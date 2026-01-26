@@ -1,1 +1,1 @@
-# kmp-platform-sdk
+A multiplatform library providing shared business logic for Android, iOS, and Web (Wasm). Encapsulates Ktor-based API communication, Kotlinx serialization, and secure token management.
