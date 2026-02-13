@@ -1,0 +1,7 @@
+<resources>
+    <string name="login">Login</string>
+    <string name="login_with">Login with:</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone number</string>
+    <string name="privacy_policy">Privacy Policy</string>
+</resources>

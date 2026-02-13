@@ -1,0 +1,8 @@
+package io.github.mudrichenkoevgeny.kmp.feature.user.mapper.confirmation
+
+import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.SendConfirmationData
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.response.confirmation.SendConfirmationResponse
+
+fun SendConfirmationResponse.toSendConfirmationData(): SendConfirmationData = SendConfirmationData(
+    retryAfterSeconds = retryAfterSeconds
+)

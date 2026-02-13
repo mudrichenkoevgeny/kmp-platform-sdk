@@ -1,33 +1,40 @@
-rootProject.name = "kmp-platform-sdk"
-
 pluginManagement {
     repositories {
-        google {
-            content { 
-              	includeGroupByRegex("com\\.android.*")
-              	includeGroupByRegex("com\\.google.*")
-              	includeGroupByRegex("androidx.*")
-              	includeGroupByRegex("android.*")
-            }
-        }
-        gradlePluginPortal()
+        google()
         mavenCentral()
+        gradlePluginPortal()
     }
 }
 
 dependencyResolutionManagement {
     repositories {
-        google {
-            content { 
-              	includeGroupByRegex("com\\.android.*")
-              	includeGroupByRegex("com\\.google.*")
-              	includeGroupByRegex("androidx.*")
-              	includeGroupByRegex("android.*")
-            }
-        }
+        google()
         mavenCentral()
     }
 }
-include(":shared")
-include(":sample:composeApp")
 
+rootProject.name = "kmp-platform-sdk"
+
+fun registerModules(parentDir: String, modules: List<String>) {
+    modules.forEach { name ->
+        val gradlePath = ":$parentDir:$name"
+        val folderPath = "$parentDir/$name"
+
+        include(gradlePath)
+        project(gradlePath).projectDir = file(folderPath)
+    }
+}
+
+val coreModules = listOf(
+    "common"
+)
+registerModules("core", coreModules)
+
+val featureModules = listOf(
+    "user"
+)
+registerModules("feature", featureModules)
+
+include(":sample:composeApp")
+include(":sample:androidApp")
+include(":bom")
