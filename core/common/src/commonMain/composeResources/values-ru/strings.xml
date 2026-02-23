@@ -1,0 +1,10 @@
+<resources>
+    <string name="error_common_unknown">Неизвестная ошибка</string>
+    <string name="error_common_internal">Внутренняя ошибка</string>
+    <string name="error_common_no_internet">Отсутствует подключение к интернету</string>
+    <string name="error_common_network">Ошибка сети</string>
+    <string name="error_common_service_unavailable">Сервис недоступен</string>
+    <string name="error_common_too_many_requests">Слишком много запросов</string>
+
+    <string name="retry">Повторить</string>
+</resources>

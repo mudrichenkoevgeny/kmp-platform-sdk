@@ -1,47 +1,80 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.di
 
-import io.github.mudrichenkoevgeny.kmp.core.common.config.model.CommonConfig
+import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.AppErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.AppErrorParserBuilder
+import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.CommonErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.platform.DeviceInfoProvider
-import io.github.mudrichenkoevgeny.kmp.core.common.platform.getDeviceInfoProvider
-import io.github.mudrichenkoevgeny.kmp.core.common.platform.model.DeviceInfo
+import io.github.mudrichenkoevgeny.kmp.core.common.network.httpclient.HttpClientConfigPlugin
+import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenProvider
+import io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo.model.DeviceInfo
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
-import io.github.mudrichenkoevgeny.kmp.core.common.storage.common.CommonStorage
-import io.github.mudrichenkoevgeny.kmp.core.common.storage.common.EncryptedCommonStorage
-import io.github.mudrichenkoevgeny.kmp.core.common.storage.getSettingsFactory
+import kotlinx.coroutines.CoroutineScope
 
 class CommonComponent(
-    val commonConfig: CommonConfig,
-    private val platformContext: Any? = null
+    val encryptedSettings: EncryptedSettings,
+    deviceInfo: DeviceInfo,
+    baseUrl: String,
+    httpClientConfigPlugins: List<HttpClientConfigPlugin> = emptyList(),
+    private val accessTokenProvider: AccessTokenProvider,
+    appScope: CoroutineScope,
+    platformContext: Any? = null
 ) {
+
     @InternalApi
     constructor(
-        commonConfig: CommonConfig,
-        deviceInfo: DeviceInfo
-    ) : this(commonConfig, null) {
-        this._deviceInfo = deviceInfo
+        encryptedSettings: EncryptedSettings,
+        deviceInfo: DeviceInfo,
+        baseUrl: String,
+        accessTokenProvider: AccessTokenProvider,
+        appScope: CoroutineScope
+    ) : this(
+        encryptedSettings,
+        deviceInfo,
+        baseUrl,
+        emptyList(),
+        accessTokenProvider,
+        appScope,
+        null
+    )
+
+    private var _appErrorParser: AppErrorParser? = null
+    val appErrorParser: AppErrorParser
+        get() = _appErrorParser ?: throw IllegalStateException(
+            "AppErrorParser not initialized! Call init() first."
+        )
+
+    private val storageModule by lazy { CommonStorageModule(encryptedSettings) }
+    val commonStorage get() = storageModule.commonStorage
+
+    private val platformModule by lazy { CommonPlatformModule(platformContext) }
+    val externalLauncher get() = platformModule.externalLauncher
+
+    private val repositoryModule by lazy {
+        CommonRepositoryModule(
+            deviceInfo
+        )
     }
+    val platformRepository get() = repositoryModule.platformRepository
 
-    val encryptedSettings: EncryptedSettings by lazy {
-        getSettingsFactory(platformContext).create()
+    private val networkModule by lazy {
+        CommonNetworkModule(
+            baseUrl = baseUrl,
+            httpClientConfigPlugins = httpClientConfigPlugins,
+            accessTokenProvider = accessTokenProvider,
+            platformRepository = platformRepository,
+            appScope = appScope
+        )
     }
+    val httpClient get() = networkModule.httpClient
+    val webSocketService get() = networkModule.webSocketService
 
-    private val commonStorage: CommonStorage by lazy {
-        EncryptedCommonStorage(encryptedSettings)
-    }
-
-    val deviceInfoProvider: DeviceInfoProvider by lazy {
-        getDeviceInfoProvider(platformContext, commonConfig, commonStorage)
-    }
-
-    private var _deviceInfo: DeviceInfo? = null
-    val deviceInfo: DeviceInfo
-        get() = _deviceInfo ?: error("CommonComponent not initialized! Call init() first.")
-
-    suspend fun init() {
-        if (_deviceInfo != null) {
-            return
-        }
-        _deviceInfo = deviceInfoProvider.getDeviceInfo()
+    fun init(
+        appErrorParserCommonParser: AppErrorParser = CommonErrorParser,
+        appErrorParserSpecificParsers: List<AppErrorParser> = emptyList()
+    ) {
+        _appErrorParser = AppErrorParserBuilder.build(
+            commonParser = appErrorParserCommonParser,
+            specificParsers = appErrorParserSpecificParsers
+        )
     }
 }

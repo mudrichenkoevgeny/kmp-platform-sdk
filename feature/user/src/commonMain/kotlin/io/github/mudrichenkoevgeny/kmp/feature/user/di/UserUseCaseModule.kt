@@ -1,0 +1,110 @@
+package io.github.mudrichenkoevgeny.kmp.feature.user.di
+
+import io.github.mudrichenkoevgeny.kmp.core.security.repository.securitysettings.SecuritySettingsRepository
+import io.github.mudrichenkoevgeny.kmp.core.settings.repository.globalsettings.GlobalSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
+import io.github.mudrichenkoevgeny.kmp.feature.user.auth.google.DisabledGoogleAuthService
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration.UserConfigurationApi
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.AuthSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByEmailUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByGoogleUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByPhoneUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.SendLoginConfirmationToPhoneUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.registration.RegistrationByEmailUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.registration.SendRegistrationConfirmationToEmailUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.RefreshAuthSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.configuration.RefreshUserConfigurationUseCase
+
+internal class UserUseCaseModule(
+    private val repositoryModule: UserRepositoryModule,
+    private val authStorage: AuthStorage,
+    private val storageModule: UserStorageModule,
+    private val authServices: UserAuthServices,
+    private val userConfigurationApi: UserConfigurationApi,
+    private val globalSettingsRepository: GlobalSettingsRepository,
+    private val securitySettingsRepository: SecuritySettingsRepository,
+    private val authSettingsRepository: AuthSettingsRepository
+) {
+
+    // Auth
+    val refreshTokenUseCase by lazy {
+
+    }
+
+    val loginByEmailUseCase by lazy {
+        LoginByEmailUseCase(
+            loginRepository = repositoryModule.loginRepository,
+            authStorage = authStorage,
+            userStorage = storageModule.userStorage
+        )
+    }
+
+    val loginByPhoneUseCase by lazy {
+        LoginByPhoneUseCase(
+            loginRepository = repositoryModule.loginRepository,
+            authStorage = authStorage,
+            userStorage = storageModule.userStorage
+        )
+    }
+
+    val sendLoginConfirmationToPhoneUseCase by lazy {
+        SendLoginConfirmationToPhoneUseCase(
+            loginRepository = repositoryModule.loginRepository
+        )
+    }
+
+    val loginByGoogleUseCase by lazy {
+        LoginByGoogleUseCase(
+            authService = authServices.googleAuth ?: DisabledGoogleAuthService(),
+            loginRepository = repositoryModule.loginRepository,
+            authStorage = authStorage,
+            userStorage = storageModule.userStorage
+        )
+    }
+
+    val registrationByEmailUseCase by lazy {
+        RegistrationByEmailUseCase(
+            registrationRepository = repositoryModule.registrationRepository,
+            authStorage = authStorage,
+            userStorage = storageModule.userStorage
+        )
+    }
+
+    val sendRegistrationConfirmationToEmailUseCase by lazy {
+        SendRegistrationConfirmationToEmailUseCase(
+            registrationRepository = repositoryModule.registrationRepository
+        )
+    }
+
+    val refreshAuthSettingsUseCase by lazy {
+        RefreshAuthSettingsUseCase(
+            authSettingsRepository = repositoryModule.authSettingsRepository
+        )
+    }
+
+    val getAvailableUserAuthProvidersUseCase by lazy {
+        GetAvailableUserAuthProvidersUseCase(
+            authSettingsRepository = repositoryModule.authSettingsRepository
+        )
+    }
+
+    val resetEmailPasswordUseCase by lazy {
+
+    }
+
+    val sendResetPasswordConfirmationToEmailUseCase by lazy {
+
+    }
+
+    // Configuration
+    val refreshUserConfigurationUseCase by lazy {
+        RefreshUserConfigurationUseCase(
+            userConfigurationApi = userConfigurationApi,
+            globalSettingsRepository = globalSettingsRepository,
+            securitySettingsRepository = securitySettingsRepository,
+            authSettingsRepository = authSettingsRepository
+        )
+    }
+}

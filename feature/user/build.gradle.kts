@@ -25,15 +25,22 @@ kotlin {
 //        minSdk = libs.versions.android.minSdk.get().toInt()
 //    }
 
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach {
-        it.binaries.framework {
-            baseName = "FeatureUserApp"
-            isStatic = true
-        }
-    }
+    // TODO: [IOS] Uncomment when starting iOS development
+//    listOf(
+//        iosArm64(),
+//        iosSimulatorArm64()
+//    ).forEach {
+//        it.binaries.framework {
+//            baseName = "FeatureUserApp"
+//            isStatic = true
+//        }
+//
+//        it.compilations.getByName("main") {
+//            val googleSignIn by cinterops.creating {
+//                definitionFile.set(project.file("src/nativeInterop/cinterop/GoogleSignIn.def"))
+//            }
+//        }
+//    }
 
     wasmJs {
         browser()
@@ -44,8 +51,11 @@ kotlin {
         commonMain.dependencies {
             // Project Modules
             implementation(project(":core:common"))
+            implementation(project(":core:settings"))
+            implementation(project(":core:security"))
 
             // Shared Foundation
+            implementation(libs.shared.foundation.core.security)
             implementation(libs.shared.foundation.feature.user)
 
             // Kotlin
@@ -70,6 +80,12 @@ kotlin {
             // Infrastructure
             implementation(libs.decompose)
             implementation(libs.decompose.compose)
+
+            // Logging
+            implementation(libs.kermit)
+
+            // Testing
+            implementation(libs.kotlinx.coroutines.test)
         }
 
         androidMain.dependencies {
@@ -79,6 +95,11 @@ kotlin {
             // Android
             implementation(libs.androidx.activityCompose)
             implementation(libs.compose.ui.tooling)
+
+            // OAuth
+            implementation(libs.androidx.credentials)
+            implementation(libs.androidx.credentials.play.services)
+            implementation(libs.googleid)
         }
     }
 }
@@ -89,4 +110,9 @@ android {
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
+}
+
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "io.github.mudrichenkoevgeny.kmp.feature.user"
 }

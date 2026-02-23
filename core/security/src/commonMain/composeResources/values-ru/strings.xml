@@ -1,0 +1,10 @@
+<resources>
+    <string name="error_security_password_policy_unavailable">Требования к безопасности временно недоступны. Пожалуйста, попробуйте позже.</string>
+    <string name="error_security_password_too_short">Пароль слишком короткий</string>
+    <string name="error_security_password_no_letter">Пароль должен содержать хотя бы одну букву</string>
+    <string name="error_security_password_no_uppercase">Пароль должен содержать хотя бы одну заглавную букву</string>
+    <string name="error_security_password_no_lowercase">Пароль должен содержать хотя бы одну строчную букву</string>
+    <string name="error_security_password_no_digit">Пароль должен содержать хотя бы одну цифру</string>
+    <string name="error_security_password_no_special_char">Пароль должен содержать хотя бы один специальный символ</string>
+    <string name="error_security_password_too_common">Этот пароль слишком распространен и его легко угадать</string>
+</resources>

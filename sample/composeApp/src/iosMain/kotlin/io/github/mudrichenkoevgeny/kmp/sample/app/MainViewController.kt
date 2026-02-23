@@ -1,6 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.sample.app
 
 import androidx.compose.ui.window.ComposeUIViewController
+import io.github.mudrichenkoevgeny.kmp.feature.user.auth.IosUserAuthServices
+import io.github.mudrichenkoevgeny.kmp.sample.BuildConfig
 import io.github.mudrichenkoevgeny.kmp.sample.app.di.AppComponent
 import platform.UIKit.UIViewController
 import io.github.mudrichenkoevgeny.kmp.sample.app.ui.root.RootContent
@@ -9,10 +11,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 fun MainViewController(): UIViewController {
-    val appComponent = AppComponent()
+    var controller: UIViewController? = null
+
+    val appComponent = AppComponent(
+        authServices = IosUserAuthServices(
+            getRootController = { controller ?: error("Controller not initialized") },
+            googleWebClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID
+        )
+    )
 
     CoroutineScope(Dispatchers.Main).launch {
         appComponent.init()
     }
-    return ComposeUIViewController { RootContent(appComponent) }
+
+    val mainController = ComposeUIViewController {
+        RootContent(appComponent)
+    }
+
+    controller = mainController
+
+    return mainController
 }

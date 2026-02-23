@@ -1,11 +1,13 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.model.user
 
+import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @JvmInline
+@Serializable
 value class UserId(val value: Uuid) {
     fun asHexDashString(): String = value.toHexDashString()
 

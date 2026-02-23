@@ -24,6 +24,8 @@ android {
 
 dependencies {
     // Project Modules
+    implementation(project(":core:common"))
+    implementation(project(":feature:user"))
     implementation(project(":sample:composeApp"))
 
     // Android

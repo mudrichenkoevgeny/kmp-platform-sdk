@@ -5,10 +5,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import com.arkivanov.decompose.DefaultComponentContext
-import com.arkivanov.essenty.lifecycle.LifecycleRegistry
-import com.arkivanov.essenty.lifecycle.resume
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalCommonComponent
+import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.rememberComponentContext
 import io.github.mudrichenkoevgeny.kmp.sample.app.di.AppComponent
 import io.github.mudrichenkoevgeny.kmp.sample.app.di.LocalAppComponent
@@ -27,6 +25,7 @@ fun RootContent(appComponent: AppComponent) {
 
         CompositionLocalProvider(
             LocalCommonComponent provides appComponent.commonComponent,
+            LocalErrorParser provides appComponent.commonComponent.appErrorParser,
             LocalAppComponent provides appComponent
         ) {
             MainScreen(mainComponent)

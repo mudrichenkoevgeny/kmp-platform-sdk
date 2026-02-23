@@ -15,7 +15,8 @@ class EncryptedUserStorage(
     private val json = FoundationJson
 
     override suspend fun getCurrentUser(): CurrentUser? {
-        val data = encryptedSettings.get(KEY_CURRENT_USER) ?: return null
+        val data = encryptedSettings.get(KEY_CURRENT_USER)
+            ?: return null
         return json.decodeFromString(data)
     }
 
@@ -35,7 +36,8 @@ class EncryptedUserStorage(
     }
 
     override suspend fun getUserIdentifiersList(): List<UserIdentifier> {
-        val data = encryptedSettings.get(KEY_USER_IDENTIFIERS) ?: return emptyList()
+        val data = encryptedSettings.get(KEY_USER_IDENTIFIERS)
+            ?: return emptyList()
         return json.decodeFromString(data)
     }
 
@@ -45,7 +47,8 @@ class EncryptedUserStorage(
     }
 
     override suspend fun getUserSessionsList(): List<UserSession> {
-        val data = encryptedSettings.get(KEY_USER_SESSIONS) ?: return emptyList()
+        val data = encryptedSettings.get(KEY_USER_SESSIONS)
+            ?: return emptyList()
         return json.decodeFromString(data)
     }
 

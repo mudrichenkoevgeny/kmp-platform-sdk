@@ -1,0 +1,4 @@
+language = Objective-C
+modules = GoogleSignIn
+compilerOpts = -framework GoogleSignIn
+linkerOpts = -framework GoogleSignIn

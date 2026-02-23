@@ -7,7 +7,7 @@ android-targetSdk = "36"
 
 # Plugins & Core
 kotlin = "2.3.10"
-agp = "9.0.0"
+agp = "9.0.1"
 compose = "1.10.1"
 sqlDelight = "2.2.1"
 buildConfig = "6.0.7"
@@ -15,7 +15,7 @@ maven-publish = "0.36.0"
 dependency-analysis = "3.5.1"
 
 # Shared Foundation
-shared-foundation = "0.0.11"
+shared-foundation = "0.0.15"
 
 # Kotlin
 kotlinx-serialization = "1.10.0"
@@ -41,13 +41,18 @@ androidx-datastorePreferences = "1.3.0-alpha05"
 kermit = "2.0.8"
 
 # Android
-androidx-activityCompose = "1.12.3"
+androidx-activityCompose = "1.12.4"
 crypto-tink = "1.20.0"
 jetbrainsKotlinJvm = "2.3.10"
+
+# OAuth
+androidx-credentials = "1.5.0"
+googleid = "1.2.0"
 
 [libraries]
 # Shared Foundation
 shared-foundation-core-common = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-common", version.ref = "shared-foundation" }
+shared-foundation-core-settings = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-settings", version.ref = "shared-foundation" }
 shared-foundation-core-security = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-security", version.ref = "shared-foundation" }
 shared-foundation-feature-user = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-feature-user", version.ref = "shared-foundation" }
 
@@ -75,6 +80,7 @@ ktor-client-serialization = { module = "io.ktor:ktor-client-serialization", vers
 ktor-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
+ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
@@ -100,6 +106,11 @@ kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 # Android
 androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 crypto-tink-android = { module = "com.google.crypto.tink:tink-android", version.ref = "crypto-tink" }
+
+# OAuth
+androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "androidx-credentials" }
+androidx-credentials-play-services = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "androidx-credentials" }
+googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
 
 # Testing
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }

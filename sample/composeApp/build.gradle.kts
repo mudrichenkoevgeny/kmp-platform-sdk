@@ -25,15 +25,16 @@ kotlin {
 //        minSdk = libs.versions.android.minSdk.get().toInt()
 //    }
 
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach {
-        it.binaries.framework {
-            baseName = "SampleComposeApp"
-            isStatic = true
-        }
-    }
+    // TODO: [IOS] Uncomment when starting iOS development
+//    listOf(
+//        iosArm64(),
+//        iosSimulatorArm64()
+//    ).forEach {
+//        it.binaries.framework {
+//            baseName = "SampleComposeApp"
+//            isStatic = true
+//        }
+//    }
 
     wasmJs {
         browser {
@@ -48,6 +49,8 @@ kotlin {
         commonMain.dependencies {
             // Project Modules
             implementation(project(":core:common"))
+            implementation(project(":core:settings"))
+            implementation(project(":core:security"))
             implementation(project(":feature:user"))
 
             // Shared Foundation
@@ -65,9 +68,20 @@ kotlin {
             implementation(libs.compose.icons.core)
             implementation(libs.compose.material3)
 
+            // Ktor
+            implementation(libs.ktor.client.core)
+
             // Infrastructure
             implementation(libs.decompose)
             implementation(libs.decompose.compose)
+
+            // Logging
+            implementation(libs.kermit)
+        }
+
+        wasmJsMain.dependencies {
+            // Project Modules
+            implementation(project(":core:common"))
         }
     }
 }
@@ -90,20 +104,25 @@ val env = project.findProperty("app.env")?.toString() ?: "dev"
 buildConfig {
     packageName("io.github.mudrichenkoevgeny.kmp.sample")
 
-    buildConfigField("APP_VERSION", project.version.toString())
+    useKotlinOutput { internalVisibility = false }
+
+    buildConfigField("APP_VERSION", "\"${project.version}\"")
 
     when (env) {
         "prod" -> {
             buildConfigField("BASE_URL", "https://www.myapp.com")
             buildConfigField("ENV_NAME", "Production")
+            buildConfigField("GOOGLE_WEB_CLIENT_ID", "\"982478008604-albtrhoegkqkpe2ev7rirg6c8h9hijfl.apps.googleusercontent.com\"")
         }
         "test" -> {
             buildConfigField("BASE_URL", "https://www.test.myapp.com")
             buildConfigField("ENV_NAME", "Testing")
+            buildConfigField("GOOGLE_WEB_CLIENT_ID", "\"982478008604-albtrhoegkqkpe2ev7rirg6c8h9hijfl.apps.googleusercontent.com\"")
         }
         else -> {
             buildConfigField("BASE_URL", "https://www.dev.myapp.com")
             buildConfigField("ENV_NAME", "Development")
+            buildConfigField("GOOGLE_WEB_CLIENT_ID", "\"982478008604-albtrhoegkqkpe2ev7rirg6c8h9hijfl.apps.googleusercontent.com\"")
         }
     }
 }

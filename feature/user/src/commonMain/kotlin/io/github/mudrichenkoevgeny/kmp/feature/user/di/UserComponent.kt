@@ -2,62 +2,58 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.di
 
 import com.arkivanov.decompose.ComponentContext
 import io.github.mudrichenkoevgeny.kmp.core.common.di.CommonComponent
-import io.github.mudrichenkoevgeny.kmp.core.common.network.httpclient.setupCommonConfig
-import io.github.mudrichenkoevgeny.kmp.feature.user.api.UserApi
-import io.github.mudrichenkoevgeny.kmp.feature.user.api.auth.login.KtorLoginApi
-import io.github.mudrichenkoevgeny.kmp.feature.user.api.auth.login.LoginApi
+import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
+import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
-import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.setupAuthConfig
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginRepository
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginRepositoryImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepositoryImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.EncryptedAuthStorage
-import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.EncryptedUserStorage
-import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.root.LoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.root.LoginRootComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByEmailUseCase
-import io.ktor.client.HttpClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
 class UserComponent(
-    private val commonComponent: CommonComponent,
-    private val baseUrl: String
+    val commonComponent: CommonComponent,
+    val settingsComponent: SettingsComponent,
+    val securityComponent: SecurityComponent,
+    val authStorage: AuthStorage,
+    val authServices: UserAuthServices,
+    parentScope: CoroutineScope? = null
 ) {
 
-    private val authStorage: AuthStorage by lazy {
-        EncryptedAuthStorage(commonComponent.encryptedSettings)
-    }
+    private val componentScope = parentScope
+        ?: CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-    private val userStorage: UserStorage by lazy {
-        EncryptedUserStorage(commonComponent.encryptedSettings)
-    }
+    private val storageModule = UserStorageModule(commonComponent.encryptedSettings)
 
-    val httpClient: HttpClient by lazy {
-        HttpClient {
-            setupCommonConfig(baseUrl, commonComponent.deviceInfo)
-            setupAuthConfig(baseUrl, authStorage)
-        }
-    }
+    private val networkModule = UserNetworkModule(commonComponent.httpClient)
 
-    val loginApi: LoginApi by lazy { KtorLoginApi(httpClient) }
-    val userApi: UserApi by lazy { UserApi(httpClient) }
+    private val repositoryModule = UserRepositoryModule(networkModule, authStorage, storageModule, commonComponent.webSocketService, componentScope)
+    val loginRepository get() = repositoryModule.loginRepository
+    val registrationRepository get() = repositoryModule.registrationRepository
+    val userRepository get() = repositoryModule.userRepository
 
-    val loginRepository: LoginRepository by lazy {
-        LoginRepositoryImpl(loginApi)
-    }
+    val passwordPolicyValidator get() = securityComponent.passwordPolicyValidator
 
-    val userRepository: UserRepository by lazy {
-        UserRepositoryImpl(userStorage)
-    }
-
-    val loginByEmailUseCase: LoginByEmailUseCase by lazy {
-        LoginByEmailUseCase(
-            loginRepository = loginRepository,
-            authStorage = authStorage,
-            userStorage = userStorage
-        )
-    }
+    private val useCaseModule = UserUseCaseModule(
+        repositoryModule = repositoryModule,
+        authStorage = authStorage,
+        storageModule = storageModule,
+        authServices = authServices,
+        userConfigurationApi = networkModule.userConfigurationApi,
+        globalSettingsRepository = settingsComponent.globalSettingsRepository,
+        securitySettingsRepository = securityComponent.securitySettingsRepository,
+        authSettingsRepository = repositoryModule.authSettingsRepository
+    )
+    val loginByEmailUseCase get() = useCaseModule.loginByEmailUseCase
+    val loginByPhoneUseCase get() = useCaseModule.loginByPhoneUseCase
+    val sendLoginConfirmationToPhoneUseCase get() = useCaseModule.sendLoginConfirmationToPhoneUseCase
+    val loginByGoogleUseCase get() = useCaseModule.loginByGoogleUseCase
+    val refreshAuthSettingsUseCase get() = useCaseModule.refreshAuthSettingsUseCase
+    val sendRegistrationConfirmationToEmailUseCase get() = useCaseModule.sendRegistrationConfirmationToEmailUseCase
+    val registrationByEmailUseCase get() = useCaseModule.registrationByEmailUseCase
+    val refreshUserConfigurationUseCase get() = useCaseModule.refreshUserConfigurationUseCase
+    val getAvailableUserAuthProvidersUseCase get() = useCaseModule.getAvailableUserAuthProvidersUseCase
 
     fun createLoginRootDialogComponent(
         componentContext: ComponentContext,
@@ -65,11 +61,10 @@ class UserComponent(
     ): LoginRootComponent {
         return LoginRootComponentImpl(
             componentContext = componentContext,
+            settingsComponent = settingsComponent,
+            securityComponent = securityComponent,
+            userComponent = this,
             onFinished = onFinished
         )
-    }
-
-    fun clear() {
-        httpClient.close()
     }
 }

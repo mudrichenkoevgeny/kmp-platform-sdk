@@ -1,0 +1,10 @@
+<resources>
+    <string name="error_common_unknown">Unknown error</string>
+    <string name="error_common_internal">Internal error</string>
+    <string name="error_common_no_internet">No internet connection</string>
+    <string name="error_common_network">Network error</string>
+    <string name="error_common_service_unavailable">Service unavailable</string>
+    <string name="error_common_too_many_requests">Too many requests</string>
+
+    <string name="retry">Retry</string>
+</resources>

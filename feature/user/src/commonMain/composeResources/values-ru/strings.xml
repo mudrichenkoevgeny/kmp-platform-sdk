@@ -1,0 +1,13 @@
+<resources>
+    <string name="error_user_auth_failed">Ошибка авторизации</string>
+    <string name="error_user_access_denied">Доступ запрещен</string>
+    <string name="error_user_blocked">Пользователь заблокирован</string>
+    <string name="error_user_read_only">Действие ограничено. Ваш аккаунт находится в режиме «только чтение».</string>
+    <string name="error_user_not_found">Пользователь не найден</string>
+    <string name="error_user_invalid_credentials">Неверные данные для входа</string>
+    <string name="error_user_wrong_confirmation_code">Неверный код подтверждения</string>
+    <string name="error_user_wrong_password">Неверный пароль</string>
+    <string name="error_user_password_too_weak">Слишком слабый пароль</string>
+    <string name="error_user_confirmation_required">Требуется подтверждение личности. Пожалуйста, подтвердите текущую сессию.</string>
+    <string name="error_user_identifier_already_exists">Идентификатор такого типа уже привязан к вашему аккаунту.</string>
+</resources>

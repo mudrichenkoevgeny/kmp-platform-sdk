@@ -4,5 +4,6 @@ import com.arkivanov.decompose.value.Value
 
 interface ProfileScreenComponent {
     val state: Value<ProfileScreenState>
+
     fun onLoginClick()
 }

@@ -1,0 +1,10 @@
+<resources>
+    <string name="error_security_password_policy_unavailable">Security requirements are currently unavailable. Please try again later.</string>
+    <string name="error_security_password_too_short">Password is too short</string>
+    <string name="error_security_password_no_letter">Password must contain at least one letter</string>
+    <string name="error_security_password_no_uppercase">Password must contain at least one uppercase letter</string>
+    <string name="error_security_password_no_lowercase">Password must contain at least one lowercase letter</string>
+    <string name="error_security_password_no_digit">Password must contain at least one digit</string>
+    <string name="error_security_password_no_special_char">Password must contain at least one special character</string>
+    <string name="error_security_password_too_common">This password is too common and easy to guess</string>
+</resources>

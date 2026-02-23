@@ -26,7 +26,9 @@ fun registerModules(parentDir: String, modules: List<String>) {
 }
 
 val coreModules = listOf(
-    "common"
+    "common",
+    "settings",
+    "security"
 )
 registerModules("core", coreModules)
 

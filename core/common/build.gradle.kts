@@ -24,15 +24,16 @@ kotlin {
 //        minSdk = libs.versions.android.minSdk.get().toInt()
 //    }
 
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach {
-        it.binaries.framework {
-            baseName = "CoreCommon"
-            isStatic = true
-        }
-    }
+    // TODO: [IOS] Uncomment when starting iOS development
+//    listOf(
+//        iosArm64(),
+//        iosSimulatorArm64()
+//    ).forEach {
+//        it.binaries.framework {
+//            baseName = "CoreCommon"
+//            isStatic = true
+//        }
+//    }
 
     wasmJs {
         browser()
@@ -51,6 +52,10 @@ kotlin {
             implementation(libs.compose.foundation)
             implementation(libs.compose.ui)
             implementation(libs.compose.runtime)
+            implementation(libs.compose.resources)
+            implementation(libs.compose.ui.tooling.preview)
+            implementation(libs.compose.icons.core)
+            implementation(libs.compose.material3)
 
             // Ktor
             implementation(libs.ktor.client.core)
@@ -58,9 +63,13 @@ kotlin {
             implementation(libs.ktor.serialization.json)
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.auth)
+            implementation(libs.ktor.client.websockets)
 
             // Infrastructure
             implementation(libs.decompose)
+
+            // Testing
+            implementation(libs.kotlinx.coroutines.test)
         }
 
         androidMain.dependencies {
@@ -69,16 +78,18 @@ kotlin {
 
             // Android
             implementation(libs.androidx.activityCompose)
+            implementation(libs.compose.ui.tooling)
             api(libs.crypto.tink.android)
         }
 
-        iosMain.dependencies {
-            // Ktor
-            implementation(libs.ktor.client.darwin)
-
-            // Storage
-            implementation(libs.androidx.datastorePreferences)
-        }
+        // TODO: [IOS] Uncomment when starting iOS development
+//        iosMain.dependencies {
+//            // Ktor
+//            implementation(libs.ktor.client.darwin)
+//
+//            // Storage
+//            implementation(libs.androidx.datastorePreferences)
+//        }
     }
 }
 
@@ -88,4 +99,9 @@ android {
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
+}
+
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "io.github.mudrichenkoevgeny.kmp.core.common"
 }

@@ -10,4 +10,5 @@ interface LoginRepository {
     suspend fun loginByPhone(phoneNumber: String, confirmationCode: String): AppResult<AuthData>
     suspend fun loginByExternalAuthProvider(authProvider: UserAuthProvider, token: String): AppResult<AuthData>
     suspend fun sendLoginConfirmationToPhone(phoneNumber: String): AppResult<SendConfirmationData>
+    fun getRemainingLoginConfirmationDelayInSeconds(phoneNumber: String): Int
 }

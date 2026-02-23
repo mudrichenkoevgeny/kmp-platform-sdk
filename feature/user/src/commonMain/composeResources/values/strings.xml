@@ -1,7 +1,45 @@
 <resources>
+    <string name="error_user_auth_failed">Authentication failed</string>
+    <string name="error_user_access_denied">Access denied</string>
+    <string name="error_user_blocked">User blocked</string>
+    <string name="error_user_read_only">Action restricted. Your account is in read-only mode.</string>
+    <string name="error_user_not_found">User not found</string>
+    <string name="error_user_invalid_credentials">Invalid credentials</string>
+    <string name="error_user_wrong_confirmation_code">Wrong confirmation code</string>
+    <string name="error_user_wrong_password">Wrong password</string>
+    <string name="error_user_password_too_weak">Password is too weak</string>
+    <string name="error_user_confirmation_required">Identity confirmation required. Please verify your session.</string>
+    <string name="error_user_identifier_already_exists">An identifier of this type is already linked to your account.</string>
+
     <string name="login">Login</string>
     <string name="login_with">Login with:</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_in_with_email">Sign in with Email</string>
+    <string name="sign_in_with_phone">Sign in with Phone</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_in_with_apple">Sign in with Apple</string>
+    <string name="or_sign_in_with">Or sign in with</string>
     <string name="email">Email</string>
     <string name="phone_number">Phone number</string>
+
+    <string name="enter_phone_number">Enter phone number</string>
+    <string name="send_code">Send code</string>
+
+    <string name="enter_confirmation_code">Enter code</string>
+    <string name="code_sent_to">The code has been sent to %s</string>
+    <string name="confirmation_code">Confirmation code</string>
+    <string name="resend_code_timer">Resend code in %d sec</string>
+    <string name="resend_code">Resend code</string>
+    <string name="change_phone_number">Change phone number</string>
+    <string name="confirm">Confirm</string>
+
+    <string name="login_by_email">Login by Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="no_account_register">Don\'t have an account? Register</string>
+
+    <string name="legal_agreement_prefix">By signing in, you agree to our</string>
+    <string name="and">and</string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_of_service">Terms of service</string>
 </resources>

@@ -52,7 +52,7 @@ fun MainScreen(screenComponent: MainScreenComponent) {
 
     Box(Modifier.fillMaxSize()) {
         MainContent(
-            isMobile = appComponent.commonComponent.deviceInfo.isMobileClient(),
+            isMobile = appComponent.commonComponent.platformRepository.getDeviceInfo().isMobileClient(),
             screenStack = screenComponent.stack,
             currentDestination = currentNavigation,
             destinations = MainScreenDestination.allDestinations,

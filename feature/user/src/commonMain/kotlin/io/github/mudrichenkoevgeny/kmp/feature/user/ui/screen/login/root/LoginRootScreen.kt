@@ -15,14 +15,17 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalCommonComponent
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.email.LoginByEmailScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.phone.LoginByPhoneScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.welcome.LoginWelcomeScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.registration.email.RegistrationByEmailScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginRootScreen(component: LoginRootComponent) {
     val commonComponent = LocalCommonComponent.current
 
-    if (commonComponent.deviceInfo.isMobileClient()) {
+    if (commonComponent.platformRepository.getDeviceInfo().isMobileClient()) {
         ModalBottomSheet(onDismissRequest = component::onDismiss) {
             LoginDialogContainer(component)
         }
@@ -46,6 +49,9 @@ private fun LoginDialogContainer(component: LoginRootComponent) {
         ) { child ->
             when (val instance = child.instance) {
                 is LoginRootComponent.Child.Welcome -> LoginWelcomeScreen(instance.component)
+                is LoginRootComponent.Child.LoginByEmail -> LoginByEmailScreen(instance.component)
+                is LoginRootComponent.Child.LoginByPhone -> LoginByPhoneScreen(instance.component)
+                is LoginRootComponent.Child.RegistrationByEmail -> RegistrationByEmailScreen(instance.component)
             }
         }
     }

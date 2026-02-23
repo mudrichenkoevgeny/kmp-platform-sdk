@@ -13,6 +13,13 @@ inline fun <T> AppResult<T>.onError(block: (AppError) -> Unit): AppResult<T> {
     return this
 }
 
+inline fun <T, R> AppResult<T>.flatMap(transform: (T) -> AppResult<R>): AppResult<R> {
+    return when (this) {
+        is AppResult.Success -> transform(data)
+        is AppResult.Error -> AppResult.Error(this.error)
+    }
+}
+
 inline fun <T, R> AppResult<T>.mapSuccess(transform: (T) -> R): AppResult<R> {
     return when (this) {
         is AppResult.Success -> {
@@ -22,6 +29,13 @@ inline fun <T, R> AppResult<T>.mapSuccess(transform: (T) -> R): AppResult<R> {
                 AppResult.Error(CommonError.ContractViolation(e))
             }
         }
+        is AppResult.Error -> AppResult.Error(error)
+    }
+}
+
+inline fun <T, R> AppResult<T>.flatMapSuccess(transform: (T) -> AppResult<R>): AppResult<R> {
+    return when (this) {
+        is AppResult.Success -> transform(data)
         is AppResult.Error -> AppResult.Error(error)
     }
 }

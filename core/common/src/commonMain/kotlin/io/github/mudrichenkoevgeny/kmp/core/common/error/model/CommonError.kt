@@ -69,4 +69,14 @@ sealed class CommonError(
         code = ClientCommonErrorCodes.CONTRACT_VIOLATION,
         isRetryable = isRetryable
     )
+
+    class Lifecycle(
+        message: String,
+        isRetryable: Boolean = false
+    ) : CommonError(
+        id = ErrorId.generate(),
+        code = ClientCommonErrorCodes.LIFECYCLE_ERROR,
+        args = mapOf(CommonErrorArgs.MESSAGE to message),
+        isRetryable = isRetryable
+    )
 }
