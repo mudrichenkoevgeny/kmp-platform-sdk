@@ -7,10 +7,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.AccessToken
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.RefreshToken
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class EncryptedAuthStorage(
@@ -20,16 +19,13 @@ class EncryptedAuthStorage(
 
     private val json = FoundationJson
 
-    private val _accessTokenFlow = MutableSharedFlow<AccessToken?>(replay = 1)
-    override val accessTokenFlow: Flow<String?> = _accessTokenFlow
-        .asSharedFlow()
-        .map { it?.value }
+    private val _accessTokenFlow = MutableStateFlow<String?>(null)
+    override val accessTokenFlow: StateFlow<String?> = _accessTokenFlow.asStateFlow()
 
     init {
         scope.launch {
             val accessToken = encryptedSettings.get(KEY_ACCESS_TOKEN)
-                ?.let { AccessToken(it) }
-            _accessTokenFlow.emit(accessToken)
+            _accessTokenFlow.value = accessToken
         }
     }
 
@@ -50,7 +46,7 @@ class EncryptedAuthStorage(
         encryptedSettings.put(KEY_ACCESS_TOKEN, accessToken.value)
         encryptedSettings.put(KEY_REFRESH_TOKEN, refreshToken.value)
         encryptedSettings.put(KEY_EXPIRES_AT, expiresAt.toString())
-        _accessTokenFlow.emit(accessToken)
+        _accessTokenFlow.value = accessToken.value
     }
 
     override suspend fun clearTokens() {

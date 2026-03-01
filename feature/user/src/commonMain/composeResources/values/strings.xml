@@ -7,8 +7,6 @@
     <string name="error_user_invalid_credentials">Invalid credentials</string>
     <string name="error_user_wrong_confirmation_code">Wrong confirmation code</string>
     <string name="error_user_wrong_password">Wrong password</string>
-    <string name="error_user_password_too_weak">Password is too weak</string>
-    <string name="error_user_confirmation_required">Identity confirmation required. Please verify your session.</string>
     <string name="error_user_identifier_already_exists">An identifier of this type is already linked to your account.</string>
 
     <string name="login">Login</string>

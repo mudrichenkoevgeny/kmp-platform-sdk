@@ -134,6 +134,13 @@ class AppComponent(
         commonComponent.init(
             appErrorParserSpecificParsers = listOf(SecurityErrorParser, UserErrorParser)
         )
+        val handlers = listOf(
+            commonComponent.commonWebSocketMessageHandler,
+            settingsComponent.settingsWebSocketMessageHandler,
+            securityComponent.securityWebSocketMessageHandler,
+            userComponent.userWebSocketMessageHandler
+        )
+        commonComponent.webSocketService.updateWebSocketMessageHandlers(handlers)
         _isInitialized.value = true
     }
 

@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.di
 
+import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandler
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.auth.login.KtorLoginApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.auth.password.KtorPasswordApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.auth.refreshtoken.KtorRefreshTokenApi
@@ -10,6 +11,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.security.passwor
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.security.userIdentifiers.KtorSecurityUserIdentifiersApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.session.KtorSessionApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.user.KtorUserApi
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.websocket.messagehandler.UserWebSocketMessageHandler
 import io.ktor.client.HttpClient
 import kotlin.getValue
 
@@ -35,4 +37,8 @@ internal class UserNetworkModule(
 
     // Configuration
     val userConfigurationApi by lazy { KtorUserConfigurationApi(httpClient) }
+
+    val userWebSocketMessageHandler: WebSocketMessageHandler by lazy {
+        UserWebSocketMessageHandler()
+    }
 }

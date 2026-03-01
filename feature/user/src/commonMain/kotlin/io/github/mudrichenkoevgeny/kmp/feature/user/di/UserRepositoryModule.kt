@@ -1,6 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.di
 
-import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.WebSocketService
+import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.password.PasswordRepository

@@ -7,11 +7,15 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.CommonErrorParse
 import io.github.mudrichenkoevgeny.kmp.core.security.Res
 import io.github.mudrichenkoevgeny.kmp.core.security.*
 import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.SecurityErrorCodes
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorCodes as SharedSecurityErrorCodes
 import org.jetbrains.compose.resources.stringResource
 
 object SecurityErrorParser : AppErrorParser {
     @Composable
     override fun parse(appError: AppError): String? = when (appError.code) {
+        SharedSecurityErrorCodes.PASSWORD_TOO_WEAK ->
+            stringResource(Res.string.error_security_password_too_weak)
+
         SecurityErrorCodes.PASSWORD_POLICY_UNAVAILABLE ->
             stringResource(Res.string.error_security_password_policy_unavailable)
 
@@ -35,6 +39,9 @@ object SecurityErrorParser : AppErrorParser {
 
         SecurityErrorCodes.PASSWORD_TOO_COMMON ->
             stringResource(Res.string.error_security_password_too_common)
+
+        SharedSecurityErrorCodes.AUTHENTICATION_CONFIRMATION_REQUIRED ->
+            stringResource(Res.string.error_security_confirmation_required)
 
         else -> CommonErrorParser.parse(appError)
     }

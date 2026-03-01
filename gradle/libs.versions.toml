@@ -15,7 +15,7 @@ maven-publish = "0.36.0"
 dependency-analysis = "3.5.1"
 
 # Shared Foundation
-shared-foundation = "0.0.15"
+shared-foundation = "0.0.20"
 
 # Kotlin
 kotlinx-serialization = "1.10.0"

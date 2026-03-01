@@ -22,9 +22,6 @@ object UserErrorParser : AppErrorParser {
         UserErrorCodes.EXTERNAL_TOKEN_INVALID ->
             stringResource(Res.string.error_user_auth_failed)
 
-        UserErrorCodes.AUTHENTICATION_CONFIRMATION_REQUIRED ->
-            stringResource(Res.string.error_user_confirmation_required)
-
         UserErrorCodes.USER_BLOCKED ->
             stringResource(Res.string.error_user_blocked)
 
@@ -42,9 +39,6 @@ object UserErrorParser : AppErrorParser {
 
         UserErrorCodes.WRONG_PASSWORD ->
             stringResource(Res.string.error_user_wrong_password)
-
-        UserErrorCodes.PASSWORD_TOO_WEAK ->
-            stringResource(Res.string.error_user_password_too_weak)
 
         UserErrorCodes.WRONG_CONFIRMATION_CODE ->
             stringResource(Res.string.error_user_wrong_confirmation_code)

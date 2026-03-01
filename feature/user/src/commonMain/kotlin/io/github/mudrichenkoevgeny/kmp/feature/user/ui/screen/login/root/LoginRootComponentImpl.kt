@@ -55,7 +55,7 @@ class LoginRootComponentImpl(
                 componentContext = context,
                 loginByEmailUseCase = userComponent.loginByEmailUseCase,
                 validatePasswordUseCase = securityComponent.validatePasswordUseCase,
-                onNavigateToRegistration = { },
+                onNavigateToRegistrationByEmail = { },
                 onNavigateToForgotPassword = { } ,
                 onBack = navigation::pop,
                 onFinished = onFinished

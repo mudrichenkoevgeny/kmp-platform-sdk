@@ -34,6 +34,7 @@ class AndroidApp : Application() {
         applicationScope.launch {
             appComponent.init()
             appComponent.refreshUserConfigurationUseCase() // or appComponent.syncDataUseCase()
+            appComponent.commonComponent.webSocketService.connect()
         }
     }
 }

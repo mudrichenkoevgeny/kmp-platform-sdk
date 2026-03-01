@@ -18,7 +18,7 @@ class LoginByEmailComponentImpl(
     componentContext: ComponentContext,
     private val loginByEmailUseCase: LoginByEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase,
-    private val onNavigateToRegistration: () -> Unit,
+    private val onNavigateToRegistrationByEmail: () -> Unit,
     private val onNavigateToForgotPassword: () -> Unit,
     private val onBack: () -> Unit,
     private val onFinished: () -> Unit
@@ -99,7 +99,7 @@ class LoginByEmailComponentImpl(
     }
 
     override fun onRegistrationClick() {
-        onNavigateToRegistration()
+        onNavigateToRegistrationByEmail()
     }
 
     override fun onBackClick() {

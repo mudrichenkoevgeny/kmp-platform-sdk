@@ -7,7 +7,5 @@
     <string name="error_user_invalid_credentials">Неверные данные для входа</string>
     <string name="error_user_wrong_confirmation_code">Неверный код подтверждения</string>
     <string name="error_user_wrong_password">Неверный пароль</string>
-    <string name="error_user_password_too_weak">Слишком слабый пароль</string>
-    <string name="error_user_confirmation_required">Требуется подтверждение личности. Пожалуйста, подтвердите текущую сессию.</string>
     <string name="error_user_identifier_already_exists">Идентификатор такого типа уже привязан к вашему аккаунту.</string>
 </resources>

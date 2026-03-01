@@ -4,8 +4,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.settings.AuthSett
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.AccessToken
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.RefreshToken
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class MockAuthStorage : AuthStorage {
 
@@ -14,7 +15,7 @@ class MockAuthStorage : AuthStorage {
     private var expiresAt: Long = 0L
     private var authSettings: AuthSettings? = null
 
-    override val accessTokenFlow: Flow<String?> = flowOf(accessToken?.value)
+    override val accessTokenFlow: StateFlow<String?> = MutableStateFlow(null).asStateFlow()
 
     override suspend fun getAccessToken(): AccessToken? = accessToken
 

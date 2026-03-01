@@ -27,6 +27,7 @@ class UserComponent(
     private val storageModule = UserStorageModule(commonComponent.encryptedSettings)
 
     private val networkModule = UserNetworkModule(commonComponent.httpClient)
+    val userWebSocketMessageHandler get() = networkModule.userWebSocketMessageHandler
 
     private val repositoryModule = UserRepositoryModule(networkModule, authStorage, storageModule, commonComponent.webSocketService, componentScope)
     val loginRepository get() = repositoryModule.loginRepository

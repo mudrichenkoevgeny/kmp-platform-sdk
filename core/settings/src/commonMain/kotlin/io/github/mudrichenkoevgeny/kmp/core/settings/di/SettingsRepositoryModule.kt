@@ -1,6 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.settings.di
 
-import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.WebSocketService
+import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.core.settings.network.api.globalsettings.GlobalSettingsApi
 import io.github.mudrichenkoevgeny.kmp.core.settings.repository.globalsettings.GlobalSettingsRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.core.settings.storage.globalsettings.GlobalSettingsStorage

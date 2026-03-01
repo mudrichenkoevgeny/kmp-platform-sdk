@@ -1,6 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.security.di
 
-import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.WebSocketService
+import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.core.security.network.api.securitysettings.SecuritySettingsApi
 import io.github.mudrichenkoevgeny.kmp.core.security.repository.securitysettings.SecuritySettingsRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.core.security.storage.securitysettings.SecuritySettingsStorage

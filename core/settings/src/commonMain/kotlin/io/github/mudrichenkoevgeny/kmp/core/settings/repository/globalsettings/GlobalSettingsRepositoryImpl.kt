@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.core.settings.repository.globalsettings
 
 import co.touchlab.kermit.Logger
-import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.WebSocketService
+import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
 import io.github.mudrichenkoevgeny.kmp.core.settings.mapper.globalsettings.toGlobalSettings

@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.network.provider
 
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 interface AccessTokenProvider {
-    val accessTokenFlow: Flow<String?>
+    val accessTokenFlow: StateFlow<String?>
 }

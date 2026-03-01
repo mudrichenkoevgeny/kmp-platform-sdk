@@ -5,7 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.security.network.api.securitysetting
 import io.github.mudrichenkoevgeny.kmp.core.security.storage.securitysettings.SecuritySettingsStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 import co.touchlab.kermit.Logger
-import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.WebSocketService
+import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
 import io.github.mudrichenkoevgeny.kmp.core.security.mapper.securitysettings.toSecuritySettings

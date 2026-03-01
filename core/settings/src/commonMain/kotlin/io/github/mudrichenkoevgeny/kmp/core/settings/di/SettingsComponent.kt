@@ -1,6 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.settings.di
 
-import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.WebSocketService
+import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -29,6 +29,7 @@ class SettingsComponent(
         )
     }
     val globalSettingsApi get() = networkModule.globalSettingsApi
+    val settingsWebSocketMessageHandler get() = networkModule.settingsWebSocketMessageHandler
 
     private val repositoryModule by lazy {
         SettingsRepositoryModule(

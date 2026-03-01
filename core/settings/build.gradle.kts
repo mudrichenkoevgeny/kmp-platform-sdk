@@ -8,6 +8,7 @@ plugins {
     // 3. Uncomment androidLibrary block
     // 4. Remove android block
      id("com.android.library")
+    alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose)
     alias(libs.plugins.maven.publish)
@@ -50,6 +51,7 @@ kotlin {
             implementation(libs.shared.foundation.core.settings)
 
             // Kotlin
+            implementation(libs.kotlinx.serialization.json)
             api(libs.kotlinx.coroutines.core)
 
             // Compose

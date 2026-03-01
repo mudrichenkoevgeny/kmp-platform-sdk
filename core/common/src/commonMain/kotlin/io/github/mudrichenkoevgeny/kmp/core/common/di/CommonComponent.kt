@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.CommonErrorParse
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.network.httpclient.HttpClientConfigPlugin
 import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenProvider
+import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandler
 import io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo.model.DeviceInfo
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
 import kotlinx.coroutines.CoroutineScope
@@ -67,6 +68,7 @@ class CommonComponent(
     }
     val httpClient get() = networkModule.httpClient
     val webSocketService get() = networkModule.webSocketService
+    val commonWebSocketMessageHandler get() = networkModule.commonWebSocketMessageHandler
 
     fun init(
         appErrorParserCommonParser: AppErrorParser = CommonErrorParser,

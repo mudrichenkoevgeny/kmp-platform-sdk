@@ -4,10 +4,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenP
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.settings.AuthSettings
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.AccessToken
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.RefreshToken
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 interface AuthStorage : AccessTokenProvider {
-    override val accessTokenFlow: Flow<String?>
+    override val accessTokenFlow: StateFlow<String?>
     suspend fun getAccessToken(): AccessToken?
     suspend fun getRefreshToken(): RefreshToken?
     suspend fun getExpiresAt(): Long

@@ -1,6 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.security.di
 
-import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.WebSocketService
+import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator.PasswordPolicyValidator
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator.PasswordPolicyValidatorImpl
@@ -31,6 +31,7 @@ class SecurityComponent(
         )
     }
     val securitySettingsApi get() = networkModule.securitySettingsApi
+    val securityWebSocketMessageHandler get() = networkModule.securityWebSocketMessageHandler
 
     private val repositoryModule by lazy {
         SecurityRepositoryModule(

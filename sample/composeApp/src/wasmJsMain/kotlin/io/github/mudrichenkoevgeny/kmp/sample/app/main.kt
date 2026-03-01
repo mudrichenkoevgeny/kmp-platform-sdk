@@ -32,6 +32,7 @@ fun main() {
     MainScope().launch {
         appComponent.init()
         appComponent.refreshUserConfigurationUseCase() // or appComponent.syncDataUseCase()
+        appComponent.commonComponent.webSocketService.connect()
 
         ComposeViewport(container) {
             RootContent(appComponent)

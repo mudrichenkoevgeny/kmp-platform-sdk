@@ -5,7 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.websockets.MockW
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.storage.MockEncryptedSettings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.TestScope
-import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.WebSocketService
+import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
 import io.ktor.client.HttpClient
 
