@@ -6,8 +6,8 @@ import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.root.LoginRootComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.root.LoginRootComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.root.LoginRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.root.LoginRootComponentImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -33,6 +33,7 @@ class UserComponent(
     val loginRepository get() = repositoryModule.loginRepository
     val registrationRepository get() = repositoryModule.registrationRepository
     val userRepository get() = repositoryModule.userRepository
+    val passwordRepository get() = repositoryModule.passwordRepository
 
     val passwordPolicyValidator get() = securityComponent.passwordPolicyValidator
 
@@ -55,6 +56,8 @@ class UserComponent(
     val registrationByEmailUseCase get() = useCaseModule.registrationByEmailUseCase
     val refreshUserConfigurationUseCase get() = useCaseModule.refreshUserConfigurationUseCase
     val getAvailableUserAuthProvidersUseCase get() = useCaseModule.getAvailableUserAuthProvidersUseCase
+    val resetEmailPasswordUseCase get() = useCaseModule.resetEmailPasswordUseCase
+    val sendResetPasswordConfirmationToEmailUseCase get() = useCaseModule.sendResetPasswordConfirmationToEmailUseCase
 
     fun createLoginRootDialogComponent(
         componentContext: ComponentContext,

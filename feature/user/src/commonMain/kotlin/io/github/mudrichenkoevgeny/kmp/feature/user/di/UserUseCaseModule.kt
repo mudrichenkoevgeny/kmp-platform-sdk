@@ -11,6 +11,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByEm
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByGoogleUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByPhoneUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.SendLoginConfirmationToPhoneUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.password.ResetEmailPasswordUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.password.SendResetPasswordConfirmationToEmailUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.refreshtoken.RefreshTokenUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.registration.RegistrationByEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.registration.SendRegistrationConfirmationToEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
@@ -30,7 +33,10 @@ internal class UserUseCaseModule(
 
     // Auth
     val refreshTokenUseCase by lazy {
-
+        RefreshTokenUseCase(
+            refreshTokenRepository = repositoryModule.refreshTokenRepository,
+            authStorage = authStorage
+        )
     }
 
     val loginByEmailUseCase by lazy {
@@ -91,11 +97,15 @@ internal class UserUseCaseModule(
     }
 
     val resetEmailPasswordUseCase by lazy {
-
+        ResetEmailPasswordUseCase(
+            passwordRepository = repositoryModule.passwordRepository
+        )
     }
 
     val sendResetPasswordConfirmationToEmailUseCase by lazy {
-
+        SendResetPasswordConfirmationToEmailUseCase(
+            passwordRepository = repositoryModule.passwordRepository
+        )
     }
 
     // Configuration

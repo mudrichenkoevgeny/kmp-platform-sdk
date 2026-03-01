@@ -1,19 +1,22 @@
-package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.root
+package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.root
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.LoginDestination
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.email.LoginByEmailComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.phone.LoginByPhoneComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.welcome.LoginWelcomeComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.registration.email.RegistrationByEmailComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.LoginDestination
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.phone.LoginByPhoneComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.password.ResetEmailPasswordComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.registration.email.RegistrationByEmailComponentImpl
 
 class LoginRootComponentImpl(
     componentContext: ComponentContext,
@@ -34,6 +37,7 @@ class LoginRootComponentImpl(
             childFactory = ::createChild
         )
 
+    @OptIn(DelicateDecomposeApi::class)
     private fun createChild(
         config: LoginDestination,
         context: ComponentContext
@@ -45,8 +49,8 @@ class LoginRootComponentImpl(
                 getGlobalSettingsUseCase = settingsComponent.getGlobalSettingsUseCase,
                 getAvailableUserAuthProvidersUseCase = userComponent.getAvailableUserAuthProvidersUseCase,
                 loginByGoogleUseCase = userComponent.loginByGoogleUseCase,
-                onNavigateToLoginByEmail = { } ,
-                onNavigateToLoginByPhone = { },
+                onNavigateToLoginByEmail = { navigation.push(LoginDestination.LoginByEmail) },
+                onNavigateToLoginByPhone = { navigation.push(LoginDestination.LoginByPhone) },
                 onFinished = onFinished
             )
         )
@@ -55,8 +59,8 @@ class LoginRootComponentImpl(
                 componentContext = context,
                 loginByEmailUseCase = userComponent.loginByEmailUseCase,
                 validatePasswordUseCase = securityComponent.validatePasswordUseCase,
-                onNavigateToRegistrationByEmail = { },
-                onNavigateToForgotPassword = { } ,
+                onNavigateToRegistrationByEmail = { navigation.push(LoginDestination.RegistrationByEmail) },
+                onNavigateToForgotPassword = { navigation.push(LoginDestination.ResetEmailPassword) },
                 onBack = navigation::pop,
                 onFinished = onFinished
             )
@@ -77,6 +81,17 @@ class LoginRootComponentImpl(
                 registrationRepository = userComponent.registrationRepository,
                 sendRegistrationConfirmationToEmailUseCase = userComponent.sendRegistrationConfirmationToEmailUseCase,
                 registrationByEmailUseCase = userComponent.registrationByEmailUseCase,
+                validatePasswordUseCase = securityComponent.validatePasswordUseCase,
+                onBack = navigation::pop,
+                onFinished = onFinished
+            )
+        )
+        is LoginDestination.ResetEmailPassword -> LoginRootComponent.Child.ResetEmailPassword(
+            ResetEmailPasswordComponentImpl(
+                componentContext = context,
+                passwordRepository = userComponent.passwordRepository,
+                sendResetPasswordConfirmationToEmailUseCase = userComponent.sendResetPasswordConfirmationToEmailUseCase,
+                resetEmailPasswordUseCase = userComponent.resetEmailPasswordUseCase,
                 validatePasswordUseCase = securityComponent.validatePasswordUseCase,
                 onBack = navigation::pop,
                 onFinished = onFinished

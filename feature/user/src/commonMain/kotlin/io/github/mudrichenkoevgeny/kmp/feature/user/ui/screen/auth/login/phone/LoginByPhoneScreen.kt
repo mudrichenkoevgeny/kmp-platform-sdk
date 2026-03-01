@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.phone
+package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.phone
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -6,21 +6,18 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -31,16 +28,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextLinkStyles
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withLink
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
@@ -59,7 +48,6 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
     val state by component.state.subscribeAsState()
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -74,7 +62,8 @@ fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
                 PhoneInputContent(
                     state = currentState,
                     onPhoneChanged = component::onPhoneChanged,
-                    onSendCodeClick = component::onSendCodeClick
+                    onSendCodeClick = component::onSendCodeClick,
+                    onBackClick = component::onBackClick
                 )
             }
             is LoginByPhoneScreenState.CodeInput -> {
@@ -82,7 +71,8 @@ fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
                     state = currentState,
                     onCodeChanged = component::onCodeChanged,
                     onConfirmCodeClick = component::onConfirmCodeClick,
-                    onResetPhoneClick = component::onResetPhoneClick
+                    onResetPhoneClick = component::onResetPhoneClick,
+                    onBackClick = component::onBackClick
                 )
             }
         }
@@ -93,7 +83,8 @@ fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
 private fun PhoneInputContent(
     state: LoginByPhoneScreenState.PhoneInput,
     onPhoneChanged: (String) -> Unit,
-    onSendCodeClick: () -> Unit
+    onSendCodeClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Column(
@@ -102,10 +93,26 @@ private fun PhoneInputContent(
                 .padding(Dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(Res.string.enter_phone_number),
-                style = MaterialTheme.typography.headlineSmall
-            )
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                IconButton(
+                    onClick = onBackClick,
+                    modifier = Modifier.align(Alignment.CenterStart),
+                    enabled = !state.actionLoading
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null
+                    )
+                }
+
+                Text(
+                    text = stringResource(Res.string.enter_phone_number),
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
 
             Spacer(Modifier.height(Dimens.paddingLarge))
 
@@ -143,7 +150,8 @@ private fun CodeInputContent(
     state: LoginByPhoneScreenState.CodeInput,
     onCodeChanged: (String) -> Unit,
     onConfirmCodeClick: () -> Unit,
-    onResetPhoneClick: () -> Unit
+    onResetPhoneClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Column(
@@ -152,10 +160,26 @@ private fun CodeInputContent(
                 .padding(Dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(Res.string.enter_confirmation_code),
-                style = MaterialTheme.typography.headlineSmall
-            )
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                IconButton(
+                    onClick = onBackClick,
+                    modifier = Modifier.align(Alignment.CenterStart),
+                    enabled = !state.actionLoading
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null
+                    )
+                }
+
+                Text(
+                    text = stringResource(Res.string.enter_confirmation_code),
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
 
             Text(
                 text = stringResource(Res.string.code_sent_to, state.phoneNumber),
@@ -243,7 +267,8 @@ private fun LoginByPhonePhoneInputPreview() {
                         isPhoneNumberValid = true
                     ),
                     onPhoneChanged = {},
-                    onSendCodeClick = {}
+                    onSendCodeClick = {},
+                    onBackClick = {}
                 )
             }
         }
@@ -263,7 +288,8 @@ private fun LoginByPhonePhoneInputLoadingPreview() {
                         actionLoading = true
                     ),
                     onPhoneChanged = {},
-                    onSendCodeClick = {}
+                    onSendCodeClick = {},
+                    onBackClick = {}
                 )
             }
         }
@@ -284,7 +310,8 @@ private fun LoginByPhoneCodeInputTimerPreview() {
                     ),
                     onCodeChanged = {},
                     onConfirmCodeClick = {},
-                    onResetPhoneClick = {}
+                    onResetPhoneClick = {},
+                    onBackClick = {}
                 )
             }
         }
@@ -305,7 +332,8 @@ private fun LoginByPhoneCodeInputResendReadyPreview() {
                     ),
                     onCodeChanged = {},
                     onConfirmCodeClick = {},
-                    onResetPhoneClick = {}
+                    onResetPhoneClick = {},
+                    onBackClick = {}
                 )
             }
         }
@@ -326,7 +354,8 @@ private fun LoginByPhoneCodeInputErrorPreview() {
                     ),
                     onCodeChanged = {},
                     onConfirmCodeClick = {},
-                    onResetPhoneClick = {}
+                    onResetPhoneClick = {},
+                    onBackClick = {}
                 )
             }
         }

@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.phone
+package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.phone
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 

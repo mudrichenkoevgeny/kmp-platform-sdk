@@ -24,9 +24,9 @@
     <string name="send_code">Send code</string>
 
     <string name="enter_confirmation_code">Enter code</string>
-    <string name="code_sent_to">The code has been sent to %s</string>
+    <string name="code_sent_to">The code has been sent to %1$s</string>
     <string name="confirmation_code">Confirmation code</string>
-    <string name="resend_code_timer">Resend code in %d sec</string>
+    <string name="resend_code_timer">Resend code in %1$d sec</string>
     <string name="resend_code">Resend code</string>
     <string name="change_phone_number">Change phone number</string>
     <string name="confirm">Confirm</string>
@@ -34,7 +34,14 @@
     <string name="login_by_email">Login by Email</string>
     <string name="password">Password</string>
     <string name="forgot_password">Forgot password?</string>
-    <string name="no_account_register">Don\'t have an account? Register</string>
+    <string name="no_account_register">Don't have an account? Register</string>
+
+    <string name="registration_by_email">Registration by Email</string>
+    <string name="register">Register</string>
+
+    <string name="reset_password">Reset password</string>
+    <string name="new_password">New password</string>
+    <string name="change_email">Change email</string>
 
     <string name="legal_agreement_prefix">By signing in, you agree to our</string>
     <string name="and">and</string>

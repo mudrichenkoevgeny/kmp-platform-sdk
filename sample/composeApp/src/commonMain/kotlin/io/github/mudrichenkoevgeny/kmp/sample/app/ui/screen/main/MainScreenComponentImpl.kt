@@ -11,7 +11,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.root.LoginRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.root.LoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.sample.app.di.AppComponent
 import io.github.mudrichenkoevgeny.kmp.sample.app.ui.screen.home.HomeScreenComponentImpl
 import io.github.mudrichenkoevgeny.kmp.sample.app.ui.screen.profile.ProfileScreenComponentImpl

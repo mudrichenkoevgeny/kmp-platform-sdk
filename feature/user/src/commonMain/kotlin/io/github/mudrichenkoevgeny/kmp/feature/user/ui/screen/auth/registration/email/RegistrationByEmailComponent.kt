@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.registration.email
+package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.registration.email
 
 import com.arkivanov.decompose.value.Value
 

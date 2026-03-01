@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.email
+package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email
 
 import com.arkivanov.decompose.value.Value
 

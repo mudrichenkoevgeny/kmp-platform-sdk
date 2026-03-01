@@ -35,7 +35,7 @@ import io.github.mudrichenkoevgeny.kmp.sample.app.di.LocalAppComponent
 import io.github.mudrichenkoevgeny.kmp.sample.app.ui.screen.home.HomeScreen
 import io.github.mudrichenkoevgeny.kmp.sample.app.ui.screen.profile.ProfileScreen
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.root.LoginRootScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.root.LoginRootScreen
 import io.github.mudrichenkoevgeny.kmp.sample.app.ui.screen.home.HomeScreenComponent
 import org.jetbrains.compose.resources.stringResource
 

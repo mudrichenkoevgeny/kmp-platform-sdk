@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.welcome
+package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
@@ -79,9 +79,11 @@ class LoginWelcomeComponentImpl(
         when (authProvider) {
             UserAuthProvider.EMAIL -> {
                 onNavigateToLoginByEmail()
+                stopActionState()
             }
             UserAuthProvider.PHONE -> {
                 onNavigateToLoginByPhone()
+                stopActionState()
             }
             UserAuthProvider.GOOGLE -> {
                 loginByGoogle()

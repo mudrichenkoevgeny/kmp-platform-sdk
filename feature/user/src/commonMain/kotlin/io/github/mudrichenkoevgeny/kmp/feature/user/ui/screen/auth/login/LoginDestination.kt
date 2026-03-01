@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login
+package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login
 
 import kotlinx.serialization.Serializable
 
@@ -8,6 +8,5 @@ sealed interface LoginDestination {
     @Serializable object LoginByEmail : LoginDestination
     @Serializable object LoginByPhone : LoginDestination
     @Serializable object RegistrationByEmail : LoginDestination
-//    @Serializable object ForgotPassword : LoginDestination
-//    @Serializable object Registration : LoginDestination
+    @Serializable object ResetEmailPassword : LoginDestination
 }

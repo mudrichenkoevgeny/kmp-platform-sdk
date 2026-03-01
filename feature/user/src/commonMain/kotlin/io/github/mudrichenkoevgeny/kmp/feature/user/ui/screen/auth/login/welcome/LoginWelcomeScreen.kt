@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.welcome
+package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize

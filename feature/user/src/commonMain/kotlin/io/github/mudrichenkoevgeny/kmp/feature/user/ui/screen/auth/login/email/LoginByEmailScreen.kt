@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.email
+package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -6,23 +6,18 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,20 +30,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextLinkStyles
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withLink
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
@@ -84,7 +70,8 @@ fun LoginByEmailScreen(component: LoginByEmailComponent) {
                     onTogglePasswordVisibility = component::onTogglePasswordVisibility,
                     onLoginClick = component::onLoginClick,
                     onForgotPasswordClick = component::onForgotPasswordClick,
-                    onRegistrationClick = component::onRegistrationClick
+                    onRegistrationClick = component::onRegistrationClick,
+                    onBackClick = component::onBackClick
                 )
             }
         }
@@ -99,7 +86,8 @@ private fun LoginByEmailContent(
     onTogglePasswordVisibility: () -> Unit,
     onLoginClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
-    onRegistrationClick: () -> Unit
+    onRegistrationClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Column(
@@ -108,10 +96,26 @@ private fun LoginByEmailContent(
                 .padding(Dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(Res.string.login_by_email),
-                style = MaterialTheme.typography.headlineSmall
-            )
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                IconButton(
+                    onClick = onBackClick,
+                    modifier = Modifier.align(Alignment.CenterStart),
+                    enabled = !state.actionLoading
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null
+                    )
+                }
+
+                Text(
+                    text = stringResource(Res.string.login_by_email),
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
 
             Spacer(Modifier.height(Dimens.paddingLarge))
 
@@ -223,7 +227,8 @@ private fun LoginByEmailContentPreview() {
                     onTogglePasswordVisibility = {},
                     onLoginClick = {},
                     onForgotPasswordClick = {},
-                    onRegistrationClick = {}
+                    onRegistrationClick = {},
+                    onBackClick = {}
                 )
             }
         }
@@ -246,7 +251,8 @@ private fun LoginByEmailContentLoadingPreview() {
                     onTogglePasswordVisibility = {},
                     onLoginClick = {},
                     onForgotPasswordClick = {},
-                    onRegistrationClick = {}
+                    onRegistrationClick = {},
+                    onBackClick = {}
                 )
             }
         }
@@ -269,7 +275,8 @@ private fun LoginByEmailContentErrorPreview() {
                     onTogglePasswordVisibility = {},
                     onLoginClick = {},
                     onForgotPasswordClick = {},
-                    onRegistrationClick = {}
+                    onRegistrationClick = {},
+                    onBackClick = {}
                 )
             }
         }

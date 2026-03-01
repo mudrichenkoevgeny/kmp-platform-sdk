@@ -3,7 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.sample.app.ui.screen.main
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.login.root.LoginRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.root.LoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.sample.app.ui.screen.home.HomeScreenComponent
 import io.github.mudrichenkoevgeny.kmp.sample.app.ui.screen.profile.ProfileScreenComponent
 import kotlinx.serialization.Serializable
