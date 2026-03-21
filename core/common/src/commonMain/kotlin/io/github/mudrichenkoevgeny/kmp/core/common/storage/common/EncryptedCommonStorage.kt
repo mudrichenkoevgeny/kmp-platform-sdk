@@ -2,6 +2,9 @@ package io.github.mudrichenkoevgeny.kmp.core.common.storage.common
 
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
 
+/**
+ * Default [CommonStorage] implementation backed by an [EncryptedSettings] store.
+ */
 class EncryptedCommonStorage(
     private val encryptedSettings: EncryptedSettings
 ) : CommonStorage {

@@ -7,13 +7,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.Web
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
 @OptIn(InternalApi::class)
 fun mockSecurityComponent(
     httpClient: HttpClient = HttpClient(),
     webSocketService: WebSocketService = MockWebSocketService(),
-    parentScope: CoroutineScope = TestScope()
+    parentScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 ): SecurityComponent {
     return SecurityComponent(
         encryptedSettings = MockEncryptedSettings(),

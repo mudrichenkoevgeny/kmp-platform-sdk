@@ -1,0 +1,63 @@
+---
+description: Project identity, stack, repo layout, module boundaries
+alwaysApply: true
+---
+
+# KMP Platform SDK — Overview
+
+## Project identity
+- **Type:** Kotlin Multiplatform **library (SDK)** meant to be added as a dependency to real applications.
+- **Publishing:** Maven Central via `com.vanniktech.maven.publish`; versions are managed in the root `build.gradle.kts`.
+- **Coordinates:** group `io.github.mudrichenkoevgeny`, artifact ids follow `kmp-platform-sdk-*` convention for published subprojects.
+
+## Tech stack (high level)
+- **Kotlin:** 2.x, coroutines, Kotlinx Serialization.
+- **UI:** Compose Multiplatform (including `composeResources` + generated `Res`).
+- **Architecture:** Decompose (component model).
+- **Networking:** Ktor **client** (HTTP + WebSockets).
+- **Serialization:** `kotlinx.serialization`, `FoundationJson` (shared foundation).
+- **Security/storage (Android-first):** Android DataStore (encrypted settings abstraction), Google Tink.
+- **Logging:** Kermit.
+- **Platforms:** Android + WasmJs are enabled; iOS scaffolding exists but is currently commented out in Gradle.
+
+## Repository layout
+- **Root:** `settings.gradle.kts`, `build.gradle.kts`, `gradle/libs.versions.toml`.
+- **Modules:**
+  - `core/` — reusable building blocks and shared infrastructure used by features.
+  - `feature/` — feature-specific capabilities.
+  - `sample/` — reference host applications (wiring only).
+  - `bom/` — version alignment for consumers.
+
+## Module structure
+### Core (`core/`)
+- `core/` — reusable building blocks and shared infrastructure used by features.
+- `core/common`
+  - Network bootstrap (Ktor client + WebSocket service)
+  - App error model and error parsing pipeline
+  - Platform abstractions for encrypted settings storage
+  - Common UI building blocks (e.g. loading/error components)
+  - DI/wiring components (e.g. `CommonComponent`, network modules)
+- `core/settings`
+  - Global settings repository + storage implementations
+  - Settings-related WebSocket message handling (when applicable)
+- `core/security`
+  - Security settings storage/repositories
+  - Security-specific error parsing (`SecurityErrorParser`)
+  - Token/password validation use cases (when applicable)
+
+### Feature (`feature/`)
+- `feature/user`
+  - User auth/networking (`HttpClientConfigPlugin` implementations)
+  - User settings/repositories + encrypted storage wrappers
+  - User error model and parsing (`UserErrorParser`)
+  - Use cases + Decompose screen components
+
+### Other
+- `sample/*`
+  - Reference host apps: wiring `CommonComponent`/feature components, providing runtime `baseUrl`, registering error parsers, and registering WebSocket message handlers.
+  - Treat sample as the source of truth for host integration.
+
+## Boundaries (non-negotiable)
+- `core/common` must not depend on feature modules (like `feature/user`).
+- Feature modules depend on relevant `core/*` modules and shared foundation; they must not hardcode host app details.
+- `sample/*` is for wiring only; do not move SDK/business logic into `sample/*`.

@@ -2,6 +2,9 @@ package io.github.mudrichenkoevgeny.kmp.core.common.ui.theme
 
 import androidx.compose.ui.unit.dp
 
+/**
+ * Centralized dimension constants used by shared UI components.
+ */
 object Dimens {
     val paddingSmall = 8.dp
     val paddingMedium = 16.dp

@@ -1,0 +1,21 @@
+# KMP Platform SDK — Project Rules (Index)
+
+This repository uses **Cursor rules** under `.cursor/rules/*.mdc` for maintainable, scoped guidance.
+
+Keep this file short; add new/updated rules as separate `.mdc` files.
+
+## Core principles (always on)
+
+- **Precedence:** project rules in this repo override conflicting Cursor User Rules. What matters for contributors is under `.cursor/rules/` (committed), not personal global rules.
+- This is a **Kotlin Multiplatform library (SDK)** — not a standalone app. Avoid hardcoded app assumptions; prefer configuration via constructor parameters (and optional wiring in `sample/*`).
+- **FQN in Kotlin code is forbidden**: do not write fully qualified names in expressions/type annotations/generics; use imports (or typealiases). Only keep minimal FQN when imports are impossible/ambiguous, and explain the reason in PR/commit message.
+- Never suggest or run tests automatically after test changes.
+
+## Detailed rules live in `.cursor/rules/`
+
+- `project-overview.mdc` — project identity, stack, repo/module layout, boundaries.
+- `architecture-patterns.mdc` — wiring/bootstrap conventions, layering, networking, errors.
+- `docs-kdoc-basics.mdc` + `docs-kdoc-type-requirements.mdc` — **mandatory** KDoc and documentation rules.
+- `localization.mdc` — Compose localization resource layout and naming.
+- `testing-style.mdc` — test conventions/constraints (if/when tests exist).
+- `ai-workflow.mdc` — dependency changes guidance and SDK vs sample boundaries.

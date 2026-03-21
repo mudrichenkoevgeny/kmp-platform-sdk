@@ -14,6 +14,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 
+/**
+ * A fullscreen overlay with a loading spinner.
+ *
+ * This composable is intended for blocking operations (e.g. waiting for auth/network).
+ */
 @Composable
 fun BoxScope.FullscreenOverlayLoading(
     modifier: Modifier = Modifier,

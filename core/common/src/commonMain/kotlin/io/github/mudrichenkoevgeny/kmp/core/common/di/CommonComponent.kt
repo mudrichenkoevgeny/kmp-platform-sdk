@@ -6,11 +6,29 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.CommonErrorParse
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.network.httpclient.HttpClientConfigPlugin
 import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenProvider
-import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandler
 import io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo.model.DeviceInfo
+import io.github.mudrichenkoevgeny.kmp.core.common.platform.externallauncher.ExternalLauncher
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
+import io.github.mudrichenkoevgeny.kmp.core.common.storage.common.CommonStorage
 import kotlinx.coroutines.CoroutineScope
 
+/**
+ * Root SDK wiring component for `core/common`.
+ * This class is responsible for assembling and exposing the common infrastructure:
+ * - encrypted settings access (`commonStorage`)
+ * - platform abstractions (e.g. `externalLauncher`, `platformRepository`)
+ * - networking bootstrap (`httpClient`, `webSocketService`)
+ * - error parsing pipeline (`appErrorParser`) that is initialized via [init].
+ * Constructor dependencies:
+ * - [EncryptedSettings]: backing store for [CommonStorage].
+ * - [DeviceInfo]: device identity for repositories and WebSocket bootstrap.
+ * - `baseUrl`: HTTP and WebSocket endpoint base.
+ * - [HttpClientConfigPlugin] list: optional extensions to the shared Ktor HTTP client (empty by default).
+ * - [AccessTokenProvider]: token for authenticated HTTP and WebSocket.
+ * - [CoroutineScope]: application scope for long-running SDK work (for example WebSockets).
+ * - `platformContext`: optional platform handle for abstractions such as [ExternalLauncher]; may be null.
+ * Host apps (see `sample/`) must call [init] before accessing [appErrorParser].
+ */
 class CommonComponent(
     val encryptedSettings: EncryptedSettings,
     deviceInfo: DeviceInfo,
@@ -70,6 +88,12 @@ class CommonComponent(
     val webSocketService get() = networkModule.webSocketService
     val commonWebSocketMessageHandler get() = networkModule.commonWebSocketMessageHandler
 
+    /**
+     * Builds and installs the root [AppErrorParser] chain used by composition locals and UI.
+     *
+     * @param appErrorParserCommonParser Parser used when no feature parser handles an error (defaults to [CommonErrorParser]).
+     * @param appErrorParserSpecificParsers Feature parsers consulted before the common parser.
+     */
     fun init(
         appErrorParserCommonParser: AppErrorParser = CommonErrorParser,
         appErrorParserSpecificParsers: List<AppErrorParser> = emptyList()

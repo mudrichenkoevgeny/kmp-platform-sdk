@@ -7,6 +7,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOf
 
+/**
+ * In-memory test double for [AccessTokenProvider].
+ *
+ * @param token Initial access token value exposed via [accessTokenFlow].
+ */
 class MockAccessTokenProvider(
     token: String? = "mock_access_token"
 ) : AccessTokenProvider {

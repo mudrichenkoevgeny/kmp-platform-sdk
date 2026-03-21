@@ -1,0 +1,60 @@
+---
+description: Architecture, wiring, bootstrap, config, naming conventions
+globs: **/*.kt
+alwaysApply: false
+---
+
+# Architecture and patterns
+
+## Host app wiring (sample is reference)
+- `sample/*` is the reference host application and is allowed to do runtime wiring:
+  - instantiate `CommonComponent` / feature components
+  - pass runtime config like `baseUrl`
+  - register `AppErrorParser` feature parsers in `CommonComponent.init(...)`
+  - register WebSocket message handlers
+- SDK modules (`core/*`, `feature/*`) must not assume the host entry point; they should be usable by any app that provides the required constructor parameters.
+
+## Networking (Ktor client + WebSockets)
+- HTTP client bootstrap:
+  - Common default configuration is applied in `core/common` via `HttpClientCommonConfig.setupCommonConfig(...)`.
+  - Additional client behavior must be expressed as `HttpClientConfigPlugin` implementations (in the owning module).
+- WebSockets:
+  - SDK provides WebSocket plumbing in `core/common` (`KtorWebSocketService` + base message handler wiring).
+  - Feature-specific message interpretation belongs in `WebSocketMessageHandler` implementations in the corresponding module.
+
+## Error modeling and parsing
+- Errors are modeled as `AppError` implementations with:
+  - a stable machine-readable `code`
+  - optional `args` map with additional metadata
+  - an `isRetryable` flag
+- Parsing to user-facing strings is done via `AppErrorParser`:
+  - `CommonErrorParser` is the fallback authority for common codes.
+  - Feature parsers (e.g. user/security) map their codes to localized `composeResources` strings.
+
+## Layering (keep responsibilities separated)
+- Prefer this general flow:
+  - Compose UI / Decompose components
+  - use cases (or use-case modules)
+  - repositories (network/storage orchestration)
+  - storage abstractions + network clients
+- Repositories should be responsible for:
+  - calling network endpoints / parsing responses
+  - mapping failures into `AppError` / `AppResult.Error`
+- Decompose components (presentation layer) own screen state and trigger actions:
+  - they call use cases/repositories via injected collaborators
+  - they translate `AppResult`/errors into `*ScreenState` (or an equivalent state model)
+- UI composables (render layer) should only:
+  - render the current screen state
+  - call user-intent handlers exposed by the Decompose component
+  - display localized strings via `AppErrorParser` (e.g. via `CompositionLocal` helpers)
+
+## Configuration & runtime parameters
+- Runtime config values (e.g. `baseUrl`) must be passed via constructor parameters into components/modules.
+- Avoid hardcoding environment values inside `core/*` or `feature/*` modules.
+
+## Naming / packaging
+- Package by layer/feature, using existing conventions from this repo:
+  - `ui/`, `model/`, `usecase/`, `repository/`, `storage/`, `network/`, `error/`, `di/`
+  - if a dedicated `config` package exists in some module, follow that module’s local convention
+- Use module prefixes in resource string ids:
+  - `error_common_*`, `error_user_*`, `error_security_*`.

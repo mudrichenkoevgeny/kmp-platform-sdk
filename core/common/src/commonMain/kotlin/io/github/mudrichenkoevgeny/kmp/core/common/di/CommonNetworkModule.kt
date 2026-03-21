@@ -13,6 +13,16 @@ import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.Logger
 import kotlinx.coroutines.CoroutineScope
 
+/**
+ * Internal networking wiring for `core/common`.
+ *
+ * Provides:
+ * - a configured Ktor `httpClient` with common defaults + installed [HttpClientConfigPlugin]s
+ * - a default [WebSocketMessageHandler] for common WebSocket frames
+ * - a [WebSocketService] implementation that shares the HTTP client, base URL, and token provider,
+ *   dispatches incoming frames to handlers registered via [WebSocketService.updateWebSocketMessageHandlers],
+ *   and exposes frames that no handler consumed through [WebSocketService.observeEvents]
+ */
 internal class CommonNetworkModule(
     private val baseUrl: String,
     private val httpClientConfigPlugins: List<HttpClientConfigPlugin> = emptyList(),

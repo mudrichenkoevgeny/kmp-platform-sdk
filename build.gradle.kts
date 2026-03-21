@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+
 plugins {
     alias(libs.plugins.multiplatform).apply(false)
     // TODO: [KMP_ANDROID]
@@ -17,6 +20,20 @@ plugins {
 }
 
 subprojects {
+    tasks.withType<KotlinCompilationTask<*>>().configureEach {
+        compilerOptions {
+            freeCompilerArgs.add("-opt-in=kotlin.uuid.ExperimentalUuidApi")
+        }
+    }
+
+    afterEvaluate {
+        extensions.findByType<KotlinMultiplatformExtension>()?.apply {
+            sourceSets.configureEach {
+                languageSettings.optIn("kotlin.uuid.ExperimentalUuidApi")
+            }
+        }
+    }
+
     plugins.withId("com.vanniktech.maven.publish") {
         extensions.configure<com.vanniktech.maven.publish.MavenPublishBaseExtension> {
             val projectPathName = project.path

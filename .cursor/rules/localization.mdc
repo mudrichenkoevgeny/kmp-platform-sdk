@@ -1,0 +1,28 @@
+---
+description: Compose localization resource layout and naming
+globs: **/composeResources/**/*.xml
+alwaysApply: false
+---
+
+# Localization (Compose Resources)
+
+## Resource layout
+- Localization resources live under `*/src/*/composeResources/values*/strings.xml`.
+  - Example:
+    - `core/common/src/commonMain/composeResources/values/strings.xml`
+    - `core/common/src/commonMain/composeResources/values-ru/strings.xml`
+- Use ISO language code in the folder name suffix:
+  - `values-ru`, `values-en`, etc.
+- Keep **one** `strings.xml` per locale folder (do not split files).
+
+## Naming conventions
+- Prefer stable, code-driven resource ids that match parsers:
+  - common errors: `error_common_*`
+  - user errors: `error_user_*`
+  - security errors: `error_security_*`
+- Avoid ad-hoc ids; new user-facing text introduced for an error should be added alongside the error parser mapping.
+
+## Completeness
+- When you add a new error code / UI string referenced from an `AppErrorParser`:
+  - add translations in every existing locale folder in that module
+  - keep the fallback behavior in `CommonErrorParser` for unknown codes

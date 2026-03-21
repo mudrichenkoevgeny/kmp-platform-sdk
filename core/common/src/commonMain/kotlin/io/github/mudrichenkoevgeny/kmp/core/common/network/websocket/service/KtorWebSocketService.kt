@@ -29,9 +29,17 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlin.time.Clock
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+/**
+ * Ktor-based implementation of [WebSocketService].
+ *
+ * It connects to the `WebSocketContract` endpoint, routes incoming frames through a list of
+ * [WebSocketMessageHandler]s, and exposes unhandled frames through [observeEvents].
+ *
+ * The service restarts the connection automatically when access token changes
+ * (see [AccessTokenProvider.accessTokenFlow]).
+ */
 class KtorWebSocketService(
     private val httpClient: HttpClient,
     private val baseUrl: String,
@@ -86,7 +94,6 @@ class KtorWebSocketService(
         this.webSocketMessageHandlers = webSocketMessageHandlers
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     override suspend fun sendEvent(
         type: String,
         payload: JsonElement?,

@@ -5,6 +5,15 @@ import android.content.Intent
 import androidx.core.net.toUri
 import io.github.mudrichenkoevgeny.kmp.core.common.platform.filesystem.AndroidFileOpener
 
+/**
+ * Android [ExternalLauncher] that starts system activities for URLs, `mailto:`, and local files.
+ *
+ * HTTP and HTTPS paths passed to [openFile] are opened like [openUrl]. Other paths are delegated to
+ * [AndroidFileOpener] (requires a configured `FileProvider` in the host app).
+ *
+ * @param context Application or activity context; used with [Intent.FLAG_ACTIVITY_NEW_TASK] for cold starts.
+ * @param fileOpener Opens non-http(s) paths via content URIs.
+ */
 class AndroidExternalLauncher(
     private val context: Context,
     private val fileOpener: AndroidFileOpener

@@ -7,6 +7,13 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.serialization.json.JsonElement
 
+/**
+ * Simple in-memory [WebSocketService] implementation for previews/tests.
+ *
+ * - `connect`/`disconnect` are no-ops
+ * - [observeEvents] exposes an internal [MutableSharedFlow] of [SocketFrame]
+ * - sending methods are no-ops (events are not generated automatically)
+ */
 class MockWebSocketService : WebSocketService {
     private val _events = MutableSharedFlow<SocketFrame>()
 

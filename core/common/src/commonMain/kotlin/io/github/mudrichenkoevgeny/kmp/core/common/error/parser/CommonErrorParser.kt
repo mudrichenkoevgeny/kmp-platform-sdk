@@ -8,6 +8,13 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.naming.ClientCommonErro
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.CommonErrorCodes
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Fallback [AppErrorParser] for common error codes.
+ *
+ * Handles [CommonErrorCodes] values from shared foundation, [ClientCommonErrorCodes] from this module,
+ * and the overlapping server-style codes listed in the implementation. Any other code maps to
+ * [Res.string.error_common_unknown].
+ */
 object CommonErrorParser : AppErrorParser {
     @Composable
     override fun parse(appError: AppError): String = when (appError.code) {

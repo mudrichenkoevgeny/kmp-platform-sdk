@@ -21,6 +21,10 @@ sealed class CommonError(
 
     /**
      * Represents an error with an undefined or unrecognized cause.
+     *
+     * This error does not set [args].
+     *
+     * @param isRetryable Whether the failure is considered transient and can be retried.
      */
     class Unknown(
         isRetryable: Boolean = false
@@ -32,7 +36,11 @@ sealed class CommonError(
 
     /**
      * Represents a technical or unexpected system failure.
-     * @property throwable The underlying exception that caused the failure.
+     *
+     * This error does not set [args].
+     *
+     * @param throwable The underlying exception that caused the failure.
+     * @param isRetryable Whether the failure is considered transient and can be retried.
      */
     class Internal(
         val throwable: Throwable,
@@ -43,6 +51,14 @@ sealed class CommonError(
         isRetryable = isRetryable
     )
 
+    /**
+     * Represents a failure caused by the absence of internet connectivity.
+     *
+     * This error does not set [args] (it is meant to be mapped to a localized message by [code]).
+     *
+     * @param throwable Underlying exception/cause.
+     * @param isRetryable Whether the failure is transient and can be retried.
+     */
     class NoInternetConnection(
         val throwable: Throwable,
         isRetryable: Boolean = true
@@ -52,6 +68,12 @@ sealed class CommonError(
         isRetryable = isRetryable
     )
 
+    /**
+     * Represents a network transport failure (e.g. timeouts, DNS issues) that is typically transient.
+     *
+     * @param throwable Underlying exception/cause.
+     * @param isRetryable Whether the failure is transient and can be retried.
+     */
     class Network(
         val throwable: Throwable,
         isRetryable: Boolean = true
@@ -61,6 +83,14 @@ sealed class CommonError(
         isRetryable = isRetryable
     )
 
+    /**
+     * Represents a broken contract between layers (e.g. invalid input/state that should not happen).
+     *
+     * This error does not set [args].
+     *
+     * @param throwable Underlying exception that indicates the contract violation.
+     * @param isRetryable Contract violations are usually non-retryable.
+     */
     class ContractViolation(
         val throwable: Throwable,
         isRetryable: Boolean = false
@@ -70,6 +100,15 @@ sealed class CommonError(
         isRetryable = isRetryable
     )
 
+    /**
+     * Represents a lifecycle-related error caused by invalid runtime state transitions.
+     *
+     * The [message] is propagated into [AppError.args] under [CommonErrorArgs.MESSAGE] so that
+     * UI/localization can use it in a user-friendly way.
+     *
+     * @param message Lifecycle error message to include in [args].
+     * @param isRetryable Whether the failure is transient and can be retried.
+     */
     class Lifecycle(
         message: String,
         isRetryable: Boolean = false

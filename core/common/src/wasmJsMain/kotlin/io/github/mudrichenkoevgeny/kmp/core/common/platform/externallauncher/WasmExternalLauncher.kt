@@ -2,8 +2,18 @@ package io.github.mudrichenkoevgeny.kmp.core.common.platform.externallauncher
 
 import kotlinx.browser.window
 
+/**
+ * Host `encodeURIComponent` binding for building `mailto:` query segments (subject/body) safely.
+ *
+ * @param s Raw string to encode for use in a URI component.
+ */
 external fun encodeURIComponent(s: String): String
 
+/**
+ * Wasm/JS [ExternalLauncher] that uses [window.open] (`_blank` for generic URLs, `_self` for `mailto:`).
+ *
+ * [openFile] delegates to [openUrl] because the browser cannot open arbitrary host filesystem paths like Android.
+ */
 class WasmExternalLauncher : ExternalLauncher {
 
     override fun openUrl(url: String) {

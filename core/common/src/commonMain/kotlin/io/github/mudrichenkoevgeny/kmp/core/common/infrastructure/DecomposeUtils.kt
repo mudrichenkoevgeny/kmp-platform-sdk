@@ -21,6 +21,17 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * Compose/Decompose helpers used by SDK UI components.
+ *
+ * These utilities bind coroutines/flows to Decompose [Lifecycle] so that resources are cleaned up
+ * when a component is destroyed.
+ */
+/**
+ * Creates a [ComponentContext] with an attached [LifecycleRegistry].
+ *
+ * Intended for cases when SDK code needs a standalone component context (e.g. previews).
+ */
 @Composable
 fun rememberComponentContext(): ComponentContext {
     val lifecycle = remember { LifecycleRegistry() }
@@ -33,12 +44,24 @@ fun rememberComponentContext(): ComponentContext {
     return remember { DefaultComponentContext(lifecycle) }
 }
 
+/**
+ * Creates a [CoroutineScope] that is canceled when the Decompose component is destroyed.
+ */
 fun ComponentContext.componentCoroutineScope(): CoroutineScope {
     val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     lifecycle.doOnDestroy { scope.cancel() }
     return scope
 }
 
+/**
+ * Converts a cold/hot [Flow] into a Decompose/Essenty [Value] that is updated on each emission.
+ *
+ * The created coroutine scope is canceled when [lifecycle] is destroyed.
+ *
+ * @param initialValue Value to use before the first emission.
+ * @param lifecycle Component lifecycle to bind cancellation to.
+ * @param context Coroutine context used for collecting the flow.
+ */
 fun <T : Any> Flow<T>.asValue(
     initialValue: T,
     lifecycle: Lifecycle,

@@ -11,6 +11,16 @@ import kotlinx.io.IOException
 import kotlinx.serialization.SerializationException
 import kotlin.coroutines.cancellation.CancellationException
 
+/**
+ * Executes an HTTP call and converts its result into [AppResult].
+ *
+ * Error mapping:
+ * - [ApiException] -> server payload into [CommonError] via [toServerError]
+ * - IO/network errors -> `CommonError.NoInternetConnection` or `CommonError.Network`
+ * - JSON/serialization errors -> `CommonError.ContractViolation`
+ *
+ * @param isRetryable Indicates whether the operation should be treated as retryable when an IO failure happens.
+ */
 suspend inline fun <reified T> HttpClient.callResult(
     isRetryable: Boolean = false,
     block: HttpClient.() -> HttpResponse
@@ -35,4 +45,9 @@ suspend inline fun <reified T> HttpClient.callResult(
     AppResult.Error(CommonError.Internal(t, isRetryable))
 }
 
+/**
+ * Expected platform check for detecting "no internet" conditions from a transport exception.
+ *
+ * The networking layer should use this to decide between `CommonError.NoInternetConnection` and `CommonError.Network`.
+ */
 expect fun isNoInternetException(e: Throwable): Boolean

@@ -1,0 +1,49 @@
+---
+description: Mandatory KDoc requirements by type (components, errors, value classes, public APIs)
+globs: **/*.kt
+alwaysApply: false
+---
+
+# Documentation requirements by type — mandatory
+
+## Public API (interfaces / public classes)
+- Interface KDoc:
+  - class-level KDoc: role/purpose
+  - each method: purpose + `@param` + `@return`
+- For public (non-internal) classes, provide class-level KDoc that clarifies concrete behavior and intended usage.
+
+## Component / wiring classes (`*Component`, `*Module`)
+- Every wiring component/module must have class-level KDoc describing:
+  - what dependencies it requires (constructor parameters)
+  - what it provides (public properties/functions)
+  - any initialization contract (e.g. “must call `init()` before using `appErrorParser`”)
+- Aggregate/wiring modules should clearly state which submodules they include/coordinate.
+
+## Error models (sealed error hierarchies implementing `AppError`)
+- For each sealed hierarchy (e.g. `CommonError`, `SecurityError`, `UserError`):
+  - class-level KDoc: purpose + meaning of `code`, `args`, and `isRetryable`
+  - each variant:
+    - short description of when it happens
+    - `@param` for ctor params (if any)
+    - describe `args` usage:
+      - what keys can appear in `args`
+      - whether values are safe for user display and/or logging
+
+## Value classes / identifier wrappers (`@JvmInline value class`)
+- For value classes that wrap UUID/parseable identifiers and cross network/storage/serialization boundaries:
+  - provide `asHexDashString()` instance method
+  - provide `companion object fun generate()`
+  - provide parsing extensions following the project naming:
+    - `String.toXxxOrNull()` when invalid input should be handled gracefully
+    - `String.toXxxOrThrow()` when invalid input must be treated as a programming/contract violation
+- If a value class is intentionally “opaque” (e.g. tokens not parsed from string), do not add parsing extensions; still document its invariants/purpose.
+
+## Localization-aware types
+- Any class that maps error codes to localized strings (i.e. implementations of `AppErrorParser`) must have KDoc explaining:
+  - what codes it handles
+  - what it returns for unknown/unmapped codes (delegate to `CommonErrorParser`).
+
+## KMP/UI state models
+- For UI state sealed interfaces/classes used by screens (e.g. `*ScreenState`):
+  - provide KDoc on the root sealed type to explain the lifecycle/meaning of states
+  - each state variant should clarify what the UI should display/do.

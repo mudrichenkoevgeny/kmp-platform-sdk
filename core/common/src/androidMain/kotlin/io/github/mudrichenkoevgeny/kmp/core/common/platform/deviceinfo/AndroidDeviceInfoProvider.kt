@@ -7,9 +7,20 @@ import io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo.model.Dev
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.UserClientType
 import java.util.Locale
 
+/**
+ * Android [DeviceInfoProvider] that reads app metadata from the host `PackageManager`, device fields from
+ * [Build], and the default [Locale].
+ *
+ * @param context Any application context used for package metadata.
+ */
 class AndroidDeviceInfoProvider(
     private val context: Context
 ) : DeviceInfoProvider {
+    /**
+     * @return [DeviceInfo] with [UserClientType.ANDROID], a newly generated [DeviceId], manufacturer and model
+     * as device name, default locale language code, the host app `versionName` (or [DeviceInfo.VERSION_UNKNOWN]),
+     * and the Android OS release string from `Build`.
+     */
     override fun getDeviceInfo(): DeviceInfo {
         val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
         val appVersion = packageInfo.versionName

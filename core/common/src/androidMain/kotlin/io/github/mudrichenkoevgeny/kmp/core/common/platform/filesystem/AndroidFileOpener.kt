@@ -6,17 +6,22 @@ import androidx.core.content.FileProvider
 import java.io.File
 
 /**
- * Helper for opening local files on Android using [FileProvider].
- * Requirements for usage:
- * 1. Provide a 'res/xml/file_paths.xml' with appropriate paths.
- * 2. Add a FileProvider to AndroidManifest.xml.
- * @param context Android context for starting activities.
- * @param authority Should match the authority defined in AndroidManifest.xml.
+ * Opens on-disk files on Android by granting a temporary content URI through [FileProvider].
+ *
+ * Host integration checklist:
+ * - Add `res/xml/file_paths.xml` with the directories you expose.
+ * - Register a `FileProvider` in `AndroidManifest.xml` whose `android:authorities` matches the
+ *   `authority` passed to this class.
  */
 class AndroidFileOpener(
     private val context: Context,
     private val authority: String
 ) {
+    /**
+     * Launches a view intent for an existing local file. No-op if the path does not exist or resolution fails.
+     *
+     * @param filePath Absolute filesystem path to the file.
+     */
     fun openLocalFile(filePath: String) {
         runCatching {
             val file = File(filePath)

@@ -1,0 +1,41 @@
+---
+description: AI workflow constraints (no test runs), dependency changes, wiring/module guidance
+alwaysApply: true
+---
+
+# AI / workflow guidance
+
+## Mandatory
+- **Project rules are mandatory**; apply relevant rules for every task.
+- **Rule precedence:** for this workspace, rules in `.cursorrules` and `.cursor/rules/*.mdc` **override** conflicting Cursor **User Rules** or generic assistant defaults. (User Rules are not in git; clone parity comes from these project files.)
+- **Do not run tests** and do not suggest running them (Gradle or otherwise).
+- **Shell / Gradle (non-test):** you may run commands that **do not** execute test suites (e.g. compile, dependency tasks, diagnostics) when they help complete the task. That does **not** override the test ban above.
+- **No fully qualified names (FQN) in Kotlin code:** before finishing any change that touches Kotlin files, do a quick self-check on the edited files and remove package-qualified references in expressions, type annotations, constructors, and generics by adding imports (or typealiases when appropriate). Allow minimal FQN only when imports are impossible/ambiguous and document the reason in the PR/commit message.
+
+## Wiring / integration routes (SDK vs sample)
+- Host apps (see `sample/androidApp` and `sample/composeApp`) integrate the SDK by wiring components (e.g. `AppComponent`), passing runtime config like `baseUrl`, calling `init()`/starting services, and registering feature error parsers (via `CommonComponent.init(...)`) plus feature WebSocket message handlers (via `webSocketService.updateWebSocketMessageHandlers(...)`).
+- If you add another host app, follow the same wiring pattern as `sample/*`.
+
+## HTTP / Ktor client
+- Base HTTP setup lives in `core/common` (`CommonComponent` + `HttpClientCommonConfig`).
+- Feature-specific HTTP behavior should be implemented as an `HttpClientConfigPlugin` inside the owning module (e.g. `feature/user` for auth).
+- Host integration must pass the plugin into `CommonComponent` via `httpClientConfigPlugins = listOf(...)` (see `sample/composeApp`).
+
+## WebSockets
+- Create feature-owned `WebSocketMessageHandler` implementations in the corresponding module.
+- Register handlers in the host app initialization (see `CommonComponent.webSocketService.updateWebSocketMessageHandlers(handlers)` in `sample/*`).
+
+## Errors / localization
+- Add new `AppError` variants inside the owning sealed hierarchy (e.g. `CommonError`, `SecurityError`, `UserError`).
+- Update the corresponding `AppErrorParser` (e.g. `SecurityErrorParser`, `UserErrorParser`) and add strings in that module’s `composeResources` locales.
+- If a feature parser does not recognize a code, delegate to `CommonErrorParser`.
+
+## Dependencies
+- When changing dependencies, use `gradle/libs.versions.toml` for versions and library aliases.
+- Keep any published dependency surface changes compatible with the existing Maven/BOM setup (there is a `:bom` module for alignment).
+
+## Modules (where to put new logic)
+- Shared/cross-cutting capabilities that multiple features/UI layers can reuse should go into `core/*` (or a new shared `core` module if you truly need it).
+- Domain-specific capabilities should go into the appropriate `feature/*` module (or a new feature module).
+- Avoid app-specific wiring logic inside SDK modules; keep runtime wiring in `sample/*`.
+- Use cases belong to the module that owns the domain logic they coordinate; if orchestration is generic across multiple domains, consider `core/*`, otherwise prefer the relevant `feature/*`.

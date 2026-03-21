@@ -5,6 +5,16 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
+/**
+ * Android implementation of [isNoInternetException] used when mapping transport errors in [callResult].
+ *
+ * Returns `true` for [UnknownHostException], [ConnectException], and [SocketTimeoutException]. For other
+ * [IOException] types, matches common Android/Linux message fragments such as unresolved host, no route,
+ * or connection refused.
+ *
+ * @param e Failure from HTTP/WebSocket or lower-level I/O.
+ * @return `true` if the SDK should treat this as a no-internet style condition.
+ */
 actual fun isNoInternetException(e: Throwable): Boolean {
     return when (e) {
         is UnknownHostException -> true

@@ -7,6 +7,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
+/**
+ * In-memory [EncryptedSettings] implementation for previews/tests.
+ *
+ * Values are stored in a map keyed by `String` and exposed via [observe] as a hot [Flow]
+ * implemented with `StateFlow`.
+ *
+ * All operations are guarded by a [Mutex] to make the mock safe for concurrent access.
+ */
 class MockEncryptedSettings : EncryptedSettings {
     private val mutex = Mutex()
     private val storage = mutableMapOf<String, MutableStateFlow<String?>>()

@@ -25,6 +25,13 @@ private const val KEY_TEMPLATE_AES = "AES256_GCM"
 private const val MASTER_KEY_URI = "android-keystore://master_key_v1"
 private const val DATASTORE_FILE_NAME = "secure_settings"
 
+/**
+ * Android [getSettingsFactory]: registers Tink AEAD (`AeadConfig`), builds Android Keystore–backed key material
+ * via [AndroidKeysetManager], and returns [EncryptedSettings] backed by Preferences [DataStore] in
+ * `secure_settings` under the app data directory.
+ *
+ * @param platformContext Must be [Context].
+ */
 actual fun getSettingsFactory(platformContext: Any?): SettingsFactory = object : SettingsFactory {
     override fun create(): EncryptedSettings {
         val context = platformContext as Context
@@ -49,6 +56,9 @@ actual fun getSettingsFactory(platformContext: Any?): SettingsFactory = object :
     }
 }
 
+/**
+ * [EncryptedSettings] backed by a single [DataStore] of string preferences (values stored under string keys).
+ */
 private class DataStoreEncryptedSettings(
     private val dataStore: DataStore<Preferences>
 ) : EncryptedSettings {

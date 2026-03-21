@@ -114,6 +114,8 @@ googleid = { module = "com.google.android.libraries.identity.googleid:googleid",
 
 # Testing
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+androidx-test-core = { module = "androidx.test:core", version = "1.6.1" }
+robolectric = { module = "org.robolectric:robolectric", version = "4.14.1" }
 
 [plugins]
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

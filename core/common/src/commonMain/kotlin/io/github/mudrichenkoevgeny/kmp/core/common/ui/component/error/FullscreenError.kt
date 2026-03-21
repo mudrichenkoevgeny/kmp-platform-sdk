@@ -30,6 +30,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.MockAppErro
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Fullscreen error screen with optional retry action.
+ *
+ * The displayed message comes from [error] via localization helpers.
+ */
 @Composable
 fun FullscreenError(
     error: AppError,

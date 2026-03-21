@@ -16,6 +16,11 @@ import androidx.compose.ui.Modifier
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 import kotlinx.coroutines.delay
 
+/**
+ * Fullscreen loading indicator.
+ *
+ * When [delayMillis] is greater than zero, the indicator is shown only after the delay.
+ */
 @Composable
 fun FullscreenLoading(
     modifier: Modifier = Modifier,

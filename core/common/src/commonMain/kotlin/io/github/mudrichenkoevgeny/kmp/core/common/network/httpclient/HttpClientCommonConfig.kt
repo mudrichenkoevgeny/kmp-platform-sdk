@@ -22,14 +22,24 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlin.time.Duration.Companion.seconds
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 private const val DYNAMIC_HEADERS = "DynamicHeaders"
 private const val WEB_SOCKETS_PING_INTERVAL_SECONDS = 30L
 private const val LOGGER_RESPONSE_VALIDATOR_PREFIX = "Response validator"
 
-@OptIn(ExperimentalUuidApi::class)
+/**
+ * Installs common Ktor client configuration used by the SDK.
+ *
+ * Responsibilities:
+ * - Content negotiation with shared [FoundationJson]
+ * - SDK-level request headers (including trace id)
+ * - WebSocket ping interval configuration
+ * - Response validation that converts server error payloads into [ApiException]
+ *
+ * Feature modules can extend/override behavior by providing [HttpClientConfigPlugin] implementations
+ * passed from the host app into `CommonComponent`.
+ */
 fun HttpClientConfig<*>.setupCommonConfig(
     baseUrl: String,
     networkLogger: Logger,

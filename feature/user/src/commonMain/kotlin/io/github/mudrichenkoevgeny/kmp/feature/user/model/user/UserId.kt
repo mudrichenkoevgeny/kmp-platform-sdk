@@ -2,10 +2,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.model.user
 
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 @JvmInline
 @Serializable
 value class UserId(val value: Uuid) {
@@ -16,9 +14,7 @@ value class UserId(val value: Uuid) {
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
 fun String.toUserIdOrNull(): UserId? =
     Uuid.parseOrNull(this)?.let { UserId(it) }
 
-@OptIn(ExperimentalUuidApi::class)
 fun String.toUserIdOrThrow(): UserId = UserId(Uuid.parse(this))

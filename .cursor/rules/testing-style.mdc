@@ -1,0 +1,26 @@
+---
+description: Test conventions and constraints (if/when tests exist)
+globs: **/src/test/kotlin/**/*.kt
+alwaysApply: false
+---
+
+# Testing style
+
+## Running tests
+- **Do not run tests** (and do not suggest running them). Tests should be written as runnable code, but execution is up to the user.
+
+## Dependencies
+- If new tests are introduced:
+  - declare all required test dependencies explicitly in the module’s `build.gradle.kts`
+  - do not rely on transitive or runtime-only artifacts for test compilation.
+
+## Frameworks
+- Prefer the frameworks that already match the target source set:
+  - For JVM/Android tests, prefer JUnit 5 (Jupiter) and MockK.
+  - For `commonTest` tests (typical for `core/common`), prefer `kotlin.test` assertions (it is multiplatform and keeps the test code portable).
+- Keep mocking usage target-aware: if mocking libraries are JVM-only, prefer fakes/stubs or hand-written test doubles for `commonTest`.
+
+## Code style
+- No FQN in test code; use imports.
+- Keep tests focused on one observable behavior.
+- Extract repeated non-trivial literals into `private const val` within the test class.
