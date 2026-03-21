@@ -83,6 +83,23 @@ kotlin {
             // Project Modules
             implementation(project(":core:common"))
         }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.shared.foundation.core.security)
+            implementation(libs.shared.foundation.feature.user)
+        }
+
+        androidUnitTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.kotlinx.coroutines.test)
+        }
+
+        wasmJsTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.kotlinx.coroutines.test)
+        }
     }
 }
 

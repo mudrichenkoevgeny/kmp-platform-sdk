@@ -10,11 +10,21 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 
+/**
+ * Runs global, security, and auth settings refresh use cases concurrently and logs failures without throwing.
+ *
+ * @param refreshGlobalSettingsUseCase Settings module refresh.
+ * @param refreshSecuritySettingsUseCase Security module refresh.
+ * @param refreshAuthSettingsUseCase User auth settings refresh.
+ */
 class SyncDataUseCase(
     private val refreshGlobalSettingsUseCase: RefreshGlobalSettingsUseCase,
     private val refreshSecuritySettingsUseCase: RefreshSecuritySettingsUseCase,
     private val refreshAuthSettingsUseCase: RefreshAuthSettingsUseCase
 ) {
+    /**
+     * Awaits all three refresh jobs; errors are logged and swallowed.
+     */
     suspend operator fun invoke(): Unit = withContext(Dispatchers.Default) {
         val tasks = listOf(
             async { refreshGlobalSettingsUseCase().logIfError("GlobalSettings") },

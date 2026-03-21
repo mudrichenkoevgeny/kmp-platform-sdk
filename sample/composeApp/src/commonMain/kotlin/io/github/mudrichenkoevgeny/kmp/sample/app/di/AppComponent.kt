@@ -25,6 +25,22 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+/**
+ * Sample host root: builds encrypted storage, [CommonComponent], [SettingsComponent], [SecurityComponent],
+ * and [UserComponent], then exposes refresh and sync entry points used at startup.
+ *
+ * Production-style constructor:
+ * - `platformContext`: optional handle for platform services (Android `Application`, and similar).
+ * - [DeviceInfo]: device identity for networking and WebSocket bootstrap.
+ * - `baseUrl`: HTTP and WebSocket base URL for the sample backend.
+ * - [UserAuthServices]: platform auth integrations (Google sign-in, and similar).
+ *
+ * Call [init] once before relying on [CommonComponent.appErrorParser] or socket handlers. [init] registers
+ * feature error parsers on the common component and installs WebSocket message handlers from each module.
+ *
+ * The internal `@InternalApi` constructor is used by the mock factory under `mock.di` in tests and previews; it skips
+ * real encrypted settings construction and marks the app as initialized immediately.
+ */
 class AppComponent(
     platformContext: Any? = null,
     deviceInfo: DeviceInfo,
@@ -126,6 +142,10 @@ class AppComponent(
     )
     val syncDataUseCase get() = appUseCaseModule.syncDataUseCase
 
+    /**
+     * Registers feature error parsers and the combined WebSocket handler list on the shared socket service,
+     * then sets [isInitialized] to `true`. Safe to call once; subsequent calls are no-ops.
+     */
     fun init() {
         if (_isInitialized.value) {
             return
@@ -144,6 +164,10 @@ class AppComponent(
         _isInitialized.value = true
     }
 
+    /**
+     * @param componentContext Decompose context for the tab stack and dialog slot.
+     * @return [MainScreenComponent] hosting home and profile destinations.
+     */
     fun createMainScreenComponent(
         componentContext: ComponentContext
     ): MainScreenComponent {

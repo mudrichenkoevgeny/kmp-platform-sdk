@@ -18,6 +18,11 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.model.user.mockCurrentUser
 
+/**
+ * Profile tab: binds [ProfileScreenComponent] state to [ProfileContent].
+ *
+ * @param component Decompose component exposing [ProfileScreenState] and login intent.
+ */
 @Composable
 fun ProfileScreen(component: ProfileScreenComponent) {
     val state by component.state.subscribeAsState()
@@ -28,6 +33,12 @@ fun ProfileScreen(component: ProfileScreenComponent) {
     )
 }
 
+/**
+ * Stateless profile UI for previews and tests.
+ *
+ * @param state Current authorization and content state.
+ * @param onLoginClick Opens the login flow when in [ProfileScreenState.Unauthorized].
+ */
 @Composable
 fun ProfileContent(
     state: ProfileScreenState,

@@ -10,6 +10,12 @@ import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.SecurityErrorC
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorCodes as SharedSecurityErrorCodes
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Maps security-related [AppError.code] values to localized strings from `composeResources`.
+ *
+ * Handles module-specific [SecurityErrorCodes], selected shared foundation security codes, and
+ * delegates any unknown code to [CommonErrorParser].
+ */
 object SecurityErrorParser : AppErrorParser {
     @Composable
     override fun parse(appError: AppError): String? = when (appError.code) {

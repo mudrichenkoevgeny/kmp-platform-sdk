@@ -13,6 +13,12 @@ import io.github.mudrichenkoevgeny.kmp.sample.app.di.LocalAppComponent
 import io.github.mudrichenkoevgeny.kmp.sample.app.ui.screen.main.MainScreen
 import io.github.mudrichenkoevgeny.kmp.sample.app.ui.screen.splash.SplashScreen
 
+/**
+ * Top-level sample UI: shows [SplashScreen] until [AppComponent.isInitialized], then provides
+ * [LocalCommonComponent], [LocalErrorParser], and [LocalAppComponent] and displays [MainScreen].
+ *
+ * @param appComponent Wired host graph; [AppComponent.init] must complete before navigation is shown.
+ */
 @Composable
 fun RootContent(appComponent: AppComponent) {
     val isInitialized by appComponent.isInitialized.collectAsState()

@@ -10,6 +10,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * iOS entry: creates [AppComponent], starts initialization on the main dispatcher, and returns a
+ * [ComposeUIViewController] that displays [RootContent].
+ *
+ * @return Root view controller for the sample scene.
+ */
 fun MainViewController(): UIViewController {
     var controller: UIViewController? = null
 

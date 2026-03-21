@@ -4,6 +4,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
 import io.github.mudrichenkoevgeny.kmp.core.security.model.securitysettings.SecuritySettings
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 
+/**
+ * [SecuritySettingsStorage] backed by [EncryptedSettings], using shared [FoundationJson] for
+ * serialization.
+ *
+ * @param encryptedSettings Key-value store used for the `security_settings` entry.
+ */
 class EncryptedSecuritySettingsStorage(
     private val encryptedSettings: EncryptedSettings
 ) : SecuritySettingsStorage {

@@ -4,6 +4,12 @@ import io.github.mudrichenkoevgeny.kmp.core.settings.model.globalsettings.Global
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 
+/**
+ * [GlobalSettingsStorage] backed by [EncryptedSettings], using shared [FoundationJson] for
+ * serialization.
+ *
+ * @param encryptedSettings Key-value store used for the `global_settings` entry.
+ */
 class EncryptedGlobalSettingsStorage(
     private val encryptedSettings: EncryptedSettings
 ) : GlobalSettingsStorage {

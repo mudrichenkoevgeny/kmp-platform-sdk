@@ -8,9 +8,16 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserReposito
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
+/**
+ * Maps [UserRepository.currentUser] into [ProfileScreenState] and forwards login taps to the host dialog.
+ *
+ * @param componentContext Decompose lifecycle context.
+ * @param userRepository Source of the signed-in user flow.
+ * @param onLoginDialogRequest Callback when the user requests login from the unauthorized state.
+ */
 class ProfileScreenComponentImpl(
     componentContext: ComponentContext,
-    private val userRepository: UserRepository,
+    userRepository: UserRepository,
     private val onLoginDialogRequest: () -> Unit
 ) : ProfileScreenComponent, ComponentContext by componentContext {
 

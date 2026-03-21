@@ -39,6 +39,12 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.root.Lo
 import io.github.mudrichenkoevgeny.kmp.sample.app.ui.screen.home.HomeScreenComponent
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Sample shell with bottom navigation (mobile) or header actions (web), Decompose stack for tabs, and an
+ * optional login dialog slot.
+ *
+ * @param screenComponent Root Decompose component for home and profile stacks plus login overlay.
+ */
 @Composable
 fun MainScreen(screenComponent: MainScreenComponent) {
     val appComponent = LocalAppComponent.current
@@ -67,6 +73,15 @@ fun MainScreen(screenComponent: MainScreenComponent) {
     }
 }
 
+/**
+ * Shared layout for tab content: renders the Decompose [ChildStack] inside either mobile scaffold or web header.
+ *
+ * @param isMobile Chooses bottom bar versus top header navigation chrome.
+ * @param screenStack Active stack driving [Children] animation and tab bodies.
+ * @param currentDestination Currently selected tab for highlighting.
+ * @param destinations Ordered tabs for the mobile bar.
+ * @param onDestinationChange Invoked when the user selects a tab.
+ */
 @Composable
 fun MainContent(
     isMobile: Boolean,

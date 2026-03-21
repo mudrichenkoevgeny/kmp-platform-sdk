@@ -1,5 +1,11 @@
 package io.github.mudrichenkoevgeny.kmp.core.security.error.naming
 
+import io.github.mudrichenkoevgeny.kmp.core.security.error.model.SecurityError
+import io.github.mudrichenkoevgeny.kmp.core.security.error.parser.SecurityErrorParser
+
+/**
+ * Machine-readable error codes for [SecurityError] and related parsing in [SecurityErrorParser].
+ */
 object SecurityErrorCodes {
     /**
      * Password policy is missing and cannot be fetched.

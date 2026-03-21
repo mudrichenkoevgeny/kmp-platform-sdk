@@ -16,6 +16,12 @@ import io.github.mudrichenkoevgeny.kmp.sample.app.di.AppComponent
 import io.github.mudrichenkoevgeny.kmp.sample.app.ui.screen.home.HomeScreenComponentImpl
 import io.github.mudrichenkoevgeny.kmp.sample.app.ui.screen.profile.ProfileScreenComponentImpl
 
+/**
+ * Default [MainScreenComponent]: stack navigation for home and profile, slot for [LoginRootComponent].
+ *
+ * @param componentContext Decompose lifecycle context.
+ * @param appComponent Host graph used to build feature components and dialogs.
+ */
 class MainScreenComponentImpl(
     componentContext: ComponentContext,
     private val appComponent: AppComponent

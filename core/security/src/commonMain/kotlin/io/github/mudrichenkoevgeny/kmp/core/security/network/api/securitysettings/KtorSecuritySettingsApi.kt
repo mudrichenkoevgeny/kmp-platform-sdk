@@ -7,6 +7,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.route
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 
+/**
+ * Ktor [HttpClient] implementation of [SecuritySettingsApi] using foundation route constants.
+ *
+ * @param client Shared client (typically from `core/common`) with base URL and plugins already applied.
+ */
 class KtorSecuritySettingsApi(
     private val client: HttpClient
 ) : SecuritySettingsApi {

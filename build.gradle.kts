@@ -23,6 +23,7 @@ subprojects {
     tasks.withType<KotlinCompilationTask<*>>().configureEach {
         compilerOptions {
             freeCompilerArgs.add("-opt-in=kotlin.uuid.ExperimentalUuidApi")
+            freeCompilerArgs.add("-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi")
         }
     }
 
@@ -30,6 +31,7 @@ subprojects {
         extensions.findByType<KotlinMultiplatformExtension>()?.apply {
             sourceSets.configureEach {
                 languageSettings.optIn("kotlin.uuid.ExperimentalUuidApi")
+                languageSettings.optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
             }
         }
     }

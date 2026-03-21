@@ -18,6 +18,7 @@ alwaysApply: false
 ## Scope rules
 - In `object` / class-level KDoc, do **not** link to function parameters by name (out of scope). Use plain text and move parameter links to function-level KDoc.
 - When documentation is requested for a **package**, the scope includes all subpackages.
+- For package documentation requests, **do not** add new Kotlin files that exist only to carry a package-level KDoc comment (no types, no functions, no other declarations). Document existing declarations in that package tree instead.
 
 ## Comments
 - Use inline comments sparingly; do not narrate obvious behavior.

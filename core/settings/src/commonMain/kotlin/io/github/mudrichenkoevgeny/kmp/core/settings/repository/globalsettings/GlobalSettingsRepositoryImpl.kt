@@ -21,6 +21,16 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.decodeFromJsonElement
 
+/**
+ * Default [GlobalSettingsRepository]: mutex-guarded in-memory state, encrypted persistence, REST
+ * refresh via [GlobalSettingsApi], and subscription to [WebSocketService] events of type
+ * `GLOBAL_SETTINGS_UPDATED` (see foundation contract).
+ *
+ * @param globalSettingsApi Network access for fetching settings.
+ * @param globalSettingsStorage Encrypted backing store.
+ * @param webSocketService Source of push events; non-matching frame types are ignored.
+ * @param repositoryScope Coroutine scope used to preload cache and collect socket events.
+ */
 class GlobalSettingsRepositoryImpl(
     private val globalSettingsApi: GlobalSettingsApi,
     private val globalSettingsStorage: GlobalSettingsStorage,

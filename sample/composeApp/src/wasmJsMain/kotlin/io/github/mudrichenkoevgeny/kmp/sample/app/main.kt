@@ -11,6 +11,9 @@ import io.github.mudrichenkoevgeny.kmp.sample.app.ui.root.RootContent
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
+/**
+ * Wasm browser entry: builds [AppComponent], initializes SDK services, connects WebSockets, and hosts [RootContent].
+ */
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     val deviceInfoProvider = WasmDeviceInfoProvider(
