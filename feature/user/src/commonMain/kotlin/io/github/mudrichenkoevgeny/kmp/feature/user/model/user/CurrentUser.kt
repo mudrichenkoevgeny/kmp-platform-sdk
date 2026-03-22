@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.U
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
+/** Authenticated user snapshot including role, account state, and activity timestamps. */
 @Serializable
 data class CurrentUser(
     val id: UserId,

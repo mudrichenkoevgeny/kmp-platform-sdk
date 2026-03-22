@@ -45,6 +45,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Phone login UI: phone entry with send code, then code entry with timer/resend and confirm.
+ *
+ * @param component Decompose component providing state and callbacks.
+ */
 @Composable
 fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
     val state by component.state.subscribeAsState()

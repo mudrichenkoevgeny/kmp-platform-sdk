@@ -1,0 +1,12 @@
+---
+description: Do not add UI or unit tests for Compose Preview-only helpers
+alwaysApply: true
+---
+
+# Compose Preview helpers — no tests
+
+- **Do not** add **UI tests** (Compose UI tests, Robolectric `runComposeUiTest`, etc.) for types that exist **only** to support **Compose tooling previews**.
+- **Do not** add dedicated `*Test.kt` classes whose only purpose is to verify **preview sample data** or **`PreviewParameterProvider.values`** sequences.
+- Examples of out-of-scope subjects: `PreviewParameterProvider` implementations, preview-only data classes used with `@PreviewParameter`, and similar **non-`@Composable`** preview wiring.
+
+Rely on **`@Preview`** in source and IDE preview for these; test **`@Composable`** UI and real behavior in the components/screens that use them.

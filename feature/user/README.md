@@ -1,80 +1,46 @@
 # feature/user
 
-User **authentication**, **session tokens**, **auth settings**, **user profile/cache**, and **Compose + Decompose** flows for sign-in, registration, and password recovery. Depends on [CommonComponent], [SettingsComponent], and [SecurityComponent]; extends the shared HTTP client with bearer auth and refresh, and plugs into the common error and WebSocket pipelines.
+Kotlin Multiplatform feature module for **user identity, authentication flows, session-oriented HTTP behavior, and related UI** (Compose + Decompose). It depends on `core:common`, `core:settings`, and `core:security`; it must not embed host-app specifics—runtime wiring lives in the host (see `sample/*`).
 
-## What it provides
+## Host integration (summary)
 
-- **Wiring:** [UserComponent] takes `commonComponent`, `settingsComponent`, `securityComponent`, [AuthStorage] (typically [EncryptedAuthStorage] over shared [EncryptedSettings]), [UserAuthServices] (e.g. Google on each platform), and an optional parent coroutine scope. It builds internal [UserNetworkModule], [UserRepositoryModule], [UserUseCaseModule], and [UserStorageModule]. It also exposes `passwordPolicyValidator` from [SecurityComponent] for password validation aligned with security settings.
-- **HTTP client:** [AuthHttpClientConfigPlugin] is an [HttpClientConfigPlugin] that installs [setupAuthConfig] (Ktor `Auth` bearer, token load/refresh against your `baseUrl`). Pass it into [CommonComponent] as `httpClientConfigPlugins` together with `accessTokenProvider` / storage aligned with [AuthStorage].
-- **Network APIs:** Ktor clients for login, registration, refresh token, password, auth settings, user profile, session, user configuration, and security-related user endpoints — see classes under `network/api` (e.g. [KtorLoginApi], [KtorUserConfigurationApi]).
-- **Repositories:** Login, registration, confirmation, refresh token, password, auth settings, and user repositories ([LoginRepositoryImpl], [AuthSettingsRepositoryImpl], [UserRepositoryImpl], and others wired in [UserRepositoryModule]).
-- **Storage:** [UserStorage] backed by [EncryptedUserStorage]; tokens and auth state via [AuthStorage] / [EncryptedAuthStorage].
-- **Use cases:** Email/phone/Google login, registration and confirmation sends, password reset flow, [RefreshAuthSettingsUseCase], [GetAvailableUserAuthProvidersUseCase], [RefreshUserConfigurationUseCase] (coordinates user configuration API with global, security, and auth settings caches).
-- **WebSockets:** [UserWebSocketMessageHandler] handles user-domain socket event types (e.g. unauthorized, auth settings updated); register it with [WebSocketService.updateWebSocketMessageHandlers] alongside common/settings/security handlers.
-- **Errors:** [UserError] (client- and server-shaped `AppError` variants) and [UserErrorParser] (`AppErrorParser` with Compose `stringResource`; unknown codes delegate to [CommonErrorParser]).
-- **UI:** Decompose graph for the auth stack, e.g. [LoginRootComponent] / [LoginRootComponentImpl] and screens under `ui/screen/auth` (welcome, email/phone login, registration, confirmations). Uses module `composeResources` for strings.
-- **Platform auth:** [UserAuthServices] exposes optional [GoogleAuthService]; concrete implementations live in `androidMain`, `wasmJsMain`, and `iosMain` (e.g. [AndroidUserAuthServices], [WasmUserAuthServices], [IosUserAuthServices]).
-- **Mocks:** [UserAuthServicesMock] and related test doubles under `mock/`.
+1. **HTTP:** Pass [AuthHttpClientConfigPlugin](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/network/httpclient/AuthHttpClientConfigPlugin.kt) into `CommonComponent` via `httpClientConfigPlugins` so the shared Ktor client attaches auth headers and token refresh behavior using your [AuthStorage](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/storage/auth/AuthStorage.kt) implementation.
+2. **Errors:** Register [UserErrorParser](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/error/pasrer/UserErrorParser.kt) in `CommonComponent.init(...)` so user-domain error codes resolve to localized strings; unknown codes fall back to `CommonErrorParser`.
+3. **WebSockets:** Register [UserWebSocketMessageHandler](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/network/websocket/messagehandler/UserWebSocketMessageHandler.kt) with the app’s `WebSocketService` (alongside other handlers).
+4. **DI:** Construct [UserComponent](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/di/UserComponent.kt) with `CommonComponent`, `SettingsComponent`, `SecurityComponent`, `AuthStorage`, and platform [UserAuthServices](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/auth/UserAuthServices.kt) (e.g. Google Sign-In on Android/Wasm).
 
-## Usage
+## Package map
 
-- Add a dependency on `:feature:user` (or align via the published BOM).
-- Construct [EncryptedAuthStorage] (or another [AuthStorage]) with the **same** [EncryptedSettings] instance you pass to [CommonComponent].
-- Create [AuthHttpClientConfigPlugin] with runtime `baseUrl` and that storage; pass it into [CommonComponent] `httpClientConfigPlugins`. Ensure [CommonComponent] `accessTokenProvider` matches your auth storage if the rest of the stack reads tokens from it.
-- Build [UserComponent] after [SettingsComponent] and [SecurityComponent], reusing `commonComponent.httpClient` and `commonComponent.webSocketService`.
-- In the host `init` path: include [UserErrorParser] in `CommonComponent.init(...)` and add [userWebSocketMessageHandler] to the handler list on [WebSocketService].
-- For UI, call [UserComponent.createLoginRootDialogComponent] (or embed the same graph your app needs) with a Decompose [ComponentContext].
-- Do not hardcode backend URLs inside this module; the host supplies `baseUrl` and OAuth client IDs (see [sample README](../sample/README.md)).
+| Package | Role |
+|--------|------|
+| `...user.di` | [UserComponent](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/di/UserComponent.kt) and internal modules that wire storage, Ktor APIs, repositories, and use cases. |
+| `...user.auth` | [UserAuthServices](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/auth/UserAuthServices.kt); platform `actual` aggregators (e.g. Android, Wasm, iOS stubs). |
+| `...user.auth.google` | [GoogleAuthService](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/auth/google/GoogleAuthService.kt) abstraction and platform implementations / disabled fallback. |
+| `...user.model.*` | Domain models: auth payload, tokens, session, user profile identifiers, confirmation keys, auth settings, remote user configuration. |
+| `...user.network.api.*` | Ktor-backed API facades: login, registration, password, refresh token, auth settings, session, user profile, security password/user-identifiers, user configuration. |
+| `...user.network.auth` | Low-level auth configuration helpers and attributes used when installing client plugins. |
+| `...user.network.httpclient` | [AuthHttpClientConfigPlugin](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/network/httpclient/AuthHttpClientConfigPlugin.kt) and related Ktor setup. |
+| `...user.network.websocket.messagehandler` | [UserWebSocketMessageHandler](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/network/websocket/messagehandler/UserWebSocketMessageHandler.kt) for user-related socket event types. |
+| `...user.repository.*` | Repositories orchestrating APIs, confirmation helpers, and storage (login, registration, password, refresh token, auth settings, user, security, session, confirmation). |
+| `...user.storage.auth` | [AuthStorage](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/storage/auth/AuthStorage.kt) contract for tokens and cached auth settings. |
+| `...user.storage.user` | Encrypted persistence for user-scoped data (e.g. profile cache) via `EncryptedUserStorage`. |
+| `...user.usecase.*` | Use cases invoked from UI/components: login (email/phone/Google), registration, password reset, refresh token, auth settings refresh, provider discovery, user configuration refresh. |
+| `...user.mapper.*` | Mapping between DTOs / foundation types and feature models. |
+| `...user.error.model` | [UserError](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/error/model/UserError.kt) sealed hierarchy implementing `AppError` for client-side user errors. |
+| `...user.error.naming` | [ClientUserErrorCodes](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/error/naming/ClientUserErrorCodes.kt) for codes originating in the client. |
+| `...user.error.pasrer` | [UserErrorParser](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/error/pasrer/UserErrorParser.kt) (package name retains the historical `pasrer` spelling). |
+| `...user.ui.screen.auth.*` | Decompose components, screen state, and Compose UI for login (welcome, email, phone), registration by email, reset password. |
+| `...user.ui.component.*` | Reusable auth UI pieces (provider grid/items, legal footer). |
+| `...user.mock.*` | Test/support fakes: [mockUserComponent](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/mock/di/UserComponentMock.kt), mock auth storage, mock auth services, sample user models. |
+| `...user.utils` | Small helpers such as [FieldValidator](src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/utils/FieldValidator.kt). |
 
-## Related module docs
+## Source set notes
 
-- [core/common](../core/common/README.md)
-- [core/settings](../core/settings/README.md)
-- [core/security](../core/security/README.md)
+- **commonMain:** Shared logic, UI, and contracts.
+- **androidMain:** Android credentials / Google auth wiring ([AndroidUserAuthServices](src/androidMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/auth/AndroidUserAuthServices.kt)).
+- **wasmJsMain:** Browser-oriented Google auth interop and [WasmUserAuthServices](src/wasmJsMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/auth/WasmUserAuthServices.kt).
+- **iosMain:** Placeholders / iOS-oriented auth services for future enablement.
 
-[CommonComponent]: ../core/common/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/di/CommonComponent.kt
-[SettingsComponent]: ../core/settings/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/settings/di/SettingsComponent.kt
-[SecurityComponent]: ../core/security/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/security/di/SecurityComponent.kt
-[EncryptedSettings]: ../core/common/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/storage/EncryptedSettings.kt
-[HttpClientConfigPlugin]: ../core/common/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/network/httpclient/HttpClientConfigPlugin.kt
-[WebSocketService.updateWebSocketMessageHandlers]: ../core/common/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/network/websocket/service/WebSocketService.kt
-[CommonErrorParser]: ../core/common/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/error/parser/CommonErrorParser.kt
+## Resources
 
-[UserComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/di/UserComponent.kt
-[UserNetworkModule]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/di/UserNetworkModule.kt
-[UserRepositoryModule]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/di/UserRepositoryModule.kt
-[UserUseCaseModule]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/di/UserUseCaseModule.kt
-[UserStorageModule]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/di/UserStorageModule.kt
-
-[AuthHttpClientConfigPlugin]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/network/httpclient/AuthHttpClientConfigPlugin.kt
-[setupAuthConfig]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/network/httpclient/HttpClientAuthConfig.kt
-[KtorLoginApi]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/network/api/auth/login/KtorLoginApi.kt
-[KtorUserConfigurationApi]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/network/api/configuration/KtorUserConfigurationApi.kt
-
-[LoginRepositoryImpl]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/repository/auth/login/LoginRepositoryImpl.kt
-[AuthSettingsRepositoryImpl]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/repository/auth/settings/AuthSettingsRepositoryImpl.kt
-[UserRepositoryImpl]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/repository/user/UserRepositoryImpl.kt
-
-[UserStorage]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/storage/user/UserStorage.kt
-[EncryptedUserStorage]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/storage/user/EncryptedUserStorage.kt
-[AuthStorage]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/storage/auth/AuthStorage.kt
-[EncryptedAuthStorage]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/storage/auth/EncryptedAuthStorage.kt
-
-[RefreshAuthSettingsUseCase]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/usecase/auth/settings/RefreshAuthSettingsUseCase.kt
-[GetAvailableUserAuthProvidersUseCase]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/usecase/auth/settings/GetAvailableUserAuthProvidersUseCase.kt
-[RefreshUserConfigurationUseCase]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/usecase/configuration/RefreshUserConfigurationUseCase.kt
-
-[UserWebSocketMessageHandler]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/network/websocket/messagehandler/UserWebSocketMessageHandler.kt
-[UserError]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/error/model/UserError.kt
-[UserErrorParser]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/error/pasrer/UserErrorParser.kt
-
-[LoginRootComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/screen/auth/login/root/LoginRootComponent.kt
-[LoginRootComponentImpl]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/screen/auth/login/root/LoginRootComponentImpl.kt
-
-[UserAuthServices]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/auth/UserAuthServices.kt
-[GoogleAuthService]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/auth/google/GoogleAuthService.kt
-[AndroidUserAuthServices]: src/androidMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/auth/AndroidUserAuthServices.kt
-[WasmUserAuthServices]: src/wasmJsMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/auth/WasmUserAuthServices.kt
-[IosUserAuthServices]: src/iosMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/auth/IosUserAuthServices.kt
-
-[UserAuthServicesMock]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/mock/auth/UserAuthServicesMock.kt
+Compose Multiplatform resources for this module are generated with `publicResClass = true` and `packageOfResClass = io.github.mudrichenkoevgeny.kmp.feature.user` (see `build.gradle.kts`). String keys for user errors use the `error_user_*` prefix per project conventions.

@@ -8,6 +8,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 
+/** [UserApi] backed by [HttpClient]. */
 class KtorUserApi(
     private val client: HttpClient
 ) : UserApi {

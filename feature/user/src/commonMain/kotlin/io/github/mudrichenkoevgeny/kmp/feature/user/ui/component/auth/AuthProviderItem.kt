@@ -22,6 +22,12 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.UserAuthProvider
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * Compact square tile showing only the provider icon (for grids and secondary auth options).
+ *
+ * @param authProvider which provider icon to show.
+ * @param onClick invoked when the user taps the tile.
+ */
 @Composable
 fun AuthProviderItem(
     authProvider: UserAuthProvider,

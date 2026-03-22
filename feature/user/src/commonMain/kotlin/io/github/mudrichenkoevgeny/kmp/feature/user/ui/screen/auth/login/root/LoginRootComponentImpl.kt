@@ -18,6 +18,18 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.password.ResetEmailPasswordComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.registration.email.RegistrationByEmailComponentImpl
 
+/**
+ * [LoginRootComponent] implementation: stack router over [LoginDestination] with child Decompose components.
+ *
+ * Requires:
+ * @param componentContext Decompose [ComponentContext] for lifecycle and coroutine scope.
+ * @param settingsComponent provides global settings (e.g. legal URLs) and related use cases.
+ * @param securityComponent provides password validation for email login, registration, and reset flows.
+ * @param userComponent provides user auth repositories and use cases for all stack destinations.
+ * @param onFinished invoked when the flow completes successfully (e.g. logged in) or when [onDismiss] runs.
+ *
+ * No separate `init()`; the stack is ready after construction. Back is handled by the stack when enabled.
+ */
 class LoginRootComponentImpl(
     componentContext: ComponentContext,
     private val settingsComponent: SettingsComponent,

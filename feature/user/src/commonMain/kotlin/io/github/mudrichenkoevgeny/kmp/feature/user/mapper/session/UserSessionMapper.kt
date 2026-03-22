@@ -8,6 +8,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.U
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserApiFields
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.response.session.UserSessionResponse
 
+/**
+ * Maps a session row from the API into [UserSession].
+ *
+ * @throws IllegalStateException when [UserSessionResponse.identifierAuthProvider] is not a known wire value.
+ */
 fun UserSessionResponse.toUserSession(): UserSession = UserSession(
     id = id.toUserSessionIdOrThrow(),
     identifierId = identifierId.toUserIdentifierIdOrThrow(),

@@ -21,6 +21,19 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.decodeFromJsonElement
 
+/**
+ * Implements [AuthSettingsRepository] with a mutex-guarded in-memory [MutableStateFlow], persistence
+ * via [AuthStorage], HTTP via [AuthSettingsApi], and live updates from [WebSocketService] for
+ * `AUTH_SETTINGS_UPDATED` events.
+ *
+ * On construction, loads cached settings from storage into the flow and subscribes to WebSocket
+ * frames in [repositoryScope]; invalid payloads are logged and ignored.
+ *
+ * @param authSettingsApi Remote read endpoint for auth settings.
+ * @param authStorage Encrypted or local persistence for settings snapshots.
+ * @param webSocketService Source of push updates for auth settings changes.
+ * @param repositoryScope Long-lived scope used for the WebSocket collector started in `init`.
+ */
 class AuthSettingsRepositoryImpl(
     private val authSettingsApi: AuthSettingsApi,
     private val authStorage: AuthStorage,

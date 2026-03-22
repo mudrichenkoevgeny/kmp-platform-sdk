@@ -7,6 +7,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.SessionToken
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.auth.refreshtoken.RefreshTokenApi
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.refreshtoken.RefreshTokenRequest
 
+/**
+ * Implements [RefreshTokenRepository] by delegating to [RefreshTokenApi].
+ *
+ * @param refreshTokenApi HTTP endpoint for token refresh.
+ */
 class RefreshTokenRepositoryImpl(
     private val refreshTokenApi: RefreshTokenApi
 ) : RefreshTokenRepository {

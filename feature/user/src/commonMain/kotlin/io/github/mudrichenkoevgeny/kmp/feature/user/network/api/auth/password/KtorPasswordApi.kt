@@ -12,6 +12,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
+/** [PasswordApi] backed by [HttpClient]; reset routes use [markAsPublic]. */
 class KtorPasswordApi(
     private val client: HttpClient
 ) : PasswordApi {

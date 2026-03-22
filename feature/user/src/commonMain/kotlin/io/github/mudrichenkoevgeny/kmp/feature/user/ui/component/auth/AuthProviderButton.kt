@@ -27,6 +27,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.U
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Full-width primary-style button for a single [UserAuthProvider] (icon + localized label).
+ *
+ * @param authProvider which sign-in method to display.
+ * @param onClick invoked when the user taps the button.
+ * @param modifier optional modifier for the surface.
+ */
 @Composable
 fun AuthProviderButton(
     authProvider: UserAuthProvider,

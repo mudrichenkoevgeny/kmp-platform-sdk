@@ -28,6 +28,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Password reset UI: email + send code, then code + new password with resend timer and change-email action.
+ *
+ * @param component Decompose component providing state and callbacks.
+ */
 @Composable
 fun ResetEmailPasswordScreen(component: ResetEmailPasswordComponent) {
     val state by component.state.subscribeAsState()

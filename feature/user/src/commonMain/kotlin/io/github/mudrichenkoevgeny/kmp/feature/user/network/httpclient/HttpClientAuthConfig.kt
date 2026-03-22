@@ -19,6 +19,17 @@ import kotlin.time.Clock
 
 private const val LOGGER_AUTH_PREFIX = "Auth"
 
+/**
+ * Installs Ktor `Auth` with bearer token loading, refresh, and conditional header attachment.
+ *
+ * [AuthStorage] supplies access and refresh tokens. Requests marked with [IsPublicApi] skip the
+ * `Authorization` header. The refresh flow posts to the refresh route, updates storage on success,
+ * and clears tokens when refresh fails.
+ *
+ * @param baseUrl API origin prepended to refresh path constants from shared routes.
+ * @param networkLogger Logger used for auth lifecycle messages.
+ * @param authStorage Persistent token and expiry source.
+ */
 fun HttpClientConfig<*>.setupAuthConfig(
     baseUrl: String,
     networkLogger: Logger,

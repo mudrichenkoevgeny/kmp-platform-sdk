@@ -15,6 +15,16 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * Default [LoginByPhoneComponent]: send-code, cooldown handling, and login-by-phone confirmation.
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param loginRepository reads remaining confirmation delay for a phone number.
+ * @param sendLoginConfirmationToPhoneUseCase requests an SMS code.
+ * @param loginByPhoneUseCase completes login with phone and code.
+ * @param onBack pops this flow on the parent stack when appropriate.
+ * @param onFinished invoked when login succeeds.
+ */
 class LoginByPhoneComponentImpl(
     componentContext: ComponentContext,
     private val loginRepository: LoginRepository,

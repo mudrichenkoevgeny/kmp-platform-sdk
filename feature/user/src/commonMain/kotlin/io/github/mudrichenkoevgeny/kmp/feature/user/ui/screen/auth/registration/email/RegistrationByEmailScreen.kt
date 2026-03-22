@@ -35,6 +35,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Registration UI: email + send code, then code + password with resend and change-email actions.
+ *
+ * @param component Decompose component providing state and callbacks.
+ */
 @Composable
 fun RegistrationByEmailScreen(component: RegistrationByEmailComponent) {
     val state by component.state.subscribeAsState()

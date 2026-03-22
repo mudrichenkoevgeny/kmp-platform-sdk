@@ -20,6 +20,18 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAva
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.RefreshAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.configuration.RefreshUserConfigurationUseCase
 
+/**
+ * Wires user-facing use cases from repositories, [AuthStorage], [UserAuthServices], and cross-cutting settings APIs.
+ *
+ * @param repositoryModule User repositories for auth and profile.
+ * @param authStorage Token and cached auth settings.
+ * @param storageModule User-scoped storage for post-login data.
+ * @param authServices Platform auth helpers; missing Google service falls back to [DisabledGoogleAuthService].
+ * @param userConfigurationApi Remote user configuration endpoint.
+ * @param globalSettingsRepository From `core:settings`.
+ * @param securitySettingsRepository From `core:security`.
+ * @param authSettingsRepository Auth provider and policy snapshot repository.
+ */
 internal class UserUseCaseModule(
     private val repositoryModule: UserRepositoryModule,
     private val authStorage: AuthStorage,

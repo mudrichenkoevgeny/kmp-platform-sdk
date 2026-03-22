@@ -5,6 +5,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehand
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.model.websocket.SocketFrame
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserWebSocketEventTypes
 
+/**
+ * Interprets user-related WebSocket frames (`UserWebSocketEventTypes`) for unauthorized sessions, auth-setting
+ * changes, account status, and session termination. Register alongside other handlers on the app `WebSocketService`.
+ *
+ * Some branches are still placeholders (token refresh / settings sync); they return [WebSocketMessageHandlerResult.Handled] today.
+ */
 class UserWebSocketMessageHandler() : WebSocketMessageHandler {
     override suspend fun handle(frame: SocketFrame): WebSocketMessageHandlerResult {
         return when (frame.type) {

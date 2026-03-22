@@ -13,6 +13,18 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.auth.UserAuthServicesMo
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.MockAuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 
+/**
+ * Builds a [UserComponent] backed by in-memory or fake collaborators for previews and tests.
+ *
+ * Callers outside the SDK should opt in to [InternalApi] when using core mock factories this wires through.
+ *
+ * @param commonComponent Defaults to `mockCommonComponent()`.
+ * @param settingsComponent Defaults to `mockSettingsComponent()`.
+ * @param securityComponent Defaults to `mockSecurityComponent()`.
+ * @param authStorage Defaults to [MockAuthStorage].
+ * @param authServices Defaults to [UserAuthServicesMock].
+ * @return A fully wired user feature root using the provided or default mocks.
+ */
 @OptIn(InternalApi::class)
 fun mockUserComponent(
     commonComponent: CommonComponent = mockCommonComponent(),

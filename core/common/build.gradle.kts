@@ -8,6 +8,7 @@ plugins {
     // 3. Uncomment androidLibrary block
     // 4. Remove android block
      id("com.android.library")
+    alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose)
     alias(libs.plugins.maven.publish)
@@ -47,6 +48,7 @@ kotlin {
 
             // Kotlin
             api(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.json)
 
             // Compose
             implementation(libs.compose.foundation)
@@ -80,6 +82,8 @@ kotlin {
         androidUnitTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.compose.ui.test)
+            implementation(libs.androidx.compose.ui.test.manifest)
             implementation(libs.androidx.test.core)
             implementation(libs.robolectric)
         }
@@ -115,6 +119,11 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
+    }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
     }
 }
 

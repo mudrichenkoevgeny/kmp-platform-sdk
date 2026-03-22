@@ -48,6 +48,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Email login form with back navigation, forgot-password and registration links, and loading overlay on submit.
+ *
+ * @param component Decompose component providing state and callbacks.
+ */
 @Composable
 fun LoginByEmailScreen(component: LoginByEmailComponent) {
     val state by component.state.subscribeAsState()

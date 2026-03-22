@@ -12,6 +12,13 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.Conf
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.register.RegisterByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
 
+/**
+ * Implements [RegistrationRepository] using [RegistrationApi] and [ConfirmationRepository] for
+ * throttled confirmation sends.
+ *
+ * @param registrationApi Registration and send-confirmation HTTP endpoints.
+ * @param confirmationRepository Client-side cooldown for registration email codes.
+ */
 class RegistrationRepositoryImpl(
     private val registrationApi: RegistrationApi,
     private val confirmationRepository: ConfirmationRepository

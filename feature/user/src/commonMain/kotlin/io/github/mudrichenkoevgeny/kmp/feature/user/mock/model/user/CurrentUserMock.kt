@@ -6,6 +6,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.U
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.UserRole
 import kotlin.time.Clock
 
+/**
+ * Builds a non-persistent [CurrentUser] with a fresh [UserId] and timestamps anchored to [Clock.System.now].
+ *
+ * @param role Wire role for the mock user (default [UserRole.USER]).
+ * @param accountStatus Account state (default [UserAccountStatus.ACTIVE]).
+ */
 fun mockCurrentUser(
     role: UserRole = UserRole.USER,
     accountStatus: UserAccountStatus = UserAccountStatus.ACTIVE

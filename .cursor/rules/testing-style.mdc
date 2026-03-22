@@ -1,10 +1,16 @@
 ---
 description: Test conventions and constraints (if/when tests exist)
-globs: **/src/test/kotlin/**/*.kt
+globs: "**/src/**/*Test/**/*.kt"
 alwaysApply: false
 ---
 
 # Testing style
+
+## One test class per unit under test
+- **Do not** put tests for unrelated types, files, or behavioral units in a single test class file.
+- **Do** use one dedicated test class (one `*Test.kt` file) per primary subject—for example the type, extension receiver, mapper, use case, or repository implementation being verified.
+- If two subjects are tested together, that should reflect a **single** integration boundary (and stay in one file only when that boundary is the subject itself); otherwise split the file.
+- Name the test class after the subject (e.g. `FooTest` for `Foo`, `FooMapperTest` for `FooMapper`).
 
 ## Running tests
 - **Do not run tests** (and do not suggest running them). Tests should be written as runnable code, but execution is up to the user.

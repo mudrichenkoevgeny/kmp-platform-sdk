@@ -15,6 +15,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByPhoneRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToPhoneRequest
 
+/**
+ * Implements [LoginRepository] using [LoginApi] and [ConfirmationRepository] for throttled phone
+ * confirmation sends.
+ *
+ * @param loginApi HTTP endpoints for all login variants and phone confirmation send.
+ * @param confirmationRepository Client-side cooldown for phone login confirmation sends.
+ */
 class LoginRepositoryImpl(
     private val loginApi: LoginApi,
     private val confirmationRepository: ConfirmationRepository

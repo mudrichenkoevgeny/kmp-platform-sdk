@@ -11,6 +11,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Maps user-domain backend and client [AppError] codes to localized strings from this module’s `composeResources`.
+ *
+ * Handles authentication/session failures, account state, credentials/confirmation mistakes, and identifier
+ * conflicts defined in `UserErrorCodes`; some identifier-management errors surface the generic internal common string.
+ *
+ * @return A localized message for known user codes, or the result of [CommonErrorParser.parse] when the code is not mapped here.
+ */
 object UserErrorParser : AppErrorParser {
     @Composable
     override fun parse(appError: AppError): String? = when (appError.code) {

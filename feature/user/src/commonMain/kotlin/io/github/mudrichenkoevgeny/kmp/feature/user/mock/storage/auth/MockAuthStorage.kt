@@ -8,6 +8,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+/**
+ * In-memory [AuthStorage] for tests and previews. Token fields and [accessTokenFlow] stay in sync, mirroring
+ * `EncryptedAuthStorage` behavior without persistence.
+ */
 class MockAuthStorage : AuthStorage {
 
     private var accessToken: AccessToken? = null
@@ -15,7 +19,8 @@ class MockAuthStorage : AuthStorage {
     private var expiresAt: Long = 0L
     private var authSettings: AuthSettings? = null
 
-    override val accessTokenFlow: StateFlow<String?> = MutableStateFlow(null).asStateFlow()
+    private val _accessTokenFlow = MutableStateFlow<String?>(null)
+    override val accessTokenFlow: StateFlow<String?> = _accessTokenFlow.asStateFlow()
 
     override suspend fun getAccessToken(): AccessToken? = accessToken
 
@@ -27,12 +32,14 @@ class MockAuthStorage : AuthStorage {
         this.accessToken = accessToken
         this.refreshToken = refreshToken
         this.expiresAt = expiresAt
+        _accessTokenFlow.value = accessToken.value
     }
 
     override suspend fun clearTokens() {
         accessToken = null
         refreshToken = null
         expiresAt = 0L
+        _accessTokenFlow.value = null
     }
 
     override suspend fun getAuthSettings(): AuthSettings? = authSettings

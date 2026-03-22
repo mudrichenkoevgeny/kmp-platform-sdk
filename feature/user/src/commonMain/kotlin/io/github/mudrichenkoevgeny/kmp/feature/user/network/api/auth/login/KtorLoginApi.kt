@@ -14,6 +14,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
+/** [LoginApi] backed by [HttpClient]; login routes call [markAsPublic] so bearer auth is not applied. */
 class KtorLoginApi(
     private val client: HttpClient
 ) : LoginApi {

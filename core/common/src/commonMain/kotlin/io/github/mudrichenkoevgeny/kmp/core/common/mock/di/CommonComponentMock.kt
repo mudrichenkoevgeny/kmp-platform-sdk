@@ -20,17 +20,21 @@ import kotlinx.coroutines.SupervisorJob
  * - [mockDeviceInfo] for deterministic headers/device fields
  *
  * @param clientType Value passed to [mockDeviceInfo] for deterministic device metadata.
+ * @param platformContext Optional handle for platform services (for example Android [Context] for [CommonComponent.externalLauncher]).
  * @return A [CommonComponent] that does not require platform encrypted storage or a real base URL.
  */
 @OptIn(InternalApi::class)
 fun mockCommonComponent(
-    clientType: UserClientType = UserClientType.ANDROID
+    clientType: UserClientType = UserClientType.ANDROID,
+    platformContext: Any? = null
 ): CommonComponent {
     return CommonComponent(
         encryptedSettings = MockEncryptedSettings(),
-        baseUrl = "",
-        accessTokenProvider = MockAccessTokenProvider(),
         deviceInfo = mockDeviceInfo(clientType = clientType),
-        appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+        baseUrl = "",
+        httpClientConfigPlugins = emptyList(),
+        accessTokenProvider = MockAccessTokenProvider(),
+        appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
+        platformContext = platformContext
     )
 }

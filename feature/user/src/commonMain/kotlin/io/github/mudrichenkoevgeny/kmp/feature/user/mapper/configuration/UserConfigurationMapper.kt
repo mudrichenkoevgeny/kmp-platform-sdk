@@ -6,6 +6,10 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mapper.auth.settings.toAuthS
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.configuration.UserConfiguration
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.response.configuration.UserConfigurationResponse
 
+/**
+ * Maps aggregated user-configuration payload into [UserConfiguration] by delegating to core mappers
+ * ([toGlobalSettings], [toSecuritySettings]) and user [toAuthSettings].
+ */
 fun UserConfigurationResponse.toUserConfiguration() = UserConfiguration(
     globalSettings = this.globalSettings.toGlobalSettings(),
     securitySettings = this.securitySettings.toSecuritySettings(),

@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.U
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
+/** A single login identifier bound to a user (email, phone, or external provider subject). */
 @Serializable
 data class UserIdentifier(
     val id: UserIdentifierId,

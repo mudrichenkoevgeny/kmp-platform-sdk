@@ -1,20 +1,26 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.error.model
 
+import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
-@JvmInline
 /**
- * Identifier used to correlate and track errors across layers.
+ * Stable identifier used to correlate and track errors across layers.
  *
- * The id is represented as UUID and can be serialized/deserialized via:
- * - [asHexDashString] for stable textual representation
- * - [toErrorIdOrNull] for safe parsing from external strings
+ * Wraps a [Uuid] to provide type safety at call sites where error identifiers are passed around,
+ * logged, or serialized.
  */
+@JvmInline
+@Serializable
 value class ErrorId(val value: Uuid) {
+
+    /**
+     * Returns the underlying [Uuid] as a canonical hex string with dashes.
+     */
     fun asHexDashString(): String = value.toHexDashString()
 
     companion object {
+
         /**
          * Generates a new random [ErrorId].
          */
@@ -23,9 +29,14 @@ value class ErrorId(val value: Uuid) {
 }
 
 /**
- * Parses a server/external string into [ErrorId].
+ * Attempts to parse this string as an [ErrorId].
  *
- * @return parsed [ErrorId] or `null` if the input is not a valid UUID.
+ * Returns `null` if the value is not a valid UUID in hex-with-dashes form.
  */
 fun String.toErrorIdOrNull(): ErrorId? =
     Uuid.parseOrNull(this)?.let { ErrorId(it) }
+
+/**
+ * Parses this string into an [ErrorId] or throws if the value is not a valid UUID.
+ */
+fun String.toErrorIdOrThrow(): ErrorId = ErrorId(Uuid.parse(this))

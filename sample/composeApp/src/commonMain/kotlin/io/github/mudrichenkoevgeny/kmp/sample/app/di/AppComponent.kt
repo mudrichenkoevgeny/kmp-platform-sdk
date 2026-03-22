@@ -84,10 +84,16 @@ class AppComponent(
         )
     }
 
-    private val authHttpClientConfigPlugin = AuthHttpClientConfigPlugin(
-        baseUrl = baseUrl,
-        authStorage = authStorage
-    )
+    /**
+     * Must be lazy: the [InternalApi] mock constructor assigns [mockCommonComponent] (and related mocks)
+     * after the primary constructor runs; eager init would force [authStorage] / encrypted settings too early.
+     */
+    private val authHttpClientConfigPlugin by lazy {
+        AuthHttpClientConfigPlugin(
+            baseUrl = baseUrl,
+            authStorage = authStorage
+        )
+    }
 
     private var mockCommonComponent: CommonComponent? = null
     val commonComponent: CommonComponent by lazy {
@@ -135,11 +141,17 @@ class AppComponent(
     }
     val refreshUserConfigurationUseCase get() = userComponent.refreshUserConfigurationUseCase
 
-    private val appUseCaseModule = AppUseCaseModule(
-        refreshGlobalSettingsUseCase = settingsComponent.refreshGlobalSettingsUseCase,
-        refreshSecuritySettingsUseCase = securityComponent.refreshSecuritySettingsUseCase,
-        refreshAuthSettingsUseCase = userComponent.refreshAuthSettingsUseCase
-    )
+    /**
+     * Must be lazy for the same reason as [authHttpClientConfigPlugin] — otherwise [settingsComponent] /
+     * [userComponent] are touched before mock fields are assigned.
+     */
+    private val appUseCaseModule by lazy {
+        AppUseCaseModule(
+            refreshGlobalSettingsUseCase = settingsComponent.refreshGlobalSettingsUseCase,
+            refreshSecuritySettingsUseCase = securityComponent.refreshSecuritySettingsUseCase,
+            refreshAuthSettingsUseCase = userComponent.refreshAuthSettingsUseCase
+        )
+    }
     val syncDataUseCase get() = appUseCaseModule.syncDataUseCase
 
     /**

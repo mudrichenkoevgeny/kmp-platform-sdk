@@ -89,11 +89,18 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.shared.foundation.core.security)
             implementation(libs.shared.foundation.feature.user)
+            implementation(libs.ktor.client.mock)
+            implementation(libs.ktor.client.cio)
         }
 
         androidUnitTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.androidx.test.core)
+            implementation(libs.compose.ui.test)
+            implementation(libs.androidx.compose.ui.test.manifest)
+            implementation(libs.robolectric)
+            implementation(libs.ktor.client.cio)
         }
 
         wasmJsTest.dependencies {
@@ -108,6 +115,11 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
+    }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
     }
 }
 

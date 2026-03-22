@@ -20,6 +20,12 @@ alwaysApply: false
 - When documentation is requested for a **package**, the scope includes all subpackages.
 - For package documentation requests, **do not** add new Kotlin files that exist only to carry a package-level KDoc comment (no types, no functions, no other declarations). Document existing declarations in that package tree instead.
 
+## Documentation tasks — definition of done
+- When the user asks to document a **package**, **directory**, **set of files**, or **module** without narrowing scope, **public API** in that scope must satisfy the **Public API** rules in `docs-kdoc-type-requirements.mdc` in full.
+- In particular, for **`interface` types** that means **both** class-level KDoc **and** KDoc on **every public** `fun` / `val` member that is part of the contract (typically: purpose, `@param` for each parameter, `@return` for non-`Unit` results; for `Unit` or `AppResult<Unit>`, still state the outcome in the summary or a brief `@return` when it clarifies error handling).
+- **Do not** treat such a request as complete if interfaces only have class-level KDoc while methods are undocumented, **unless** the user explicitly limits scope (e.g. “class-level only”, or names specific declarations).
+- When the user names a **single** type, document that type completely per the same type rules (class + all members that require KDoc).
+
 ## Comments
 - Use inline comments sparingly; do not narrate obvious behavior.
 - Prefer clear naming and KDoc for public surface; comment only when intent/constraints are non-obvious.

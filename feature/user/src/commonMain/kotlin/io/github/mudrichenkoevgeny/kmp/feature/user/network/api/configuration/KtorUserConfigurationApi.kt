@@ -7,6 +7,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 
+/** [UserConfigurationApi] backed by [HttpClient]. */
 class KtorUserConfigurationApi(
     private val client: HttpClient
 ) : UserConfigurationApi {

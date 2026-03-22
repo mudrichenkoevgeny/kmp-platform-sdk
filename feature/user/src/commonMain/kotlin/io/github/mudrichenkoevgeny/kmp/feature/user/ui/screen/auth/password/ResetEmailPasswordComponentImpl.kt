@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.password
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
@@ -18,6 +19,17 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * Default [ResetEmailPasswordComponent]: send reset code, cooldowns, and password update via use cases.
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param passwordRepository exposes remaining reset-confirmation delay per email.
+ * @param sendResetPasswordConfirmationToEmailUseCase sends the reset verification code.
+ * @param resetEmailPasswordUseCase applies the new password after code verification.
+ * @param validatePasswordUseCase enforces password rules before submit.
+ * @param onBack pops this screen or returns to email step.
+ * @param onFinished invoked when the password was reset successfully.
+ */
 class ResetEmailPasswordComponentImpl(
     componentContext: ComponentContext,
     private val passwordRepository: PasswordRepository,
@@ -177,7 +189,7 @@ class ResetEmailPasswordComponentImpl(
         }
     }
 
-    private fun updateError(error: io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError) {
+    private fun updateError(error: AppError) {
         val current = _state.value
         _state.value = when (current) {
             is ResetEmailPasswordScreenState.EmailInput -> current.copy(actionLoading = false, actionError = error)

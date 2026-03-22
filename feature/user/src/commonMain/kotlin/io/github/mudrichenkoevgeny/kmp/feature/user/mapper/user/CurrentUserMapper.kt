@@ -8,6 +8,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contra
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.response.user.CurrentUserResponse
 import kotlin.time.Instant
 
+/**
+ * Maps the authenticated user snapshot from the API into [CurrentUser], converting epoch-ms fields to [Instant].
+ *
+ * @throws IllegalStateException when [CurrentUserResponse.role] or [CurrentUserResponse.accountStatus] is not a known wire value.
+ */
 fun CurrentUserResponse.toCurrentUser(): CurrentUser = CurrentUser(
     id = id.toUserIdOrThrow(),
     role = UserRole.fromValue(role) ?: throw IllegalStateException(

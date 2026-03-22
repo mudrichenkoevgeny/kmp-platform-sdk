@@ -12,6 +12,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * Production [AuthStorage] that persists tokens and cached [AuthSettings] under encrypted keys and mirrors the access token
+ * string into [accessTokenFlow].
+ *
+ * @param encryptedSettings Host-provided encrypted settings.
+ * @param scope [CoroutineScope] used to load the initial access token from storage on construction (updates [accessTokenFlow]).
+ */
 class EncryptedAuthStorage(
     private val encryptedSettings: EncryptedSettings,
     scope: CoroutineScope

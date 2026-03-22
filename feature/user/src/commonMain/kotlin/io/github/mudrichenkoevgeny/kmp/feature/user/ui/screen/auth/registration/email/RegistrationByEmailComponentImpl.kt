@@ -18,6 +18,17 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * Default [RegistrationByEmailComponent]: confirmation email, timers, and registration use case.
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param registrationRepository exposes remaining confirmation delay per email.
+ * @param sendRegistrationConfirmationToEmailUseCase sends the email verification code.
+ * @param registrationByEmailUseCase completes registration with email, password, and code.
+ * @param validatePasswordUseCase enforces password rules before submit.
+ * @param onBack pops this screen or returns to email step.
+ * @param onFinished invoked when registration succeeds.
+ */
 class RegistrationByEmailComponentImpl(
     componentContext: ComponentContext,
     private val registrationRepository: RegistrationRepository,

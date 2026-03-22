@@ -15,6 +15,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.network.websocket.messagehan
 import io.ktor.client.HttpClient
 import kotlin.getValue
 
+/**
+ * Lazily constructs Ktor API clients and the user WebSocket message handler from a shared [HttpClient].
+ *
+ * @param httpClient The host-configured Ktor client (typically from `CommonComponent`).
+ */
 internal class UserNetworkModule(
     private val httpClient: HttpClient
 ) {

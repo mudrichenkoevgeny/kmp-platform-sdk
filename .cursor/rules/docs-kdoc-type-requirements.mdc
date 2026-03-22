@@ -9,8 +9,9 @@ alwaysApply: false
 ## Public API (interfaces / public classes)
 - Interface KDoc:
   - class-level KDoc: role/purpose
-  - each method: purpose + `@param` + `@return`
-- For public (non-internal) classes, provide class-level KDoc that clarifies concrete behavior and intended usage.
+  - **every** public member (`fun` / property accessor): its own KDoc — purpose, `@param` for each parameter, `@return` when the return type is not `Unit` (for `Unit` or `AppResult<Unit>`, the summary or a short `@return` should still make success vs failure clear).
+- **Implicit scope:** requests such as “document this package/path/module” **include** documenting **all** public members on interfaces in that scope; class-level-only KDoc on an interface is **not** sufficient unless the user explicitly narrows the task.
+- For public (non-internal) classes, provide class-level KDoc that clarifies concrete behavior and intended usage, and document public members per the same member-level expectations where they form part of the SDK surface.
 
 ## Component / wiring classes (`*Component`, `*Module`)
 - Every wiring component/module must have class-level KDoc describing:

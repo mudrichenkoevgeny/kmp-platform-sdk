@@ -14,6 +14,17 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
+/**
+ * Default [LoginByEmailComponent]: validates credentials and performs email login through [LoginByEmailUseCase].
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param loginByEmailUseCase performs sign-in with email and password.
+ * @param validatePasswordUseCase enforces password rules before network calls.
+ * @param onNavigateToRegistrationByEmail opens the registration screen on the parent stack.
+ * @param onNavigateToForgotPassword opens the reset-password screen on the parent stack.
+ * @param onBack pops this screen on the parent stack.
+ * @param onFinished invoked when login succeeds so the host can close the flow.
+ */
 class LoginByEmailComponentImpl(
     componentContext: ComponentContext,
     private val loginByEmailUseCase: LoginByEmailUseCase,

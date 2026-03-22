@@ -7,6 +7,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.U
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserApiFields
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.response.user.PublicUserResponse
 
+/**
+ * Maps a public user payload from the HTTP API into [PublicUser].
+ *
+ * @throws IllegalStateException when [PublicUserResponse.role] or [PublicUserResponse.accountStatus] is not a known wire value.
+ */
 fun PublicUserResponse.toPublicUser(): PublicUser = PublicUser(
     id = id.toUserIdOrThrow(),
     role = UserRole.fromValue(role) ?: throw IllegalStateException(

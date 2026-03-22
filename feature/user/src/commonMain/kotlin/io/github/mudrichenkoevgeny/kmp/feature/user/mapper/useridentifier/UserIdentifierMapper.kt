@@ -8,6 +8,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contra
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.response.useridentifier.UserIdentifierResponse
 import kotlin.time.Instant
 
+/**
+ * Maps a user-identifier API model into [UserIdentifier], parsing IDs and converting timestamps to [Instant].
+ *
+ * @throws IllegalStateException when [UserIdentifierResponse.userAuthProvider] is not a known wire value.
+ */
 fun UserIdentifierResponse.toUserIdentifier(): UserIdentifier = UserIdentifier(
     id = id.toUserIdentifierIdOrThrow(),
     userId = userId.toUserIdOrThrow(),

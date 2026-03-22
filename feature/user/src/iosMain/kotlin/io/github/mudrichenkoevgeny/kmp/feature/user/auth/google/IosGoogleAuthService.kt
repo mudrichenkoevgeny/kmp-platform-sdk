@@ -4,6 +4,16 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import platform.UIKit.UIViewController
 import kotlin.coroutines.resume
 
+/**
+ * iOS [GoogleAuthService] using Google Sign-In (`GIDSignIn`): configures `serverClientID` from [webClientId], presents from
+ * [getRootController], and returns the Google ID token string on success.
+ *
+ * The current implementation resumes the sign-in coroutine immediately with a not-implemented failure, so the SDK callback
+ * path below is effectively dead until that line is removed.
+ *
+ * @param getRootController Host callback that returns the presenting `UIViewController`.
+ * @param webClientId Backend OAuth web client ID used as `serverClientID` when building `GIDConfiguration`.
+ */
 class IosGoogleAuthService(
     private val getRootController: () -> UIViewController,
     private val webClientId: String

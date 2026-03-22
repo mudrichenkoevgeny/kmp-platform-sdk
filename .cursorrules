@@ -2,7 +2,7 @@
 
 This repository uses **Cursor rules** under `.cursor/rules/*.mdc` for maintainable, scoped guidance.
 
-Keep this file short; add new/updated rules as separate `.mdc` files.
+Keep this file short. **Prefer extending an existing `.mdc` in the same domain** (e.g. Kotlin syntax → `kotlin-style.mdc`) instead of adding many tiny one-topic files; add a **new** `.mdc` when the topic is a new area (KDoc, tests, architecture, …).
 
 ## Core principles (always on)
 
@@ -15,7 +15,9 @@ Keep this file short; add new/updated rules as separate `.mdc` files.
 
 - `project-overview.mdc` — project identity, stack, repo/module layout, boundaries.
 - `architecture-patterns.mdc` — wiring/bootstrap conventions, layering, networking, errors.
-- `docs-kdoc-basics.mdc` + `docs-kdoc-type-requirements.mdc` — **mandatory** KDoc and documentation rules.
+- `docs-kdoc-basics.mdc` + `docs-kdoc-type-requirements.mdc` — **mandatory** KDoc and documentation rules (package/path doc requests: **definition of done** is in `docs-kdoc-basics.mdc`, including **every public interface member** unless the user narrows scope).
 - `localization.mdc` — Compose localization resource layout and naming.
 - `testing-style.mdc` — test conventions/constraints (if/when tests exist).
+- `testing-compose-preview-no-tests.mdc` — no UI/unit tests for Preview-only helpers (`PreviewParameterProvider`, etc.).
+- `kotlin-style.mdc` — Kotlin syntax: `when` subject / naming outcomes, `if`+`return` braces (no one-line `if (…) return`).
 - `ai-workflow.mdc` — dependency changes guidance and SDK vs sample boundaries.

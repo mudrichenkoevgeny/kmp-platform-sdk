@@ -15,6 +15,13 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.UserAuthProvider
 
+/**
+ * Wraps [authProviders] in a flow layout of compact icon buttons ([AuthProviderItem]).
+ *
+ * @param authProviders providers to show as secondary-style tiles (e.g. OAuth).
+ * @param onProviderClick invoked with the tapped [UserAuthProvider].
+ * @param modifier optional modifier for the container.
+ */
 @Composable
 fun AuthProviderGrid(
     authProviders: List<UserAuthProvider>,
@@ -36,7 +43,11 @@ fun AuthProviderGrid(
     }
 }
 
+/**
+ * [PreviewParameterProvider] supplying sample lists of [UserAuthProvider] for [AuthProviderGrid] previews.
+ */
 class AuthGridPreviewProvider : PreviewParameterProvider<List<UserAuthProvider>> {
+    /** Varying list sizes and provider mixes for layout previews. */
     override val values: Sequence<List<UserAuthProvider>> = sequenceOf(
         listOf(UserAuthProvider.GOOGLE, UserAuthProvider.APPLE),
         listOf(

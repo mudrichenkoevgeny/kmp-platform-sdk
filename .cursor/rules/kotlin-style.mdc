@@ -1,18 +1,26 @@
 ---
-description: Kotlin when subject — no calls inside; name call outcomes clearly (Result)
+description: Kotlin syntax/style — when subject, naming outcomes, if+return braces
 alwaysApply: true
 ---
 
-# Kotlin — `when` subject and naming of call outcomes
+# Kotlin style (syntax)
 
-## Calls and the `when` subject
+## `when` subject and naming of call outcomes
+
+### Calls and the `when` subject
 
 - **Do not** put a **function invocation** or **suspend invocation** inside the `when (...)` parentheses.
 - Assign that return value to a **`val` on the preceding line**, then use **`when` only on that variable** (a plain reference, no new computation in the subject).
 - **Do not** use **`when (val … = …)`** when the right-hand side is or contains such an invocation; extract the invocation to its own `val` first, then branch.
 
-## Naming the `val` that holds a return value
+### Naming the `val` that holds a return value
 
 - Use a **concrete** name tied to **what** was produced (domain or operation), not a vague placeholder.
 - When the value is the **outcome of a step** (especially a result-shaped type), the identifier should read as that outcome—**include `Result` in the name** when it improves clarity.
 - Inside branches, use the same binding you switched on (fields from that `val`), not a shadowed or re-invoked source.
+
+## `if` + `return`
+
+- **Do not** write a single-line early exit such as `if (condition) return` (or `if (a && b) return`).
+- **Do** use a **block body** and put `return` on its **own line** inside the braces.
+- Apply the same rule whenever an `if` exists **only** to perform a `return` (or `return@label`): always use `{ … }`, not a one-line `if (…) return …`.

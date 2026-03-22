@@ -17,6 +17,18 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.U
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
+/**
+ * Default [LoginWelcomeComponent]: loads auth providers and legal URLs on init, routes provider taps, runs Google login.
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param externalLauncher opens privacy/terms URLs in the system browser or equivalent.
+ * @param getGlobalSettingsUseCase loads legal URLs and related settings.
+ * @param getAvailableUserAuthProvidersUseCase loads which [UserAuthProvider] values are enabled.
+ * @param loginByGoogleUseCase performs Google sign-in when that provider is chosen.
+ * @param onNavigateToLoginByEmail pushes the email login destination on the parent stack.
+ * @param onNavigateToLoginByPhone pushes the phone login destination on the parent stack.
+ * @param onFinished completes the flow when sign-in succeeds (e.g. Google).
+ */
 class LoginWelcomeComponentImpl(
     componentContext: ComponentContext,
     private val externalLauncher: ExternalLauncher,

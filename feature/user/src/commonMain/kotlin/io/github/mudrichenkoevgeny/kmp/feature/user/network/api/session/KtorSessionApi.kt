@@ -10,6 +10,7 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 
+/** [SessionApi] backed by [HttpClient]. */
 class KtorSessionApi(
     private val client: HttpClient
 ) : SessionApi {

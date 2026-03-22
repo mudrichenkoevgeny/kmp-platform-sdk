@@ -19,6 +19,16 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlin.time.Clock
 
+/**
+ * Coordinates user feature repositories: auth (login, registration, tokens, password, auth settings),
+ * confirmation timing, and user profile loading against user storage and network APIs.
+ *
+ * @param networkModule Lazy Ktor API accessors.
+ * @param authStorage Token and auth-settings persistence.
+ * @param storageModule User profile storage.
+ * @param webSocketService Used by auth-settings repository for reactive updates.
+ * @param repositoryScope Coroutine scope for long-lived repository jobs.
+ */
 internal class UserRepositoryModule(
     private val networkModule: UserNetworkModule,
     private val authStorage: AuthStorage,

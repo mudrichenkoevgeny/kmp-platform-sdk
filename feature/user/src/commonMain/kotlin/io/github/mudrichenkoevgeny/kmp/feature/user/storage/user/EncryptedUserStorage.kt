@@ -8,6 +8,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.F
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+/**
+ * [UserStorage] backed by [EncryptedSettings], using [FoundationJson] to encode [CurrentUser], identifier, and session lists.
+ *
+ * @param encryptedSettings Encrypted key-value store supplied by the host.
+ */
 class EncryptedUserStorage(
     private val encryptedSettings: EncryptedSettings
 ) : UserStorage {

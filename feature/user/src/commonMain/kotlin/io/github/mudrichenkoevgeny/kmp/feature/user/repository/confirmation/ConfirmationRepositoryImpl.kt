@@ -8,6 +8,12 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.Confirmat
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.HasRetryDelay
 import kotlin.time.Clock
 
+/**
+ * In-memory implementation of [ConfirmationRepository] that records block-until timestamps using
+ * [Clock].
+ *
+ * @param clock Source of current time for computing cooldown expiry.
+ */
 class ConfirmationRepositoryImpl(
     private val clock: Clock
 ) : ConfirmationRepository {

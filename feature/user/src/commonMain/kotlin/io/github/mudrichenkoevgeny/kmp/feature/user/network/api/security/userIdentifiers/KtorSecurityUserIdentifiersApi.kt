@@ -17,6 +17,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
+/** [SecurityUserIdentifiersApi] backed by [HttpClient]. */
 class KtorSecurityUserIdentifiersApi(
     private val client: HttpClient
 ) : SecurityUserIdentifiersApi {

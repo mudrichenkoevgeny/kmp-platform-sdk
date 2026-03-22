@@ -21,6 +21,13 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.password.ResetEmailPasswordScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.registration.email.RegistrationByEmailScreen
 
+/**
+ * Presents the login flow in a host-appropriate shell: [ModalBottomSheet] on mobile clients, [Dialog] otherwise.
+ *
+ * Renders the active [LoginRootComponent.Child] from [LoginRootComponent.stack] with slide stack animation.
+ *
+ * @param component root login component supplying navigation state and child screens.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginRootScreen(component: LoginRootComponent) {

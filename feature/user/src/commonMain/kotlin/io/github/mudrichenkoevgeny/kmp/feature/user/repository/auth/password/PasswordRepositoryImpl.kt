@@ -12,6 +12,13 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.Conf
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.password.ResetPasswordRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.password.SendResetPasswordConfirmationRequest
 
+/**
+ * Implements [PasswordRepository] via [PasswordApi], using [ConfirmationRepository] for send-code
+ * cooldown state keyed by email.
+ *
+ * @param passwordApi HTTP endpoints for reset and confirmation send.
+ * @param confirmationRepository Rate limiting for password-reset email confirmation sends.
+ */
 class PasswordRepositoryImpl(
     private val passwordApi: PasswordApi,
     private val confirmationRepository: ConfirmationRepository

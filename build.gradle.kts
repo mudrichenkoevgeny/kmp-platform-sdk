@@ -24,6 +24,7 @@ subprojects {
         compilerOptions {
             freeCompilerArgs.add("-opt-in=kotlin.uuid.ExperimentalUuidApi")
             freeCompilerArgs.add("-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi")
+            freeCompilerArgs.add("-opt-in=androidx.compose.ui.test.ExperimentalTestApi")
         }
     }
 
@@ -32,6 +33,7 @@ subprojects {
             sourceSets.configureEach {
                 languageSettings.optIn("kotlin.uuid.ExperimentalUuidApi")
                 languageSettings.optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
+                languageSettings.optIn("androidx.compose.ui.test.ExperimentalTestApi")
             }
         }
     }

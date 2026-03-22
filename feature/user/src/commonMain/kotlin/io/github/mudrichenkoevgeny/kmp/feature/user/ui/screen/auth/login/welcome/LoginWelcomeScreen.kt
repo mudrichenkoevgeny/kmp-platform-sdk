@@ -42,6 +42,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.legal.LegalFoot
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.UserAuthProvider
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Welcome UI: loading, fullscreen init error with retry, or provider list with legal footer and action feedback.
+ *
+ * @param component Decompose component driving state and callbacks.
+ */
 @Composable
 fun LoginWelcomeScreen(component: LoginWelcomeComponent) {
     val state by component.state.subscribeAsState()

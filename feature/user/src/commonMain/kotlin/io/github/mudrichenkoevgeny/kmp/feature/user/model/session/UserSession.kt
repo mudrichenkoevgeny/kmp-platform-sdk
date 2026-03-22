@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.Us
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.UserAuthProvider
 import kotlinx.serialization.Serializable
 
+/** Describes one active session/device row as returned by the session API (expiry, client hints, audit timestamps). */
 @Serializable
 data class UserSession(
     val id: UserSessionId,
