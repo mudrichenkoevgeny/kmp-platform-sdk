@@ -6,10 +6,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.CommonErrorParse
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.network.httpclient.HttpClientConfigPlugin
 import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenProvider
-import io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo.model.DeviceInfo
 import io.github.mudrichenkoevgeny.kmp.core.common.platform.externallauncher.ExternalLauncher
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.common.CommonStorage
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceInfo
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -21,7 +21,7 @@ import kotlinx.coroutines.CoroutineScope
  * - error parsing pipeline (`appErrorParser`) that is initialized via [init].
  * Constructor dependencies:
  * - [EncryptedSettings]: backing store for [CommonStorage].
- * - [DeviceInfo]: device identity for repositories and WebSocket bootstrap.
+ * - [ClientDeviceInfo]: device identity for repositories and WebSocket bootstrap.
  * - `baseUrl`: HTTP and WebSocket endpoint base.
  * - [HttpClientConfigPlugin] list: optional extensions to the shared Ktor HTTP client (empty by default).
  * - [AccessTokenProvider]: token for authenticated HTTP and WebSocket.
@@ -31,7 +31,7 @@ import kotlinx.coroutines.CoroutineScope
  */
 class CommonComponent(
     val encryptedSettings: EncryptedSettings,
-    deviceInfo: DeviceInfo,
+    deviceInfo: ClientDeviceInfo,
     baseUrl: String,
     httpClientConfigPlugins: List<HttpClientConfigPlugin> = emptyList(),
     private val accessTokenProvider: AccessTokenProvider,
@@ -42,10 +42,11 @@ class CommonComponent(
     @InternalApi
     constructor(
         encryptedSettings: EncryptedSettings,
-        deviceInfo: DeviceInfo,
+        deviceInfo: ClientDeviceInfo,
         baseUrl: String,
         accessTokenProvider: AccessTokenProvider,
-        appScope: CoroutineScope
+        appScope: CoroutineScope,
+        platformContext: Any? = null
     ) : this(
         encryptedSettings,
         deviceInfo,
@@ -53,7 +54,7 @@ class CommonComponent(
         emptyList(),
         accessTokenProvider,
         appScope,
-        null
+        platformContext
     )
 
     private var _appErrorParser: AppErrorParser? = null

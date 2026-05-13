@@ -3,8 +3,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.di
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginRepositoryImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.password.PasswordRepository
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.password.PasswordRepositoryImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpassword.ResetPasswordRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpassword.ResetPasswordRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.refreshtoken.RefreshTokenRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.refreshtoken.RefreshTokenRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.registration.RegistrationRepository
@@ -13,8 +13,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.Aut
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.AuthSettingsRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepositoryImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepositoryImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.session.SessionRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.session.SessionRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepositoryImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.security.UserSecurityRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.security.UserSecurityRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlin.time.Clock
@@ -51,8 +57,8 @@ internal class UserRepositoryModule(
     val refreshTokenRepository: RefreshTokenRepository by lazy {
         RefreshTokenRepositoryImpl(networkModule.refreshTokenApi)
     }
-    val passwordRepository: PasswordRepository by lazy {
-        PasswordRepositoryImpl(networkModule.passwordApi, confirmationRepository)
+    val resetPasswordRepository: ResetPasswordRepository by lazy {
+        ResetPasswordRepositoryImpl(networkModule.resetPasswordApi, confirmationRepository)
     }
     val authSettingsRepository: AuthSettingsRepository by lazy {
         AuthSettingsRepositoryImpl(
@@ -63,12 +69,38 @@ internal class UserRepositoryModule(
         )
     }
 
-    // Security
+    // Identifier
+    val identifierRepository: IdentifierRepository by lazy {
+        IdentifierRepositoryImpl(
+            identifiersApi = networkModule.identifiersApi,
+            confirmationRepository = confirmationRepository,
+            userStorage = storageModule.userStorage
+        )
+    }
 
     // Session
+    val sessionRepository: SessionRepository by lazy {
+        SessionRepositoryImpl(
+            sessionApi = networkModule.sessionApi,
+            userStorage = storageModule.userStorage
+        )
+    }
 
     // User
     val userRepository: UserRepository by lazy {
-        UserRepositoryImpl(storageModule.userStorage, networkModule.userApi)
+        UserRepositoryImpl(
+            userStorage = storageModule.userStorage,
+            authStorage = authStorage,
+            userApi = networkModule.userApi,
+            webSocketService = webSocketService,
+            repositoryScope = repositoryScope
+        )
+    }
+
+    val userSecurityRepository: UserSecurityRepository by lazy {
+        UserSecurityRepositoryImpl(
+            userSecurityApi = networkModule.userSecurityApi,
+            userStorage = storageModule.userStorage
+        )
     }
 }

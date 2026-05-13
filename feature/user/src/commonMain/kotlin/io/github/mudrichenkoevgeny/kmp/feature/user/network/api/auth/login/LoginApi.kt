@@ -1,12 +1,13 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.network.api.auth.login
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.otpconfirmation.OtpConfirmationPayload
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.verifytotp.VerifyTotpPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.data.AuthDataPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByExternalAuthProviderRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByPhoneRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToPhoneRequest
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.response.auth.AuthDataResponse
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.response.confirmation.SendConfirmationResponse
 
 /** Remote login and phone confirmation entry points for the user feature. */
 interface LoginApi {
@@ -16,7 +17,7 @@ interface LoginApi {
      * @param request Email and secret payload from the shared contract.
      * @return Session tokens and related auth payload, or a mapped failure.
      */
-    suspend fun loginByEmail(request: LoginByEmailRequest): AppResult<AuthDataResponse>
+    suspend fun loginByEmail(request: LoginByEmailRequest): AppResult<AuthDataPayload>
 
     /**
      * Signs in with phone credentials (e.g. after OTP verification).
@@ -24,7 +25,7 @@ interface LoginApi {
      * @param request Phone login payload from the shared contract.
      * @return Session tokens and related auth payload, or a mapped failure.
      */
-    suspend fun loginByPhone(request: LoginByPhoneRequest): AppResult<AuthDataResponse>
+    suspend fun loginByPhone(request: LoginByPhoneRequest): AppResult<AuthDataPayload>
 
     /**
      * Signs in via an external identity provider (OAuth / social).
@@ -34,7 +35,16 @@ interface LoginApi {
      */
     suspend fun loginByExternalAuthProvider(
         request: LoginByExternalAuthProviderRequest
-    ): AppResult<AuthDataResponse>
+    ): AppResult<AuthDataPayload>
+
+    // todo doc
+    suspend fun loginByTotp(
+        request: VerifyTotpPayload
+    ): AppResult<AuthDataPayload>
+
+    suspend fun loginByTotpRecoveryCode(
+        request: VerifyTotpPayload
+    ): AppResult<AuthDataPayload>
 
     /**
      * Sends a login confirmation challenge to the user phone (e.g. SMS / OTP).
@@ -44,5 +54,5 @@ interface LoginApi {
      */
     suspend fun sendLoginConfirmationToPhone(
         request: SendConfirmationToPhoneRequest
-    ): AppResult<SendConfirmationResponse>
+    ): AppResult<OtpConfirmationPayload>
 }

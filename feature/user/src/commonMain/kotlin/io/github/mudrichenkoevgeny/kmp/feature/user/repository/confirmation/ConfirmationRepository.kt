@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.ConfirmationType
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.HasRetryDelay
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 
 /**
  * Client-side rate limiting for confirmation flows keyed by [ConfirmationType] and a logical
@@ -13,7 +13,7 @@ interface ConfirmationRepository {
      * Invokes [action] when the cooldown for the given key has elapsed; otherwise returns an error
      * [AppResult] without calling [action].
      *
-     * On successful [action], if the result implements [HasRetryDelay], a new cooldown is stored
+     * On successful [action], if the result is [OtpConfirmation], a new cooldown is stored
      * using `retryAfterSeconds`.
      *
      * @param type Which confirmation flow is being throttled.

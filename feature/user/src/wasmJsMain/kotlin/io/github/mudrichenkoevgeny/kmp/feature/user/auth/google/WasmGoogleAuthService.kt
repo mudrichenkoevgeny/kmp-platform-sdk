@@ -5,6 +5,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
+/**
+ * Web (Wasm) implementation of [GoogleAuthService] using the **Google Identity Services** (GSI) JavaScript library.
+ *
+ * This service leverages WebAssembly Interop to trigger the Google "One Tap" or standard
+ * Sign-In prompt in a web browser.
+ *
+ * @property webClientId OAuth 2.0 client ID (Web application type) used for browser-based authentication.
+ */
 class WasmGoogleAuthService(
     private val webClientId: String
 ) : GoogleAuthService {

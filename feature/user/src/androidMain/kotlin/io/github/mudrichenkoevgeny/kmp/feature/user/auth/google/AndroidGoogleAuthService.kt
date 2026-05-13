@@ -14,6 +14,16 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+/**
+ * Android implementation of [GoogleAuthService] using the **Jetpack Credential Manager** API.
+ *
+ * This service handles Google Sign-In by requesting a Google ID Token from the system's
+ * account picker and provides sign-out capabilities by clearing the credential state.
+ *
+ * @property context Android `Context` required to initialize [CredentialManager].
+ * @property webClientId The server's OAuth 2.0 client ID (Web application type)
+ * used to identify the app to Google's identity servers.
+ */
 class AndroidGoogleAuthService(
     private val context: Context,
     private val webClientId: String

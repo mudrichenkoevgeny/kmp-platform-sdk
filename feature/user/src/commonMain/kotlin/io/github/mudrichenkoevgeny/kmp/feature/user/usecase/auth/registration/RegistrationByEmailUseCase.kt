@@ -2,10 +2,10 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.registration
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.AuthData
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.registration.RegistrationRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
 
 /**
  * Registers a new account by email and, on success, stores session tokens and the new user snapshot.
@@ -41,7 +41,7 @@ class RegistrationByEmailUseCase(
                 refreshToken = authData.sessionToken.refreshToken,
                 expiresAt = authData.sessionToken.expiresAt
             )
-            userStorage.updateCurrentUser(authData.currentUser)
+            userStorage.updateCurrentUser(authData.userDetails)
         }
     }
 }

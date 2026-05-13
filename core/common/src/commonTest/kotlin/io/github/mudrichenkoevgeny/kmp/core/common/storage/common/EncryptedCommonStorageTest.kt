@@ -1,16 +1,18 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.storage.common
 
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.storage.MockEncryptedSettings
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.storage.EncryptedSettingsMock
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
+@InternalApi
 class EncryptedCommonStorageTest {
 
     @Test
     fun `getDeviceId returns null when not set`() = runTest {
-        val settings = MockEncryptedSettings()
+        val settings = EncryptedSettingsMock()
         val storage = EncryptedCommonStorage(settings)
 
         assertNull(storage.getDeviceId())
@@ -18,7 +20,7 @@ class EncryptedCommonStorageTest {
 
     @Test
     fun `updateDeviceId persists and getDeviceId returns it`() = runTest {
-        val settings = MockEncryptedSettings()
+        val settings = EncryptedSettingsMock()
         val storage = EncryptedCommonStorage(settings)
 
         storage.updateDeviceId("device-1")
@@ -28,7 +30,7 @@ class EncryptedCommonStorageTest {
 
     @Test
     fun `clear removes deviceId`() = runTest {
-        val settings = MockEncryptedSettings()
+        val settings = EncryptedSettingsMock()
         val storage = EncryptedCommonStorage(settings)
 
         storage.updateDeviceId("device-1")

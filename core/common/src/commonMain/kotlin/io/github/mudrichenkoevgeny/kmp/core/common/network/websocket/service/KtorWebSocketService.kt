@@ -1,10 +1,10 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenProvider
-import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.mapper.toWebSocketInitializePayload
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandler
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandlerResult
-import io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo.model.DeviceInfo
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceInfo
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.websocket.toWebSocketInitializePayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.contract.CommonWebSocketEventTypes
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.contract.WebSocketContract
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.model.websocket.SocketFrame
@@ -45,7 +45,7 @@ class KtorWebSocketService(
     private val baseUrl: String,
     private val networkLogger: Logger,
     private val accessTokenProvider: AccessTokenProvider,
-    private val deviceInfo: DeviceInfo,
+    private val deviceInfo: ClientDeviceInfo,
     private val scope: CoroutineScope
 ) : WebSocketService {
 
@@ -250,7 +250,7 @@ class KtorWebSocketService(
     }
 
     private suspend fun sendInitializeFrame() {
-        val payload = deviceInfo.toWebSocketInitializePayload()
+        val payload = deviceInfo.toWebSocketInitializePayload("1")
         sendEvent(
             type = CommonWebSocketEventTypes.INITIALIZE,
             payload = FoundationJson.encodeToJsonElement(payload)

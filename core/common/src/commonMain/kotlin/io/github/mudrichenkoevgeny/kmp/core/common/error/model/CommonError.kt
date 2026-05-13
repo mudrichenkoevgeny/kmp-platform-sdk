@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.error.model
 
+import io.github.mudrichenkoevgeny.kmp.core.common.error.naming.ClientCommonErrorArgs
 import io.github.mudrichenkoevgeny.kmp.core.common.error.naming.ClientCommonErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.CommonErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.CommonErrorCodes
@@ -54,7 +55,7 @@ sealed class CommonError(
     /**
      * Represents a failure caused by the absence of internet connectivity.
      *
-     * This error does not set [args] (it is meant to be mapped to a localized message by [code]).
+     * This error does not set [args].
      *
      * @param throwable Underlying exception/cause.
      * @param isRetryable Whether the failure is transient and can be retried.
@@ -86,17 +87,18 @@ sealed class CommonError(
     /**
      * Represents a broken contract between layers (e.g. invalid input/state that should not happen).
      *
-     * This error does not set [args].
-     *
-     * @param throwable Underlying exception that indicates the contract violation.
+     * @param throwable Underlying exception/cause.
+     * @param args Optional structured details.
      * @param isRetryable Contract violations are usually non-retryable.
      */
     class ContractViolation(
-        val throwable: Throwable,
+        val throwable: Throwable? = null,
+        args: Map<String, String>? = null,
         isRetryable: Boolean = false
     ) : CommonError(
         id = ErrorId.generate(),
         code = ClientCommonErrorCodes.CONTRACT_VIOLATION,
+        args = args,
         isRetryable = isRetryable
     )
 

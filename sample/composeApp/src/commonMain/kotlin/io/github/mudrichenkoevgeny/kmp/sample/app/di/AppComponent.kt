@@ -4,11 +4,12 @@ import com.arkivanov.decompose.ComponentContext
 import io.github.mudrichenkoevgeny.kmp.core.common.di.CommonComponent
 import io.github.mudrichenkoevgeny.kmp.core.common.di.EncryptedSettingsComponent
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.platform.model.mockDeviceInfo
-import io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo.model.DeviceInfo
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.platform.model.deviceInfoMock
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.security.error.parser.SecurityErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
+import io.github.mudrichenkoevgeny.kmp.feature.securityapi.di.SecurityApiComponent
+import io.github.mudrichenkoevgeny.kmp.feature.settingsapi.di.SettingsApiComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.pasrer.UserErrorParser
@@ -18,6 +19,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.EncryptedAuthStorage
 import io.github.mudrichenkoevgeny.kmp.sample.app.ui.screen.main.MainScreenComponent
 import io.github.mudrichenkoevgeny.kmp.sample.app.ui.screen.main.MainScreenComponentImpl
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -31,7 +33,7 @@ import kotlinx.coroutines.flow.asStateFlow
  *
  * Production-style constructor:
  * - `platformContext`: optional handle for platform services (Android `Application`, and similar).
- * - [DeviceInfo]: device identity for networking and WebSocket bootstrap.
+ * - [ClientDeviceInfo]: device identity for networking and WebSocket bootstrap.
  * - `baseUrl`: HTTP and WebSocket base URL for the sample backend.
  * - [UserAuthServices]: platform auth integrations (Google sign-in, and similar).
  *
@@ -43,7 +45,7 @@ import kotlinx.coroutines.flow.asStateFlow
  */
 class AppComponent(
     platformContext: Any? = null,
-    deviceInfo: DeviceInfo,
+    deviceInfo: ClientDeviceInfo,
     baseUrl: String,
     authServices: UserAuthServices
 ) {
@@ -53,13 +55,14 @@ class AppComponent(
 
     @InternalApi
     constructor(
+        platformContext: Any?,
         mockCommonComponent: CommonComponent,
         mockSettingsComponent: SettingsComponent,
         mockSecurityComponent: SecurityComponent,
         mockUserComponent: UserComponent
     ) : this(
-        platformContext = null,
-        deviceInfo = mockDeviceInfo(),
+        platformContext = platformContext,
+        deviceInfo = deviceInfoMock(),
         baseUrl = "",
         authServices = UserAuthServicesMock()
     ) {
@@ -108,22 +111,36 @@ class AppComponent(
         )
     }
 
+    private val settingsApiComponent by lazy {
+        SettingsApiComponent(
+            httpClient = commonComponent.httpClient
+        )
+    }
+    val globalSettingsApi = settingsApiComponent.globalSettingsApi
+
     private var mockSettingsComponent: SettingsComponent? = null
     val settingsComponent: SettingsComponent by lazy {
         mockSettingsComponent ?: SettingsComponent(
-            encryptedSettings = encryptedSettings,
-            httpClient = commonComponent.httpClient,
             webSocketService = commonComponent.webSocketService,
+            globalSettingsApi = globalSettingsApi,
+            encryptedSettings = encryptedSettings,
             parentScope = appScope
         )
     }
 
+    private val securityApiComponent by lazy {
+        SecurityApiComponent(
+            httpClient = commonComponent.httpClient
+        )
+    }
+    val securitySettingsApi = securityApiComponent.securitySettingsApi
+
     private var mockSecurityComponent: SecurityComponent? = null
     val securityComponent: SecurityComponent by lazy {
         mockSecurityComponent ?: SecurityComponent(
-            encryptedSettings = encryptedSettings,
-            httpClient = commonComponent.httpClient,
             webSocketService = commonComponent.webSocketService,
+            securitySettingsApi = securitySettingsApi,
+            encryptedSettings = encryptedSettings,
             parentScope = appScope
         )
     }

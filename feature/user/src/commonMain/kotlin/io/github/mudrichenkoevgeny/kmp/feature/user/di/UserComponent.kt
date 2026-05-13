@@ -42,14 +42,22 @@ class UserComponent(
 
     private val storageModule = UserStorageModule(commonComponent.encryptedSettings)
 
-    private val networkModule = UserNetworkModule(commonComponent.httpClient)
-    val userWebSocketMessageHandler get() = networkModule.userWebSocketMessageHandler
+    private val networkModule = UserNetworkModule(
+        httpClient = commonComponent.httpClient
+    )
 
-    private val repositoryModule = UserRepositoryModule(networkModule, authStorage, storageModule, commonComponent.webSocketService, componentScope)
+    private val repositoryModule = UserRepositoryModule(
+        networkModule,
+        authStorage,
+        storageModule,
+        commonComponent.webSocketService,
+        componentScope
+    )
     val loginRepository get() = repositoryModule.loginRepository
     val registrationRepository get() = repositoryModule.registrationRepository
     val userRepository get() = repositoryModule.userRepository
-    val passwordRepository get() = repositoryModule.passwordRepository
+    val passwordRepository get() = repositoryModule.resetPasswordRepository
+    val authSettingsRepository get() = repositoryModule.authSettingsRepository
 
     val passwordPolicyValidator get() = securityComponent.passwordPolicyValidator
 
@@ -59,10 +67,11 @@ class UserComponent(
         storageModule = storageModule,
         authServices = authServices,
         userConfigurationApi = networkModule.userConfigurationApi,
+        authSettingsRepository = repositoryModule.authSettingsRepository,
         globalSettingsRepository = settingsComponent.globalSettingsRepository,
-        securitySettingsRepository = securityComponent.securitySettingsRepository,
-        authSettingsRepository = repositoryModule.authSettingsRepository
+        securitySettingsRepository = securityComponent.securitySettingsRepository
     )
+    val refreshTokenUseCase get() = useCaseModule.refreshTokenUseCase
     val loginByEmailUseCase get() = useCaseModule.loginByEmailUseCase
     val loginByPhoneUseCase get() = useCaseModule.loginByPhoneUseCase
     val sendLoginConfirmationToPhoneUseCase get() = useCaseModule.sendLoginConfirmationToPhoneUseCase
@@ -70,10 +79,19 @@ class UserComponent(
     val refreshAuthSettingsUseCase get() = useCaseModule.refreshAuthSettingsUseCase
     val sendRegistrationConfirmationToEmailUseCase get() = useCaseModule.sendRegistrationConfirmationToEmailUseCase
     val registrationByEmailUseCase get() = useCaseModule.registrationByEmailUseCase
-    val refreshUserConfigurationUseCase get() = useCaseModule.refreshUserConfigurationUseCase
     val getAvailableUserAuthProvidersUseCase get() = useCaseModule.getAvailableUserAuthProvidersUseCase
     val resetEmailPasswordUseCase get() = useCaseModule.resetEmailPasswordUseCase
     val sendResetPasswordConfirmationToEmailUseCase get() = useCaseModule.sendResetPasswordConfirmationToEmailUseCase
+    val refreshUserConfigurationUseCase get() = useCaseModule.refreshUserConfigurationUseCase
+
+    private val userWebSocketModule = UserWebSocketModule(
+        userStorage = storageModule.userStorage,
+        authStorage = authStorage,
+        authSettingsRepository = authSettingsRepository,
+        refreshTokenUseCase = refreshTokenUseCase,
+        scope = componentScope
+    )
+    val userWebSocketMessageHandler get() = userWebSocketModule.userWebSocketMessageHandler
 
     fun createLoginRootDialogComponent(
         componentContext: ComponentContext,

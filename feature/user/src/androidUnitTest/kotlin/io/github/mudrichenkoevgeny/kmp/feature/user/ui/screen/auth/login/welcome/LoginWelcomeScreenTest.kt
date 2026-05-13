@@ -14,17 +14,19 @@ import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.MockAppErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.settings.AvailableAuthProviders
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.AvailableAuthProviders
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+@InternalApi
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [ROBOLECTRIC_SDK])
 class LoginWelcomeScreenTest {
@@ -143,15 +145,16 @@ class LoginWelcomeScreenTest {
         const val PRIVACY_URL = "https://example.com/privacy"
         const val TERMS_URL = "https://example.com/terms"
 
-        /** [MockAppErrorParser] always returns this string for any [AppError]. */
+        /** [AppErrorParserMock] always returns this string for any [AppError]. */
         const val MOCK_ERROR_MESSAGE = "Unknown Error"
     }
 }
 
+@InternalApi
 @Composable
 private fun LoginWelcomeScreenHarness(component: LoginWelcomeComponent) {
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             LoginWelcomeScreen(component)
         }
     }

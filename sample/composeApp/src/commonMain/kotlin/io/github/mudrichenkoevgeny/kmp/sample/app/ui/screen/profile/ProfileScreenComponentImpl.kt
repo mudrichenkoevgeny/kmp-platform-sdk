@@ -29,7 +29,9 @@ class ProfileScreenComponentImpl(
                 ProfileScreenState.Content(user = user)
             }
         }
-        .catch { emit(ProfileScreenState.Error(CommonError.Unknown())) }
+        .catch {
+            emit(ProfileScreenState.Error(CommonError.Unknown()))
+        }
         .asValue(
             initialValue = ProfileScreenState.Loading,
             lifecycle = lifecycle

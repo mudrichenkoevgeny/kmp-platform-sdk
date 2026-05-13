@@ -1,10 +1,11 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenProvider
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.settings.AuthSettings
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.AccessToken
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.RefreshToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.PublicAuthSettings
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
 import kotlinx.coroutines.flow.StateFlow
+import kotlin.time.Instant
 
 /**
  * Persists session tokens and cached auth settings for the user feature. Implementations are supplied by the host
@@ -30,17 +31,21 @@ interface AuthStorage : AccessTokenProvider {
      * @param refreshToken New refresh token.
      * @param expiresAt Access token expiry as epoch milliseconds.
      */
-    suspend fun updateTokens(accessToken: AccessToken, refreshToken: RefreshToken, expiresAt: Long)
+    suspend fun updateTokens(
+        accessToken: AccessToken,
+        refreshToken: RefreshToken,
+        expiresAt: Instant
+    )
 
     /** Removes tokens from storage (logout / invalid session). */
     suspend fun clearTokens()
 
     /** @return Last known auth settings snapshot, or null if never loaded. */
-    suspend fun getAuthSettings(): AuthSettings?
+    suspend fun getAuthSettings(): PublicAuthSettings?
 
     /** @param authSettings Replaces cached provider/policy settings from the backend or WebSocket. */
-    suspend fun updateAuthSettings(authSettings: AuthSettings)
+    suspend fun updateAuthSettings(authSettings: PublicAuthSettings)
 
-    /** Clears cached auth settings (e.g. on logout). */
+    /** Clears cached auth settings. */
     suspend fun clearAuthSettings()
 }

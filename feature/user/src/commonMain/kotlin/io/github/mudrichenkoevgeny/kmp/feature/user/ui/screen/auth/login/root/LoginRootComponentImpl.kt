@@ -15,7 +15,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.LoginDe
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.phone.LoginByPhoneComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.password.ResetEmailPasswordComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.registration.email.RegistrationByEmailComponentImpl
 
 /**
@@ -101,7 +101,7 @@ class LoginRootComponentImpl(
         is LoginDestination.ResetEmailPassword -> LoginRootComponent.Child.ResetEmailPassword(
             ResetEmailPasswordComponentImpl(
                 componentContext = context,
-                passwordRepository = userComponent.passwordRepository,
+                resetPasswordRepository = userComponent.passwordRepository,
                 sendResetPasswordConfirmationToEmailUseCase = userComponent.sendResetPasswordConfirmationToEmailUseCase,
                 resetEmailPasswordUseCase = userComponent.resetEmailPasswordUseCase,
                 validatePasswordUseCase = securityComponent.validatePasswordUseCase,

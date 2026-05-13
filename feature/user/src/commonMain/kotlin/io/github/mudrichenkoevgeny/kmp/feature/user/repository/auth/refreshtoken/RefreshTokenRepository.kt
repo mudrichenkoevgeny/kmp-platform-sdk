@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.refreshtoken
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.SessionToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
 
 /**
  * Obtains a new session token pair using a refresh token from the auth API.

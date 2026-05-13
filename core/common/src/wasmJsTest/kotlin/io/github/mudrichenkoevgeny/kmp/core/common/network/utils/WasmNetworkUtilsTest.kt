@@ -1,9 +1,11 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.network.utils
 
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
+@InternalApi
 class WasmNetworkUtilsTest {
 
     @Test

@@ -27,7 +27,8 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.MockAppErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
@@ -284,11 +285,12 @@ private fun ErrorText(error: AppError?) {
     }
 }
 
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun RegistrationEmailInputPreview() {
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             Surface {
                 EmailInputContent(
                     state = RegistrationByEmailScreenState.EmailInput(
@@ -304,11 +306,12 @@ private fun RegistrationEmailInputPreview() {
     }
 }
 
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun RegistrationInputPreview() {
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             Surface {
                 RegistrationInputContent(
                     state = RegistrationByEmailScreenState.RegistrationInput(

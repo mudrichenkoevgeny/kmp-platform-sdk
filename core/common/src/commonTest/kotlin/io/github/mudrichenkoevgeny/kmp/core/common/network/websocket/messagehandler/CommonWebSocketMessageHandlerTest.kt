@@ -1,6 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.toErrorIdOrNull
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.contract.CommonWebSocketEventTypes
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.model.websocket.SocketFrame
 import kotlinx.coroutines.test.runTest
@@ -13,6 +14,7 @@ import kotlin.test.assertTrue
 private const val FRAME_ID = "123e4567-e89b-12d3-a456-426614174000"
 private const val FRAME_TS = 42L
 
+@InternalApi
 class CommonWebSocketMessageHandlerTest {
 
     private val handler = CommonWebSocketMessageHandler()
@@ -28,9 +30,8 @@ class CommonWebSocketMessageHandlerTest {
         val result = handler.handle(frame(CommonWebSocketEventTypes.PING))
 
         assertTrue(result is WebSocketMessageHandlerResult.SendSocketFrame)
-        val send = result as WebSocketMessageHandlerResult.SendSocketFrame
-        assertEquals(CommonWebSocketEventTypes.PONG, send.socketFrame.type)
-        assertNotNull(send.socketFrame.id.toErrorIdOrNull())
+        assertEquals(CommonWebSocketEventTypes.PONG, result.socketFrame.type)
+        assertNotNull(result.socketFrame.id.toErrorIdOrNull())
     }
 
     @Test

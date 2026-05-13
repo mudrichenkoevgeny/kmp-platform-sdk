@@ -1,64 +1,138 @@
 # kmp-platform-sdk
 
-A modular **Kotlin Multiplatform** client SDK for Android and Web (Wasm). It bundles a shared **Ktor HTTP client**, **WebSockets**, **encrypted storage** (Android-first), **settings / security / user** domains, **Compose Multiplatform** UI for auth flows, and **Decompose** navigation—so host apps can wire runtime config once and reuse the same stack across targets.
+A modular **Kotlin Multiplatform (KMP)** client SDK for Android and Web (Wasm). It provides a unified foundation for building multiplatform applications with shared logic for networking, encrypted storage, security policies, and identity management. By bundling **Compose Multiplatform** UI and **Decompose** navigation, it allows host apps to integrate complex auth flows and system settings with minimal boilerplate.
 
-Targets today are primarily **Android** and **Wasm**; iOS source sets exist as scaffolding where noted in Gradle.
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.mudrichenkoevgeny/kmp-platform-sdk-bom)](https://central.sonatype.com/artifact/io.github.mudrichenkoevgeny/kmp-platform-sdk-bom)
 
 ## Modules
 
 | Module | Purpose |
-|--------|--------|
-| **core/common** | Base for all SDK modules: Ktor client bootstrap, WebSocket service, `EncryptedSettings`, device/platform metadata, `AppError` parsing pipeline, shared Compose building blocks, mocks. Does not depend on other in-repo `core/*` or `feature/*` modules. |
-| **core/settings** | Global settings: storage, HTTP API, repository, refresh use cases, WebSocket message handler. |
-| **core/security** | Security settings, password policy validation (via shared foundation), refresh use cases, WebSocket handler, `SecurityErrorParser`. |
-| **feature/user** | Auth (email, phone, Google), tokens, auth settings, user profile cache, `AuthHttpClientConfigPlugin`, `UserWebSocketMessageHandler`, `UserErrorParser`, Decompose login/registration UI. Depends on **core/common**, **core/settings**, **core/security**. |
-| **bom** | Java platform module: Gradle constraints so `core/*` and `feature/*` stay on aligned versions when consumed together. |
-| **sample** | Reference **composeApp** (shared UI + Wasm + Android library target) and **androidApp** showing how to build `AppComponent`, call `init()`, register parsers and WebSocket handlers, and host `RootContent`. |
+| :--- | :--- |
+| **core/common** | **Foundation:** Ktor bootstrap, WebSocket lifecycle, `EncryptedSettings` abstraction, platform metadata, and Chain of Responsibility error parsing. |
+| **core/settings** | **Global Settings:** Logic for application configuration, encrypted caching, and reactive state management. |
+| **core/security** | **Security Domain:** Password policy validation, MFA state management, and localized security errors. |
+| **feature/settingsapi** | **Settings Network:** Ktor implementation for fetching global application configurations. |
+| **feature/securityapi** | **Security Network:** Ktor implementation for fetching security policies and MFA requirements. |
+| **feature/user** | **Identity & Auth:** Identity solution with multi-method auth (Email, Phone, Google), session management, and Decompose UI flows. |
+| **bom** | **Bill of Materials:** Gradle platform to ensure version alignment across all SDK modules. |
 
-Depend only on what you need. Per-module details:
+## Installation
 
-- [core/common/README.md](core/common/README.md)
-- [core/settings/README.md](core/settings/README.md)
-- [core/security/README.md](core/security/README.md)
-- [feature/user/README.md](feature/user/README.md)
-- [sample/README.md](sample/README.md)
-
-## Adding the SDK to your project
-
-Consume the SDK **from source**: include this repository in your Gradle build (monorepo layout, Git submodule, or `includeBuild`), then add **project** dependencies from your Kotlin Multiplatform targets.
-
-Example (your app lives in the same composite build and can see these projects):
+Add the BOM and the required modules to your `commonMain` dependencies:
 
 ```kotlin
-// build.gradle.kts — commonMain (or androidMain / wasmJsMain as needed)
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core:common"))
-            implementation(project(":core:settings"))
-            implementation(project(":core:security"))
-            implementation(project(":feature:user"))
+            implementation(platform("io.github.mudrichenkoevgeny:kmp-platform-sdk-bom:0.0.1"))
+            implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-core-common")
+            implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-feature-user")
+            // Add other core or feature modules as needed
         }
     }
 }
 ```
 
-Adjust project paths (`:core:common`, etc.) to match how you **include** this repo in `settings.gradle.kts`. To keep module versions consistent inside one composite build, you can depend on **`project(":bom")`** as a platform alongside the feature and core projects.
+## Integration Steps
 
-Shared **foundation** types and contracts are pulled in via dependencies declared in this repo’s `gradle/libs.versions.toml` (your app inherits them transitively when you depend on the SDK modules).
+### 1. Storage & Infrastructure
+Initialize the `EncryptedSettingsComponent` and the root `CommonComponent` using platform-specific context.
 
-## Integration steps
+```kotlin
+val encryptedSettingsComponent = EncryptedSettingsComponent(platformContext)
 
-1. **Storage** — Provide platform `EncryptedSettings` by constructing [EncryptedSettingsComponent](core/common/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/di/EncryptedSettingsComponent.kt) (or an equivalent host-owned setup) and reuse that instance everywhere below.
+val commonComponent = CommonComponent(
+    encryptedSettings = encryptedSettingsComponent.encryptedSettings,
+    deviceInfo = deviceInfo,
+    baseUrl = "https://api.example.com",
+    accessTokenProvider = authStorage,
+    appScope = appScope,
+    platformContext = platformContext
+)
+```
 
-2. **Common** — Build [CommonComponent](core/common/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/di/CommonComponent.kt) with `baseUrl`, `deviceInfo`, `encryptedSettings`, optional `platformContext`, `accessTokenProvider`, and `httpClientConfigPlugins` (include [AuthHttpClientConfigPlugin](feature/user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/network/httpclient/AuthHttpClientConfigPlugin.kt) from **feature/user** when you use auth APIs).
+### 2. Feature API & Components
+Construct the networking providers and domain components by sharing the core `HttpClient` and `WebSocketService`.
 
-3. **Settings & security** — Construct [SettingsComponent](core/settings/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/settings/di/SettingsComponent.kt) and [SecurityComponent](core/security/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/security/di/SecurityComponent.kt) with the **same** `encryptedSettings`, Ktor `HttpClient`, and `WebSocketService` as `CommonComponent`.
+```kotlin
+val securityApi = SecurityApiComponent(httpClient = commonComponent.httpClient).securitySettingsApi
+val settingsApi = SettingsApiComponent(httpClient = commonComponent.httpClient).globalSettingsApi
 
-4. **User** — Build [UserComponent](feature/user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/di/UserComponent.kt) with `commonComponent`, `settingsComponent`, `securityComponent`, [AuthStorage](feature/user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/storage/auth/AuthStorage.kt) (e.g. [EncryptedAuthStorage](feature/user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/storage/auth/EncryptedAuthStorage.kt)), and platform [UserAuthServices](feature/user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/auth/UserAuthServices.kt).
+val securityComponent = SecurityComponent(
+    webSocketService = commonComponent.webSocketService,
+    securitySettingsApi = securityApi,
+    encryptedSettings = commonComponent.encryptedSettings,
+    parentScope = appScope
+)
 
-5. **Init** — Call `CommonComponent.init(...)` with feature parsers (`SecurityErrorParser`, `UserErrorParser`, …), then `webSocketService.updateWebSocketMessageHandlers(...)` with the combined list (common, settings, security, user). Connect the socket when your app is ready.
+val settingsComponent = SettingsComponent(
+    webSocketService = commonComponent.webSocketService,
+    globalSettingsApi = settingsApi,
+    encryptedSettings = commonComponent.encryptedSettings,
+    parentScope = appScope
+)
+```
 
-6. **UI** — Use `CompositionLocalProvider` with `LocalCommonComponent` / `LocalErrorParser` (see [RootContent](sample/composeApp/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/sample/app/ui/root/RootContent.kt) in the sample) and embed feature UI such as `UserComponent.createLoginRootDialogComponent(...)`.
+### 3. User Identity Setup
+Wire the `UserComponent` with its core collaborators and platform-specific authentication services.
 
-For a full wiring example, see the [sample](sample) application and [sample/README.md](sample/README.md).
+```kotlin
+val userComponent = UserComponent(
+    commonComponent = commonComponent,
+    settingsComponent = settingsComponent,
+    securityComponent = securityComponent,
+    authStorage = encryptedAuthStorage,
+    authServices = platformAuthServices,
+    parentScope = appScope
+)
+```
+
+### 4. System Initialization
+Register auth interceptors, domain error parsers, and WebSocket message handlers during the application startup sequence.
+
+```kotlin
+fun init() {
+commonComponent.httpClientConfigPlugins.add(userComponent.authHttpClientConfigPlugin)
+
+    commonComponent.init(
+        appErrorParserSpecificParsers = listOf(
+            SecurityErrorParser,
+            UserErrorParser
+        )
+    )
+
+    commonComponent.webSocketService.updateWebSocketMessageHandlers(
+        listOf(
+            commonComponent.commonWebSocketMessageHandler,
+            securityComponent.securityWebSocketMessageHandler,
+            settingsComponent.settingsWebSocketMessageHandler,
+            userComponent.userWebSocketMessageHandler
+        )
+    )
+}
+```
+
+### 5. UI Integration
+Inject the SDK graph into your Compose Multiplatform tree using `CompositionLocalProvider`.
+
+```kotlin
+@Composable
+@Composable
+fun App(appComponent: AppComponent) {
+    val isInitialized by appComponent.isInitialized.collectAsState()
+
+    if (isInitialized) {
+        CompositionLocalProvider(
+            LocalCommonComponent provides appComponent.commonComponent,
+            LocalErrorParser provides appComponent.commonComponent.appErrorParser,
+            LocalAppComponent provides appComponent
+        ) {
+            // Embed feature UI or launch LoginRootComponent navigation
+        }
+    } else {
+        SplashScreen()
+    }
+}
+```
+
+For a complete wiring example, refer to the [sample](sample) application.

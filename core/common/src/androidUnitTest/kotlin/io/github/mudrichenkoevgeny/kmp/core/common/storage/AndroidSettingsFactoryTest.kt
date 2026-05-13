@@ -2,6 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.core.common.storage
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import kotlinx.coroutines.test.runTest
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -12,6 +13,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
 
+@InternalApi
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
 class AndroidSettingsFactoryTest {

@@ -1,9 +1,11 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo
 
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.UserClientType
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+@InternalApi
 class WasmDeviceInfoProviderTest {
 
     @Test
@@ -12,8 +14,8 @@ class WasmDeviceInfoProviderTest {
 
         val info = provider.getDeviceInfo()
 
-        assertEquals(UserClientType.WEB, info.clientType)
+        assertEquals(ClientType.WEB, info.clientType)
         assertEquals("9.8.7", info.appVersion)
-        assertEquals(WasmDeviceInfo.OS_VERSION, info.osVersion)
+        assertEquals(WasmDeviceInfo.OS_VERSION, info.operationSystemVersion)
     }
 }

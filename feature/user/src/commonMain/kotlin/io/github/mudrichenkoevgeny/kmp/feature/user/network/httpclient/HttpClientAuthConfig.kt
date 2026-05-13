@@ -1,12 +1,12 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient
 
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.AccessToken
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.RefreshToken
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.auth.IsPublicApi
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.refreshtoken.RefreshTokenRequest
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.response.token.SessionTokenResponse
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.auth.refreshtoken.RefreshTokenRoutes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.RefreshTokenPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.SessionTokenPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.auth.refreshtoken.OpenRefreshTokenRoutes
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
 import io.ktor.client.plugins.auth.Auth
@@ -16,6 +16,7 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import kotlin.time.Clock
+import kotlin.time.Instant
 
 private const val LOGGER_AUTH_PREFIX = "Auth"
 
@@ -68,15 +69,15 @@ fun HttpClientConfig<*>.setupAuthConfig(
 
                 try {
                     val tokenResponse = client
-                        .post("$baseUrl${RefreshTokenRoutes.REFRESH}") {
+                        .post("$baseUrl${OpenRefreshTokenRoutes.REFRESH_TOKEN}") {
                             markAsRefreshTokenRequest()
-                            setBody(RefreshTokenRequest(refreshToken.value))
-                        }.body<SessionTokenResponse>()
+                            setBody(RefreshTokenPayload(refreshToken.value))
+                        }.body<SessionTokenPayload>()
 
                     authStorage.updateTokens(
                         accessToken = AccessToken(tokenResponse.accessToken),
                         refreshToken = RefreshToken(tokenResponse.refreshToken),
-                        expiresAt = tokenResponse.expiresAt
+                        expiresAt = Instant.fromEpochMilliseconds(tokenResponse.expiresAt)
                     )
 
                     networkLogger.log("$LOGGER_AUTH_PREFIX: Tokens successfully refreshed")

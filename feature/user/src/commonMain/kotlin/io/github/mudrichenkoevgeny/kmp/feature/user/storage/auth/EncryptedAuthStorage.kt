@@ -2,18 +2,22 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenProvider
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.settings.AuthSettings
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.AccessToken
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.RefreshToken
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.PublicAuthSettings
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.settings.toAuthSettings
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.settings.toAuthSettingsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.settings.PublicAuthSettingsPayload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.time.Instant
 
 /**
- * Production [AuthStorage] that persists tokens and cached [AuthSettings] under encrypted keys and mirrors the access token
+ * Production [AuthStorage] that persists tokens and cached [PublicAuthSettings] under encrypted keys and mirrors the access token
  * string into [accessTokenFlow].
  *
  * @param encryptedSettings Host-provided encrypted settings.
@@ -48,11 +52,11 @@ class EncryptedAuthStorage(
     override suspend fun updateTokens(
         accessToken: AccessToken,
         refreshToken: RefreshToken,
-        expiresAt: Long
+        expiresAt: Instant
     ) {
         encryptedSettings.put(KEY_ACCESS_TOKEN, accessToken.value)
         encryptedSettings.put(KEY_REFRESH_TOKEN, refreshToken.value)
-        encryptedSettings.put(KEY_EXPIRES_AT, expiresAt.toString())
+        encryptedSettings.put(KEY_EXPIRES_AT, expiresAt.toEpochMilliseconds().toString())
         _accessTokenFlow.value = accessToken.value
     }
 
@@ -63,14 +67,19 @@ class EncryptedAuthStorage(
         _accessTokenFlow.emit(null)
     }
 
-    override suspend fun getAuthSettings(): AuthSettings? {
+    override suspend fun getAuthSettings(): PublicAuthSettings? {
         val data = encryptedSettings.get(KEY_AUTH_SETTINGS)
             ?: return null
-        return json.decodeFromString(data)
+        return try {
+            json.decodeFromString<PublicAuthSettingsPayload>(data).toAuthSettings()
+        } catch (e: Exception) {
+            null
+        }
     }
 
-    override suspend fun updateAuthSettings(authSettings: AuthSettings) {
-        val data = json.encodeToString(authSettings)
+    override suspend fun updateAuthSettings(authSettings: PublicAuthSettings) {
+        val payload = authSettings.toAuthSettingsPayload()
+        val data = json.encodeToString(payload)
         encryptedSettings.put(KEY_AUTH_SETTINGS, data)
     }
 

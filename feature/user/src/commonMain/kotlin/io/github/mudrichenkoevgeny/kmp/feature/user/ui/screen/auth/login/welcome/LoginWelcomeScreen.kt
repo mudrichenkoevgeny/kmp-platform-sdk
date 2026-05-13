@@ -28,18 +28,19 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.MockAppErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error.FullscreenError
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.settings.AvailableAuthProviders
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth.AuthProviderButton
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth.AuthProviderGrid
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.legal.LegalFooter
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.AvailableAuthProviders
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -156,6 +157,7 @@ private fun LoginWelcomeContent(
     }
 }
 
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun LoginWelcomeScreenContentPreview() {
@@ -165,7 +167,7 @@ private fun LoginWelcomeScreenContentPreview() {
     )
 
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             Surface {
                 LoginWelcomeContent(
                     state = LoginWelcomeScreenState.Content(
@@ -181,6 +183,7 @@ private fun LoginWelcomeScreenContentPreview() {
     }
 }
 
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun LoginWelcomeScreenContentWithActionErrorPreview() {
@@ -190,7 +193,7 @@ private fun LoginWelcomeScreenContentWithActionErrorPreview() {
     )
 
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             Surface {
                 LoginWelcomeContent(
                     state = LoginWelcomeScreenState.Content(
@@ -206,6 +209,7 @@ private fun LoginWelcomeScreenContentWithActionErrorPreview() {
     }
 }
 
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun LoginWelcomeScreenContentWithActionLoadingPreview() {
@@ -215,7 +219,7 @@ private fun LoginWelcomeScreenContentWithActionLoadingPreview() {
     )
 
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             Surface {
                 LoginWelcomeContent(
                     state = LoginWelcomeScreenState.Content(
@@ -231,6 +235,7 @@ private fun LoginWelcomeScreenContentWithActionLoadingPreview() {
     }
 }
 
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun LoginWelcomeScreenLoadingPreview() {

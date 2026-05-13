@@ -1,8 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.core.settings.usecase
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.core.settings.model.globalsettings.GlobalSettings
-import io.github.mudrichenkoevgeny.kmp.core.settings.repository.globalsettings.GlobalSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.core.settings.repository.GlobalSettingsRepository
+import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.model.globalsettings.GlobalSettings
 
 /**
  * Use case that delegates to [GlobalSettingsRepository.getGlobalSettings].

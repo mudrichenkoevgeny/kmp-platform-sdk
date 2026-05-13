@@ -1,25 +1,27 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.refreshtoken
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.AccessToken
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.RefreshToken
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.SessionToken
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.token.sessionTokenPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.auth.refreshtoken.RefreshTokenApi
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.wireSessionTokenResponse
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.refreshtoken.RefreshTokenRequest
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.response.token.SessionTokenResponse
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.RefreshTokenPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.SessionTokenPayload
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertSame
 
+@InternalApi
 class RefreshTokenRepositoryImplTest {
 
     @Test
     fun refreshToken_forwardsWrappedRequest_andMapsSuccess() = runTest {
-        val wire = wireSessionTokenResponse(
+        val wire = sessionTokenPayloadMock(
             accessToken = ACCESS_TOKEN,
             refreshToken = REFRESH_TOKEN,
             expiresAt = EXPIRES_AT_MS,
@@ -33,7 +35,7 @@ class RefreshTokenRepositoryImplTest {
         val success = assertIs<AppResult.Success<SessionToken>>(refreshResult)
         assertEquals(AccessToken(ACCESS_TOKEN), success.data.accessToken)
         assertEquals(RefreshToken(REFRESH_TOKEN), success.data.refreshToken)
-        assertEquals(EXPIRES_AT_MS, success.data.expiresAt)
+        assertEquals(EXPIRES_AT_MS, success.data.expiresAt.toEpochMilliseconds())
         assertEquals(TOKEN_TYPE_BEARER, success.data.tokenType)
         assertEquals(SECRET_REFRESH_TOKEN, api.lastRequest.refreshToken)
     }
@@ -51,10 +53,10 @@ class RefreshTokenRepositoryImplTest {
     }
 
     private class FakeRefreshTokenApi : RefreshTokenApi {
-        lateinit var lastRequest: RefreshTokenRequest
-        var result: AppResult<SessionTokenResponse> = AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
+        lateinit var lastRequest: RefreshTokenPayload
+        var result: AppResult<SessionTokenPayload> = AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
 
-        override suspend fun refreshToken(request: RefreshTokenRequest): AppResult<SessionTokenResponse> {
+        override suspend fun refreshToken(request: RefreshTokenPayload): AppResult<SessionTokenPayload> {
             lastRequest = request
             return result
         }

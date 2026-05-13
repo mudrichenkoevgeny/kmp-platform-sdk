@@ -1,9 +1,9 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.AuthData
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.SendConfirmationData
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 
 /**
  * Sign-in entry points: email/password, phone with SMS-style confirmation, and external identity
@@ -37,14 +37,19 @@ interface LoginRepository {
      */
     suspend fun loginByExternalAuthProvider(authProvider: UserAuthProvider, token: String): AppResult<AuthData>
 
+    // todo doc
+    suspend fun loginByTotp(mfaToken: String, code: String): AppResult<AuthData>
+
+    suspend fun loginByTotpRecoveryCode(mfaToken: String, code: String): AppResult<AuthData>
+
     /**
      * Sends a login confirmation code to [phoneNumber], respecting client-side rate limits.
      *
      * @param phoneNumber Target phone for the login code.
-     * @return [SendConfirmationData] with retry metadata on success, or an error result (including
+     * @return [OtpConfirmation] with retry metadata on success, or an error result (including
      * when throttled before the network call).
      */
-    suspend fun sendLoginConfirmationToPhone(phoneNumber: String): AppResult<SendConfirmationData>
+    suspend fun sendLoginConfirmationToPhone(phoneNumber: String): AppResult<OtpConfirmation>
 
     /**
      * @param phoneNumber Same phone key as used for login confirmation sends.

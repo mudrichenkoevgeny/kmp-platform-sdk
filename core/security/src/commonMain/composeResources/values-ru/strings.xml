@@ -1,12 +1,14 @@
 <resources>
-    <string name="error_security_password_too_weak">Слишком слабый пароль</string>
-    <string name="error_security_password_policy_unavailable">Требования к безопасности временно недоступны. Пожалуйста, попробуйте позже.</string>
-    <string name="error_security_password_too_short">Пароль слишком короткий</string>
-    <string name="error_security_password_no_letter">Пароль должен содержать хотя бы одну букву</string>
-    <string name="error_security_password_no_uppercase">Пароль должен содержать хотя бы одну заглавную букву</string>
-    <string name="error_security_password_no_lowercase">Пароль должен содержать хотя бы одну строчную букву</string>
-    <string name="error_security_password_no_digit">Пароль должен содержать хотя бы одну цифру</string>
-    <string name="error_security_password_no_special_char">Пароль должен содержать хотя бы один специальный символ</string>
-    <string name="error_security_password_too_common">Этот пароль слишком распространен и его легко угадать</string>
-    <string name="error_security_confirmation_required">Требуется подтверждение личности. Пожалуйста, подтвердите текущую сессию.</string>
+    <string name="error_security_totp_confirmation_required">Требуется подтверждение аутентификации.</string>
+    <string name="error_security_totp_confirmation_required_args">Требуется подтверждение аутентификации. MFA токен: %1$s</string>
+    <string name="error_security_totp_already_enabled">Двухфакторная аутентификация уже включена для этого аккаунта.</string>
+    <string name="error_security_totp_not_enabled">Двухфакторная аутентификация не включена для этого аккаунта.</string>
+    <string name="error_security_mfa_token_expired">Срок действия MFA токена истек. Пожалуйста, запросите новый.</string>
+    <string name="error_security_invalid_mfa_token">MFA токен недействителен или поврежден.</string>
+    <string name="error_security_invalid_totp_code">Предоставленный код неверный.</string>
+    <string name="error_security_recovery_code_used">Этот код восстановления уже был использован.</string>
+    <string name="error_security_otp_retry_too_soon">Слишком много попыток. Пожалуйста, попробуйте позже.</string>
+    <string name="error_security_otp_retry_too_soon_args">Слишком много попыток. Пожалуйста, попробуйте снова через %1$s сек.</string>
+    <string name="error_security_password_too_weak">Пароль слишком слабый.</string>
+    <string name="error_security_password_too_weak_args">Пароль слишком слабый. Короткий: %1$s (мин: %2$s), Нет букв: %3$s, Нет заглавных: %4$s, Нет строчных: %5$s, Нет цифр: %6$s, Нет спецсимволов: %7$s, Популярный: %8$s.</string>
 </resources>

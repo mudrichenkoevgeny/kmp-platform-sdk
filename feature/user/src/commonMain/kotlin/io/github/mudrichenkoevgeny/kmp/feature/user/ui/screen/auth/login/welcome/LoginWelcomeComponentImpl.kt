@@ -13,7 +13,7 @@ import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.GetGlobalSettingsUs
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByGoogleUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
@@ -101,7 +101,7 @@ class LoginWelcomeComponentImpl(
                 loginByGoogle()
             }
             UserAuthProvider.APPLE -> {
-                // todo iOS development
+                // TODO: [IOS] Implement Apple Sign-In (loginByApple) when starting iOS development
                 stopActionState(
                     UserError.ExternalAuthFailed(
                         Exception("Apple auth not supported")

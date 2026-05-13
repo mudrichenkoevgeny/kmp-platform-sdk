@@ -3,9 +3,9 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.refreshtoken
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.SessionToken
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.refreshtoken.RefreshTokenRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
 
 /**
  * Refreshes the session using the stored refresh token; updates [AuthStorage] when the backend
@@ -23,7 +23,7 @@ class RefreshTokenUseCase(
      * [UserError.InvalidRefreshToken] when no refresh token is cached, or an error from refresh when
      * the backend rejects the token.
      */
-    suspend fun execute(): AppResult<SessionToken> {
+    suspend operator fun invoke(): AppResult<SessionToken> {
         val currentRefreshToken = authStorage.getRefreshToken()?.value
             ?: return AppResult.Error(UserError.InvalidRefreshToken())
 

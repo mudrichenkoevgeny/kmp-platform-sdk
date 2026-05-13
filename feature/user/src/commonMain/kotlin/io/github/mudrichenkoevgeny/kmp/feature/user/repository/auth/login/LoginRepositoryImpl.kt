@@ -2,14 +2,15 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
-import io.github.mudrichenkoevgeny.kmp.feature.user.mapper.auth.toAuthData
-import io.github.mudrichenkoevgeny.kmp.feature.user.mapper.confirmation.toSendConfirmationData
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.AuthData
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.ConfirmationType
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.SendConfirmationData
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.auth.login.LoginApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepository
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.mapper.otpconfirmation.toOtpConfirmation
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.verifytotp.VerifyTotpPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByExternalAuthProviderRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByPhoneRequest
@@ -32,8 +33,8 @@ class LoginRepositoryImpl(
         password: String
     ): AppResult<AuthData> {
         return loginApi.loginByEmail(LoginByEmailRequest(email, password))
-            .mapSuccess { authDataResponse ->
-                authDataResponse.toAuthData()
+            .mapSuccess { authDataPayload ->
+                authDataPayload.toAuthData()
             }
     }
 
@@ -42,8 +43,8 @@ class LoginRepositoryImpl(
         confirmationCode: String
     ): AppResult<AuthData> {
         return loginApi.loginByPhone(LoginByPhoneRequest(phoneNumber, confirmationCode))
-            .mapSuccess { authDataResponse ->
-                authDataResponse.toAuthData()
+            .mapSuccess { authDataPayload ->
+                authDataPayload.toAuthData()
             }
     }
 
@@ -53,14 +54,39 @@ class LoginRepositoryImpl(
     ): AppResult<AuthData> {
         return loginApi.loginByExternalAuthProvider(
             LoginByExternalAuthProviderRequest(authProvider.serialName, token)
-        ).mapSuccess { authDataResponse ->
-            authDataResponse.toAuthData()
+        ).mapSuccess { authDataPayload ->
+            authDataPayload.toAuthData()
+        }
+    }
+
+    override suspend fun loginByTotp(mfaToken: String, code: String): AppResult<AuthData> {
+        return loginApi.loginByTotp(
+            VerifyTotpPayload(
+                mfaToken = mfaToken,
+                code = code
+            )
+        ).mapSuccess { authDataPayload ->
+            authDataPayload.toAuthData()
+        }
+    }
+
+    override suspend fun loginByTotpRecoveryCode(
+        mfaToken: String,
+        code: String
+    ): AppResult<AuthData> {
+        return loginApi.loginByTotp(
+            VerifyTotpPayload(
+                mfaToken = mfaToken,
+                code = code
+            )
+        ).mapSuccess { authDataPayload ->
+            authDataPayload.toAuthData()
         }
     }
 
     override suspend fun sendLoginConfirmationToPhone(
         phoneNumber: String
-    ): AppResult<SendConfirmationData> {
+    ): AppResult<OtpConfirmation> {
         return confirmationRepository.executeWithTimer(
             type = ConfirmationType.LOGIN_PHONE,
             identifier = phoneNumber
@@ -68,7 +94,7 @@ class LoginRepositoryImpl(
             loginApi.sendLoginConfirmationToPhone(
                 SendConfirmationToPhoneRequest(phoneNumber)
             ).mapSuccess { response ->
-                response.toSendConfirmationData()
+                response.toOtpConfirmation()
             }
         }
     }

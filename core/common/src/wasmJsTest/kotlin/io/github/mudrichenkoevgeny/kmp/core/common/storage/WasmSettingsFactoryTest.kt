@@ -1,11 +1,13 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.storage
 
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import kotlinx.coroutines.test.runTest
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
+@InternalApi
 class WasmSettingsFactoryTest {
 
     @Test

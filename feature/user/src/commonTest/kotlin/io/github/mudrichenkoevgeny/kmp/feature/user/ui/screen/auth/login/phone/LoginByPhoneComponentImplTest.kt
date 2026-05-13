@@ -5,19 +5,18 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.arkivanov.essenty.lifecycle.destroy
 import com.arkivanov.essenty.lifecycle.resume
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
+import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.otpConfirmationMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
-import io.github.mudrichenkoevgeny.kmp.feature.user.mapper.auth.toAuthData
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.MockAuthStorage
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.MockUserStorage
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.AuthData
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.SendConfirmationData
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginRepository
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.wireAuthDataResponse
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.data.authDataPayloadMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.login.LoginRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.test.runUserUiComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByPhoneUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.SendLoginConfirmationToPhoneUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.UserAuthProvider
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.test.runUserUiComponentTest
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlin.test.Test
@@ -26,6 +25,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertNull
 
+@InternalApi
 class LoginByPhoneComponentImplTest {
 
     @Test
@@ -42,8 +42,8 @@ class LoginByPhoneComponentImplTest {
 
     @Test
     fun onPhoneChanged_validPhone_whenRemainingDelayPositive_movesToCodeInput() = runUserUiComponentTest {
-        val repo = FakeLoginRepository().apply {
-            remainingDelaySeconds = REMAINING_DELAY_SECONDS
+        val repo = LoginRepositoryMock().apply {
+            remainingDelayProvider = { REMAINING_DELAY_SECONDS }
         }
         val harness = createHarness(repo)
         try {
@@ -58,8 +58,10 @@ class LoginByPhoneComponentImplTest {
 
     @Test
     fun onSendCodeClick_success_movesToCodeInput() = runUserUiComponentTest {
-        val repo = FakeLoginRepository().apply {
-            sendResult = AppResult.Success(SendConfirmationData(retryAfterSeconds = RETRY_AFTER_SEND))
+        val repo = LoginRepositoryMock().apply {
+            otpConfirmationResultProvider = {
+                AppResult.Success(otpConfirmationMock(retryAfterSeconds = RETRY_AFTER_SEND))
+            }
         }
         val harness = createHarness(repo)
         try {
@@ -69,7 +71,7 @@ class LoginByPhoneComponentImplTest {
             val code = assertIs<LoginByPhoneScreenState.CodeInput>(harness.component.state.value)
             assertEquals(VALID_PHONE, code.phoneNumber)
             assertEquals(RETRY_AFTER_SEND, code.resendTimerSeconds)
-            assertEquals(VALID_PHONE, repo.lastSendPhone)
+            assertEquals(VALID_PHONE, repo.lastPhoneNumber)
         } finally {
             harness.destroy()
         }
@@ -77,8 +79,10 @@ class LoginByPhoneComponentImplTest {
 
     @Test
     fun onSendCodeClick_tooManyRequests_movesToCodeInputWithRetry() = runUserUiComponentTest {
-        val repo = FakeLoginRepository().apply {
-            sendResult = AppResult.Error(UserError.TooManyConfirmationRequests(retryAfterSeconds = RETRY_AFTER_RATE_LIMIT))
+        val repo = LoginRepositoryMock().apply {
+            otpConfirmationResultProvider = {
+                AppResult.Error(UserError.TooManyConfirmationRequests(retryAfterSeconds = RETRY_AFTER_RATE_LIMIT))
+            }
         }
         val harness = createHarness(repo)
         try {
@@ -94,8 +98,10 @@ class LoginByPhoneComponentImplTest {
 
     @Test
     fun onSendCodeClick_genericError_keepsPhoneStepWithError() = runUserUiComponentTest {
-        val repo = FakeLoginRepository().apply {
-            sendResult = AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
+        val repo = LoginRepositoryMock().apply {
+            otpConfirmationResultProvider = {
+                AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
+            }
         }
         val harness = createHarness(repo)
         try {
@@ -112,10 +118,10 @@ class LoginByPhoneComponentImplTest {
 
     @Test
     fun onCodeChanged_fullCode_triggersLogin_andOnFinished() = runUserUiComponentTest {
-        val authData = wireAuthDataResponse().toAuthData()
-        val repo = FakeLoginRepository().apply {
-            sendResult = AppResult.Success(SendConfirmationData(retryAfterSeconds = ZERO_RETRY))
-            loginByPhoneResult = AppResult.Success(authData)
+        val authData = authDataPayloadMock().toAuthData()
+        val repo = LoginRepositoryMock().apply {
+            otpConfirmationResultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            authDataResultProvider = { AppResult.Success(authData) }
         }
         val harness = createHarness(repo)
         try {
@@ -125,8 +131,8 @@ class LoginByPhoneComponentImplTest {
             harness.component.onCodeChanged(FULL_CODE)
             advanceUntilIdle()
             assertEquals(ONE_CALL, harness.counters.finished)
-            assertEquals(VALID_PHONE, repo.lastLoginPhone)
-            assertEquals(FULL_CODE, repo.lastLoginCode)
+            assertEquals(VALID_PHONE, repo.lastPhoneNumber)
+            assertEquals(FULL_CODE, repo.lastConfirmationCode)
         } finally {
             harness.destroy()
         }
@@ -134,9 +140,9 @@ class LoginByPhoneComponentImplTest {
 
     @Test
     fun onConfirmCodeClick_loginError_surfacesError() = runUserUiComponentTest {
-        val repo = FakeLoginRepository().apply {
-            sendResult = AppResult.Success(SendConfirmationData(retryAfterSeconds = ZERO_RETRY))
-            loginByPhoneResult = AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
+        val repo = LoginRepositoryMock().apply {
+            otpConfirmationResultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            authDataResultProvider = { AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE)) }
         }
         val harness = createHarness(repo)
         try {
@@ -156,9 +162,9 @@ class LoginByPhoneComponentImplTest {
 
     @Test
     fun onConfirmCodeClick_whenCodeIncomplete_doesNotCallRepository() = runUserUiComponentTest {
-        val repo = FakeLoginRepository().apply {
-            sendResult = AppResult.Success(SendConfirmationData(retryAfterSeconds = ZERO_RETRY))
-            loginByPhoneResult = AppResult.Success(wireAuthDataResponse().toAuthData())
+        val repo = LoginRepositoryMock().apply {
+            otpConfirmationResultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            authDataResultProvider = { AppResult.Success(authDataPayloadMock().toAuthData()) }
         }
         val harness = createHarness(repo)
         try {
@@ -167,7 +173,7 @@ class LoginByPhoneComponentImplTest {
             advanceUntilIdle()
             harness.component.onConfirmCodeClick()
             advanceUntilIdle()
-            assertNull(repo.lastLoginPhone)
+            assertNull(repo.lastConfirmationCode)
         } finally {
             harness.destroy()
         }
@@ -175,8 +181,8 @@ class LoginByPhoneComponentImplTest {
 
     @Test
     fun onResetPhoneClick_returnsToPhoneInput_preservingNumber() = runUserUiComponentTest {
-        val repo = FakeLoginRepository().apply {
-            sendResult = AppResult.Success(SendConfirmationData(retryAfterSeconds = ZERO_RETRY))
+        val repo = LoginRepositoryMock().apply {
+            otpConfirmationResultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
         }
         val harness = createHarness(repo)
         try {
@@ -194,8 +200,8 @@ class LoginByPhoneComponentImplTest {
 
     @Test
     fun onBackClick_fromCodeStep_returnsToPhoneInput() = runUserUiComponentTest {
-        val repo = FakeLoginRepository().apply {
-            sendResult = AppResult.Success(SendConfirmationData(retryAfterSeconds = ZERO_RETRY))
+        val repo = LoginRepositoryMock().apply {
+            otpConfirmationResultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
         }
         val harness = createHarness(repo)
         try {
@@ -222,9 +228,9 @@ class LoginByPhoneComponentImplTest {
     }
 
     private fun createHarness(
-        loginRepository: FakeLoginRepository = FakeLoginRepository().apply {
-            sendResult = AppResult.Success(SendConfirmationData(retryAfterSeconds = ZERO_RETRY))
-            loginByPhoneResult = AppResult.Success(wireAuthDataResponse().toAuthData())
+        loginRepository: LoginRepositoryMock = LoginRepositoryMock().apply {
+            otpConfirmationResultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            authDataResultProvider = { AppResult.Success(authDataPayloadMock().toAuthData()) }
         }
     ): Harness {
         val lifecycle = LifecycleRegistry()
@@ -234,8 +240,8 @@ class LoginByPhoneComponentImplTest {
         val sendUseCase = SendLoginConfirmationToPhoneUseCase(loginRepository)
         val loginByPhoneUseCase = LoginByPhoneUseCase(
             loginRepository,
-            MockAuthStorage(),
-            MockUserStorage()
+            AuthStorageMock(),
+            UserStorageMock()
         )
         val component = LoginByPhoneComponentImpl(
             componentContext = ctx,
@@ -246,39 +252,6 @@ class LoginByPhoneComponentImplTest {
             onFinished = { counters.finished++ }
         )
         return Harness(lifecycle, component, counters)
-    }
-
-    private class FakeLoginRepository : LoginRepository {
-        var remainingDelaySeconds: Int = ZERO_RETRY
-        var sendResult: AppResult<SendConfirmationData> =
-            AppResult.Success(SendConfirmationData(retryAfterSeconds = ZERO_RETRY))
-        var loginByPhoneResult: AppResult<AuthData> =
-            AppResult.Success(wireAuthDataResponse().toAuthData())
-
-        var lastSendPhone: String? = null
-        var lastLoginPhone: String? = null
-        var lastLoginCode: String? = null
-
-        override fun getRemainingLoginConfirmationDelayInSeconds(phoneNumber: String): Int = remainingDelaySeconds
-
-        override suspend fun sendLoginConfirmationToPhone(phoneNumber: String): AppResult<SendConfirmationData> {
-            lastSendPhone = phoneNumber
-            return sendResult
-        }
-
-        override suspend fun loginByPhone(phoneNumber: String, confirmationCode: String): AppResult<AuthData> {
-            lastLoginPhone = phoneNumber
-            lastLoginCode = confirmationCode
-            return loginByPhoneResult
-        }
-
-        override suspend fun loginByEmail(email: String, password: String): AppResult<AuthData> =
-            error(STUB_NOT_USED)
-
-        override suspend fun loginByExternalAuthProvider(
-            authProvider: UserAuthProvider,
-            token: String
-        ): AppResult<AuthData> = error(STUB_NOT_USED)
     }
 
     private class NavigationCounters(
@@ -305,7 +278,6 @@ class LoginByPhoneComponentImplTest {
         const val RETRY_AFTER_RATE_LIMIT = 40
         const val ZERO_RETRY = 0
         const val NOT_RETRYABLE = false
-        const val STUB_NOT_USED = "stub"
         const val ZERO_CALLS = 0
         const val ONE_CALL = 1
     }

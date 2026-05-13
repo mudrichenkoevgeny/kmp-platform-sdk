@@ -1,6 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.settings.storage.globalsettings
 
-import io.github.mudrichenkoevgeny.kmp.core.settings.model.globalsettings.GlobalSettings
+import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.model.globalsettings.GlobalSettings
 
 /**
  * Persistence port for [GlobalSettings] (encrypted or plain, depending on implementation).

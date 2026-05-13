@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.response.configuration.UserConfigurationResponse
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.configuration.UserConfigurationPayload
 
 /** Server-driven user configuration for the signed-in user. */
 interface UserConfigurationApi {
@@ -10,5 +10,5 @@ interface UserConfigurationApi {
      *
      * @return Configuration DTO from the shared contract, or a mapped failure.
      */
-    suspend fun getUserConfiguration(): AppResult<UserConfigurationResponse>
+    suspend fun getUserConfiguration(): AppResult<UserConfigurationPayload>
 }

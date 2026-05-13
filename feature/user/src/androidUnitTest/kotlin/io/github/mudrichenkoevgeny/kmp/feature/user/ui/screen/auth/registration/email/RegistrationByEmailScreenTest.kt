@@ -13,7 +13,8 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.MockAppErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import org.junit.runner.RunWith
@@ -22,6 +23,7 @@ import org.robolectric.annotation.Config
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+@InternalApi
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [ROBOLECTRIC_SDK])
 class RegistrationByEmailScreenTest {
@@ -162,10 +164,11 @@ class RegistrationByEmailScreenTest {
     }
 }
 
+@InternalApi
 @Composable
 private fun RegistrationByEmailScreenHarness(component: RegistrationByEmailComponent) {
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             RegistrationByEmailScreen(component)
         }
     }

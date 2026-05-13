@@ -70,6 +70,9 @@ kotlin {
             // Infrastructure
             implementation(libs.decompose)
 
+            // Logging
+            implementation(libs.kermit)
+
             // Testing
             implementation(libs.kotlinx.coroutines.test)
         }

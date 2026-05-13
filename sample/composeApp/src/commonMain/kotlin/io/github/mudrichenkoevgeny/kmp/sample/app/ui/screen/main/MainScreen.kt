@@ -191,7 +191,7 @@ private fun WebLayout(
     }
 }
 
-private val mockStack = MutableValue(
+private val screenStackMock = MutableValue(
     ChildStack(
         active = Child.Created(
             configuration = MainScreenComponent.Config.Home,
@@ -209,7 +209,7 @@ private fun MobileMainScreenPreview() {
     MaterialTheme {
         MainContent(
             isMobile = true,
-            screenStack = mockStack,
+            screenStack = screenStackMock,
             currentDestination = MainScreenDestination.Home,
             destinations = MainScreenDestination.allDestinations,
             onDestinationChange = { }
@@ -223,7 +223,7 @@ private fun WebMainScreenPreview() {
     MaterialTheme {
         MainContent(
             isMobile = false,
-            screenStack = mockStack,
+            screenStack = screenStackMock,
             currentDestination = MainScreenDestination.Home,
             destinations = MainScreenDestination.allDestinations,
             onDestinationChange = { }

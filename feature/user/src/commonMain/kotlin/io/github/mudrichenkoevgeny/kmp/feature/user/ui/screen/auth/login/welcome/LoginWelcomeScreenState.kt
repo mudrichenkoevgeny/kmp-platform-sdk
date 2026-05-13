@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.settings.AvailableAuthProviders
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.AvailableAuthProviders
 
 /**
  * UI state for the login welcome screen: initial load, recoverable init failure, or interactive content.

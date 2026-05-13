@@ -26,7 +26,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.MockAppErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
 
@@ -77,11 +78,12 @@ fun FullscreenError(
     }
 }
 
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun FullscreenErrorPreview() {
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             FullscreenError(
                 error = CommonError.Unknown(isRetryable = false),
                 onRetry = {}
@@ -90,11 +92,12 @@ private fun FullscreenErrorPreview() {
     }
 }
 
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun FullscreenErrorRetryablePreview() {
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             FullscreenError(
                 error = CommonError.Unknown(isRetryable = true),
                 onRetry = {}

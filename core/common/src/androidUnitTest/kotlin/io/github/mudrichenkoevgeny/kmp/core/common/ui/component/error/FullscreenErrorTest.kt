@@ -10,7 +10,8 @@ import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.MockAppErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -19,6 +20,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
+@InternalApi
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [ROBOLECTRIC_SDK])
 class FullscreenErrorTest {
@@ -31,7 +33,7 @@ class FullscreenErrorTest {
                 onRetry = {}
             )
         }
-        onNodeWithText(MOCK_ERROR_MESSAGE).assertIsDisplayed()
+        onNodeWithText(ERROR_MESSAGE_MOCK).assertIsDisplayed()
         assertFailsWith<AssertionError> {
             onNodeWithText(RETRY_LABEL).assertIsDisplayed()
         }
@@ -46,7 +48,7 @@ class FullscreenErrorTest {
                 onRetry = { retries++ }
             )
         }
-        onNodeWithText(MOCK_ERROR_MESSAGE).assertIsDisplayed()
+        onNodeWithText(ERROR_MESSAGE_MOCK).assertIsDisplayed()
         onNodeWithText(RETRY_LABEL).assertIsDisplayed()
         onNodeWithText(RETRY_LABEL).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, retries)
@@ -55,21 +57,22 @@ class FullscreenErrorTest {
     private companion object {
         const val EXPECTED_SINGLE_CALLBACK = 1
 
-        /** [MockAppErrorParser] always returns this string for any error. */
-        const val MOCK_ERROR_MESSAGE = "Unknown Error"
+        /** [AppErrorParserMock] always returns this string for any error. */
+        const val ERROR_MESSAGE_MOCK = "Unknown Error"
 
         /** Mirrors default `values/strings.xml`. */
         const val RETRY_LABEL = "Retry"
     }
 }
 
+@InternalApi
 @Composable
 private fun FullscreenErrorHarness(
     error: AppError,
     onRetry: () -> Unit
 ) {
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             FullscreenError(error = error, onRetry = onRetry)
         }
     }

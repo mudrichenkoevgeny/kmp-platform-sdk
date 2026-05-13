@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome
 
 import com.arkivanov.decompose.value.Value
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 
 /**
  * Presentation logic for the welcome step: loads providers and legal URLs, handles provider selection and OAuth.

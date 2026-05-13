@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 
 /**
  * [PreviewParameterProvider] that yields a fixed sequence of [UserAuthProvider] values for Compose previews.

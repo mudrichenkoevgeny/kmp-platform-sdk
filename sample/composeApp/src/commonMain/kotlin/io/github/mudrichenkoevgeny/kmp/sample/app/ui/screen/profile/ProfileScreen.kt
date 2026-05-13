@@ -15,8 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.model.user.mockCurrentUser
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 
 /**
  * Profile tab: binds [ProfileScreenComponent] state to [ProfileContent].
@@ -73,13 +74,14 @@ fun ProfileContent(
     }
 }
 
+@InternalApi
 @Preview(showBackground = true, name = "Authorized")
 @Composable
 private fun ProfileContentContentPreview() {
     MaterialTheme {
         ProfileContent(
             state = ProfileScreenState.Content(
-                user = mockCurrentUser()
+                user = userDetailsMock()
             ),
             onLoginClick = {}
         )

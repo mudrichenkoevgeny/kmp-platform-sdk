@@ -2,12 +2,12 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.configuration
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
-import io.github.mudrichenkoevgeny.kmp.core.security.repository.securitysettings.SecuritySettingsRepository
-import io.github.mudrichenkoevgeny.kmp.core.settings.repository.globalsettings.GlobalSettingsRepository
-import io.github.mudrichenkoevgeny.kmp.feature.user.mapper.configuration.toUserConfiguration
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.configuration.UserConfiguration
+import io.github.mudrichenkoevgeny.kmp.core.security.repository.SecuritySettingsRepository
+import io.github.mudrichenkoevgeny.kmp.core.settings.repository.GlobalSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration.UserConfigurationApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.AuthSettingsRepository
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.configuration.UserConfiguration
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.configuration.toUserConfiguration
 
 /**
  * Fetches the combined user configuration bundle and, when the network call succeeds, writes each

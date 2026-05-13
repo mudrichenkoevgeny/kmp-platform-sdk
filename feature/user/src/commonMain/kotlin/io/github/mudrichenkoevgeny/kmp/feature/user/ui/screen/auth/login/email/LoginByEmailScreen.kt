@@ -40,7 +40,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.MockAppErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
@@ -216,11 +217,12 @@ private fun ErrorText(error: AppError?) {
     }
 }
 
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun LoginByEmailContentPreview() {
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             Surface {
                 LoginByEmailContent(
                     state = LoginByEmailScreenState.Content(
@@ -240,11 +242,12 @@ private fun LoginByEmailContentPreview() {
     }
 }
 
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun LoginByEmailContentLoadingPreview() {
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             Surface {
                 LoginByEmailContent(
                     state = LoginByEmailScreenState.Content(
@@ -264,11 +267,12 @@ private fun LoginByEmailContentLoadingPreview() {
     }
 }
 
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun LoginByEmailContentErrorPreview() {
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             Surface {
                 LoginByEmailContent(
                     state = LoginByEmailScreenState.Content(

@@ -1,8 +1,10 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.platform.externallauncher
 
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
+@InternalApi
 class AndroidExternalLauncherFactoryTest {
 
     @Test

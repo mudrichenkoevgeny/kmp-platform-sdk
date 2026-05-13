@@ -1,6 +1,5 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo
 
-import io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo.model.DeviceInfo
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.common.CommonStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.UserClientType
 import platform.Foundation.NSBundle
@@ -16,13 +15,13 @@ class IosDeviceInfoProvider() : DeviceInfoProvider {
             ?.get("CFBundleShortVersionString") as? String
             ?: DeviceInfo.VERSION_UNKNOWN
 
-        return DeviceInfo(
-            clientType = UserClientType.IOS,
-            deviceId = DeviceId.generate(),
+        ClientDeviceInfo(
+            deviceId = ClientDeviceId.generate(),
             deviceName = "${device.systemName} ${device.model}",
-            language = NSLocale.currentLocale.languageCode,
+            clientType = ClientType.IOS,
+            language = Locale.getDefault().language,
             appVersion = appVersion,
-            osVersion = device.systemVersion
+            operationSystemVersion = Build.VERSION.RELEASE
         )
     }
 }

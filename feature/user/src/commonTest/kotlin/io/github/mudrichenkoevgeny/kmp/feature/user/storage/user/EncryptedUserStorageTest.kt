@@ -1,103 +1,111 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.storage.user
 
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.storage.MockEncryptedSettings
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.model.user.mockCurrentUser
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.session.UserSession
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.session.UserSessionId
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.user.UserId
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.useridentifier.UserIdentifier
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.useridentifier.UserIdentifierId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.UserAuthProvider
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.storage.EncryptedSettingsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
-import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
-import kotlin.time.Clock
+import kotlin.time.Instant
 
+@OptIn(InternalApi::class)
 class EncryptedUserStorageTest {
+
+    private fun Instant.truncated(): Instant =
+        Instant.fromEpochMilliseconds(this.toEpochMilliseconds())
+
+    private fun fixTime(user: UserDetails): UserDetails = user.copy(
+        createdAt = user.createdAt.truncated(),
+        lastLoginAt = user.lastLoginAt?.truncated(),
+        lastActiveAt = user.lastActiveAt?.truncated()
+    )
+
+    private fun fixIdentifierTime(identifier: UserIdentifier): UserIdentifier = identifier.copy(
+        createdAt = identifier.createdAt.truncated(),
+        updatedAt = identifier.updatedAt?.truncated()
+    )
+
+    private fun fixSessionTime(session: UserSession): UserSession = session.copy(
+        createdAt = session.createdAt.truncated(),
+        updatedAt = session.updatedAt?.truncated(),
+        expiresAt = session.expiresAt.truncated(),
+        lastAccessedAt = session.lastAccessedAt.truncated(),
+        lastReauthenticatedAt = session.lastReauthenticatedAt.truncated()
+    )
 
     @Test
     fun currentUser_roundTripsThroughStorage() = runTest {
-        val storage = EncryptedUserStorage(MockEncryptedSettings())
-        val user = mockCurrentUser()
+        val storage = EncryptedUserStorage(EncryptedSettingsMock())
+        val expectedUser = fixTime(userDetailsMock())
 
-        storage.updateCurrentUser(user)
+        storage.updateCurrentUser(expectedUser)
+        val actualUser = storage.getCurrentUser()
 
-        assertEquals(user, storage.getCurrentUser())
+        assertEquals(expectedUser, actualUser)
     }
 
     @Test
     fun observeCurrentUser_emitsNullThenValue() = runTest {
-        val storage = EncryptedUserStorage(MockEncryptedSettings())
-        val flow = storage.observeCurrentUser()
-        assertNull(flow.first())
+        val storage = EncryptedUserStorage(EncryptedSettingsMock())
+        val expectedUser = fixTime(userDetailsMock())
 
-        val user = mockCurrentUser()
-        storage.updateCurrentUser(user)
+        val firstValue = storage.observeCurrentUser().first()
+        assertNull(firstValue)
 
-        assertEquals(user, flow.first())
+        storage.updateCurrentUser(expectedUser)
+
+        val secondValue = storage.observeCurrentUser().first { it != null }
+        assertEquals(expectedUser, secondValue)
     }
 
     @Test
     fun userIdentifiers_roundTrip() = runTest {
-        val storage = EncryptedUserStorage(MockEncryptedSettings())
-        val identifiers = listOf(sampleIdentifier())
+        val storage = EncryptedUserStorage(EncryptedSettingsMock())
+        val identifier = fixIdentifierTime(userIdentifierMock())
+        val expectedPagedResult = pagedResultMock(items = listOf(identifier))
 
-        storage.updateUserIdentifiersList(identifiers)
+        storage.updateUserIdentifiersList(expectedPagedResult)
+        val actualResult = storage.getUserIdentifiersList()
 
-        assertContentEquals(identifiers, storage.getUserIdentifiersList())
+        assertEquals(expectedPagedResult, actualResult)
     }
 
     @Test
     fun userSessions_roundTrip() = runTest {
-        val storage = EncryptedUserStorage(MockEncryptedSettings())
-        val sessions = listOf(sampleSession())
+        val storage = EncryptedUserStorage(EncryptedSettingsMock())
+        val session = fixSessionTime(userSessionMock())
+        val expectedPagedResult = pagedResultMock(items = listOf(session))
 
-        storage.updateUserSessionsList(sessions)
+        storage.updateUserSessionsList(expectedPagedResult)
+        val actualResult = storage.getUserSessionsList()
 
-        assertContentEquals(sessions, storage.getUserSessionsList())
+        assertEquals(expectedPagedResult, actualResult)
     }
 
     @Test
     fun clear_removesAllSlices() = runTest {
-        val storage = EncryptedUserStorage(MockEncryptedSettings())
-        storage.updateCurrentUser(mockCurrentUser())
-        storage.updateUserIdentifiersList(listOf(sampleIdentifier()))
-        storage.updateUserSessionsList(listOf(sampleSession()))
+        val storage = EncryptedUserStorage(EncryptedSettingsMock())
+
+        storage.updateCurrentUser(userDetailsMock())
+        storage.updateUserIdentifiersList(pagedResultMock(items = listOf(userIdentifierMock())))
+        storage.updateUserSessionsList(pagedResultMock(items = listOf(userSessionMock())))
 
         storage.clear()
 
         assertNull(storage.getCurrentUser())
-        assertContentEquals(emptyList(), storage.getUserIdentifiersList())
-        assertContentEquals(emptyList(), storage.getUserSessionsList())
-    }
 
-    private fun sampleIdentifier(): UserIdentifier {
-        val now = Clock.System.now()
-        return UserIdentifier(
-            id = UserIdentifierId.generate(),
-            userId = UserId.generate(),
-            userAuthProvider = UserAuthProvider.EMAIL,
-            identifier = "user@example.com",
-            createdAt = now,
-            updatedAt = null
-        )
-    }
+        val emptyIdentifiers = storage.getUserIdentifiersList()
+        assertEquals(0, emptyIdentifiers.items.size)
 
-    private fun sampleSession(): UserSession {
-        return UserSession(
-            id = UserSessionId.generate(),
-            identifierId = UserIdentifierId.generate(),
-            identifierAuthProvider = UserAuthProvider.EMAIL,
-            expiresAt = null,
-            clientType = null,
-            userAgent = null,
-            ipAddress = null,
-            deviceName = null,
-            createdAt = null,
-            lastAccessedAt = null
-        )
+        val emptySessions = storage.getUserSessionsList()
+        assertEquals(0, emptySessions.items.size)
     }
 }

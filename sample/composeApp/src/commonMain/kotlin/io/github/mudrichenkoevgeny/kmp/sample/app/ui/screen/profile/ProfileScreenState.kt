@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.sample.app.ui.screen.profile
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.user.CurrentUser
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
 
 /**
  * Profile tab UI states: loading user, signed out, signed in, or failure from the user stream.
@@ -18,7 +18,7 @@ sealed interface ProfileScreenState {
      *
      * @param user Active session snapshot.
      */
-    data class Content(val user: CurrentUser) : ProfileScreenState
+    data class Content(val user: UserDetails) : ProfileScreenState
 
     /**
      * User stream failed; surface a generic error placeholder.

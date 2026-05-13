@@ -37,7 +37,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.MockAppErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
@@ -260,11 +261,12 @@ private fun ErrorText(error: AppError?) {
     }
 }
 
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun LoginByPhonePhoneInputPreview() {
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             Surface {
                 PhoneInputContent(
                     state = LoginByPhoneScreenState.PhoneInput(
@@ -280,11 +282,12 @@ private fun LoginByPhonePhoneInputPreview() {
     }
 }
 
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun LoginByPhonePhoneInputLoadingPreview() {
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             Surface {
                 PhoneInputContent(
                     state = LoginByPhoneScreenState.PhoneInput(
@@ -301,11 +304,12 @@ private fun LoginByPhonePhoneInputLoadingPreview() {
     }
 }
 
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun LoginByPhoneCodeInputTimerPreview() {
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             Surface {
                 CodeInputContent(
                     state = LoginByPhoneScreenState.CodeInput(
@@ -323,11 +327,12 @@ private fun LoginByPhoneCodeInputTimerPreview() {
     }
 }
 
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun LoginByPhoneCodeInputResendReadyPreview() {
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             Surface {
                 CodeInputContent(
                     state = LoginByPhoneScreenState.CodeInput(
@@ -345,11 +350,12 @@ private fun LoginByPhoneCodeInputResendReadyPreview() {
     }
 }
 
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun LoginByPhoneCodeInputErrorPreview() {
     MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides MockAppErrorParser) {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             Surface {
                 CodeInputContent(
                     state = LoginByPhoneScreenState.CodeInput(

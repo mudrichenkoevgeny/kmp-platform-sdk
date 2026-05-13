@@ -5,7 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.ConfirmationKey
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.ConfirmationType
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.HasRetryDelay
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import kotlin.time.Clock
 
 /**
@@ -35,9 +35,14 @@ class ConfirmationRepositoryImpl(
         }
 
         return action().onSuccess { result ->
-            if (result is HasRetryDelay) {
+            val retrySeconds = when (result) {
+                is OtpConfirmation -> result.retryAfterSeconds
+                else -> null
+            }
+
+            if (retrySeconds != null && retrySeconds > 0) {
                 val now = clock.now().toEpochMilliseconds()
-                blockedUntilMap[key] = now + (result.retryAfterSeconds * 1000L)
+                blockedUntilMap[key] = now + (retrySeconds * 1000L)
             }
         }
     }

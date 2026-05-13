@@ -1,6 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.security.storage.securitysettings
 
-import io.github.mudrichenkoevgeny.kmp.core.security.model.securitysettings.SecuritySettings
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.securitysettings.SecuritySettings
 
 /**
  * Persistence port for [SecuritySettings] (encrypted or plain, depending on implementation).

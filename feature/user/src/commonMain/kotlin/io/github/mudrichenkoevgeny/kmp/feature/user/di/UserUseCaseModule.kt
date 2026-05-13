@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.di
 
-import io.github.mudrichenkoevgeny.kmp.core.security.repository.securitysettings.SecuritySettingsRepository
-import io.github.mudrichenkoevgeny.kmp.core.settings.repository.globalsettings.GlobalSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.core.security.repository.SecuritySettingsRepository
+import io.github.mudrichenkoevgeny.kmp.core.settings.repository.GlobalSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.google.DisabledGoogleAuthService
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration.UserConfigurationApi
@@ -11,8 +11,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByEm
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByGoogleUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByPhoneUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.SendLoginConfirmationToPhoneUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.password.ResetEmailPasswordUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.password.SendResetPasswordConfirmationToEmailUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.ResetEmailPasswordUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.SendResetPasswordConfirmationToEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.refreshtoken.RefreshTokenUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.registration.RegistrationByEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.registration.SendRegistrationConfirmationToEmailUseCase
@@ -28,8 +28,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.configuration.Refres
  * @param storageModule User-scoped storage for post-login data.
  * @param authServices Platform auth helpers; missing Google service falls back to [DisabledGoogleAuthService].
  * @param userConfigurationApi Remote user configuration endpoint.
- * @param globalSettingsRepository From `core:settings`.
- * @param securitySettingsRepository From `core:security`.
  * @param authSettingsRepository Auth provider and policy snapshot repository.
  */
 internal class UserUseCaseModule(
@@ -38,9 +36,9 @@ internal class UserUseCaseModule(
     private val storageModule: UserStorageModule,
     private val authServices: UserAuthServices,
     private val userConfigurationApi: UserConfigurationApi,
+    private val authSettingsRepository: AuthSettingsRepository,
     private val globalSettingsRepository: GlobalSettingsRepository,
-    private val securitySettingsRepository: SecuritySettingsRepository,
-    private val authSettingsRepository: AuthSettingsRepository
+    private val securitySettingsRepository: SecuritySettingsRepository
 ) {
 
     // Auth
@@ -110,17 +108,16 @@ internal class UserUseCaseModule(
 
     val resetEmailPasswordUseCase by lazy {
         ResetEmailPasswordUseCase(
-            passwordRepository = repositoryModule.passwordRepository
+            resetPasswordRepository = repositoryModule.resetPasswordRepository
         )
     }
 
     val sendResetPasswordConfirmationToEmailUseCase by lazy {
         SendResetPasswordConfirmationToEmailUseCase(
-            passwordRepository = repositoryModule.passwordRepository
+            resetPasswordRepository = repositoryModule.resetPasswordRepository
         )
     }
 
-    // Configuration
     val refreshUserConfigurationUseCase by lazy {
         RefreshUserConfigurationUseCase(
             userConfigurationApi = userConfigurationApi,

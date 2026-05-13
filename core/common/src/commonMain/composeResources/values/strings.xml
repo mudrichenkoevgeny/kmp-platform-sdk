@@ -1,10 +1,25 @@
 <resources>
-    <string name="error_common_unknown">Unknown error</string>
-    <string name="error_common_internal">Internal error</string>
-    <string name="error_common_no_internet">No internet connection</string>
-    <string name="error_common_network">Network error</string>
-    <string name="error_common_service_unavailable">Service unavailable</string>
-    <string name="error_common_too_many_requests">Too many requests</string>
+    <string name="error_common_not_found">Resource not found.</string>
+    <string name="error_common_not_found_args">Resource "%1$s" was not found.</string>
+    <string name="error_common_missing_parameter">A required parameter is missing.</string>
+    <string name="error_common_missing_parameter_args">The required parameter "%1$s" is missing.</string>
+    <string name="error_common_invalid_parameter">A parameter has an invalid value.</string>
+    <string name="error_common_invalid_parameter_args">The parameter "%1$s" has an invalid value.</string>
+    <string name="error_common_missing_field">A required field is missing.</string>
+    <string name="error_common_missing_field_args">The required field "%1$s" is missing.</string>
+    <string name="error_common_blank_field">The field must not be blank.</string>
+    <string name="error_common_blank_field_args">The field "%1$s" must not be blank.</string>
+    <string name="error_common_empty_field">The field must not be empty.</string>
+    <string name="error_common_empty_field_args">The collection "%1$s" must not be empty.</string>
+    <string name="error_common_invalid_field">The field has an invalid value.</string>
+    <string name="error_common_invalid_field_args">The field "%1$s" has an invalid value.</string>
+    <string name="error_common_too_many_requests">Too many requests. Please try again later.</string>
+    <string name="error_common_too_many_requests_args">Too many requests. Try again in %1$s seconds.</string>
+    <string name="error_common_service_unavailable">The service is temporarily unavailable.</string>
+    <string name="error_common_internal">An error has occurred.</string>
+    <string name="error_common_unknown">An unknown error has occurred.</string>
+    <string name="error_common_no_internet">No internet connection.</string>
+    <string name="error_common_network">Network error.</string>
 
     <string name="retry">Retry</string>
 </resources>

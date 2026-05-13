@@ -2,8 +2,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.settings.AvailableAuthProviders
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.AuthSettingsRepository
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.AvailableAuthProviders
 
 /**
  * Loads auth settings and exposes which sign-in providers the backend allows for this user/session.

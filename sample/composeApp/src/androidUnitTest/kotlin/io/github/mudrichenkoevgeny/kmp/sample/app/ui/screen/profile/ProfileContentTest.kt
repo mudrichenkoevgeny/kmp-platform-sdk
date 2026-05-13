@@ -8,14 +8,16 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.model.user.mockCurrentUser
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+@InternalApi
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [ROBOLECTRIC_SDK])
 class ProfileContentTest {
@@ -55,7 +57,7 @@ class ProfileContentTest {
         setContent {
             MaterialTheme {
                 ProfileContent(
-                    state = ProfileScreenState.Content(user = mockCurrentUser()),
+                    state = ProfileScreenState.Content(user = userDetailsMock()),
                     onLoginClick = {}
                 )
             }

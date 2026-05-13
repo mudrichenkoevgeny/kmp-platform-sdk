@@ -1,8 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.core.settings.di
 
-import io.github.mudrichenkoevgeny.kmp.core.settings.repository.globalsettings.GlobalSettingsRepository
-import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.GetGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.RefreshGlobalSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.core.settings.repository.GlobalSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.GetGlobalSettingsUseCase
 
 /**
  * Internal use-case wiring for `core/settings`.

@@ -1,12 +1,14 @@
 <resources>
-    <string name="error_security_password_too_weak">Password is too weak</string>
-    <string name="error_security_password_policy_unavailable">Security requirements are currently unavailable. Please try again later.</string>
-    <string name="error_security_password_too_short">Password is too short</string>
-    <string name="error_security_password_no_letter">Password must contain at least one letter</string>
-    <string name="error_security_password_no_uppercase">Password must contain at least one uppercase letter</string>
-    <string name="error_security_password_no_lowercase">Password must contain at least one lowercase letter</string>
-    <string name="error_security_password_no_digit">Password must contain at least one digit</string>
-    <string name="error_security_password_no_special_char">Password must contain at least one special character</string>
-    <string name="error_security_password_too_common">This password is too common and easy to guess</string>
-    <string name="error_security_confirmation_required">Identity confirmation required. Please verify your session.</string>
+    <string name="error_security_totp_confirmation_required">Authentication confirmation is required.</string>
+    <string name="error_security_totp_confirmation_required_args">Authentication confirmation is required. MFA token: %1$s</string>
+    <string name="error_security_totp_already_enabled">Two-factor authentication is already enabled for this account.</string>
+    <string name="error_security_totp_not_enabled">Two-factor authentication is not enabled for this account.</string>
+    <string name="error_security_mfa_token_expired">The MFA token has expired. Please request a new one.</string>
+    <string name="error_security_invalid_mfa_token">The MFA token is invalid or malformed.</string>
+    <string name="error_security_invalid_totp_code">The provided code is invalid.</string>
+    <string name="error_security_recovery_code_used">This recovery code has already been used.</string>
+    <string name="error_security_otp_retry_too_soon">Too many attempts. Please try again later.</string>
+    <string name="error_security_otp_retry_too_soon_args">Too many attempts. Please try again in %1$s seconds.</string>
+    <string name="error_security_password_too_weak">Password is too weak.</string>
+    <string name="error_security_password_too_weak_args">Password is too weak. Too short: %1$s (min: %2$s), No letters: %3$s, No uppercase: %4$s, No lowercase: %5$s, No digits: %6$s, No special chars: %7$s, Too common: %8$s.</string>
 </resources>

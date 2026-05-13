@@ -4,11 +4,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.flatMap
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.google.GoogleAuthService
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.AuthData
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 
 /**
  * Google Sign-In flow: obtains a provider token, exchanges it for session material via
@@ -40,7 +40,7 @@ class LoginByGoogleUseCase(
                     refreshToken = authData.sessionToken.refreshToken,
                     expiresAt = authData.sessionToken.expiresAt
                 )
-                userStorage.updateCurrentUser(authData.currentUser)
+                userStorage.updateCurrentUser(authData.userDetails)
             }
     }
 }

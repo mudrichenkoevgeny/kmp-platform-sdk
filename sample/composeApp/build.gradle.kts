@@ -52,9 +52,12 @@ kotlin {
             implementation(project(":core:settings"))
             implementation(project(":core:security"))
             implementation(project(":feature:user"))
+            implementation(project(":feature:settingsapi"))
+            implementation(project(":feature:securityapi"))
 
             // Shared Foundation
             implementation(libs.shared.foundation.core.common)
+            implementation(libs.shared.foundation.feature.user)
 
             // Kotlin
             implementation(libs.kotlinx.serialization.json)

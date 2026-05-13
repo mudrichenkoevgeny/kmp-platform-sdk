@@ -1,17 +1,30 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.repository.user
 
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.user.CurrentUser
+import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Read-side access to the signed-in user snapshot as observed from local storage (and any future
- * network-backed refresh paths).
+ * Access to the signed-in user snapshot and profile management operations.
  */
 interface UserRepository {
-    /** [Flow] of the cached [CurrentUser], or `null` when none is stored. */
-    val currentUser: Flow<CurrentUser?>
+    /** [Flow] of the cached [UserDetails], or `null` when none is stored. */
+    val currentUser: Flow<UserDetails?>
 
-//    suspend fun getUser(): AppResult<CurrentUser>
-//    suspend fun deleteUser(): AppResult<Unit>
-//    suspend fun getUserSettings(): AppResult<UserSettings>
+    /**
+     * Forces a network reload of the current user profile and updates local storage on success.
+     *
+     * @return Fresh [UserDetails] on success, or an error result when the request fails.
+     */
+    suspend fun refreshCurrentUser(): AppResult<UserDetails>
+
+    /**
+     * Schedules the current account for permanent deletion and updates local state.
+     */
+    suspend fun scheduleUserDeletion(): AppResult<UserDetails>
+
+    /**
+     * Cancels a pending account deletion request and updates local state.
+     */
+    suspend fun restoreUser(): AppResult<UserDetails>
 }

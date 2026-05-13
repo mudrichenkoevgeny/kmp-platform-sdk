@@ -1,46 +1,75 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.network.websocket.messagehandler
 
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.model.websocket.socketFrameMock
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandlerResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.model.websocket.SocketFrame
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.settings.publicAuthSettingsPayloadMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.user.userDetailsPayloadMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.refreshtoken.RefreshTokenRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.settings.AuthSettingsRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.refreshtoken.RefreshTokenUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserWebSocketEventTypes
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.encodeToJsonElement
 import kotlin.test.Test
 import kotlin.test.assertSame
 
-private const val FRAME_ID = "123e4567-e89b-12d3-a456-426614174000"
-private const val FRAME_TS = 42L
-
+@InternalApi
 class UserWebSocketMessageHandlerTest {
 
-    private val handler = UserWebSocketMessageHandler()
+    private val userStorage = UserStorageMock()
+    private val authStorage = AuthStorageMock()
+    private val authSettingsRepository = AuthSettingsRepositoryMock()
+    private val refreshTokenUseCase = RefreshTokenUseCase(
+        refreshTokenRepository = RefreshTokenRepositoryMock(),
+        authStorage = authStorage
+    )
 
-    private fun frame(type: String) = SocketFrame(
-        id = FRAME_ID,
-        type = type,
-        timestamp = FRAME_TS
+    private fun createHandler(scope: TestScope) = UserWebSocketMessageHandler(
+        userStorage = userStorage,
+        authStorage = authStorage,
+        authSettingsRepository = authSettingsRepository,
+        refreshTokenUseCase = refreshTokenUseCase,
+        scope = scope
     )
 
     @Test
     fun `known user websocket event types are handled`() = runTest {
-        val handledTypes = listOf(
-            UserWebSocketEventTypes.UNAUTHORIZED,
-            UserWebSocketEventTypes.AUTH_SETTINGS_UPDATED,
-            UserWebSocketEventTypes.ACCOUNT_STATUS_CHANGED,
-            UserWebSocketEventTypes.SESSION_TERMINATED
+        val handler = createHandler(this)
+
+        val frames = listOf(
+            socketFrameMock(type = UserWebSocketEventTypes.UNAUTHORIZED),
+            socketFrameMock(
+                type = UserWebSocketEventTypes.AUTH_SETTINGS_UPDATED,
+                payload = FoundationJson.encodeToJsonElement(publicAuthSettingsPayloadMock())
+            ),
+            socketFrameMock(
+                type = UserWebSocketEventTypes.USER_UPDATED,
+                payload = FoundationJson.encodeToJsonElement(userDetailsPayloadMock())
+            ),
+            socketFrameMock(type = UserWebSocketEventTypes.SESSION_DELETED)
         )
-        for (type in handledTypes) {
+
+        for (f in frames) {
+            val result = handler.handle(f)
             assertSame(
-                WebSocketMessageHandlerResult.Handled,
-                handler.handle(frame(type))
+                expected = WebSocketMessageHandlerResult.Handled,
+                actual = result,
+                message = "Failed for type: ${f.type}"
             )
         }
     }
 
     @Test
     fun `unknown type is not handled`() = runTest {
+        val handler = createHandler(this)
         assertSame(
-            WebSocketMessageHandlerResult.NotHandled,
-            handler.handle(frame("UNKNOWN_USER_WS_TYPE"))
+            expected = WebSocketMessageHandlerResult.NotHandled,
+            actual = handler.handle(socketFrameMock(type = "UNKNOWN_USER_WS_TYPE"))
         )
     }
 }

@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.network.utils
 
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -8,6 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
+@InternalApi
 class AndroidNetworkUtilsTest {
 
     @Test

@@ -9,7 +9,7 @@ import com.arkivanov.essenty.lifecycle.resume
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.root.LoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.sample.app.mock.di.mockAppComponent
+import io.github.mudrichenkoevgeny.kmp.sample.app.mock.di.appComponentMock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -23,7 +23,7 @@ import kotlin.test.assertNull
 
 /**
  * Login dialog slot activates [LoginRootComponent], which needs a platform [Context] for the
- * external launcher on Android JVM. Multiplatform [commonTest] has no application context; this test runs on Robolectric only.
+ * external launcher on Android JVM.
  */
 @OptIn(InternalApi::class)
 @RunWith(RobolectricTestRunner::class)
@@ -39,7 +39,7 @@ class MainScreenComponentImplDialogSlotAndroidTest {
             val lifecycle = LifecycleRegistry()
             lifecycle.resume()
             val ctx = DefaultComponentContext(lifecycle)
-            val app = mockAppComponent(platformContext = context)
+            val app = appComponentMock(platformContext = context)
             val main = MainScreenComponentImpl(componentContext = ctx, appComponent = app)
             assertNull(main.loginDialogSlot.value.child?.instance)
             main.onShowLogin()

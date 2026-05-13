@@ -4,13 +4,13 @@ import co.touchlab.kermit.Logger
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
-import io.github.mudrichenkoevgeny.kmp.feature.user.mapper.auth.settings.toAuthSettings
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.settings.AuthSettings
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.auth.settings.AuthSettingsApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.PublicAuthSettings
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.settings.toAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserWebSocketEventTypes
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.response.auth.settings.AuthSettingsResponse
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.settings.PublicAuthSettingsPayload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,7 +42,7 @@ class AuthSettingsRepositoryImpl(
 ) : AuthSettingsRepository {
 
     private val updateMutex = Mutex()
-    private val _settings = MutableStateFlow<AuthSettings?>(null)
+    private val _settings = MutableStateFlow<PublicAuthSettings?>(null)
 
     init {
         repositoryScope.launch {
@@ -53,7 +53,7 @@ class AuthSettingsRepositoryImpl(
                 .collect { frame ->
                     try {
                         val response = frame.payload?.let {
-                            FoundationJson.decodeFromJsonElement<AuthSettingsResponse>(it)
+                            FoundationJson.decodeFromJsonElement<PublicAuthSettingsPayload>(it)
                         }
 
                         if (response != null) {
@@ -68,7 +68,7 @@ class AuthSettingsRepositoryImpl(
         }
     }
 
-    override suspend fun getAuthSettings(): AppResult<AuthSettings> {
+    override suspend fun getAuthSettings(): AppResult<PublicAuthSettings> {
         _settings.value?.let { return AppResult.Success(it) }
 
         return updateMutex.withLock {
@@ -83,21 +83,21 @@ class AuthSettingsRepositoryImpl(
         }
     }
 
-    override suspend fun refreshAuthSettings(): AppResult<AuthSettings> {
+    override suspend fun refreshAuthSettings(): AppResult<PublicAuthSettings> {
         return updateMutex.withLock {
             refreshAuthSettingsInternal()
         }
     }
 
-    override suspend fun updateAuthSettings(authSettings: AuthSettings) {
+    override suspend fun updateAuthSettings(authSettings: PublicAuthSettings) {
         updateMutex.withLock {
             applySettingsUpdate(authSettings)
         }
     }
 
-    override fun observeAuthSettings(): Flow<AuthSettings?> = _settings.asStateFlow()
+    override fun observeAuthSettings(): Flow<PublicAuthSettings?> = _settings.asStateFlow()
 
-    private suspend fun refreshAuthSettingsInternal(): AppResult<AuthSettings> {
+    private suspend fun refreshAuthSettingsInternal(): AppResult<PublicAuthSettings> {
         return authSettingsApi.getAuthSettings()
             .mapSuccess { response ->
                 val settings = response.toAuthSettings()
@@ -106,7 +106,7 @@ class AuthSettingsRepositoryImpl(
             }
     }
 
-    private suspend fun applySettingsUpdate(authSettings: AuthSettings) {
+    private suspend fun applySettingsUpdate(authSettings: PublicAuthSettings) {
         authStorage.updateAuthSettings(authSettings)
         _settings.value = authSettings
     }

@@ -20,6 +20,13 @@ plugins {
 }
 
 subprojects {
+    val isBom = project.name == "bom"
+    val isModule = project.projectDir.resolve("src").exists() || isBom
+
+    if (!isModule) return@subprojects
+
+    apply(plugin = "com.autonomousapps.dependency-analysis")
+
     tasks.withType<KotlinCompilationTask<*>>().configureEach {
         compilerOptions {
             freeCompilerArgs.add("-opt-in=kotlin.uuid.ExperimentalUuidApi")

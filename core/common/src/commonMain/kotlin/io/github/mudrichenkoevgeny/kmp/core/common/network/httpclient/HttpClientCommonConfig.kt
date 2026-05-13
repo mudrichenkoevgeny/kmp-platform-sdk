@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.network.httpclient
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.ApiException
-import io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo.model.DeviceInfo
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceInfo
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.model.ApiErrorResponse
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.contract.CommonHttpHeaders
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
@@ -43,7 +43,7 @@ private const val LOGGER_RESPONSE_VALIDATOR_PREFIX = "Response validator"
 fun HttpClientConfig<*>.setupCommonConfig(
     baseUrl: String,
     networkLogger: Logger,
-    deviceInfo: DeviceInfo
+    deviceInfo: ClientDeviceInfo
 ) {
     install(ContentNegotiation) {
         json(FoundationJson)
@@ -72,7 +72,7 @@ fun HttpClientConfig<*>.setupCommonConfig(
         header(CommonHttpHeaders.DEVICE_ID_HEADER_NAME, deviceInfo.deviceId)
         header(CommonHttpHeaders.DEVICE_NAME_HEADER_NAME, deviceInfo.deviceName)
         header(CommonHttpHeaders.APP_VERSION_HEADER_NAME, deviceInfo.appVersion)
-        header(CommonHttpHeaders.OPERATION_SYSTEM_VERSION_HEADER_NAME, deviceInfo.osVersion)
+        header(CommonHttpHeaders.OPERATION_SYSTEM_VERSION_HEADER_NAME, deviceInfo.operationSystemVersion)
         header(HttpHeaders.AcceptLanguage, deviceInfo.language)
     }
 

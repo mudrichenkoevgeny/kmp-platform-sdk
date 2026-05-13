@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.settings.AuthSettings
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.PublicAuthSettings
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -12,16 +12,16 @@ interface AuthSettingsRepository {
      * Returns cached settings when already loaded or stored; otherwise loads from the network or
      * storage as implemented.
      *
-     * @return [AppResult.Success] with [AuthSettings], or [AppResult.Error] when load fails.
+     * @return [AppResult.Success] with [PublicAuthSettings], or [AppResult.Error] when load fails.
      */
-    suspend fun getAuthSettings(): AppResult<AuthSettings>
+    suspend fun getAuthSettings(): AppResult<PublicAuthSettings>
 
     /**
      * Forces a network reload and updates the observable snapshot on success.
      *
-     * @return Fresh [AuthSettings] on success, or an error result when the request fails.
+     * @return Fresh [PublicAuthSettings] on success, or an error result when the request fails.
      */
-    suspend fun refreshAuthSettings(): AppResult<AuthSettings>
+    suspend fun refreshAuthSettings(): AppResult<PublicAuthSettings>
 
     /**
      * Persists [authSettings] and publishes them to observers. Failures are not represented as
@@ -29,12 +29,12 @@ interface AuthSettingsRepository {
      *
      * @param authSettings Complete settings payload to apply locally and in persistence.
      */
-    suspend fun updateAuthSettings(authSettings: AuthSettings)
+    suspend fun updateAuthSettings(authSettings: PublicAuthSettings)
 
     /**
      * Observes the in-memory settings snapshot (including `null` before the first successful load).
      *
-     * @return [Flow] of the current [AuthSettings] or `null`.
+     * @return [Flow] of the current [PublicAuthSettings] or `null`.
      */
-    fun observeAuthSettings(): Flow<AuthSettings?>
+    fun observeAuthSettings(): Flow<PublicAuthSettings?>
 }

@@ -1,21 +1,23 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth
 
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.storage.MockEncryptedSettings
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.settings.AuthSettings
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.settings.AvailableAuthProviders
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.AccessToken
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.token.RefreshToken
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.storage.EncryptedSettingsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.auth.settings.publicAuthSettingsMock
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.time.Instant
 
+@InternalApi
 class EncryptedAuthStorageTest {
 
     @Test
     fun init_mirrorsPersistedAccessTokenIntoFlow() = runTest {
-        val settings = MockEncryptedSettings()
+        val settings = EncryptedSettingsMock()
         settings.put(KEY_ACCESS_TOKEN, STORED_ACCESS)
 
         val storage = EncryptedAuthStorage(settings, this)
@@ -27,10 +29,10 @@ class EncryptedAuthStorageTest {
 
     @Test
     fun updateTokens_persistsAndUpdatesFlow() = runTest {
-        val storage = EncryptedAuthStorage(MockEncryptedSettings(), this)
+        val storage = EncryptedAuthStorage(EncryptedSettingsMock(), this)
         advanceUntilIdle()
 
-        storage.updateTokens(AccessToken(ACCESS_A), RefreshToken(REFRESH_A), expiresAt = 99L)
+        storage.updateTokens(AccessToken(ACCESS_A), RefreshToken(REFRESH_A), expiresAt = Instant.fromEpochMilliseconds(99L))
 
         assertEquals(AccessToken(ACCESS_A), storage.getAccessToken())
         assertEquals(RefreshToken(REFRESH_A), storage.getRefreshToken())
@@ -40,9 +42,9 @@ class EncryptedAuthStorageTest {
 
     @Test
     fun clearTokens_clearsBackingStoreAndFlow() = runTest {
-        val storage = EncryptedAuthStorage(MockEncryptedSettings(), this)
+        val storage = EncryptedAuthStorage(EncryptedSettingsMock(), this)
         advanceUntilIdle()
-        storage.updateTokens(AccessToken(ACCESS_A), RefreshToken(REFRESH_A), 1L)
+        storage.updateTokens(AccessToken(ACCESS_A), RefreshToken(REFRESH_A), Instant.fromEpochMilliseconds(1L))
 
         storage.clearTokens()
 
@@ -54,14 +56,10 @@ class EncryptedAuthStorageTest {
 
     @Test
     fun authSettings_roundTrip() = runTest {
-        val storage = EncryptedAuthStorage(MockEncryptedSettings(), this)
+        val storage = EncryptedAuthStorage(EncryptedSettingsMock(), this)
         advanceUntilIdle()
-        val settings = AuthSettings(
-            availableAuthProviders = AvailableAuthProviders(
-                primary = emptyList(),
-                secondary = emptyList()
-            )
-        )
+
+        val settings = publicAuthSettingsMock()
 
         storage.updateAuthSettings(settings)
 
@@ -70,16 +68,9 @@ class EncryptedAuthStorageTest {
 
     @Test
     fun clearAuthSettings_removesSnapshot() = runTest {
-        val storage = EncryptedAuthStorage(MockEncryptedSettings(), this)
+        val storage = EncryptedAuthStorage(EncryptedSettingsMock(), this)
         advanceUntilIdle()
-        storage.updateAuthSettings(
-            AuthSettings(
-                availableAuthProviders = AvailableAuthProviders(
-                    primary = emptyList(),
-                    secondary = emptyList()
-                )
-            )
-        )
+        storage.updateAuthSettings(publicAuthSettingsMock())
 
         storage.clearAuthSettings()
 

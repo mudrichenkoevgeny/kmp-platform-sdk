@@ -1,8 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.registration
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.AuthData
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.SendConfirmationData
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
 
 /**
  * Email-based registration: confirm address, then complete sign-up and receive auth material.
@@ -22,10 +22,10 @@ interface RegistrationRepository {
      * Sends a registration confirmation code to [email], respecting client-side rate limits.
      *
      * @param email Destination for the registration code.
-     * @return [SendConfirmationData] with retry metadata on success, or an error result (including
+     * @return [OtpConfirmation] with retry metadata on success, or an error result (including
      * when throttled before the network call).
      */
-    suspend fun sendRegistrationConfirmationToEmail(email: String): AppResult<SendConfirmationData>
+    suspend fun sendRegistrationConfirmationToEmail(email: String): AppResult<OtpConfirmation>
 
     /**
      * @param email Same email key as used for registration confirmation sends.

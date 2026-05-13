@@ -27,16 +27,19 @@ fun registerModules(parentDir: String, modules: List<String>) {
 
 val coreModules = listOf(
     "common",
-    "settings",
-    "security"
+    "security",
+    "settings"
 )
 registerModules("core", coreModules)
 
 val featureModules = listOf(
-    "user"
+    "user",
+    "securityapi",
+    "settingsapi"
 )
 registerModules("feature", featureModules)
 
+include(":bom")
+
 include(":sample:composeApp")
 include(":sample:androidApp")
-include(":bom")

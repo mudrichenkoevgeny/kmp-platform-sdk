@@ -1,13 +1,28 @@
 <resources>
-    <string name="error_user_auth_failed">Authentication failed</string>
-    <string name="error_user_access_denied">Access denied</string>
-    <string name="error_user_blocked">User blocked</string>
-    <string name="error_user_read_only">Action restricted. Your account is in read-only mode.</string>
-    <string name="error_user_not_found">User not found</string>
-    <string name="error_user_invalid_credentials">Invalid credentials</string>
-    <string name="error_user_wrong_confirmation_code">Wrong confirmation code</string>
-    <string name="error_user_wrong_password">Wrong password</string>
-    <string name="error_user_identifier_already_exists">An identifier of this type is already linked to your account.</string>
+    <string name="error_user_invalid_access_token">The access token is invalid.</string>
+    <string name="error_user_access_token_expired">The access token has expired.</string>
+    <string name="error_user_invalid_refresh_token">The refresh token is invalid.</string>
+    <string name="error_user_invalid_session">The session is invalid.</string>
+    <string name="error_user_blocked">This account has been blocked.</string>
+    <string name="error_user_read_only">This account is read-only.</string>
+    <string name="error_user_security_hold">This account is temporarily restricted for security reasons.</string>
+    <string name="error_user_pending_deletion">This account is pending deletion and cannot be used.</string>
+    <string name="error_user_illegal_status">The current account status does not allow this operation.</string>
+    <string name="error_user_forbidden">Access to this resource is forbidden.</string>
+    <string name="error_user_role_not_allowed">Your role does not allow this action.</string>
+    <string name="error_user_missing_permissions">You do not have the required permissions for this action.</string>
+    <string name="error_user_insufficient_authority">Your authority level is insufficient for this action.</string>
+    <string name="error_user_not_found">User not found.</string>
+    <string name="error_user_invalid_credentials">Invalid email or password.</string>
+    <string name="error_user_wrong_password">The current password is incorrect.</string>
+    <string name="error_user_wrong_confirmation_code">The confirmation code is incorrect or has expired.</string>
+    <string name="error_user_external_linkage_failed">External account could not be linked.</string>
+    <string name="error_user_can_not_delete_identifier">This sign-in method cannot be removed.</string>
+    <string name="error_user_can_not_create_identifier">This sign-in method could not be added.</string>
+    <string name="error_user_identifier_limit_reached">The limit of identifiers has been reached.</string>
+    <string name="error_user_identifier_limit_reached_args">The limit of %1$s identifiers for "%2$s" has been reached.</string>
+    <string name="error_user_total_identifiers_limit_reached">The maximum total limit of identifiers has been reached.</string>
+    <string name="error_user_total_identifiers_limit_reached_args">The maximum total limit of %1$s identifiers per account has been reached.</string>
 
     <string name="login">Login</string>
     <string name="login_with">Login with:</string>

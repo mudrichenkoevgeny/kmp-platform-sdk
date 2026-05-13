@@ -7,8 +7,8 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.arkivanov.essenty.lifecycle.destroy
 import com.arkivanov.essenty.lifecycle.resume
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.di.mockCommonComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.di.mockUserComponent
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.di.commonComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.di.userComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.LoginDestination
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponentImpl
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
@@ -69,8 +69,8 @@ class LoginRootComponentImplTest {
     @Test
     fun userComponent_createLoginRootDialogComponent_startsAtWelcome() {
         withUserUiMainDispatcher {
-            val user = mockUserComponent(
-                commonComponent = mockCommonComponent(platformContext = androidContext())
+            val user = userComponentMock(
+                commonComponent = commonComponentMock(platformContext = androidContext())
             )
             val lifecycle = LifecycleRegistry()
             lifecycle.resume()
@@ -88,8 +88,8 @@ class LoginRootComponentImplTest {
     private fun androidContext(): Context = ApplicationProvider.getApplicationContext()
 
     private fun createHarness(onFinished: () -> Unit = {}): Harness {
-        val user = mockUserComponent(
-            commonComponent = mockCommonComponent(platformContext = androidContext())
+        val user = userComponentMock(
+            commonComponent = commonComponentMock(platformContext = androidContext())
         )
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()

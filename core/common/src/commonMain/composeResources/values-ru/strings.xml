@@ -1,10 +1,25 @@
 <resources>
-    <string name="error_common_unknown">Неизвестная ошибка</string>
-    <string name="error_common_internal">Внутренняя ошибка</string>
-    <string name="error_common_no_internet">Отсутствует подключение к интернету</string>
-    <string name="error_common_network">Ошибка сети</string>
-    <string name="error_common_service_unavailable">Сервис недоступен</string>
-    <string name="error_common_too_many_requests">Слишком много запросов</string>
+    <string name="error_common_not_found">Ресурс не найден.</string>
+    <string name="error_common_not_found_args">Ресурс «%1$s» не найден.</string>
+    <string name="error_common_missing_parameter">Отсутствует обязательный параметр.</string>
+    <string name="error_common_missing_parameter_args">Отсутствует обязательный параметр «%1$s».</string>
+    <string name="error_common_invalid_parameter">Параметр имеет недопустимое значение.</string>
+    <string name="error_common_invalid_parameter_args">Параметр «%1$s» имеет недопустимое значение.</string>
+    <string name="error_common_missing_field">Отсутствует обязательное поле.</string>
+    <string name="error_common_missing_field_args">Отсутствует обязательное поле «%1$s».</string>
+    <string name="error_common_blank_field">Поле не должно быть пустым.</string>
+    <string name="error_common_blank_field_args">Поле «%1$s» не должно быть пустым.</string>
+    <string name="error_common_empty_field">Поле не должно быть пустым.</string>
+    <string name="error_common_empty_field_args">Коллекция «%1$s» не должна быть пустой.</string>
+    <string name="error_common_invalid_field">Поле имеет недопустимое значение.</string>
+    <string name="error_common_invalid_field_args">Поле «%1$s» имеет недопустимое значение.</string>
+    <string name="error_common_too_many_requests">Слишком много запросов. Пожалуйста, попробуйте позже.</string>
+    <string name="error_common_too_many_requests_args">Слишком много запросов. Повторите через %1$s сек.</string>
+    <string name="error_common_service_unavailable">Сервис временно недоступен.</string>
+    <string name="error_common_internal">Произошла ошибка.</string>
+    <string name="error_common_unknown">Произошла неизвестная ошибка.</string>
+    <string name="error_common_no_internet">Отсутствует подключение к интернету.</string>
+    <string name="error_common_network">Ошибка сети.</string>
 
     <string name="retry">Повторить</string>
 </resources>

@@ -28,6 +28,10 @@ dependencies {
     implementation(project(":feature:user"))
     implementation(project(":sample:composeApp"))
 
+    // Shared Foundation
+    implementation(libs.shared.foundation.core.common)
+    implementation(libs.shared.foundation.feature.user)
+
     // Android
     implementation(libs.androidx.activityCompose)
     implementation(libs.compose.ui.tooling)

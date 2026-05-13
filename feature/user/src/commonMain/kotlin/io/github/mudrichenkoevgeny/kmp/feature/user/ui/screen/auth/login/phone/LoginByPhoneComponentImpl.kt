@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.phone
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import io.github.mudrichenkoevgeny.kmp.core.common.error.logger.log
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
@@ -105,6 +106,7 @@ class LoginByPhoneComponentImpl(
                 .onSuccess { onFinished() }
                 .onError { error ->
                     _state.value = current.copy(actionLoading = false, actionError = error)
+                    error.log()
                 }
         }
     }
