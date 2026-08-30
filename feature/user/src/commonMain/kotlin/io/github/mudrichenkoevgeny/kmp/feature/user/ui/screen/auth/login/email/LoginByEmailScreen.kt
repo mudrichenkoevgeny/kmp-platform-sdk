@@ -181,14 +181,16 @@ private fun LoginByEmailContent(
 
             Spacer(Modifier.height(Dimens.paddingMedium))
 
-            TextButton(
-                onClick = onRegistrationClick,
-                enabled = !state.actionLoading
-            ) {
-                Text(
-                    text = stringResource(Res.string.no_account_register),
-                    style = MaterialTheme.typography.labelLarge
-                )
+            if (state.isRegistrationAvailable) {
+                TextButton(
+                    onClick = onRegistrationClick,
+                    enabled = !state.actionLoading
+                ) {
+                    Text(
+                        text = stringResource(Res.string.no_account_register),
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
             }
         }
 
@@ -227,7 +229,8 @@ private fun LoginByEmailContentPreview() {
                 LoginByEmailContent(
                     state = LoginByEmailScreenState.Content(
                         email = "test@example.com",
-                        isEmailValid = true
+                        isEmailValid = true,
+                        isRegistrationAvailable = true
                     ),
                     onEmailChanged = {},
                     onPasswordChanged = {},

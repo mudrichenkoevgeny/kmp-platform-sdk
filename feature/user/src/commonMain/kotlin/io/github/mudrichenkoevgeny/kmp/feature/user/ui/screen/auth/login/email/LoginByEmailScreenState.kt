@@ -27,6 +27,7 @@ sealed interface LoginByEmailScreenState {
         val password: String = "",
         val isPasswordValid: Boolean = false,
         val isPasswordVisible: Boolean = false,
+        val isRegistrationAvailable: Boolean = true,
         val actionLoading: Boolean = false,
         val actionError: AppError? = null
     ) : LoginByEmailScreenState {

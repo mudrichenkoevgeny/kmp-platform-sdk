@@ -4,13 +4,15 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.platform.externallauncher.ExternalLauncher
+import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.GetGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
-import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.GetGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
+import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByGoogleUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
@@ -31,10 +33,11 @@ import kotlinx.coroutines.launch
  */
 class LoginWelcomeComponentImpl(
     componentContext: ComponentContext,
+    private val appType: AppType,
     private val externalLauncher: ExternalLauncher,
     private val getGlobalSettingsUseCase: GetGlobalSettingsUseCase,
     private val getAvailableUserAuthProvidersUseCase: GetAvailableUserAuthProvidersUseCase,
-    private val loginByGoogleUseCase: LoginByGoogleUseCase,
+    private val loginByGoogleUseCase: LoginByGoogleUseCase?,
     private val onNavigateToLoginByEmail: () -> Unit,
     private val onNavigateToLoginByPhone: () -> Unit,
     private val onFinished: () -> Unit
@@ -112,8 +115,17 @@ class LoginWelcomeComponentImpl(
     }
 
     private fun loginByGoogle() {
+        val loginByGoogle = loginByGoogleUseCase
+        if (loginByGoogle == null) {
+            val error = CommonError.ContractViolation(
+                throwable = IllegalStateException("Login by google are not supported.")
+            )
+            stopActionState(error)
+            return
+        }
+
         scope.launch {
-            loginByGoogleUseCase.execute()
+            loginByGoogle.execute()
                 .onSuccess {
                     onFinished()
                 }

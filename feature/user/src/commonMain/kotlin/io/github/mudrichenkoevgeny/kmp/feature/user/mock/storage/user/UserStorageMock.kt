@@ -3,9 +3,14 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
@@ -32,9 +37,25 @@ class UserStorageMock : UserStorage {
         currentUserFlow.value = currentUser
     }
 
-    override suspend fun getUserIdentifiersList(): PagedResult<UserIdentifier> = identifiersFlow.value
+    override suspend fun getUserIdentifiersList(
+        pageNumber: Int?,
+        pageSize: Int?,
+        sortBy: UserSortValues.UserIdentifierSortBy?,
+        sortOrder: SortOrder?,
+        userIds: List<String>?,
+        userAuthProviders: List<UserAuthProvider>?,
+        identifiers: List<String>?
+    ): PagedResult<UserIdentifier> = identifiersFlow.value
 
-    override fun observeUserIdentifiersList(): Flow<PagedResult<UserIdentifier>> = identifiersFlow
+    override fun observeUserIdentifiersList(
+        pageNumber: Int?,
+        pageSize: Int?,
+        sortBy: UserSortValues.UserIdentifierSortBy?,
+        sortOrder: SortOrder?,
+        userIds: List<String>?,
+        userAuthProviders: List<UserAuthProvider>?,
+        identifiers: List<String>?
+    ): Flow<PagedResult<UserIdentifier>> = identifiersFlow
 
     override suspend fun updateUserIdentifiersList(userIdentifiersList: PagedResult<UserIdentifier>) {
         identifiersFlow.value = userIdentifiersList
@@ -71,9 +92,45 @@ class UserStorageMock : UserStorage {
         }
     }
 
-    override suspend fun getUserSessionsList(): PagedResult<UserSession> = sessionsFlow.value
+    override suspend fun getUserSessionsList(
+        pageNumber: Int?,
+        pageSize: Int?,
+        sortBy: UserSortValues.UserSessionSortBy?,
+        sortOrder: SortOrder?,
+        userIds: List<String>?,
+        userRoles: List<UserRole>?,
+        identifiers: List<String>?,
+        identifierIds: List<String>?,
+        userAuthProviders: List<UserAuthProvider>?,
+        clientTypes: List<ClientType>?,
+        userAgents: List<String>?,
+        ipAddresses: List<String>?,
+        languages: List<String>?,
+        deviceIds: List<String>?,
+        deviceNames: List<String>?,
+        appVersions: List<String>?,
+        operationSystemVersions: List<String>?
+    ): PagedResult<UserSession> = sessionsFlow.value
 
-    override fun observeUserSessionsList(): Flow<PagedResult<UserSession>> = sessionsFlow
+    override fun observeUserSessionsList(
+        pageNumber: Int?,
+        pageSize: Int?,
+        sortBy: UserSortValues.UserSessionSortBy?,
+        sortOrder: SortOrder?,
+        userIds: List<String>?,
+        userRoles: List<UserRole>?,
+        identifiers: List<String>?,
+        identifierIds: List<String>?,
+        userAuthProviders: List<UserAuthProvider>?,
+        clientTypes: List<ClientType>?,
+        userAgents: List<String>?,
+        ipAddresses: List<String>?,
+        languages: List<String>?,
+        deviceIds: List<String>?,
+        deviceNames: List<String>?,
+        appVersions: List<String>?,
+        operationSystemVersions: List<String>?
+    ): Flow<PagedResult<UserSession>> = sessionsFlow
 
     override suspend fun updateUserSessionsList(userSessionsList: PagedResult<UserSession>) {
         sessionsFlow.value = userSessionsList

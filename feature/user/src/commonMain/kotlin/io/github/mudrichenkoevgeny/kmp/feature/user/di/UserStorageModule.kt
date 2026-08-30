@@ -5,10 +5,10 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.EncryptedUserSt
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
 
 /**
- * Internal wiring for encrypted user-scoped storage backed by [EncryptedSettings].
+ * Wiring for encrypted user-scoped storage backed by [EncryptedSettings].
  *
  * @param encryptedSettings Platform encrypted settings used to build [UserStorage].
  */
-internal class UserStorageModule(encryptedSettings: EncryptedSettings) {
+class UserStorageModule(encryptedSettings: EncryptedSettings) {
     val userStorage: UserStorage by lazy { EncryptedUserStorage(encryptedSettings) }
 }

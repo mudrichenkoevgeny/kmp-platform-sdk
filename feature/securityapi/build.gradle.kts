@@ -31,7 +31,7 @@ kotlin {
 //        iosSimulatorArm64()
 //    ).forEach {
 //        it.binaries.framework {
-//            baseName = "FeatureUserApp"
+//            baseName = "FeatureSecurityApiApp"
 //            isStatic = true
 //        }
 //    }

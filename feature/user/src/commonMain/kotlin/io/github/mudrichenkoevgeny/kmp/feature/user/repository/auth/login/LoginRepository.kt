@@ -6,8 +6,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 
 /**
- * Sign-in entry points: email/password, phone with SMS-style confirmation, and external identity
- * providers, plus throttled send-code for phone login.
+ * Unified sign-in entry points for both client and management applications.
+ *
+ * Supports password-based authentication, multifactor verification (TOTP/Recovery codes),
+ * and platform-specific identity providers.
  */
 interface LoginRepository {
     /**
@@ -20,7 +22,7 @@ interface LoginRepository {
     suspend fun loginByEmail(email: String, password: String): AppResult<AuthData>
 
     /**
-     * Completes phone login using [phoneNumber] and [confirmationCode] from the SMS or voice step.
+     * Completes phone login using [phoneNumber] and [confirmationCode].
      *
      * @param phoneNumber E.164 or backend-normalized phone string.
      * @param confirmationCode One-time code delivered to the phone.
@@ -29,31 +31,45 @@ interface LoginRepository {
     suspend fun loginByPhone(phoneNumber: String, confirmationCode: String): AppResult<AuthData>
 
     /**
-     * Signs in via an external [authProvider] using an identity [token] from that provider SDK.
+     * Signs in via an external [authProvider] using an identity [token].
      *
-     * @param authProvider Which OAuth/OIDC/social backend integration to use.
-     * @param token Provider-issued credential passed to the backend.
+     * @param authProvider OAuth/OIDC/social backend integration.
+     * @param token Provider-issued credential.
      * @return [AuthData] on success, or an error result.
      */
     suspend fun loginByExternalAuthProvider(authProvider: UserAuthProvider, token: String): AppResult<AuthData>
 
-    // todo doc
+    /**
+     * Completes the MFA flow using a time-based one-time password (TOTP).
+     *
+     * @param mfaToken Opaque intermediate token from the initial authentication step.
+     * @param code Time-based verification code.
+     * @return [AuthData] on success, or an error result.
+     */
     suspend fun loginByTotp(mfaToken: String, code: String): AppResult<AuthData>
 
+    /**
+     * Completes the MFA flow using a static backup recovery code.
+     *
+     * @param mfaToken Opaque intermediate token from the initial authentication step.
+     * @param code Single-use alphanumeric recovery code.
+     * @return [AuthData] on success, or an error result.
+     */
     suspend fun loginByTotpRecoveryCode(mfaToken: String, code: String): AppResult<AuthData>
 
     /**
-     * Sends a login confirmation code to [phoneNumber], respecting client-side rate limits.
+     * Sends a login confirmation code to [phoneNumber].
      *
-     * @param phoneNumber Target phone for the login code.
-     * @return [OtpConfirmation] with retry metadata on success, or an error result (including
-     * when throttled before the network call).
+     * @param phoneNumber Target phone for the code.
+     * @return [OtpConfirmation] with retry metadata on success, or an error result.
      */
     suspend fun sendLoginConfirmationToPhone(phoneNumber: String): AppResult<OtpConfirmation>
 
     /**
-     * @param phoneNumber Same phone key as used for login confirmation sends.
-     * @return Remaining client-side cooldown in seconds before another send is allowed, or `0`.
+     * Returns the remaining client-side cooldown in seconds for [phoneNumber].
+     *
+     * @param phoneNumber Target phone key.
+     * @return Remaining delay in seconds, or 0 if allowed immediately.
      */
     fun getRemainingLoginConfirmationDelayInSeconds(phoneNumber: String): Int
 }

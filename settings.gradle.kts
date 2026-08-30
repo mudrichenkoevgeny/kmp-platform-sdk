@@ -35,11 +35,16 @@ registerModules("core", coreModules)
 val featureModules = listOf(
     "user",
     "securityapi",
-    "settingsapi"
+    "settingsapi",
+    "clientuser",
+    "managementuser"
 )
 registerModules("feature", featureModules)
 
 include(":bom")
 
-include(":sample:composeApp")
-include(":sample:androidApp")
+include(":sampleclient:composeApp")
+include(":sampleclient:androidApp")
+
+include(":samplemanagement:composeApp")
+include(":samplemanagement:androidApp")

@@ -9,6 +9,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.SecurityErrorCodes
 import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ValidatePasswordUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 import kotlinx.coroutines.Job
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
  */
 class LoginByEmailComponentImpl(
     componentContext: ComponentContext,
+    appType: AppType,
     private val loginByEmailUseCase: LoginByEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val onNavigateToRegistrationByEmail: () -> Unit,
@@ -39,7 +41,9 @@ class LoginByEmailComponentImpl(
     private var passwordValidationJob: Job? = null
 
     private val _state = MutableValue<LoginByEmailScreenState>(
-        LoginByEmailScreenState.Content()
+        LoginByEmailScreenState.Content(
+            isRegistrationAvailable = appType == AppType.CLIENT
+        )
     )
     override val state: Value<LoginByEmailScreenState> = _state
 

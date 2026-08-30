@@ -9,6 +9,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.platform.externallauncher.ExternalLauncherMock
 import io.github.mudrichenkoevgeny.kmp.core.common.platform.externallauncher.ExternalLauncher
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.core.settings.mock.repository.GlobalSettingsRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.GetGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
@@ -16,10 +17,10 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.auth.google.GoogleAuthS
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.auth.settings.publicAuthSettingsMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.data.authDataPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.login.LoginRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.settings.AuthSettingsRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.settings.OpenAuthSettingsRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.test.runUserUiComponentTest
+import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByGoogleUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.model.globalsettings.GlobalSettings
@@ -35,7 +36,7 @@ import kotlin.test.assertIs
 class LoginWelcomeComponentImplTest {
 
     @Test
-    fun init_loadsContent_whenAuthAndGlobalSettingsSucceed() = runUserUiComponentTest {
+    fun init_loadsContent_whenAuthAndGlobalSettingsSucceed() = runComponentTest {
         val harness = createHarness()
         try {
             advanceUntilIdle()
@@ -49,8 +50,8 @@ class LoginWelcomeComponentImplTest {
     }
 
     @Test
-    fun init_showsInitializationError_whenAuthSettingsFail() = runUserUiComponentTest {
-        val authRepo = AuthSettingsRepositoryMock().apply {
+    fun init_showsInitializationError_whenAuthSettingsFail() = runComponentTest {
+        val authRepo = OpenAuthSettingsRepositoryMock().apply {
             resultProvider = { AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE)) }
         }
         val harness = createHarness(authSettingsRepository = authRepo)
@@ -64,8 +65,8 @@ class LoginWelcomeComponentImplTest {
     }
 
     @Test
-    fun onRetryInitClick_recoverAfterFailure() = runUserUiComponentTest {
-        val authRepo = AuthSettingsRepositoryMock().apply {
+    fun onRetryInitClick_recoverAfterFailure() = runComponentTest {
+        val authRepo = OpenAuthSettingsRepositoryMock().apply {
             resultProvider = { AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE)) }
         }
         val harness = createHarness(authSettingsRepository = authRepo)
@@ -85,7 +86,7 @@ class LoginWelcomeComponentImplTest {
     }
 
     @Test
-    fun onLoginClick_email_navigatesToEmail() = runUserUiComponentTest {
+    fun onLoginClick_email_navigatesToEmail() = runComponentTest {
         val harness = createHarness()
         try {
             advanceUntilIdle()
@@ -97,7 +98,7 @@ class LoginWelcomeComponentImplTest {
     }
 
     @Test
-    fun onLoginClick_phone_navigatesToPhone() = runUserUiComponentTest {
+    fun onLoginClick_phone_navigatesToPhone() = runComponentTest {
         val harness = createHarness()
         try {
             advanceUntilIdle()
@@ -109,7 +110,7 @@ class LoginWelcomeComponentImplTest {
     }
 
     @Test
-    fun onLoginClick_google_success_callsOnFinished() = runUserUiComponentTest {
+    fun onLoginClick_google_success_callsOnFinished() = runComponentTest {
         val harness = createHarness()
         try {
             advanceUntilIdle()
@@ -122,7 +123,7 @@ class LoginWelcomeComponentImplTest {
     }
 
     @Test
-    fun onLoginClick_google_error_showsActionError() = runUserUiComponentTest {
+    fun onLoginClick_google_error_showsActionError() = runComponentTest {
         val loginRepo = LoginRepositoryMock().apply {
             authDataResultProvider = { AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE)) }
         }
@@ -140,7 +141,7 @@ class LoginWelcomeComponentImplTest {
     }
 
     @Test
-    fun onLoginClick_apple_showsExternalAuthFailed() = runUserUiComponentTest {
+    fun onLoginClick_apple_showsExternalAuthFailed() = runComponentTest {
         val harness = createHarness()
         try {
             advanceUntilIdle()
@@ -153,7 +154,7 @@ class LoginWelcomeComponentImplTest {
     }
 
     @Test
-    fun onPrivacyPolicyClick_opensUrl() = runUserUiComponentTest {
+    fun onPrivacyPolicyClick_opensUrl() = runComponentTest {
         val launcher = ExternalLauncherMock()
         val harness = createHarness(externalLauncher = launcher)
         try {
@@ -166,7 +167,7 @@ class LoginWelcomeComponentImplTest {
     }
 
     @Test
-    fun onTermsOfServiceClick_opensUrl() = runUserUiComponentTest {
+    fun onTermsOfServiceClick_opensUrl() = runComponentTest {
         val launcher = ExternalLauncherMock()
         val harness = createHarness(externalLauncher = launcher)
         try {
@@ -179,7 +180,7 @@ class LoginWelcomeComponentImplTest {
     }
 
     private fun createHarness(
-        authSettingsRepository: AuthSettingsRepositoryMock = AuthSettingsRepositoryMock().apply {
+        authSettingsRepository: OpenAuthSettingsRepositoryMock = OpenAuthSettingsRepositoryMock().apply {
             resultProvider = { AppResult.Success(publicAuthSettingsMock()) }
         },
         globalSettingsRepository: GlobalSettingsRepositoryMock = GlobalSettingsRepositoryMock().apply {
@@ -203,7 +204,10 @@ class LoginWelcomeComponentImplTest {
         val ctx = DefaultComponentContext(lifecycle)
         val counters = NavigationCounters()
         val getGlobalSettings = GetGlobalSettingsUseCase(globalSettingsRepository)
-        val getProviders = GetAvailableUserAuthProvidersUseCase(authSettingsRepository)
+        val getProviders = GetAvailableUserAuthProvidersUseCase(
+            appType = AppType.CLIENT,
+            openAuthSettingsRepository = authSettingsRepository
+        )
         val googleAuth = GoogleAuthServiceMock()
         val loginByGoogle = LoginByGoogleUseCase(
             authService = googleAuth,
@@ -217,6 +221,7 @@ class LoginWelcomeComponentImplTest {
         }
         val component = LoginWelcomeComponentImpl(
             componentContext = ctx,
+            appType = AppType.CLIENT,
             externalLauncher = externalLauncher,
             getGlobalSettingsUseCase = getGlobalSettings,
             getAvailableUserAuthProvidersUseCase = getProviders,

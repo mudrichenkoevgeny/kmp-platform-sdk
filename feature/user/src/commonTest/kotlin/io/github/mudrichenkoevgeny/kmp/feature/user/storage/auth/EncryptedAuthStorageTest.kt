@@ -61,20 +61,20 @@ class EncryptedAuthStorageTest {
 
         val settings = publicAuthSettingsMock()
 
-        storage.updateAuthSettings(settings)
+        storage.updatePublicAuthSettings(settings)
 
-        assertEquals(settings, storage.getAuthSettings())
+        assertEquals(settings, storage.getPublicAuthSettings())
     }
 
     @Test
-    fun clearAuthSettings_removesSnapshot() = runTest {
+    fun clearPublicAuthSettings_removesSnapshot() = runTest {
         val storage = EncryptedAuthStorage(EncryptedSettingsMock(), this)
         advanceUntilIdle()
-        storage.updateAuthSettings(publicAuthSettingsMock())
+        storage.updatePublicAuthSettings(publicAuthSettingsMock())
 
-        storage.clearAuthSettings()
+        storage.clearPublicAuthSettings()
 
-        assertNull(storage.getAuthSettings())
+        assertNull(storage.getPublicAuthSettings())
     }
 
     private companion object {

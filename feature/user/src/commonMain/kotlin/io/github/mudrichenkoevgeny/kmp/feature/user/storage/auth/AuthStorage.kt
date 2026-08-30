@@ -1,6 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenProvider
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.ManagementAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.PublicAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
@@ -40,12 +41,21 @@ interface AuthStorage : AccessTokenProvider {
     /** Removes tokens from storage (logout / invalid session). */
     suspend fun clearTokens()
 
-    /** @return Last known auth settings snapshot, or null if never loaded. */
-    suspend fun getAuthSettings(): PublicAuthSettings?
+    /** @return Last known public auth settings snapshot, or null if never loaded. */
+    suspend fun getPublicAuthSettings(): PublicAuthSettings?
 
-    /** @param authSettings Replaces cached provider/policy settings from the backend or WebSocket. */
-    suspend fun updateAuthSettings(authSettings: PublicAuthSettings)
+    /** @param publicAuthSettings Replaces cached public provider/policy settings from the backend or WebSocket. */
+    suspend fun updatePublicAuthSettings(publicAuthSettings: PublicAuthSettings)
 
-    /** Clears cached auth settings. */
-    suspend fun clearAuthSettings()
+    /** Clears cached public auth settings. */
+    suspend fun clearPublicAuthSettings()
+
+    /** @return Last known management auth settings snapshot, or null if never loaded. */
+    suspend fun getManagementAuthSettings(): ManagementAuthSettings?
+
+    /** @param managementAuthSettings Replaces cached management configuration from the backend. */
+    suspend fun updateManagementAuthSettings(managementAuthSettings: ManagementAuthSettings)
+
+    /** Clears cached management auth settings. */
+    suspend fun clearManagementAuthSettings()
 }

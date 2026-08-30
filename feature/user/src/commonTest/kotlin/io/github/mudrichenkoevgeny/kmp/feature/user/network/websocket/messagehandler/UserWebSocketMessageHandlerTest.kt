@@ -3,10 +3,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.network.websocket.messageha
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.model.websocket.socketFrameMock
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandlerResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.settings.publicAuthSettingsPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.user.userDetailsPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.refreshtoken.RefreshTokenRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.settings.AuthSettingsRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.refreshtoken.RefreshTokenUseCase
@@ -23,7 +21,6 @@ class UserWebSocketMessageHandlerTest {
 
     private val userStorage = UserStorageMock()
     private val authStorage = AuthStorageMock()
-    private val authSettingsRepository = AuthSettingsRepositoryMock()
     private val refreshTokenUseCase = RefreshTokenUseCase(
         refreshTokenRepository = RefreshTokenRepositoryMock(),
         authStorage = authStorage
@@ -32,7 +29,6 @@ class UserWebSocketMessageHandlerTest {
     private fun createHandler(scope: TestScope) = UserWebSocketMessageHandler(
         userStorage = userStorage,
         authStorage = authStorage,
-        authSettingsRepository = authSettingsRepository,
         refreshTokenUseCase = refreshTokenUseCase,
         scope = scope
     )
@@ -43,10 +39,6 @@ class UserWebSocketMessageHandlerTest {
 
         val frames = listOf(
             socketFrameMock(type = UserWebSocketEventTypes.UNAUTHORIZED),
-            socketFrameMock(
-                type = UserWebSocketEventTypes.AUTH_SETTINGS_UPDATED,
-                payload = FoundationJson.encodeToJsonElement(publicAuthSettingsPayloadMock())
-            ),
             socketFrameMock(
                 type = UserWebSocketEventTypes.USER_UPDATED,
                 payload = FoundationJson.encodeToJsonElement(userDetailsPayloadMock())
@@ -62,6 +54,15 @@ class UserWebSocketMessageHandlerTest {
                 message = "Failed for type: ${f.type}"
             )
         }
+    }
+
+    @Test
+    fun `auth settings updated is not handled`() = runTest {
+        val handler = createHandler(this)
+        assertSame(
+            expected = WebSocketMessageHandlerResult.NotHandled,
+            actual = handler.handle(socketFrameMock(type = UserWebSocketEventTypes.AUTH_SETTINGS_UPDATED))
+        )
     }
 
     @Test

@@ -97,6 +97,9 @@ kotlin {
         }
 
         androidMain.dependencies {
+            // Ktor
+            implementation(libs.ktor.client.okhttp)
+
             // Storage
             implementation(libs.androidx.datastorePreferences)
 

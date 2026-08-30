@@ -16,7 +16,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.time.Instant
 
-@OptIn(InternalApi::class)
+@InternalApi
 class EncryptedUserStorageTest {
 
     private fun Instant.truncated(): Instant =
@@ -70,9 +70,10 @@ class EncryptedUserStorageTest {
     fun userIdentifiers_roundTrip() = runTest {
         val storage = EncryptedUserStorage(EncryptedSettingsMock())
         val identifier = fixIdentifierTime(userIdentifierMock())
-        val expectedPagedResult = pagedResultMock(items = listOf(identifier))
+        val inputPagedResult = pagedResultMock(items = listOf(identifier))
+        val expectedPagedResult = inputPagedResult.copy(pageSize = 1)
 
-        storage.updateUserIdentifiersList(expectedPagedResult)
+        storage.updateUserIdentifiersList(inputPagedResult)
         val actualResult = storage.getUserIdentifiersList()
 
         assertEquals(expectedPagedResult, actualResult)
@@ -82,9 +83,10 @@ class EncryptedUserStorageTest {
     fun userSessions_roundTrip() = runTest {
         val storage = EncryptedUserStorage(EncryptedSettingsMock())
         val session = fixSessionTime(userSessionMock())
-        val expectedPagedResult = pagedResultMock(items = listOf(session))
+        val inputPagedResult = pagedResultMock(items = listOf(session))
+        val expectedPagedResult = inputPagedResult.copy(pageSize = 1)
 
-        storage.updateUserSessionsList(expectedPagedResult)
+        storage.updateUserSessionsList(inputPagedResult)
         val actualResult = storage.getUserSessionsList()
 
         assertEquals(expectedPagedResult, actualResult)

@@ -7,6 +7,7 @@ import com.arkivanov.essenty.lifecycle.resume
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.otpConfirmationMock
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.securitySettingsMock
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.repository.SecuritySettingsRepositoryMock
@@ -17,7 +18,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.resetpa
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.ResetEmailPasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.SendResetPasswordConfirmationToEmailUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator.PasswordPolicyValidatorImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.test.runUserUiComponentTest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifier
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
@@ -31,7 +31,7 @@ import kotlin.test.assertTrue
 class ResetEmailPasswordComponentImplTest {
 
     @Test
-    fun onEmailChanged_invalidEmail_marksEmailInvalid() = runUserUiComponentTest {
+    fun onEmailChanged_invalidEmail_marksEmailInvalid() = runComponentTest {
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = ZERO_RETRY
         val harness = createHarness(repo)
@@ -47,7 +47,7 @@ class ResetEmailPasswordComponentImplTest {
     }
 
     @Test
-    fun onEmailChanged_whenRemainingDelayPositive_skipsToResetInput() = runUserUiComponentTest {
+    fun onEmailChanged_whenRemainingDelayPositive_skipsToResetInput() = runComponentTest {
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = REMAINING_DELAY_SECONDS
         val harness = createHarness(repo)
@@ -63,7 +63,7 @@ class ResetEmailPasswordComponentImplTest {
     }
 
     @Test
-    fun onSendCodeClick_success_movesToResetInput() = runUserUiComponentTest {
+    fun onSendCodeClick_success_movesToResetInput() = runComponentTest {
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = ZERO_RETRY
         repo.sendResult = AppResult.Success(
@@ -83,7 +83,7 @@ class ResetEmailPasswordComponentImplTest {
     }
 
     @Test
-    fun onSendCodeClick_tooManyRequests_movesToResetInputWithRetry() = runUserUiComponentTest {
+    fun onSendCodeClick_tooManyRequests_movesToResetInputWithRetry() = runComponentTest {
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = ZERO_RETRY
         repo.sendResult = AppResult.Error(
@@ -102,7 +102,7 @@ class ResetEmailPasswordComponentImplTest {
     }
 
     @Test
-    fun onSendCodeClick_genericError_keepsEmailStepWithError() = runUserUiComponentTest {
+    fun onSendCodeClick_genericError_keepsEmailStepWithError() = runComponentTest {
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = ZERO_RETRY
         repo.sendResult = AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
@@ -120,7 +120,7 @@ class ResetEmailPasswordComponentImplTest {
     }
 
     @Test
-    fun onPasswordChanged_updatesPasswordValidityViaPolicy() = runUserUiComponentTest {
+    fun onPasswordChanged_updatesPasswordValidityViaPolicy() = runComponentTest {
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = ZERO_RETRY
         repo.sendResult = AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY))
@@ -139,7 +139,7 @@ class ResetEmailPasswordComponentImplTest {
     }
 
     @Test
-    fun onConfirmResetClick_success_callsOnFinished() = runUserUiComponentTest {
+    fun onConfirmResetClick_success_callsOnFinished() = runComponentTest {
         val userId = userIdentifierPayloadMock(identifier = VALID_EMAIL).toUserIdentifier()
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = ZERO_RETRY
@@ -162,7 +162,7 @@ class ResetEmailPasswordComponentImplTest {
     }
 
     @Test
-    fun onConfirmResetClick_resetError_surfacesError() = runUserUiComponentTest {
+    fun onConfirmResetClick_resetError_surfacesError() = runComponentTest {
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = ZERO_RETRY
         repo.sendResult = AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY))

@@ -13,55 +13,46 @@ import androidx.compose.ui.window.Dialog
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalCommonComponent
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailScreen
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.phone.LoginByPhoneScreen
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeScreen
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordScreen
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.registration.email.RegistrationByEmailScreen
 
-/**
- * Presents the login flow in a host-appropriate shell: [ModalBottomSheet] on mobile clients, [Dialog] otherwise.
- *
- * Renders the active [LoginRootComponent.Child] from [LoginRootComponent.stack] with slide stack animation.
- *
- * @param component root login component supplying navigation state and child screens.
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginRootScreen(component: LoginRootComponent) {
+fun <C : Any, T : Any> LoginRootContainer(
+    stack: Value<ChildStack<C, T>>,
+    onDismiss: () -> Unit,
+    content: @Composable (T) -> Unit
+) {
     val commonComponent = LocalCommonComponent.current
 
     if (commonComponent.platformRepository.getDeviceInfo().isMobileClient()) {
-        ModalBottomSheet(onDismissRequest = component::onDismiss) {
-            LoginDialogContainer(component)
+        ModalBottomSheet(onDismissRequest = onDismiss) {
+            LoginDialogSurface(stack = stack, content = content)
         }
     } else {
-        Dialog(onDismissRequest = component::onDismiss) {
-            LoginDialogContainer(component)
+        Dialog(onDismissRequest = onDismiss) {
+            LoginDialogSurface(stack = stack, content = content)
         }
     }
 }
 
 @Composable
-private fun LoginDialogContainer(component: LoginRootComponent) {
+private fun <C : Any, T : Any> LoginDialogSurface(
+    stack: Value<ChildStack<C, T>>,
+    content: @Composable (T) -> Unit
+) {
     Surface(
         modifier = Modifier.fillMaxWidth().wrapContentHeight(),
         shape = RoundedCornerShape(Dimens.roundedCornerShape),
         color = MaterialTheme.colorScheme.surface
     ) {
         Children(
-            stack = component.stack,
+            stack = stack,
             animation = stackAnimation(slide())
         ) { child ->
-            when (val instance = child.instance) {
-                is LoginRootComponent.Child.Welcome -> LoginWelcomeScreen(instance.component)
-                is LoginRootComponent.Child.LoginByEmail -> LoginByEmailScreen(instance.component)
-                is LoginRootComponent.Child.LoginByPhone -> LoginByPhoneScreen(instance.component)
-                is LoginRootComponent.Child.RegistrationByEmail -> RegistrationByEmailScreen(instance.component)
-                is LoginRootComponent.Child.ResetEmailPassword -> ResetEmailPasswordScreen(instance.component)
-            }
+            content(child.instance)
         }
     }
 }

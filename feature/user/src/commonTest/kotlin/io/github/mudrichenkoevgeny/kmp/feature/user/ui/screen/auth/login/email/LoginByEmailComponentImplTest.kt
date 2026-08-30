@@ -7,6 +7,7 @@ import com.arkivanov.essenty.lifecycle.resume
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.core.security.error.model.SecurityError
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.securitySettingsMock
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.repository.SecuritySettingsRepositoryMock
@@ -15,7 +16,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.data
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.login.LoginRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.test.runUserUiComponentTest
+import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByEmailUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator.PasswordPolicyValidatorImpl
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
@@ -26,7 +27,7 @@ import kotlin.test.*
 class LoginByEmailComponentImplTest {
 
     @Test
-    fun onEmailChanged_updatesValidityAndClearsActionError() = runUserUiComponentTest {
+    fun onEmailChanged_updatesValidityAndClearsActionError() = runComponentTest {
         val harness = createHarness()
         try {
             harness.component.onEmailChanged(INVALID_EMAIL)
@@ -47,7 +48,7 @@ class LoginByEmailComponentImplTest {
     }
 
     @Test
-    fun onPasswordChanged_asyncValidation_updatesPasswordValidity() = runUserUiComponentTest {
+    fun onPasswordChanged_asyncValidation_updatesPasswordValidity() = runComponentTest {
         val harness = createHarness()
         try {
             harness.component.onPasswordChanged(SHORT_PASSWORD)
@@ -67,7 +68,7 @@ class LoginByEmailComponentImplTest {
     }
 
     @Test
-    fun onLoginClick_success_callsOnFinished() = runUserUiComponentTest {
+    fun onLoginClick_success_callsOnFinished() = runComponentTest {
         val repo = LoginRepositoryMock().apply {
             authDataResultProvider = { AppResult.Success(authDataPayloadMock().toAuthData()) }
         }
@@ -90,7 +91,7 @@ class LoginByEmailComponentImplTest {
     }
 
     @Test
-    fun onLoginClick_loginError_surfacesError() = runUserUiComponentTest {
+    fun onLoginClick_loginError_surfacesError() = runComponentTest {
         val repo = LoginRepositoryMock().apply {
             authDataResultProvider = {
                 AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
@@ -117,7 +118,7 @@ class LoginByEmailComponentImplTest {
     }
 
     @Test
-    fun onLoginClick_secondValidatePasswordInvocationFailure_showsError() = runUserUiComponentTest {
+    fun onLoginClick_secondValidatePasswordInvocationFailure_showsError() = runComponentTest {
         val secRepo = SecuritySettingsRepositoryMock().apply {
             resultProvider = {
                 AppResult.Error(SecurityError.PasswordPolicyUnavailable())
@@ -145,7 +146,7 @@ class LoginByEmailComponentImplTest {
     }
 
     @Test
-    fun onLoginClick_whenCannotLogin_doesNotInvokeRepository() = runUserUiComponentTest {
+    fun onLoginClick_whenCannotLogin_doesNotInvokeRepository() = runComponentTest {
         val repo = LoginRepositoryMock()
 
         val harness = createHarness(loginRepository = repo)
@@ -165,7 +166,7 @@ class LoginByEmailComponentImplTest {
     }
 
     @Test
-    fun onForgotPasswordClick_invokesNavigation() = runUserUiComponentTest {
+    fun onForgotPasswordClick_invokesNavigation() = runComponentTest {
         val harness = createHarness()
         try {
             harness.component.onForgotPasswordClick()
@@ -176,7 +177,7 @@ class LoginByEmailComponentImplTest {
     }
 
     @Test
-    fun onRegistrationClick_invokesNavigation() = runUserUiComponentTest {
+    fun onRegistrationClick_invokesNavigation() = runComponentTest {
         val harness = createHarness()
         try {
             harness.component.onRegistrationClick()
@@ -187,7 +188,7 @@ class LoginByEmailComponentImplTest {
     }
 
     @Test
-    fun onBackClick_invokesOnBack() = runUserUiComponentTest {
+    fun onBackClick_invokesOnBack() = runComponentTest {
         val harness = createHarness()
         try {
             harness.component.onBackClick()
@@ -198,7 +199,7 @@ class LoginByEmailComponentImplTest {
     }
 
     @Test
-    fun onTogglePasswordVisibility_togglesFlag() = runUserUiComponentTest {
+    fun onTogglePasswordVisibility_togglesFlag() = runComponentTest {
         val harness = createHarness()
         try {
             harness.component.onTogglePasswordVisibility()
@@ -238,6 +239,7 @@ class LoginByEmailComponentImplTest {
 
         val component = LoginByEmailComponentImpl(
             componentContext = ctx,
+            appType = AppType.CLIENT,
             loginByEmailUseCase = loginByEmailUseCase,
             validatePasswordUseCase = validatePasswordUseCase
                 ?: validatePasswordUseCaseSuccess(),

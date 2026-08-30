@@ -15,8 +15,8 @@ plugins {
     alias(libs.plugins.sqlDelight).apply(false)
     alias(libs.plugins.buildConfig).apply(false)
     alias(libs.plugins.maven.publish).apply(false)
-    alias(libs.plugins.dependency.analysis)
-    alias(libs.plugins.jetbrains.kotlin.jvm) apply false
+    alias(libs.plugins.dependency.analysis).apply(false)
+    alias(libs.plugins.jetbrains.kotlin.jvm).apply(false)
 }
 
 subprojects {
@@ -25,7 +25,7 @@ subprojects {
 
     if (!isModule) return@subprojects
 
-    apply(plugin = "com.autonomousapps.dependency-analysis")
+    pluginManager.apply("com.autonomousapps.dependency-analysis")
 
     tasks.withType<KotlinCompilationTask<*>>().configureEach {
         compilerOptions {
@@ -53,11 +53,7 @@ subprojects {
 
             val baseArtifactId = "kmp-platform-sdk"
 
-            val artifactId = if (projectPathName == "SampleComposeApp") {
-                baseArtifactId
-            } else {
-                "$baseArtifactId-$projectPathName"
-            }
+            val artifactId = "$baseArtifactId-$projectPathName"
 
             coordinates(
                 groupId = "io.github.mudrichenkoevgeny",

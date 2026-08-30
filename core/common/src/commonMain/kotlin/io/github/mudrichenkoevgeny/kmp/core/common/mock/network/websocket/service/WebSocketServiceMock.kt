@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.serialization.json.JsonElement
 
 /**
- * Simple in-memory [io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService] implementation for previews/tests.
+ * Simple in-memory [WebSocketService] implementation for previews/tests.
  *
  * - `connect`/`disconnect` are no-ops
- * - [observeEvents] exposes an internal [kotlinx.coroutines.flow.MutableSharedFlow] of [io.github.mudrichenkoevgeny.shared.foundation.core.common.network.model.websocket.SocketFrame]
+ * - [observeEvents] exposes an internal [MutableSharedFlow] of [SocketFrame]
  * - sending methods are no-ops (events are not generated automatically)
  */
 @InternalApi
