@@ -1,22 +1,17 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasProgressBarRangeInfo
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import com.arkivanov.decompose.value.MutableValue
-import com.arkivanov.decompose.value.Value
-import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.resetpassword.ResetEmailPasswordComponentMock
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -30,8 +25,12 @@ class ResetEmailPasswordScreenTest {
 
     @Test
     fun loading_showsIndeterminateProgressAfterDefaultDelay() = runComposeUiTest {
-        val component = FakeResetEmailPasswordComponent(ResetEmailPasswordScreenState.Loading)
-        setContent { ResetEmailPasswordScreenHarness(component) }
+        val component = ResetEmailPasswordComponentMock(ResetEmailPasswordScreenState.Loading)
+        setContent {
+            ComponentTestHarness {
+                ResetEmailPasswordScreen(component)
+            }
+        }
         mainClock.autoAdvance = false
         mainClock.advanceTimeBy(FullscreenLoadingConfig.DELAY_MILLIS + LOADING_EXTRA_DELAY_MS)
         onNode(hasProgressBarRangeInfo(ProgressBarRangeInfo.Indeterminate)).assertExists()
@@ -39,10 +38,14 @@ class ResetEmailPasswordScreenTest {
 
     @Test
     fun emailInput_displaysTitleEmailAndSendCode() = runComposeUiTest {
-        val component = FakeResetEmailPasswordComponent(
+        val component = ResetEmailPasswordComponentMock(
             ResetEmailPasswordScreenState.EmailInput(email = EMAIL_SEND_STEP, isEmailValid = true)
         )
-        setContent { ResetEmailPasswordScreenHarness(component) }
+        setContent {
+            ComponentTestHarness {
+                ResetEmailPasswordScreen(component)
+            }
+        }
         onNodeWithText(RESET_PASSWORD_TITLE).assertIsDisplayed()
         onNodeWithText(EMAIL_LABEL).assertIsDisplayed()
         onNodeWithText(SEND_CODE).assertIsDisplayed()
@@ -50,31 +53,39 @@ class ResetEmailPasswordScreenTest {
 
     @Test
     fun emailInput_inlineError_showsLocalizedMessage() = runComposeUiTest {
-        val component = FakeResetEmailPasswordComponent(
+        val component = ResetEmailPasswordComponentMock(
             ResetEmailPasswordScreenState.EmailInput(
                 email = EMAIL_SEND_STEP,
                 isEmailValid = true,
                 actionError = CommonError.Unknown()
             )
         )
-        setContent { ResetEmailPasswordScreenHarness(component) }
+        setContent {
+            ComponentTestHarness {
+                ResetEmailPasswordScreen(component)
+            }
+        }
         onNodeWithText(MOCK_ERROR_MESSAGE).assertIsDisplayed()
     }
 
     @Test
     fun emailInput_clickSendCode_invokesCallback() = runComposeUiTest {
-        val component = FakeResetEmailPasswordComponent(
+        val component = ResetEmailPasswordComponentMock(
             ResetEmailPasswordScreenState.EmailInput(email = EMAIL_SEND_STEP, isEmailValid = true)
         )
-        setContent { ResetEmailPasswordScreenHarness(component) }
+        setContent {
+            ComponentTestHarness {
+                ResetEmailPasswordScreen(component)
+            }
+        }
         onNodeWithText(SEND_CODE).performClick()
-        assertEquals(EXPECTED_SINGLE_CALLBACK, component.sendCodeClicks)
+        assertEquals(EXPECTED_SINGLE_CALLBACK, component.sendCodeCalls)
     }
 
     @Test
     fun resetInput_displaysCodeSentLineAndFields() = runComposeUiTest {
         val email = EMAIL_CODE_SENT_LINE
-        val component = FakeResetEmailPasswordComponent(
+        val component = ResetEmailPasswordComponentMock(
             ResetEmailPasswordScreenState.ResetInput(
                 email = email,
                 code = CODE_THREE_DIGITS,
@@ -83,7 +94,11 @@ class ResetEmailPasswordScreenTest {
                 resendTimerSeconds = RESEND_TIMER_RESET_INPUT_SECONDS
             )
         )
-        setContent { ResetEmailPasswordScreenHarness(component) }
+        setContent {
+            ComponentTestHarness {
+                ResetEmailPasswordScreen(component)
+            }
+        }
         onNodeWithText(ENTER_CODE_TITLE).assertIsDisplayed()
         onNodeWithText(CODE_SENT_PREFIX, substring = true).assertIsDisplayed()
         onNodeWithText(email, substring = true).assertIsDisplayed()
@@ -95,31 +110,39 @@ class ResetEmailPasswordScreenTest {
 
     @Test
     fun resetInput_whenTimerPositive_showsCountdown() = runComposeUiTest {
-        val component = FakeResetEmailPasswordComponent(
+        val component = ResetEmailPasswordComponentMock(
             ResetEmailPasswordScreenState.ResetInput(
                 email = EMAIL_RESET_FLOW,
                 resendTimerSeconds = RESEND_TIMER_COUNTDOWN_SECONDS
             )
         )
-        setContent { ResetEmailPasswordScreenHarness(component) }
+        setContent {
+            ComponentTestHarness {
+                ResetEmailPasswordScreen(component)
+            }
+        }
         onNodeWithText(RESEND_TIMER_COUNTDOWN_TEXT, substring = true).assertIsDisplayed()
     }
 
     @Test
     fun resetInput_whenCanResend_showsResendButton() = runComposeUiTest {
-        val component = FakeResetEmailPasswordComponent(
+        val component = ResetEmailPasswordComponentMock(
             ResetEmailPasswordScreenState.ResetInput(
                 email = EMAIL_RESET_FLOW,
                 resendTimerSeconds = RESEND_TIMER_EXPIRED_SECONDS
             )
         )
-        setContent { ResetEmailPasswordScreenHarness(component) }
+        setContent {
+            ComponentTestHarness {
+                ResetEmailPasswordScreen(component)
+            }
+        }
         onNodeWithText(RESEND_CODE).assertIsDisplayed()
     }
 
     @Test
     fun resetInput_clickChangeEmail_invokesCallback() = runComposeUiTest {
-        val component = FakeResetEmailPasswordComponent(
+        val component = ResetEmailPasswordComponentMock(
             ResetEmailPasswordScreenState.ResetInput(
                 email = EMAIL_RESET_FLOW,
                 code = CODE_SIX_DIGITS,
@@ -128,9 +151,13 @@ class ResetEmailPasswordScreenTest {
                 resendTimerSeconds = RESEND_TIMER_COUNTDOWN_SECONDS
             )
         )
-        setContent { ResetEmailPasswordScreenHarness(component) }
+        setContent {
+            ComponentTestHarness {
+                ResetEmailPasswordScreen(component)
+            }
+        }
         onNodeWithText(CHANGE_EMAIL).performClick()
-        assertEquals(EXPECTED_SINGLE_CALLBACK, component.resetEmailClicks)
+        assertEquals(EXPECTED_SINGLE_CALLBACK, component.resetEmailCalls)
     }
 
     private companion object {
@@ -163,41 +190,4 @@ class ResetEmailPasswordScreenTest {
         const val CODE_SENT_PREFIX = "The code has been sent to"
         const val MOCK_ERROR_MESSAGE = "Unknown Error"
     }
-}
-
-@InternalApi
-@Composable
-private fun ResetEmailPasswordScreenHarness(component: ResetEmailPasswordComponent) {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            ResetEmailPasswordScreen(component)
-        }
-    }
-}
-
-private class FakeResetEmailPasswordComponent(
-    initial: ResetEmailPasswordScreenState
-) : ResetEmailPasswordComponent {
-
-    private val mutableState = MutableValue(initial)
-    override val state: Value<ResetEmailPasswordScreenState> get() = mutableState
-
-    var sendCodeClicks: Int = 0
-        private set
-    var resetEmailClicks: Int = 0
-        private set
-
-    override fun onEmailChanged(email: String) {}
-    override fun onCodeChanged(code: String) {}
-    override fun onPasswordChanged(password: String) {}
-    override fun onSendCodeClick() {
-        sendCodeClicks++
-    }
-
-    override fun onResetEmailClick() {
-        resetEmailClicks++
-    }
-
-    override fun onConfirmResetClick() {}
-    override fun onBackClick() {}
 }

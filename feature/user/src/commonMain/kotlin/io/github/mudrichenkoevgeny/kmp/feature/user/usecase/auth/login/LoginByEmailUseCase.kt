@@ -15,7 +15,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
  * @param authStorage Encrypted token storage updated after a successful login.
  * @param userStorage User snapshot storage updated after a successful login.
  */
-class LoginByEmailUseCase(
+open class LoginByEmailUseCase(
     private val loginRepository: LoginRepository,
     private val authStorage: AuthStorage,
     private val userStorage: UserStorage
@@ -26,7 +26,7 @@ class LoginByEmailUseCase(
      * @return [AuthData] after a successful login and local persistence, or an error result without
      * touching storage when login fails.
      */
-    suspend fun execute(email: String, password: String): AppResult<AuthData> {
+    open suspend fun execute(email: String, password: String): AppResult<AuthData> {
         return loginRepository.loginByEmail(email, password)
             .onSuccess { authData ->
                 authStorage.updateTokens(

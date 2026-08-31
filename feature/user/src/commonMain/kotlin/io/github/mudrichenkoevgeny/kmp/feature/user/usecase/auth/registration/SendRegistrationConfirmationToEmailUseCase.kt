@@ -9,14 +9,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
  *
  * @param registrationRepository Registration repository that performs the send.
  */
-class SendRegistrationConfirmationToEmailUseCase(
+open class SendRegistrationConfirmationToEmailUseCase(
     private val registrationRepository: RegistrationRepository
 ) {
     /**
      * @param email Destination address for the registration code.
      * @return [OtpConfirmation] on success, or an error result (including client-side throttling).
      */
-    suspend fun execute(email: String): AppResult<OtpConfirmation> {
+    open suspend fun execute(email: String): AppResult<OtpConfirmation> {
         return registrationRepository.sendRegistrationConfirmationToEmail(email)
     }
 }

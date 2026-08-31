@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
  *
  * @param resetPasswordRepository Password recovery API surface.
  */
-class ResetEmailPasswordUseCase(
+open class ResetEmailPasswordUseCase(
     private val resetPasswordRepository: ResetPasswordRepository
 ) {
     /**
@@ -18,7 +18,7 @@ class ResetEmailPasswordUseCase(
      * @param confirmationCode One-time code from the confirmation email.
      * @return [UserIdentifier] context on success, or an error result when reset is rejected.
      */
-    suspend fun execute(
+    open suspend fun execute(
         email: String,
         newPassword: String,
         confirmationCode: String

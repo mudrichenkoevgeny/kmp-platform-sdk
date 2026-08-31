@@ -3,13 +3,11 @@ package io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.refre
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.api.auth.refreshtoken.RefreshTokenApiMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.token.sessionTokenPayloadMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.auth.refreshtoken.RefreshTokenApi
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.RefreshTokenPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.SessionTokenPayload
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -27,7 +25,7 @@ class OpenRefreshTokenRepositoryImplTest {
             expiresAt = EXPIRES_AT_MS,
             tokenType = TOKEN_TYPE_BEARER
         )
-        val api = FakeRefreshTokenApi().apply { result = AppResult.Success(wire) }
+        val api = RefreshTokenApiMock().apply { refreshTokenResult = AppResult.Success(wire) }
         val repo = OpenRefreshTokenRepositoryImpl(api)
 
         val refreshResult = repo.refreshToken(SECRET_REFRESH_TOKEN)
@@ -37,29 +35,19 @@ class OpenRefreshTokenRepositoryImplTest {
         assertEquals(RefreshToken(REFRESH_TOKEN), success.data.refreshToken)
         assertEquals(EXPIRES_AT_MS, success.data.expiresAt.toEpochMilliseconds())
         assertEquals(TOKEN_TYPE_BEARER, success.data.tokenType)
-        assertEquals(SECRET_REFRESH_TOKEN, api.lastRequest.refreshToken)
+        assertEquals(SECRET_REFRESH_TOKEN, api.lastRefreshTokenRequest?.refreshToken)
     }
 
     @Test
     fun refreshToken_propagatesApiError() = runTest {
         val err = CommonError.Unknown(isRetryable = NOT_RETRYABLE)
-        val api = FakeRefreshTokenApi().apply { result = AppResult.Error(err) }
+        val api = RefreshTokenApiMock().apply { refreshTokenResult = AppResult.Error(err) }
         val repo = OpenRefreshTokenRepositoryImpl(api)
 
         val refreshResult = repo.refreshToken(ERROR_CASE_REFRESH_TOKEN)
 
         val failure = assertIs<AppResult.Error>(refreshResult)
         assertSame(err, failure.error)
-    }
-
-    private class FakeRefreshTokenApi : RefreshTokenApi {
-        lateinit var lastRequest: RefreshTokenPayload
-        var result: AppResult<SessionTokenPayload> = AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
-
-        override suspend fun refreshToken(request: RefreshTokenPayload): AppResult<SessionTokenPayload> {
-            lastRequest = request
-            return result
-        }
     }
 
     private companion object {

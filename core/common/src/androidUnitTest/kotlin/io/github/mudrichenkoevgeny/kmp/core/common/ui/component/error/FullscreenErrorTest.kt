@@ -1,17 +1,13 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
-import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -28,10 +24,12 @@ class FullscreenErrorTest {
     @Test
     fun nonRetryable_showsLocalizedMessageWithoutRetry() = runComposeUiTest {
         setContent {
-            FullscreenErrorHarness(
-                error = CommonError.Unknown(isRetryable = false),
-                onRetry = {}
-            )
+            ComponentTestHarness {
+                FullscreenError(
+                    error = CommonError.Unknown(isRetryable = false),
+                    onRetry = {}
+                )
+            }
         }
         onNodeWithText(ERROR_MESSAGE_MOCK).assertIsDisplayed()
         assertFailsWith<AssertionError> {
@@ -43,10 +41,12 @@ class FullscreenErrorTest {
     fun retryable_showsMessageAndRetry_invokesOnRetry() = runComposeUiTest {
         var retries = 0
         setContent {
-            FullscreenErrorHarness(
-                error = CommonError.Unknown(isRetryable = true),
-                onRetry = { retries++ }
-            )
+            ComponentTestHarness {
+                FullscreenError(
+                    error = CommonError.Unknown(isRetryable = true),
+                    onRetry = { retries++ }
+                )
+            }
         }
         onNodeWithText(ERROR_MESSAGE_MOCK).assertIsDisplayed()
         onNodeWithText(RETRY_LABEL).assertIsDisplayed()
@@ -62,18 +62,5 @@ class FullscreenErrorTest {
 
         /** Mirrors default `values/strings.xml`. */
         const val RETRY_LABEL = "Retry"
-    }
-}
-
-@InternalApi
-@Composable
-private fun FullscreenErrorHarness(
-    error: AppError,
-    onRetry: () -> Unit
-) {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            FullscreenError(error = error, onRetry = onRetry)
-        }
     }
 }

@@ -27,9 +27,9 @@ class SecuritySettingsRepositoryMock : SecuritySettingsRepository {
         resultProvider()
     }
 
-    override suspend fun getSecuritySettings(): AppResult<SecuritySettings> = passwordPolicyResultProvider()
+    override suspend fun getSecuritySettings(): AppResult<SecuritySettings> = resultProvider()
 
-    override suspend fun refreshSecuritySettings(): AppResult<SecuritySettings> = passwordPolicyResultProvider()
+    override suspend fun refreshSecuritySettings(): AppResult<SecuritySettings> = resultProvider()
 
     override suspend fun updateSecuritySettings(securitySettings: SecuritySettings) {
         securitySettingsFlow.value = securitySettings

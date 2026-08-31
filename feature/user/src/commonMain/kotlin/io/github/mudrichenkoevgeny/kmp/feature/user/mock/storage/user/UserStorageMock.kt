@@ -29,6 +29,16 @@ class UserStorageMock : UserStorage {
     private val identifiersFlow = MutableStateFlow(pagedResultMock<UserIdentifier>())
     private val sessionsFlow = MutableStateFlow(pagedResultMock<UserSession>())
 
+    var isCleared = false
+        private set
+
+    var lastUpdatedIdentifiersPayload: PagedResult<UserIdentifierPayload>? = null
+    var lastRemovedIdentifierId: UserIdentifierId? = null
+    var lastUpdatedSessionsPayload: PagedResult<UserSessionPayload>? = null
+    var lastAddedSession: UserSession? = null
+    var lastRemovedSessionId: UserSessionId? = null
+    var lastRemovedSessionsList: List<UserSessionId>? = null
+
     override suspend fun getCurrentUser(): UserDetails? = currentUserFlow.value
 
     override fun observeCurrentUser(): Flow<UserDetails?> = currentUserFlow
@@ -62,6 +72,7 @@ class UserStorageMock : UserStorage {
     }
 
     override suspend fun updateUserIdentifiersPayloadList(userIdentifiersList: PagedResult<UserIdentifierPayload>) {
+        lastUpdatedIdentifiersPayload = userIdentifiersList
         val mapped = userIdentifiersList.items.map { it.toUserIdentifier() }
         identifiersFlow.value = pagedResultMock(
             items = mapped,
@@ -82,6 +93,7 @@ class UserStorageMock : UserStorage {
     }
 
     override suspend fun removeUserIdentifier(identifierId: UserIdentifierId) {
+        lastRemovedIdentifierId = identifierId
         identifiersFlow.update { current ->
             val newItems = current.items.filterNot { it.id == identifierId }
             val removedCount = current.items.size - newItems.size
@@ -137,6 +149,7 @@ class UserStorageMock : UserStorage {
     }
 
     override suspend fun updateUserSessionsPayloadList(userSessionsList: PagedResult<UserSessionPayload>) {
+        lastUpdatedSessionsPayload = userSessionsList
         val mapped = userSessionsList.items.map { it.toUserSession() }
         sessionsFlow.value = pagedResultMock(
             items = mapped,
@@ -148,6 +161,7 @@ class UserStorageMock : UserStorage {
     }
 
     override suspend fun addUserSession(userSession: UserSession) {
+        lastAddedSession = userSession
         sessionsFlow.update { current ->
             current.copy(
                 items = current.items + userSession,
@@ -157,10 +171,12 @@ class UserStorageMock : UserStorage {
     }
 
     override suspend fun removeUserSession(sessionId: UserSessionId) {
+        lastRemovedSessionId = sessionId
         removeUserSessions(listOf(sessionId))
     }
 
     override suspend fun removeUserSessions(sessionIds: List<UserSessionId>) {
+        lastRemovedSessionsList = sessionIds
         sessionsFlow.update { current ->
             val newItems = current.items.filterNot { it.id in sessionIds }
             val removedCount = current.items.size - newItems.size
@@ -175,5 +191,6 @@ class UserStorageMock : UserStorage {
         currentUserFlow.value = null
         identifiersFlow.value = pagedResultMock()
         sessionsFlow.value = pagedResultMock()
+        isCleared = true
     }
 }

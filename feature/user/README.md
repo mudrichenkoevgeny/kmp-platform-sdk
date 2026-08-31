@@ -91,8 +91,8 @@ val loginRoot = LoginRootComponentImpl(
 | `...user.storage` | [AuthStorage] (tokens) and [UserStorage] (profile) with encrypted persistence. |
 | `...user.ui.screen` | Decompose components & UI for Login (Email/Phone/Google) and Registration. |
 | `...user.ui.component` | Reusable UI: [AuthProviderGrid], [AuthProviderButton], and [LegalFooter]. |
-| `...user.usecase` | Atomic logic: [LoginByEmailUseCase], [RefreshTokenUseCase], [ResetEmailPasswordUseCase]. |
-| `...user.mock` | Mocks for tests: [UserAuthServicesMock] and mock repositories. |
+| `...user.usecase` | Atomic logic: Auth, Session, Identifier, and User Security UseCases. |
+| `...user.mock` | Mocks for tests: UseCase and Repository mocks, storage mocks. |
 | `...user.utils` | Internal helpers including [FieldValidator] for input logic. |
 
 ## Source set notes

@@ -8,18 +8,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
+import io.github.mudrichenkoevgeny.kmp.core.security.error.model.SecurityError
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.otpConfirmationMock
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.securitySettingsMock
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.repository.SecuritySettingsRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ValidatePasswordUseCase
+import io.github.mudrichenkoevgeny.kmp.core.security.mock.usecase.ValidatePasswordUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.data.authDataPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.registration.RegistrationRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.registration.RegistrationByEmailUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.registration.SendRegistrationConfirmationToEmailUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator.PasswordPolicyValidatorImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.registration.RegistrationByEmailUseCaseMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.registration.SendRegistrationConfirmationToEmailUseCaseMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -28,22 +24,22 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.milliseconds
 
 @InternalApi
 class RegistrationByEmailComponentImplTest {
 
     @Test
     fun onEmailChanged_invalidEmail_marksEmailInvalid() = runComponentTest {
-        val repo = RegistrationRepositoryMock()
-        val harness = ComponentHarness(repo, validatePasswordUseCase())
+        val context = createRegistrationByEmailComponentTestContext()
         try {
-            harness.component.onEmailChanged(INVALID_EMAIL)
+            context.component.onEmailChanged(INVALID_EMAIL)
             advanceUntilIdle()
-            val emailState = assertIs<RegistrationByEmailScreenState.EmailInput>(harness.component.state.value)
+            val emailState = assertIs<RegistrationByEmailScreenState.EmailInput>(context.component.state.value)
             assertFalse(emailState.isEmailValid)
             assertEquals(INVALID_EMAIL, emailState.email)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
@@ -52,274 +48,244 @@ class RegistrationByEmailComponentImplTest {
         val repo = RegistrationRepositoryMock().apply {
             remainingDelayProvider = { REMAINING_DELAY_SECONDS }
         }
-        val harness = ComponentHarness(repo, validatePasswordUseCase())
+        val context = createRegistrationByEmailComponentTestContext(registrationRepository = repo)
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            advanceTimeBy(100)
-            val reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(harness.component.state.value)
+            context.component.onEmailChanged(VALID_EMAIL)
+            advanceTimeBy(100.milliseconds)
+            val reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
             assertEquals(VALID_EMAIL, reg.email)
             assertEquals(REMAINING_DELAY_SECONDS, reg.resendTimerSeconds)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onSendCodeClick_success_movesToRegistrationInput() = runComponentTest {
-        val repo = RegistrationRepositoryMock().apply {
-            otpConfirmationResultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = RETRY_AFTER_SEND_SUCCESS)) }
+        val sendUseCase = SendRegistrationConfirmationToEmailUseCaseMock().apply {
+            resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = RETRY_AFTER_SEND_SUCCESS)) }
         }
-        val harness = ComponentHarness(
-            registrationRepository = repo,
-            validatePasswordUseCase = validatePasswordUseCase()
-        )
+        val context = createRegistrationByEmailComponentTestContext(sendRegistrationConfirmationToEmailUseCase = sendUseCase)
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onSendCodeClick()
-            advanceTimeBy(100)
-            val reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(harness.component.state.value)
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.component.onSendCodeClick()
+            advanceTimeBy(100.milliseconds)
+            val reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
             assertEquals(VALID_EMAIL, reg.email)
             assertEquals(RETRY_AFTER_SEND_SUCCESS, reg.resendTimerSeconds)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onSendCodeClick_tooManyRequests_movesToRegistrationInputWithRetryFromError() = runComponentTest {
-        val repo = RegistrationRepositoryMock().apply {
-            otpConfirmationResultProvider = { AppResult.Error(UserError.TooManyConfirmationRequests(retryAfterSeconds = RETRY_AFTER_RATE_LIMIT)) }
+        val sendUseCase = SendRegistrationConfirmationToEmailUseCaseMock().apply {
+            resultProvider = { AppResult.Error(UserError.TooManyConfirmationRequests(retryAfterSeconds = RETRY_AFTER_RATE_LIMIT)) }
         }
-        val harness = ComponentHarness(
-            registrationRepository = repo,
-            validatePasswordUseCase = validatePasswordUseCase()
-        )
+        val context = createRegistrationByEmailComponentTestContext(sendRegistrationConfirmationToEmailUseCase = sendUseCase)
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onSendCodeClick()
-            advanceTimeBy(100)
-            val reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(harness.component.state.value)
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.component.onSendCodeClick()
+            advanceTimeBy(100.milliseconds)
+            val reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
             assertEquals(RETRY_AFTER_RATE_LIMIT, reg.resendTimerSeconds)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onSendCodeClick_genericError_keepsEmailStepWithError() = runComponentTest {
-        val repo = RegistrationRepositoryMock().apply {
-            otpConfirmationResultProvider = { AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE)) }
+        val sendUseCase = SendRegistrationConfirmationToEmailUseCaseMock().apply {
+            resultProvider = { AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE)) }
         }
-        val harness = ComponentHarness(
-            registrationRepository = repo,
-            validatePasswordUseCase = validatePasswordUseCase()
-        )
+        val context = createRegistrationByEmailComponentTestContext(sendRegistrationConfirmationToEmailUseCase = sendUseCase)
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onSendCodeClick()
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.component.onSendCodeClick()
             advanceUntilIdle()
-            val emailState = assertIs<RegistrationByEmailScreenState.EmailInput>(harness.component.state.value)
+            val emailState = assertIs<RegistrationByEmailScreenState.EmailInput>(context.component.state.value)
             assertIs<CommonError.Unknown>(emailState.actionError)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onPasswordChanged_updatesPasswordValidityViaPolicy() = runComponentTest {
-        val repo = RegistrationRepositoryMock().apply {
-            otpConfirmationResultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
-        }
-        val harness = ComponentHarness(
-            registrationRepository = repo,
-            validatePasswordUseCase = validatePasswordUseCase()
-        )
+        val context = createRegistrationByEmailComponentTestContext()
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onSendCodeClick()
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.component.onSendCodeClick()
             advanceUntilIdle()
-            harness.component.onPasswordChanged(SHORT_PASSWORD)
+            
+            context.validatePasswordUseCase.resultProvider = { AppResult.Error(SecurityError.PasswordTooShort()) }
+            context.component.onPasswordChanged(SHORT_PASSWORD)
             advanceUntilIdle()
-            var reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(harness.component.state.value)
+            var reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
             assertFalse(reg.isPasswordValid)
-            harness.component.onPasswordChanged(VALID_PASSWORD)
+            
+            context.validatePasswordUseCase.resultProvider = { AppResult.Success(Unit) }
+            context.component.onPasswordChanged(VALID_PASSWORD)
             advanceUntilIdle()
-            reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(harness.component.state.value)
+            reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
             assertTrue(reg.isPasswordValid)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onRegisterClick_success_callsOnFinished() = runComponentTest {
         val authData = authDataPayloadMock().toAuthData()
-        val repo = RegistrationRepositoryMock().apply {
-            otpConfirmationResultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
-            authDataResultProvider = { AppResult.Success(authData) }
+        val registerUseCase = RegistrationByEmailUseCaseMock().apply {
+            resultProvider = { _, _, _ -> AppResult.Success(authData) }
         }
-        val harness = ComponentHarness(
-            registrationRepository = repo,
-            validatePasswordUseCase = validatePasswordUseCase()
-        )
+        val context = createRegistrationByEmailComponentTestContext(registrationByEmailUseCase = registerUseCase)
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onSendCodeClick()
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.component.onSendCodeClick()
             advanceUntilIdle()
-            harness.component.onCodeChanged(FULL_CODE)
-            harness.component.onPasswordChanged(VALID_PASSWORD)
+            context.component.onCodeChanged(FULL_CODE)
+            context.component.onPasswordChanged(VALID_PASSWORD)
             advanceUntilIdle()
-            harness.component.onRegisterClick()
+            context.component.onRegisterClick()
             advanceUntilIdle()
-            assertEquals(ONE_CALL, harness.onFinishedCalls)
+            assertEquals(ONE_CALL, context.onFinishedCalls)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onRegisterClick_registerError_surfacesError() = runComponentTest {
-        val repo = RegistrationRepositoryMock().apply {
-            otpConfirmationResultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
-            authDataResultProvider = { AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE)) }
+        val registerUseCase = RegistrationByEmailUseCaseMock().apply {
+            resultProvider = { _, _, _ -> AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE)) }
         }
-        val harness = ComponentHarness(
-            registrationRepository = repo,
-            validatePasswordUseCase = validatePasswordUseCase()
-        )
+        val context = createRegistrationByEmailComponentTestContext(registrationByEmailUseCase = registerUseCase)
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onSendCodeClick()
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.component.onSendCodeClick()
             advanceUntilIdle()
-            harness.component.onCodeChanged(FULL_CODE)
-            harness.component.onPasswordChanged(VALID_PASSWORD)
+            context.component.onCodeChanged(FULL_CODE)
+            context.component.onPasswordChanged(VALID_PASSWORD)
             advanceUntilIdle()
-            harness.component.onRegisterClick()
+            context.component.onRegisterClick()
             advanceUntilIdle()
-            val reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(harness.component.state.value)
+            val reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
             assertIs<CommonError.Unknown>(reg.actionError)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onBackClick_fromRegistration_returnsToEmailInput() = runComponentTest {
-        val repo = RegistrationRepositoryMock().apply {
-            otpConfirmationResultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
-        }
-        val harness = ComponentHarness(
-            registrationRepository = repo,
-            validatePasswordUseCase = validatePasswordUseCase()
-        )
+        val context = createRegistrationByEmailComponentTestContext()
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onSendCodeClick()
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.component.onSendCodeClick()
             advanceUntilIdle()
-            harness.component.onBackClick()
+            context.component.onBackClick()
             advanceUntilIdle()
-            val emailState = assertIs<RegistrationByEmailScreenState.EmailInput>(harness.component.state.value)
+            val emailState = assertIs<RegistrationByEmailScreenState.EmailInput>(context.component.state.value)
             assertEquals(VALID_EMAIL, emailState.email)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onBackClick_fromEmail_invokesOnBack() = runComponentTest {
-        val repo = RegistrationRepositoryMock()
-        val harness = ComponentHarness(repo, validatePasswordUseCase())
+        val context = createRegistrationByEmailComponentTestContext()
         try {
-            harness.component.onBackClick()
+            context.component.onBackClick()
             advanceUntilIdle()
-            assertEquals(ONE_CALL, harness.onBackCalls)
+            assertEquals(ONE_CALL, context.onBackCalls)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onTogglePasswordVisibility_togglesFlag() = runComponentTest {
-        val repo = RegistrationRepositoryMock().apply {
-            otpConfirmationResultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
-        }
-        val harness = ComponentHarness(
-            registrationRepository = repo,
-            validatePasswordUseCase = validatePasswordUseCase()
-        )
+        val context = createRegistrationByEmailComponentTestContext()
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onSendCodeClick()
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.component.onSendCodeClick()
             advanceUntilIdle()
-            harness.component.onTogglePasswordVisibility()
-            var reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(harness.component.state.value)
+            context.component.onTogglePasswordVisibility()
+            var reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
             assertTrue(reg.isPasswordVisible)
-            harness.component.onTogglePasswordVisibility()
-            reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(harness.component.state.value)
+            context.component.onTogglePasswordVisibility()
+            reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
             assertFalse(reg.isPasswordVisible)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onCodeChanged_ignoresInputLongerThanCodeLength() = runComponentTest {
-        val repo = RegistrationRepositoryMock().apply {
-            otpConfirmationResultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
-        }
-        val harness = ComponentHarness(
-            registrationRepository = repo,
-            validatePasswordUseCase = validatePasswordUseCase()
-        )
+        val context = createRegistrationByEmailComponentTestContext()
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onSendCodeClick()
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.component.onSendCodeClick()
             advanceUntilIdle()
-            harness.component.onCodeChanged(FULL_CODE)
-            harness.component.onCodeChanged(TOO_LONG_CODE)
-            val reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(harness.component.state.value)
+            context.component.onCodeChanged(FULL_CODE)
+            context.component.onCodeChanged(TOO_LONG_CODE)
+            val reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
             assertEquals(FULL_CODE, reg.code)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
-    private fun validatePasswordUseCase(): ValidatePasswordUseCase {
-        val secRepo = SecuritySettingsRepositoryMock().apply {
-            resultProvider = { AppResult.Success(securitySettingsMock()) }
-        }
-        return ValidatePasswordUseCase(secRepo, PasswordPolicyValidatorImpl())
+    private fun createRegistrationByEmailComponentTestContext(
+        registrationRepository: RegistrationRepositoryMock = RegistrationRepositoryMock(),
+        sendRegistrationConfirmationToEmailUseCase: SendRegistrationConfirmationToEmailUseCaseMock = SendRegistrationConfirmationToEmailUseCaseMock(),
+        registrationByEmailUseCase: RegistrationByEmailUseCaseMock = RegistrationByEmailUseCaseMock(),
+        validatePasswordUseCase: ValidatePasswordUseCaseMock = ValidatePasswordUseCaseMock()
+    ): RegistrationByEmailComponentTestContext {
+        val lifecycle = LifecycleRegistry()
+        lifecycle.resume()
+        
+        val context = RegistrationByEmailComponentTestContext(
+            lifecycle = lifecycle,
+            sendRegistrationConfirmationToEmailUseCase = sendRegistrationConfirmationToEmailUseCase,
+            registrationByEmailUseCase = registrationByEmailUseCase,
+            validatePasswordUseCase = validatePasswordUseCase
+        )
+
+        context.component = RegistrationByEmailComponentImpl(
+            componentContext = DefaultComponentContext(lifecycle),
+            registrationRepository = registrationRepository,
+            sendRegistrationConfirmationToEmailUseCase = sendRegistrationConfirmationToEmailUseCase,
+            registrationByEmailUseCase = registrationByEmailUseCase,
+            validatePasswordUseCase = validatePasswordUseCase,
+            onBack = { context.onBackCalls++ },
+            onFinished = { context.onFinishedCalls++ }
+        )
+        
+        return context
     }
 
-    private class ComponentHarness(
-        registrationRepository: RegistrationRepositoryMock,
-        validatePasswordUseCase: ValidatePasswordUseCase
+    private class RegistrationByEmailComponentTestContext(
+        val lifecycle: LifecycleRegistry,
+        val sendRegistrationConfirmationToEmailUseCase: SendRegistrationConfirmationToEmailUseCaseMock,
+        val registrationByEmailUseCase: RegistrationByEmailUseCaseMock,
+        val validatePasswordUseCase: ValidatePasswordUseCaseMock
     ) {
-        var onBackCalls: Int = ZERO_CALLS
-        var onFinishedCalls: Int = ZERO_CALLS
-        private val lifecycle = LifecycleRegistry()
-        val component: RegistrationByEmailComponentImpl
-
-        init {
-            lifecycle.resume()
-            
-            val sendRegistrationConfirmationToEmailUseCase = SendRegistrationConfirmationToEmailUseCase(registrationRepository)
-            val registrationByEmailUseCase = RegistrationByEmailUseCase(
-                registrationRepository = registrationRepository,
-                authStorage = AuthStorageMock(),
-                userStorage = UserStorageMock()
-            )
-            
-            component = RegistrationByEmailComponentImpl(
-                componentContext = DefaultComponentContext(lifecycle),
-                registrationRepository = registrationRepository,
-                sendRegistrationConfirmationToEmailUseCase = sendRegistrationConfirmationToEmailUseCase,
-                registrationByEmailUseCase = registrationByEmailUseCase,
-                validatePasswordUseCase = validatePasswordUseCase,
-                onBack = { onBackCalls++ },
-                onFinished = { onFinishedCalls++ }
-            )
-        }
+        lateinit var component: RegistrationByEmailComponentImpl
+        var onBackCalls: Int = 0
+        var onFinishedCalls: Int = 0
 
         fun destroy() = lifecycle.destroy()
     }
@@ -336,7 +302,6 @@ class RegistrationByEmailComponentImplTest {
         const val FULL_CODE = "123456"
         const val TOO_LONG_CODE = "1234567"
         const val NOT_RETRYABLE = false
-        const val ZERO_CALLS = 0
         const val ONE_CALL = 1
     }
 }

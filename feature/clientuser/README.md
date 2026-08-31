@@ -95,8 +95,8 @@ val loginRoot = clientUserComponent.createLoginRootDialogComponent(
 | `...user.storage` | [AuthStorage] (tokens) and [UserStorage] (profile) with encrypted persistence. |
 | `...user.ui.screen` | Decompose components & UI for Login (Email/Phone/Google) and Registration. |
 | `...user.ui.component` | Reusable UI: [AuthProviderGrid], [AuthProviderButton], and [LegalFooter]. |
-| `...user.usecase` | Atomic logic: [LoginByEmailUseCase], [RefreshTokenUseCase], [ResetEmailPasswordUseCase]. |
-| `...user.mock` | Mocks for tests: [UserComponentMock], [UserAuthServicesMock], and mock repositories. |
+| `...user.usecase` | Atomic logic: Reuses `:feature:user` UseCases + Client specific logic. |
+| `...user.mock` | Mocks for tests: UseCase and Repository mocks for client context. |
 | `...user.utils` | Internal helpers including [FieldValidator] for input logic. |
 
 ## Source set notes

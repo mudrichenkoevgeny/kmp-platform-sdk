@@ -14,7 +14,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
  * @param authStorage Encrypted token storage updated after successful registration.
  * @param userStorage User snapshot storage updated after successful registration.
  */
-class RegistrationByEmailUseCase(
+open class RegistrationByEmailUseCase(
     private val registrationRepository: RegistrationRepository,
     private val authStorage: AuthStorage,
     private val userStorage: UserStorage
@@ -26,7 +26,7 @@ class RegistrationByEmailUseCase(
      * @return [AuthData] after successful registration and local persistence, or an error result
      * without updating storage when registration fails.
      */
-    suspend fun execute(
+    open suspend fun execute(
         email: String,
         password: String,
         confirmationCode: String

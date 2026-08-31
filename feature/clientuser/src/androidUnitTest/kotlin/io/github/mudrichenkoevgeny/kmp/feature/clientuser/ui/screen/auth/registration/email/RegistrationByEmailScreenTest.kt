@@ -1,22 +1,19 @@
 package io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasProgressBarRangeInfo
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import com.arkivanov.decompose.value.MutableValue
-import com.arkivanov.decompose.value.Value
-import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.ui.screen.auth.registration.email.RegistrationByEmailComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email.RegistrationByEmailScreen
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email.RegistrationByEmailScreenState
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -30,10 +27,14 @@ class RegistrationByEmailScreenTest {
 
     @Test
     fun loading_showsIndeterminateProgressAfterDefaultDelay() = runComposeUiTest {
-        val component = FakeRegistrationByEmailComponent(
+        val component = RegistrationByEmailComponentMock(
             RegistrationByEmailScreenState.EmailInput(actionLoading = true)
         )
-        setContent { RegistrationByEmailScreenHarness(component) }
+        setContent {
+            ComponentTestHarness {
+                RegistrationByEmailScreen(component)
+            }
+        }
         mainClock.autoAdvance = false
         mainClock.advanceTimeBy(FullscreenLoadingConfig.DELAY_MILLIS + LOADING_EXTRA_DELAY_MS)
         onNode(hasProgressBarRangeInfo(ProgressBarRangeInfo.Indeterminate)).assertExists()
@@ -41,10 +42,14 @@ class RegistrationByEmailScreenTest {
 
     @Test
     fun emailInput_displaysTitleEmailAndSendCode() = runComposeUiTest {
-        val component = FakeRegistrationByEmailComponent(
+        val component = RegistrationByEmailComponentMock(
             RegistrationByEmailScreenState.EmailInput(email = EMAIL_SEND_STEP, isEmailValid = true)
         )
-        setContent { RegistrationByEmailScreenHarness(component) }
+        setContent {
+            ComponentTestHarness {
+                RegistrationByEmailScreen(component)
+            }
+        }
         onNodeWithText(REGISTRATION_TITLE).assertIsDisplayed()
         onNodeWithText(EMAIL_LABEL).assertIsDisplayed()
         onNodeWithText(SEND_CODE).assertIsDisplayed()
@@ -52,31 +57,39 @@ class RegistrationByEmailScreenTest {
 
     @Test
     fun emailInput_inlineError_showsLocalizedMessage() = runComposeUiTest {
-        val component = FakeRegistrationByEmailComponent(
+        val component = RegistrationByEmailComponentMock(
             RegistrationByEmailScreenState.EmailInput(
                 email = EMAIL_SEND_STEP,
                 isEmailValid = true,
                 actionError = CommonError.Unknown()
             )
         )
-        setContent { RegistrationByEmailScreenHarness(component) }
+        setContent {
+            ComponentTestHarness {
+                RegistrationByEmailScreen(component)
+            }
+        }
         onNodeWithText(MOCK_ERROR_MESSAGE).assertIsDisplayed()
     }
 
     @Test
     fun emailInput_clickSendCode_invokesCallback() = runComposeUiTest {
-        val component = FakeRegistrationByEmailComponent(
+        val component = RegistrationByEmailComponentMock(
             RegistrationByEmailScreenState.EmailInput(email = EMAIL_SEND_STEP, isEmailValid = true)
         )
-        setContent { RegistrationByEmailScreenHarness(component) }
+        setContent {
+            ComponentTestHarness {
+                RegistrationByEmailScreen(component)
+            }
+        }
         onNodeWithText(SEND_CODE).performClick()
-        assertEquals(EXPECTED_SINGLE_CALLBACK, component.sendCodeClicks)
+        assertEquals(EXPECTED_SINGLE_CALLBACK, component.sendCodeCalls)
     }
 
     @Test
     fun registrationInput_displaysCodeSentLinePasswordRegister() = runComposeUiTest {
         val email = EMAIL_CODE_SENT_LINE
-        val component = FakeRegistrationByEmailComponent(
+        val component = RegistrationByEmailComponentMock(
             RegistrationByEmailScreenState.RegistrationInput(
                 email = email,
                 code = CODE_THREE_DIGITS,
@@ -85,7 +98,11 @@ class RegistrationByEmailScreenTest {
                 resendTimerSeconds = RESEND_TIMER_REGISTRATION_INPUT_SECONDS
             )
         )
-        setContent { RegistrationByEmailScreenHarness(component) }
+        setContent {
+            ComponentTestHarness {
+                RegistrationByEmailScreen(component)
+            }
+        }
         onNodeWithText(ENTER_CODE_TITLE).assertIsDisplayed()
         onNodeWithText(CODE_SENT_PREFIX, substring = true).assertIsDisplayed()
         onNodeWithText(email, substring = true).assertIsDisplayed()
@@ -96,31 +113,39 @@ class RegistrationByEmailScreenTest {
 
     @Test
     fun registrationInput_whenTimerPositive_showsCountdown() = runComposeUiTest {
-        val component = FakeRegistrationByEmailComponent(
+        val component = RegistrationByEmailComponentMock(
             RegistrationByEmailScreenState.RegistrationInput(
                 email = EMAIL_REGISTRATION_FLOW,
                 resendTimerSeconds = RESEND_TIMER_COUNTDOWN_SECONDS
             )
         )
-        setContent { RegistrationByEmailScreenHarness(component) }
+        setContent {
+            ComponentTestHarness {
+                RegistrationByEmailScreen(component)
+            }
+        }
         onNodeWithText(RESEND_TIMER_COUNTDOWN_TEXT, substring = true).assertIsDisplayed()
     }
 
     @Test
     fun registrationInput_whenCanResend_showsResendButton() = runComposeUiTest {
-        val component = FakeRegistrationByEmailComponent(
+        val component = RegistrationByEmailComponentMock(
             RegistrationByEmailScreenState.RegistrationInput(
                 email = EMAIL_REGISTRATION_FLOW,
                 resendTimerSeconds = RESEND_TIMER_EXPIRED_SECONDS
             )
         )
-        setContent { RegistrationByEmailScreenHarness(component) }
+        setContent {
+            ComponentTestHarness {
+                RegistrationByEmailScreen(component)
+            }
+        }
         onNodeWithText(RESEND_CODE).assertIsDisplayed()
     }
 
     @Test
     fun registrationInput_clickRegister_invokesCallback() = runComposeUiTest {
-        val component = FakeRegistrationByEmailComponent(
+        val component = RegistrationByEmailComponentMock(
             RegistrationByEmailScreenState.RegistrationInput(
                 email = EMAIL_REGISTRATION_FLOW,
                 code = CODE_SIX_DIGITS,
@@ -128,9 +153,13 @@ class RegistrationByEmailScreenTest {
                 isPasswordValid = true
             )
         )
-        setContent { RegistrationByEmailScreenHarness(component) }
+        setContent {
+            ComponentTestHarness {
+                RegistrationByEmailScreen(component)
+            }
+        }
         onNodeWithText(REGISTER_BUTTON).performClick()
-        assertEquals(EXPECTED_SINGLE_CALLBACK, component.registerClicks)
+        assertEquals(EXPECTED_SINGLE_CALLBACK, component.registerCalls)
     }
 
     private companion object {
@@ -162,41 +191,4 @@ class RegistrationByEmailScreenTest {
         const val CODE_SENT_PREFIX = "The code has been sent to"
         const val MOCK_ERROR_MESSAGE = "Unknown Error"
     }
-}
-
-@InternalApi
-@Composable
-private fun RegistrationByEmailScreenHarness(component: RegistrationByEmailComponent) {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            RegistrationByEmailScreen(component)
-        }
-    }
-}
-
-private class FakeRegistrationByEmailComponent(
-    initial: RegistrationByEmailScreenState
-) : RegistrationByEmailComponent {
-
-    private val mutableState = MutableValue(initial)
-    override val state: Value<RegistrationByEmailScreenState> get() = mutableState
-
-    var sendCodeClicks: Int = 0
-        private set
-    var registerClicks: Int = 0
-        private set
-
-    override fun onEmailChanged(email: String) {}
-    override fun onSendCodeClick() {
-        sendCodeClicks++
-    }
-
-    override fun onCodeChanged(code: String) {}
-    override fun onPasswordChanged(password: String) {}
-    override fun onTogglePasswordVisibility() {}
-    override fun onRegisterClick() {
-        registerClicks++
-    }
-
-    override fun onBackClick() {}
 }

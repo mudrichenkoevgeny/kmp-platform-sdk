@@ -7,25 +7,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 
 /**
  * Deterministic [GoogleAuthService] for tests and previews.
- *
- * @param resultToken Token string returned on successful [signIn].
- * @param shouldSucceed When false, [signIn] returns [UserError.ExternalAuthFailed]; [signOut] always succeeds.
  */
 @InternalApi
-class GoogleAuthServiceMock(
-    private val resultToken: String = "mock_id_token",
-    private val shouldSucceed: Boolean = true
-) : GoogleAuthService {
+class GoogleAuthServiceMock : GoogleAuthService {
 
-    override suspend fun signIn(): AppResult<String> {
-        return if (shouldSucceed) {
-            AppResult.Success(resultToken)
-        } else {
-            AppResult.Error(UserError.ExternalAuthFailed(null))
-        }
-    }
+    var signInResultProvider: () -> AppResult<String> = { AppResult.Success("mock_id_token") }
+    var signOutResultProvider: () -> AppResult<Unit> = { AppResult.Success(Unit) }
 
-    override suspend fun signOut(): AppResult<Unit> {
-        return AppResult.Success(Unit)
-    }
+    override suspend fun signIn(): AppResult<String> = signInResultProvider()
+
+    override suspend fun signOut(): AppResult<Unit> = signOutResultProvider()
 }

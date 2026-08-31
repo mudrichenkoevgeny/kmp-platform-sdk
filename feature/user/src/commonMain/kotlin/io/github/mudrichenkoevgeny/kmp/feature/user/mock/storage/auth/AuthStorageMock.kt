@@ -24,6 +24,15 @@ class AuthStorageMock : AuthStorage {
     private var publicAuthSettings: PublicAuthSettings? = null
     private var managementAuthSettings: ManagementAuthSettings? = null
 
+    var isTokensCleared = false
+        private set
+
+    var isPublicAuthSettingsCleared = false
+        private set
+
+    var isManagementAuthSettingsCleared = false
+        private set
+
     private val _accessTokenFlow = MutableStateFlow<String?>(null)
     override val accessTokenFlow: StateFlow<String?> = _accessTokenFlow.asStateFlow()
 
@@ -45,6 +54,7 @@ class AuthStorageMock : AuthStorage {
         refreshToken = null
         expiresAt = 0L
         _accessTokenFlow.value = null
+        isTokensCleared = true
     }
 
     override suspend fun getPublicAuthSettings(): PublicAuthSettings? = publicAuthSettings
@@ -55,6 +65,7 @@ class AuthStorageMock : AuthStorage {
 
     override suspend fun clearPublicAuthSettings() {
         publicAuthSettings = null
+        isPublicAuthSettingsCleared = true
     }
 
     override suspend fun getManagementAuthSettings(): ManagementAuthSettings? = managementAuthSettings
@@ -65,5 +76,6 @@ class AuthStorageMock : AuthStorage {
 
     override suspend fun clearManagementAuthSettings() {
         managementAuthSettings = null
+        isManagementAuthSettingsCleared = true
     }
 }

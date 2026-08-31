@@ -9,14 +9,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
  *
  * @param resetPasswordRepository Password recovery API surface.
  */
-class SendResetPasswordConfirmationToEmailUseCase(
+open class SendResetPasswordConfirmationToEmailUseCase(
     private val resetPasswordRepository: ResetPasswordRepository
 ) {
     /**
      * @param email Address that should receive the reset code or link.
      * @return [OtpConfirmation] on success, or an error result from the repository.
      */
-    suspend fun execute(email: String): AppResult<OtpConfirmation> {
+    open suspend fun execute(email: String): AppResult<OtpConfirmation> {
         return resetPasswordRepository.sendResetPasswordConfirmationToEmail(email)
     }
 }

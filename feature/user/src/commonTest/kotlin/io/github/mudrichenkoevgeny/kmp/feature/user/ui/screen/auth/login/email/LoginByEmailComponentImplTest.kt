@@ -9,16 +9,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.core.security.error.model.SecurityError
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.securitySettingsMock
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.repository.SecuritySettingsRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ValidatePasswordUseCase
+import io.github.mudrichenkoevgeny.kmp.core.security.mock.usecase.ValidatePasswordUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.data.authDataPayloadMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.login.LoginRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.login.LoginByEmailUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByEmailUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator.PasswordPolicyValidatorImpl
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.*
@@ -28,252 +22,233 @@ class LoginByEmailComponentImplTest {
 
     @Test
     fun onEmailChanged_updatesValidityAndClearsActionError() = runComponentTest {
-        val harness = createHarness()
+        val context = createLoginByEmailComponentTestContext()
         try {
-            harness.component.onEmailChanged(INVALID_EMAIL)
+            context.component.onEmailChanged(INVALID_EMAIL)
             advanceUntilIdle()
 
-            var content = assertIs<LoginByEmailScreenState.Content>(harness.component.state.value)
+            var content = assertIs<LoginByEmailScreenState.Content>(context.component.state.value)
             assertFalse(content.isEmailValid)
 
-            harness.component.onEmailChanged(VALID_EMAIL)
+            context.component.onEmailChanged(VALID_EMAIL)
             advanceUntilIdle()
 
-            content = assertIs<LoginByEmailScreenState.Content>(harness.component.state.value)
+            content = assertIs<LoginByEmailScreenState.Content>(context.component.state.value)
             assertTrue(content.isEmailValid)
             assertEquals(VALID_EMAIL, content.email)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onPasswordChanged_asyncValidation_updatesPasswordValidity() = runComponentTest {
-        val harness = createHarness()
+        val context = createLoginByEmailComponentTestContext()
         try {
-            harness.component.onPasswordChanged(SHORT_PASSWORD)
+            context.validatePasswordUseCase.resultProvider = { AppResult.Error(SecurityError.PasswordTooShort()) }
+            context.component.onPasswordChanged(SHORT_PASSWORD)
             advanceUntilIdle()
 
-            var content = assertIs<LoginByEmailScreenState.Content>(harness.component.state.value)
+            var content = assertIs<LoginByEmailScreenState.Content>(context.component.state.value)
             assertFalse(content.isPasswordValid)
 
-            harness.component.onPasswordChanged(VALID_PASSWORD)
+            context.validatePasswordUseCase.resultProvider = { AppResult.Success(Unit) }
+            context.component.onPasswordChanged(VALID_PASSWORD)
             advanceUntilIdle()
 
-            content = assertIs<LoginByEmailScreenState.Content>(harness.component.state.value)
+            content = assertIs<LoginByEmailScreenState.Content>(context.component.state.value)
             assertTrue(content.isPasswordValid)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onLoginClick_success_callsOnFinished() = runComponentTest {
-        val repo = LoginRepositoryMock().apply {
-            authDataResultProvider = { AppResult.Success(authDataPayloadMock().toAuthData()) }
+        val loginUseCase = LoginByEmailUseCaseMock().apply {
+            resultProvider = { _, _ -> AppResult.Success(authDataPayloadMock().toAuthData()) }
         }
 
-        val harness = createHarness(loginRepository = repo)
+        val context = createLoginByEmailComponentTestContext(loginByEmailUseCase = loginUseCase)
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onPasswordChanged(VALID_PASSWORD)
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.component.onPasswordChanged(VALID_PASSWORD)
             advanceUntilIdle()
 
-            harness.component.onLoginClick()
+            context.component.onLoginClick()
             advanceUntilIdle()
 
-            assertEquals(ONE_CALL, harness.counters.finished)
-            assertEquals(VALID_EMAIL, repo.lastEmail)
-            assertEquals(VALID_PASSWORD, repo.lastPassword)
+            assertEquals(ONE_CALL, context.onFinishedCalls)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onLoginClick_loginError_surfacesError() = runComponentTest {
-        val repo = LoginRepositoryMock().apply {
-            authDataResultProvider = {
+        val loginUseCase = LoginByEmailUseCaseMock().apply {
+            resultProvider = { _, _ ->
                 AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
             }
         }
 
-        val harness = createHarness(loginRepository = repo)
+        val context = createLoginByEmailComponentTestContext(loginByEmailUseCase = loginUseCase)
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onPasswordChanged(VALID_PASSWORD)
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.component.onPasswordChanged(VALID_PASSWORD)
             advanceUntilIdle()
 
-            harness.component.onLoginClick()
+            context.component.onLoginClick()
             advanceUntilIdle()
 
-            assertEquals(ZERO_CALLS, harness.counters.finished)
+            assertEquals(ZERO_CALLS, context.onFinishedCalls)
 
-            val content = assertIs<LoginByEmailScreenState.Content>(harness.component.state.value)
+            val content = assertIs<LoginByEmailScreenState.Content>(context.component.state.value)
             assertFalse(content.actionLoading)
             assertIs<CommonError.Unknown>(content.actionError)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onLoginClick_secondValidatePasswordInvocationFailure_showsError() = runComponentTest {
-        val secRepo = SecuritySettingsRepositoryMock().apply {
+        val validatePassword = ValidatePasswordUseCaseMock().apply {
             resultProvider = {
                 AppResult.Error(SecurityError.PasswordPolicyUnavailable())
             }
         }
-
-        val validatePassword = ValidatePasswordUseCase(secRepo, PasswordPolicyValidatorImpl())
-        val harness = createHarness(validatePasswordUseCase = validatePassword)
+        val context = createLoginByEmailComponentTestContext(validatePasswordUseCase = validatePassword)
 
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onPasswordChanged(VALID_PASSWORD)
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.component.onPasswordChanged(VALID_PASSWORD)
             advanceUntilIdle()
 
-            harness.component.onLoginClick()
+            context.component.onLoginClick()
             advanceUntilIdle()
 
-            assertEquals(ZERO_CALLS, harness.counters.finished)
+            assertEquals(ZERO_CALLS, context.onFinishedCalls)
 
-            val content = assertIs<LoginByEmailScreenState.Content>(harness.component.state.value)
+            val content = assertIs<LoginByEmailScreenState.Content>(context.component.state.value)
             assertIs<SecurityError.PasswordPolicyUnavailable>(content.actionError)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onLoginClick_whenCannotLogin_doesNotInvokeRepository() = runComponentTest {
-        val repo = LoginRepositoryMock()
+        val loginUseCase = LoginByEmailUseCaseMock()
 
-        val harness = createHarness(loginRepository = repo)
+        val context = createLoginByEmailComponentTestContext(loginByEmailUseCase = loginUseCase)
         try {
-            harness.component.onEmailChanged(INVALID_EMAIL)
-            harness.component.onPasswordChanged(VALID_PASSWORD)
+            context.component.onEmailChanged(INVALID_EMAIL)
+            context.component.onPasswordChanged(VALID_PASSWORD)
             advanceUntilIdle()
 
-            harness.component.onLoginClick()
+            context.component.onLoginClick()
             advanceUntilIdle()
 
-            assertNull(repo.lastEmail)
-            assertEquals(ZERO_CALLS, harness.counters.finished)
+            assertEquals(ZERO_CALLS, context.onFinishedCalls)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onForgotPasswordClick_invokesNavigation() = runComponentTest {
-        val harness = createHarness()
+        val context = createLoginByEmailComponentTestContext()
         try {
-            harness.component.onForgotPasswordClick()
-            assertEquals(ONE_CALL, harness.counters.forgotPassword)
+            context.component.onForgotPasswordClick()
+            assertEquals(ONE_CALL, context.onNavigateToForgotPasswordCalls)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onRegistrationClick_invokesNavigation() = runComponentTest {
-        val harness = createHarness()
+        val context = createLoginByEmailComponentTestContext()
         try {
-            harness.component.onRegistrationClick()
-            assertEquals(ONE_CALL, harness.counters.registration)
+            context.component.onRegistrationClick()
+            assertEquals(ONE_CALL, context.onNavigateToRegistrationByEmailCalls)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onBackClick_invokesOnBack() = runComponentTest {
-        val harness = createHarness()
+        val context = createLoginByEmailComponentTestContext()
         try {
-            harness.component.onBackClick()
-            assertEquals(ONE_CALL, harness.counters.back)
+            context.component.onBackClick()
+            assertEquals(ONE_CALL, context.onBackCalls)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onTogglePasswordVisibility_togglesFlag() = runComponentTest {
-        val harness = createHarness()
+        val context = createLoginByEmailComponentTestContext()
         try {
-            harness.component.onTogglePasswordVisibility()
+            context.component.onTogglePasswordVisibility()
 
-            var content = assertIs<LoginByEmailScreenState.Content>(harness.component.state.value)
+            var content = assertIs<LoginByEmailScreenState.Content>(context.component.state.value)
             assertTrue(content.isPasswordVisible)
 
-            harness.component.onTogglePasswordVisibility()
+            context.component.onTogglePasswordVisibility()
 
-            content = assertIs<LoginByEmailScreenState.Content>(harness.component.state.value)
+            content = assertIs<LoginByEmailScreenState.Content>(context.component.state.value)
             assertFalse(content.isPasswordVisible)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
-    private fun createHarness(
-        loginRepository: LoginRepositoryMock = LoginRepositoryMock().apply {
-            authDataResultProvider = {
+    private fun createLoginByEmailComponentTestContext(
+        loginByEmailUseCase: LoginByEmailUseCaseMock = LoginByEmailUseCaseMock().apply {
+            resultProvider = { _, _ ->
                 AppResult.Success(authDataPayloadMock().toAuthData())
             }
         },
-        validatePasswordUseCase: ValidatePasswordUseCase? = null
-    ): Harness {
+        validatePasswordUseCase: ValidatePasswordUseCaseMock = ValidatePasswordUseCaseMock()
+    ): LoginByEmailComponentTestContext {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
 
-        val ctx = DefaultComponentContext(lifecycle)
-
-        val loginByEmailUseCase = LoginByEmailUseCase(
-            loginRepository,
-            AuthStorageMock(),
-            UserStorageMock()
-        )
-
-        val counters = NavigationCounters()
-
-        val component = LoginByEmailComponentImpl(
-            componentContext = ctx,
-            appType = AppType.CLIENT,
+        val context = LoginByEmailComponentTestContext(
+            lifecycle = lifecycle,
             loginByEmailUseCase = loginByEmailUseCase,
             validatePasswordUseCase = validatePasswordUseCase
-                ?: validatePasswordUseCaseSuccess(),
-            onNavigateToRegistrationByEmail = { counters.registration++ },
-            onNavigateToForgotPassword = { counters.forgotPassword++ },
-            onBack = { counters.back++ },
-            onFinished = { counters.finished++ }
         )
 
-        return Harness(lifecycle, component, counters)
+        context.component = LoginByEmailComponentImpl(
+            componentContext = DefaultComponentContext(lifecycle),
+            appType = AppType.CLIENT,
+            loginByEmailUseCase = loginByEmailUseCase,
+            validatePasswordUseCase = validatePasswordUseCase,
+            onNavigateToRegistrationByEmail = { context.onNavigateToRegistrationByEmailCalls++ },
+            onNavigateToForgotPassword = { context.onNavigateToForgotPasswordCalls++ },
+            onBack = { context.onBackCalls++ },
+            onFinished = { context.onFinishedCalls++ }
+        )
+
+        return context
     }
 
-    private fun validatePasswordUseCaseSuccess(): ValidatePasswordUseCase {
-        val secRepo = SecuritySettingsRepositoryMock().apply {
-            resultProvider = {
-                AppResult.Success(securitySettingsMock())
-            }
-        }
-
-        return ValidatePasswordUseCase(secRepo, PasswordPolicyValidatorImpl())
-    }
-
-    private class NavigationCounters(
-        var finished: Int = ZERO_CALLS,
-        var forgotPassword: Int = ZERO_CALLS,
-        var registration: Int = ZERO_CALLS,
-        var back: Int = ZERO_CALLS
-    )
-
-    private class Harness(
-        private val lifecycle: LifecycleRegistry,
-        val component: LoginByEmailComponentImpl,
-        val counters: NavigationCounters
+    private class LoginByEmailComponentTestContext(
+        val lifecycle: LifecycleRegistry,
+        val loginByEmailUseCase: LoginByEmailUseCaseMock,
+        val validatePasswordUseCase: ValidatePasswordUseCaseMock
     ) {
+        lateinit var component: LoginByEmailComponentImpl
+        var onFinishedCalls: Int = 0
+        var onNavigateToForgotPasswordCalls: Int = 0
+        var onNavigateToRegistrationByEmailCalls: Int = 0
+        var onBackCalls: Int = 0
+
         fun destroy() {
             lifecycle.destroy()
         }

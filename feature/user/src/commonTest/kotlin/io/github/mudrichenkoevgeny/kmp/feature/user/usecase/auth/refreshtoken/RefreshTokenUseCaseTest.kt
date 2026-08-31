@@ -1,12 +1,11 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.refreshtoken
 
-import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.token.sessionTokenPayloadMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.refreshtoken.RefreshTokenRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.refreshtoken.RefreshTokenRepository
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
@@ -23,7 +22,7 @@ class RefreshTokenUseCaseTest {
     @Test
     fun execute_returnsInvalidRefreshToken_whenNoRefreshTokenStored() = runTest {
         val useCase = RefreshTokenUseCase(
-            refreshTokenRepository = FakeRefreshTokenRepository(),
+            refreshTokenRepository = RefreshTokenRepositoryMock(),
             authStorage = AuthStorageMock()
         )
 
@@ -48,8 +47,8 @@ class RefreshTokenUseCaseTest {
             tokenType = TOKEN_TYPE_BEARER
         )
         val expectedSession = wire.toSessionToken()
-        val refreshRepo = FakeRefreshTokenRepository().apply {
-            result = AppResult.Success(wire.toSessionToken())
+        val refreshRepo = RefreshTokenRepositoryMock().apply {
+            refreshTokenResultProvider = { AppResult.Success(expectedSession) }
         }
         val useCase = RefreshTokenUseCase(refreshRepo, authStorage)
 
@@ -57,20 +56,10 @@ class RefreshTokenUseCaseTest {
 
         val success = assertIs<AppResult.Success<SessionToken>>(refreshResult)
         assertEquals(expectedSession.accessToken, success.data.accessToken)
-        assertEquals(STORED_REFRESH_TOKEN, refreshRepo.lastRefreshTokenPassed)
+        assertEquals(STORED_REFRESH_TOKEN, refreshRepo.lastRefreshToken)
         assertEquals(AccessToken(NEW_ACCESS_TOKEN), authStorage.getAccessToken())
         assertEquals(RefreshToken(NEW_REFRESH_TOKEN), authStorage.getRefreshToken())
         assertEquals(EXPIRES_AT_AFTER_REFRESH, authStorage.getExpiresAt())
-    }
-
-    private class FakeRefreshTokenRepository : RefreshTokenRepository {
-        var result: AppResult<SessionToken> = AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
-        var lastRefreshTokenPassed: String? = null
-
-        override suspend fun refreshToken(refreshToken: String): AppResult<SessionToken> {
-            lastRefreshTokenPassed = refreshToken
-            return result
-        }
     }
 
     private companion object {
@@ -81,6 +70,5 @@ class RefreshTokenUseCaseTest {
         private const val NEW_REFRESH_TOKEN = "new-refresh"
         private const val EXPIRES_AT_AFTER_REFRESH = 200L
         private const val TOKEN_TYPE_BEARER = "Bearer"
-        private const val NOT_RETRYABLE = false
     }
 }

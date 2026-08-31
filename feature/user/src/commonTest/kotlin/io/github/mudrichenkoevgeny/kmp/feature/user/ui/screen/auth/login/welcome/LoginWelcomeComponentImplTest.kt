@@ -37,15 +37,15 @@ class LoginWelcomeComponentImplTest {
 
     @Test
     fun init_loadsContent_whenAuthAndGlobalSettingsSucceed() = runComponentTest {
-        val harness = createHarness()
+        val context = createLoginWelcomeComponentTestContext()
         try {
             advanceUntilIdle()
-            val content = assertIs<LoginWelcomeScreenState.Content>(harness.component.state.value)
-            assertEquals(harness.expectedProviders, content.availableAuthProviders)
+            val content = assertIs<LoginWelcomeScreenState.Content>(context.component.state.value)
+            assertEquals(context.expectedProviders, content.availableAuthProviders)
             assertEquals(PRIVACY_POLICY_URL, content.privacyPolicyUrl)
             assertEquals(TERMS_OF_SERVICE_URL, content.termsOfServiceUrl)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
@@ -54,13 +54,13 @@ class LoginWelcomeComponentImplTest {
         val authRepo = OpenAuthSettingsRepositoryMock().apply {
             resultProvider = { AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE)) }
         }
-        val harness = createHarness(authSettingsRepository = authRepo)
+        val context = createLoginWelcomeComponentTestContext(authSettingsRepository = authRepo)
         try {
             advanceUntilIdle()
-            val err = assertIs<LoginWelcomeScreenState.InitializationError>(harness.component.state.value)
+            val err = assertIs<LoginWelcomeScreenState.InitializationError>(context.component.state.value)
             assertIs<CommonError.Unknown>(err.error)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
@@ -69,56 +69,56 @@ class LoginWelcomeComponentImplTest {
         val authRepo = OpenAuthSettingsRepositoryMock().apply {
             resultProvider = { AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE)) }
         }
-        val harness = createHarness(authSettingsRepository = authRepo)
+        val context = createLoginWelcomeComponentTestContext(authSettingsRepository = authRepo)
         try {
             advanceUntilIdle()
-            assertIs<LoginWelcomeScreenState.InitializationError>(harness.component.state.value)
+            assertIs<LoginWelcomeScreenState.InitializationError>(context.component.state.value)
 
             val settings = publicAuthSettingsMock()
             authRepo.resultProvider = { AppResult.Success(settings) }
 
-            harness.component.onRetryInitClick()
+            context.component.onRetryInitClick()
             advanceUntilIdle()
-            assertIs<LoginWelcomeScreenState.Content>(harness.component.state.value)
+            assertIs<LoginWelcomeScreenState.Content>(context.component.state.value)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onLoginClick_email_navigatesToEmail() = runComponentTest {
-        val harness = createHarness()
+        val context = createLoginWelcomeComponentTestContext()
         try {
             advanceUntilIdle()
-            harness.component.onLoginClick(UserAuthProvider.EMAIL)
-            assertEquals(ONE_CALL, harness.counters.navigateEmail)
+            context.component.onLoginClick(UserAuthProvider.EMAIL)
+            assertEquals(ONE_CALL, context.onNavigateToLoginByEmailCalls)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onLoginClick_phone_navigatesToPhone() = runComponentTest {
-        val harness = createHarness()
+        val context = createLoginWelcomeComponentTestContext()
         try {
             advanceUntilIdle()
-            harness.component.onLoginClick(UserAuthProvider.PHONE)
-            assertEquals(ONE_CALL, harness.counters.navigatePhone)
+            context.component.onLoginClick(UserAuthProvider.PHONE)
+            assertEquals(ONE_CALL, context.onNavigateToLoginByPhoneCalls)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onLoginClick_google_success_callsOnFinished() = runComponentTest {
-        val harness = createHarness()
+        val context = createLoginWelcomeComponentTestContext()
         try {
             advanceUntilIdle()
-            harness.component.onLoginClick(UserAuthProvider.GOOGLE)
+            context.component.onLoginClick(UserAuthProvider.GOOGLE)
             advanceUntilIdle()
-            assertEquals(ONE_CALL, harness.counters.finished)
+            assertEquals(ONE_CALL, context.onFinishedCalls)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
@@ -127,59 +127,59 @@ class LoginWelcomeComponentImplTest {
         val loginRepo = LoginRepositoryMock().apply {
             authDataResultProvider = { AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE)) }
         }
-        val harness = createHarness(loginRepository = loginRepo)
+        val context = createLoginWelcomeComponentTestContext(loginRepository = loginRepo)
         try {
             advanceUntilIdle()
-            harness.component.onLoginClick(UserAuthProvider.GOOGLE)
+            context.component.onLoginClick(UserAuthProvider.GOOGLE)
             advanceUntilIdle()
-            assertEquals(ZERO_CALLS, harness.counters.finished)
-            val content = assertIs<LoginWelcomeScreenState.Content>(harness.component.state.value)
+            assertEquals(ZERO_CALLS, context.onFinishedCalls)
+            val content = assertIs<LoginWelcomeScreenState.Content>(context.component.state.value)
             assertIs<CommonError.Unknown>(content.actionError)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onLoginClick_apple_showsExternalAuthFailed() = runComponentTest {
-        val harness = createHarness()
+        val context = createLoginWelcomeComponentTestContext()
         try {
             advanceUntilIdle()
-            harness.component.onLoginClick(UserAuthProvider.APPLE)
-            val content = assertIs<LoginWelcomeScreenState.Content>(harness.component.state.value)
+            context.component.onLoginClick(UserAuthProvider.APPLE)
+            val content = assertIs<LoginWelcomeScreenState.Content>(context.component.state.value)
             assertIs<UserError.ExternalAuthFailed>(content.actionError)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onPrivacyPolicyClick_opensUrl() = runComponentTest {
         val launcher = ExternalLauncherMock()
-        val harness = createHarness(externalLauncher = launcher)
+        val context = createLoginWelcomeComponentTestContext(externalLauncher = launcher)
         try {
             advanceUntilIdle()
-            harness.component.onPrivacyPolicyClick()
+            context.component.onPrivacyPolicyClick()
             assertEquals(listOf(PRIVACY_POLICY_URL), launcher.openedUrls)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
     @Test
     fun onTermsOfServiceClick_opensUrl() = runComponentTest {
         val launcher = ExternalLauncherMock()
-        val harness = createHarness(externalLauncher = launcher)
+        val context = createLoginWelcomeComponentTestContext(externalLauncher = launcher)
         try {
             advanceUntilIdle()
-            harness.component.onTermsOfServiceClick()
+            context.component.onTermsOfServiceClick()
             assertEquals(listOf(TERMS_OF_SERVICE_URL), launcher.openedUrls)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
-    private fun createHarness(
+    private fun createLoginWelcomeComponentTestContext(
         authSettingsRepository: OpenAuthSettingsRepositoryMock = OpenAuthSettingsRepositoryMock().apply {
             resultProvider = { AppResult.Success(publicAuthSettingsMock()) }
         },
@@ -198,56 +198,51 @@ class LoginWelcomeComponentImplTest {
         loginRepository: LoginRepositoryMock = LoginRepositoryMock().apply {
             authDataResultProvider = { AppResult.Success(authDataPayloadMock().toAuthData()) }
         }
-    ): Harness {
+    ): LoginWelcomeComponentTestContext {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
-        val ctx = DefaultComponentContext(lifecycle)
-        val counters = NavigationCounters()
-        val getGlobalSettings = GetGlobalSettingsUseCase(globalSettingsRepository)
-        val getProviders = GetAvailableUserAuthProvidersUseCase(
-            appType = AppType.CLIENT,
-            openAuthSettingsRepository = authSettingsRepository
+        
+        val context = LoginWelcomeComponentTestContext(
+            lifecycle = lifecycle,
+            expectedProviders = when (val authResult = authSettingsRepository.resultProvider()) {
+                is AppResult.Success -> authResult.data.availableAuthProviders
+                is AppResult.Error -> publicAuthSettingsMock().availableAuthProviders
+            }
         )
-        val googleAuth = GoogleAuthServiceMock()
-        val loginByGoogle = LoginByGoogleUseCase(
-            authService = googleAuth,
-            loginRepository = loginRepository,
-            authStorage = AuthStorageMock(),
-            userStorage = UserStorageMock()
-        )
-        val expectedProviders = when (val authResult = authSettingsRepository.resultProvider()) {
-            is AppResult.Success -> authResult.data.availableAuthProviders
-            is AppResult.Error -> publicAuthSettingsMock().availableAuthProviders
-        }
-        val component = LoginWelcomeComponentImpl(
-            componentContext = ctx,
+
+        context.component = LoginWelcomeComponentImpl(
+            componentContext = DefaultComponentContext(lifecycle),
             appType = AppType.CLIENT,
             externalLauncher = externalLauncher,
-            getGlobalSettingsUseCase = getGlobalSettings,
-            getAvailableUserAuthProvidersUseCase = getProviders,
-            loginByGoogleUseCase = loginByGoogle,
-            onNavigateToLoginByEmail = { counters.navigateEmail++ },
-            onNavigateToLoginByPhone = { counters.navigatePhone++ },
-            onFinished = { counters.finished++ }
+            getGlobalSettingsUseCase = GetGlobalSettingsUseCase(globalSettingsRepository),
+            getAvailableUserAuthProvidersUseCase = GetAvailableUserAuthProvidersUseCase(
+                appType = AppType.CLIENT,
+                openAuthSettingsRepository = authSettingsRepository
+            ),
+            loginByGoogleUseCase = LoginByGoogleUseCase(
+                authService = GoogleAuthServiceMock(),
+                loginRepository = loginRepository,
+                authStorage = AuthStorageMock(),
+                userStorage = UserStorageMock()
+            ),
+            onNavigateToLoginByEmail = { context.onNavigateToLoginByEmailCalls++ },
+            onNavigateToLoginByPhone = { context.onNavigateToLoginByPhoneCalls++ },
+            onFinished = { context.onFinishedCalls++ }
         )
-        return Harness(lifecycle, component, counters, expectedProviders)
+        
+        return context
     }
 
-    private class NavigationCounters(
-        var navigateEmail: Int = ZERO_CALLS,
-        var navigatePhone: Int = ZERO_CALLS,
-        var finished: Int = ZERO_CALLS
-    )
-
-    private class Harness(
+    private class LoginWelcomeComponentTestContext(
         private val lifecycle: LifecycleRegistry,
-        val component: LoginWelcomeComponentImpl,
-        val counters: NavigationCounters,
         val expectedProviders: AvailableAuthProviders
     ) {
-        fun destroy() {
-            lifecycle.destroy()
-        }
+        lateinit var component: LoginWelcomeComponentImpl
+        var onNavigateToLoginByEmailCalls: Int = 0
+        var onNavigateToLoginByPhoneCalls: Int = 0
+        var onFinishedCalls: Int = 0
+
+        fun destroy() = lifecycle.destroy()
     }
 
     private companion object {

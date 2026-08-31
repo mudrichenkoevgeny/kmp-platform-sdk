@@ -9,14 +9,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
  *
  * @param loginRepository Login repository that performs the send and throttling.
  */
-class SendLoginConfirmationToPhoneUseCase(
+open class SendLoginConfirmationToPhoneUseCase(
     private val loginRepository: LoginRepository
 ) {
     /**
      * @param phoneNumber Target phone for the OTP or SMS challenge.
      * @return [OtpConfirmation] on success, or an error result (including client-side throttling).
      */
-    suspend fun execute(phoneNumber: String): AppResult<OtpConfirmation> {
+    open suspend fun execute(phoneNumber: String): AppResult<OtpConfirmation> {
         return loginRepository.sendLoginConfirmationToPhone(phoneNumber)
     }
 }

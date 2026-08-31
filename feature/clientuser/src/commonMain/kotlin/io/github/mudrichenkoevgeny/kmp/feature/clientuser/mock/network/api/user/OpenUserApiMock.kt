@@ -8,11 +8,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 
 @InternalApi
 class OpenUserApiMock : OpenUserApi {
-    var userResult: AppResult<UserDetailsPayload> = AppResult.Error(CommonError.Unknown())
-    var scheduleDeletionResult: AppResult<UserDetailsPayload> = AppResult.Error(CommonError.Unknown())
+    var getUserResult: AppResult<UserDetailsPayload> = AppResult.Error(CommonError.Unknown())
+    var scheduleUserDeletionResult: AppResult<UserDetailsPayload> = AppResult.Error(CommonError.Unknown())
     var restoreUserResult: AppResult<UserDetailsPayload> = AppResult.Error(CommonError.Unknown())
 
-    override suspend fun getUser(): AppResult<UserDetailsPayload> = userResult
-    override suspend fun scheduleUserDeletion(): AppResult<UserDetailsPayload> = scheduleDeletionResult
+    override suspend fun getUser(): AppResult<UserDetailsPayload> = getUserResult
+    override suspend fun scheduleUserDeletion(): AppResult<UserDetailsPayload> = scheduleUserDeletionResult
     override suspend fun restoreUser(): AppResult<UserDetailsPayload> = restoreUserResult
 }

@@ -64,7 +64,11 @@ class LoginByPhoneComponentImpl(
     override fun onCodeChanged(code: String) {
         val current = _state.value as? LoginByPhoneScreenState.CodeInput ?: return
         if (code.length <= current.codeLength) {
-            _state.value = current.copy(code = code, actionError = null)
+            val updated = current.copy(code = code, actionError = null)
+            _state.value = updated
+            if (updated.isCodeFullLength) {
+                onConfirmCodeClick()
+            }
         }
     }
 

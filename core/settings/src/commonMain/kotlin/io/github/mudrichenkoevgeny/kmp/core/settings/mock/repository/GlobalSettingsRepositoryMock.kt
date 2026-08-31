@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.settings.mock.repository
 
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.settings.repository.GlobalSettingsRepository
@@ -15,7 +16,7 @@ class GlobalSettingsRepositoryMock : GlobalSettingsRepository {
 
     var resultProvider: () -> AppResult<GlobalSettings> = {
         _settingsFlow.value?.let { AppResult.Success(it) }
-            ?: AppResult.Error(io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError.Unknown())
+            ?: AppResult.Error(CommonError.Unknown())
     }
 
     override suspend fun getGlobalSettings(): AppResult<GlobalSettings> {

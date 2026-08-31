@@ -10,7 +10,7 @@ fun securitySettingsMock(
     recentAuthenticationValiditySeconds: Int = 300,
     recentAuthenticationValiditySecondsForManagement: Int = 60,
     passwordPolicy: PasswordPolicy = passwordPolicyMock(),
-    otpConfirmation: OtpConfirmation =otpConfirmationMock(),
+    otpConfirmation: OtpConfirmation = otpConfirmationMock(),
     mfaTokenExpirationSeconds: Int = 180
 ) = SecuritySettings(
     recentAuthenticationValiditySeconds = recentAuthenticationValiditySeconds,

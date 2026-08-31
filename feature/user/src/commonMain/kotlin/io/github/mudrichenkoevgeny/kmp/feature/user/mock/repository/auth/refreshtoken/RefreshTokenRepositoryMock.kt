@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.t
 @InternalApi
 class RefreshTokenRepositoryMock : RefreshTokenRepository {
 
-    var resultProvider: (String) -> AppResult<SessionToken> = {
+    var refreshTokenResultProvider: (String) -> AppResult<SessionToken> = {
         AppResult.Error(
             CommonError.ContractViolation(
                 throwable = IllegalStateException("RefreshTokenRepositoryMock: result not provided")
@@ -17,6 +17,10 @@ class RefreshTokenRepositoryMock : RefreshTokenRepository {
         )
     }
 
-    override suspend fun refreshToken(refreshToken: String): AppResult<SessionToken> =
-        resultProvider(refreshToken)
+    var lastRefreshToken: String? = null
+
+    override suspend fun refreshToken(refreshToken: String): AppResult<SessionToken> {
+        lastRefreshToken = refreshToken
+        return refreshTokenResultProvider(refreshToken)
+    }
 }

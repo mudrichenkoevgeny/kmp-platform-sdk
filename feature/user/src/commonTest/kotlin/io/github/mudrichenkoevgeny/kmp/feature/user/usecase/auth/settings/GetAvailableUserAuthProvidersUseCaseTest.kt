@@ -4,11 +4,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.settings.OpenAuthSettingsRepositoryMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.AvailableAuthProviders
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.PublicAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -45,7 +44,9 @@ class GetAvailableUserAuthProvidersUseCaseTest {
 
     @Test
     fun `client app should return settings from repository`() = runTest {
-        val repository = FakeOpenAuthSettingsRepository(AppResult.Success(authSettingsMock))
+        val repository = OpenAuthSettingsRepositoryMock().apply {
+            resultProvider = { AppResult.Success(authSettingsMock) }
+        }
         val useCase = GetAvailableUserAuthProvidersUseCase(AppType.CLIENT, repository)
 
         val result = useCase()
@@ -67,21 +68,14 @@ class GetAvailableUserAuthProvidersUseCaseTest {
     @Test
     fun `client app should propagate repository error`() = runTest {
         val error = CommonError.Network(Exception("api_fail"))
-        val repository = FakeOpenAuthSettingsRepository(AppResult.Error(error))
+        val repository = OpenAuthSettingsRepositoryMock().apply {
+            resultProvider = { AppResult.Error(error) }
+        }
         val useCase = GetAvailableUserAuthProvidersUseCase(AppType.CLIENT, repository)
 
         val result = useCase()
 
         assertIs<AppResult.Error>(result)
         assertEquals(error, result.error)
-    }
-
-    private class FakeOpenAuthSettingsRepository(
-        private val result: AppResult<PublicAuthSettings>
-    ) : OpenAuthSettingsRepository {
-        override suspend fun getAuthSettings(): AppResult<PublicAuthSettings> = result
-        override suspend fun refreshAuthSettings(): AppResult<PublicAuthSettings> = result
-        override suspend fun updateAuthSettings(authSettings: PublicAuthSettings) = Unit
-        override fun observeAuthSettings(): Flow<PublicAuthSettings?> = error("N/A")
     }
 }

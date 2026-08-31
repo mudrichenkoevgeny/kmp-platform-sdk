@@ -86,7 +86,7 @@ interface SessionRepository {
      * Performs re-authentication via TOTP for the current management session to update its trust level.
      *
      * @param mfaToken Opaque intermediate verification token.
-     * @param code Six-digit time-based verification code.
+     * @param code time-based verification code.
      * @return Empty success indicator, or a mapped failure.
      */
     suspend fun reauthenticateSession(mfaToken: String, code: String): AppResult<Unit>

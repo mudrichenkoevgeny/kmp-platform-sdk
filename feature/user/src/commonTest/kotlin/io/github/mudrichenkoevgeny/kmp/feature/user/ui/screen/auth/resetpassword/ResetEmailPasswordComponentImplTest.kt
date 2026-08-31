@@ -9,15 +9,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.otpConfirmationMock
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.securitySettingsMock
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.repository.SecuritySettingsRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ValidatePasswordUseCase
+import io.github.mudrichenkoevgeny.kmp.core.security.mock.usecase.ValidatePasswordUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.identifier.userIdentifierPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.resetpassword.ResetPasswordRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.ResetEmailPasswordUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.SendResetPasswordConfirmationToEmailUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator.PasswordPolicyValidatorImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.resetpassword.ResetEmailPasswordUseCaseMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.resetpassword.SendResetPasswordConfirmationToEmailUseCaseMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifier
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
@@ -26,23 +23,24 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.milliseconds
 
 @InternalApi
 class ResetEmailPasswordComponentImplTest {
 
     @Test
     fun onEmailChanged_invalidEmail_marksEmailInvalid() = runComponentTest {
-        val repo = ResetPasswordRepositoryMock()
-        repo.remainingDelaySeconds = ZERO_RETRY
-        val harness = createHarness(repo)
+        val resetPasswordRepository = ResetPasswordRepositoryMock()
+        resetPasswordRepository.remainingDelaySeconds = ZERO_RETRY
+        val context = createResetEmailPasswordComponentTestContext(resetPasswordRepository)
         try {
-            harness.component.onEmailChanged(INVALID_EMAIL)
+            context.component.onEmailChanged(INVALID_EMAIL)
             runCurrent()
-            val emailState = assertIs<ResetEmailPasswordScreenState.EmailInput>(harness.component.state.value)
+            val emailState = assertIs<ResetEmailPasswordScreenState.EmailInput>(context.component.state.value)
             assertFalse(emailState.isEmailValid)
             assertEquals(INVALID_EMAIL, emailState.email)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
@@ -50,15 +48,15 @@ class ResetEmailPasswordComponentImplTest {
     fun onEmailChanged_whenRemainingDelayPositive_skipsToResetInput() = runComponentTest {
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = REMAINING_DELAY_SECONDS
-        val harness = createHarness(repo)
+        val context = createResetEmailPasswordComponentTestContext(repo)
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            advanceTimeBy(100)
-            val reset = assertIs<ResetEmailPasswordScreenState.ResetInput>(harness.component.state.value)
+            context.component.onEmailChanged(VALID_EMAIL)
+            advanceTimeBy(100.milliseconds)
+            val reset = assertIs<ResetEmailPasswordScreenState.ResetInput>(context.component.state.value)
             assertEquals(VALID_EMAIL, reset.email)
             assertEquals(REMAINING_DELAY_SECONDS, reset.resendTimerSeconds)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
@@ -66,19 +64,19 @@ class ResetEmailPasswordComponentImplTest {
     fun onSendCodeClick_success_movesToResetInput() = runComponentTest {
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = ZERO_RETRY
-        repo.sendResult = AppResult.Success(
-            otpConfirmationMock(retryAfterSeconds = RETRY_AFTER_SEND_SUCCESS)
-        )
-        val harness = createHarness(repo)
+        val sendUseCase = SendResetPasswordConfirmationToEmailUseCaseMock().apply {
+            resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = RETRY_AFTER_SEND_SUCCESS)) }
+        }
+        val context = createResetEmailPasswordComponentTestContext(repo, sendResetPasswordConfirmationToEmailUseCase = sendUseCase)
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onSendCodeClick()
-            advanceTimeBy(100)
-            val reset = assertIs<ResetEmailPasswordScreenState.ResetInput>(harness.component.state.value)
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.component.onSendCodeClick()
+            advanceTimeBy(100.milliseconds)
+            val reset = assertIs<ResetEmailPasswordScreenState.ResetInput>(context.component.state.value)
             assertEquals(VALID_EMAIL, reset.email)
             assertEquals(RETRY_AFTER_SEND_SUCCESS, reset.resendTimerSeconds)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
@@ -86,18 +84,18 @@ class ResetEmailPasswordComponentImplTest {
     fun onSendCodeClick_tooManyRequests_movesToResetInputWithRetry() = runComponentTest {
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = ZERO_RETRY
-        repo.sendResult = AppResult.Error(
-            UserError.TooManyConfirmationRequests(retryAfterSeconds = RETRY_AFTER_RATE_LIMIT)
-        )
-        val harness = createHarness(repo)
+        val sendUseCase = SendResetPasswordConfirmationToEmailUseCaseMock().apply {
+            resultProvider = { AppResult.Error(UserError.TooManyConfirmationRequests(retryAfterSeconds = RETRY_AFTER_RATE_LIMIT)) }
+        }
+        val context = createResetEmailPasswordComponentTestContext(repo, sendResetPasswordConfirmationToEmailUseCase = sendUseCase)
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onSendCodeClick()
-            advanceTimeBy(100)
-            val reset = assertIs<ResetEmailPasswordScreenState.ResetInput>(harness.component.state.value)
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.component.onSendCodeClick()
+            advanceTimeBy(100.milliseconds)
+            val reset = assertIs<ResetEmailPasswordScreenState.ResetInput>(context.component.state.value)
             assertEquals(RETRY_AFTER_RATE_LIMIT, reset.resendTimerSeconds)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
@@ -105,17 +103,19 @@ class ResetEmailPasswordComponentImplTest {
     fun onSendCodeClick_genericError_keepsEmailStepWithError() = runComponentTest {
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = ZERO_RETRY
-        repo.sendResult = AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
-        val harness = createHarness(repo)
+        val sendUseCase = SendResetPasswordConfirmationToEmailUseCaseMock().apply {
+            resultProvider = { AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE)) }
+        }
+        val context = createResetEmailPasswordComponentTestContext(repo, sendResetPasswordConfirmationToEmailUseCase = sendUseCase)
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onSendCodeClick()
-            advanceTimeBy(100)
-            val emailState = assertIs<ResetEmailPasswordScreenState.EmailInput>(harness.component.state.value)
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.component.onSendCodeClick()
+            advanceTimeBy(100.milliseconds)
+            val emailState = assertIs<ResetEmailPasswordScreenState.EmailInput>(context.component.state.value)
             assertFalse(emailState.actionLoading)
             assertIs<CommonError.Unknown>(emailState.actionError)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
@@ -123,18 +123,20 @@ class ResetEmailPasswordComponentImplTest {
     fun onPasswordChanged_updatesPasswordValidityViaPolicy() = runComponentTest {
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = ZERO_RETRY
-        repo.sendResult = AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY))
-        val harness = createHarness(repo, validatePasswordUseCase())
+        val context = createResetEmailPasswordComponentTestContext(repo)
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onSendCodeClick()
-            advanceTimeBy(100)
-            harness.component.onPasswordChanged(VALID_PASSWORD)
-            advanceTimeBy(100)
-            val reset = assertIs<ResetEmailPasswordScreenState.ResetInput>(harness.component.state.value)
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.sendResetPasswordConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.component.onSendCodeClick()
+            advanceTimeBy(100.milliseconds)
+            
+            context.validatePasswordUseCase.resultProvider = { AppResult.Success(Unit) }
+            context.component.onPasswordChanged(VALID_PASSWORD)
+            advanceTimeBy(100.milliseconds)
+            val reset = assertIs<ResetEmailPasswordScreenState.ResetInput>(context.component.state.value)
             assertTrue(reset.isPasswordValid)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
@@ -143,21 +145,23 @@ class ResetEmailPasswordComponentImplTest {
         val userId = userIdentifierPayloadMock(identifier = VALID_EMAIL).toUserIdentifier()
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = ZERO_RETRY
-        repo.sendResult = AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY))
-        repo.resetResult = AppResult.Success(userId)
-        val harness = createHarness(repo, validatePasswordUseCase())
+        val resetUseCase = ResetEmailPasswordUseCaseMock().apply {
+            resultProvider = { _, _, _ -> AppResult.Success(userId) }
+        }
+        val context = createResetEmailPasswordComponentTestContext(repo, resetEmailPasswordUseCase = resetUseCase)
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onSendCodeClick()
-            advanceTimeBy(100)
-            harness.component.onCodeChanged(FULL_CODE)
-            harness.component.onPasswordChanged(VALID_PASSWORD)
-            advanceTimeBy(100)
-            harness.component.onConfirmResetClick()
-            advanceTimeBy(100)
-            assertEquals(ONE_CALL, harness.counters.finished)
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.sendResetPasswordConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.component.onSendCodeClick()
+            advanceTimeBy(100.milliseconds)
+            context.component.onCodeChanged(FULL_CODE)
+            context.component.onPasswordChanged(VALID_PASSWORD)
+            advanceTimeBy(100.milliseconds)
+            context.component.onConfirmResetClick()
+            advanceTimeBy(100.milliseconds)
+            assertEquals(ONE_CALL, context.onFinishedCalls)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
@@ -165,55 +169,66 @@ class ResetEmailPasswordComponentImplTest {
     fun onConfirmResetClick_resetError_surfacesError() = runComponentTest {
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = ZERO_RETRY
-        repo.sendResult = AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY))
-        repo.resetResult = AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
-        val harness = createHarness(repo, validatePasswordUseCase())
+        val resetUseCase = ResetEmailPasswordUseCaseMock().apply {
+            resultProvider = { _, _, _ -> AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE)) }
+        }
+        val context = createResetEmailPasswordComponentTestContext(repo, resetEmailPasswordUseCase = resetUseCase)
         try {
-            harness.component.onEmailChanged(VALID_EMAIL)
-            harness.component.onSendCodeClick()
-            advanceTimeBy(100)
-            harness.component.onCodeChanged(FULL_CODE)
-            harness.component.onPasswordChanged(VALID_PASSWORD)
-            advanceTimeBy(100)
-            harness.component.onConfirmResetClick()
-            advanceTimeBy(100)
-            val reset = assertIs<ResetEmailPasswordScreenState.ResetInput>(harness.component.state.value)
+            context.component.onEmailChanged(VALID_EMAIL)
+            context.sendResetPasswordConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.component.onSendCodeClick()
+            advanceTimeBy(100.milliseconds)
+            context.component.onCodeChanged(FULL_CODE)
+            context.component.onPasswordChanged(VALID_PASSWORD)
+            advanceTimeBy(100.milliseconds)
+            context.component.onConfirmResetClick()
+            advanceTimeBy(100.milliseconds)
+            val reset = assertIs<ResetEmailPasswordScreenState.ResetInput>(context.component.state.value)
             assertIs<CommonError.Unknown>(reset.actionError)
         } finally {
-            harness.destroy()
+            context.destroy()
         }
     }
 
-    private fun createHarness(
-        passwordRepository: ResetPasswordRepositoryMock,
-        validatePassword: ValidatePasswordUseCase = validatePasswordUseCase()
-    ): Harness {
+    private fun createResetEmailPasswordComponentTestContext(
+        resetPasswordRepository: ResetPasswordRepositoryMock,
+        sendResetPasswordConfirmationToEmailUseCase: SendResetPasswordConfirmationToEmailUseCaseMock = SendResetPasswordConfirmationToEmailUseCaseMock(),
+        resetEmailPasswordUseCase: ResetEmailPasswordUseCaseMock = ResetEmailPasswordUseCaseMock(),
+        validatePasswordUseCase: ValidatePasswordUseCaseMock = ValidatePasswordUseCaseMock()
+    ): ResetEmailPasswordComponentTestContext {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
-        val ctx = DefaultComponentContext(lifecycle)
-        val counters = NavigationCounters()
-        val component = ResetEmailPasswordComponentImpl(
-            componentContext = ctx,
-            resetPasswordRepository = passwordRepository,
-            sendResetPasswordConfirmationToEmailUseCase = SendResetPasswordConfirmationToEmailUseCase(passwordRepository),
-            resetEmailPasswordUseCase = ResetEmailPasswordUseCase(passwordRepository),
-            validatePasswordUseCase = validatePassword,
-            onBack = { counters.back++ },
-            onFinished = { counters.finished++ }
+        
+        val context = ResetEmailPasswordComponentTestContext(
+            lifecycle = lifecycle,
+            sendResetPasswordConfirmationToEmailUseCase = sendResetPasswordConfirmationToEmailUseCase,
+            resetEmailPasswordUseCase = resetEmailPasswordUseCase,
+            validatePasswordUseCase = validatePasswordUseCase
         )
-        return Harness(lifecycle, component, counters)
+
+        context.component = ResetEmailPasswordComponentImpl(
+            componentContext = DefaultComponentContext(lifecycle),
+            resetPasswordRepository = resetPasswordRepository,
+            sendResetPasswordConfirmationToEmailUseCase = sendResetPasswordConfirmationToEmailUseCase,
+            resetEmailPasswordUseCase = resetEmailPasswordUseCase,
+            validatePasswordUseCase = validatePasswordUseCase,
+            onBack = { context.onBackCalls++ },
+            onFinished = { context.onFinishedCalls++ }
+        )
+        
+        return context
     }
 
-    private fun validatePasswordUseCase(): ValidatePasswordUseCase {
-        val secRepo = SecuritySettingsRepositoryMock().apply {
-            resultProvider = { AppResult.Success(securitySettingsMock()) }
-            passwordPolicyResultProvider = { resultProvider() }
-        }
-        return ValidatePasswordUseCase(secRepo, PasswordPolicyValidatorImpl())
-    }
+    private class ResetEmailPasswordComponentTestContext(
+        val lifecycle: LifecycleRegistry,
+        val sendResetPasswordConfirmationToEmailUseCase: SendResetPasswordConfirmationToEmailUseCaseMock,
+        val resetEmailPasswordUseCase: ResetEmailPasswordUseCaseMock,
+        val validatePasswordUseCase: ValidatePasswordUseCaseMock
+    ) {
+        lateinit var component: ResetEmailPasswordComponentImpl
+        var onBackCalls: Int = 0
+        var onFinishedCalls: Int = 0
 
-    private class NavigationCounters(var finished: Int = 0, var back: Int = 0)
-    private class Harness(val lifecycle: LifecycleRegistry, val component: ResetEmailPasswordComponentImpl, val counters: NavigationCounters) {
         fun destroy() = lifecycle.destroy()
     }
 

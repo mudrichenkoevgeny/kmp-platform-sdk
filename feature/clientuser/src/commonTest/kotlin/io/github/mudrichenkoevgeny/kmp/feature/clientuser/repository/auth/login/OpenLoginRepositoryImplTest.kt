@@ -1,22 +1,18 @@
 package io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.login
 
-import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepositoryImpl
-import io.github.mudrichenkoevgeny.kmp.core.common.testsupport.MutableEpochTestClock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.confirmation.ConfirmationRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.ConfirmationType
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.network.model.otpconfirmation.otpConfirmationPayloadMock
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.login.OpenLoginApi
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.network.api.auth.login.OpenLoginApiMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.data.authDataPayloadMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.mapper.otpconfirmation.toOtpConfirmation
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.otpconfirmation.OtpConfirmationPayload
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.verifytotp.VerifyTotpPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.data.AuthDataPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByExternalAuthProviderRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByPhoneRequest
@@ -24,7 +20,6 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertIs
 
 @InternalApi
@@ -33,34 +28,34 @@ class OpenLoginRepositoryImplTest {
     @Test
     fun loginByEmail_forwardsRequest_andMapsAuthData() = runTest {
         val wire = authDataPayloadMock()
-        val api = FakeLoginApi().apply { emailResult = AppResult.Success(wire) }
-        val repo = OpenLoginRepositoryImpl(api, confirmationRepo())
+        val api = OpenLoginApiMock().apply { loginByEmailResult = AppResult.Success(wire) }
+        val repo = OpenLoginRepositoryImpl(api, ConfirmationRepositoryMock())
 
         val loginResult = repo.loginByEmail(LOGIN_EMAIL, LOGIN_PASSWORD)
 
         val success = assertIs<AppResult.Success<AuthData>>(loginResult)
         assertEquals(wire.toAuthData(), success.data)
-        assertEquals(LoginByEmailRequest(LOGIN_EMAIL, LOGIN_PASSWORD), api.lastEmail)
+        assertEquals(LoginByEmailRequest(LOGIN_EMAIL, LOGIN_PASSWORD), api.lastLoginByEmailRequest)
     }
 
     @Test
     fun loginByPhone_forwardsRequest_andMapsAuthData() = runTest {
         val wire = authDataPayloadMock()
-        val api = FakeLoginApi().apply { phoneResult = AppResult.Success(wire) }
-        val repo = OpenLoginRepositoryImpl(api, confirmationRepo())
+        val api = OpenLoginApiMock().apply { loginByPhoneResult = AppResult.Success(wire) }
+        val repo = OpenLoginRepositoryImpl(api, ConfirmationRepositoryMock())
 
         val loginResult = repo.loginByPhone(LOGIN_PHONE, LOGIN_PHONE_CODE)
 
         val success = assertIs<AppResult.Success<AuthData>>(loginResult)
         assertEquals(wire.toAuthData(), success.data)
-        assertEquals(LoginByPhoneRequest(LOGIN_PHONE, LOGIN_PHONE_CODE), api.lastPhone)
+        assertEquals(LoginByPhoneRequest(LOGIN_PHONE, LOGIN_PHONE_CODE), api.lastLoginByPhoneRequest)
     }
 
     @Test
     fun loginByExternalAuthProvider_forwardsSerialName_andMapsAuthData() = runTest {
         val wire = authDataPayloadMock()
-        val api = FakeLoginApi().apply { externalResult = AppResult.Success(wire) }
-        val repo = OpenLoginRepositoryImpl(api, confirmationRepo())
+        val api = OpenLoginApiMock().apply { loginByExternalAuthProviderResult = AppResult.Success(wire) }
+        val repo = OpenLoginRepositoryImpl(api, ConfirmationRepositoryMock())
 
         val loginResult = repo.loginByExternalAuthProvider(UserAuthProvider.GOOGLE, EXTERNAL_ID_TOKEN)
 
@@ -68,100 +63,44 @@ class OpenLoginRepositoryImplTest {
         assertEquals(wire.toAuthData(), success.data)
         assertEquals(
             LoginByExternalAuthProviderRequest(UserAuthProvider.GOOGLE.serialName, EXTERNAL_ID_TOKEN),
-            api.lastExternal
+            api.lastLoginByExternalAuthProviderRequest
         )
     }
 
     @Test
     fun sendLoginConfirmationToPhone_usesLoginPhoneTimer_andMapsResponse() = runTest {
         val wire = otpConfirmationPayloadMock(retryAfterSeconds = CONFIRMATION_RETRY_AFTER_SECONDS)
-        val api = FakeLoginApi().apply { phoneSendResult = AppResult.Success(wire) }
-        val repo = OpenLoginRepositoryImpl(api, confirmationRepo())
+        val api = OpenLoginApiMock().apply { sendLoginConfirmationToPhoneResult = AppResult.Success(wire) }
+        val confirmationMock = ConfirmationRepositoryMock()
+        val repo = OpenLoginRepositoryImpl(api, confirmationMock)
 
         val first = repo.sendLoginConfirmationToPhone(PHONE)
 
         assertIs<AppResult.Success<OtpConfirmation>>(first)
         assertEquals(wire.toOtpConfirmation(), first.data)
-        assertEquals(SendConfirmationToPhoneRequest(PHONE), api.lastPhoneSend)
+        assertEquals(SendConfirmationToPhoneRequest(PHONE), api.lastSendLoginConfirmationToPhoneRequest)
+        assertEquals(ConfirmationType.LOGIN_PHONE, confirmationMock.lastType)
+        assertEquals(PHONE, confirmationMock.lastIdentifier)
 
-        var apiCalledAgain = false
-        api.phoneSendHook = {
-            apiCalledAgain = true
-            AppResult.Success(otpConfirmationPayloadMock(ZERO_RETRY_AFTER_SECONDS))
-        }
-
+        val expectedError = UserError.TooManyConfirmationRequests(CONFIRMATION_RETRY_AFTER_SECONDS)
+        confirmationMock.executeWithTimerResult = AppResult.Error(expectedError)
+        
         val blocked = repo.sendLoginConfirmationToPhone(PHONE)
         assertIs<AppResult.Error>(blocked)
-        assertIs<UserError.TooManyConfirmationRequests>(blocked.error)
-        assertFalse(apiCalledAgain)
+        assertEquals(expectedError, blocked.error)
     }
 
     @Test
     fun getRemainingLoginConfirmationDelayInSeconds_delegatesWithLoginPhoneType() {
-        val clock = MutableEpochTestClock(BASE_MS)
-        val confirmation = ConfirmationRepositoryImpl(clock)
-        val repo = OpenLoginRepositoryImpl(FakeLoginApi(), confirmation)
+        val confirmationMock = ConfirmationRepositoryMock().apply { delayReturn = 42 }
+        val repo = OpenLoginRepositoryImpl(OpenLoginApiMock(), confirmationMock)
 
-        assertEquals(0, repo.getRemainingLoginConfirmationDelayInSeconds(PHONE))
-    }
-
-    private fun confirmationRepo() = ConfirmationRepositoryImpl(MutableEpochTestClock(BASE_MS))
-
-    private class FakeLoginApi : OpenLoginApi {
-        var emailResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
-        var phoneResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
-        var externalResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
-        var loginByTotpResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
-        var phoneSendResult: AppResult<OtpConfirmationPayload> = AppResult.Error(CommonError.Unknown(isRetryable = NOT_RETRYABLE))
-        var phoneSendHook: (suspend () -> AppResult<OtpConfirmationPayload>)? = null
-
-        var lastEmail: LoginByEmailRequest? = null
-        var lastPhone: LoginByPhoneRequest? = null
-        var lastExternal: LoginByExternalAuthProviderRequest? = null
-        var lastVerifyTotpPayload: VerifyTotpPayload? = null
-        var lastPhoneSend: SendConfirmationToPhoneRequest? = null
-
-        override suspend fun loginByEmail(request: LoginByEmailRequest): AppResult<AuthDataPayload> {
-            lastEmail = request
-            return emailResult
-        }
-
-        override suspend fun loginByPhone(request: LoginByPhoneRequest): AppResult<AuthDataPayload> {
-            lastPhone = request
-            return phoneResult
-        }
-
-        override suspend fun loginByExternalAuthProvider(
-            request: LoginByExternalAuthProviderRequest
-        ): AppResult<AuthDataPayload> {
-            lastExternal = request
-            return externalResult
-        }
-
-        override suspend fun loginByTotp(
-            request: VerifyTotpPayload
-        ): AppResult<AuthDataPayload> {
-            lastVerifyTotpPayload = request
-            return loginByTotpResult
-        }
-
-        override suspend fun loginByTotpRecoveryCode(
-            request: VerifyTotpPayload
-        ): AppResult<AuthDataPayload> {
-            lastVerifyTotpPayload = request
-            return loginByTotpResult
-        }
-
-        override suspend fun sendLoginConfirmationToPhone(
-            request: SendConfirmationToPhoneRequest
-        ): AppResult<OtpConfirmationPayload> {
-            lastPhoneSend = request
-            return phoneSendHook?.invoke() ?: phoneSendResult
-        }
+        assertEquals(42, repo.getRemainingLoginConfirmationDelayInSeconds(PHONE))
+        assertEquals(ConfirmationType.LOGIN_PHONE, confirmationMock.lastType)
+        assertEquals(PHONE, confirmationMock.lastIdentifier)
     }
 
     private companion object {
-        private const val BASE_MS = 1_000_000L
         private const val PHONE = "+15550001111"
         private const val LOGIN_EMAIL = "u@e.com"
         private const val LOGIN_PASSWORD = "secret"
@@ -170,6 +109,5 @@ class OpenLoginRepositoryImplTest {
         private const val EXTERNAL_ID_TOKEN = "id-token"
         private const val CONFIRMATION_RETRY_AFTER_SECONDS = 5
         private const val ZERO_RETRY_AFTER_SECONDS = 0
-        private const val NOT_RETRYABLE = false
     }
 }

@@ -54,7 +54,7 @@ class UserRepositoryImplTest {
     @Test
     fun `refreshCurrentUser fetches from api and updates storage`() = runTest {
         val wire = userDetailsPayloadMock()
-        userApi.userResult = AppResult.Success(wire)
+        userApi.getUserResult = AppResult.Success(wire)
         val repo = createRepository(this)
 
         val result = repo.refreshCurrentUser()
@@ -68,7 +68,7 @@ class UserRepositoryImplTest {
     @Test
     fun `scheduleUserDeletion fetches from api and updates storage`() = runTest {
         val wire = userDetailsPayloadMock()
-        userApi.scheduleDeletionResult = AppResult.Success(wire)
+        userApi.scheduleUserDeletionResult = AppResult.Success(wire)
         val repo = createRepository(this)
 
         val result = repo.scheduleUserDeletion()
