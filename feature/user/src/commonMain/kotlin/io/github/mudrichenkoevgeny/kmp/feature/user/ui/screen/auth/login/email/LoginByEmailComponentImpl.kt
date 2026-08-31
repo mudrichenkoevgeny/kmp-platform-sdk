@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
  * Default [LoginByEmailComponent]: validates credentials and performs email login through [LoginByEmailUseCase].
  *
  * @param componentContext Decompose [ComponentContext].
+ * @param appType Defines the application context (Client/Management) to toggle features like registration.
  * @param loginByEmailUseCase performs sign-in with email and password.
  * @param validatePasswordUseCase enforces password rules before network calls.
  * @param onNavigateToRegistrationByEmail opens the registration screen on the parent stack.

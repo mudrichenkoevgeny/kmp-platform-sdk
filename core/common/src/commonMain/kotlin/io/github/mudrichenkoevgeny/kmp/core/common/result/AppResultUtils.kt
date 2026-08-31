@@ -7,6 +7,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
  * Executes [block] when this [AppResult] is [AppResult.Success].
  *
  * The receiver is returned to make the call chain convenient.
+ *
+ * @param block Function to execute with the successful data.
  */
 inline fun <T> AppResult<T>.onSuccess(block: (T) -> Unit): AppResult<T> {
     if (this is AppResult.Success) block(data)
@@ -17,6 +19,8 @@ inline fun <T> AppResult<T>.onSuccess(block: (T) -> Unit): AppResult<T> {
  * Executes [block] when this [AppResult] is [AppResult.Error].
  *
  * The receiver is returned to make the call chain convenient.
+ *
+ * @param block Function to execute with the error details.
  */
 inline fun <T> AppResult<T>.onError(block: (AppError) -> Unit): AppResult<T> {
     if (this is AppResult.Error) block(error)
@@ -25,6 +29,8 @@ inline fun <T> AppResult<T>.onError(block: (AppError) -> Unit): AppResult<T> {
 
 /**
  * Transforms a successful value into another [AppResult].
+ *
+ * @param transform Function to apply to the successful data.
  */
 inline fun <T, R> AppResult<T>.flatMap(transform: (T) -> AppResult<R>): AppResult<R> {
     return when (this) {
@@ -37,6 +43,8 @@ inline fun <T, R> AppResult<T>.flatMap(transform: (T) -> AppResult<R>): AppResul
  * Maps a successful value into a different type.
  *
  * Exceptions thrown from [transform] are mapped into [CommonError.ContractViolation].
+ *
+ * @param transform Function to apply to the successful data.
  */
 inline fun <T, R> AppResult<T>.mapSuccess(transform: (T) -> R): AppResult<R> {
     return when (this) {
@@ -53,6 +61,8 @@ inline fun <T, R> AppResult<T>.mapSuccess(transform: (T) -> R): AppResult<R> {
 
 /**
  * Executes [transform] only for successful values, while propagating errors unchanged.
+ *
+ * @param transform Function to apply to the successful data.
  */
 inline fun <T, R> AppResult<T>.flatMapSuccess(transform: (T) -> AppResult<R>): AppResult<R> {
     return when (this) {

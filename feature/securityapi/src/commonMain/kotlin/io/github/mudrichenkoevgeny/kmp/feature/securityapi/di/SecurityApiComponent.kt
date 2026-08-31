@@ -4,13 +4,13 @@ import io.github.mudrichenkoevgeny.kmp.core.security.network.securitysettings.Se
 import io.ktor.client.HttpClient
 
 /**
- * Root wiring component for `core/security`.
+ * Root wiring component for the `feature:securityapi` module (networking implementation for `core:security`).
  *
- * Assembles network, repository and use cases. Exposes:
+ * Assembles the network layer and exposes:
  * - [SecuritySettingsApi] (`securitySettingsApi`) for host registration
  *
  * Constructor dependencies:
- * - [HttpClient]: shared Ktor client (typically from `core/common`) for REST calls.
+ * - [HttpClient]: shared Ktor client (typically from `core:common`) for REST calls.
  */
 class SecurityApiComponent(
     httpClient: HttpClient
@@ -20,5 +20,9 @@ class SecurityApiComponent(
             httpClient
         )
     }
+
+    /**
+     * Ktor-backed implementation of [SecuritySettingsApi].
+     */
     val securitySettingsApi get() = networkModule.securitySettingsApi
 }

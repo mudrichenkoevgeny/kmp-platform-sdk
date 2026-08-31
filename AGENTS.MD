@@ -24,7 +24,9 @@ This document is the entry point for architectural and coding standards. These r
 
 - **`feature/settingsapi`:** Ktor-based networking implementation for fetching global configurations.
 - **`feature/securityapi`:** Ktor implementation for security policies and MFA requirement sync.
-- **`feature/user`:** Identity & Auth solution. Includes multi-method auth (Email, Phone, Google), session management, and shared Decompose navigation flows with Compose Multiplatform UI.
+- **`feature/user`:** Base Identity & Auth logic. Includes core models, use cases and encrypted storage for sessions.
+- **`feature/clientuser`:** Identity solution for standard user applications. Includes multi-method auth (Email, Phone, Google), and shared Decompose navigation flows with Compose Multiplatform UI.
+- **`feature/managementuser`:** Administrative identity solution for internal staff, providing resource oversight and session management.
 
 ### Distribution (`bom`)
 - **`bom`:** Bill of Materials (Gradle platform) to ensure version alignment across all SDK modules.

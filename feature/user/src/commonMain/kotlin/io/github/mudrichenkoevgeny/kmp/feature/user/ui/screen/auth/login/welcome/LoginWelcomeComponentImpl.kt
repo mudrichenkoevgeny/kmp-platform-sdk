@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
  * Default [LoginWelcomeComponent]: loads auth providers and legal URLs on init, routes provider taps, runs Google login.
  *
  * @param componentContext Decompose [ComponentContext].
+ * @param appType Operational context (Client or Management).
  * @param externalLauncher opens privacy/terms URLs in the system browser or equivalent.
  * @param getGlobalSettingsUseCase loads legal URLs and related settings.
  * @param getAvailableUserAuthProvidersUseCase loads which [UserAuthProvider] values are enabled.

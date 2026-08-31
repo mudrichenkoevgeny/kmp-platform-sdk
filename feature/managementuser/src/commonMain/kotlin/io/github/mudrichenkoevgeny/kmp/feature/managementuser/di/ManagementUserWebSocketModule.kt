@@ -11,6 +11,14 @@ import kotlinx.coroutines.CoroutineScope
 /**
  * Lazily constructs the user WebSocket message handler from a shared [HttpClient].
  */
+/**
+ * Lazily constructs the user WebSocket message handler from a shared [HttpClient].
+ *
+ * @param userStorage User snapshot cache.
+ * @param authStorage Token storage.
+ * @param refreshTokenUseCase Use case for auto-reauth.
+ * @param scope Coroutine scope for push updates.
+ */
 class ManagementUserWebSocketModule(
     private val userStorage: UserStorage,
     private val authStorage: AuthStorage,

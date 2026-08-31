@@ -99,4 +99,36 @@ class SelfManagementSessionRepositoryImplTest {
 
         assertIs<AppResult.Success<Unit>>(result)
     }
+
+    @Test
+    fun `getSession fetches from network and updates cache`() = runTest {
+        val payload = userSessionPayloadMock()
+        api.getSessionResult = AppResult.Success(payload)
+        val sessionId = UserSessionId(Uuid.random())
+
+        val result = repo.getSession(sessionId)
+
+        val success = assertIs<AppResult.Success<UserSession>>(result)
+        assertEquals(payload.toUserSession(), success.data)
+
+        val cached = repo.getSession(sessionId)
+        assertEquals(success.data, (cached as AppResult.Success).data)
+    }
+
+    @Test
+    fun `deleteAllOtherSessions removes IDs from storage`() = runTest {
+        val id1 = UserSessionId(Uuid.random())
+        val deletedIds = listOf(id1.value.toHexDashString())
+        api.deleteAllOtherSessionsResult = AppResult.Success(
+            io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.DeletedSessionsPayload(deletedIds)
+        )
+        
+        storage.addUserSession(userSessionPayloadMock().toUserSession().copy(id = id1))
+        assertEquals(1, storage.getUserSessionsList().items.size)
+
+        val result = repo.deleteAllOtherSessions()
+
+        assertIs<AppResult.Success<Unit>>(result)
+        assertEquals(0, storage.getUserSessionsList().items.size)
+    }
 }

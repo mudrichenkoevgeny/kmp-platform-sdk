@@ -7,6 +7,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.mapper.global
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.mapper.globalsettings.toGlobalSettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.model.globalsettings.GlobalSettingsPayload
 
+/**
+ * [GlobalSettingsStorage] implementation that uses [EncryptedSettings] for persistence.
+ *
+ * Data is serialized using [FoundationJson] before being stored.
+ *
+ * @param encryptedSettings Key-value store used for the `global_settings` entry.
+ */
 class EncryptedGlobalSettingsStorage(
     private val encryptedSettings: EncryptedSettings
 ) : GlobalSettingsStorage {

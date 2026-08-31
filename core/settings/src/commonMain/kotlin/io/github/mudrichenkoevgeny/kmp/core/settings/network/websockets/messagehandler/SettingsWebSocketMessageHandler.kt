@@ -21,6 +21,9 @@ import kotlinx.serialization.json.decodeFromJsonElement
  * Returns [WebSocketMessageHandlerResult.NotHandled] when the frame type is not recognized. For
  * `GLOBAL_SETTINGS_UPDATED`, returns [WebSocketMessageHandlerResult.Handled]; persisting parsed data
  * is handled by the settings repository that subscribes to [WebSocketService] events.
+ *
+ * @param globalSettingsRepository Repository for updating the global settings state.
+ * @param scope Coroutine scope for launching background update tasks.
  */
 class SettingsWebSocketMessageHandler(
     private val globalSettingsRepository: GlobalSettingsRepository,

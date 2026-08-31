@@ -23,7 +23,7 @@ Construct the `SettingsApiComponent` by providing a shared `HttpClient` (usually
 
 ```kotlin
 val settingsApiComponent = SettingsApiComponent(
-httpClient = commonComponent.httpClient
+    httpClient = commonComponent.httpClient
 )
 
 val globalSettingsApi = settingsApiComponent.globalSettingsApi

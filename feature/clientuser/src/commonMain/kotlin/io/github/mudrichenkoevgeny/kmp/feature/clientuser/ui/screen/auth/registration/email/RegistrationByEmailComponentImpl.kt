@@ -7,6 +7,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCorou
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
+import io.github.mudrichenkoevgeny.kmp.core.common.time.resendCountdown
 import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.SecurityErrorCodes
 import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ValidatePasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
@@ -15,7 +16,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.registration.Re
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.registration.SendRegistrationConfirmationToEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -172,12 +172,10 @@ class RegistrationByEmailComponentImpl(
         if (seconds <= 0) return
 
         timerJob = scope.launch {
-            var left = seconds
-            while (left > 0) {
-                delay(1000)
-                left--
-                updateTimerState(left)
-            }
+            resendCountdown(
+                totalSeconds = seconds,
+                onTick = ::updateTimerState
+            )
         }
     }
 

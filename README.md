@@ -8,12 +8,14 @@ A modular **Kotlin Multiplatform (KMP)** client SDK for Android and Web (Wasm). 
 
 | Module | Purpose |
 | :--- | :--- |
-| **core/common** | **Foundation:** Ktor bootstrap, WebSocket lifecycle, `EncryptedSettings` abstraction, platform metadata, and Chain of Responsibility error parsing. |
+| **core/common** | **Foundation:** Ktor bootstrap, WebSocket lifecycle, `EncryptedSettings` abstraction, platform metadata, and error parsing. |
 | **core/settings** | **Global Settings:** Logic for application configuration, encrypted caching, and reactive state management. |
 | **core/security** | **Security Domain:** Password policy validation, MFA state management, and localized security errors. |
 | **feature/settingsapi** | **Settings Network:** Ktor implementation for fetching global application configurations. |
 | **feature/securityapi** | **Security Network:** Ktor implementation for fetching security policies and MFA requirements. |
-| **feature/user** | **Identity & Auth:** Identity solution with multi-method auth (Email, Phone, Google), session management, and Decompose UI flows. |
+| **feature/user** | **Base Identity:** Foundational models, use cases, and storage for user identity and authentication. |
+| **feature/clientuser** | **Client Identity:** Identity solution for standard user applications, including UI and social login. |
+| **feature/managementuser** | **Management Identity:** Administrative identity solution for internal staff and resource oversight. |
 | **bom** | **Bill of Materials:** Gradle platform to ensure version alignment across all SDK modules. |
 
 ## Installation
@@ -26,7 +28,7 @@ kotlin {
         commonMain.dependencies {
             implementation(platform("io.github.mudrichenkoevgeny:kmp-platform-sdk-bom:0.0.1"))
             implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-core-common")
-            implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-feature-user")
+            implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-feature-clientuser")
             // Add other core or feature modules as needed
         }
     }
@@ -73,11 +75,11 @@ val settingsComponent = SettingsComponent(
 )
 ```
 
-### 3. User Identity Setup
-Wire the `UserComponent` with its core collaborators and platform-specific authentication services.
+### 3. Client User Identity Setup
+Wire the `ClientUserComponent` with its core collaborators and platform-specific authentication services.
 
 ```kotlin
-val userComponent = UserComponent(
+val clientUserComponent = ClientUserComponent(
     commonComponent = commonComponent,
     settingsComponent = settingsComponent,
     securityComponent = securityComponent,
@@ -92,7 +94,7 @@ Register auth interceptors, domain error parsers, and WebSocket message handlers
 
 ```kotlin
 fun init() {
-commonComponent.httpClientConfigPlugins.add(userComponent.authHttpClientConfigPlugin)
+    commonComponent.httpClientConfigPlugins.add(clientUserComponent.authHttpClientConfigPlugin)
 
     commonComponent.init(
         appErrorParserSpecificParsers = listOf(
@@ -104,9 +106,9 @@ commonComponent.httpClientConfigPlugins.add(userComponent.authHttpClientConfigPl
     commonComponent.webSocketService.updateWebSocketMessageHandlers(
         listOf(
             commonComponent.commonWebSocketMessageHandler,
-            securityComponent.securityWebSocketMessageHandler,
             settingsComponent.settingsWebSocketMessageHandler,
-            userComponent.userWebSocketMessageHandler
+            securityComponent.securityWebSocketMessageHandler,
+            clientUserComponent.userWebSocketMessageHandler
         )
     )
 }
@@ -117,15 +119,14 @@ Inject the SDK graph into your Compose Multiplatform tree using `CompositionLoca
 
 ```kotlin
 @Composable
-@Composable
-fun App(appComponent: AppComponent) {
-    val isInitialized by appComponent.isInitialized.collectAsState()
+fun App(clientAppComponent: ClientAppComponent) {
+    val isInitialized by clientAppComponent.isInitialized.collectAsState()
 
     if (isInitialized) {
         CompositionLocalProvider(
-            LocalCommonComponent provides appComponent.commonComponent,
-            LocalErrorParser provides appComponent.commonComponent.appErrorParser,
-            LocalAppComponent provides appComponent
+            LocalCommonComponent provides clientAppComponent.commonComponent,
+            LocalErrorParser provides clientAppComponent.commonComponent.appErrorParser,
+            LocalClientAppComponent provides clientAppComponent
         ) {
             // Embed feature UI or launch LoginRootComponent navigation
         }
@@ -135,4 +136,4 @@ fun App(appComponent: AppComponent) {
 }
 ```
 
-For a complete wiring example, refer to the [sample](sample) application.
+For a complete wiring example, refer to the [sampleclient](sampleclient) or [samplemanagement](samplemanagement) applications.

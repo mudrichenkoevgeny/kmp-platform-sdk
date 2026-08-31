@@ -40,6 +40,7 @@ internal class ManagementUserUseCaseModule(
 ) {
 
     // Auth
+    /** Refreshes the management session. */
     val refreshTokenUseCase by lazy {
         RefreshTokenUseCase(
             refreshTokenRepository = managementUserRepositoryModule.selfManagementRefreshTokenRepository,
@@ -47,6 +48,7 @@ internal class ManagementUserUseCaseModule(
         )
     }
 
+    /** Signs in via email. */
     val loginByEmailUseCase by lazy {
         LoginByEmailUseCase(
             loginRepository = managementUserRepositoryModule.selfManagementLoginRepository,
@@ -55,30 +57,35 @@ internal class ManagementUserUseCaseModule(
         )
     }
 
+    /** Forces a network refresh of auth settings. */
     val refreshAuthSettingsUseCase by lazy {
         RefreshAuthSettingsUseCase(
             managementAuthSettingsRepository = managementUserRepositoryModule.managementAuthSettingsRepository
         )
     }
 
+    /** Resets the management password. */
     val resetEmailPasswordUseCase by lazy {
         ResetEmailPasswordUseCase(
             resetPasswordRepository = managementUserRepositoryModule.selfManagementResetPasswordRepository
         )
     }
 
+    /** Requests a reset code for email. */
     val sendResetPasswordConfirmationToEmailUseCase by lazy {
         SendResetPasswordConfirmationToEmailUseCase(
             resetPasswordRepository = managementUserRepositoryModule.selfManagementResetPasswordRepository
         )
     }
 
+    /** Returns available auth providers for management. */
     val getAvailableUserAuthProvidersUseCase by lazy {
         GetAvailableUserAuthProvidersUseCase(
             appType = AppType.MANAGEMENT
         )
     }
 
+    /** Refreshes configuration for the manager. */
     val refreshUserConfigurationUseCase by lazy {
         RefreshManagementUserConfigurationUseCase(
             userConfigurationApi = managementUserConfigurationApi,

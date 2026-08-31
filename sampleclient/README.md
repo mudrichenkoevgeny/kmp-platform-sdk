@@ -4,28 +4,28 @@ Reference host applications that demonstrate how to wire **kmp-platform-sdk** mo
 
 ## Modules
 
-*   **`sample:composeApp`** — Kotlin Multiplatform library with shared Compose UI, **[AppComponent]**, Decompose screens, and platform entry points (`wasmJs`, **`android`**).
+*   **`sample:composeApp`** — Kotlin Multiplatform library with shared Compose UI, **[ClientAppComponent]**, Decompose screens, and platform entry points (`wasmJs`, **`android`**).
 *   **`sample:androidApp`** — Android application that depends on `composeApp` and hosts **[MainActivity]**.
 
 ---
 
 ## What it provides
 
-- **Root wiring**: **[AppComponent]** acts as the central DI container. It aggregates:
+- **Root wiring**: **[ClientAppComponent]** acts as the central DI container. It aggregates:
     - **Core**: **[EncryptedSettingsComponent]** and **[CommonComponent]** (provides `HttpClient` and `WebSocketService`).
     - **Feature APIs**: `SettingsApiComponent` and `SecurityApiComponent` for network communication.
-    - **Domain Components**: **[SettingsComponent]**, **[SecurityComponent]**, and **[UserComponent]** for business logic and state.
-- **Initialization**: **[AppComponent.init]** orchestrates the startup sequence:
+    - **Domain Components**: **[SettingsComponent]**, **[SecurityComponent]**, and **[ClientUserComponent]** for business logic and state.
+- **Initialization**: **[ClientAppComponent.init]** orchestrates the startup sequence:
     - Attaches `authHttpClientConfigPlugin` to the Ktor pipeline.
     - Registers domain-specific error parsers (**SecurityErrorParser**, **UserErrorParser**).
     - Installs a combined list of **WebSocket handlers** from all modules.
 - **Startup data**: Parallel refresh of configuration via **[SyncDataUseCase]**. Android and Wasm targets trigger `refreshUserConfigurationUseCase()` and establish WebSocket connections after successful initialization.
 - **UI Architecture**: Uses **Decompose** for navigation and lifecycle management. **[RootContent]** provides:
     - A **splash screen** during the initialization phase.
-    - `CompositionLocalProvider` for shared components (`LocalCommonComponent`, `LocalErrorParser`, `LocalAppComponent`).
+    - `CompositionLocalProvider` for shared components (`LocalCommonComponent`, `LocalErrorParser`, `LocalClientAppComponent`).
     - Hosting for **[MainScreen]** or auth flows.
 - **Platform Hosts**:
-    - **Android**: **[AndroidApp]** initializes **[AppComponent]** with `BuildConfig.BASE_URL`, **[AndroidDeviceInfoProvider]**, and **[AndroidUserAuthServices]**.
+    - **Android**: **[AndroidApp]** initializes **[ClientAppComponent]** with `BuildConfig.BASE_URL`, **[AndroidDeviceInfoProvider]**, and **[AndroidUserAuthServices]**.
     - **Wasm**: **[main]** builds the component using **[WasmDeviceInfoProvider]** and **[WasmUserAuthServices]**, running the app in a browser viewport.
 
 ---
@@ -41,7 +41,7 @@ Reference host applications that demonstrate how to wire **kmp-platform-sdk** mo
 ## Usage
 
 1.  **Run**: Use the **`sample:androidApp`** run configuration for Android, or the `wasmJsBrowserRun` task for the Web version.
-2.  **Reference**: To integrate the SDK into your own project, mirror the pattern in **[AppComponent]**:
+2.  **Reference**: To integrate the SDK into your own project, mirror the pattern in **[ClientAppComponent]**:
     *   Initialize core components first.
     *   Link feature API components to the shared `HttpClient`.
     *   Pass shared storage and network objects to domain components.
@@ -58,18 +58,18 @@ Reference host applications that demonstrate how to wire **kmp-platform-sdk** mo
 | **core/security** | [README](../core/security/README.md) |
 | **feature/settingsapi** | [README](../feature/settingsapi/README.md) |
 | **feature/securityapi** | [README](../feature/securityapi/README.md) |
-| **feature/user** | [README](../feature/user/README.md) |
+| **feature/clientuser** | [README](../feature/clientuser/README.md) |
 
 ---
 
-[AppComponent]: composeApp/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/sampleclient/app/di/AppComponent.kt
+[ClientAppComponent]: composeApp/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/sampleclient/app/di/ClientAppComponent.kt
 [EncryptedSettingsComponent]: ../core/common/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/di/EncryptedSettingsComponent.kt
 [CommonComponent]: ../core/common/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/di/CommonComponent.kt
 [SettingsComponent]: ../core/settings/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/settings/di/SettingsComponent.kt
 [SecurityComponent]: ../core/security/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/security/di/SecurityComponent.kt
-[UserComponent]: ../feature/user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/di/UserComponent.kt
+[ClientUserComponent]: ../feature/clientuser/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/di/ClientUserComponent.kt
 
-[AppComponent.init]: composeApp/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/sampleclient/app/di/AppComponent.kt
+[ClientAppComponent.init]: composeApp/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/sampleclient/app/di/ClientAppComponent.kt
 [SyncDataUseCase]: composeApp/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/sampleclient/app/usecase/SyncDataUseCase.kt
 
 [RootContent]: composeApp/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/sampleclient/app/ui/root/RootContent.kt

@@ -44,10 +44,19 @@ class ManagementUserComponent(
         networkModule, authStorage, storageModule, commonComponent.webSocketService, componentScope
     )
 
+    /** Repository for self-management login (email/totp). */
     val loginRepository get() = repositoryModule.selfManagementLoginRepository
+
+    /** Repository for current management user profile. */
     val userRepository get() = repositoryModule.selfManagementUserRepository
+
+    /** Repository for password recovery in management context. */
     val passwordRepository get() = repositoryModule.selfManagementResetPasswordRepository
+
+    /** Repository for management-specific authentication settings. */
     val authSettingsRepository get() = repositoryModule.managementAuthSettingsRepository
+
+    /** Validator for password rules from core security. */
     val passwordPolicyValidator get() = securityComponent.passwordPolicyValidator
 
     private val useCaseModule = ManagementUserUseCaseModule(
@@ -61,12 +70,25 @@ class ManagementUserComponent(
         securitySettingsRepository = securityComponent.securitySettingsRepository
     )
 
+    /** Refreshes the management session. */
     val refreshTokenUseCase get() = useCaseModule.refreshTokenUseCase
+
+    /** Signs in as manager via email. */
     val loginByEmailUseCase get() = useCaseModule.loginByEmailUseCase
+
+    /** Forces refresh of auth settings. */
     val refreshAuthSettingsUseCase get() = useCaseModule.refreshAuthSettingsUseCase
+
+    /** Resets management password. */
     val resetEmailPasswordUseCase get() = useCaseModule.resetEmailPasswordUseCase
+
+    /** Requests password reset code. */
     val sendResetPasswordConfirmationToEmailUseCase get() = useCaseModule.sendResetPasswordConfirmationToEmailUseCase
+
+    /** Returns auth providers for management app. */
     val getAvailableUserAuthProvidersUseCase get() = useCaseModule.getAvailableUserAuthProvidersUseCase
+
+    /** Refreshes full configuration for the management user. */
     val refreshUserConfigurationUseCase get() = useCaseModule.refreshUserConfigurationUseCase
 
     private val userWebSocketModule = ManagementUserWebSocketModule(
@@ -75,8 +97,16 @@ class ManagementUserComponent(
         refreshTokenUseCase = refreshTokenUseCase,
         scope = componentScope
     )
+
+    /** WebSocket handler for management push events. */
     val userWebSocketMessageHandler get() = userWebSocketModule.userWebSocketMessageHandler
 
+    /**
+     * Creates the root Decompose component for management login flow.
+     *
+     * @param componentContext Decompose context.
+     * @param onFinished Invoked on successful login.
+     */
     fun createLoginRootDialogComponent(
         componentContext: ComponentContext,
         onFinished: () -> Unit

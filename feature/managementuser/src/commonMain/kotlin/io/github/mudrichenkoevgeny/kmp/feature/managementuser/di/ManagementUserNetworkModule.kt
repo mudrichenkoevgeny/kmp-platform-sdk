@@ -25,25 +25,38 @@ internal class ManagementUserNetworkModule(
     private val httpClient: HttpClient
 ) {
     // Auth
+    /** API for self-management login. */
     val loginApi by lazy { KtorSelfManagementLoginApi(httpClient) }
+    /** API for management session refresh. */
     val refreshTokenApi by lazy { KtorSelfManagementRefreshTokenApi(httpClient) }
+    /** API for management password reset. */
     val resetPasswordApi by lazy { KtorSelfManagementResetPasswordApi(httpClient) }
+    /** API for administrative auth settings. */
     val authSettingsApi by lazy { KtorManagementAuthSettingsApi(httpClient) }
 
     // Identifier
+    /** API for managing current manager identifiers. */
     val identifiersApi by lazy { KtorSelfManagementIdentifiersApi(httpClient) }
+    /** Administrative API for managing any user identifiers. */
     val managementIdentifiersApi by lazy { KtorManagementIdentifierApi(httpClient) }
 
     // Session
+    /** API for managing current manager sessions. */
     val sessionApi by lazy { KtorSelfManagementSessionApi(httpClient) }
+    /** Administrative API for managing any user sessions. */
     val managementSessionApi by lazy { KtorManagementSessionApi(httpClient) }
 
     // User
+    /** API for current manager profile. */
     val userApi by lazy { KtorSelfManagementUserApi(httpClient) }
+    /** Administrative API for managing any user profiles. */
     val managementUserApi by lazy { KtorManagementUserApi(httpClient) }
+    /** API for current manager security settings. */
     val userSecurityApi by lazy { KtorUserSelfManagementUserSecurityApi(httpClient) }
+    /** Administrative API for managing any user security. */
     val managementUserSecurityApi by lazy { KtorManagementUserSecurityApi(httpClient) }
 
     // Configuration
+    /** API for management user configuration. */
     val userConfigurationApi by lazy { KtorManagementUserConfigurationApi(httpClient) }
 }

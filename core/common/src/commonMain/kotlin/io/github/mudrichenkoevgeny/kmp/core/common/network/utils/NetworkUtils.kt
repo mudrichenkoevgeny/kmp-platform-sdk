@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.ResponseException
 import io.ktor.client.statement.HttpResponse
 import kotlinx.io.IOException
 import kotlinx.serialization.SerializationException
@@ -16,6 +17,7 @@ import kotlin.coroutines.cancellation.CancellationException
  *
  * Error mapping:
  * - [ApiException] -> server payload into [CommonError] via [toServerError]
+ * - [ResponseException] -> transport level HTTP error into `CommonError.Network`
  * - IO/network errors -> `CommonError.NoInternetConnection` or `CommonError.Network`
  * - JSON/serialization errors -> `CommonError.ContractViolation`
  *
@@ -29,6 +31,8 @@ suspend inline fun <reified T> HttpClient.callResult(
     AppResult.Success(response.body())
 } catch (e: ApiException) {
     AppResult.Error(e.apiErrorResponse.toServerError(isRetryable))
+} catch (e: ResponseException) {
+    AppResult.Error(CommonError.Network(throwable = e, isRetryable = isRetryable))
 } catch (e: IOException) {
     val error = if (isNoInternetException(e)) {
         CommonError.NoInternetConnection(e, isRetryable)

@@ -35,6 +35,10 @@ import org.jetbrains.compose.resources.stringResource
  * Fullscreen error screen with optional retry action.
  *
  * The displayed message comes from [error] via localization helpers.
+ *
+ * @param error Domain error to display.
+ * @param onRetry Callback for the retry button action.
+ * @param modifier Layout modifier.
  */
 @Composable
 fun FullscreenError(

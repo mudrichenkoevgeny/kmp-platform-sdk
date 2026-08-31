@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.feature.user.error.pasrer
+package io.github.mudrichenkoevgeny.kmp.feature.user.error.parser
 
 import androidx.compose.runtime.Composable
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
@@ -103,6 +103,15 @@ object UserErrorParser : AppErrorParser {
         }
     }
 
+    /**
+     * Resolves a localized limit error message that requires both a provider name and a limit value.
+     *
+     * @param args Error arguments.
+     * @param providerKey Key for the auth provider name (e.g. "GOOGLE").
+     * @param limitKey Key for the numeric limit value.
+     * @param withArgsRes Resource to use when both arguments are present.
+     * @param fallbackRes Resource to use when arguments are missing.
+     */
     @Composable
     private fun resolveLimit(
         args: Map<String, String>,

@@ -12,7 +12,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.di.ClientUserComponent
 import io.github.mudrichenkoevgeny.kmp.feature.securityapi.di.SecurityApiComponent
 import io.github.mudrichenkoevgeny.kmp.feature.settingsapi.di.SettingsApiComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
-import io.github.mudrichenkoevgeny.kmp.feature.user.error.pasrer.UserErrorParser
+import io.github.mudrichenkoevgeny.kmp.feature.user.error.parser.UserErrorParser
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.auth.UserAuthServicesMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.AuthHttpClientConfigPlugin
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
@@ -51,6 +51,10 @@ class ClientAppComponent(
 ) {
 
     private val _isInitialized = MutableStateFlow(false)
+
+    /**
+     * Emits `true` once [init] has been successfully completed.
+     */
     val isInitialized: StateFlow<Boolean> = _isInitialized.asStateFlow()
 
     @InternalApi
@@ -80,6 +84,9 @@ class ClientAppComponent(
     }
     private val encryptedSettings get() = encryptedSettingsComponent.encryptedSettings
 
+    /**
+     * Persistence for session tokens.
+     */
     val authStorage: AuthStorage by lazy {
         EncryptedAuthStorage(
             encryptedSettings = encryptedSettings,
@@ -99,6 +106,10 @@ class ClientAppComponent(
     }
 
     private var mockCommonComponent: CommonComponent? = null
+
+    /**
+     * Shared networking and base platform infrastructure.
+     */
     val commonComponent: CommonComponent by lazy {
         mockCommonComponent ?: CommonComponent(
             encryptedSettings = encryptedSettings,
@@ -116,9 +127,13 @@ class ClientAppComponent(
             httpClient = commonComponent.httpClient
         )
     }
+
+    /** REST API for global settings. */
     val globalSettingsApi = settingsApiComponent.globalSettingsApi
 
     private var mockSettingsComponent: SettingsComponent? = null
+
+    /** Domain logic for global app settings. */
     val settingsComponent: SettingsComponent by lazy {
         mockSettingsComponent ?: SettingsComponent(
             webSocketService = commonComponent.webSocketService,
@@ -133,9 +148,13 @@ class ClientAppComponent(
             httpClient = commonComponent.httpClient
         )
     }
+
+    /** REST API for security metadata. */
     val securitySettingsApi = securityApiComponent.securitySettingsApi
 
     private var mockSecurityComponent: SecurityComponent? = null
+
+    /** Domain logic for password policies and security states. */
     val securityComponent: SecurityComponent by lazy {
         mockSecurityComponent ?: SecurityComponent(
             webSocketService = commonComponent.webSocketService,
@@ -146,6 +165,8 @@ class ClientAppComponent(
     }
 
     private var mockClientUserComponent: ClientUserComponent? = null
+
+    /** Root component for client-user specific logic and UI. */
     val clientUserComponent: ClientUserComponent by lazy {
         mockClientUserComponent ?: ClientUserComponent(
             commonComponent = commonComponent,
@@ -156,6 +177,8 @@ class ClientAppComponent(
             parentScope = appScope
         )
     }
+
+    /** Atomic use case for refreshing full user state. */
     val refreshUserConfigurationUseCase get() = clientUserComponent.refreshUserConfigurationUseCase
 
     /**
@@ -169,6 +192,8 @@ class ClientAppComponent(
             refreshAuthSettingsUseCase = clientUserComponent.refreshAuthSettingsUseCase
         )
     }
+
+    /** Concurrent sync operation for all settings modules. */
     val syncDataUseCase get() = clientAppUseCaseModule.syncDataUseCase
 
     /**

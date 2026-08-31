@@ -31,30 +31,23 @@ Kotlin Multiplatform feature module for user identity, authentication flows, ses
 ### 5. Network & API Facades
 - **Ktor Implementation:** Feature-rich API layers including [KtorLoginApi], [KtorRegistrationApi], and [KtorSessionApi].
 - **Modular Networking:** Separate modules for configuration, identifiers, and user security to ensure clean separation of concerns.
-- **Error Handling:** Integrated [UserErrorParser] to map backend responses to domain-specific [UserError] models.
+- **[UserErrorParser]:** An [AppErrorParser] that handles user-specific codes, including session invalidation, account status, and identifier limits.
 
 ## Usage
 
 ### 1. Dependency & DI
-The module is designed as a standalone feature requiring core dependencies to be injected. Initialize the UserComponent by providing the necessary collaborators:
-
-```kotlin
-val userComponent = UserComponent(
-    commonComponent = commonComponent,
-    settingsComponent = settingsComponent,
-    securityComponent = securityComponent,
-    authStorage = encryptedAuthStorage,
-    authServices = platformAuthServices
-)
-```
+The module provides foundational building blocks (UseCases, Repositories, Storage) which are assembled into higher-level components depending on the application context:
+- `ClientUserComponent`: for standard user applications (see `:feature:clientuser`).
+- `ManagementUserComponent`: for administrative applications (see `:feature:managementuser`).
 
 ### 2. System Initialization
-To enable automatic token management, real-time state synchronization, and specialized error parsing, register the module components in your CommonComponent during application startup:
+To enable automatic token management, real-time state synchronization, and specialized error parsing, register the module's handlers and plugins in your `CommonComponent` during application startup.
 
+Example for a client application:
 ```kotlin
-fun init() {
+fun init(clientUserComponent: ClientUserComponent) {
     commonComponent.httpClientConfigPlugins.add(
-        userComponent.authHttpClientConfigPlugin
+        clientUserComponent.authHttpClientConfigPlugin
     )
 
     commonComponent.init(
@@ -62,7 +55,7 @@ fun init() {
     )
 
     commonComponent.webSocketService.updateWebSocketMessageHandlers(
-        listOf(userComponent.userWebSocketMessageHandler)
+        listOf(clientUserComponent.userWebSocketMessageHandler)
     )
 }
 ```
@@ -87,7 +80,7 @@ val loginRoot = LoginRootComponentImpl(
 | Package | Role |
 |:---|:---|
 | `...user.auth` | [UserAuthServices] and [GoogleAuthService] — platform actuals (Android/JS/iOS). |
-| `...user.di` | [UserComponent] and Dagger modules wiring Network, Repositories, and Storage. |
+| `...user.di` | Dagger modules or factories wiring Network, Repositories, and Storage. |
 | `...user.error` | [UserError], [UserErrorParser], and [ClientUserErrorCodes] for typed handling. |
 | `...user.model` | Domain entities: Session, Profile, and [ConfirmationKey] / [ConfirmationType]. |
 | `...user.network.api` | Ktor implementations for Auth (Login/Reg), Session, and User Security APIs. |
@@ -99,7 +92,7 @@ val loginRoot = LoginRootComponentImpl(
 | `...user.ui.screen` | Decompose components & UI for Login (Email/Phone/Google) and Registration. |
 | `...user.ui.component` | Reusable UI: [AuthProviderGrid], [AuthProviderButton], and [LegalFooter]. |
 | `...user.usecase` | Atomic logic: [LoginByEmailUseCase], [RefreshTokenUseCase], [ResetEmailPasswordUseCase]. |
-| `...user.mock` | Mocks for tests: [UserComponentMock], [UserAuthServicesMock], and mock repositories. |
+| `...user.mock` | Mocks for tests: [UserAuthServicesMock] and mock repositories. |
 | `...user.utils` | Internal helpers including [FieldValidator] for input logic. |
 
 ## Source set notes
@@ -115,10 +108,9 @@ Compose Multiplatform resources for this module are generated with `publicResCla
 
 ---
 
-[UserComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/di/UserComponent.kt
 [UserAuthServices]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/auth/UserAuthServices.kt
 [UserError]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/error/model/UserError.kt
-[UserErrorParser]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/error/pasrer/UserErrorParser.kt
+[UserErrorParser]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/error/parser/UserErrorParser.kt
 [AuthStorage]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/storage/auth/AuthStorage.kt
 [UserStorage]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/storage/user/UserStorage.kt
 [FieldValidator]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/utils/FieldValidator.kt

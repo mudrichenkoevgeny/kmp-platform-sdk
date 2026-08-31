@@ -7,13 +7,13 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.logger.log
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
+import io.github.mudrichenkoevgeny.kmp.core.common.time.resendCountdown
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByPhoneUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.SendLoginConfirmationToPhoneUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -62,15 +62,9 @@ class LoginByPhoneComponentImpl(
     }
 
     override fun onCodeChanged(code: String) {
-        // todo wait for api
         val current = _state.value as? LoginByPhoneScreenState.CodeInput ?: return
-
-        if (code.length <= 6) {
+        if (code.length <= current.codeLength) {
             _state.value = current.copy(code = code, actionError = null)
-        }
-
-        if (code.length == 6) {
-            onConfirmCodeClick()
         }
     }
 
@@ -138,12 +132,10 @@ class LoginByPhoneComponentImpl(
         if (seconds <= 0) return
 
         timerJob = scope.launch {
-            var left = seconds
-            while (left > 0) {
-                delay(1000)
-                left--
-                updateTimerState(left)
-            }
+            resendCountdown(
+                totalSeconds = seconds,
+                onTick = ::updateTimerState
+            )
         }
     }
 

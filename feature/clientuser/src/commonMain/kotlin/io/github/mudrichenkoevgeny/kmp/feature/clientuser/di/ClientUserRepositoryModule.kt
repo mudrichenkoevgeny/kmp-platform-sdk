@@ -44,23 +44,29 @@ internal class ClientUserRepositoryModule(
     repositoryScope: CoroutineScope
 ) {
     // Confirmation
+    /** Shared repository for managing confirmation code request intervals. */
     val confirmationRepository: ConfirmationRepository by lazy {
         ConfirmationRepositoryImpl(Clock.System)
     }
 
     // Auth
+    /** Repository for authentication flows. */
     val loginRepository: LoginRepository by lazy {
         OpenLoginRepositoryImpl(networkModule.loginApi, confirmationRepository)
     }
+    /** Repository for registration flows. */
     val registrationRepository: RegistrationRepository by lazy {
         OpenRegistrationRepositoryImpl(networkModule.registrationApi, confirmationRepository)
     }
+    /** Repository for token refresh logic. */
     val refreshTokenRepository: RefreshTokenRepository by lazy {
         OpenRefreshTokenRepositoryImpl(networkModule.refreshTokenApi)
     }
+    /** Repository for password recovery. */
     val resetPasswordRepository: ResetPasswordRepository by lazy {
         OpenResetPasswordRepositoryImpl(networkModule.resetPasswordApi, confirmationRepository)
     }
+    /** Repository for public authentication settings. */
     val openAuthSettingsRepository: OpenAuthSettingsRepository by lazy {
         OpenAuthSettingsRepositoryImpl(
             openAuthSettingsApi = networkModule.authSettingsApi,
@@ -71,6 +77,7 @@ internal class ClientUserRepositoryModule(
     }
 
     // Identifier
+    /** Repository for managing user identity records. */
     val identifierRepository: IdentifierRepository by lazy {
         OpenIdentifierRepositoryImpl(
             openIdentifiersApi = networkModule.identifiersApi,
@@ -80,6 +87,7 @@ internal class ClientUserRepositoryModule(
     }
 
     // Session
+    /** Repository for managing active user sessions. */
     val sessionRepository: SessionRepository by lazy {
         OpenSessionRepositoryImpl(
             sessionApi = networkModule.sessionApi,
@@ -88,6 +96,7 @@ internal class ClientUserRepositoryModule(
     }
 
     // User
+    /** Repository for user profile data. */
     val userRepository: UserRepository by lazy {
         OpenUserRepositoryImpl(
             userStorage = storageModule.userStorage,
@@ -98,6 +107,7 @@ internal class ClientUserRepositoryModule(
         )
     }
 
+    /** Repository for managing user security (TOTP, recovery codes). */
     val userSecurityRepository: UserSecurityRepository by lazy {
         OpenUserSecurityRepositoryImpl(
             userSecurityApi = networkModule.userSecurityApi,

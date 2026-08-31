@@ -21,7 +21,7 @@ The SDK follows a strict layering based on the **Decompose** component model to 
 
 - **Initialization Sequence:** The host app (or `sample`) is responsible for the manual wiring of the graph:
   1. Instantiate `CommonComponent` with platform-specific `baseUrl` and `platformContext`.
-  2. Initialize feature components (e.g., `UserComponent`) by passing the `CommonComponent` and parent `CoroutineScope`.
+  2. Initialize feature components (e.g., `ClientUserComponent`) by passing the `CommonComponent` and parent `CoroutineScope`.
   3. Call `commonComponent.init()` providing a list of feature-specific `AppErrorParser` implementations.
 - **WebSocket Handlers:** Feature modules must provide `WebSocketMessageHandler` implementations, which are registered in the `commonComponent.webSocketService` during the startup sequence.
 

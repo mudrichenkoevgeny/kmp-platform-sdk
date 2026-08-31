@@ -44,6 +44,7 @@ internal class ClientUserUseCaseModule(
 ) {
 
     // Auth
+    /** Refreshes current session tokens. */
     val refreshTokenUseCase by lazy {
         RefreshTokenUseCase(
             refreshTokenRepository = clientUserRepositoryModule.refreshTokenRepository,
@@ -51,6 +52,7 @@ internal class ClientUserUseCaseModule(
         )
     }
 
+    /** Signs in with email. */
     val loginByEmailUseCase by lazy {
         LoginByEmailUseCase(
             loginRepository = clientUserRepositoryModule.loginRepository,
@@ -59,6 +61,7 @@ internal class ClientUserUseCaseModule(
         )
     }
 
+    /** Signs in with phone OTP. */
     val loginByPhoneUseCase by lazy {
         LoginByPhoneUseCase(
             loginRepository = clientUserRepositoryModule.loginRepository,
@@ -67,12 +70,14 @@ internal class ClientUserUseCaseModule(
         )
     }
 
+    /** Requests a login OTP for a phone number. */
     val sendLoginConfirmationToPhoneUseCase by lazy {
         SendLoginConfirmationToPhoneUseCase(
             loginRepository = clientUserRepositoryModule.loginRepository
         )
     }
 
+    /** Signs in with Google credentials. */
     val loginByGoogleUseCase by lazy {
         LoginByGoogleUseCase(
             authService = authServices.googleAuth ?: DisabledGoogleAuthService(),
@@ -82,6 +87,7 @@ internal class ClientUserUseCaseModule(
         )
     }
 
+    /** Registers a new account with email. */
     val registrationByEmailUseCase by lazy {
         RegistrationByEmailUseCase(
             registrationRepository = clientUserRepositoryModule.registrationRepository,
@@ -90,18 +96,21 @@ internal class ClientUserUseCaseModule(
         )
     }
 
+    /** Requests a registration code for an email. */
     val sendRegistrationConfirmationToEmailUseCase by lazy {
         SendRegistrationConfirmationToEmailUseCase(
             registrationRepository = clientUserRepositoryModule.registrationRepository
         )
     }
 
+    /** Forces a refresh of allowed auth providers. */
     val refreshAuthSettingsUseCase by lazy {
         RefreshAuthSettingsUseCase(
             openAuthSettingsRepository = openAuthSettingsRepository
         )
     }
 
+    /** Returns auth providers allowed for this client app. */
     val getAvailableUserAuthProvidersUseCase by lazy {
         GetAvailableUserAuthProvidersUseCase(
             appType = AppType.CLIENT,
@@ -109,18 +118,21 @@ internal class ClientUserUseCaseModule(
         )
     }
 
+    /** Resets password using an email code. */
     val resetEmailPasswordUseCase by lazy {
         ResetEmailPasswordUseCase(
             resetPasswordRepository = clientUserRepositoryModule.resetPasswordRepository
         )
     }
 
+    /** Requests a password-reset code for an email. */
     val sendResetPasswordConfirmationToEmailUseCase by lazy {
         SendResetPasswordConfirmationToEmailUseCase(
             resetPasswordRepository = clientUserRepositoryModule.resetPasswordRepository
         )
     }
 
+    /** Full state refresh for the authenticated user. */
     val refreshUserConfigurationUseCase by lazy {
         RefreshClientUserConfigurationUseCase(
             userConfigurationApi = userConfigurationApi,

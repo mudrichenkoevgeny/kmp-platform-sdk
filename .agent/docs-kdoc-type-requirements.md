@@ -18,7 +18,7 @@ Every DI/Component class must have class-level KDoc describing:
 - **Dependencies:** What it requires via constructor (e.g., `platformContext`, `parentScope`).
 - **Provisions:** What it exposes to the parent or UI layer.
 - **Initialization:** Explicitly state if `init()` or other lifecycle methods must be called before accessing properties (e.g., "Must call `commonComponent.init()` to register error parsers").
-- **Aggregates:** Root components (like `UserComponent`) must list the sub-components they coordinate.
+- **Aggregates:** Root components (like `ClientUserComponent`) must list the sub-components they coordinate.
 
 ## 3. Implementation Classes
 - **Concrete Behavior:** Mandatory class-level KDoc explaining **how** it achieves the contract (e.g., "Uses Android DataStore for encrypted persistence", "Wraps Ktor's auth provider").

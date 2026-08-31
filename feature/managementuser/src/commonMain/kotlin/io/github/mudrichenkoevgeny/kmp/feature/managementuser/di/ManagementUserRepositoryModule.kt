@@ -50,23 +50,28 @@ internal class ManagementUserRepositoryModule(
     repositoryScope: CoroutineScope
 ) {
     // Confirmation
+    /** Throttling for management-specific confirmation codes. */
     val confirmationRepository: ConfirmationRepository by lazy {
         ConfirmationRepositoryImpl(Clock.System)
     }
 
     // Auth
+    /** Repository for self-management login. */
     val selfManagementLoginRepository: LoginRepository by lazy {
         SelfManagementLoginRepositoryImpl(networkModule.loginApi)
     }
+    /** Repository for management session refresh. */
     val selfManagementRefreshTokenRepository: RefreshTokenRepository by lazy {
         SelfManagementRefreshTokenRepositoryImpl(networkModule.refreshTokenApi)
     }
+    /** Repository for self-management password reset. */
     val selfManagementResetPasswordRepository: ResetPasswordRepository by lazy {
         SelfManagementResetPasswordRepositoryImpl(
             resetPasswordApi = networkModule.resetPasswordApi,
             confirmationRepository = confirmationRepository
         )
     }
+    /** Repository for administrative auth settings. */
     val managementAuthSettingsRepository: ManagementAuthSettingsRepository by lazy {
         ManagementAuthSettingsRepositoryImpl(
             managementAuthSettingsApi = networkModule.authSettingsApi,
@@ -77,11 +82,13 @@ internal class ManagementUserRepositoryModule(
     }
 
     // Identifier
+    /** Repository for managing current manager identifiers. */
     val selfManagementIdentifierRepository: IdentifierRepository by lazy {
         SelfManagementIdentifierRepositoryImpl(
             selfManagementIdentifiersApi = networkModule.identifiersApi
         )
     }
+    /** Administrative repository for any user identifiers. */
     val managementIdentifierRepository: ManagementIdentifierRepository by lazy {
         ManagementIdentifierRepositoryImpl(
             managementIdentifierApi = networkModule.managementIdentifiersApi
@@ -89,12 +96,14 @@ internal class ManagementUserRepositoryModule(
     }
 
     // Session
+    /** Repository for current manager sessions. */
     val selfManagementSessionRepository: SessionRepository by lazy {
         SelfManagementSessionRepositoryImpl(
             selfManagementSessionApi = networkModule.sessionApi,
             userStorage = storageModule.userStorage
         )
     }
+    /** Administrative repository for any user sessions. */
     val managementSessionRepository: ManagementSessionRepository by lazy {
         ManagementSessionRepositoryImpl(
             managementSessionApi = networkModule.managementSessionApi
@@ -102,6 +111,7 @@ internal class ManagementUserRepositoryModule(
     }
 
     // User
+    /** Repository for current manager profile. */
     val selfManagementUserRepository: UserRepository by lazy {
         SelfManagementUserRepositoryImpl(
             userStorage = storageModule.userStorage,
@@ -111,17 +121,20 @@ internal class ManagementUserRepositoryModule(
             repositoryScope = repositoryScope
         )
     }
+    /** Administrative repository for any user profile data. */
     val managementUserRepository: ManagementUserRepository by lazy {
         ManagementUserRepositoryImpl(
             managementUserApi = networkModule.managementUserApi
         )
     }
+    /** Repository for current manager security (TOTP). */
     val selfManagementUserSecurityRepository: UserSecurityRepository by lazy {
         SelfManagementUserSecurityRepositoryImpl(
             userSecurityApi = networkModule.userSecurityApi,
             userStorage = storageModule.userStorage
         )
     }
+    /** Administrative repository for any user security management. */
     val managementUserSecurityRepository: ManagementUserSecurityRepository by lazy {
         ManagementUserSecurityRepositoryImpl(
             managementUserSecurityApi = networkModule.managementUserSecurityApi

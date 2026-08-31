@@ -18,6 +18,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
  * A fullscreen overlay with a loading spinner.
  *
  * This composable is intended for blocking operations (e.g. waiting for auth/network).
+ *
+ * @param modifier Layout modifier.
+ * @param backgroundColor Overlay color.
  */
 @Composable
 fun BoxScope.FullscreenOverlayLoading(

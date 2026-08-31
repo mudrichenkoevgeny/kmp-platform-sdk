@@ -20,6 +20,9 @@ import kotlinx.coroutines.delay
  * Fullscreen loading indicator.
  *
  * When [delayMillis] is greater than zero, the indicator is shown only after the delay.
+ *
+ * @param modifier Layout modifier.
+ * @param delayMillis Delay before the indicator becomes visible.
  */
 @Composable
 fun FullscreenLoading(
@@ -49,6 +52,12 @@ fun FullscreenLoading(
     }
 }
 
+/**
+ * Configuration defaults for the loading screen.
+ */
 object FullscreenLoadingConfig {
+    /**
+     * Default delay to prevent flickering for fast operations.
+     */
     const val DELAY_MILLIS = 250L
 }

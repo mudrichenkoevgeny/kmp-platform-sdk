@@ -21,6 +21,11 @@ import kotlinx.serialization.json.decodeFromJsonElement
  * account status, and session termination. Register alongside other handlers on the app `WebSocketService`.
  *
  * Auth settings updates (`AUTH_SETTINGS_UPDATED`) are handled directly by the corresponding repositories.
+ *
+ * @param userStorage Storage for updating the current user snapshot.
+ * @param authStorage Storage for clearing tokens on session deletion.
+ * @param refreshTokenUseCase Use case to trigger session refresh on unauthorized frames.
+ * @param scope Coroutine scope for launching background update/clear tasks.
  */
 class UserWebSocketMessageHandler(
     private val userStorage: UserStorage,

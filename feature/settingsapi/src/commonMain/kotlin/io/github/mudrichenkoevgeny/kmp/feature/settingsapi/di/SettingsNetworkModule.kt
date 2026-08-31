@@ -1,16 +1,16 @@
 package io.github.mudrichenkoevgeny.kmp.feature.settingsapi.di
 
-import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandler
 import io.github.mudrichenkoevgeny.kmp.core.settings.network.globalsettings.GlobalSettingsApi
 import io.github.mudrichenkoevgeny.kmp.feature.settingsapi.network.globalsettings.KtorGlobalSettingsApi
-import io.github.mudrichenkoevgeny.kmp.core.settings.network.websockets.messagehandler.SettingsWebSocketMessageHandler
 import io.ktor.client.HttpClient
 
 /**
- * Internal network wiring for `core/settings`.
+ * Internal network wiring for the `feature:settingsapi` module.
  *
- * Provides the Ktor-backed [GlobalSettingsApi] and the [SettingsWebSocketMessageHandler] for host
- * registration alongside other [WebSocketMessageHandler] instances.
+ * Provides the Ktor-backed [GlobalSettingsApi] for host
+ * registration alongside other network services.
+ *
+ * @param httpClient Shared Ktor client for REST operations.
  */
 internal class SettingsNetworkModule(
     httpClient: HttpClient

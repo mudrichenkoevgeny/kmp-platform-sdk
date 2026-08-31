@@ -36,10 +36,10 @@ Kotlin Multiplatform feature module for user identity, authentication flows, ses
 ## Usage
 
 ### 1. Dependency & DI
-The module is designed as a standalone feature requiring core dependencies to be injected. Initialize the UserComponent by providing the necessary collaborators:
+The module is designed as a standalone feature requiring core dependencies to be injected. Initialize the **[ClientUserComponent]** by providing the necessary collaborators:
 
 ```kotlin
-val userComponent = UserComponent(
+val clientUserComponent = ClientUserComponent(
     commonComponent = commonComponent,
     settingsComponent = settingsComponent,
     securityComponent = securityComponent,
@@ -49,12 +49,12 @@ val userComponent = UserComponent(
 ```
 
 ### 2. System Initialization
-To enable automatic token management, real-time state synchronization, and specialized error parsing, register the module components in your CommonComponent during application startup:
+To enable automatic token management, real-time state synchronization, and specialized error parsing, register the module components in your `CommonComponent` during application startup:
 
 ```kotlin
 fun init() {
     commonComponent.httpClientConfigPlugins.add(
-        userComponent.authHttpClientConfigPlugin
+        clientUserComponent.authHttpClientConfigPlugin
     )
 
     commonComponent.init(
@@ -62,20 +62,17 @@ fun init() {
     )
 
     commonComponent.webSocketService.updateWebSocketMessageHandlers(
-        listOf(userComponent.userWebSocketMessageHandler)
+        listOf(clientUserComponent.userWebSocketMessageHandler)
     )
 }
 ```
 
 ### 3. UI Integration (Decompose)
-To launch the authentication flow (Welcome -> Login -> OTP), use the LoginRootComponent factory:
+To launch the authentication flow (Welcome -> Login -> OTP), use the **[ClientLoginRootComponent]** factory:
 
 ```kotlin
-val loginRoot = LoginRootComponentImpl(
+val loginRoot = clientUserComponent.createLoginRootDialogComponent(
     componentContext = childContext("login_root"),
-    settingsComponent = settingsComponent,
-    securityComponent = securityComponent,
-    userComponent = userComponent,
     onFinished = { }
 )
 ```
@@ -87,7 +84,7 @@ val loginRoot = LoginRootComponentImpl(
 | Package | Role |
 |:---|:---|
 | `...user.auth` | [UserAuthServices] and [GoogleAuthService] — platform actuals (Android/JS/iOS). |
-| `...user.di` | [UserComponent] and Dagger modules wiring Network, Repositories, and Storage. |
+| `...user.di` | [ClientUserComponent] and modules wiring Network, Repositories, and Storage. |
 | `...user.error` | [UserError], [UserErrorParser], and [ClientUserErrorCodes] for typed handling. |
 | `...user.model` | Domain entities: Session, Profile, and [ConfirmationKey] / [ConfirmationType]. |
 | `...user.network.api` | Ktor implementations for Auth (Login/Reg), Session, and User Security APIs. |
@@ -115,14 +112,14 @@ Compose Multiplatform resources for this module are generated with `publicResCla
 
 ---
 
-[UserComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/di/ClientUserComponent.kt
-[UserAuthServices]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/auth/UserAuthServices.kt
-[UserError]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/error/model/UserError.kt
-[UserErrorParser]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/error/pasrer/UserErrorParser.kt
-[AuthStorage]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/storage/auth/AuthStorage.kt
-[UserStorage]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/storage/user/UserStorage.kt
-[FieldValidator]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/utils/FieldValidator.kt
-[AuthHttpClientConfigPlugin]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/network/httpclient/AuthHttpClientConfigPlugin.kt
-[UserWebSocketMessageHandler]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/network/websocket/messagehandler/UserWebSocketMessageHandler.kt
-[AuthProviderGrid]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/ui/component/auth/AuthProviderGrid.kt
-[LegalFooter]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/ui/component/legal/LegalFooter.kt
+[ClientUserComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/di/ClientUserComponent.kt
+[UserAuthServices]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/auth/UserAuthServices.kt
+[UserError]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/error/model/UserError.kt
+[UserErrorParser]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/error/parser/UserErrorParser.kt
+[AuthStorage]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/storage/auth/AuthStorage.kt
+[UserStorage]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/storage/user/UserStorage.kt
+[FieldValidator]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/utils/FieldValidator.kt
+[AuthHttpClientConfigPlugin]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/network/httpclient/AuthHttpClientConfigPlugin.kt
+[UserWebSocketMessageHandler]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/network/websocket/messagehandler/UserWebSocketMessageHandler.kt
+[AuthProviderGrid]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/component/auth/AuthProviderGrid.kt
+[LegalFooter]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/component/legal/LegalFooter.kt

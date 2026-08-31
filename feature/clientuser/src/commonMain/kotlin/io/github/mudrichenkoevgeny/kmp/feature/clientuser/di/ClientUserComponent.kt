@@ -43,6 +43,11 @@ class ClientUserComponent(
 
     private val storageModule = UserStorageModule(commonComponent.encryptedSettings)
 
+    /**
+     * DataStore-backed storage for user profile and session metadata.
+     */
+    val userStorage get() = storageModule.userStorage
+
     private val networkModule = ClientUserNetworkModule(
         httpClient = commonComponent.httpClient
     )
@@ -54,12 +59,23 @@ class ClientUserComponent(
         commonComponent.webSocketService,
         componentScope
     )
+
+    /** Repository for email, phone and external logins. */
     val loginRepository get() = clientUserRepositoryModule.loginRepository
+
+    /** Repository for new user registration. */
     val registrationRepository get() = clientUserRepositoryModule.registrationRepository
+
+    /** Repository for current user profile data and real-time updates. */
     val userRepository get() = clientUserRepositoryModule.userRepository
+
+    /** Repository for password recovery and change operations. */
     val passwordRepository get() = clientUserRepositoryModule.resetPasswordRepository
+
+    /** Repository for fetching available authentication providers and policies. */
     val authSettingsRepository get() = clientUserRepositoryModule.openAuthSettingsRepository
 
+    /** Foundation-level validator for password strength rules. */
     val passwordPolicyValidator get() = securityComponent.passwordPolicyValidator
 
     private val useCaseModule = ClientUserUseCaseModule(
@@ -72,17 +88,41 @@ class ClientUserComponent(
         globalSettingsRepository = settingsComponent.globalSettingsRepository,
         securitySettingsRepository = securityComponent.securitySettingsRepository
     )
+
+    /** Refreshes the session using the stored refresh token. */
     val refreshTokenUseCase get() = useCaseModule.refreshTokenUseCase
+
+    /** Signs in using email and password. */
     val loginByEmailUseCase get() = useCaseModule.loginByEmailUseCase
+
+    /** Signs in using a phone number and OTP code. */
     val loginByPhoneUseCase get() = useCaseModule.loginByPhoneUseCase
+
+    /** Sends a login verification code to the specified phone number. */
     val sendLoginConfirmationToPhoneUseCase get() = useCaseModule.sendLoginConfirmationToPhoneUseCase
+
+    /** Performs Google Sign-In using platform credentials. */
     val loginByGoogleUseCase get() = useCaseModule.loginByGoogleUseCase
+
+    /** Refreshes the available auth providers from the network. */
     val refreshAuthSettingsUseCase get() = useCaseModule.refreshAuthSettingsUseCase
+
+    /** Sends a registration verification code to the specified email. */
     val sendRegistrationConfirmationToEmailUseCase get() = useCaseModule.sendRegistrationConfirmationToEmailUseCase
+
+    /** Completes the registration flow with an email and code. */
     val registrationByEmailUseCase get() = useCaseModule.registrationByEmailUseCase
+
+    /** Returns a filtered list of auth providers enabled for this deployment. */
     val getAvailableUserAuthProvidersUseCase get() = useCaseModule.getAvailableUserAuthProvidersUseCase
+
+    /** Resets the user's password using an email-delivered code. */
     val resetEmailPasswordUseCase get() = useCaseModule.resetEmailPasswordUseCase
+
+    /** Sends a password-reset verification code to the specified email. */
     val sendResetPasswordConfirmationToEmailUseCase get() = useCaseModule.sendResetPasswordConfirmationToEmailUseCase
+
+    /** Refreshes all user-related configurations (global, security, auth). */
     val refreshUserConfigurationUseCase get() = useCaseModule.refreshUserConfigurationUseCase
 
     private val userWebSocketModule = ClientUserWebSocketModule(
@@ -91,8 +131,17 @@ class ClientUserComponent(
         refreshTokenUseCase = refreshTokenUseCase,
         scope = componentScope
     )
+
+    /** WebSocket handler for identity-related push events. */
     val userWebSocketMessageHandler get() = userWebSocketModule.userWebSocketMessageHandler
 
+    /**
+     * Creates the root Decompose component for the login and registration flow.
+     *
+     * @param componentContext Decompose context for the new component.
+     * @param onFinished Invoked when the authentication flow is successfully completed.
+     * @return A new instance of [ClientLoginRootComponent].
+     */
     fun createLoginRootDialogComponent(
         componentContext: ComponentContext,
         onFinished: () -> Unit

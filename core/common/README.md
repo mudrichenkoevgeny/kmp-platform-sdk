@@ -13,7 +13,6 @@ Base for all SDK modules: shared **Ktor HTTP client** bootstrap, **WebSocket** i
 - **HTTP Client:** Pre-configured Ktor client with support for [HttpClientConfigPlugin] extensions and [AccessTokenProvider] integration.
 - **WebSockets:** [WebSocketService] (and [KtorWebSocketService]) manages connection lifecycles, pings, and automatic restarts when the access token changes.
 - **Message Handling:** [WebSocketMessageHandler] interface with a [CommonWebSocketMessageHandler] for framework-level events (ping/pong, initialization). Uses [WebSocketMessageHandlerResult] to route frames.
-- **Data Models:** [PagedResult] — a generic, [Serializable] model for paginated listings, shared across API, server, and client layers.
 
 ### 3. Error Handling & Result
 - **Result Pattern:** [AppResult] sealed class (`Success` or `Error`) used as the standard return type for operations to ensure consistent error propagation.
