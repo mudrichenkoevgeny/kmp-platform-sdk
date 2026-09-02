@@ -16,6 +16,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.TotpS
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierPhoneUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.DeleteUserIdentifierUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.EmailChangePasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.GetUserIdentifiersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.SendAddEmailIdentifierConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.SendAddPhoneIdentifierConfirmationUseCase
@@ -23,6 +24,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteAllOth
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.LogoutUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.RestoreUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.DisableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.EnableTotpUseCase
@@ -38,6 +40,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.SetupT
  * @param userRepository Source of the current user profile state.
  * @param logoutUseCase Ends the current session and clears local storage.
  * @param scheduleUserDeletionUseCase Initiates account deletion for end-users.
+ * @param restoreUserUseCase Restores an account scheduled for deletion.
  * @param setupTotpUseCase Generates TOTP secret and setup URI.
  * @param enableTotpUseCase Verifies initial code and enables TOTP.
  * @param disableTotpUseCase Turns off TOTP for the account.
@@ -52,6 +55,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.SetupT
  * @param addUserIdentifierEmailUseCase Links a new email via verified OTP.
  * @param sendAddPhoneIdentifierConfirmationUseCase Requests an OTP for a new phone.
  * @param addUserIdentifierPhoneUseCase Links a new phone via verified OTP.
+ * @param emailChangePasswordUseCase Updates account password.
  * @param onNavigateToLogin Invoked when the user needs to sign in (from the unauthorized state).
  */
 class ProfileRootComponentImpl(
@@ -60,6 +64,7 @@ class ProfileRootComponentImpl(
     private val userRepository: UserRepository,
     private val logoutUseCase: LogoutUseCase,
     private val scheduleUserDeletionUseCase: ScheduleUserDeletionUseCase,
+    private val restoreUserUseCase: RestoreUserUseCase,
     private val setupTotpUseCase: SetupTotpUseCase,
     private val enableTotpUseCase: EnableTotpUseCase,
     private val disableTotpUseCase: DisableTotpUseCase,
@@ -74,6 +79,7 @@ class ProfileRootComponentImpl(
     private val addUserIdentifierEmailUseCase: AddUserIdentifierEmailUseCase,
     private val sendAddPhoneIdentifierConfirmationUseCase: SendAddPhoneIdentifierConfirmationUseCase,
     private val addUserIdentifierPhoneUseCase: AddUserIdentifierPhoneUseCase,
+    private val emailChangePasswordUseCase: EmailChangePasswordUseCase,
     private val onNavigateToLogin: () -> Unit
 ) : ProfileRootComponent, ComponentContext by componentContext {
 
@@ -99,6 +105,7 @@ class ProfileRootComponentImpl(
                 userRepository = userRepository,
                 logoutUseCase = logoutUseCase,
                 scheduleUserDeletionUseCase = scheduleUserDeletionUseCase,
+                restoreUserUseCase = restoreUserUseCase,
                 onNavigateToLogin = onNavigateToLogin,
                 onNavigateToTotp = { navigation.push(ProfileDestination.TotpSettings) },
                 onNavigateToSessions = { navigation.push(ProfileDestination.Sessions) },
@@ -135,6 +142,7 @@ class ProfileRootComponentImpl(
                 addUserIdentifierEmailUseCase = addUserIdentifierEmailUseCase,
                 sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase,
                 addUserIdentifierPhoneUseCase = addUserIdentifierPhoneUseCase,
+                emailChangePasswordUseCase = emailChangePasswordUseCase,
                 onBack = navigation::pop
             )
         )

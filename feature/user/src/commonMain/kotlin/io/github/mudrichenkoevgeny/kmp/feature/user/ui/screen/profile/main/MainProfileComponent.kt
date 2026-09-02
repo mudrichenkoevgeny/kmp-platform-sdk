@@ -12,8 +12,11 @@ interface MainProfileComponent {
     /** Opens the login flow. */
     fun onLoginClick()
 
-    /** Ends the current session. */
+    /** Shows logout confirmation dialog. */
     fun onLogoutClick()
+
+    /** Executes logout after confirmation. */
+    fun onConfirmLogout()
 
     /** Navigates to TOTP settings. */
     fun onTotpSettingsClick()
@@ -29,6 +32,9 @@ interface MainProfileComponent {
 
     /** Executes account deletion after confirmation. */
     fun onConfirmDeleteAccount()
+
+    /** Restores a user account currently scheduled for deletion. */
+    fun onRestoreAccountClick()
 
     /** Hides any active confirmation dialogs. */
     fun onDismissDialog()

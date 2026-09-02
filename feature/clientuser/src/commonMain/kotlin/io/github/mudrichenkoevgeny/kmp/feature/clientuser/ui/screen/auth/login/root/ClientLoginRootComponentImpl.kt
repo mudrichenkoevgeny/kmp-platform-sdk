@@ -16,6 +16,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registr
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.phone.LoginByPhoneComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.pendingdeletion.PendingDeletionComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordComponentImpl
@@ -55,6 +56,7 @@ class ClientLoginRootComponentImpl(
                 onNavigateToLoginByEmail = { navigation.push(ClientLoginDestination.LoginByEmail) },
                 onNavigateToLoginByPhone = { navigation.push(ClientLoginDestination.LoginByPhone) },
                 onNavigateToTotp = { mfaToken -> navigation.push(ClientLoginDestination.LoginByTotp(mfaToken)) },
+                onNavigateToPendingDeletion = { navigation.push(ClientLoginDestination.PendingDeletion) },
                 onFinished = onFinished
             )
         )
@@ -67,6 +69,7 @@ class ClientLoginRootComponentImpl(
                 onNavigateToRegistrationByEmail = { navigation.push(ClientLoginDestination.RegistrationByEmail) },
                 onNavigateToForgotPassword = { navigation.push(ClientLoginDestination.ResetEmailPassword) },
                 onNavigateToTotp = { mfaToken -> navigation.push(ClientLoginDestination.LoginByTotp(mfaToken)) },
+                onNavigateToPendingDeletion = { navigation.push(ClientLoginDestination.PendingDeletion) },
                 onBack = navigation::pop,
                 onFinished = onFinished
             )
@@ -78,6 +81,7 @@ class ClientLoginRootComponentImpl(
                 sendLoginConfirmationToPhoneUseCase = clientUserComponent.sendLoginConfirmationToPhoneUseCase,
                 loginByPhoneUseCase = clientUserComponent.loginByPhoneUseCase,
                 onNavigateToTotp = { mfaToken -> navigation.push(ClientLoginDestination.LoginByTotp(mfaToken)) },
+                onNavigateToPendingDeletion = { navigation.push(ClientLoginDestination.PendingDeletion) },
                 onBack = navigation::pop,
                 onFinished = onFinished
             )
@@ -110,8 +114,18 @@ class ClientLoginRootComponentImpl(
                 mfaToken = config.mfaToken,
                 loginByTotpUseCase = clientUserComponent.loginByTotpUseCase,
                 loginByTotpRecoveryCodeUseCase = clientUserComponent.loginByTotpRecoveryCodeUseCase,
+                onNavigateToPendingDeletion = { navigation.push(ClientLoginDestination.PendingDeletion) },
                 onBack = navigation::pop,
                 onFinished = onFinished
+            )
+        )
+        is ClientLoginDestination.PendingDeletion -> ClientLoginRootComponent.Child.PendingDeletion(
+            PendingDeletionComponentImpl(
+                componentContext = context,
+                restoreUserUseCase = clientUserComponent.restoreUserUseCase,
+                logoutUseCase = clientUserComponent.logoutUseCase,
+                onRestoreSuccess = onFinished,
+                onSignOut = { navigation.pop() }
             )
         )
     }

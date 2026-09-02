@@ -233,6 +233,8 @@ class LoginByPhoneComponentImplTest {
             loginRepository = loginRepository,
             sendLoginConfirmationToPhoneUseCase = sendLoginConfirmationToPhoneUseCase,
             loginByPhoneUseCase = loginByPhoneUseCase,
+            onNavigateToTotp = { context.lastTotpMfaToken = it },
+            onNavigateToPendingDeletion = { context.onNavigateToPendingDeletionCalls++ },
             onBack = { context.onBackCalls++ },
             onFinished = { context.onFinishedCalls++ }
         )
@@ -248,6 +250,8 @@ class LoginByPhoneComponentImplTest {
         lateinit var component: LoginByPhoneComponentImpl
         var onBackCalls: Int = 0
         var onFinishedCalls: Int = 0
+        var onNavigateToPendingDeletionCalls: Int = 0
+        var lastTotpMfaToken: String? = null
 
         fun destroy() = lifecycle.destroy()
     }

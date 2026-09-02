@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.p
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.root.LoginRootContainer
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeScreen
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email.RegistrationByEmailScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.pendingdeletion.PendingDeletionScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordScreen
 
@@ -22,6 +23,7 @@ fun ClientLoginRootScreen(component: ClientLoginRootComponent) {
             is ClientLoginRootComponent.Child.LoginByTotp -> LoginByTotpScreen(instance.component)
             is ClientLoginRootComponent.Child.RegistrationByEmail -> RegistrationByEmailScreen(instance.component)
             is ClientLoginRootComponent.Child.ResetEmailPassword -> ResetEmailPasswordScreen(instance.component)
+            is ClientLoginRootComponent.Child.PendingDeletion -> PendingDeletionScreen(instance.component)
         }
     }
 }

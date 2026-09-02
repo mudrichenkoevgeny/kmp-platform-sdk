@@ -8,6 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByTotpRecoveryCodeUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByTotpUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import kotlinx.coroutines.launch
 
 /**
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
  * @param mfaToken Opaque intermediate token required for the login call.
  * @param loginByTotpUseCase Performs sign-in with TOTP code.
  * @param loginByTotpRecoveryCodeUseCase Performs sign-in with recovery code.
+ * @param onNavigateToPendingDeletion Opens the pending deletion restoration screen on the parent stack.
  * @param onBack Pops this screen on the parent stack.
  * @param onFinished Invoked when login succeeds so the host can close the flow.
  */
@@ -25,6 +27,7 @@ class LoginByTotpComponentImpl(
     mfaToken: String,
     private val loginByTotpUseCase: LoginByTotpUseCase,
     private val loginByTotpRecoveryCodeUseCase: LoginByTotpRecoveryCodeUseCase,
+    private val onNavigateToPendingDeletion: () -> Unit,
     private val onBack: () -> Unit,
     private val onFinished: () -> Unit
 ) : LoginByTotpComponent, ComponentContext by componentContext {
@@ -70,7 +73,13 @@ class LoginByTotpComponentImpl(
             }
 
             result
-                .onSuccess { onFinished() }
+                .onSuccess { authData ->
+                    if (authData.userDetails.accountStatus == UserAccountStatus.PENDING_DELETION) {
+                        onNavigateToPendingDeletion()
+                    } else {
+                        onFinished()
+                    }
+                }
                 .onError { error ->
                     _state.value = current.copy(
                         actionLoading = false,

@@ -8,7 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.Identi
  *
  * @param identifierRepository Remote identifier management API.
  */
-class EmailChangePasswordUseCase(
+open class EmailChangePasswordUseCase(
     private val identifierRepository: IdentifierRepository
 ) {
     /**
@@ -17,7 +17,7 @@ class EmailChangePasswordUseCase(
      * @param newPassword Target password to be applied.
      * @return Success indicator, or a mapped failure.
      */
-    suspend operator fun invoke(
+    open suspend operator fun invoke(
         email: String,
         oldPassword: String,
         newPassword: String

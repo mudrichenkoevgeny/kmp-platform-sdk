@@ -237,6 +237,7 @@ class LoginByEmailComponentImplTest {
             onNavigateToRegistrationByEmail = { context.onNavigateToRegistrationByEmailCalls++ },
             onNavigateToForgotPassword = { context.onNavigateToForgotPasswordCalls++ },
             onNavigateToTotp = { context.lastTotpMfaToken = it },
+            onNavigateToPendingDeletion = { context.onNavigateToPendingDeletionCalls++ },
             onBack = { context.onBackCalls++ },
             onFinished = { context.onFinishedCalls++ }
         )
@@ -252,6 +253,7 @@ class LoginByEmailComponentImplTest {
         var onFinishedCalls: Int = 0
         var onNavigateToForgotPasswordCalls: Int = 0
         var onNavigateToRegistrationByEmailCalls: Int = 0
+        var onNavigateToPendingDeletionCalls: Int = 0
         var onBackCalls: Int = 0
         var lastTotpMfaToken: String? = null
 

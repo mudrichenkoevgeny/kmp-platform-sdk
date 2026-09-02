@@ -37,6 +37,15 @@ interface IdentifierListComponent {
     /** Cancels any add flow. */
     fun onCancelAddClick()
 
+    /** Opens the change password dialog for the specified email identifier. */
+    fun onChangePasswordClick(email: String)
+
+    /** Submits password change request. */
+    fun onConfirmChangePasswordClick(oldPassword: String, newPassword: String)
+
+    /** Dismisses the change password dialog. */
+    fun onDismissChangePasswordDialog()
+
     /** Requests the next page of identifiers if available. */
     fun onLoadNextPage()
 

@@ -14,6 +14,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.di.ManagementUserC
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.ManagementLoginDestination
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.pendingdeletion.PendingDeletionComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordComponentImpl
@@ -53,6 +54,7 @@ class ManagementLoginRootComponentImpl(
                 onNavigateToLoginByEmail = { navigation.push(ManagementLoginDestination.LoginByEmail) },
                 onNavigateToLoginByPhone = { },
                 onNavigateToTotp = { mfaToken -> navigation.push(ManagementLoginDestination.LoginByTotp(mfaToken)) },
+                onNavigateToPendingDeletion = { navigation.push(ManagementLoginDestination.PendingDeletion) },
                 onFinished = onFinished
             )
         )
@@ -65,6 +67,7 @@ class ManagementLoginRootComponentImpl(
                 onNavigateToRegistrationByEmail = { },
                 onNavigateToForgotPassword = { navigation.push(ManagementLoginDestination.ResetEmailPassword) },
                 onNavigateToTotp = { mfaToken -> navigation.push(ManagementLoginDestination.LoginByTotp(mfaToken)) },
+                onNavigateToPendingDeletion = { navigation.push(ManagementLoginDestination.PendingDeletion) },
                 onBack = navigation::pop,
                 onFinished = onFinished
             )
@@ -86,8 +89,18 @@ class ManagementLoginRootComponentImpl(
                 mfaToken = config.mfaToken,
                 loginByTotpUseCase = managementUserComponent.loginByTotpUseCase,
                 loginByTotpRecoveryCodeUseCase = managementUserComponent.loginByTotpRecoveryCodeUseCase,
+                onNavigateToPendingDeletion = { navigation.push(ManagementLoginDestination.PendingDeletion) },
                 onBack = navigation::pop,
                 onFinished = onFinished
+            )
+        )
+        is ManagementLoginDestination.PendingDeletion -> ManagementLoginRootComponent.Child.PendingDeletion(
+            PendingDeletionComponentImpl(
+                componentContext = context,
+                restoreUserUseCase = managementUserComponent.restoreUserUseCase,
+                logoutUseCase = managementUserComponent.logoutUseCase,
+                onRestoreSuccess = onFinished,
+                onSignOut = { navigation.pop() }
             )
         )
     }

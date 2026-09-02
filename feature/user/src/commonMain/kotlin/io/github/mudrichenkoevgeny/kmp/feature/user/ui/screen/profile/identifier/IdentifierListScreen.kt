@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -64,17 +65,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottom
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.confirm
-import io.github.mudrichenkoevgeny.kmp.feature.user.confirmation_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.email
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_add_email
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_add_phone
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_delete
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifiers
+import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.password
-import io.github.mudrichenkoevgeny.kmp.feature.user.phone_number
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.identifier.item.IdentifierItem
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import org.jetbrains.compose.resources.stringResource
@@ -127,6 +121,9 @@ fun IdentifierListScreen(component: IdentifierListComponent) {
                         Content(
                             state = currentState,
                             onDeleteIdentifier = component::onDeleteIdentifierClick,
+                            onChangePasswordClick = component::onChangePasswordClick,
+                            onConfirmChangePassword = component::onConfirmChangePasswordClick,
+                            onDismissChangePassword = component::onDismissChangePasswordDialog,
                             onAddEmail = component::onAddEmailClick,
                             onEmailCodeChanged = component::onEmailCodeChanged,
                             onConfirmEmail = component::onConfirmAddEmailClick,
@@ -154,6 +151,9 @@ fun IdentifierListScreen(component: IdentifierListComponent) {
 private fun Content(
     state: IdentifierListScreenState.Content,
     onDeleteIdentifier: (UserIdentifierId) -> Unit,
+    onChangePasswordClick: (String) -> Unit,
+    onConfirmChangePassword: (oldPassword: String, newPassword: String) -> Unit,
+    onDismissChangePassword: () -> Unit,
     onAddEmail: (String) -> Unit,
     onEmailCodeChanged: (String) -> Unit,
     onConfirmEmail: (String) -> Unit,
@@ -173,23 +173,27 @@ private fun Content(
     var passwordInput by remember { mutableStateOf("") }
     var phoneInput by remember { mutableStateOf("") }
 
-    LazyColumn(
-        state = listState,
-        modifier = Modifier
-            .fillMaxSize()
-            .testTag(IdentifierListTestTags.IDENTIFIER_LIST),
-        contentPadding = PaddingValues(Dimens.paddingMedium),
-        verticalArrangement = Arrangement.spacedBy(Dimens.paddingSmall)
-    ) {
-        items(state.paging.items, key = { it.id.value }) { identifier ->
-            IdentifierItem(
-                identifier = identifier,
-                onDeleteClick = { onDeleteIdentifier(identifier.id) },
-                enabled = !state.actionLoading && 
-                    state.addEmailState is IdentifierListScreenState.AddIdentifierState.Idle && 
-                    state.addPhoneState is IdentifierListScreenState.AddIdentifierState.Idle
-            )
-        }
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            state = listState,
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag(IdentifierListTestTags.IDENTIFIER_LIST),
+            contentPadding = PaddingValues(Dimens.paddingMedium),
+            verticalArrangement = Arrangement.spacedBy(Dimens.paddingSmall)
+        ) {
+            items(state.paging.items, key = { it.id.value }) { identifier ->
+                IdentifierItem(
+                    identifier = identifier,
+                    onDeleteClick = { onDeleteIdentifier(identifier.id) },
+                    onChangePasswordClick = if (identifier.userAuthProvider == UserAuthProvider.EMAIL) {
+                        { onChangePasswordClick(identifier.identifier) }
+                    } else null,
+                    enabled = !state.actionLoading &&
+                        state.addEmailState is IdentifierListScreenState.AddIdentifierState.Idle &&
+                        state.addPhoneState is IdentifierListScreenState.AddIdentifierState.Idle
+                )
+            }
 
         item {
             PagingFooter(
@@ -243,6 +247,77 @@ private fun Content(
             )
         }
     }
+
+    if (state.changePasswordEmail != null) {
+        ChangePasswordDialog(
+            email = state.changePasswordEmail,
+            onConfirm = onConfirmChangePassword,
+            onDismiss = onDismissChangePassword,
+            enabled = !state.actionLoading
+        )
+    }
+    }
+}
+
+@Composable
+private fun ChangePasswordDialog(
+    email: String,
+    onConfirm: (oldPassword: String, newPassword: String) -> Unit,
+    onDismiss: () -> Unit,
+    enabled: Boolean
+) {
+    var oldPassword by remember { mutableStateOf("") }
+    var newPassword by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = stringResource(Res.string.change_password)) },
+        text = {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Email: $email",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(Modifier.height(Dimens.paddingSmall))
+                OutlinedTextField(
+                    value = oldPassword,
+                    onValueChange = { oldPassword = it },
+                    modifier = Modifier.fillMaxWidth().testTag(IdentifierListTestTags.CHANGE_PASSWORD_OLD_INPUT),
+                    label = { Text(stringResource(Res.string.old_password)) },
+                    visualTransformation = PasswordVisualTransformation(),
+                    enabled = enabled,
+                    singleLine = true
+                )
+                Spacer(Modifier.height(Dimens.paddingSmall))
+                OutlinedTextField(
+                    value = newPassword,
+                    onValueChange = { newPassword = it },
+                    modifier = Modifier.fillMaxWidth().testTag(IdentifierListTestTags.CHANGE_PASSWORD_NEW_INPUT),
+                    label = { Text(stringResource(Res.string.new_password)) },
+                    visualTransformation = PasswordVisualTransformation(),
+                    enabled = enabled,
+                    singleLine = true
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = { onConfirm(oldPassword, newPassword) },
+                enabled = enabled && oldPassword.isNotBlank() && newPassword.isNotBlank(),
+                modifier = Modifier.testTag(IdentifierListTestTags.CONFIRM_CHANGE_PASSWORD_BUTTON)
+            ) {
+                Text(text = stringResource(Res.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss,
+                enabled = enabled
+            ) {
+                Text(text = stringResource(Res.string.dialog_cancel))
+            }
+        }
+    )
 }
 
 @Composable
@@ -427,6 +502,9 @@ private fun IdentifierListContentPreview() {
                         )
                     ),
                     onDeleteIdentifier = {},
+                    onChangePasswordClick = {},
+                    onConfirmChangePassword = { _, _ -> },
+                    onDismissChangePassword = {},
                     onAddEmail = {},
                     onEmailCodeChanged = {},
                     onConfirmEmail = {},
@@ -449,6 +527,10 @@ internal object IdentifierListTestTags {
     const val IDENTIFIER_LIST = "IdentifierList_List"
     const val IDENTIFIER_ITEM_PREFIX = "IdentifierList_Item_"
     const val DELETE_BUTTON_PREFIX = "IdentifierList_DeleteButton_"
+    const val CHANGE_PASSWORD_BUTTON_PREFIX = "IdentifierList_ChangePasswordButton_"
+    const val CHANGE_PASSWORD_OLD_INPUT = "IdentifierList_ChangePasswordOldInput"
+    const val CHANGE_PASSWORD_NEW_INPUT = "IdentifierList_ChangePasswordNewInput"
+    const val CONFIRM_CHANGE_PASSWORD_BUTTON = "IdentifierList_ConfirmChangePasswordButton"
     const val ADD_EMAIL_INPUT = "IdentifierList_AddEmailInput"
     const val ADD_EMAIL_BUTTON = "IdentifierList_AddEmailButton"
     const val ADD_EMAIL_PASSWORD_INPUT = "IdentifierList_AddEmailPasswordInput"

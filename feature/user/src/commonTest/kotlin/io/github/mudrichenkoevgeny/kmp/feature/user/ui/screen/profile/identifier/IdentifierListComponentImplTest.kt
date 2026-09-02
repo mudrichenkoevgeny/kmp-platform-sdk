@@ -12,6 +12,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.AddUserIdentifierEmailUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.AddUserIdentifierPhoneUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.DeleteUserIdentifierUseCaseMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.EmailChangePasswordUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.GetUserIdentifiersUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.SendAddEmailIdentifierConfirmationUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.SendAddPhoneIdentifierConfirmationUseCaseMock
@@ -196,6 +197,33 @@ class IdentifierListComponentImplTest {
     }
 
     @Test
+    fun onChangePasswordClick_showsDialog_andConfirmExecutesUseCase() = runComponentTest {
+        val email = "test@example.com"
+        val oldPass = "old123"
+        val newPass = "new123"
+        val emailChangePasswordUseCase = EmailChangePasswordUseCaseMock()
+        val context = createIdentifierListComponentTestContext(
+            emailChangePasswordUseCase = emailChangePasswordUseCase
+        )
+        try {
+            advanceTimeBy(100.milliseconds)
+            context.component.onChangePasswordClick(email)
+
+            val state1 = assertIs<IdentifierListScreenState.Content>(context.component.state.value)
+            assertEquals(email, state1.changePasswordEmail)
+
+            context.component.onConfirmChangePasswordClick(oldPass, newPass)
+            advanceTimeBy(100.milliseconds)
+
+            assertEquals(1, emailChangePasswordUseCase.executeCalls)
+            val state2 = assertIs<IdentifierListScreenState.Content>(context.component.state.value)
+            assertEquals(null, state2.changePasswordEmail)
+        } finally {
+            context.destroy()
+        }
+    }
+
+    @Test
     fun onBackClick_invokesOnBack() = runComponentTest {
         val context = createIdentifierListComponentTestContext()
         try {
@@ -212,7 +240,8 @@ class IdentifierListComponentImplTest {
         sendAddEmailIdentifierConfirmationUseCase: SendAddEmailIdentifierConfirmationUseCaseMock = SendAddEmailIdentifierConfirmationUseCaseMock(),
         addUserIdentifierEmailUseCase: AddUserIdentifierEmailUseCaseMock = AddUserIdentifierEmailUseCaseMock(),
         sendAddPhoneIdentifierConfirmationUseCase: SendAddPhoneIdentifierConfirmationUseCaseMock = SendAddPhoneIdentifierConfirmationUseCaseMock(),
-        addUserIdentifierPhoneUseCase: AddUserIdentifierPhoneUseCaseMock = AddUserIdentifierPhoneUseCaseMock()
+        addUserIdentifierPhoneUseCase: AddUserIdentifierPhoneUseCaseMock = AddUserIdentifierPhoneUseCaseMock(),
+        emailChangePasswordUseCase: EmailChangePasswordUseCaseMock = EmailChangePasswordUseCaseMock()
     ): IdentifierListComponentTestContext {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
@@ -227,6 +256,7 @@ class IdentifierListComponentImplTest {
             addUserIdentifierEmailUseCase = addUserIdentifierEmailUseCase,
             sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase,
             addUserIdentifierPhoneUseCase = addUserIdentifierPhoneUseCase,
+            emailChangePasswordUseCase = emailChangePasswordUseCase,
             onBack = { context.onBackCalls++ }
         )
 

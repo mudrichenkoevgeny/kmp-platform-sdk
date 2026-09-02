@@ -33,6 +33,8 @@ class MainProfileComponentMock(
         logoutCalls++
     }
 
+    override fun onConfirmLogout() {}
+
     override fun onTotpSettingsClick() {
         totpSettingsCalls++
     }
@@ -50,6 +52,8 @@ class MainProfileComponentMock(
     }
 
     override fun onConfirmDeleteAccount() {}
+
+    override fun onRestoreAccountClick() {}
 
     override fun onDismissDialog() {}
 }

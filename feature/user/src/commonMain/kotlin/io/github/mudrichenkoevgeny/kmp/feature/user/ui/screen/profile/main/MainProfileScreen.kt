@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
@@ -40,6 +42,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import org.jetbrains.compose.resources.stringResource
 
 // TODO: In development
@@ -57,11 +60,13 @@ fun MainProfileScreen(component: MainProfileComponent) {
             is MainProfileScreenState.Content -> ProfileContent(
                 state = currentState,
                 onLogoutClick = component::onLogoutClick,
+                onConfirmLogout = component::onConfirmLogout,
                 onTotpSettingsClick = component::onTotpSettingsClick,
                 onSessionsClick = component::onSessionsClick,
                 onIdentifiersClick = component::onIdentifiersClick,
                 onDeleteAccountClick = component::onDeleteAccountClick,
                 onConfirmDeleteAccount = component::onConfirmDeleteAccount,
+                onRestoreAccountClick = component::onRestoreAccountClick,
                 onDismissDialog = component::onDismissDialog
             )
             is MainProfileScreenState.Error -> {
@@ -96,13 +101,17 @@ private fun UnauthorizedContent(onLoginClick: () -> Unit) {
 private fun ProfileContent(
     state: MainProfileScreenState.Content,
     onLogoutClick: () -> Unit,
+    onConfirmLogout: () -> Unit,
     onTotpSettingsClick: () -> Unit,
     onSessionsClick: () -> Unit,
     onIdentifiersClick: () -> Unit,
     onDeleteAccountClick: () -> Unit,
     onConfirmDeleteAccount: () -> Unit,
+    onRestoreAccountClick: () -> Unit,
     onDismissDialog: () -> Unit
 ) {
+    val isPendingDeletion = state.user.accountStatus == UserAccountStatus.PENDING_DELETION
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -110,6 +119,48 @@ private fun ProfileContent(
                 .padding(Dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if (isPendingDeletion) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = Dimens.paddingMedium)
+                        .testTag(MainProfileTestTags.PENDING_DELETION_CARD),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(Dimens.paddingMedium),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.account_pending_deletion_title),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                        Spacer(Modifier.height(Dimens.paddingSmall))
+                        Text(
+                            text = stringResource(Res.string.account_pending_deletion_desc),
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(Modifier.height(Dimens.paddingMedium))
+                        Button(
+                            onClick = onRestoreAccountClick,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag(MainProfileTestTags.RESTORE_ACCOUNT_BUTTON),
+                            enabled = !state.actionLoading
+                        ) {
+                            Text(text = stringResource(Res.string.restore_account))
+                        }
+                    }
+                }
+            }
+
             Text(
                 text = stringResource(Res.string.user_id, state.user.id.asHexDashString()),
                 style = MaterialTheme.typography.bodyLarge,
@@ -154,7 +205,7 @@ private fun ProfileContent(
 
             Spacer(Modifier.height(Dimens.paddingLarge))
 
-            if (state.isAccountDeletionAvailable) {
+            if (state.isAccountDeletionAvailable && !isPendingDeletion) {
                 OutlinedButton(
                     onClick = onDeleteAccountClick,
                     modifier = Modifier
@@ -190,6 +241,24 @@ private fun ProfileContent(
                 text = { Text(text = stringResource(Res.string.delete_account_confirm_msg)) },
                 confirmButton = {
                     TextButton(onClick = onConfirmDeleteAccount) {
+                        Text(text = stringResource(Res.string.dialog_confirm))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = onDismissDialog) {
+                        Text(text = stringResource(Res.string.dialog_cancel))
+                    }
+                }
+            )
+        }
+
+        if (state.showLogoutConfirmation) {
+            AlertDialog(
+                onDismissRequest = onDismissDialog,
+                title = { Text(text = stringResource(Res.string.dialog_confirm_title)) },
+                text = { Text(text = stringResource(Res.string.logout_confirm_msg)) },
+                confirmButton = {
+                    TextButton(onClick = onConfirmLogout) {
                         Text(text = stringResource(Res.string.dialog_confirm))
                     }
                 },
@@ -254,11 +323,13 @@ private fun MainProfileScreenContentPreview() {
                         isAccountDeletionAvailable = true
                     ),
                     onLogoutClick = {},
+                    onConfirmLogout = {},
                     onTotpSettingsClick = {},
                     onSessionsClick = {},
                     onIdentifiersClick = {},
                     onDeleteAccountClick = {},
                     onConfirmDeleteAccount = {},
+                    onRestoreAccountClick = {},
                     onDismissDialog = {}
                 )
             }
@@ -279,11 +350,13 @@ private fun MainProfileScreenContentLoadingPreview() {
                         actionLoading = true
                     ),
                     onLogoutClick = {},
+                    onConfirmLogout = {},
                     onTotpSettingsClick = {},
                     onSessionsClick = {},
                     onIdentifiersClick = {},
                     onDeleteAccountClick = {},
                     onConfirmDeleteAccount = {},
+                    onRestoreAccountClick = {},
                     onDismissDialog = {}
                 )
             }
@@ -304,11 +377,13 @@ private fun MainProfileScreenContentErrorPreview() {
                         actionError = CommonError.Unknown()
                     ),
                     onLogoutClick = {},
+                    onConfirmLogout = {},
                     onTotpSettingsClick = {},
                     onSessionsClick = {},
                     onIdentifiersClick = {},
                     onDeleteAccountClick = {},
                     onConfirmDeleteAccount = {},
+                    onRestoreAccountClick = {},
                     onDismissDialog = {}
                 )
             }
@@ -319,6 +394,9 @@ private fun MainProfileScreenContentErrorPreview() {
 internal object MainProfileTestTags {
     const val UNAUTHORIZED_TEXT = "MainProfile_UnauthorizedText"
     const val LOGIN_BUTTON = "MainProfile_LoginButton"
+
+    const val PENDING_DELETION_CARD = "MainProfile_PendingDeletionCard"
+    const val RESTORE_ACCOUNT_BUTTON = "MainProfile_RestoreAccountButton"
 
     const val USER_ID_TEXT = "MainProfile_UserIdText"
     const val TOTP_SETTINGS_BUTTON = "MainProfile_TotpSettingsButton"

@@ -17,6 +17,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByGo
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorCodes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -33,6 +34,7 @@ import kotlinx.coroutines.launch
  * @param onNavigateToLoginByEmail Pushes the email login destination on the parent stack.
  * @param onNavigateToLoginByPhone Pushes the phone login destination on the parent stack.
  * @param onNavigateToTotp Opens the MFA/TOTP screen on the parent stack.
+ * @param onNavigateToPendingDeletion Opens the pending deletion restoration screen on the parent stack.
  * @param onFinished Completes the flow when sign-in succeeds (e.g. Google).
  */
 class LoginWelcomeComponentImpl(
@@ -45,6 +47,7 @@ class LoginWelcomeComponentImpl(
     private val onNavigateToLoginByEmail: () -> Unit,
     private val onNavigateToLoginByPhone: () -> Unit,
     private val onNavigateToTotp: (mfaToken: String) -> Unit,
+    private val onNavigateToPendingDeletion: () -> Unit,
     private val onFinished: () -> Unit
 ) : LoginWelcomeComponent, ComponentContext by componentContext {
 
@@ -131,8 +134,12 @@ class LoginWelcomeComponentImpl(
 
         scope.launch {
             loginByGoogle.execute()
-                .onSuccess {
-                    onFinished()
+                .onSuccess { authData ->
+                    if (authData.userDetails.accountStatus == UserAccountStatus.PENDING_DELETION) {
+                        onNavigateToPendingDeletion()
+                    } else {
+                        onFinished()
+                    }
                 }
                 .onError { appError ->
                     if (appError.code == SecurityErrorCodes.TOTP_CONFIRMATION_REQUIRED) {

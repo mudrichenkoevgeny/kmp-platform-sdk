@@ -14,6 +14,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByEm
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorCodes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
  * @param onNavigateToRegistrationByEmail Opens the registration screen on the parent stack.
  * @param onNavigateToForgotPassword Opens the reset-password screen on the parent stack.
  * @param onNavigateToTotp Opens the MFA/TOTP screen on the parent stack.
+ * @param onNavigateToPendingDeletion Opens the pending deletion restoration screen on the parent stack.
  * @param onBack Pops this screen on the parent stack.
  * @param onFinished Invoked when login succeeds so the host can close the flow.
  */
@@ -38,6 +40,7 @@ class LoginByEmailComponentImpl(
     private val onNavigateToRegistrationByEmail: () -> Unit,
     private val onNavigateToForgotPassword: () -> Unit,
     private val onNavigateToTotp: (mfaToken: String) -> Unit,
+    private val onNavigateToPendingDeletion: () -> Unit,
     private val onBack: () -> Unit,
     private val onFinished: () -> Unit
 ) : LoginByEmailComponent, ComponentContext by componentContext {
@@ -101,7 +104,13 @@ class LoginByEmailComponentImpl(
             validatePasswordUseCase(current.password)
                 .onSuccess {
                     loginByEmailUseCase.execute(current.email, current.password)
-                        .onSuccess { onFinished() }
+                        .onSuccess { authData ->
+                            if (authData.userDetails.accountStatus == UserAccountStatus.PENDING_DELETION) {
+                                onNavigateToPendingDeletion()
+                            } else {
+                                onFinished()
+                            }
+                        }
                         .onError { error ->
                             if (error.code == SecurityErrorCodes.TOTP_CONFIRMATION_REQUIRED) {
                                 val mfaToken = error.args?.get(SecurityErrorArgs.MFA_TOKEN)

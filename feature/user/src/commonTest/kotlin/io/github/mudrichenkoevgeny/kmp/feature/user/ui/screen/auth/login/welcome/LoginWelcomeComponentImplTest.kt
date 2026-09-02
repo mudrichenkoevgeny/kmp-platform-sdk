@@ -228,6 +228,7 @@ class LoginWelcomeComponentImplTest {
             onNavigateToLoginByEmail = { context.onNavigateToLoginByEmailCalls++ },
             onNavigateToLoginByPhone = { context.onNavigateToLoginByPhoneCalls++ },
             onNavigateToTotp = { context.onNavigateToTotpCalls++ },
+            onNavigateToPendingDeletion = { context.onNavigateToPendingDeletionCalls++ },
             onFinished = { context.onFinishedCalls++ }
         )
         
@@ -242,6 +243,7 @@ class LoginWelcomeComponentImplTest {
         var onNavigateToLoginByEmailCalls: Int = 0
         var onNavigateToLoginByPhoneCalls: Int = 0
         var onNavigateToTotpCalls: Int = 0
+        var onNavigateToPendingDeletionCalls: Int = 0
         var onFinishedCalls: Int = 0
 
         fun destroy() = lifecycle.destroy()

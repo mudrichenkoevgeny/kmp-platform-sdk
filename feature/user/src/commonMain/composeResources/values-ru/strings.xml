@@ -61,6 +61,15 @@
     <string name="dialog_confirm">Подтвердить</string>
 
     <string name="delete_account_confirm_msg">Это действие запланирует безвозвратное удаление вашего аккаунта. Это можно будет отменить только в течение ограниченного времени.</string>
+    <string name="logout_confirm_msg">Вы уверены, что хотите выйти из аккаунта?</string>
     <string name="disable_totp_confirm_msg">Отключение двухфакторной аутентификации сделает ваш аккаунт менее защищенным. Вы уверены, что хотите продолжить?</string>
     <string name="regenerate_codes_confirm_msg">Обновление кодов восстановления сделает все текущие коды недействительными. Обязательно сохраните новые коды сразу после генерации.</string>
+
+    <string name="account_pending_deletion_title">Аккаунт ожидает удаления</string>
+    <string name="account_pending_deletion_desc">Ваш аккаунт запланирован к безвозвратному удалению. Вы можете восстановить его, чтобы продолжить использование.</string>
+    <string name="restore_account">Восстановить аккаунт</string>
+
+    <string name="change_password">Сменить пароль</string>
+    <string name="old_password">Текущий пароль</string>
+    <string name="new_password">Новый пароль</string>
 </resources>

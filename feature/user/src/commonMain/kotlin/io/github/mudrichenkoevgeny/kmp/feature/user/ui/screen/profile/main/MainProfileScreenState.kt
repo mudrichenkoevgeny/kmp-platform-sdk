@@ -19,6 +19,7 @@ sealed interface MainProfileScreenState {
         val user: UserDetails,
         val isAccountDeletionAvailable: Boolean = true,
         val showDeleteConfirmation: Boolean = false,
+        val showLogoutConfirmation: Boolean = false,
         val actionLoading: Boolean = false,
         val actionError: AppError? = null
     ) : MainProfileScreenState

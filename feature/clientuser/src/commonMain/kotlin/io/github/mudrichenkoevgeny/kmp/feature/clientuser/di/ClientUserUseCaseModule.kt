@@ -43,6 +43,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.Enable
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.GetRecoveryCodesUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.RegenerateRecoveryCodesUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.SetupTotpUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.RestoreUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.usecase.auth.settings.RefreshAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.usecase.configuration.RefreshClientUserConfigurationUseCase
@@ -202,6 +203,13 @@ internal class ClientUserUseCaseModule(
     /** Schedules current account for deletion. */
     val scheduleUserDeletionUseCase by lazy {
         ScheduleUserDeletionUseCase(
+            userRepository = clientUserRepositoryModule.userRepository
+        )
+    }
+
+    /** Restores an account scheduled for deletion. */
+    val restoreUserUseCase by lazy {
+        RestoreUserUseCase(
             userRepository = clientUserRepositoryModule.userRepository
         )
     }

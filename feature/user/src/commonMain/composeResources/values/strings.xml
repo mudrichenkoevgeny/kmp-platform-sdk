@@ -94,8 +94,17 @@
     <string name="dialog_confirm">Confirm</string>
 
     <string name="delete_account_confirm_msg">This will permanently schedule your account for deletion. This action can be undone only within a limited time.</string>
+    <string name="logout_confirm_msg">Are you sure you want to log out of your account?</string>
     <string name="disable_totp_confirm_msg">Disabling two-factor authentication will make your account less secure. Are you sure you want to proceed?</string>
     <string name="regenerate_codes_confirm_msg">Regenerating recovery codes will invalidate all your current backup codes. Make sure to save the new ones immediately.</string>
+
+    <string name="account_pending_deletion_title">Account Scheduled for Deletion</string>
+    <string name="account_pending_deletion_desc">Your account is currently scheduled for permanent deletion. You can restore it to continue using the application.</string>
+    <string name="restore_account">Restore account</string>
+
+    <string name="change_password">Change password</string>
+    <string name="old_password">Current password</string>
+    <string name="new_password">New password</string>
 
     <string name="forgot_password">Forgot password?</string>
     <string name="no_account_register">Don't have an account? Register</string>
@@ -104,7 +113,6 @@
     <string name="register">Register</string>
 
     <string name="reset_password">Reset password</string>
-    <string name="new_password">New password</string>
     <string name="change_email">Change email</string>
 
     <string name="legal_agreement_prefix">By signing in, you agree to our</string>

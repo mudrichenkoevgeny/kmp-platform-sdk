@@ -11,6 +11,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.UserRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.LogoutUseCaseMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.RestoreUserUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.ScheduleUserDeletionUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import kotlinx.coroutines.flow.flow
@@ -138,14 +139,35 @@ class MainProfileComponentImplTest {
     }
 
     @Test
-    fun onLogoutClick_executesLogoutUseCase() = runComponentTest {
+    fun onLogoutClick_showsLogoutConfirmationDialog() = runComponentTest {
+        val context = createMainProfileComponentTestContext()
+        try {
+            context.userRepository.emit(userDetailsMock())
+            runCurrent()
+
+            context.component.onLogoutClick()
+            runCurrent()
+
+            val state = assertIs<MainProfileScreenState.Content>(context.component.state.value)
+            assertTrue(state.showLogoutConfirmation)
+        } finally {
+            context.destroy()
+        }
+    }
+
+    @Test
+    fun onConfirmLogout_executesLogoutUseCase() = runComponentTest {
         val logoutUseCase = LogoutUseCaseMock().apply {
             resultProvider = { AppResult.Success(Unit) }
         }
         val context = createMainProfileComponentTestContext(logoutUseCase = logoutUseCase)
         try {
-            context.component.onLogoutClick()
+            context.userRepository.emit(userDetailsMock())
+            runCurrent()
+
+            context.component.onConfirmLogout()
             advanceTimeBy(100.milliseconds)
+
             assertEquals(ONE_CALL, logoutUseCase.executeCalls)
         } finally {
             context.destroy()
@@ -192,6 +214,26 @@ class MainProfileComponentImplTest {
     }
 
     @Test
+    fun onRestoreAccountClick_executesRestoreUserUseCase() = runComponentTest {
+        val userDetails = userDetailsMock()
+        val restoreUserUseCase = RestoreUserUseCaseMock().apply {
+            resultProvider = { AppResult.Success(userDetails) }
+        }
+        val context = createMainProfileComponentTestContext(restoreUserUseCase = restoreUserUseCase)
+        try {
+            context.userRepository.emit(userDetails)
+            runCurrent()
+
+            context.component.onRestoreAccountClick()
+            advanceTimeBy(100.milliseconds)
+
+            assertEquals(ONE_CALL, restoreUserUseCase.executeCalls)
+        } finally {
+            context.destroy()
+        }
+    }
+
+    @Test
     fun onDismissDialog_hidesConfirmationDialog() = runComponentTest {
         val context = createMainProfileComponentTestContext()
         try {
@@ -215,7 +257,8 @@ class MainProfileComponentImplTest {
         appType: AppType = AppType.CLIENT,
         userRepository: UserRepositoryMock = UserRepositoryMock(),
         logoutUseCase: LogoutUseCaseMock = LogoutUseCaseMock(),
-        scheduleUserDeletionUseCase: ScheduleUserDeletionUseCaseMock = ScheduleUserDeletionUseCaseMock()
+        scheduleUserDeletionUseCase: ScheduleUserDeletionUseCaseMock = ScheduleUserDeletionUseCaseMock(),
+        restoreUserUseCase: RestoreUserUseCaseMock = RestoreUserUseCaseMock()
     ): MainProfileComponentTestContext {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
@@ -231,6 +274,7 @@ class MainProfileComponentImplTest {
             userRepository = userRepository,
             logoutUseCase = logoutUseCase,
             scheduleUserDeletionUseCase = scheduleUserDeletionUseCase,
+            restoreUserUseCase = restoreUserUseCase,
             onNavigateToLogin = { context.onNavigateToLoginCalls++ },
             onNavigateToTotp = { context.onNavigateToTotpCalls++ },
             onNavigateToSessions = { context.onNavigateToSessionsCalls++ },

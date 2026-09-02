@@ -188,6 +188,7 @@ class LoginByTotpComponentImplTest {
             mfaToken = mfaToken,
             loginByTotpUseCase = loginByTotpUseCase,
             loginByTotpRecoveryCodeUseCase = loginByTotpRecoveryCodeUseCase,
+            onNavigateToPendingDeletion = { context.onNavigateToPendingDeletionCalls++ },
             onBack = { context.onBackCalls++ },
             onFinished = { context.onFinishedCalls++ }
         )
@@ -200,6 +201,7 @@ class LoginByTotpComponentImplTest {
     ) {
         lateinit var component: LoginByTotpComponentImpl
         var onFinishedCalls: Int = 0
+        var onNavigateToPendingDeletionCalls: Int = 0
         var onBackCalls: Int = 0
 
         fun destroy() {

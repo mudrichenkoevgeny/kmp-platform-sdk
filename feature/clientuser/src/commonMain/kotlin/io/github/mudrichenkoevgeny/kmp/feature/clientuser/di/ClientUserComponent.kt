@@ -140,6 +140,9 @@ class ClientUserComponent(
     /** Schedules the current account for permanent deletion. */
     val scheduleUserDeletionUseCase get() = useCaseModule.scheduleUserDeletionUseCase
 
+    /** Restores an account scheduled for deletion. */
+    val restoreUserUseCase get() = useCaseModule.restoreUserUseCase
+
     /** Initiates TOTP setup. */
     val setupTotpUseCase get() = useCaseModule.setupTotpUseCase
 
@@ -182,6 +185,9 @@ class ClientUserComponent(
     /** Links new phone. */
     val addUserIdentifierPhoneUseCase get() = useCaseModule.addUserIdentifierPhoneUseCase
 
+    /** Updates account password. */
+    val emailChangePasswordUseCase get() = useCaseModule.emailChangePasswordUseCase
+
     /**
      * Creates the root Decompose component for the profile management flow.
      *
@@ -198,6 +204,7 @@ class ClientUserComponent(
         userRepository = userRepository,
         logoutUseCase = logoutUseCase,
         scheduleUserDeletionUseCase = scheduleUserDeletionUseCase,
+        restoreUserUseCase = restoreUserUseCase,
         setupTotpUseCase = setupTotpUseCase,
         enableTotpUseCase = enableTotpUseCase,
         disableTotpUseCase = disableTotpUseCase,
@@ -212,6 +219,7 @@ class ClientUserComponent(
         addUserIdentifierEmailUseCase = addUserIdentifierEmailUseCase,
         sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase,
         addUserIdentifierPhoneUseCase = addUserIdentifierPhoneUseCase,
+        emailChangePasswordUseCase = emailChangePasswordUseCase,
         onNavigateToLogin = onNavigateToLogin
     )
 

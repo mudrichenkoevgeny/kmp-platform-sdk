@@ -16,17 +16,19 @@ sealed interface IdentifierListScreenState {
      * Identifiers list and add flows with pagination.
      *
      * @param paging cumulative state of the paginated list.
-     * @param actionLoading true when an action (delete, send code, add) is in progress.
+     * @param actionLoading true when an action (delete, send code, add, change password) is in progress.
      * @param actionError error from the last action attempt.
      * @param addEmailState current state of the add email flow.
      * @param addPhoneState current state of the add phone flow.
+     * @param changePasswordEmail target email for password change dialog, or null if hidden.
      */
     data class Content(
         val paging: PaginationState<UserIdentifier>,
         val actionLoading: Boolean = false,
         val actionError: AppError? = null,
         val addEmailState: AddIdentifierState = AddIdentifierState.Idle,
-        val addPhoneState: AddIdentifierState = AddIdentifierState.Idle
+        val addPhoneState: AddIdentifierState = AddIdentifierState.Idle,
+        val changePasswordEmail: String? = null
     ) : IdentifierListScreenState
 
     /** Critical error during state initialization. */

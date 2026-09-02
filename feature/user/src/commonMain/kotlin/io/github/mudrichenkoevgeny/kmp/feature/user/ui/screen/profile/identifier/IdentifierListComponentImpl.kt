@@ -15,6 +15,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierPhoneUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.DeleteUserIdentifierUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.EmailChangePasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.GetUserIdentifiersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.SendAddEmailIdentifierConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.SendAddPhoneIdentifierConfirmationUseCase
@@ -32,6 +33,7 @@ import kotlinx.coroutines.launch
  * @param addUserIdentifierEmailUseCase Finalizes email linking with code.
  * @param sendAddPhoneIdentifierConfirmationUseCase Initiates phone linking flow.
  * @param addUserIdentifierPhoneUseCase Finalizes phone linking with code.
+ * @param emailChangePasswordUseCase Updates account password.
  * @param onBack Pops this screen from the navigation stack.
  */
 class IdentifierListComponentImpl(
@@ -42,6 +44,7 @@ class IdentifierListComponentImpl(
     private val addUserIdentifierEmailUseCase: AddUserIdentifierEmailUseCase,
     private val sendAddPhoneIdentifierConfirmationUseCase: SendAddPhoneIdentifierConfirmationUseCase,
     private val addUserIdentifierPhoneUseCase: AddUserIdentifierPhoneUseCase,
+    private val emailChangePasswordUseCase: EmailChangePasswordUseCase,
     private val onBack: () -> Unit
 ) : IdentifierListComponent, ComponentContext by componentContext {
 
@@ -157,8 +160,35 @@ class IdentifierListComponentImpl(
         _state.value = current.copy(
             addEmailState = IdentifierListScreenState.AddIdentifierState.Idle,
             addPhoneState = IdentifierListScreenState.AddIdentifierState.Idle,
+            changePasswordEmail = null,
             actionError = null
         )
+    }
+
+    override fun onChangePasswordClick(email: String) {
+        val current = _state.value as? IdentifierListScreenState.Content ?: return
+        _state.value = current.copy(changePasswordEmail = email, actionError = null)
+    }
+
+    override fun onConfirmChangePasswordClick(oldPassword: String, newPassword: String) {
+        val current = _state.value as? IdentifierListScreenState.Content ?: return
+        val email = current.changePasswordEmail ?: return
+        _state.value = current.copy(actionLoading = true, actionError = null)
+
+        scope.launch {
+            emailChangePasswordUseCase(email = email, oldPassword = oldPassword, newPassword = newPassword)
+                .onSuccess {
+                    _state.value = current.copy(actionLoading = false, changePasswordEmail = null)
+                }
+                .onError { error ->
+                    _state.value = current.copy(actionLoading = false, actionError = error)
+                }
+        }
+    }
+
+    override fun onDismissChangePasswordDialog() {
+        val current = _state.value as? IdentifierListScreenState.Content ?: return
+        _state.value = current.copy(changePasswordEmail = null)
     }
 
     override fun onBackClick() {

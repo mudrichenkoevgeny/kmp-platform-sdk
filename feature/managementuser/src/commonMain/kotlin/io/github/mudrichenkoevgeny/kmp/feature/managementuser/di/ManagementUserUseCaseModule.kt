@@ -14,6 +14,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.R
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.SendResetPasswordConfirmationToEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.refreshtoken.RefreshTokenUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.RestoreUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.DisableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.EnableTotpUseCase
@@ -156,6 +157,13 @@ internal class ManagementUserUseCaseModule(
     /** Schedules manager account for deletion. (Note: might be unsupported by repo but we wire it). */
     val scheduleUserDeletionUseCase by lazy {
         ScheduleUserDeletionUseCase(
+            userRepository = managementUserRepositoryModule.selfManagementUserRepository
+        )
+    }
+
+    /** Restores an account scheduled for deletion. */
+    val restoreUserUseCase by lazy {
+        RestoreUserUseCase(
             userRepository = managementUserRepositoryModule.selfManagementUserRepository
         )
     }

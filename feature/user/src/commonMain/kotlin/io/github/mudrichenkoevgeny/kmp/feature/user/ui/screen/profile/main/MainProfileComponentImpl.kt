@@ -11,6 +11,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.LogoutUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.RestoreUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
@@ -25,6 +26,7 @@ import kotlinx.coroutines.launch
  * @param userRepository Source of the current user profile state.
  * @param logoutUseCase Ends the current session and clears local storage.
  * @param scheduleUserDeletionUseCase Initiates account deletion for end-users.
+ * @param restoreUserUseCase Restores an account scheduled for deletion.
  * @param onNavigateToLogin Invoked when the user needs to sign in.
  * @param onNavigateToTotp Opens the TOTP settings screen.
  * @param onNavigateToSessions Opens the active sessions list.
@@ -36,6 +38,7 @@ class MainProfileComponentImpl(
     userRepository: UserRepository,
     private val logoutUseCase: LogoutUseCase,
     private val scheduleUserDeletionUseCase: ScheduleUserDeletionUseCase,
+    private val restoreUserUseCase: RestoreUserUseCase,
     private val onNavigateToLogin: () -> Unit,
     private val onNavigateToTotp: () -> Unit,
     private val onNavigateToSessions: () -> Unit,
@@ -44,20 +47,23 @@ class MainProfileComponentImpl(
 
     private val scope = componentCoroutineScope()
     private val showDeleteConfirmation = MutableStateFlow(false)
+    private val showLogoutConfirmation = MutableStateFlow(false)
     private val actionState = MutableStateFlow<ActionState>(ActionState.Idle)
 
     override val state: Value<MainProfileScreenState> = combine(
         userRepository.currentUser,
         showDeleteConfirmation,
+        showLogoutConfirmation,
         actionState
-    ) { user, showConfirm, action ->
+    ) { user, showDeleteConfirm, showLogoutConfirm, action ->
         if (user == null) {
             MainProfileScreenState.Unauthorized
         } else {
             MainProfileScreenState.Content(
                 user = user,
                 isAccountDeletionAvailable = appType == AppType.CLIENT,
-                showDeleteConfirmation = showConfirm,
+                showDeleteConfirmation = showDeleteConfirm,
+                showLogoutConfirmation = showLogoutConfirm,
                 actionLoading = action is ActionState.Loading,
                 actionError = (action as? ActionState.Error)?.error
             )
@@ -81,6 +87,13 @@ class MainProfileComponentImpl(
     }
 
     override fun onLogoutClick() {
+        showLogoutConfirmation.value = true
+    }
+
+    override fun onConfirmLogout() {
+        showLogoutConfirmation.value = false
+        actionState.value = ActionState.Loading
+
         scope.launch {
             logoutUseCase()
         }
@@ -114,7 +127,19 @@ class MainProfileComponentImpl(
         }
     }
 
+    override fun onRestoreAccountClick() {
+        actionState.value = ActionState.Loading
+
+        scope.launch {
+            restoreUserUseCase()
+                .onError { error ->
+                    actionState.value = ActionState.Error(error)
+                }
+        }
+    }
+
     override fun onDismissDialog() {
         showDeleteConfirmation.value = false
+        showLogoutConfirmation.value = false
     }
 }

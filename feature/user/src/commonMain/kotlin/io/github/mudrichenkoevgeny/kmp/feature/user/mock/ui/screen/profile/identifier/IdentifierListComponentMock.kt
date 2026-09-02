@@ -67,6 +67,12 @@ class IdentifierListComponentMock(
         cancelAddCalls++
     }
 
+    override fun onChangePasswordClick(email: String) {}
+
+    override fun onConfirmChangePasswordClick(oldPassword: String, newPassword: String) {}
+
+    override fun onDismissChangePasswordDialog() {}
+
     override fun onLoadNextPage() {
         loadNextPageCalls++
     }

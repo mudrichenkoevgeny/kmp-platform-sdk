@@ -10,6 +10,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.UserRep
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.AddUserIdentifierEmailUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.AddUserIdentifierPhoneUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.DeleteUserIdentifierUseCaseMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.EmailChangePasswordUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.GetUserIdentifiersUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.SendAddEmailIdentifierConfirmationUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.SendAddPhoneIdentifierConfirmationUseCaseMock
@@ -17,6 +18,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.DeleteA
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.DeleteSessionUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.GetSessionsUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.LogoutUseCaseMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.RestoreUserUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.ScheduleUserDeletionUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.security.DisableTotpUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.security.EnableTotpUseCaseMock
@@ -133,6 +135,7 @@ class ProfileRootComponentImplTest {
         userRepository: UserRepositoryMock = UserRepositoryMock(),
         logoutUseCase: LogoutUseCaseMock = LogoutUseCaseMock(),
         scheduleUserDeletionUseCase: ScheduleUserDeletionUseCaseMock = ScheduleUserDeletionUseCaseMock(),
+        restoreUserUseCase: RestoreUserUseCaseMock = RestoreUserUseCaseMock(),
         setupTotpUseCase: SetupTotpUseCaseMock = SetupTotpUseCaseMock(),
         enableTotpUseCase: EnableTotpUseCaseMock = EnableTotpUseCaseMock(),
         disableTotpUseCase: DisableTotpUseCaseMock = DisableTotpUseCaseMock(),
@@ -146,7 +149,8 @@ class ProfileRootComponentImplTest {
         sendAddEmailIdentifierConfirmationUseCase: SendAddEmailIdentifierConfirmationUseCaseMock = SendAddEmailIdentifierConfirmationUseCaseMock(),
         addUserIdentifierEmailUseCase: AddUserIdentifierEmailUseCaseMock = AddUserIdentifierEmailUseCaseMock(),
         sendAddPhoneIdentifierConfirmationUseCase: SendAddPhoneIdentifierConfirmationUseCaseMock = SendAddPhoneIdentifierConfirmationUseCaseMock(),
-        addUserIdentifierPhoneUseCase: AddUserIdentifierPhoneUseCaseMock = AddUserIdentifierPhoneUseCaseMock()
+        addUserIdentifierPhoneUseCase: AddUserIdentifierPhoneUseCaseMock = AddUserIdentifierPhoneUseCaseMock(),
+        emailChangePasswordUseCase: EmailChangePasswordUseCaseMock = EmailChangePasswordUseCaseMock()
     ): ProfileRootComponentTestContext {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
@@ -159,6 +163,7 @@ class ProfileRootComponentImplTest {
             userRepository = userRepository,
             logoutUseCase = logoutUseCase,
             scheduleUserDeletionUseCase = scheduleUserDeletionUseCase,
+            restoreUserUseCase = restoreUserUseCase,
             setupTotpUseCase = setupTotpUseCase,
             enableTotpUseCase = enableTotpUseCase,
             disableTotpUseCase = disableTotpUseCase,
@@ -173,6 +178,7 @@ class ProfileRootComponentImplTest {
             addUserIdentifierEmailUseCase = addUserIdentifierEmailUseCase,
             sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase,
             addUserIdentifierPhoneUseCase = addUserIdentifierPhoneUseCase,
+            emailChangePasswordUseCase = emailChangePasswordUseCase,
             onNavigateToLogin = { context.onNavigateToLoginCalls++ }
         )
 

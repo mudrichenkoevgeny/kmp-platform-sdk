@@ -20,4 +20,7 @@ sealed interface ManagementLoginDestination {
 
     /** MFA/TOTP verification after successful initial login. */
     @Serializable data class LoginByTotp(val mfaToken: String) : ManagementLoginDestination
+
+    /** Intercepts logins for accounts scheduled for deletion. */
+    @Serializable object PendingDeletion : ManagementLoginDestination
 }
