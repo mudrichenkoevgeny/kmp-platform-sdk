@@ -9,14 +9,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
  *
  * @param identifierRepository Remote identifier management API.
  */
-class SendAddEmailIdentifierConfirmationUseCase(
+open class SendAddEmailIdentifierConfirmationUseCase(
     private val identifierRepository: IdentifierRepository
 ) {
     /**
      * @param email Target email address.
      * @return [OtpConfirmation] details on success, or a mapped failure.
      */
-    suspend operator fun invoke(email: String): AppResult<OtpConfirmation> {
+    open suspend operator fun invoke(email: String): AppResult<OtpConfirmation> {
         return identifierRepository.sendAddEmailIdentifierConfirmation(email)
     }
 }

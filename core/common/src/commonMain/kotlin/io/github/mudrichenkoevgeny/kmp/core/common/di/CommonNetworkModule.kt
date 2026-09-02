@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.di
 
+import co.touchlab.kermit.Logger as KermitLogger
 import io.github.mudrichenkoevgeny.kmp.core.common.network.httpclient.HttpClientConfigPlugin
 import io.github.mudrichenkoevgeny.kmp.core.common.network.httpclient.setupCommonConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenProvider
@@ -9,9 +10,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.Kto
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.core.common.repository.platform.PlatformRepository
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.Logger
 import kotlinx.coroutines.CoroutineScope
+
+private const val HTTP_CLIENT_LOG_TAG = "HttpClient"
 
 /**
  * Internal networking wiring for `core/common`.
@@ -30,7 +32,11 @@ internal class CommonNetworkModule(
     private val platformRepository: PlatformRepository,
     private val appScope: CoroutineScope
 ) {
-    private val networkLogger = Logger.DEFAULT
+    private val networkLogger = object : Logger {
+        override fun log(message: String) {
+            KermitLogger.d(tag = HTTP_CLIENT_LOG_TAG) { message }
+        }
+    }
 
     val httpClient by lazy {
         HttpClient {

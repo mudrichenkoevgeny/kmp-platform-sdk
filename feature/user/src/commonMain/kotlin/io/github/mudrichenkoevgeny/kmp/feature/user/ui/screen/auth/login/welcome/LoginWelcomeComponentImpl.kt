@@ -15,6 +15,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByGoogleUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorArgs
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -28,9 +30,10 @@ import kotlinx.coroutines.launch
  * @param getGlobalSettingsUseCase loads legal URLs and related settings.
  * @param getAvailableUserAuthProvidersUseCase loads which [UserAuthProvider] values are enabled.
  * @param loginByGoogleUseCase performs Google sign-in when that provider is chosen.
- * @param onNavigateToLoginByEmail pushes the email login destination on the parent stack.
- * @param onNavigateToLoginByPhone pushes the phone login destination on the parent stack.
- * @param onFinished completes the flow when sign-in succeeds (e.g. Google).
+ * @param onNavigateToLoginByEmail Pushes the email login destination on the parent stack.
+ * @param onNavigateToLoginByPhone Pushes the phone login destination on the parent stack.
+ * @param onNavigateToTotp Opens the MFA/TOTP screen on the parent stack.
+ * @param onFinished Completes the flow when sign-in succeeds (e.g. Google).
  */
 class LoginWelcomeComponentImpl(
     componentContext: ComponentContext,
@@ -41,6 +44,7 @@ class LoginWelcomeComponentImpl(
     private val loginByGoogleUseCase: LoginByGoogleUseCase?,
     private val onNavigateToLoginByEmail: () -> Unit,
     private val onNavigateToLoginByPhone: () -> Unit,
+    private val onNavigateToTotp: (mfaToken: String) -> Unit,
     private val onFinished: () -> Unit
 ) : LoginWelcomeComponent, ComponentContext by componentContext {
 
@@ -131,6 +135,13 @@ class LoginWelcomeComponentImpl(
                     onFinished()
                 }
                 .onError { appError ->
+                    if (appError.code == SecurityErrorCodes.TOTP_CONFIRMATION_REQUIRED) {
+                        val mfaToken = appError.args?.get(SecurityErrorArgs.MFA_TOKEN)
+                        if (mfaToken != null) {
+                            onNavigateToTotp(mfaToken)
+                            return@onError
+                        }
+                    }
                     stopActionState(appError)
                 }
         }

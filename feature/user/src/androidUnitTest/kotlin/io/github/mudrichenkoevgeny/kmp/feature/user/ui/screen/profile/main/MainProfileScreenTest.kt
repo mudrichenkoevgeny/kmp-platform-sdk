@@ -1,0 +1,142 @@
+package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main
+
+import android.app.Application
+import androidx.compose.ui.semantics.ProgressBarRangeInfo
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.hasProgressBarRangeInfo
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.runComposeUiTest
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.MainProfileComponentMock
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+@InternalApi
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [ROBOLECTRIC_SDK], application = Application::class)
+class MainProfileScreenTest {
+
+    @Test
+    fun loading_showsIndeterminateProgressAfterDefaultDelay() = runComposeUiTest {
+        val component = MainProfileComponentMock(MainProfileScreenState.Loading)
+        setContent {
+            ComponentTestHarness {
+                MainProfileScreen(component)
+            }
+        }
+        mainClock.autoAdvance = false
+        mainClock.advanceTimeBy(FullscreenLoadingConfig.DELAY_MILLIS + LOADING_EXTRA_DELAY_MS)
+        onNode(hasProgressBarRangeInfo(ProgressBarRangeInfo.Indeterminate)).assertExists()
+    }
+
+    @Test
+    fun unauthorized_displaysTextAndLoginButton_invokesOnLoginClick() = runComposeUiTest {
+        val component = MainProfileComponentMock(MainProfileScreenState.Unauthorized)
+        setContent {
+            ComponentTestHarness {
+                MainProfileScreen(component)
+            }
+        }
+        onNodeWithTag(MainProfileTestTags.UNAUTHORIZED_TEXT).assertIsDisplayed()
+        onNodeWithTag(MainProfileTestTags.LOGIN_BUTTON).assertIsDisplayed().performClick()
+        assertEquals(EXPECTED_SINGLE_CALLBACK, component.loginCalls)
+    }
+
+    @Test
+    fun content_displaysElements_withDeleteAccountAvailable() = runComposeUiTest {
+        val user = userDetailsMock()
+        val component = MainProfileComponentMock(
+            MainProfileScreenState.Content(
+                user = user,
+                isAccountDeletionAvailable = true
+            )
+        )
+        setContent {
+            ComponentTestHarness {
+                MainProfileScreen(component)
+            }
+        }
+        onNodeWithTag(MainProfileTestTags.USER_ID_TEXT)
+            .assertIsDisplayed()
+            .assertTextContains(user.id.asHexDashString(), substring = true)
+        onNodeWithTag(MainProfileTestTags.TOTP_SETTINGS_BUTTON).assertIsDisplayed()
+        onNodeWithTag(MainProfileTestTags.SESSIONS_BUTTON).assertIsDisplayed()
+        onNodeWithTag(MainProfileTestTags.IDENTIFIERS_BUTTON).assertIsDisplayed()
+        onNodeWithTag(MainProfileTestTags.DELETE_ACCOUNT_BUTTON).assertIsDisplayed()
+        onNodeWithTag(MainProfileTestTags.LOGOUT_BUTTON).assertIsDisplayed()
+    }
+
+    @Test
+    fun content_clickActions_invokesCallbacks() = runComposeUiTest {
+        val component = MainProfileComponentMock(
+            MainProfileScreenState.Content(
+                user = userDetailsMock(),
+                isAccountDeletionAvailable = true
+            )
+        )
+        setContent {
+            ComponentTestHarness {
+                MainProfileScreen(component)
+            }
+        }
+
+        onNodeWithTag(MainProfileTestTags.TOTP_SETTINGS_BUTTON).performClick()
+        assertEquals(EXPECTED_SINGLE_CALLBACK, component.totpSettingsCalls)
+
+        onNodeWithTag(MainProfileTestTags.SESSIONS_BUTTON).performClick()
+        assertEquals(EXPECTED_SINGLE_CALLBACK, component.sessionsCalls)
+
+        onNodeWithTag(MainProfileTestTags.IDENTIFIERS_BUTTON).performClick()
+        assertEquals(EXPECTED_SINGLE_CALLBACK, component.identifiersCalls)
+
+        onNodeWithTag(MainProfileTestTags.DELETE_ACCOUNT_BUTTON).performClick()
+        assertEquals(EXPECTED_SINGLE_CALLBACK, component.deleteAccountCalls)
+
+        onNodeWithTag(MainProfileTestTags.LOGOUT_BUTTON).performClick()
+        assertEquals(EXPECTED_SINGLE_CALLBACK, component.logoutCalls)
+    }
+
+    @Test
+    fun content_inlineActionError_showsErrorTextNode() = runComposeUiTest {
+        val component = MainProfileComponentMock(
+            MainProfileScreenState.Content(
+                user = userDetailsMock(),
+                actionError = CommonError.Unknown()
+            )
+        )
+        setContent {
+            ComponentTestHarness {
+                MainProfileScreen(component)
+            }
+        }
+        onNodeWithTag(MainProfileTestTags.ACTION_ERROR_TEXT).assertIsDisplayed()
+    }
+
+    @Test
+    fun error_showsGlobalErrorTextNode() = runComposeUiTest {
+        val component = MainProfileComponentMock(
+            MainProfileScreenState.Error(error = CommonError.Unknown())
+        )
+        setContent {
+            ComponentTestHarness {
+                MainProfileScreen(component)
+            }
+        }
+        onNodeWithTag(MainProfileTestTags.GLOBAL_ERROR_TEXT).assertIsDisplayed()
+    }
+
+    private companion object {
+        const val LOADING_EXTRA_DELAY_MS = 50L
+        const val EXPECTED_SINGLE_CALLBACK = 1
+    }
+}

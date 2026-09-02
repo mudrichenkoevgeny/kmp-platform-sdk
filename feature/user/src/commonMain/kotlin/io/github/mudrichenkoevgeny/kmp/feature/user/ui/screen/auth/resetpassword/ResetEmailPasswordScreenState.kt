@@ -1,6 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
+import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 
 /**
  * UI state for email-based password reset: request code for email, then enter code and new password.
@@ -42,7 +43,7 @@ sealed interface ResetEmailPasswordScreenState {
         val code: String = "",
         val newPassword: String = "",
         val isPasswordValid: Boolean = false,
-        val codeLength: Int = 6,
+        val codeLength: Int = FieldValidator.DEFAULT_OTP_LENGTH,
         val resendTimerSeconds: Int = 0,
         val actionLoading: Boolean = false,
         val actionError: AppError? = null

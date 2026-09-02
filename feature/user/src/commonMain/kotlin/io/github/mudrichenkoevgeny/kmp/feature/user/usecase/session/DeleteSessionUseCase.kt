@@ -9,14 +9,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
  *
  * @param sessionRepository Remote session management API.
  */
-class DeleteSessionUseCase(
+open class DeleteSessionUseCase(
     private val sessionRepository: SessionRepository
 ) {
     /**
      * @param userSessionId Unique session identifier to revoke.
      * @return Empty success indicator, or a mapped failure.
      */
-    suspend operator fun invoke(userSessionId: UserSessionId): AppResult<Unit> {
+    open suspend operator fun invoke(userSessionId: UserSessionId): AppResult<Unit> {
         return sessionRepository.deleteSession(userSessionId)
     }
 }

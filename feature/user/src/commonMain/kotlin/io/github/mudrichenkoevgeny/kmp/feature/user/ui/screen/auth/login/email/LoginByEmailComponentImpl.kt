@@ -7,11 +7,13 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCorou
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
-import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.SecurityErrorCodes
+import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.ClientSecurityErrorCodes as LocalSecurityErrorCodes
 import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ValidatePasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorArgs
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorCodes
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -20,12 +22,13 @@ import kotlinx.coroutines.launch
  *
  * @param componentContext Decompose [ComponentContext].
  * @param appType Defines the application context (Client/Management) to toggle features like registration.
- * @param loginByEmailUseCase performs sign-in with email and password.
- * @param validatePasswordUseCase enforces password rules before network calls.
- * @param onNavigateToRegistrationByEmail opens the registration screen on the parent stack.
- * @param onNavigateToForgotPassword opens the reset-password screen on the parent stack.
- * @param onBack pops this screen on the parent stack.
- * @param onFinished invoked when login succeeds so the host can close the flow.
+ * @param loginByEmailUseCase Performs sign-in with email and password.
+ * @param validatePasswordUseCase Enforces password rules before network calls.
+ * @param onNavigateToRegistrationByEmail Opens the registration screen on the parent stack.
+ * @param onNavigateToForgotPassword Opens the reset-password screen on the parent stack.
+ * @param onNavigateToTotp Opens the MFA/TOTP screen on the parent stack.
+ * @param onBack Pops this screen on the parent stack.
+ * @param onFinished Invoked when login succeeds so the host can close the flow.
  */
 class LoginByEmailComponentImpl(
     componentContext: ComponentContext,
@@ -34,6 +37,7 @@ class LoginByEmailComponentImpl(
     private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val onNavigateToRegistrationByEmail: () -> Unit,
     private val onNavigateToForgotPassword: () -> Unit,
+    private val onNavigateToTotp: (mfaToken: String) -> Unit,
     private val onBack: () -> Unit,
     private val onFinished: () -> Unit
 ) : LoginByEmailComponent, ComponentContext by componentContext {
@@ -69,15 +73,19 @@ class LoginByEmailComponentImpl(
         passwordValidationJob = scope.launch {
             val result = validatePasswordUseCase(password)
 
-            val isTooShort = result is AppResult.Error &&
-                    result.error.code == SecurityErrorCodes.PASSWORD_TOO_SHORT
+            val isPasswordValid = when (result) {
+                is AppResult.Success -> true
+                is AppResult.Error -> result.error.code != LocalSecurityErrorCodes.PASSWORD_TOO_SHORT &&
+                        result.error.code != LocalSecurityErrorCodes.PASSWORD_POLICY_UNAVAILABLE
+            }
 
             val updated = _state.value as? LoginByEmailScreenState.Content ?: return@launch
             _state.value = updated.copy(
-                isPasswordValid = !isTooShort
+                isPasswordValid = isPasswordValid
             )
         }
     }
+
     override fun onTogglePasswordVisibility() {
         val current = _state.value as? LoginByEmailScreenState.Content ?: return
         _state.value = current.copy(isPasswordVisible = !current.isPasswordVisible)
@@ -95,6 +103,14 @@ class LoginByEmailComponentImpl(
                     loginByEmailUseCase.execute(current.email, current.password)
                         .onSuccess { onFinished() }
                         .onError { error ->
+                            if (error.code == SecurityErrorCodes.TOTP_CONFIRMATION_REQUIRED) {
+                                val mfaToken = error.args?.get(SecurityErrorArgs.MFA_TOKEN)
+                                if (mfaToken != null) {
+                                    onNavigateToTotp(mfaToken)
+                                    return@onError
+                                }
+                            }
+
                             _state.value = current.copy(
                                 actionLoading = false,
                                 actionError = error

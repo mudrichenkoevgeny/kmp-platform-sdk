@@ -17,4 +17,7 @@ sealed interface ManagementLoginDestination {
 
     /** Forgot password / reset password by email. */
     @Serializable object ResetEmailPassword : ManagementLoginDestination
+
+    /** MFA/TOTP verification after successful initial login. */
+    @Serializable data class LoginByTotp(val mfaToken: String) : ManagementLoginDestination
 }

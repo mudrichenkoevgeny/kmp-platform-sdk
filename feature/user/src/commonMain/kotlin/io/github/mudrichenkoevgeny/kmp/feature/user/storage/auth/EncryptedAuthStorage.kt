@@ -72,11 +72,11 @@ class EncryptedAuthStorage(
     }
 
     override suspend fun getPublicAuthSettings(): PublicAuthSettings? {
-        val data = encryptedSettings.get(KEY_PUBLIC_AUTH_SETTINGS)
-            ?: return null
+        val data = encryptedSettings.get(KEY_PUBLIC_AUTH_SETTINGS) ?: return null
         return try {
             json.decodeFromString<PublicAuthSettingsPayload>(data).toAuthSettings()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
+            encryptedSettings.remove(KEY_PUBLIC_AUTH_SETTINGS)
             null
         }
     }
@@ -92,11 +92,11 @@ class EncryptedAuthStorage(
     }
 
     override suspend fun getManagementAuthSettings(): ManagementAuthSettings? {
-        val data = encryptedSettings.get(KEY_MANAGEMENT_AUTH_SETTINGS)
-            ?: return null
+        val data = encryptedSettings.get(KEY_MANAGEMENT_AUTH_SETTINGS) ?: return null
         return try {
             json.decodeFromString<ManagementAuthSettingsPayload>(data).toManagementAuthSettings()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
+            encryptedSettings.remove(KEY_MANAGEMENT_AUTH_SETTINGS)
             null
         }
     }

@@ -13,7 +13,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.l
  *
  * @param identifierRepository Remote identifier management API.
  */
-class GetUserIdentifiersUseCase(
+open class GetUserIdentifiersUseCase(
     private val identifierRepository: IdentifierRepository
 ) {
     /**
@@ -25,7 +25,7 @@ class GetUserIdentifiersUseCase(
      * @param identifiers Filters by substring patterns of identifier values.
      * @return Paginated result containing matching user identifier models, or a mapped failure.
      */
-    suspend operator fun invoke(
+    open suspend operator fun invoke(
         pageNumber: Int? = null,
         pageSize: Int? = null,
         sortBy: UserSortValues.UserIdentifierSortBy? = null,

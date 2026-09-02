@@ -10,6 +10,12 @@ object FieldValidator {
     /** Minimum inclusive length for [isPhoneNumberValid] when all characters are digits. */
     const val MIN_PHONE_LENGTH = 10
 
+    /** Standard length for TOTP verification codes (RFC 6238). */
+    const val TOTP_CODE_LENGTH = 6
+
+    /** Default length for generic One-Time Passwords (SMS/Email) if not specified by server. */
+    const val DEFAULT_OTP_LENGTH = 6
+
     /**
      * Returns true when [phone] contains only digits and its length is at least [MIN_PHONE_LENGTH].
      */

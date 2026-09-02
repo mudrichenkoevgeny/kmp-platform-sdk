@@ -23,4 +23,7 @@ sealed interface ClientLoginDestination {
 
     /** Forgot password / reset password by email. */
     @Serializable object ResetEmailPassword : ClientLoginDestination
+
+    /** MFA/TOTP verification after successful initial login. */
+    @Serializable data class LoginByTotp(val mfaToken: String) : ClientLoginDestination
 }

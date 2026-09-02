@@ -25,6 +25,7 @@ class EncryptedSecuritySettingsStorage(
         return try {
             json.decodeFromString<SecuritySettingsPayload>(data).toSecuritySettings()
         } catch (_: Exception) {
+            encryptedSettings.remove(KEY_SECURITY_SETTINGS)
             null
         }
     }

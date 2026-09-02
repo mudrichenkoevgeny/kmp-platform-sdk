@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 
 /**
  * Placeholder home tab content for the sample.
@@ -18,6 +19,13 @@ fun HomeScreen(screenComponent: HomeScreenComponent) {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Home Screen")
+        Text(
+            text = "Home Screen",
+            modifier = Modifier.testTag(HomeScreenTestTags.TITLE)
+        )
     }
+}
+
+internal object HomeScreenTestTags {
+    const val TITLE = "HomeScreen_Title"
 }

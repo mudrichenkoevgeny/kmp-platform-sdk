@@ -26,6 +26,7 @@ class EncryptedGlobalSettingsStorage(
         return try {
             json.decodeFromString<GlobalSettingsPayload>(data).toGlobalSettings()
         } catch (_: Exception) {
+            encryptedSettings.remove(KEY_GLOBAL_SETTINGS)
             null
         }
     }

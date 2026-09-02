@@ -13,6 +13,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginR
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByPhoneUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.SendLoginConfirmationToPhoneUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorArgs
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorCodes
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -31,6 +33,7 @@ class LoginByPhoneComponentImpl(
     private val loginRepository: LoginRepository,
     private val sendLoginConfirmationToPhoneUseCase: SendLoginConfirmationToPhoneUseCase,
     private val loginByPhoneUseCase: LoginByPhoneUseCase,
+    private val onNavigateToTotp: (mfaToken: String) -> Unit,
     private val onBack: () -> Unit,
     private val onFinished: () -> Unit
 ) : LoginByPhoneComponent, ComponentContext by componentContext {
@@ -103,6 +106,14 @@ class LoginByPhoneComponentImpl(
             loginByPhoneUseCase.execute(current.phoneNumber, current.code)
                 .onSuccess { onFinished() }
                 .onError { error ->
+                    if (error.code == SecurityErrorCodes.TOTP_CONFIRMATION_REQUIRED) {
+                        val mfaToken = error.args?.get(SecurityErrorArgs.MFA_TOKEN)
+                        if (mfaToken != null) {
+                            onNavigateToTotp(mfaToken)
+                            return@onError
+                        }
+                    }
+
                     _state.value = current.copy(actionLoading = false, actionError = error)
                     error.log()
                 }

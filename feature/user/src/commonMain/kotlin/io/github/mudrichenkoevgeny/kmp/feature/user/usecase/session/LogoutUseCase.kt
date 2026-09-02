@@ -13,7 +13,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
  * @param authStorage Token storage to be cleared.
  * @param userStorage User profile storage to be cleared.
  */
-class LogoutUseCase(
+open class LogoutUseCase(
     private val sessionRepository: SessionRepository,
     private val authStorage: AuthStorage,
     private val userStorage: UserStorage
@@ -21,7 +21,7 @@ class LogoutUseCase(
     /**
      * @return Empty success indicator and cleared storage on success, or a mapped failure.
      */
-    suspend operator fun invoke(): AppResult<Unit> {
+    open suspend operator fun invoke(): AppResult<Unit> {
         return sessionRepository.logout()
             .onSuccess {
                 authStorage.clearTokens()

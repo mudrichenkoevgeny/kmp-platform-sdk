@@ -1,9 +1,11 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword
 
+import android.app.Application
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasProgressBarRangeInfo
-import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
@@ -20,7 +22,7 @@ import kotlin.test.assertEquals
 
 @InternalApi
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [ROBOLECTRIC_SDK])
+@Config(sdk = [ROBOLECTRIC_SDK], application = Application::class)
 class ResetEmailPasswordScreenTest {
 
     @Test
@@ -46,13 +48,14 @@ class ResetEmailPasswordScreenTest {
                 ResetEmailPasswordScreen(component)
             }
         }
-        onNodeWithText(RESET_PASSWORD_TITLE).assertIsDisplayed()
-        onNodeWithText(EMAIL_LABEL).assertIsDisplayed()
-        onNodeWithText(SEND_CODE).assertIsDisplayed()
+        onNodeWithTag(ResetEmailPasswordTestTags.EMAIL_STEP_BACK_BUTTON).assertIsDisplayed()
+        onNodeWithTag(ResetEmailPasswordTestTags.EMAIL_STEP_TITLE).assertIsDisplayed()
+        onNodeWithTag(ResetEmailPasswordTestTags.EMAIL_INPUT).assertIsDisplayed().assertTextContains(EMAIL_SEND_STEP)
+        onNodeWithTag(ResetEmailPasswordTestTags.SEND_CODE_BUTTON).assertIsDisplayed()
     }
 
     @Test
-    fun emailInput_inlineError_showsLocalizedMessage() = runComposeUiTest {
+    fun emailInput_inlineError_showsErrorTextNode() = runComposeUiTest {
         val component = ResetEmailPasswordComponentMock(
             ResetEmailPasswordScreenState.EmailInput(
                 email = EMAIL_SEND_STEP,
@@ -65,7 +68,7 @@ class ResetEmailPasswordScreenTest {
                 ResetEmailPasswordScreen(component)
             }
         }
-        onNodeWithText(MOCK_ERROR_MESSAGE).assertIsDisplayed()
+        onNodeWithTag(ResetEmailPasswordTestTags.EMAIL_STEP_ERROR_TEXT).assertIsDisplayed()
     }
 
     @Test
@@ -78,7 +81,7 @@ class ResetEmailPasswordScreenTest {
                 ResetEmailPasswordScreen(component)
             }
         }
-        onNodeWithText(SEND_CODE).performClick()
+        onNodeWithTag(ResetEmailPasswordTestTags.SEND_CODE_BUTTON).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.sendCodeCalls)
     }
 
@@ -99,13 +102,13 @@ class ResetEmailPasswordScreenTest {
                 ResetEmailPasswordScreen(component)
             }
         }
-        onNodeWithText(ENTER_CODE_TITLE).assertIsDisplayed()
-        onNodeWithText(CODE_SENT_PREFIX, substring = true).assertIsDisplayed()
-        onNodeWithText(email, substring = true).assertIsDisplayed()
-        onNodeWithText(CONFIRMATION_CODE_LABEL).assertIsDisplayed()
-        onNodeWithText(NEW_PASSWORD_LABEL).assertIsDisplayed()
-        onNodeWithText(CONFIRM_BUTTON).assertIsDisplayed()
-        onNodeWithText(CHANGE_EMAIL).assertIsDisplayed()
+        onNodeWithTag(ResetEmailPasswordTestTags.RESET_STEP_BACK_BUTTON).assertIsDisplayed()
+        onNodeWithTag(ResetEmailPasswordTestTags.RESET_STEP_TITLE).assertIsDisplayed()
+        onNodeWithTag(ResetEmailPasswordTestTags.CODE_SENT_INFO_TEXT).assertIsDisplayed().assertTextContains(email, substring = true)
+        onNodeWithTag(ResetEmailPasswordTestTags.CODE_INPUT).assertIsDisplayed().assertTextContains(CODE_THREE_DIGITS)
+        onNodeWithTag(ResetEmailPasswordTestTags.NEW_PASSWORD_INPUT).assertIsDisplayed().assertTextContains(NEW_PASSWORD_INVALID)
+        onNodeWithTag(ResetEmailPasswordTestTags.CONFIRM_BUTTON).assertIsDisplayed()
+        onNodeWithTag(ResetEmailPasswordTestTags.CHANGE_EMAIL_BUTTON).assertIsDisplayed()
     }
 
     @Test
@@ -121,7 +124,7 @@ class ResetEmailPasswordScreenTest {
                 ResetEmailPasswordScreen(component)
             }
         }
-        onNodeWithText(RESEND_TIMER_COUNTDOWN_TEXT, substring = true).assertIsDisplayed()
+        onNodeWithTag(ResetEmailPasswordTestTags.RESEND_TIMER_TEXT).assertIsDisplayed()
     }
 
     @Test
@@ -137,7 +140,7 @@ class ResetEmailPasswordScreenTest {
                 ResetEmailPasswordScreen(component)
             }
         }
-        onNodeWithText(RESEND_CODE).assertIsDisplayed()
+        onNodeWithTag(ResetEmailPasswordTestTags.RESEND_CODE_BUTTON).assertIsDisplayed()
     }
 
     @Test
@@ -156,7 +159,7 @@ class ResetEmailPasswordScreenTest {
                 ResetEmailPasswordScreen(component)
             }
         }
-        onNodeWithText(CHANGE_EMAIL).performClick()
+        onNodeWithTag(ResetEmailPasswordTestTags.CHANGE_EMAIL_BUTTON).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.resetEmailCalls)
     }
 
@@ -175,19 +178,6 @@ class ResetEmailPasswordScreenTest {
 
         const val RESEND_TIMER_RESET_INPUT_SECONDS = 20
         const val RESEND_TIMER_COUNTDOWN_SECONDS = 7
-        const val RESEND_TIMER_COUNTDOWN_TEXT = "7"
         const val RESEND_TIMER_EXPIRED_SECONDS = 0
-
-        const val RESET_PASSWORD_TITLE = "Reset password"
-        const val ENTER_CODE_TITLE = "Enter code"
-        const val EMAIL_LABEL = "Email"
-        const val CONFIRMATION_CODE_LABEL = "Confirmation code"
-        const val NEW_PASSWORD_LABEL = "New password"
-        const val SEND_CODE = "Send code"
-        const val RESEND_CODE = "Resend code"
-        const val CONFIRM_BUTTON = "Confirm"
-        const val CHANGE_EMAIL = "Change email"
-        const val CODE_SENT_PREFIX = "The code has been sent to"
-        const val MOCK_ERROR_MESSAGE = "Unknown Error"
     }
 }

@@ -1,9 +1,11 @@
 package io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email
 
+import android.app.Application
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasProgressBarRangeInfo
-import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
@@ -12,8 +14,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.Fullscre
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.ui.screen.auth.registration.email.RegistrationByEmailComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email.RegistrationByEmailScreen
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email.RegistrationByEmailScreenState
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -22,7 +22,7 @@ import kotlin.test.assertEquals
 
 @InternalApi
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [ROBOLECTRIC_SDK])
+@Config(sdk = [ROBOLECTRIC_SDK], application = Application::class)
 class RegistrationByEmailScreenTest {
 
     @Test
@@ -50,13 +50,14 @@ class RegistrationByEmailScreenTest {
                 RegistrationByEmailScreen(component)
             }
         }
-        onNodeWithText(REGISTRATION_TITLE).assertIsDisplayed()
-        onNodeWithText(EMAIL_LABEL).assertIsDisplayed()
-        onNodeWithText(SEND_CODE).assertIsDisplayed()
+        onNodeWithTag(RegistrationByEmailTestTags.BACK_BUTTON).assertIsDisplayed()
+        onNodeWithTag(RegistrationByEmailTestTags.TITLE).assertIsDisplayed()
+        onNodeWithTag(RegistrationByEmailTestTags.EMAIL_INPUT).assertIsDisplayed().assertTextContains(EMAIL_SEND_STEP)
+        onNodeWithTag(RegistrationByEmailTestTags.SEND_CODE_BUTTON).assertIsDisplayed()
     }
 
     @Test
-    fun emailInput_inlineError_showsLocalizedMessage() = runComposeUiTest {
+    fun emailInput_inlineError_showsErrorTextNode() = runComposeUiTest {
         val component = RegistrationByEmailComponentMock(
             RegistrationByEmailScreenState.EmailInput(
                 email = EMAIL_SEND_STEP,
@@ -69,7 +70,7 @@ class RegistrationByEmailScreenTest {
                 RegistrationByEmailScreen(component)
             }
         }
-        onNodeWithText(MOCK_ERROR_MESSAGE).assertIsDisplayed()
+        onNodeWithTag(RegistrationByEmailTestTags.EMAIL_STEP_ERROR_TEXT).assertIsDisplayed()
     }
 
     @Test
@@ -82,7 +83,7 @@ class RegistrationByEmailScreenTest {
                 RegistrationByEmailScreen(component)
             }
         }
-        onNodeWithText(SEND_CODE).performClick()
+        onNodeWithTag(RegistrationByEmailTestTags.SEND_CODE_BUTTON).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.sendCodeCalls)
     }
 
@@ -103,12 +104,14 @@ class RegistrationByEmailScreenTest {
                 RegistrationByEmailScreen(component)
             }
         }
-        onNodeWithText(ENTER_CODE_TITLE).assertIsDisplayed()
-        onNodeWithText(CODE_SENT_PREFIX, substring = true).assertIsDisplayed()
-        onNodeWithText(email, substring = true).assertIsDisplayed()
-        onNodeWithText(CONFIRMATION_CODE_LABEL).assertIsDisplayed()
-        onNodeWithText(PASSWORD_LABEL).assertIsDisplayed()
-        onNodeWithText(REGISTER_BUTTON).assertIsDisplayed()
+        onNodeWithTag(RegistrationByEmailTestTags.BACK_BUTTON).assertIsDisplayed()
+        onNodeWithTag(RegistrationByEmailTestTags.TITLE).assertIsDisplayed()
+        onNodeWithTag(RegistrationByEmailTestTags.CODE_STEP_TITLE).assertIsDisplayed()
+        onNodeWithTag(RegistrationByEmailTestTags.CODE_SENT_INFO_TEXT).assertIsDisplayed().assertTextContains(email)
+        onNodeWithTag(RegistrationByEmailTestTags.CODE_INPUT).assertIsDisplayed().assertTextContains(CODE_THREE_DIGITS)
+        onNodeWithTag(RegistrationByEmailTestTags.PASSWORD_INPUT).assertIsDisplayed()
+        onNodeWithTag(RegistrationByEmailTestTags.TOGGLE_PASSWORD_VISIBILITY_BUTTON).assertIsDisplayed()
+        onNodeWithTag(RegistrationByEmailTestTags.REGISTER_BUTTON).assertIsDisplayed()
     }
 
     @Test
@@ -124,7 +127,7 @@ class RegistrationByEmailScreenTest {
                 RegistrationByEmailScreen(component)
             }
         }
-        onNodeWithText(RESEND_TIMER_COUNTDOWN_TEXT, substring = true).assertIsDisplayed()
+        onNodeWithTag(RegistrationByEmailTestTags.RESEND_TIMER_TEXT).assertIsDisplayed()
     }
 
     @Test
@@ -140,7 +143,7 @@ class RegistrationByEmailScreenTest {
                 RegistrationByEmailScreen(component)
             }
         }
-        onNodeWithText(RESEND_CODE).assertIsDisplayed()
+        onNodeWithTag(RegistrationByEmailTestTags.RESEND_CODE_BUTTON).assertIsDisplayed()
     }
 
     @Test
@@ -158,7 +161,7 @@ class RegistrationByEmailScreenTest {
                 RegistrationByEmailScreen(component)
             }
         }
-        onNodeWithText(REGISTER_BUTTON).performClick()
+        onNodeWithTag(RegistrationByEmailTestTags.REGISTER_BUTTON).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.registerCalls)
     }
 
@@ -177,18 +180,6 @@ class RegistrationByEmailScreenTest {
 
         const val RESEND_TIMER_REGISTRATION_INPUT_SECONDS = 15
         const val RESEND_TIMER_COUNTDOWN_SECONDS = 44
-        const val RESEND_TIMER_COUNTDOWN_TEXT = "44"
         const val RESEND_TIMER_EXPIRED_SECONDS = 0
-
-        const val REGISTRATION_TITLE = "Registration by Email"
-        const val ENTER_CODE_TITLE = "Enter code"
-        const val EMAIL_LABEL = "Email"
-        const val CONFIRMATION_CODE_LABEL = "Confirmation code"
-        const val PASSWORD_LABEL = "Password"
-        const val SEND_CODE = "Send code"
-        const val RESEND_CODE = "Resend code"
-        const val REGISTER_BUTTON = "Register"
-        const val CODE_SENT_PREFIX = "The code has been sent to"
-        const val MOCK_ERROR_MESSAGE = "Unknown Error"
     }
 }

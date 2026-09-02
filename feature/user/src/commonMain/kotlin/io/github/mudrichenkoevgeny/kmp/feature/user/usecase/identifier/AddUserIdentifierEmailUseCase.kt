@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
  *
  * @param identifierRepository Remote identifier management API.
  */
-class AddUserIdentifierEmailUseCase(
+open class AddUserIdentifierEmailUseCase(
     private val identifierRepository: IdentifierRepository
 ) {
     /**
@@ -18,7 +18,7 @@ class AddUserIdentifierEmailUseCase(
      * @param confirmationCode One-time code sent to the email.
      * @return New [UserIdentifier] on success, or a mapped failure.
      */
-    suspend operator fun invoke(
+    open suspend operator fun invoke(
         email: String,
         password: String,
         confirmationCode: String

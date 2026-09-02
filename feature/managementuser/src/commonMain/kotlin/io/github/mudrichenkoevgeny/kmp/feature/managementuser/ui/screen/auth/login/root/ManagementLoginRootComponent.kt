@@ -4,6 +4,7 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.ManagementLoginDestination
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordComponent
 
@@ -47,5 +48,12 @@ interface ManagementLoginRootComponent {
          * @param component child Decompose component for this step.
          */
         class ResetEmailPassword(val component: ResetEmailPasswordComponent) : Child
+
+        /**
+         * MFA/TOTP verification.
+         *
+         * @param component child Decompose component for this step.
+         */
+        class LoginByTotp(val component: LoginByTotpComponent) : Child
     }
 }

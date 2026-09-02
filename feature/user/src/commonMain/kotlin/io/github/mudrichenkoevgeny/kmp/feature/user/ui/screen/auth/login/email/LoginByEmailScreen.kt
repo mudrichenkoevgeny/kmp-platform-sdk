@@ -30,6 +30,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -108,7 +109,9 @@ private fun LoginByEmailContent(
             ) {
                 IconButton(
                     onClick = onBackClick,
-                    modifier = Modifier.align(Alignment.CenterStart),
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .testTag(LoginByEmailTestTags.BACK_BUTTON),
                     enabled = !state.actionLoading
                 ) {
                     Icon(
@@ -119,7 +122,8 @@ private fun LoginByEmailContent(
 
                 Text(
                     text = stringResource(Res.string.login_by_email),
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.testTag(LoginByEmailTestTags.TITLE)
                 )
             }
 
@@ -128,7 +132,9 @@ private fun LoginByEmailContent(
             OutlinedTextField(
                 value = state.email,
                 onValueChange = onEmailChanged,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(LoginByEmailTestTags.EMAIL_INPUT),
                 label = { Text(stringResource(Res.string.email)) },
                 isError = state.actionError != null,
                 enabled = !state.actionLoading,
@@ -141,13 +147,18 @@ private fun LoginByEmailContent(
             OutlinedTextField(
                 value = state.password,
                 onValueChange = onPasswordChanged,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(LoginByEmailTestTags.PASSWORD_INPUT),
                 label = { Text(stringResource(Res.string.password)) },
                 isError = state.actionError != null,
                 enabled = !state.actionLoading,
                 visualTransformation = if (state.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
-                    IconButton(onClick = onTogglePasswordVisibility) {
+                    IconButton(
+                        onClick = onTogglePasswordVisibility,
+                        modifier = Modifier.testTag(LoginByEmailTestTags.TOGGLE_PASSWORD_VISIBILITY_BUTTON)
+                    ) {
                         val icon = if (state.isPasswordVisible) Icons.Default.Check else Icons.Default.Info
                         Icon(imageVector = icon, contentDescription = null)
                     }
@@ -160,7 +171,9 @@ private fun LoginByEmailContent(
 
             TextButton(
                 onClick = onForgotPasswordClick,
-                modifier = Modifier.align(Alignment.End),
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .testTag(LoginByEmailTestTags.FORGOT_PASSWORD_BUTTON),
                 enabled = !state.actionLoading
             ) {
                 Text(
@@ -173,7 +186,9 @@ private fun LoginByEmailContent(
 
             Button(
                 onClick = onLoginClick,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(LoginByEmailTestTags.LOGIN_BUTTON),
                 enabled = state.canLogin
             ) {
                 Text(stringResource(Res.string.login))
@@ -184,6 +199,7 @@ private fun LoginByEmailContent(
             if (state.isRegistrationAvailable) {
                 TextButton(
                     onClick = onRegistrationClick,
+                    modifier = Modifier.testTag(LoginByEmailTestTags.REGISTRATION_BUTTON),
                     enabled = !state.actionLoading
                 ) {
                     Text(
@@ -213,7 +229,9 @@ private fun ErrorText(error: AppError?) {
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = Dimens.paddingSmall)
+                modifier = Modifier
+                    .padding(top = Dimens.paddingSmall)
+                    .testTag(LoginByEmailTestTags.ERROR_TEXT)
             )
         }
     }
@@ -293,4 +311,16 @@ private fun LoginByEmailContentErrorPreview() {
             }
         }
     }
+}
+
+internal object LoginByEmailTestTags {
+    const val BACK_BUTTON = "LoginByEmail_BackButton"
+    const val TITLE = "LoginByEmail_Title"
+    const val EMAIL_INPUT = "LoginByEmail_EmailInput"
+    const val PASSWORD_INPUT = "LoginByEmail_PasswordInput"
+    const val TOGGLE_PASSWORD_VISIBILITY_BUTTON = "LoginByEmail_TogglePasswordVisibilityButton"
+    const val FORGOT_PASSWORD_BUTTON = "LoginByEmail_ForgotPasswordButton"
+    const val LOGIN_BUTTON = "LoginByEmail_LoginButton"
+    const val REGISTRATION_BUTTON = "LoginByEmail_RegistrationButton"
+    const val ERROR_TEXT = "LoginByEmail_ErrorText"
 }

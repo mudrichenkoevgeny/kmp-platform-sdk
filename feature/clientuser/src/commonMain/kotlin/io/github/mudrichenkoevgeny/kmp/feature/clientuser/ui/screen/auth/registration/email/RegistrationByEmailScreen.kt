@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -44,9 +45,17 @@ fun RegistrationByEmailScreen(component: RegistrationByEmailComponent) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(Res.string.registration_by_email)) },
+                title = {
+                    Text(
+                        text = stringResource(Res.string.registration_by_email),
+                        modifier = Modifier.testTag(RegistrationByEmailTestTags.TITLE)
+                    )
+                },
                 navigationIcon = {
-                    IconButton(onClick = component::onBackClick) {
+                    IconButton(
+                        onClick = component::onBackClick,
+                        modifier = Modifier.testTag(RegistrationByEmailTestTags.BACK_BUTTON)
+                    ) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null
@@ -105,7 +114,9 @@ private fun EmailInputContent(
         onValueChange = onEmailChanged,
         label = { Text(stringResource(Res.string.email)) },
         placeholder = { Text(stringResource(Res.string.email)) },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(RegistrationByEmailTestTags.EMAIL_INPUT),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         singleLine = true,
         isError = state.actionError != null
@@ -113,7 +124,9 @@ private fun EmailInputContent(
 
     Button(
         onClick = onSendCodeClick,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(RegistrationByEmailTestTags.SEND_CODE_BUTTON),
         enabled = state.canSendCode
     ) {
         Text(stringResource(Res.string.send_code))
@@ -123,7 +136,8 @@ private fun EmailInputContent(
         Text(
             text = error.toLocalizedMessage(),
             color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodySmall
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.testTag(RegistrationByEmailTestTags.EMAIL_STEP_ERROR_TEXT)
         )
     }
 }
@@ -139,12 +153,14 @@ private fun RegistrationInputContent(
 ) {
     Text(
         text = stringResource(Res.string.enter_confirmation_code),
-        style = MaterialTheme.typography.titleLarge
+        style = MaterialTheme.typography.titleLarge,
+        modifier = Modifier.testTag(RegistrationByEmailTestTags.CODE_STEP_TITLE)
     )
 
     Text(
         text = stringResource(Res.string.code_sent_to, state.email),
-        style = MaterialTheme.typography.bodyMedium
+        style = MaterialTheme.typography.bodyMedium,
+        modifier = Modifier.testTag(RegistrationByEmailTestTags.CODE_SENT_INFO_TEXT)
     )
 
     OutlinedTextField(
@@ -152,7 +168,9 @@ private fun RegistrationInputContent(
         onValueChange = onCodeChanged,
         label = { Text(stringResource(Res.string.confirmation_code)) },
         placeholder = { Text(stringResource(Res.string.enter_confirmation_code)) },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(RegistrationByEmailTestTags.CODE_INPUT),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         singleLine = true,
         isError = state.actionError != null
@@ -163,12 +181,17 @@ private fun RegistrationInputContent(
         onValueChange = onPasswordChanged,
         label = { Text(stringResource(Res.string.password)) },
         placeholder = { Text(stringResource(Res.string.password)) },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(RegistrationByEmailTestTags.PASSWORD_INPUT),
         visualTransformation = if (state.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         singleLine = true,
         trailingIcon = {
-            IconButton(onClick = onTogglePasswordVisibility) {
+            IconButton(
+                onClick = onTogglePasswordVisibility,
+                modifier = Modifier.testTag(RegistrationByEmailTestTags.TOGGLE_PASSWORD_VISIBILITY_BUTTON)
+            ) {
                 Icon(
                     imageVector = if (state.isPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                     contentDescription = null
@@ -180,7 +203,9 @@ private fun RegistrationInputContent(
 
     Button(
         onClick = onRegisterClick,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(RegistrationByEmailTestTags.REGISTER_BUTTON),
         enabled = state.canRegister
     ) {
         Text(stringResource(Res.string.register))
@@ -189,12 +214,15 @@ private fun RegistrationInputContent(
     if (state.resendTimerSeconds > 0) {
         Text(
             text = stringResource(Res.string.resend_code_timer, state.resendTimerSeconds),
-            style = MaterialTheme.typography.bodySmall
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.testTag(RegistrationByEmailTestTags.RESEND_TIMER_TEXT)
         )
     } else {
         TextButton(
             onClick = onResendClick,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(RegistrationByEmailTestTags.RESEND_CODE_BUTTON),
             enabled = state.canResendCode
         ) {
             Text(stringResource(Res.string.resend_code))
@@ -205,7 +233,27 @@ private fun RegistrationInputContent(
         Text(
             text = error.toLocalizedMessage(),
             color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodySmall
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.testTag(RegistrationByEmailTestTags.REGISTRATION_STEP_ERROR_TEXT)
         )
     }
+}
+
+internal object RegistrationByEmailTestTags {
+    const val BACK_BUTTON = "RegistrationByEmail_BackButton"
+    const val TITLE = "RegistrationByEmail_Title"
+
+    const val EMAIL_INPUT = "RegistrationByEmail_EmailInput"
+    const val SEND_CODE_BUTTON = "RegistrationByEmail_SendCodeButton"
+    const val EMAIL_STEP_ERROR_TEXT = "RegistrationByEmail_EmailStepErrorText"
+
+    const val CODE_STEP_TITLE = "RegistrationByEmail_CodeStepTitle"
+    const val CODE_SENT_INFO_TEXT = "RegistrationByEmail_CodeSentInfoText"
+    const val CODE_INPUT = "RegistrationByEmail_CodeInput"
+    const val PASSWORD_INPUT = "RegistrationByEmail_PasswordInput"
+    const val TOGGLE_PASSWORD_VISIBILITY_BUTTON = "RegistrationByEmail_TogglePasswordVisibilityButton"
+    const val REGISTER_BUTTON = "RegistrationByEmail_RegisterButton"
+    const val RESEND_TIMER_TEXT = "RegistrationByEmail_ResendTimerText"
+    const val RESEND_CODE_BUTTON = "RegistrationByEmail_ResendCodeButton"
+    const val REGISTRATION_STEP_ERROR_TEXT = "RegistrationByEmail_RegistrationStepErrorText"
 }

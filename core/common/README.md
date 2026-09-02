@@ -35,7 +35,11 @@ Base for all SDK modules: shared **Ktor HTTP client** bootstrap, **WebSocket** i
 - **Components:** [FullscreenLoading] (with configurable delay) and [FullscreenError].
 - **Theme:** Centralized [Dimens] and shared theme pieces for consistent multiplatform UI.
 
-### 7. Mocks & Testing
+### 7. Listing & Pagination
+- **Infrastructure:** [PaginationState] and [ListingConstants] provide a standardized way to handle paginated data from `PagedResult`.
+- **UI Components:** [PagingFooter] for loading/error states at the end of lists, and [OnBottomReached] extension for automatic page fetching during scroll.
+
+### 8. Mocks & Testing
 - Extensive **@InternalApi** test doubles for deterministic previews and unit tests:
   - [EncryptedSettingsMock], [WebSocketServiceMock], [AccessTokenProviderMock], [AppErrorParserMock], and `CommonComponentMock`.
 
@@ -139,3 +143,7 @@ FullscreenError(message = errorMessage)
 [WebSocketServiceMock]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/mock/network/websocket/service/WebSocketServiceMock.kt
 [AccessTokenProviderMock]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/mock/network/provider/AccessTokenProviderMock.kt
 [AppErrorParserMock]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/mock/error/parser/AppErrorParserMock.kt
+[PaginationState]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/infrastructure/listing/PaginationState.kt
+[ListingConstants]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/infrastructure/listing/ListingConstants.kt
+[PagingFooter]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/ui/component/listing/PagingFooter.kt
+[OnBottomReached]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/ui/component/listing/PagingExtensions.kt

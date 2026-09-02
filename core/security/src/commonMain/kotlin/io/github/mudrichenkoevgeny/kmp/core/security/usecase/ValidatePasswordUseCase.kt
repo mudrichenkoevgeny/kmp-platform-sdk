@@ -22,18 +22,17 @@ open class ValidatePasswordUseCase(
     /**
      * @param password Candidate password to validate.
      * @return [AppResult.Success] when the password satisfies the policy, or [AppResult.Error] with a
-     * [SecurityError] describing the first failed rule. If settings cannot be loaded, returns
-     * [SecurityError.PasswordPolicyUnavailable].
+     * [SecurityError] describing the first failed rule. Falls back to default [PasswordPolicy] if settings cannot be loaded.
      */
     open suspend operator fun invoke(password: String): AppResult<Unit> {
         val securitySettingsResult = securitySettingsRepository.getSecuritySettings()
-
-        val securitySettings = when (securitySettingsResult) {
-            is AppResult.Error -> return AppResult.Error(SecurityError.PasswordPolicyUnavailable())
-            is AppResult.Success -> securitySettingsResult.data
+        val passwordPolicy = when (securitySettingsResult) {
+            is AppResult.Success -> securitySettingsResult.data.passwordPolicy
+            is AppResult.Error -> PasswordPolicy()
         }
+
         val validationResult = passwordPolicyValidator.validate(
-            securitySettings.passwordPolicy,
+            passwordPolicy,
             password
         )
         return when (validationResult) {

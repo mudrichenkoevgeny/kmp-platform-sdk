@@ -8,7 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.core.common.time.resendCountdown
-import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.SecurityErrorCodes
+import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.ClientSecurityErrorCodes
 import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ValidatePasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.registration.RegistrationRepository
@@ -106,12 +106,15 @@ class RegistrationByEmailComponentImpl(
         passwordValidationJob = scope.launch {
             val result = validatePasswordUseCase(password)
 
-            val isTooShort = result is AppResult.Error &&
-                    result.error.code == SecurityErrorCodes.PASSWORD_TOO_SHORT
+            val isPasswordValid = when (result) {
+                is AppResult.Success -> true
+                is AppResult.Error -> result.error.code != ClientSecurityErrorCodes.PASSWORD_TOO_SHORT &&
+                        result.error.code != ClientSecurityErrorCodes.PASSWORD_POLICY_UNAVAILABLE
+            }
 
             val updated = _state.value as? RegistrationByEmailScreenState.RegistrationInput ?: return@launch
             _state.value = updated.copy(
-                isPasswordValid = !isTooShort
+                isPasswordValid = isPasswordValid
             )
         }
     }

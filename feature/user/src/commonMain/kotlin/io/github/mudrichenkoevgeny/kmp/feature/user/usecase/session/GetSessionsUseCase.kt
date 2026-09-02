@@ -14,7 +14,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
  *
  * @param sessionRepository Remote session management API.
  */
-class GetSessionsUseCase(
+open class GetSessionsUseCase(
     private val sessionRepository: SessionRepository
 ) {
     /**
@@ -35,7 +35,7 @@ class GetSessionsUseCase(
      * @param operationSystemVersions Filters by server-defined operating system version substrings.
      * @return Paginated result containing matching active session models, or a mapped failure.
      */
-    suspend operator fun invoke(
+    open suspend operator fun invoke(
         pageNumber: Int? = null,
         pageSize: Int? = null,
         sortBy: UserSortValues.UserSessionSortBy? = null,

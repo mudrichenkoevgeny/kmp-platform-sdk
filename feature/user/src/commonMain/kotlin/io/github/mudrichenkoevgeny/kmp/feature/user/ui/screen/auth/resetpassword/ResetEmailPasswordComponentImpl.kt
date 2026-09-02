@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.core.common.time.resendCountdown
-import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.SecurityErrorCodes
+import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.ClientSecurityErrorCodes
 import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ValidatePasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpassword.ResetPasswordRepository
@@ -17,7 +17,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.R
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.SendResetPasswordConfirmationToEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -81,12 +80,15 @@ class ResetEmailPasswordComponentImpl(
         passwordValidationJob = scope.launch {
             val result = validatePasswordUseCase(password)
 
-            val isTooShort = result is AppResult.Error &&
-                    result.error.code == SecurityErrorCodes.PASSWORD_TOO_SHORT
+            val isPasswordValid = when (result) {
+                is AppResult.Success -> true
+                is AppResult.Error -> result.error.code != ClientSecurityErrorCodes.PASSWORD_TOO_SHORT &&
+                        result.error.code != ClientSecurityErrorCodes.PASSWORD_POLICY_UNAVAILABLE
+            }
 
             val updated = _state.value as? ResetEmailPasswordScreenState.ResetInput ?: return@launch
             _state.value = updated.copy(
-                isPasswordValid = !isTooShort
+                isPasswordValid = isPasswordValid
             )
         }
     }
@@ -129,12 +131,18 @@ class ResetEmailPasswordComponentImpl(
         _state.value = current.copy(actionLoading = true, actionError = null)
 
         scope.launch {
-            resetEmailPasswordUseCase.execute(
-                email = current.email,
-                newPassword = current.newPassword,
-                confirmationCode = current.code
-            )
-                .onSuccess { onFinished() }
+            validatePasswordUseCase(current.newPassword)
+                .onSuccess {
+                    resetEmailPasswordUseCase.execute(
+                        email = current.email,
+                        newPassword = current.newPassword,
+                        confirmationCode = current.code
+                    )
+                        .onSuccess { onFinished() }
+                        .onError { error ->
+                            _state.value = current.copy(actionLoading = false, actionError = error)
+                        }
+                }
                 .onError { error ->
                     _state.value = current.copy(actionLoading = false, actionError = error)
                 }

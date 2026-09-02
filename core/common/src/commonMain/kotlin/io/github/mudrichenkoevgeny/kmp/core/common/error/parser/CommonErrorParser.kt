@@ -93,6 +93,7 @@ object CommonErrorParser : AppErrorParser {
 
             CommonErrorCodes.INTERNAL,
             CommonErrorCodes.BAD_REQUEST,
+            CommonErrorCodes.INVALID_JSON_BODY,
             CommonErrorCodes.UNKNOWN,
             ClientCommonErrorCodes.CONTRACT_VIOLATION,
             ClientCommonErrorCodes.LIFECYCLE_ERROR ->

@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
@@ -42,7 +43,10 @@ fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
             TopAppBar(
                 title = { Text(stringResource(Res.string.sign_in_with_phone)) },
                 navigationIcon = {
-                    IconButton(onClick = component::onBackClick) {
+                    IconButton(
+                        onClick = component::onBackClick,
+                        modifier = Modifier.testTag(LoginByPhoneTestTags.BACK_BUTTON)
+                    ) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null
@@ -97,7 +101,8 @@ private fun PhoneInputContent(
 ) {
     Text(
         text = stringResource(Res.string.enter_phone_number),
-        style = MaterialTheme.typography.titleLarge
+        style = MaterialTheme.typography.titleLarge,
+        modifier = Modifier.testTag(LoginByPhoneTestTags.PHONE_STEP_TITLE)
     )
 
     OutlinedTextField(
@@ -105,7 +110,9 @@ private fun PhoneInputContent(
         onValueChange = onPhoneChanged,
         label = { Text(stringResource(Res.string.phone_number)) },
         placeholder = { Text(stringResource(Res.string.enter_phone_number)) },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(LoginByPhoneTestTags.PHONE_INPUT),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
         singleLine = true,
         isError = state.actionError != null
@@ -113,7 +120,9 @@ private fun PhoneInputContent(
 
     Button(
         onClick = onSendCodeClick,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(LoginByPhoneTestTags.SEND_CODE_BUTTON),
         enabled = state.canSendCode
     ) {
         Text(stringResource(Res.string.send_code))
@@ -123,7 +132,8 @@ private fun PhoneInputContent(
         Text(
             text = error.toLocalizedMessage(),
             color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodySmall
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.testTag(LoginByPhoneTestTags.PHONE_STEP_ERROR_TEXT)
         )
     }
 }
@@ -138,12 +148,14 @@ private fun CodeInputContent(
 ) {
     Text(
         text = stringResource(Res.string.enter_confirmation_code),
-        style = MaterialTheme.typography.titleLarge
+        style = MaterialTheme.typography.titleLarge,
+        modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_STEP_TITLE)
     )
 
     Text(
         text = stringResource(Res.string.code_sent_to, state.phoneNumber),
-        style = MaterialTheme.typography.bodyMedium
+        style = MaterialTheme.typography.bodyMedium,
+        modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_SENT_INFO_TEXT)
     )
 
     OutlinedTextField(
@@ -151,7 +163,9 @@ private fun CodeInputContent(
         onValueChange = onCodeChanged,
         label = { Text(stringResource(Res.string.confirmation_code)) },
         placeholder = { Text(stringResource(Res.string.enter_confirmation_code)) },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(LoginByPhoneTestTags.CODE_INPUT),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         singleLine = true,
         isError = state.actionError != null
@@ -159,7 +173,9 @@ private fun CodeInputContent(
 
     Button(
         onClick = onConfirmClick,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(LoginByPhoneTestTags.CONFIRM_BUTTON),
         enabled = state.canConfirmCode
     ) {
         Text(stringResource(Res.string.confirm))
@@ -167,7 +183,9 @@ private fun CodeInputContent(
 
     TextButton(
         onClick = onChangePhoneClick,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(LoginByPhoneTestTags.CHANGE_PHONE_BUTTON),
         enabled = !state.actionLoading
     ) {
         Text(stringResource(Res.string.change_phone_number))
@@ -176,12 +194,15 @@ private fun CodeInputContent(
     if (state.resendTimerSeconds > 0) {
         Text(
             text = stringResource(Res.string.resend_code_timer, state.resendTimerSeconds),
-            style = MaterialTheme.typography.bodySmall
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.testTag(LoginByPhoneTestTags.RESEND_TIMER_TEXT)
         )
     } else {
         TextButton(
             onClick = onResendClick,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(LoginByPhoneTestTags.RESEND_CODE_BUTTON),
             enabled = state.canResendCode
         ) {
             Text(stringResource(Res.string.resend_code))
@@ -192,7 +213,26 @@ private fun CodeInputContent(
         Text(
             text = error.toLocalizedMessage(),
             color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodySmall
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_STEP_ERROR_TEXT)
         )
     }
+}
+
+internal object LoginByPhoneTestTags {
+    const val BACK_BUTTON = "LoginByPhone_BackButton"
+
+    const val PHONE_STEP_TITLE = "LoginByPhone_PhoneStepTitle"
+    const val PHONE_INPUT = "LoginByPhone_PhoneInput"
+    const val SEND_CODE_BUTTON = "LoginByPhone_SendCodeButton"
+    const val PHONE_STEP_ERROR_TEXT = "LoginByPhone_PhoneStepErrorText"
+
+    const val CODE_STEP_TITLE = "LoginByPhone_CodeStepTitle"
+    const val CODE_SENT_INFO_TEXT = "LoginByPhone_CodeSentInfoText"
+    const val CODE_INPUT = "LoginByPhone_CodeInput"
+    const val CONFIRM_BUTTON = "LoginByPhone_ConfirmButton"
+    const val CHANGE_PHONE_BUTTON = "LoginByPhone_ChangePhoneButton"
+    const val RESEND_TIMER_TEXT = "LoginByPhone_ResendTimerText"
+    const val RESEND_CODE_BUTTON = "LoginByPhone_ResendCodeButton"
+    const val CODE_STEP_ERROR_TEXT = "LoginByPhone_CodeStepErrorText"
 }

@@ -12,29 +12,29 @@ class LoginWelcomeScreenStateTest {
 
     @Test
     fun content_validPrivacyPolicyUrl_trimsBlankToNull() {
-        assertNull(content(privacyPolicyUrl = null).validPrivacyPolicyUrl)
-        assertNull(content(privacyPolicyUrl = EMPTY_STRING).validPrivacyPolicyUrl)
-        assertNull(content(privacyPolicyUrl = BLANK_ONLY).validPrivacyPolicyUrl)
-        assertEquals(VALID_URL, content(privacyPolicyUrl = VALID_URL).validPrivacyPolicyUrl)
+        assertNull(loginWelcomeScreenStateContent(privacyPolicyUrl = null).validPrivacyPolicyUrl)
+        assertNull(loginWelcomeScreenStateContent(privacyPolicyUrl = EMPTY_STRING).validPrivacyPolicyUrl)
+        assertNull(loginWelcomeScreenStateContent(privacyPolicyUrl = BLANK_ONLY).validPrivacyPolicyUrl)
+        assertEquals(VALID_URL, loginWelcomeScreenStateContent(privacyPolicyUrl = VALID_URL).validPrivacyPolicyUrl)
     }
 
     @Test
     fun content_validTermsOfServiceUrl_trimsBlankToNull() {
-        assertNull(content(termsOfServiceUrl = null).validTermsOfServiceUrl)
-        assertNull(content(termsOfServiceUrl = EMPTY_STRING).validTermsOfServiceUrl)
-        assertEquals(VALID_URL, content(termsOfServiceUrl = VALID_URL).validTermsOfServiceUrl)
+        assertNull(loginWelcomeScreenStateContent(termsOfServiceUrl = null).validTermsOfServiceUrl)
+        assertNull(loginWelcomeScreenStateContent(termsOfServiceUrl = EMPTY_STRING).validTermsOfServiceUrl)
+        assertEquals(VALID_URL, loginWelcomeScreenStateContent(termsOfServiceUrl = VALID_URL).validTermsOfServiceUrl)
     }
 
     @Test
     fun content_hasPrivacyPolicy_and_hasTermsOfService_followValidUrls() {
-        assertFalse(content(privacyPolicyUrl = null).hasPrivacyPolicy)
-        assertTrue(content(privacyPolicyUrl = VALID_URL).hasPrivacyPolicy)
+        assertFalse(loginWelcomeScreenStateContent(privacyPolicyUrl = null).hasPrivacyPolicy)
+        assertTrue(loginWelcomeScreenStateContent(privacyPolicyUrl = VALID_URL).hasPrivacyPolicy)
 
-        assertFalse(content(termsOfServiceUrl = null).hasTermsOfService)
-        assertTrue(content(termsOfServiceUrl = VALID_URL).hasTermsOfService)
+        assertFalse(loginWelcomeScreenStateContent(termsOfServiceUrl = null).hasTermsOfService)
+        assertTrue(loginWelcomeScreenStateContent(termsOfServiceUrl = VALID_URL).hasTermsOfService)
     }
 
-    private fun content(
+    private fun loginWelcomeScreenStateContent(
         privacyPolicyUrl: String? = null,
         termsOfServiceUrl: String? = null
     ): LoginWelcomeScreenState.Content = LoginWelcomeScreenState.Content(

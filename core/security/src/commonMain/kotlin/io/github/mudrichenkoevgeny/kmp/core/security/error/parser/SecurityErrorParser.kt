@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.AppErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.resolveLocalizedString
 import io.github.mudrichenkoevgeny.kmp.core.security.Res
 import io.github.mudrichenkoevgeny.kmp.core.security.*
+import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.ClientSecurityErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.CommonErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorArgs
@@ -71,6 +72,34 @@ object SecurityErrorParser : AppErrorParser {
 
             SecurityErrorCodes.INVALID_MFA_TOKEN ->
                 stringResource(Res.string.error_security_invalid_mfa_token)
+
+            ClientSecurityErrorCodes.PASSWORD_POLICY_UNAVAILABLE ->
+                stringResource(Res.string.error_security_password_policy_unavailable)
+
+            ClientSecurityErrorCodes.PASSWORD_TOO_SHORT -> resolveLocalizedString(
+                args = args,
+                key = SecurityErrorArgs.PASSWORD_MIN_LENGTH,
+                withArgsRes = Res.string.error_security_password_too_short_args,
+                fallbackRes = Res.string.error_security_password_too_short
+            )
+
+            ClientSecurityErrorCodes.PASSWORD_NO_LETTER ->
+                stringResource(Res.string.error_security_password_no_letter)
+
+            ClientSecurityErrorCodes.PASSWORD_NO_UPPERCASE ->
+                stringResource(Res.string.error_security_password_no_uppercase)
+
+            ClientSecurityErrorCodes.PASSWORD_NO_LOWERCASE ->
+                stringResource(Res.string.error_security_password_no_lowercase)
+
+            ClientSecurityErrorCodes.PASSWORD_NO_DIGIT ->
+                stringResource(Res.string.error_security_password_no_digit)
+
+            ClientSecurityErrorCodes.PASSWORD_NO_SPECIAL_CHAR ->
+                stringResource(Res.string.error_security_password_no_special_char)
+
+            ClientSecurityErrorCodes.PASSWORD_TOO_COMMON ->
+                stringResource(Res.string.error_security_password_too_common)
 
             else -> null
         }

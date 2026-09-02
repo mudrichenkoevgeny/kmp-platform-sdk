@@ -1,8 +1,9 @@
 package io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home
 
+import android.app.Application
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import org.junit.runner.RunWith
@@ -11,7 +12,7 @@ import org.robolectric.annotation.Config
 import kotlin.test.Test
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [ROBOLECTRIC_SDK])
+@Config(sdk = [ROBOLECTRIC_SDK], application = Application::class)
 class HomeScreenTest {
 
     @Test
@@ -21,10 +22,6 @@ class HomeScreenTest {
                 HomeScreen(screenComponent = object : HomeScreenComponent {})
             }
         }
-        onNodeWithText(HOME_TITLE).assertIsDisplayed()
-    }
-
-    private companion object {
-        const val HOME_TITLE = "Home Screen"
+        onNodeWithTag(HomeScreenTestTags.TITLE).assertIsDisplayed()
     }
 }

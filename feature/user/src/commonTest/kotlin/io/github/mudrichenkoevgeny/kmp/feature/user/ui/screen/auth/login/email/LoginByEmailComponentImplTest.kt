@@ -113,9 +113,15 @@ class LoginByEmailComponentImplTest {
 
     @Test
     fun onLoginClick_secondValidatePasswordInvocationFailure_showsError() = runComponentTest {
+        var calls = 0
         val validatePassword = ValidatePasswordUseCaseMock().apply {
             resultProvider = {
-                AppResult.Error(SecurityError.PasswordPolicyUnavailable())
+                calls++
+                if (calls == 1) {
+                    AppResult.Success(Unit)
+                } else {
+                    AppResult.Error(SecurityError.PasswordPolicyUnavailable())
+                }
             }
         }
         val context = createLoginByEmailComponentTestContext(validatePasswordUseCase = validatePassword)
@@ -220,7 +226,6 @@ class LoginByEmailComponentImplTest {
 
         val context = LoginByEmailComponentTestContext(
             lifecycle = lifecycle,
-            loginByEmailUseCase = loginByEmailUseCase,
             validatePasswordUseCase = validatePasswordUseCase
         )
 
@@ -231,6 +236,7 @@ class LoginByEmailComponentImplTest {
             validatePasswordUseCase = validatePasswordUseCase,
             onNavigateToRegistrationByEmail = { context.onNavigateToRegistrationByEmailCalls++ },
             onNavigateToForgotPassword = { context.onNavigateToForgotPasswordCalls++ },
+            onNavigateToTotp = { context.lastTotpMfaToken = it },
             onBack = { context.onBackCalls++ },
             onFinished = { context.onFinishedCalls++ }
         )
@@ -240,7 +246,6 @@ class LoginByEmailComponentImplTest {
 
     private class LoginByEmailComponentTestContext(
         val lifecycle: LifecycleRegistry,
-        val loginByEmailUseCase: LoginByEmailUseCaseMock,
         val validatePasswordUseCase: ValidatePasswordUseCaseMock
     ) {
         lateinit var component: LoginByEmailComponentImpl
@@ -248,6 +253,7 @@ class LoginByEmailComponentImplTest {
         var onNavigateToForgotPasswordCalls: Int = 0
         var onNavigateToRegistrationByEmailCalls: Int = 0
         var onBackCalls: Int = 0
+        var lastTotpMfaToken: String? = null
 
         fun destroy() {
             lifecycle.destroy()

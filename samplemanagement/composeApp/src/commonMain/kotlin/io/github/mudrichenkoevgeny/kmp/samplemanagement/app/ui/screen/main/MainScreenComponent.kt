@@ -4,8 +4,8 @@ import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home.HomeScreenComponent
-import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.profile.ProfileScreenComponent
 import kotlinx.serialization.Serializable
 
 /**
@@ -42,7 +42,7 @@ interface MainScreenComponent {
      */
     sealed class Child {
         class HomeChild(val component: HomeScreenComponent) : Child()
-        class ProfileChild(val component: ProfileScreenComponent) : Child()
+        class ProfileChild(val component: ProfileRootComponent) : Child()
     }
 
     /**

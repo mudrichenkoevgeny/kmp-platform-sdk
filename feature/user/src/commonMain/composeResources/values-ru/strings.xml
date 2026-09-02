@@ -23,4 +23,44 @@
     <string name="error_user_identifier_limit_reached_args">Достигнут лимит идентификаторов для "%2$s" (%1$s).</string>
     <string name="error_user_total_identifiers_limit_reached">Достигнут общий лимит идентификаторов.</string>
     <string name="error_user_total_identifiers_limit_reached_args">Достигнут общий лимит идентификаторов на один аккаунт (%1$s).</string>
+
+    <string name="login">Вход</string>
+    <string name="login_by_email">Вход по Email</string>
+    <string name="login_by_totp">Вход по TOTP</string>
+    <string name="login_by_recovery_code">Вход по резервному коду</string>
+    <string name="totp_code">Код TOTP</string>
+    <string name="recovery_code">Резервный код</string>
+    <string name="use_recovery_code">Использовать резервный код</string>
+    <string name="use_totp">Использовать TOTP</string>
+
+    <string name="profile">Профиль</string>
+    <string name="logout">Выйти</string>
+    <string name="totp_settings">Настройки TOTP</string>
+    <string name="sessions">Сессии</string>
+    <string name="identifiers">Идентификаторы</string>
+    <string name="delete_account">Удалить аккаунт</string>
+    <string name="not_authorized">Вы не авторизованы!</string>
+    <string name="user_id">ID пользователя: %1$s</string>
+
+    <string name="totp_disabled_desc">Двухфакторная аутентификация (TOTP) добавляет дополнительный уровень безопасности вашему аккаунту. После включения вам нужно будет вводить код из приложения-аутентификатора при входе.</string>
+    <string name="setup_totp">Настроить TOTP</string>
+    <string name="totp_setup_step1">Шаг 1: Привяжите приложение</string>
+    <string name="totp_setup_step1_desc">Откройте приложение-аутентификатор (например, Google Authenticator или Authy) и введите следующий ключ вручную.</string>
+    <string name="totp_manual_key">Ключ для ввода вручную:</string>
+    <string name="totp_setup_step2">Шаг 2: Проверьте код</string>
+    <string name="totp_setup_step2_desc">Введите 6-значный код из приложения для подтверждения настройки.</string>
+    <string name="totp_enabled_title">Двухфакторная аутентификация активна</string>
+    <string name="recovery_codes_title">Резервные коды</string>
+    <string name="recovery_codes_desc">Храните эти коды в безопасном месте. Они помогут войти в аккаунт, если вы потеряете доступ к приложению.</string>
+    <string name="regenerate_recovery_codes">Обновить коды</string>
+    <string name="disable_totp">Выключить TOTP</string>
+    <string name="copy_all">Копировать все</string>
+
+    <string name="dialog_confirm_title">Вы уверены?</string>
+    <string name="dialog_cancel">Отмена</string>
+    <string name="dialog_confirm">Подтвердить</string>
+
+    <string name="delete_account_confirm_msg">Это действие запланирует безвозвратное удаление вашего аккаунта. Это можно будет отменить только в течение ограниченного времени.</string>
+    <string name="disable_totp_confirm_msg">Отключение двухфакторной аутентификации сделает ваш аккаунт менее защищенным. Вы уверены, что хотите продолжить?</string>
+    <string name="regenerate_codes_confirm_msg">Обновление кодов восстановления сделает все текущие коды недействительными. Обязательно сохраните новые коды сразу после генерации.</string>
 </resources>

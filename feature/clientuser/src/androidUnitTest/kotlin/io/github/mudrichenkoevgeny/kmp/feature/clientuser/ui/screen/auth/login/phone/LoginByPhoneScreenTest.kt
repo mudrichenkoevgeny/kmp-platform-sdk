@@ -1,9 +1,11 @@
 package io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.phone
 
+import android.app.Application
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasProgressBarRangeInfo
-import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
@@ -20,7 +22,7 @@ import kotlin.test.assertEquals
 
 @InternalApi
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [ROBOLECTRIC_SDK])
+@Config(sdk = [ROBOLECTRIC_SDK], application = Application::class)
 class LoginByPhoneScreenTest {
 
     @Test
@@ -48,13 +50,14 @@ class LoginByPhoneScreenTest {
                 LoginByPhoneScreen(component)
             }
         }
-        onNodeWithText(ENTER_PHONE_TITLE).assertIsDisplayed()
-        onNodeWithText(PHONE_NUMBER_LABEL).assertIsDisplayed()
-        onNodeWithText(SEND_CODE).assertIsDisplayed()
+        onNodeWithTag(LoginByPhoneTestTags.BACK_BUTTON).assertIsDisplayed()
+        onNodeWithTag(LoginByPhoneTestTags.PHONE_STEP_TITLE).assertIsDisplayed()
+        onNodeWithTag(LoginByPhoneTestTags.PHONE_INPUT).assertIsDisplayed().assertTextContains(PHONE_NUMBER_FULL)
+        onNodeWithTag(LoginByPhoneTestTags.SEND_CODE_BUTTON).assertIsDisplayed()
     }
 
     @Test
-    fun phoneInput_inlineError_showsLocalizedMessage() = runComposeUiTest {
+    fun phoneInput_inlineError_showsErrorTextNode() = runComposeUiTest {
         val component = LoginByPhoneComponentMock(
             LoginByPhoneScreenState.PhoneInput(
                 phoneNumber = PHONE_NUMBER_FULL,
@@ -67,7 +70,7 @@ class LoginByPhoneScreenTest {
                 LoginByPhoneScreen(component)
             }
         }
-        onNodeWithText(MOCK_ERROR_MESSAGE).assertIsDisplayed()
+        onNodeWithTag(LoginByPhoneTestTags.PHONE_STEP_ERROR_TEXT).assertIsDisplayed()
     }
 
     @Test
@@ -80,7 +83,7 @@ class LoginByPhoneScreenTest {
                 LoginByPhoneScreen(component)
             }
         }
-        onNodeWithText(SEND_CODE).performClick()
+        onNodeWithTag(LoginByPhoneTestTags.SEND_CODE_BUTTON).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.sendCodeCalls)
     }
 
@@ -95,10 +98,12 @@ class LoginByPhoneScreenTest {
                 LoginByPhoneScreen(component)
             }
         }
-        onNodeWithText(ENTER_CODE_TITLE).assertIsDisplayed()
-        onNodeWithText(CODE_SENT_PREFIX, substring = true).assertIsDisplayed()
-        onNodeWithText(phone, substring = true).assertIsDisplayed()
-        onNodeWithText(CONFIRMATION_CODE_LABEL).assertIsDisplayed()
+        onNodeWithTag(LoginByPhoneTestTags.BACK_BUTTON).assertIsDisplayed()
+        onNodeWithTag(LoginByPhoneTestTags.CODE_STEP_TITLE).assertIsDisplayed()
+        onNodeWithTag(LoginByPhoneTestTags.CODE_SENT_INFO_TEXT).assertIsDisplayed().assertTextContains(phone)
+        onNodeWithTag(LoginByPhoneTestTags.CODE_INPUT).assertIsDisplayed().assertTextContains(CODE_TWO_DIGITS)
+        onNodeWithTag(LoginByPhoneTestTags.CONFIRM_BUTTON).assertIsDisplayed()
+        onNodeWithTag(LoginByPhoneTestTags.CHANGE_PHONE_BUTTON).assertIsDisplayed()
     }
 
     @Test
@@ -115,7 +120,7 @@ class LoginByPhoneScreenTest {
                 LoginByPhoneScreen(component)
             }
         }
-        onNodeWithText(RESEND_TIMER_SECONDS_TEXT, substring = true).assertIsDisplayed()
+        onNodeWithTag(LoginByPhoneTestTags.RESEND_TIMER_TEXT).assertIsDisplayed()
     }
 
     @Test
@@ -132,7 +137,7 @@ class LoginByPhoneScreenTest {
                 LoginByPhoneScreen(component)
             }
         }
-        onNodeWithText(RESEND_CODE).assertIsDisplayed()
+        onNodeWithTag(LoginByPhoneTestTags.RESEND_CODE_BUTTON).assertIsDisplayed()
     }
 
     @Test
@@ -149,7 +154,7 @@ class LoginByPhoneScreenTest {
                 LoginByPhoneScreen(component)
             }
         }
-        onNodeWithText(CHANGE_PHONE).performClick()
+        onNodeWithTag(LoginByPhoneTestTags.CHANGE_PHONE_BUTTON).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.resetPhoneCalls)
     }
 
@@ -163,17 +168,6 @@ class LoginByPhoneScreenTest {
         const val CODE_TWO_DIGITS = "12"
         const val CODE_SIX_DIGITS = "123456"
         const val RESEND_TIMER_SECONDS_UI = 33
-        const val RESEND_TIMER_SECONDS_TEXT = "33"
         const val RESEND_TIMER_EXPIRED_SECONDS = 0
-
-        const val ENTER_PHONE_TITLE = "Enter phone number"
-        const val ENTER_CODE_TITLE = "Enter code"
-        const val PHONE_NUMBER_LABEL = "Phone number"
-        const val CONFIRMATION_CODE_LABEL = "Confirmation code"
-        const val SEND_CODE = "Send code"
-        const val RESEND_CODE = "Resend code"
-        const val CHANGE_PHONE = "Change phone number"
-        const val CODE_SENT_PREFIX = "The code has been sent to"
-        const val MOCK_ERROR_MESSAGE = "Unknown Error"
     }
 }

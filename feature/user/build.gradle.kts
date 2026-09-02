@@ -68,6 +68,7 @@ kotlin {
             implementation(libs.compose.resources)
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.compose.icons.core)
+            implementation(libs.compose.icons.extended)
             implementation(libs.compose.material3)
 
             // Ktor
@@ -80,6 +81,9 @@ kotlin {
             // Infrastructure
             implementation(libs.decompose)
             implementation(libs.decompose.compose)
+
+            // QR Code
+            implementation(libs.qr.kit)
 
             // Logging
             implementation(libs.kermit)

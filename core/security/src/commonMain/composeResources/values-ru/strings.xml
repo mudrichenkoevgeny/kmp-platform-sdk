@@ -11,4 +11,13 @@
     <string name="error_security_otp_retry_too_soon_args">Слишком много попыток. Пожалуйста, попробуйте снова через %1$s сек.</string>
     <string name="error_security_password_too_weak">Пароль слишком слабый.</string>
     <string name="error_security_password_too_weak_args">Пароль слишком слабый. Короткий: %1$s (мин: %2$s), Нет букв: %3$s, Нет заглавных: %4$s, Нет строчных: %5$s, Нет цифр: %6$s, Нет спецсимволов: %7$s, Популярный: %8$s.</string>
+    <string name="error_security_password_policy_unavailable">Не удалось загрузить требования к паролю. Попробуйте позже.</string>
+    <string name="error_security_password_too_short">Пароль слишком короткий.</string>
+    <string name="error_security_password_too_short_args">Пароль должен содержать не менее %1$s символов.</string>
+    <string name="error_security_password_no_letter">Пароль должен содержать хотя бы одну букву.</string>
+    <string name="error_security_password_no_uppercase">Пароль должен содержать хотя бы одну заглавную букву.</string>
+    <string name="error_security_password_no_lowercase">Пароль должен содержать хотя бы одну строчную букву.</string>
+    <string name="error_security_password_no_digit">Пароль должен содержать хотя бы одну цифру.</string>
+    <string name="error_security_password_no_special_char">Пароль должен содержать хотя бы один специальный символ.</string>
+    <string name="error_security_password_too_common">Пароль слишком простой или часто используемый.</string>
 </resources>

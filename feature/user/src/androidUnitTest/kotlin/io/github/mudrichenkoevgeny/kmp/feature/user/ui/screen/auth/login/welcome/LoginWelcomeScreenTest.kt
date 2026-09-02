@@ -1,21 +1,19 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome
 
+import android.app.Application
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasProgressBarRangeInfo
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.welcome.LoginWelcomeComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeScreen
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeScreenState
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.AvailableAuthProviders
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.junit.runner.RunWith
@@ -26,7 +24,7 @@ import kotlin.test.assertEquals
 
 @InternalApi
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [ROBOLECTRIC_SDK])
+@Config(sdk = [ROBOLECTRIC_SDK], application = Application::class)
 class LoginWelcomeScreenTest {
 
     @Test
@@ -73,9 +71,10 @@ class LoginWelcomeScreenTest {
                 LoginWelcomeScreen(component)
             }
         }
-        onNodeWithText(SIGN_IN_TITLE).assertIsDisplayed()
-        onNodeWithText(SIGN_IN_WITH_EMAIL).assertIsDisplayed()
-        onNodeWithText(OR_SIGN_IN_WITH).assertIsDisplayed()
+        onNodeWithTag(LoginWelcomeTestTags.TITLE).assertIsDisplayed()
+        onNodeWithTag(LoginWelcomeTestTags.getAuthProviderTag(UserAuthProvider.EMAIL)).assertIsDisplayed()
+        onNodeWithTag(LoginWelcomeTestTags.OR_DIVIDER).assertIsDisplayed()
+        onNodeWithTag(LoginWelcomeTestTags.SECONDARY_PROVIDERS_GRID).assertIsDisplayed()
     }
 
     @Test
@@ -92,7 +91,7 @@ class LoginWelcomeScreenTest {
                 LoginWelcomeScreen(component)
             }
         }
-        onNodeWithText(SIGN_IN_WITH_EMAIL).performClick()
+        onNodeWithTag(LoginWelcomeTestTags.getAuthProviderTag(UserAuthProvider.EMAIL)).performClick()
         assertEquals(listOf(UserAuthProvider.EMAIL), component.loginClicks)
     }
 
@@ -113,7 +112,7 @@ class LoginWelcomeScreenTest {
                 LoginWelcomeScreen(component)
             }
         }
-        onNodeWithText(MOCK_ERROR_MESSAGE).assertIsDisplayed()
+        onNodeWithTag(LoginWelcomeTestTags.ACTION_ERROR_TEXT).assertIsDisplayed()
     }
 
     @Test
@@ -144,10 +143,6 @@ class LoginWelcomeScreenTest {
         const val LOADING_EXTRA_DELAY_MS = 50L
         const val EXPECTED_SINGLE_CALLBACK = 1
 
-        /** Mirrors default `values/strings.xml` (tests assert visible UI copy). */
-        const val SIGN_IN_TITLE = "Sign In"
-        const val SIGN_IN_WITH_EMAIL = "Sign in with Email"
-        const val OR_SIGN_IN_WITH = "Or sign in with"
         const val RETRY_LABEL = "Retry"
         const val PRIVACY_POLICY_LABEL = "Privacy Policy"
         const val TERMS_OF_SERVICE_LABEL = "Terms of service"
@@ -155,7 +150,6 @@ class LoginWelcomeScreenTest {
         const val PRIVACY_URL = "https://example.com/privacy"
         const val TERMS_URL = "https://example.com/terms"
 
-        /** [AppErrorParserMock] always returns this string for any [AppError]. */
         const val MOCK_ERROR_MESSAGE = "Unknown Error"
     }
 }

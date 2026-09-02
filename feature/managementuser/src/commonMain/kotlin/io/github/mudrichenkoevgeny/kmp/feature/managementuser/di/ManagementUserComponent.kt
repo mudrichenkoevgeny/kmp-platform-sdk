@@ -6,9 +6,12 @@ import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserStorageModule
+import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponentImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -76,6 +79,12 @@ class ManagementUserComponent(
     /** Signs in as manager via email. */
     val loginByEmailUseCase get() = useCaseModule.loginByEmailUseCase
 
+    /** Signs in as manager via TOTP. */
+    val loginByTotpUseCase get() = useCaseModule.loginByTotpUseCase
+
+    /** Signs in as manager via recovery code. */
+    val loginByTotpRecoveryCodeUseCase get() = useCaseModule.loginByTotpRecoveryCodeUseCase
+
     /** Forces refresh of auth settings. */
     val refreshAuthSettingsUseCase get() = useCaseModule.refreshAuthSettingsUseCase
 
@@ -90,6 +99,87 @@ class ManagementUserComponent(
 
     /** Refreshes full configuration for the management user. */
     val refreshUserConfigurationUseCase get() = useCaseModule.refreshUserConfigurationUseCase
+
+    /** Signs out the manager. */
+    val logoutUseCase get() = useCaseModule.logoutUseCase
+
+    /** Schedules the manager account for deletion. */
+    val scheduleUserDeletionUseCase get() = useCaseModule.scheduleUserDeletionUseCase
+
+    /** Initiates TOTP setup for the manager. */
+    val setupTotpUseCase get() = useCaseModule.setupTotpUseCase
+
+    /** Enables TOTP for the manager. */
+    val enableTotpUseCase get() = useCaseModule.enableTotpUseCase
+
+    /** Disables TOTP for the manager. */
+    val disableTotpUseCase get() = useCaseModule.disableTotpUseCase
+
+    /** Returns active MFA recovery codes for the manager. */
+    val getRecoveryCodesUseCase get() = useCaseModule.getRecoveryCodesUseCase
+
+    /** Generates new MFA recovery codes for the manager. */
+    val regenerateRecoveryCodesUseCase get() = useCaseModule.regenerateRecoveryCodesUseCase
+
+    /** Returns active sessions for the manager. */
+    val getSessionsUseCase get() = useCaseModule.getSessionsUseCase
+
+    /** Revokes specific manager session. */
+    val deleteSessionUseCase get() = useCaseModule.deleteSessionUseCase
+
+    /** Revokes all other manager sessions. */
+    val deleteAllOtherSessionsUseCase get() = useCaseModule.deleteAllOtherSessionsUseCase
+
+    /** Returns account identifiers for the manager. */
+    val getUserIdentifiersUseCase get() = useCaseModule.getUserIdentifiersUseCase
+
+    /** Removes a manager identifier. */
+    val deleteUserIdentifierUseCase get() = useCaseModule.deleteUserIdentifierUseCase
+
+    /** Sends email confirmation for linking (manager). */
+    val sendAddEmailIdentifierConfirmationUseCase get() = useCaseModule.sendAddEmailIdentifierConfirmationUseCase
+
+    /** Links new email (manager). */
+    val addUserIdentifierEmailUseCase get() = useCaseModule.addUserIdentifierEmailUseCase
+
+    /** Sends phone confirmation for linking (manager). */
+    val sendAddPhoneIdentifierConfirmationUseCase get() = useCaseModule.sendAddPhoneIdentifierConfirmationUseCase
+
+    /** Links new phone (manager). */
+    val addUserIdentifierPhoneUseCase get() = useCaseModule.addUserIdentifierPhoneUseCase
+
+    /**
+     * Creates the root Decompose component for the management profile flow.
+     *
+     * @param componentContext Decompose context for the new component.
+     * @param onNavigateToLogin Invoked when the manager needs to sign in.
+     * @return A new instance of [ProfileRootComponent].
+     */
+    fun createProfileComponent(
+        componentContext: ComponentContext,
+        onNavigateToLogin: () -> Unit
+    ): ProfileRootComponent = ProfileRootComponentImpl(
+        componentContext = componentContext,
+        appType = AppType.MANAGEMENT,
+        userRepository = userRepository,
+        logoutUseCase = logoutUseCase,
+        scheduleUserDeletionUseCase = scheduleUserDeletionUseCase,
+        setupTotpUseCase = setupTotpUseCase,
+        enableTotpUseCase = enableTotpUseCase,
+        disableTotpUseCase = disableTotpUseCase,
+        getRecoveryCodesUseCase = getRecoveryCodesUseCase,
+        regenerateRecoveryCodesUseCase = regenerateRecoveryCodesUseCase,
+        getSessionsUseCase = getSessionsUseCase,
+        deleteSessionUseCase = deleteSessionUseCase,
+        deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase,
+        getUserIdentifiersUseCase = getUserIdentifiersUseCase,
+        deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
+        sendAddEmailIdentifierConfirmationUseCase = sendAddEmailIdentifierConfirmationUseCase,
+        addUserIdentifierEmailUseCase = addUserIdentifierEmailUseCase,
+        sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase,
+        addUserIdentifierPhoneUseCase = addUserIdentifierPhoneUseCase,
+        onNavigateToLogin = onNavigateToLogin
+    )
 
     private val userWebSocketModule = ManagementUserWebSocketModule(
         userStorage = storageModule.userStorage,

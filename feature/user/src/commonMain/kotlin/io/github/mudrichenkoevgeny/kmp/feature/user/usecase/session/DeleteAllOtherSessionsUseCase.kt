@@ -8,13 +8,13 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.session.SessionRe
  *
  * @param sessionRepository Remote session management API.
  */
-class DeleteAllOtherSessionsUseCase(
+open class DeleteAllOtherSessionsUseCase(
     private val sessionRepository: SessionRepository
 ) {
     /**
      * @return Empty success indicator, or a mapped failure.
      */
-    suspend operator fun invoke(): AppResult<Unit> {
+    open suspend operator fun invoke(): AppResult<Unit> {
         return sessionRepository.deleteAllOtherSessions()
     }
 }

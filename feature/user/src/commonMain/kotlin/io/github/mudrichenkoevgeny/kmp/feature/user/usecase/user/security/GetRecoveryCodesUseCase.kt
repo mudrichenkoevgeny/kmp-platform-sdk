@@ -9,13 +9,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
  *
  * @param userSecurityRepository Remote security management API.
  */
-class GetRecoveryCodesUseCase(
+open class GetRecoveryCodesUseCase(
     private val userSecurityRepository: UserSecurityRepository
 ) {
     /**
      * @return Existing [TotpRecoveryCodes] details on success, or a mapped failure.
      */
-    suspend operator fun invoke(): AppResult<TotpRecoveryCodes> {
+    open suspend operator fun invoke(): AppResult<TotpRecoveryCodes> {
         return userSecurityRepository.getRecoveryCodes()
     }
 }

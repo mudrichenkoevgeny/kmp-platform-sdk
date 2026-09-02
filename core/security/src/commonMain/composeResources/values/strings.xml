@@ -11,4 +11,13 @@
     <string name="error_security_otp_retry_too_soon_args">Too many attempts. Please try again in %1$s seconds.</string>
     <string name="error_security_password_too_weak">Password is too weak.</string>
     <string name="error_security_password_too_weak_args">Password is too weak. Too short: %1$s (min: %2$s), No letters: %3$s, No uppercase: %4$s, No lowercase: %5$s, No digits: %6$s, No special chars: %7$s, Too common: %8$s.</string>
+    <string name="error_security_password_policy_unavailable">Failed to load password requirements. Please try again.</string>
+    <string name="error_security_password_too_short">Password is too short.</string>
+    <string name="error_security_password_too_short_args">Password must be at least %1$s characters long.</string>
+    <string name="error_security_password_no_letter">Password must contain at least one letter.</string>
+    <string name="error_security_password_no_uppercase">Password must contain at least one uppercase letter.</string>
+    <string name="error_security_password_no_lowercase">Password must contain at least one lowercase letter.</string>
+    <string name="error_security_password_no_digit">Password must contain at least one digit.</string>
+    <string name="error_security_password_no_special_char">Password must contain at least one special character.</string>
+    <string name="error_security_password_too_common">Password is too common and insecure.</string>
 </resources>

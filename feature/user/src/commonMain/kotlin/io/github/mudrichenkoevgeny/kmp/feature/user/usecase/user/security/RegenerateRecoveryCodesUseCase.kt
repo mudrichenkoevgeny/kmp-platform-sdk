@@ -9,13 +9,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
  *
  * @param userSecurityRepository Remote security management API.
  */
-class RegenerateRecoveryCodesUseCase(
+open class RegenerateRecoveryCodesUseCase(
     private val userSecurityRepository: UserSecurityRepository
 ) {
     /**
      * @return Newly generated replacement [TotpRecoveryCodes] on success, or a mapped failure.
      */
-    suspend operator fun invoke(): AppResult<TotpRecoveryCodes> {
+    open suspend operator fun invoke(): AppResult<TotpRecoveryCodes> {
         return userSecurityRepository.regenerateRecoveryCodes()
     }
 }

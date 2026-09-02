@@ -6,9 +6,12 @@ import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserStorageModule
+import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.root.ClientLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.root.ClientLoginRootComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponentImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -98,6 +101,12 @@ class ClientUserComponent(
     /** Signs in using a phone number and OTP code. */
     val loginByPhoneUseCase get() = useCaseModule.loginByPhoneUseCase
 
+    /** Signs in using TOTP MFA code. */
+    val loginByTotpUseCase get() = useCaseModule.loginByTotpUseCase
+
+    /** Signs in using MFA recovery code. */
+    val loginByTotpRecoveryCodeUseCase get() = useCaseModule.loginByTotpRecoveryCodeUseCase
+
     /** Sends a login verification code to the specified phone number. */
     val sendLoginConfirmationToPhoneUseCase get() = useCaseModule.sendLoginConfirmationToPhoneUseCase
 
@@ -124,6 +133,87 @@ class ClientUserComponent(
 
     /** Refreshes all user-related configurations (global, security, auth). */
     val refreshUserConfigurationUseCase get() = useCaseModule.refreshUserConfigurationUseCase
+
+    /** Signs out the current user and clears local session data. */
+    val logoutUseCase get() = useCaseModule.logoutUseCase
+
+    /** Schedules the current account for permanent deletion. */
+    val scheduleUserDeletionUseCase get() = useCaseModule.scheduleUserDeletionUseCase
+
+    /** Initiates TOTP setup. */
+    val setupTotpUseCase get() = useCaseModule.setupTotpUseCase
+
+    /** Enables TOTP with a verification code. */
+    val enableTotpUseCase get() = useCaseModule.enableTotpUseCase
+
+    /** Disables TOTP. */
+    val disableTotpUseCase get() = useCaseModule.disableTotpUseCase
+
+    /** Returns active MFA recovery codes. */
+    val getRecoveryCodesUseCase get() = useCaseModule.getRecoveryCodesUseCase
+
+    /** Generates new MFA recovery codes. */
+    val regenerateRecoveryCodesUseCase get() = useCaseModule.regenerateRecoveryCodesUseCase
+
+    /** Returns active sessions. */
+    val getSessionsUseCase get() = useCaseModule.getSessionsUseCase
+
+    /** Revokes specific session. */
+    val deleteSessionUseCase get() = useCaseModule.deleteSessionUseCase
+
+    /** Revokes all other sessions. */
+    val deleteAllOtherSessionsUseCase get() = useCaseModule.deleteAllOtherSessionsUseCase
+
+    /** Returns account identifiers. */
+    val getUserIdentifiersUseCase get() = useCaseModule.getUserIdentifiersUseCase
+
+    /** Removes an identifier. */
+    val deleteUserIdentifierUseCase get() = useCaseModule.deleteUserIdentifierUseCase
+
+    /** Sends email confirmation for linking. */
+    val sendAddEmailIdentifierConfirmationUseCase get() = useCaseModule.sendAddEmailIdentifierConfirmationUseCase
+
+    /** Links new email. */
+    val addUserIdentifierEmailUseCase get() = useCaseModule.addUserIdentifierEmailUseCase
+
+    /** Sends phone confirmation for linking. */
+    val sendAddPhoneIdentifierConfirmationUseCase get() = useCaseModule.sendAddPhoneIdentifierConfirmationUseCase
+
+    /** Links new phone. */
+    val addUserIdentifierPhoneUseCase get() = useCaseModule.addUserIdentifierPhoneUseCase
+
+    /**
+     * Creates the root Decompose component for the profile management flow.
+     *
+     * @param componentContext Decompose context for the new component.
+     * @param onNavigateToLogin Invoked when the user needs to sign in from the profile.
+     * @return A new instance of [ProfileRootComponent].
+     */
+    fun createProfileComponent(
+        componentContext: ComponentContext,
+        onNavigateToLogin: () -> Unit
+    ): ProfileRootComponent = ProfileRootComponentImpl(
+        componentContext = componentContext,
+        appType = AppType.CLIENT,
+        userRepository = userRepository,
+        logoutUseCase = logoutUseCase,
+        scheduleUserDeletionUseCase = scheduleUserDeletionUseCase,
+        setupTotpUseCase = setupTotpUseCase,
+        enableTotpUseCase = enableTotpUseCase,
+        disableTotpUseCase = disableTotpUseCase,
+        getRecoveryCodesUseCase = getRecoveryCodesUseCase,
+        regenerateRecoveryCodesUseCase = regenerateRecoveryCodesUseCase,
+        getSessionsUseCase = getSessionsUseCase,
+        deleteSessionUseCase = deleteSessionUseCase,
+        deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase,
+        getUserIdentifiersUseCase = getUserIdentifiersUseCase,
+        deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
+        sendAddEmailIdentifierConfirmationUseCase = sendAddEmailIdentifierConfirmationUseCase,
+        addUserIdentifierEmailUseCase = addUserIdentifierEmailUseCase,
+        sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase,
+        addUserIdentifierPhoneUseCase = addUserIdentifierPhoneUseCase,
+        onNavigateToLogin = onNavigateToLogin
+    )
 
     private val userWebSocketModule = ClientUserWebSocketModule(
         userStorage = storageModule.userStorage,

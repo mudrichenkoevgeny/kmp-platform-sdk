@@ -2,14 +2,15 @@ package io.github.mudrichenkoevgeny.kmp.core.security.error.model
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.ErrorId
-import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.SecurityErrorCodes
+import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.ClientSecurityErrorCodes
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorArgs
 
 /**
  * Security-domain [AppError] variants for password policy and related flows.
  *
- * Each instance carries a stable [code] aligned with [SecurityErrorCodes] (or shared foundation codes
- * where applicable for parsing). [args] is unused for these variants. [isRetryable] is `true` only for
- * [PasswordPolicyUnavailable] (settings fetch may succeed on retry).
+ * Each instance carries a stable [code] aligned with [ClientSecurityErrorCodes] (or shared foundation codes
+ * where applicable for parsing). [args] is unused for these variants except [PasswordTooShort] when length context is provided.
+ * [isRetryable] is `true` only for [PasswordPolicyUnavailable] (settings fetch may succeed on retry).
  */
 sealed class SecurityError(
     override val id: ErrorId,
@@ -23,56 +24,63 @@ sealed class SecurityError(
      */
     class PasswordPolicyUnavailable : SecurityError(
         id = ErrorId.generate(),
-        code = SecurityErrorCodes.PASSWORD_POLICY_UNAVAILABLE,
+        code = ClientSecurityErrorCodes.PASSWORD_POLICY_UNAVAILABLE,
         isRetryable = true
     )
 
-    /** Password is shorter than the minimum length required by the policy. */
-    class PasswordTooShort : SecurityError(
+    /**
+     * Password is shorter than the minimum length required by the policy.
+     *
+     * @param minLength Optional minimum length requirement to populate [SecurityErrorArgs.PASSWORD_MIN_LENGTH] in [args].
+     */
+    class PasswordTooShort(
+        minLength: Int? = null
+    ) : SecurityError(
         id = ErrorId.generate(),
-        code = SecurityErrorCodes.PASSWORD_TOO_SHORT,
+        code = ClientSecurityErrorCodes.PASSWORD_TOO_SHORT,
+        args = minLength?.let { mapOf(SecurityErrorArgs.PASSWORD_MIN_LENGTH to it.toString()) },
         isRetryable = false
     )
 
     /** Password does not contain a letter. */
     class PasswordNoLetter : SecurityError(
         id = ErrorId.generate(),
-        code = SecurityErrorCodes.PASSWORD_NO_LETTER,
+        code = ClientSecurityErrorCodes.PASSWORD_NO_LETTER,
         isRetryable = false
     )
 
     /** Password does not contain an uppercase letter. */
     class PasswordNoUpperCase : SecurityError(
         id = ErrorId.generate(),
-        code = SecurityErrorCodes.PASSWORD_NO_UPPERCASE,
+        code = ClientSecurityErrorCodes.PASSWORD_NO_UPPERCASE,
         isRetryable = false
     )
 
     /** Password does not contain a lowercase letter. */
     class PasswordNoLowerCase : SecurityError(
         id = ErrorId.generate(),
-        code = SecurityErrorCodes.PASSWORD_NO_LOWERCASE,
+        code = ClientSecurityErrorCodes.PASSWORD_NO_LOWERCASE,
         isRetryable = false
     )
 
     /** Password does not contain a digit. */
     class PasswordNoDigit : SecurityError(
         id = ErrorId.generate(),
-        code = SecurityErrorCodes.PASSWORD_NO_DIGIT,
+        code = ClientSecurityErrorCodes.PASSWORD_NO_DIGIT,
         isRetryable = false
     )
 
     /** Password does not contain a special character. */
     class PasswordNoSpecialChar : SecurityError(
         id = ErrorId.generate(),
-        code = SecurityErrorCodes.PASSWORD_NO_SPECIAL_CHAR,
+        code = ClientSecurityErrorCodes.PASSWORD_NO_SPECIAL_CHAR,
         isRetryable = false
     )
 
     /** Password matches a blocked common-password list. */
     class PasswordTooCommon : SecurityError(
         id = ErrorId.generate(),
-        code = SecurityErrorCodes.PASSWORD_TOO_COMMON,
+        code = ClientSecurityErrorCodes.PASSWORD_TOO_COMMON,
         isRetryable = false
     )
 }

@@ -12,9 +12,9 @@ import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.root.ClientLoginRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.ClientAppComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.home.HomeScreenComponentImpl
-import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.profile.ProfileScreenComponentImpl
 
 /**
  * Default [MainScreenComponent]: stack navigation for home and profile, slot for [ClientLoginRootComponent].
@@ -58,10 +58,9 @@ class ClientMainScreenComponentImpl(
             }
             is MainScreenComponent.Config.Profile -> {
                 MainScreenComponent.Child.ProfileChild(
-                    ProfileScreenComponentImpl(
+                    clientAppComponent.clientUserComponent.createProfileComponent(
                         componentContext = context,
-                        userRepository = clientAppComponent.clientUserComponent.userRepository,
-                        onLoginDialogRequest = { onShowLogin() }
+                        onNavigateToLogin = { onShowLogin() }
                     )
                 )
             }

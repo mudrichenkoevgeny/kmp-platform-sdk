@@ -42,7 +42,12 @@ class EncryptedUserStorage(
         val data = encryptedSettings.get(KEY_CURRENT_USER)
             ?: return null
 
-        return json.decodeFromString<UserDetailsPayload>(data).toUserDetails()
+        return try {
+            json.decodeFromString<UserDetailsPayload>(data).toUserDetails()
+        } catch (_: Exception) {
+            encryptedSettings.remove(KEY_CURRENT_USER)
+            null
+        }
     }
 
     override fun observeCurrentUser(): Flow<UserDetails?> {
@@ -51,7 +56,12 @@ class EncryptedUserStorage(
                 return@map null
             }
 
-            json.decodeFromString<UserDetailsPayload>(data).toUserDetails()
+            try {
+                json.decodeFromString<UserDetailsPayload>(data).toUserDetails()
+            } catch (_: Exception) {
+                encryptedSettings.remove(KEY_CURRENT_USER)
+                null
+            }
         }
     }
 
@@ -64,7 +74,12 @@ class EncryptedUserStorage(
 
     private suspend fun getAllUserIdentifiersInternal(): List<UserIdentifier> {
         val data = encryptedSettings.get(KEY_USER_IDENTIFIERS) ?: return emptyList()
-        val pagedPayload = json.decodeFromString<PagedResult<UserIdentifierPayload>>(data)
+        val pagedPayload = try {
+            json.decodeFromString<PagedResult<UserIdentifierPayload>>(data)
+        } catch (_: Exception) {
+            encryptedSettings.remove(KEY_USER_IDENTIFIERS)
+            return emptyList()
+        }
         return pagedPayload.items.map { it.toUserIdentifier() }
     }
 
@@ -228,7 +243,12 @@ class EncryptedUserStorage(
 
     private suspend fun getAllUserSessionsInternal(): List<UserSession> {
         val data = encryptedSettings.get(KEY_USER_SESSIONS) ?: return emptyList()
-        val pagedPayload = json.decodeFromString<PagedResult<UserSessionPayload>>(data)
+        val pagedPayload = try {
+            json.decodeFromString<PagedResult<UserSessionPayload>>(data)
+        } catch (_: Exception) {
+            encryptedSettings.remove(KEY_USER_SESSIONS)
+            return emptyList()
+        }
         return pagedPayload.items.map { it.toUserSession() }
     }
 

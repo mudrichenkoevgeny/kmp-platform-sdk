@@ -5,6 +5,7 @@ import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.ClientLoginDestination
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailComponent
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.phone.LoginByPhoneComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordComponent
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email.RegistrationByEmailComponent
@@ -65,5 +66,12 @@ interface ClientLoginRootComponent {
          * @param component child Decompose component for this step.
          */
         class ResetEmailPassword(val component: ResetEmailPasswordComponent) : Child
+
+        /**
+         * MFA/TOTP verification.
+         *
+         * @param component child Decompose component for this step.
+         */
+        class LoginByTotp(val component: LoginByTotpComponent) : Child
     }
 }

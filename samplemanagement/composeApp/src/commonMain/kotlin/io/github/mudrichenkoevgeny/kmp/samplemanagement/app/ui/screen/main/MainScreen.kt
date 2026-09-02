@@ -33,7 +33,7 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di.LocalManagementAppComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home.HomeScreen
-import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.profile.ProfileScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootScreen
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootScreen
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home.HomeScreenComponent
@@ -100,7 +100,7 @@ fun MainContent(
                     HomeScreen(instance.component)
                 }
                 is MainScreenComponent.Child.ProfileChild -> {
-                    ProfileScreen(instance.component)
+                    ProfileRootScreen(instance.component)
                 }
             }
         }

@@ -21,6 +21,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -96,7 +97,8 @@ private fun LoginWelcomeContent(
         ) {
             Text(
                 text = stringResource(Res.string.sign_in),
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.testTag(LoginWelcomeTestTags.TITLE)
             )
 
             Spacer(Modifier.height(Dimens.paddingLarge))
@@ -105,7 +107,9 @@ private fun LoginWelcomeContent(
                 AuthProviderButton(
                     authProvider = provider,
                     onClick = { onLoginClick(provider) },
-                    modifier = Modifier.padding(bottom = Dimens.paddingSmall)
+                    modifier = Modifier
+                        .padding(bottom = Dimens.paddingSmall)
+                        .testTag(LoginWelcomeTestTags.getAuthProviderTag(provider))
                 )
             }
 
@@ -116,13 +120,16 @@ private fun LoginWelcomeContent(
                     text = stringResource(Res.string.or_sign_in_with),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.outline,
-                    modifier = Modifier.padding(vertical = Dimens.paddingMedium)
+                    modifier = Modifier
+                        .padding(vertical = Dimens.paddingMedium)
+                        .testTag(LoginWelcomeTestTags.OR_DIVIDER)
                 )
             }
 
             AuthProviderGrid(
                 authProviders = state.availableAuthProviders.secondary,
-                onProviderClick = onLoginClick
+                onProviderClick = onLoginClick,
+                modifier = Modifier.testTag(LoginWelcomeTestTags.SECONDARY_PROVIDERS_GRID)
             )
 
             AnimatedVisibility(
@@ -136,7 +143,9 @@ private fun LoginWelcomeContent(
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.labelMedium,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(top = Dimens.paddingMedium)
+                        modifier = Modifier
+                            .padding(top = Dimens.paddingMedium)
+                            .testTag(LoginWelcomeTestTags.ACTION_ERROR_TEXT)
                     )
                 }
             }
@@ -246,4 +255,13 @@ private fun LoginWelcomeScreenLoadingPreview() {
             }
         }
     }
+}
+
+internal object LoginWelcomeTestTags {
+    const val TITLE = "LoginWelcome_Title"
+    const val OR_DIVIDER = "LoginWelcome_OrDivider"
+    const val SECONDARY_PROVIDERS_GRID = "LoginWelcome_SecondaryProvidersGrid"
+    const val ACTION_ERROR_TEXT = "LoginWelcome_ActionErrorText"
+
+    fun getAuthProviderTag(provider: UserAuthProvider): String = "LoginWelcome_AuthProvider_${provider.name}"
 }

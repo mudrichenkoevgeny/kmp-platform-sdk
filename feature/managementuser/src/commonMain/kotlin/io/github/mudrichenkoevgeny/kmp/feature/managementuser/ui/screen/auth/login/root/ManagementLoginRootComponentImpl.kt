@@ -14,6 +14,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.di.ManagementUserC
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.ManagementLoginDestination
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordComponentImpl
 
@@ -51,6 +52,7 @@ class ManagementLoginRootComponentImpl(
                 loginByGoogleUseCase = null,
                 onNavigateToLoginByEmail = { navigation.push(ManagementLoginDestination.LoginByEmail) },
                 onNavigateToLoginByPhone = { },
+                onNavigateToTotp = { mfaToken -> navigation.push(ManagementLoginDestination.LoginByTotp(mfaToken)) },
                 onFinished = onFinished
             )
         )
@@ -62,6 +64,7 @@ class ManagementLoginRootComponentImpl(
                 validatePasswordUseCase = securityComponent.validatePasswordUseCase,
                 onNavigateToRegistrationByEmail = { },
                 onNavigateToForgotPassword = { navigation.push(ManagementLoginDestination.ResetEmailPassword) },
+                onNavigateToTotp = { mfaToken -> navigation.push(ManagementLoginDestination.LoginByTotp(mfaToken)) },
                 onBack = navigation::pop,
                 onFinished = onFinished
             )
@@ -73,6 +76,16 @@ class ManagementLoginRootComponentImpl(
                 sendResetPasswordConfirmationToEmailUseCase = managementUserComponent.sendResetPasswordConfirmationToEmailUseCase,
                 resetEmailPasswordUseCase = managementUserComponent.resetEmailPasswordUseCase,
                 validatePasswordUseCase = securityComponent.validatePasswordUseCase,
+                onBack = navigation::pop,
+                onFinished = onFinished
+            )
+        )
+        is ManagementLoginDestination.LoginByTotp -> ManagementLoginRootComponent.Child.LoginByTotp(
+            LoginByTotpComponentImpl(
+                componentContext = context,
+                mfaToken = config.mfaToken,
+                loginByTotpUseCase = managementUserComponent.loginByTotpUseCase,
+                loginByTotpRecoveryCodeUseCase = managementUserComponent.loginByTotpRecoveryCodeUseCase,
                 onBack = navigation::pop,
                 onFinished = onFinished
             )

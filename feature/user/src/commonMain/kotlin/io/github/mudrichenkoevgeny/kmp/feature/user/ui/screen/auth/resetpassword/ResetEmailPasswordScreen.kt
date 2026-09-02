@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -88,7 +89,9 @@ private fun EmailInputContent(
             ) {
                 IconButton(
                     onClick = onBackClick,
-                    modifier = Modifier.align(Alignment.CenterStart),
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .testTag(ResetEmailPasswordTestTags.EMAIL_STEP_BACK_BUTTON),
                     enabled = !state.actionLoading
                 ) {
                     Icon(
@@ -99,7 +102,8 @@ private fun EmailInputContent(
 
                 Text(
                     text = stringResource(Res.string.reset_password),
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.testTag(ResetEmailPasswordTestTags.EMAIL_STEP_TITLE)
                 )
             }
 
@@ -108,20 +112,24 @@ private fun EmailInputContent(
             OutlinedTextField(
                 value = state.email,
                 onValueChange = onEmailChanged,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(ResetEmailPasswordTestTags.EMAIL_INPUT),
                 label = { Text(stringResource(Res.string.email)) },
                 isError = state.actionError != null,
                 enabled = !state.actionLoading,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
 
-            ErrorText(state.actionError)
+            ErrorText(state.actionError, ResetEmailPasswordTestTags.EMAIL_STEP_ERROR_TEXT)
 
             Spacer(Modifier.height(Dimens.paddingLarge))
 
             Button(
                 onClick = onSendCodeClick,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(ResetEmailPasswordTestTags.SEND_CODE_BUTTON),
                 enabled = state.isEmailValid && !state.actionLoading
             ) {
                 Text(stringResource(Res.string.send_code))
@@ -154,7 +162,9 @@ private fun ResetInputContent(
             ) {
                 IconButton(
                     onClick = onBackClick,
-                    modifier = Modifier.align(Alignment.CenterStart),
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .testTag(ResetEmailPasswordTestTags.RESET_STEP_BACK_BUTTON),
                     enabled = !state.actionLoading
                 ) {
                     Icon(
@@ -165,7 +175,8 @@ private fun ResetInputContent(
 
                 Text(
                     text = stringResource(Res.string.enter_confirmation_code),
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.testTag(ResetEmailPasswordTestTags.RESET_STEP_TITLE)
                 )
             }
 
@@ -173,7 +184,9 @@ private fun ResetInputContent(
                 text = stringResource(Res.string.code_sent_to, state.email),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.outline,
-                modifier = Modifier.padding(top = Dimens.paddingSmall)
+                modifier = Modifier
+                    .padding(top = Dimens.paddingSmall)
+                    .testTag(ResetEmailPasswordTestTags.CODE_SENT_INFO_TEXT)
             )
 
             Spacer(Modifier.height(Dimens.paddingLarge))
@@ -181,7 +194,9 @@ private fun ResetInputContent(
             OutlinedTextField(
                 value = state.code,
                 onValueChange = onCodeChanged,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(ResetEmailPasswordTestTags.CODE_INPUT),
                 label = { Text(stringResource(Res.string.confirmation_code)) },
                 enabled = !state.actionLoading,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
@@ -192,14 +207,16 @@ private fun ResetInputContent(
             OutlinedTextField(
                 value = state.newPassword,
                 onValueChange = onPasswordChanged,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(ResetEmailPasswordTestTags.NEW_PASSWORD_INPUT),
                 label = { Text(stringResource(Res.string.new_password)) },
                 enabled = !state.actionLoading,
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
             )
 
-            ErrorText(state.actionError)
+            ErrorText(state.actionError, ResetEmailPasswordTestTags.RESET_STEP_ERROR_TEXT)
 
             Spacer(Modifier.height(Dimens.paddingMedium))
 
@@ -207,10 +224,14 @@ private fun ResetInputContent(
                 Text(
                     text = stringResource(Res.string.resend_code_timer, state.resendTimerSeconds),
                     style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.outline
+                    color = MaterialTheme.colorScheme.outline,
+                    modifier = Modifier.testTag(ResetEmailPasswordTestTags.RESEND_TIMER_TEXT)
                 )
             } else {
-                TextButton(onClick = onResendCodeClick) {
+                TextButton(
+                    onClick = onResendCodeClick,
+                    modifier = Modifier.testTag(ResetEmailPasswordTestTags.RESEND_CODE_BUTTON)
+                ) {
                     Text(text = stringResource(Res.string.resend_code))
                 }
             }
@@ -219,13 +240,18 @@ private fun ResetInputContent(
 
             Button(
                 onClick = onConfirmResetClick,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(ResetEmailPasswordTestTags.CONFIRM_BUTTON),
                 enabled = state.canConfirm
             ) {
                 Text(stringResource(Res.string.confirm))
             }
 
-            TextButton(onClick = onResetEmailClick) {
+            TextButton(
+                onClick = onResetEmailClick,
+                modifier = Modifier.testTag(ResetEmailPasswordTestTags.CHANGE_EMAIL_BUTTON)
+            ) {
                 Text(text = stringResource(Res.string.change_email))
             }
         }
@@ -234,7 +260,7 @@ private fun ResetInputContent(
 }
 
 @Composable
-private fun ErrorText(error: AppError?) {
+private fun ErrorText(error: AppError?, tag: String) {
     AnimatedVisibility(
         visible = error != null,
         enter = fadeIn() + expandVertically(),
@@ -246,8 +272,29 @@ private fun ErrorText(error: AppError?) {
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = Dimens.paddingSmall)
+                modifier = Modifier
+                    .padding(top = Dimens.paddingSmall)
+                    .testTag(tag)
             )
         }
     }
+}
+
+internal object ResetEmailPasswordTestTags {
+    const val EMAIL_STEP_BACK_BUTTON = "ResetEmailPassword_EmailStepBackButton"
+    const val EMAIL_STEP_TITLE = "ResetEmailPassword_EmailStepTitle"
+    const val EMAIL_INPUT = "ResetEmailPassword_EmailInput"
+    const val SEND_CODE_BUTTON = "ResetEmailPassword_SendCodeButton"
+    const val EMAIL_STEP_ERROR_TEXT = "ResetEmailPassword_EmailStepErrorText"
+
+    const val RESET_STEP_BACK_BUTTON = "ResetEmailPassword_ResetStepBackButton"
+    const val RESET_STEP_TITLE = "ResetEmailPassword_ResetStepTitle"
+    const val CODE_SENT_INFO_TEXT = "ResetEmailPassword_CodeSentInfoText"
+    const val CODE_INPUT = "ResetEmailPassword_CodeInput"
+    const val NEW_PASSWORD_INPUT = "ResetEmailPassword_NewPasswordInput"
+    const val RESEND_TIMER_TEXT = "ResetEmailPassword_ResendTimerText"
+    const val RESEND_CODE_BUTTON = "ResetEmailPassword_ResendCodeButton"
+    const val CONFIRM_BUTTON = "ResetEmailPassword_ConfirmButton"
+    const val CHANGE_EMAIL_BUTTON = "ResetEmailPassword_ChangeEmailButton"
+    const val RESET_STEP_ERROR_TEXT = "ResetEmailPassword_ResetStepErrorText"
 }

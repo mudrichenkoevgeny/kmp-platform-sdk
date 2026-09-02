@@ -1,6 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.phone
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
+import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 
 /**
  * UI states for [LoginByPhoneScreen].
@@ -35,7 +36,7 @@ sealed interface LoginByPhoneScreenState {
     data class CodeInput(
         val phoneNumber: String,
         val code: String = "",
-        val codeLength: Int = 6,
+        val codeLength: Int = FieldValidator.DEFAULT_OTP_LENGTH,
         val resendTimerSeconds: Int = 0,
         override val actionLoading: Boolean = false,
         override val actionError: AppError? = null
