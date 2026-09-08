@@ -16,17 +16,23 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
@@ -77,8 +83,8 @@ fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
                             s,
                             component::onCodeChanged,
                             component::onConfirmCodeClick,
-                            component::onResetPhoneClick,
-                            component::onSendCodeClick
+                            component::onSendCodeClick,
+                            component::onResetPhoneClick
                         )
                     }
                 }
@@ -109,7 +115,7 @@ private fun PhoneInputContent(
         value = state.phoneNumber,
         onValueChange = onPhoneChanged,
         label = { Text(stringResource(Res.string.phone_number)) },
-        placeholder = { Text(stringResource(Res.string.enter_phone_number)) },
+        placeholder = { Text(stringResource(Res.string.phone_number)) },
         modifier = Modifier
             .fillMaxWidth()
             .testTag(LoginByPhoneTestTags.PHONE_INPUT),
@@ -143,8 +149,8 @@ private fun CodeInputContent(
     state: LoginByPhoneScreenState.CodeInput,
     onCodeChanged: (String) -> Unit,
     onConfirmClick: () -> Unit,
-    onChangePhoneClick: () -> Unit,
-    onResendClick: () -> Unit
+    onResendClick: () -> Unit,
+    onChangePhoneClick: () -> Unit
 ) {
     Text(
         text = stringResource(Res.string.enter_confirmation_code),
@@ -216,6 +222,23 @@ private fun CodeInputContent(
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_STEP_ERROR_TEXT)
         )
+    }
+}
+
+@InternalApi
+@Preview(showBackground = true)
+@Composable
+private fun LoginByPhoneScreenPreview() {
+    MaterialTheme {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+            Surface {
+                PhoneInputContent(
+                    state = LoginByPhoneScreenState.PhoneInput(phoneNumber = "+1234567890"),
+                    onPhoneChanged = {},
+                    onSendCodeClick = {}
+                )
+            }
+        }
     }
 }
 

@@ -61,7 +61,7 @@ class UserWebSocketMessageHandlerTest {
         val handler = createHandler(this)
         assertSame(
             expected = WebSocketMessageHandlerResult.NotHandled,
-            actual = handler.handle(socketFrameMock(type = UserWebSocketEventTypes.AUTH_SETTINGS_UPDATED))
+            actual = handler.handle(socketFrameMock(type = UserWebSocketEventTypes.OPEN_AUTH_SETTINGS_UPDATED))
         )
     }
 

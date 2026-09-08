@@ -10,7 +10,7 @@ interface ManagementAuthSettingsApi {
      *
      * @return Settings DTO from the shared contract, or a mapped failure.
      */
-    suspend fun getAuthSettings(): AppResult<ManagementAuthSettingsPayload>
+    suspend fun getManagementAuthSettings(): AppResult<ManagementAuthSettingsPayload>
 
     /**
      * Updates authentication settings and policies for the current account.
@@ -18,5 +18,5 @@ interface ManagementAuthSettingsApi {
      * @param request New authentication settings payload.
      * @return Empty success indicator, or a mapped failure.
      */
-    suspend fun updateAuthSettings(request: ManagementAuthSettingsPayload): AppResult<Unit>
+    suspend fun updateManagementAuthSettings(request: ManagementAuthSettingsPayload): AppResult<Unit>
 }

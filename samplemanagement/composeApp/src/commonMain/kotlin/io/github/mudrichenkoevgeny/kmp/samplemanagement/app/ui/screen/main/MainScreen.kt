@@ -36,6 +36,7 @@ import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home.HomeS
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootScreen
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootScreen
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.ManagementSettingsRootScreen
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home.HomeScreenComponent
 import org.jetbrains.compose.resources.stringResource
 
@@ -102,6 +103,9 @@ fun MainContent(
                 is MainScreenComponent.Child.ProfileChild -> {
                     ProfileRootScreen(instance.component)
                 }
+                is MainScreenComponent.Child.SettingsChild -> {
+                    ManagementSettingsRootScreen(instance.component)
+                }
             }
         }
     }
@@ -116,6 +120,7 @@ fun MainContent(
     } else {
         WebLayout(
             currentDestination = currentDestination,
+            destinations = destinations,
             onDestinationChange = onDestinationChange,
             content = content
         )
@@ -152,6 +157,7 @@ private fun MobileLayout(
 @Composable
 private fun WebLayout(
     currentDestination: MainScreenDestination,
+    destinations: List<MainScreenDestination>,
     onDestinationChange: (MainScreenDestination) -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -172,15 +178,22 @@ private fun WebLayout(
                     )
                 }
 
-                IconButton(onClick = { onDestinationChange(MainScreenDestination.Profile) }) {
-                    Icon(
-                        imageVector = MainScreenDestination.Profile.icon,
-                        contentDescription = stringResource(MainScreenDestination.Profile.title),
-                        tint = if (currentDestination == MainScreenDestination.Profile)
-                            MaterialTheme.colorScheme.primary
-                        else
-                            MaterialTheme.colorScheme.onSurface
-                    )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(Dimens.paddingSmall)
+                ) {
+                    destinations.filter { it != MainScreenDestination.Home }.forEach { dest ->
+                        IconButton(onClick = { onDestinationChange(dest) }) {
+                            Icon(
+                                imageVector = dest.icon,
+                                contentDescription = stringResource(dest.title),
+                                tint = if (currentDestination == dest)
+                                    MaterialTheme.colorScheme.primary
+                                else
+                                    MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
                 }
             }
         }

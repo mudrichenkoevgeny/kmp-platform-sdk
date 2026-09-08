@@ -4,12 +4,13 @@ import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.ManagementSettingsRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home.HomeScreenComponent
 import kotlinx.serialization.Serializable
 
 /**
- * Decompose root for the sample: tab stack (home and profile) and a dialog slot for the login flow.
+ * Decompose root for the sample: tab stack (home, profile, settings) and a dialog slot for the login flow.
  */
 interface MainScreenComponent {
     /**
@@ -43,6 +44,7 @@ interface MainScreenComponent {
     sealed class Child {
         class HomeChild(val component: HomeScreenComponent) : Child()
         class ProfileChild(val component: ProfileRootComponent) : Child()
+        class SettingsChild(val component: ManagementSettingsRootComponent) : Child()
     }
 
     /**
@@ -51,6 +53,7 @@ interface MainScreenComponent {
     sealed class Config {
         @Serializable object Home : Config()
         @Serializable object Profile : Config()
+        @Serializable object Settings : Config()
     }
 
     /**

@@ -2,11 +2,10 @@ package io.github.mudrichenkoevgeny.kmp.core.security.di
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
-import io.github.mudrichenkoevgeny.kmp.core.security.network.securitysettings.SecuritySettingsApi
-import io.github.mudrichenkoevgeny.kmp.core.security.repository.SecuritySettingsRepository
+import io.github.mudrichenkoevgeny.kmp.core.security.network.securitysettings.OpenSecuritySettingsApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator.PasswordPolicyValidator
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator.PasswordPolicyValidatorImpl
-import io.github.mudrichenkoevgeny.kmp.core.security.storage.securitysettings.SecuritySettingsStorage
+import io.github.mudrichenkoevgeny.kmp.core.security.storage.securitysettings.OpenSecuritySettingsStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -15,7 +14,7 @@ import kotlinx.coroutines.SupervisorJob
  * Root wiring component for `core/security`.
  *
  * Assembles storage and password policy validation. Exposes:
- * - [SecuritySettingsStorage] (`securitySettingsStorage`)
+ * - [OpenSecuritySettingsStorage] (`securitySettingsStorage`)
  * - [PasswordPolicyValidator] (`passwordPolicyValidator`)
  *
  * Constructor dependencies:
@@ -24,7 +23,7 @@ import kotlinx.coroutines.SupervisorJob
  */
 class SecurityComponent(
     webSocketService: WebSocketService,
-    securitySettingsApi: SecuritySettingsApi,
+    openSecuritySettingsApi: OpenSecuritySettingsApi,
     encryptedSettings: EncryptedSettings,
     parentScope: CoroutineScope? = null
 ) {
@@ -36,7 +35,7 @@ class SecurityComponent(
             encryptedSettings
         )
     }
-    val securitySettingsStorage get() = storageModule.securitySettingsStorage
+    val securitySettingsStorage get() = storageModule.openSecuritySettingsStorage
 
     val passwordPolicyValidator: PasswordPolicyValidator by lazy {
         PasswordPolicyValidatorImpl()
@@ -44,28 +43,25 @@ class SecurityComponent(
 
     private val repositoryModule by lazy {
         SecurityRepositoryModule(
-            securitySettingsApi = securitySettingsApi,
-            securitySettingsStorage = securitySettingsStorage,
+            openSecuritySettingsApi = openSecuritySettingsApi,
+            openSecuritySettingsStorage = securitySettingsStorage,
             webSocketService = webSocketService,
             repositoryScope = componentScope
         )
     }
-    val securitySettingsRepository get() = repositoryModule.securitySettingsRepository
+    val securitySettingsRepository get() = repositoryModule.openSecuritySettingsRepository
 
     private val useCaseModule by lazy {
         SecurityUseCaseModule(
-            securitySettingsRepository = securitySettingsRepository,
+            openSecuritySettingsRepository = securitySettingsRepository,
             passwordPolicyValidator = passwordPolicyValidator
         )
     }
-    val refreshSecuritySettingsUseCase get() = useCaseModule.refreshSecuritySettingsUseCase
+    val refreshSecuritySettingsUseCase get() = useCaseModule.refreshOpenSecuritySettingsUseCase
     val validatePasswordUseCase get() = useCaseModule.validatePasswordUseCase
 
     private val webSocketsModule by lazy {
-        SecurityWebSocketModule(
-            securitySettingsRepository = securitySettingsRepository,
-            scope = componentScope
-        )
+        SecurityWebSocketModule()
     }
 
     val securityWebSocketMessageHandler get() = webSocketsModule.securityWebSocketMessageHandler

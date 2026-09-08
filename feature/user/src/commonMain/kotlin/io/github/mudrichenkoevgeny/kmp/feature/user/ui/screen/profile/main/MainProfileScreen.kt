@@ -1,3 +1,5 @@
+@file:OptIn(InternalApi::class)
+
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main
 
 import androidx.compose.animation.AnimatedVisibility
@@ -45,7 +47,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userD
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import org.jetbrains.compose.resources.stringResource
 
-// TODO: In development
+@OptIn(InternalApi::class)
 @Composable
 fun MainProfileScreen(component: MainProfileComponent) {
     val state by component.state.subscribeAsState()
@@ -391,7 +393,8 @@ private fun MainProfileScreenContentErrorPreview() {
     }
 }
 
-internal object MainProfileTestTags {
+@InternalApi
+object MainProfileTestTags {
     const val UNAUTHORIZED_TEXT = "MainProfile_UnauthorizedText"
     const val LOGIN_BUTTON = "MainProfile_LoginButton"
 

@@ -31,7 +31,7 @@ class GetAvailableUserAuthProvidersUseCase(
                         )
                     )
 
-                repository.getAuthSettings().mapSuccess { authSettings ->
+                repository.getOpenAuthSettings().mapSuccess { authSettings ->
                     authSettings.availableAuthProviders
                 }
             }

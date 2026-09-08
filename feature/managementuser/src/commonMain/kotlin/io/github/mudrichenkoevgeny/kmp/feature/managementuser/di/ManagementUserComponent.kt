@@ -10,6 +10,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.ManagementSettingsRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.ManagementSettingsRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponentImpl
 import kotlinx.coroutines.CoroutineScope
@@ -44,7 +46,12 @@ class ManagementUserComponent(
     private val storageModule = UserStorageModule(commonComponent.encryptedSettings)
     private val networkModule = ManagementUserNetworkModule(httpClient = commonComponent.httpClient)
     private val repositoryModule = ManagementUserRepositoryModule(
-        networkModule, authStorage, storageModule, commonComponent.webSocketService, componentScope
+        networkModule = networkModule,
+        authStorage = authStorage,
+        encryptedSettings = commonComponent.encryptedSettings,
+        storageModule = storageModule,
+        webSocketService = commonComponent.webSocketService,
+        repositoryScope = componentScope
     )
 
     /** Repository for self-management login (email/totp). */
@@ -69,8 +76,8 @@ class ManagementUserComponent(
         authServices = authServices,
         managementUserConfigurationApi = networkModule.userConfigurationApi,
         managementAuthSettingsRepository = repositoryModule.managementAuthSettingsRepository,
-        globalSettingsRepository = settingsComponent.globalSettingsRepository,
-        securitySettingsRepository = securityComponent.securitySettingsRepository
+        managementGlobalSettingsRepository = repositoryModule.managementGlobalSettingsRepository,
+        managementSecuritySettingsRepository = repositoryModule.managementSecuritySettingsRepository
     )
 
     /** Refreshes the management session. */
@@ -86,7 +93,13 @@ class ManagementUserComponent(
     val loginByTotpRecoveryCodeUseCase get() = useCaseModule.loginByTotpRecoveryCodeUseCase
 
     /** Forces refresh of auth settings. */
-    val refreshAuthSettingsUseCase get() = useCaseModule.refreshAuthSettingsUseCase
+    val refreshManagementAuthSettingsUseCase get() = useCaseModule.refreshManagementAuthSettingsUseCase
+
+    /** Forces refresh of global settings. */
+    val refreshManagementGlobalSettingsUseCase get() = useCaseModule.refreshManagementGlobalSettingsUseCase
+
+    /** Forces refresh of security settings. */
+    val refreshManagementSecuritySettingsUseCase get() = useCaseModule.refreshManagementSecuritySettingsUseCase
 
     /** Resets management password. */
     val resetEmailPasswordUseCase get() = useCaseModule.resetEmailPasswordUseCase
@@ -215,4 +228,47 @@ class ManagementUserComponent(
         managementUserComponent = this,
         onFinished = onFinished
     )
+
+    /** Repository for management-specific global settings. */
+    val globalSettingsRepository get() = repositoryModule.managementGlobalSettingsRepository
+
+    /** Repository for management-specific security settings. */
+    val securitySettingsRepository get() = repositoryModule.managementSecuritySettingsRepository
+
+    /** Returns management auth settings. */
+    val getManagementAuthSettingsUseCase get() = useCaseModule.getManagementAuthSettingsUseCase
+
+    /** Saves remote auth settings. */
+    val saveRemoteAuthSettingsUseCase get() = useCaseModule.saveRemoteAuthSettingsUseCase
+
+    /** Returns management global settings. */
+    val getManagementGlobalSettingsUseCase get() = useCaseModule.getManagementGlobalSettingsUseCase
+
+    /** Saves remote global settings. */
+    val saveRemoteGlobalSettingsUseCase get() = useCaseModule.saveRemoteGlobalSettingsUseCase
+
+    /** Returns management security settings. */
+    val getManagementSecuritySettingsUseCase get() = useCaseModule.getManagementSecuritySettingsUseCase
+
+    /** Saves remote security settings. */
+    val saveRemoteSecuritySettingsUseCase get() = useCaseModule.saveRemoteSecuritySettingsUseCase
+
+    /**
+     * Creates the root Decompose component for management settings flow (Auth, Global, Security settings).
+     *
+     * @param componentContext Decompose context for the component.
+     * @return A new instance of [ManagementSettingsRootComponent].
+     */
+    fun createManagementSettingsComponent(
+        componentContext: ComponentContext
+    ): ManagementSettingsRootComponent =
+        ManagementSettingsRootComponentImpl(
+            componentContext = componentContext,
+            getManagementAuthSettingsUseCase = getManagementAuthSettingsUseCase,
+            saveRemoteAuthSettingsUseCase = saveRemoteAuthSettingsUseCase,
+            getManagementGlobalSettingsUseCase = getManagementGlobalSettingsUseCase,
+            saveRemoteGlobalSettingsUseCase = saveRemoteGlobalSettingsUseCase,
+            getManagementSecuritySettingsUseCase = getManagementSecuritySettingsUseCase,
+            saveRemoteSecuritySettingsUseCase = saveRemoteSecuritySettingsUseCase
+        )
 }

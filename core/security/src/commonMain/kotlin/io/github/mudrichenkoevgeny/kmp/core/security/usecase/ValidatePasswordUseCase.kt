@@ -2,33 +2,33 @@ package io.github.mudrichenkoevgeny.kmp.core.security.usecase
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.security.error.model.SecurityError
-import io.github.mudrichenkoevgeny.kmp.core.security.repository.SecuritySettingsRepository
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.PasswordPolicy
+import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySettingsRepository
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.OpenPasswordPolicy
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.PasswordPolicyFailReason
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.PasswordPolicyValidatorResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator.PasswordPolicyValidator
 
 /**
- * Validates a password string against the current [PasswordPolicy] from [SecuritySettingsRepository]
+ * Validates a password string against the current [OpenPasswordPolicy] from [OpenSecuritySettingsRepository]
  * using [PasswordPolicyValidator].
  *
- * @param securitySettingsRepository Source of the active password policy.
+ * @param openSecuritySettingsRepository Source of the active password policy.
  * @param passwordPolicyValidator Foundation validator implementation.
  */
 open class ValidatePasswordUseCase(
-    private val securitySettingsRepository: SecuritySettingsRepository,
+    private val openSecuritySettingsRepository: OpenSecuritySettingsRepository,
     private val passwordPolicyValidator: PasswordPolicyValidator
 ) {
     /**
      * @param password Candidate password to validate.
      * @return [AppResult.Success] when the password satisfies the policy, or [AppResult.Error] with a
-     * [SecurityError] describing the first failed rule. Falls back to default [PasswordPolicy] if settings cannot be loaded.
+     * [SecurityError] describing the first failed rule.
      */
     open suspend operator fun invoke(password: String): AppResult<Unit> {
-        val securitySettingsResult = securitySettingsRepository.getSecuritySettings()
+        val securitySettingsResult = openSecuritySettingsRepository.getOpenSecuritySettings()
         val passwordPolicy = when (securitySettingsResult) {
             is AppResult.Success -> securitySettingsResult.data.passwordPolicy
-            is AppResult.Error -> PasswordPolicy()
+            is AppResult.Error -> OpenPasswordPolicy()
         }
 
         val validationResult = passwordPolicyValidator.validate(

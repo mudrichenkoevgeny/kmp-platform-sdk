@@ -56,8 +56,11 @@ kotlin {
             implementation(project(":feature:user"))
 
             // Shared Foundation
+            implementation(libs.shared.foundation.core.settings)
             implementation(libs.shared.foundation.core.security)
             implementation(libs.shared.foundation.feature.user)
+            implementation(libs.shared.foundation.feature.settingsapi)
+            implementation(libs.shared.foundation.feature.securityapi)
 
             // Kotlin
             implementation(libs.kotlinx.serialization.json)

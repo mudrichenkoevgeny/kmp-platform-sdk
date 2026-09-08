@@ -21,12 +21,21 @@ private const val HTTP_CLIENT_LOG_TAG = "HttpClient"
  * Provides:
  * - a configured Ktor `httpClient` with common defaults + installed [HttpClientConfigPlugin]s
  * - a default [WebSocketMessageHandler] for common WebSocket frames
- * - a [WebSocketService] implementation that shares the HTTP client, base URL, and token provider,
- *   dispatches incoming frames to handlers registered via [WebSocketService.updateWebSocketMessageHandlers],
- *   and exposes frames that no handler consumed through [WebSocketService.observeEvents]
+ * - a [WebSocketService] implementation mounted at [webSocketPath] that shares the HTTP client,
+ *   base URL, and token provider, dispatches incoming frames to handlers registered via
+ *   [WebSocketService.updateWebSocketMessageHandlers], and exposes frames that no handler
+ *   consumed through [WebSocketService.observeEvents]
+ *
+ * @param baseUrl Base host URL for network requests and WebSocket connections.
+ * @param webSocketPath Target endpoint path for the real-time WebSocket connection.
+ * @param httpClientConfigPlugins Optional plugins customizing the shared Ktor HTTP client.
+ * @param accessTokenProvider Provider supplying credentials for authenticated network interactions.
+ * @param platformRepository Accessor for underlying device and platform characteristics.
+ * @param appScope Application-wide CoroutineScope orchestrating socket lifecycle operations.
  */
 internal class CommonNetworkModule(
     private val baseUrl: String,
+    private val webSocketPath: String,
     private val httpClientConfigPlugins: List<HttpClientConfigPlugin> = emptyList(),
     private val accessTokenProvider: AccessTokenProvider,
     private val platformRepository: PlatformRepository,
@@ -59,6 +68,7 @@ internal class CommonNetworkModule(
         KtorWebSocketService(
             httpClient = httpClient,
             baseUrl = baseUrl,
+            webSocketPath = webSocketPath,
             networkLogger = networkLogger,
             accessTokenProvider = accessTokenProvider,
             deviceInfo = platformRepository.getDeviceInfo(),

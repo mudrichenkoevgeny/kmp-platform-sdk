@@ -2,17 +2,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenProvider
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.ManagementAuthSettings
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.PublicAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.settings.toAuthSettings
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.settings.toAuthSettingsPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.settings.toManagementAuthSettings
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.settings.toManagementAuthSettingsPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.settings.ManagementAuthSettingsPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.settings.PublicAuthSettingsPayload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Instant
 
 /**
- * Production [AuthStorage] that persists tokens and cached settings under encrypted keys and mirrors the access token
+ * Production [AuthStorage] that persists session tokens under encrypted keys and mirrors the access token
  * string into [accessTokenFlow].
  *
  * @param encryptedSettings Host-provided encrypted settings.
@@ -31,8 +22,6 @@ class EncryptedAuthStorage(
     private val encryptedSettings: EncryptedSettings,
     scope: CoroutineScope
 ) : AuthStorage, AccessTokenProvider {
-
-    private val json = FoundationJson
 
     private val _accessTokenFlow = MutableStateFlow<String?>(null)
     override val accessTokenFlow: StateFlow<String?> = _accessTokenFlow.asStateFlow()
@@ -71,52 +60,9 @@ class EncryptedAuthStorage(
         _accessTokenFlow.emit(null)
     }
 
-    override suspend fun getPublicAuthSettings(): PublicAuthSettings? {
-        val data = encryptedSettings.get(KEY_PUBLIC_AUTH_SETTINGS) ?: return null
-        return try {
-            json.decodeFromString<PublicAuthSettingsPayload>(data).toAuthSettings()
-        } catch (_: Exception) {
-            encryptedSettings.remove(KEY_PUBLIC_AUTH_SETTINGS)
-            null
-        }
-    }
-
-    override suspend fun updatePublicAuthSettings(publicAuthSettings: PublicAuthSettings) {
-        val payload = publicAuthSettings.toAuthSettingsPayload()
-        val data = json.encodeToString(payload)
-        encryptedSettings.put(KEY_PUBLIC_AUTH_SETTINGS, data)
-    }
-
-    override suspend fun clearPublicAuthSettings() {
-        encryptedSettings.remove(KEY_PUBLIC_AUTH_SETTINGS)
-    }
-
-    override suspend fun getManagementAuthSettings(): ManagementAuthSettings? {
-        val data = encryptedSettings.get(KEY_MANAGEMENT_AUTH_SETTINGS) ?: return null
-        return try {
-            json.decodeFromString<ManagementAuthSettingsPayload>(data).toManagementAuthSettings()
-        } catch (_: Exception) {
-            encryptedSettings.remove(KEY_MANAGEMENT_AUTH_SETTINGS)
-            null
-        }
-    }
-
-    override suspend fun updateManagementAuthSettings(managementAuthSettings: ManagementAuthSettings) {
-        val payload = managementAuthSettings.toManagementAuthSettingsPayload()
-        val data = json.encodeToString(payload)
-        encryptedSettings.put(KEY_MANAGEMENT_AUTH_SETTINGS, data)
-    }
-
-    override suspend fun clearManagementAuthSettings() {
-        encryptedSettings.remove(KEY_MANAGEMENT_AUTH_SETTINGS)
-    }
-
     companion object {
         private const val KEY_ACCESS_TOKEN = "auth_access_token"
         private const val KEY_REFRESH_TOKEN = "auth_refresh_token"
         private const val KEY_EXPIRES_AT = "auth_expires_at"
-
-        private const val KEY_PUBLIC_AUTH_SETTINGS = "auth_public_settings"
-        private const val KEY_MANAGEMENT_AUTH_SETTINGS = "auth_management_settings"
     }
 }

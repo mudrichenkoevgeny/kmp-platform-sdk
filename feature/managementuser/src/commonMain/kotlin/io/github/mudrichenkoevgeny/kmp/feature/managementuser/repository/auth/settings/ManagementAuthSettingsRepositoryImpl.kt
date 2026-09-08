@@ -5,7 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.Web
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.auth.settings.ManagementAuthSettingsApi
-import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.storage.auth.settings.ManagementAuthSettingsStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.ManagementAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.settings.toManagementAuthSettings
@@ -24,17 +24,17 @@ import kotlinx.serialization.json.decodeFromJsonElement
 
 /**
  * Implements [ManagementAuthSettingsRepository] with a mutex-guarded in-memory [MutableStateFlow], persistence
- * via [AuthStorage], HTTP via [ManagementAuthSettingsApi], and live updates from [WebSocketService] for
- * `AUTH_SETTINGS_UPDATED` events.
+ * via [ManagementAuthSettingsStorage], HTTP via [ManagementAuthSettingsApi], and live updates from [WebSocketService] for
+ * `MANAGEMENT_AUTH_SETTINGS_UPDATED` events.
  *
  * @param managementAuthSettingsApi Remote read endpoint for auth settings.
- * @param authStorage Encrypted or local persistence for settings snapshots.
+ * @param managementAuthSettingsStorage Encrypted or local persistence for settings snapshots.
  * @param webSocketService Source of push updates for auth settings changes.
  * @param repositoryScope Long-lived scope used for the WebSocket collector started in `init`.
  */
 class ManagementAuthSettingsRepositoryImpl(
     private val managementAuthSettingsApi: ManagementAuthSettingsApi,
-    private val authStorage: AuthStorage,
+    private val managementAuthSettingsStorage: ManagementAuthSettingsStorage,
     private val webSocketService: WebSocketService,
     repositoryScope: CoroutineScope
 ) : ManagementAuthSettingsRepository {
@@ -44,10 +44,10 @@ class ManagementAuthSettingsRepositoryImpl(
 
     init {
         repositoryScope.launch {
-            _settings.value = authStorage.getManagementAuthSettings()
+            _settings.value = managementAuthSettingsStorage.getManagementAuthSettings()
 
             webSocketService.observeEvents()
-                .filter { it.type == UserWebSocketEventTypes.AUTH_SETTINGS_UPDATED }
+                .filter { it.type == UserWebSocketEventTypes.MANAGEMENT_AUTH_SETTINGS_UPDATED }
                 .collect { frame ->
                     try {
                         val response = frame.payload?.let {
@@ -57,7 +57,7 @@ class ManagementAuthSettingsRepositoryImpl(
                         if (response != null) {
                             updateManagementAuthSettings(response.toManagementAuthSettings())
                         } else {
-                            Logger.w { "Received AUTH_SETTINGS_UPDATED with invalid payload" }
+                            Logger.w { "Received MANAGEMENT_AUTH_SETTINGS_UPDATED with invalid payload" }
                         }
                     } catch (e: Exception) {
                         Logger.e(e) { "Failed to process WebSocket event" }
@@ -70,7 +70,7 @@ class ManagementAuthSettingsRepositoryImpl(
         _settings.value?.let { return AppResult.Success(it) }
 
         return updateMutex.withLock {
-            val cached = _settings.value ?: authStorage.getManagementAuthSettings()
+            val cached = _settings.value ?: managementAuthSettingsStorage.getManagementAuthSettings()
 
             if (cached != null) {
                 _settings.value = cached
@@ -81,9 +81,9 @@ class ManagementAuthSettingsRepositoryImpl(
         }
     }
 
-    override suspend fun saveRemoteAuthSettings(authSettings: ManagementAuthSettings): AppResult<Unit> {
+    override suspend fun saveRemoteManagementAuthSettings(authSettings: ManagementAuthSettings): AppResult<Unit> {
         val payload = authSettings.toManagementAuthSettingsPayload()
-        return managementAuthSettingsApi.updateAuthSettings(payload)
+        return managementAuthSettingsApi.updateManagementAuthSettings(payload)
             .mapSuccess {
                 updateManagementAuthSettings(authSettings)
             }
@@ -104,7 +104,7 @@ class ManagementAuthSettingsRepositoryImpl(
     override fun observeManagementAuthSettings(): Flow<ManagementAuthSettings?> = _settings.asStateFlow()
 
     private suspend fun refreshManagementAuthSettingsInternal(): AppResult<ManagementAuthSettings> {
-        return managementAuthSettingsApi.getAuthSettings()
+        return managementAuthSettingsApi.getManagementAuthSettings()
             .mapSuccess { response ->
                 val settings = response.toManagementAuthSettings()
                 applySettingsUpdate(settings)
@@ -113,7 +113,7 @@ class ManagementAuthSettingsRepositoryImpl(
     }
 
     private suspend fun applySettingsUpdate(managementAuthSettings: ManagementAuthSettings) {
-        authStorage.updateManagementAuthSettings(managementAuthSettings)
+        managementAuthSettingsStorage.updateManagementAuthSettings(managementAuthSettings)
         _settings.value = managementAuthSettings
     }
 }

@@ -8,7 +8,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorag
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
@@ -32,7 +31,7 @@ class LogoutUseCaseTest {
     }
 
     @Test
-    fun invoke_returnsError_whenLogoutFails() = runTest {
+    fun invoke_clearsStorageAndReturnsSuccess_evenWhenLogoutFails() = runTest {
         val expectedError = CommonError.Unknown()
         val repository = SessionRepositoryMock().apply {
             logoutResultProvider = { AppResult.Error(expectedError) }
@@ -43,7 +42,8 @@ class LogoutUseCaseTest {
 
         val result = useCase()
 
-        assertIs<AppResult.Error>(result)
-        assertEquals(expectedError, result.error)
+        assertIs<AppResult.Success<Unit>>(result)
+        assertTrue(authStorage.isTokensCleared)
+        assertTrue(userStorage.isCleared)
     }
 }

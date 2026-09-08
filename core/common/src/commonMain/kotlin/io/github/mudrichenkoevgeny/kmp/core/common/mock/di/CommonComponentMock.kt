@@ -32,6 +32,7 @@ fun commonComponentMock(
         encryptedSettings = EncryptedSettingsMock(),
         deviceInfo = deviceInfoMock(clientType = clientType),
         baseUrl = "",
+        webSocketPath = "",
         httpClientConfigPlugins = emptyList(),
         accessTokenProvider = AccessTokenProviderMock(),
         appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),

@@ -2,23 +2,23 @@ package io.github.mudrichenkoevgeny.kmp.feature.clientuser.usecase.auth.settings
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.settings.publicAuthSettingsPayloadMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.settings.openAuthSettingsPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.settings.OpenAuthSettingsRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.AvailableAuthProviders
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.settings.toAuthSettings
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.settings.toOpenAuthSettings
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 @InternalApi
-class GetAvailableUserAuthProvidersUseCaseTest {
+class GetClientAvailableUserAuthProvidersUseCaseTest {
 
     @Test
     fun invoke_returnsPrimaryAndSecondaryFromAuthSettings() = runTest {
-        val authSettings = publicAuthSettingsPayloadMock().toAuthSettings()
+        val authSettings = openAuthSettingsPayloadMock().toOpenAuthSettings()
         val repo = OpenAuthSettingsRepositoryMock().apply {
             resultProvider = { AppResult.Success(authSettings) }
         }

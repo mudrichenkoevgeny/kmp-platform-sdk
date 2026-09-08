@@ -20,7 +20,7 @@ class RefreshAuthSettingsUseCaseTest {
         val repository = ManagementAuthSettingsRepositoryMock().apply {
             resultProvider = { AppResult.Success(authSettings) }
         }
-        val useCase = RefreshAuthSettingsUseCase(repository)
+        val useCase = RefreshManagementAuthSettingsUseCase(repository)
 
         val result = useCase()
 
@@ -34,7 +34,7 @@ class RefreshAuthSettingsUseCaseTest {
         val repository = ManagementAuthSettingsRepositoryMock().apply {
             resultProvider = { AppResult.Error(error) }
         }
-        val useCase = RefreshAuthSettingsUseCase(repository)
+        val useCase = RefreshManagementAuthSettingsUseCase(repository)
 
         val result = useCase()
 

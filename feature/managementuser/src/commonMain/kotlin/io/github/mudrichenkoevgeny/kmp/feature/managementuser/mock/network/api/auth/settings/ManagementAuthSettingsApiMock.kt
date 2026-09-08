@@ -21,12 +21,12 @@ class ManagementAuthSettingsApiMock : ManagementAuthSettingsApi {
         AppResult.Success(Unit)
     }
 
-    override suspend fun getAuthSettings(): AppResult<ManagementAuthSettingsPayload> {
+    override suspend fun getManagementAuthSettings(): AppResult<ManagementAuthSettingsPayload> {
         getCallCount++
         return getResultProvider()
     }
 
-    override suspend fun updateAuthSettings(request: ManagementAuthSettingsPayload): AppResult<Unit> {
+    override suspend fun updateManagementAuthSettings(request: ManagementAuthSettingsPayload): AppResult<Unit> {
         updateCallCount++
         lastRequest = request
         return updateResultProvider()

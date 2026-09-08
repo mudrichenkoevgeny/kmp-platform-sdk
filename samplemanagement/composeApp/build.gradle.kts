@@ -40,6 +40,9 @@ kotlin {
         browser {
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
+                devServer = (devServer ?: org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.DevServer()).apply {
+                    port = 8082
+                }
             }
         }
         binaries.executable()
@@ -143,17 +146,17 @@ buildConfig {
 
     when (env) {
         "prod" -> {
-            buildConfigField("BASE_URL", "http://localhost:8080")
+            buildConfigField("BASE_URL", "http://localhost:9091")
             buildConfigField("ENV_NAME", "Production")
             buildConfigField("GOOGLE_WEB_CLIENT_ID", "982478008604-albtrhoegkqkpe2ev7rirg6c8h9hijfl.apps.googleusercontent.com")
         }
         "test" -> {
-            buildConfigField("BASE_URL", "http://localhost:8080")
+            buildConfigField("BASE_URL", "http://localhost:9091")
             buildConfigField("ENV_NAME", "Testing")
             buildConfigField("GOOGLE_WEB_CLIENT_ID", "982478008604-albtrhoegkqkpe2ev7rirg6c8h9hijfl.apps.googleusercontent.com")
         }
         else -> {
-            buildConfigField("BASE_URL", "http://localhost:8080")
+            buildConfigField("BASE_URL", "http://localhost:9091")
             buildConfigField("ENV_NAME", "Development")
             buildConfigField("GOOGLE_WEB_CLIENT_ID", "982478008604-albtrhoegkqkpe2ev7rirg6c8h9hijfl.apps.googleusercontent.com")
         }

@@ -22,7 +22,8 @@ import kotlinx.coroutines.CoroutineScope
  * Constructor dependencies:
  * - [EncryptedSettings]: backing store for [CommonStorage].
  * - [ClientDeviceInfo]: device identity for repositories and WebSocket bootstrap.
- * - `baseUrl`: HTTP and WebSocket endpoint base.
+ * - `baseUrl`: HTTP endpoint base.
+ * - `webSocketPath`: relative endpoint URL path for real-time WebSocket communication.
  * - [HttpClientConfigPlugin] list: optional extensions to the shared Ktor HTTP client (empty by default).
  * - [AccessTokenProvider]: token for authenticated HTTP and WebSocket.
  * - [CoroutineScope]: application scope for long-running SDK work (for example WebSockets).
@@ -33,6 +34,7 @@ class CommonComponent(
     val encryptedSettings: EncryptedSettings,
     deviceInfo: ClientDeviceInfo,
     baseUrl: String,
+    webSocketPath: String,
     httpClientConfigPlugins: List<HttpClientConfigPlugin> = emptyList(),
     private val accessTokenProvider: AccessTokenProvider,
     appScope: CoroutineScope,
@@ -44,6 +46,7 @@ class CommonComponent(
         encryptedSettings: EncryptedSettings,
         deviceInfo: ClientDeviceInfo,
         baseUrl: String,
+        webSocketPath: String,
         accessTokenProvider: AccessTokenProvider,
         appScope: CoroutineScope,
         platformContext: Any? = null
@@ -51,6 +54,7 @@ class CommonComponent(
         encryptedSettings,
         deviceInfo,
         baseUrl,
+        webSocketPath,
         emptyList(),
         accessTokenProvider,
         appScope,
@@ -79,6 +83,7 @@ class CommonComponent(
     private val networkModule by lazy {
         CommonNetworkModule(
             baseUrl = baseUrl,
+            webSocketPath = webSocketPath,
             httpClientConfigPlugins = httpClientConfigPlugins,
             accessTokenProvider = accessTokenProvider,
             platformRepository = platformRepository,

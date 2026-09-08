@@ -8,8 +8,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.core.security.error.model.SecurityError
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.usecase.ValidatePasswordUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.data.authDataPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.login.LoginByEmailUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
@@ -42,17 +40,15 @@ class LoginByEmailComponentImplTest {
     }
 
     @Test
-    fun onPasswordChanged_asyncValidation_updatesPasswordValidity() = runComponentTest {
+    fun onPasswordChanged_updatesPasswordValidity() = runComponentTest {
         val context = createLoginByEmailComponentTestContext()
         try {
-            context.validatePasswordUseCase.resultProvider = { AppResult.Error(SecurityError.PasswordTooShort()) }
-            context.component.onPasswordChanged(SHORT_PASSWORD)
+            context.component.onPasswordChanged(BLANK_PASSWORD)
             advanceUntilIdle()
 
             var content = assertIs<LoginByEmailScreenState.Content>(context.component.state.value)
             assertFalse(content.isPasswordValid)
 
-            context.validatePasswordUseCase.resultProvider = { AppResult.Success(Unit) }
             context.component.onPasswordChanged(VALID_PASSWORD)
             advanceUntilIdle()
 
@@ -106,38 +102,6 @@ class LoginByEmailComponentImplTest {
             val content = assertIs<LoginByEmailScreenState.Content>(context.component.state.value)
             assertFalse(content.actionLoading)
             assertIs<CommonError.Unknown>(content.actionError)
-        } finally {
-            context.destroy()
-        }
-    }
-
-    @Test
-    fun onLoginClick_secondValidatePasswordInvocationFailure_showsError() = runComponentTest {
-        var calls = 0
-        val validatePassword = ValidatePasswordUseCaseMock().apply {
-            resultProvider = {
-                calls++
-                if (calls == 1) {
-                    AppResult.Success(Unit)
-                } else {
-                    AppResult.Error(SecurityError.PasswordPolicyUnavailable())
-                }
-            }
-        }
-        val context = createLoginByEmailComponentTestContext(validatePasswordUseCase = validatePassword)
-
-        try {
-            context.component.onEmailChanged(VALID_EMAIL)
-            context.component.onPasswordChanged(VALID_PASSWORD)
-            advanceUntilIdle()
-
-            context.component.onLoginClick()
-            advanceUntilIdle()
-
-            assertEquals(ZERO_CALLS, context.onFinishedCalls)
-
-            val content = assertIs<LoginByEmailScreenState.Content>(context.component.state.value)
-            assertIs<SecurityError.PasswordPolicyUnavailable>(content.actionError)
         } finally {
             context.destroy()
         }
@@ -218,22 +182,17 @@ class LoginByEmailComponentImplTest {
             resultProvider = { _, _ ->
                 AppResult.Success(authDataPayloadMock().toAuthData())
             }
-        },
-        validatePasswordUseCase: ValidatePasswordUseCaseMock = ValidatePasswordUseCaseMock()
+        }
     ): LoginByEmailComponentTestContext {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
 
-        val context = LoginByEmailComponentTestContext(
-            lifecycle = lifecycle,
-            validatePasswordUseCase = validatePasswordUseCase
-        )
+        val context = LoginByEmailComponentTestContext(lifecycle = lifecycle)
 
         context.component = LoginByEmailComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
             appType = AppType.CLIENT,
             loginByEmailUseCase = loginByEmailUseCase,
-            validatePasswordUseCase = validatePasswordUseCase,
             onNavigateToRegistrationByEmail = { context.onNavigateToRegistrationByEmailCalls++ },
             onNavigateToForgotPassword = { context.onNavigateToForgotPasswordCalls++ },
             onNavigateToTotp = { context.lastTotpMfaToken = it },
@@ -246,8 +205,7 @@ class LoginByEmailComponentImplTest {
     }
 
     private class LoginByEmailComponentTestContext(
-        val lifecycle: LifecycleRegistry,
-        val validatePasswordUseCase: ValidatePasswordUseCaseMock
+        val lifecycle: LifecycleRegistry
     ) {
         lateinit var component: LoginByEmailComponentImpl
         var onFinishedCalls: Int = 0
@@ -266,7 +224,7 @@ class LoginByEmailComponentImplTest {
         const val VALID_EMAIL = "user.name+tag@example.com"
         const val INVALID_EMAIL = "not-an-email"
         const val VALID_PASSWORD = "Password123!"
-        const val SHORT_PASSWORD = "1"
+        const val BLANK_PASSWORD = "   "
         const val NOT_RETRYABLE = false
         const val ZERO_CALLS = 0
         const val ONE_CALL = 1

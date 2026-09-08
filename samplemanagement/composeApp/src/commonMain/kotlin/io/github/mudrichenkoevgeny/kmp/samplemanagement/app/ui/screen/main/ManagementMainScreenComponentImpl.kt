@@ -64,6 +64,13 @@ class ManagementMainScreenComponentImpl(
                     )
                 )
             }
+            is MainScreenComponent.Config.Settings -> {
+                MainScreenComponent.Child.SettingsChild(
+                    managementAppComponent.managementUserComponent.createManagementSettingsComponent(
+                        componentContext = context
+                    )
+                )
+            }
         }
 
     private fun createDialogChild(

@@ -5,7 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.reset
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.refreshtoken.KtorOpenRefreshTokenApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.registration.KtorRegistrationApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.settings.KtorOpenAuthSettingsApi
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.configuration.KtorUserConfigurationApi
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.configuration.KtorOpenUserConfigurationApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.identifier.KtorOpenIdentifiersApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.session.KtorOpenSessionApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.user.KtorOpenUserApi
@@ -49,5 +49,5 @@ internal class ClientUserNetworkModule(
 
     // Configuration
     /** API for fetching combined user configuration. */
-    val userConfigurationApi by lazy { KtorUserConfigurationApi(httpClient) }
+    val userConfigurationApi by lazy { KtorOpenUserConfigurationApi(httpClient) }
 }

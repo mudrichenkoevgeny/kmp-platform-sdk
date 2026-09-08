@@ -6,7 +6,6 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.t
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.RefreshTokenPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.SessionTokenPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.auth.refreshtoken.OpenRefreshTokenRoutes
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
 import io.ktor.client.plugins.auth.Auth
@@ -24,17 +23,19 @@ private const val LOGGER_AUTH_PREFIX = "Auth"
  * Installs Ktor `Auth` with bearer token loading, refresh, and conditional header attachment.
  *
  * [AuthStorage] supplies access and refresh tokens. Requests marked with [IsPublicApi] skip the
- * `Authorization` header. The refresh flow posts to the refresh route, updates storage on success,
+ * `Authorization` header. The refresh flow posts to [refreshTokenRoute], updates storage on success,
  * and clears tokens when refresh fails.
  *
  * @param baseUrl API origin prepended to refresh path constants from shared routes.
  * @param networkLogger Logger used for auth lifecycle messages.
  * @param authStorage Persistent token and expiry source.
+ * @param refreshTokenRoute Route path for token refresh operations.
  */
 fun HttpClientConfig<*>.setupAuthConfig(
     baseUrl: String,
     networkLogger: Logger,
-    authStorage: AuthStorage
+    authStorage: AuthStorage,
+    refreshTokenRoute: String
 ) {
     install(Auth) {
         bearer {
@@ -69,7 +70,7 @@ fun HttpClientConfig<*>.setupAuthConfig(
 
                 try {
                     val tokenResponse = client
-                        .post("$baseUrl${OpenRefreshTokenRoutes.REFRESH_TOKEN}") {
+                        .post("$baseUrl$refreshTokenRoute") {
                             markAsRefreshTokenRequest()
                             setBody(RefreshTokenPayload(refreshToken.value))
                         }.body<SessionTokenPayload>()

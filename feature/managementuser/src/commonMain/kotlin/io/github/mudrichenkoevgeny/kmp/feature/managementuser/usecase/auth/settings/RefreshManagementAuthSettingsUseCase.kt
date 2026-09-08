@@ -5,15 +5,15 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.auth.se
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.ManagementAuthSettings
 
 /**
- * Forces a network reload of management auth settings.
+ * Forces a network reload of auth-related settings and updates the repository’s observable state.
  *
- * @param managementAuthSettingsRepository Remote management auth settings API.
+ * @param managementAuthSettingsRepository Auth settings aggregate.
  */
 class RefreshManagementAuthSettingsUseCase(
     private val managementAuthSettingsRepository: ManagementAuthSettingsRepository
 ) {
     /**
-     * @return Fresh [ManagementAuthSettings] on success, or an error result.
+     * @return Fresh [ManagementAuthSettings] on success, or an error result when the refresh request fails.
      */
     suspend operator fun invoke(): AppResult<ManagementAuthSettings> {
         return managementAuthSettingsRepository.refreshManagementAuthSettings()

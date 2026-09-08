@@ -96,6 +96,7 @@ class MainProfileComponentImpl(
 
         scope.launch {
             logoutUseCase()
+            actionState.value = ActionState.Idle
         }
     }
 

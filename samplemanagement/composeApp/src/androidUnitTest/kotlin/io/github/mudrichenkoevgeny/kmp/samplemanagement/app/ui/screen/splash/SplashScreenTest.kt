@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.splash
 
+import android.app.Application
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.test.hasProgressBarRangeInfo
@@ -11,7 +12,7 @@ import org.robolectric.annotation.Config
 import kotlin.test.Test
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [ROBOLECTRIC_SDK])
+@Config(sdk = [ROBOLECTRIC_SDK], application = Application::class)
 class SplashScreenTest {
 
     @Test

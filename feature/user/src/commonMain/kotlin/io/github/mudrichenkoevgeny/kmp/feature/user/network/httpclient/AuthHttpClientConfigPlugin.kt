@@ -8,16 +8,18 @@ import io.ktor.client.plugins.logging.Logger
 
 /**
  * [HttpClientConfigPlugin] that installs user-auth behavior (base URL, logging hooks, bearer/refresh wiring)
- * via [setupAuthConfig], using the given [authStorage].
+ * via [setupAuthConfig], using the given [authStorage] and [refreshTokenRoute].
  *
  * Pass an instance to `CommonComponent` so all feature HTTP calls share the same token lifecycle.
  *
  * @param baseUrl API origin used when configuring the client.
  * @param authStorage Source of access/refresh tokens and related auth state for the plugin.
+ * @param refreshTokenRoute Explicit route path for token refresh operations.
  */
 class AuthHttpClientConfigPlugin(
     private val baseUrl: String,
-    private val authStorage: AuthStorage
+    private val authStorage: AuthStorage,
+    private val refreshTokenRoute: String
 ) : HttpClientConfigPlugin {
     override fun install(
         config: HttpClientConfig<out HttpClientEngineConfig>,
@@ -26,7 +28,8 @@ class AuthHttpClientConfigPlugin(
         config.setupAuthConfig(
             baseUrl = baseUrl,
             networkLogger = networkLogger,
-            authStorage = authStorage
+            authStorage = authStorage,
+            refreshTokenRoute = refreshTokenRoute
         )
     }
 }

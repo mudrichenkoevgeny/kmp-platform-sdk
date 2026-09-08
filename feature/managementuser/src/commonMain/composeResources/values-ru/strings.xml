@@ -1,0 +1,65 @@
+<resources>
+    <!-- Common / Navigation -->
+    <string name="back">Назад</string>
+    <string name="save">Сохранить</string>
+    <string name="saving">Сохранение...</string>
+    <string name="retry">Повторить</string>
+
+    <!-- Main Management Settings Screen -->
+    <string name="management_settings_title">Настройки управления</string>
+
+    <!-- Edit Auth Settings Screen -->
+    <string name="edit_auth_settings_title">Редактировать настройки авторизации</string>
+    <string name="enabled_auth_providers">Включенные провайдеры авторизации</string>
+    <string name="is_registration_enabled">Разрешить регистрацию новых пользователей</string>
+    <string name="limits_and_expirations">Ограничения и сроки действия</string>
+    <string name="max_total_identifiers">Макс. общее число идентификаторов</string>
+    <string name="max_email_identifiers">Макс. число Email-идентификаторов</string>
+    <string name="max_phone_identifiers">Макс. число Phone-идентификаторов</string>
+    <string name="max_identifiers_per_external_provider">Макс. идентификаторов на внешнего провайдера</string>
+    <string name="max_active_sessions">Макс. активных сессий</string>
+    <string name="access_token_expiration_seconds">Срок действия Access Token (сек)</string>
+    <string name="refresh_token_expiration_seconds">Срок действия Refresh Token (сек)</string>
+    <string name="account_deletion_delay_seconds">Задержка удаления аккаунта (сек)</string>
+
+    <!-- Navigation Buttons -->
+    <string name="edit_global_settings">Редактировать глобальные настройки</string>
+    <string name="edit_auth_settings">Редактировать настройки авторизации</string>
+    <string name="edit_security_settings">Редактировать настройки безопасности</string>
+
+    <!-- Edit Global Settings Screen -->
+    <string name="edit_global_settings_title">Редактировать глобальные настройки</string>
+    <string name="privacy_policy_url">URL политики конфиденциальности</string>
+    <string name="terms_of_service_url">URL условий использования</string>
+    <string name="contact_support_email">Email службы поддержки</string>
+    <string name="telemetry_and_logging">Телеметрия и логирование</string>
+    <string name="is_tracing_enabled">Включить трассировку запросов</string>
+    <string name="is_metrics_enabled">Включить сбор метрик</string>
+    <string name="is_verbose_logging_enabled">Включить подробный логинг</string>
+    <string name="min_supported_app_versions">Минимальные поддерживаемые версии приложений</string>
+    <string name="min_version_android">Мин. версия Android</string>
+    <string name="min_version_ios">Мин. версия iOS</string>
+    <string name="min_version_web">Мин. версия Web</string>
+    <string name="min_version_desktop">Мин. версия Desktop</string>
+
+    <!-- Edit Security Settings Screen -->
+    <string name="edit_security_settings_title">Редактировать настройки безопасности</string>
+    <string name="general_security">Общая безопасность</string>
+    <string name="recent_authentication_validity_seconds">Срок действия недавней аутентификации (сек)</string>
+    <string name="recent_authentication_validity_for_management">Срок действия недавней аутентификации админа (сек)</string>
+    <string name="mfa_token_expiration_seconds">Срок действия MFA токена (сек)</string>
+    <string name="rate_limiting">Ограничение частоты запросов</string>
+    <string name="max_requests_per_period">Макс. запросов за период</string>
+    <string name="rate_limit_period_seconds">Период ограничения (сек)</string>
+    <string name="password_policy">Политика паролей</string>
+    <string name="password_min_length">Мин. длина пароля</string>
+    <string name="password_require_letter">Требовать букву</string>
+    <string name="password_require_uppercase">Требовать заглавную букву</string>
+    <string name="password_require_lowercase">Требовать строчную букву</string>
+    <string name="password_require_digit">Требовать цифру</string>
+    <string name="password_require_special_char">Требовать спецсимвол</string>
+    <string name="otp_confirmation">OTP подтверждение</string>
+    <string name="otp_retry_after_seconds">Повторный запрос через (сек)</string>
+    <string name="otp_number_of_symbols">Количество символов</string>
+    <string name="otp_expiration_seconds">Срок действия OTP (сек)</string>
+</resources>

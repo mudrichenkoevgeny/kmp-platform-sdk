@@ -1,26 +1,26 @@
 package io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di
 
-import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.RefreshGlobalSettingsUseCase
-import io.github.mudrichenkoevgeny.kmp.core.security.usecase.RefreshSecuritySettingsUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings.RefreshAuthSettingsUseCase
-import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.usecase.SyncDataUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.RefreshManagementGlobalSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.RefreshManagementSecuritySettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings.RefreshManagementAuthSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.usecase.SyncManagementDataUseCase
 
 /**
- * Internal sample wiring that builds [SyncDataUseCase] from module refresh use cases.
+ * Internal sample wiring that builds [SyncManagementDataUseCase] from module refresh use cases.
  */
 internal class ManagementAppUseCaseModule(
-    refreshGlobalSettingsUseCase: RefreshGlobalSettingsUseCase,
-    refreshSecuritySettingsUseCase: RefreshSecuritySettingsUseCase,
-    refreshAuthSettingsUseCase: RefreshAuthSettingsUseCase
+    refreshManagementGlobalSettingsUseCase: RefreshManagementGlobalSettingsUseCase,
+    refreshManagementSecuritySettingsUseCase: RefreshManagementSecuritySettingsUseCase,
+    refreshManagementAuthSettingsUseCase: RefreshManagementAuthSettingsUseCase
 ) {
     /**
      * Parallel refresh of global, security, and auth settings for startup-style sync.
      */
-    val syncDataUseCase by lazy {
-        SyncDataUseCase(
-            refreshGlobalSettingsUseCase = refreshGlobalSettingsUseCase,
-            refreshSecuritySettingsUseCase = refreshSecuritySettingsUseCase,
-            refreshAuthSettingsUseCase = refreshAuthSettingsUseCase
+    val syncManagementDataUseCase by lazy {
+        SyncManagementDataUseCase(
+            refreshManagementGlobalSettingsUseCase = refreshManagementGlobalSettingsUseCase,
+            refreshManagementSecuritySettingsUseCase = refreshManagementSecuritySettingsUseCase,
+            refreshManagementAuthSettingsUseCase = refreshManagementAuthSettingsUseCase
         )
     }
 }

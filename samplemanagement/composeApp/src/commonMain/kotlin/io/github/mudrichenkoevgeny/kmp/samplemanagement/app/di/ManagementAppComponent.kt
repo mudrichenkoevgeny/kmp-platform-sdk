@@ -7,10 +7,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.platform.model.deviceInfoMock
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.security.error.parser.SecurityErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.security.network.securitysettings.OpenSecuritySettingsApi
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
+import io.github.mudrichenkoevgeny.kmp.core.settings.network.globalsettings.OpenGlobalSettingsApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.di.ManagementUserComponent
-import io.github.mudrichenkoevgeny.kmp.feature.securityapi.di.SecurityApiComponent
-import io.github.mudrichenkoevgeny.kmp.feature.settingsapi.di.SettingsApiComponent
+import io.github.mudrichenkoevgeny.kmp.feature.securityapi.network.securitysettings.KtorOpenSecuritySettingsApi
+import io.github.mudrichenkoevgeny.kmp.feature.settingsapi.network.globalsettings.KtorOpenGlobalSettingsApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.parser.UserErrorParser
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.auth.UserAuthServicesMock
@@ -20,6 +22,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.EncryptedAuthSt
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main.MainScreenComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main.ManagementMainScreenComponentImpl
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceInfo
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.contract.WebSocketContract
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.auth.refreshtoken.SelfManagementRefreshTokenRoutes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -101,7 +105,8 @@ class ManagementAppComponent(
     private val authHttpClientConfigPlugin by lazy {
         AuthHttpClientConfigPlugin(
             baseUrl = baseUrl,
-            authStorage = authStorage
+            authStorage = authStorage,
+            refreshTokenRoute = SelfManagementRefreshTokenRoutes.REFRESH_TOKEN
         )
     }
 
@@ -115,6 +120,7 @@ class ManagementAppComponent(
             encryptedSettings = encryptedSettings,
             deviceInfo = deviceInfo,
             baseUrl = baseUrl,
+            webSocketPath = WebSocketContract.WS_MANAGEMENT_REALTIME_PATH,
             httpClientConfigPlugins = listOf(authHttpClientConfigPlugin),
             accessTokenProvider = authStorage,
             appScope = appScope,
@@ -122,14 +128,12 @@ class ManagementAppComponent(
         )
     }
 
-    private val settingsApiComponent by lazy {
-        SettingsApiComponent(
-            httpClient = commonComponent.httpClient
+    /** REST API for global settings using open routes (/global-settings). */
+    val openGlobalSettingsApi: OpenGlobalSettingsApi by lazy {
+        KtorOpenGlobalSettingsApi(
+            client = commonComponent.httpClient
         )
     }
-
-    /** REST API for global settings. */
-    val globalSettingsApi = settingsApiComponent.globalSettingsApi
 
     private var mockSettingsComponent: SettingsComponent? = null
 
@@ -137,20 +141,18 @@ class ManagementAppComponent(
     val settingsComponent: SettingsComponent by lazy {
         mockSettingsComponent ?: SettingsComponent(
             webSocketService = commonComponent.webSocketService,
-            globalSettingsApi = globalSettingsApi,
+            openGlobalSettingsApi = openGlobalSettingsApi,
             encryptedSettings = encryptedSettings,
             parentScope = appScope
         )
     }
 
-    private val securityApiComponent by lazy {
-        SecurityApiComponent(
-            httpClient = commonComponent.httpClient
+    /** REST API for security metadata using open routes (/security/settings). */
+    val openSecuritySettingsApi: OpenSecuritySettingsApi by lazy {
+        KtorOpenSecuritySettingsApi(
+            client = commonComponent.httpClient
         )
     }
-
-    /** REST API for security metadata. */
-    val securitySettingsApi = securityApiComponent.securitySettingsApi
 
     private var mockSecurityComponent: SecurityComponent? = null
 
@@ -158,7 +160,7 @@ class ManagementAppComponent(
     val securityComponent: SecurityComponent by lazy {
         mockSecurityComponent ?: SecurityComponent(
             webSocketService = commonComponent.webSocketService,
-            securitySettingsApi = securitySettingsApi,
+            openSecuritySettingsApi = openSecuritySettingsApi,
             encryptedSettings = encryptedSettings,
             parentScope = appScope
         )
@@ -187,14 +189,14 @@ class ManagementAppComponent(
      */
     private val managementAppUseCaseModule by lazy {
         ManagementAppUseCaseModule(
-            refreshGlobalSettingsUseCase = settingsComponent.refreshGlobalSettingsUseCase,
-            refreshSecuritySettingsUseCase = securityComponent.refreshSecuritySettingsUseCase,
-            refreshAuthSettingsUseCase = managementUserComponent.refreshAuthSettingsUseCase
+            refreshManagementGlobalSettingsUseCase = managementUserComponent.refreshManagementGlobalSettingsUseCase,
+            refreshManagementSecuritySettingsUseCase = managementUserComponent.refreshManagementSecuritySettingsUseCase,
+            refreshManagementAuthSettingsUseCase = managementUserComponent.refreshManagementAuthSettingsUseCase
         )
     }
 
     /** Concurrent sync operation for all settings modules. */
-    val syncDataUseCase get() = managementAppUseCaseModule.syncDataUseCase
+    val syncDataUseCase get() = managementAppUseCaseModule.syncManagementDataUseCase
 
     /**
      * Registers feature error parsers and the combined WebSocket handler list on the shared socket service,

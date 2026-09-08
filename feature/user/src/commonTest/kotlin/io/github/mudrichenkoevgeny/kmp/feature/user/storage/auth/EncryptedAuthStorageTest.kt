@@ -2,7 +2,6 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.storage.EncryptedSettingsMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.auth.settings.publicAuthSettingsMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -52,29 +51,6 @@ class EncryptedAuthStorageTest {
         assertNull(storage.getRefreshToken())
         assertEquals(0L, storage.getExpiresAt())
         assertNull(storage.accessTokenFlow.value)
-    }
-
-    @Test
-    fun authSettings_roundTrip() = runTest {
-        val storage = EncryptedAuthStorage(EncryptedSettingsMock(), this)
-        advanceUntilIdle()
-
-        val settings = publicAuthSettingsMock()
-
-        storage.updatePublicAuthSettings(settings)
-
-        assertEquals(settings, storage.getPublicAuthSettings())
-    }
-
-    @Test
-    fun clearPublicAuthSettings_removesSnapshot() = runTest {
-        val storage = EncryptedAuthStorage(EncryptedSettingsMock(), this)
-        advanceUntilIdle()
-        storage.updatePublicAuthSettings(publicAuthSettingsMock())
-
-        storage.clearPublicAuthSettings()
-
-        assertNull(storage.getPublicAuthSettings())
     }
 
     private companion object {

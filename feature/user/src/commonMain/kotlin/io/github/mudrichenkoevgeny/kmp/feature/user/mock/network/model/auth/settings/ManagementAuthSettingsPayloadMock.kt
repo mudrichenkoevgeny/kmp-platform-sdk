@@ -12,7 +12,8 @@ fun managementAuthSettingsPayloadMock(
     maxActiveSessions: Int = 3,
     accessTokenExpirationSeconds: Int = 3600,
     refreshTokenExpirationSeconds: Int = 86400,
-    accountDeletionDelaySeconds: Int = 604800
+    accountDeletionDelaySeconds: Int = 604800,
+    isRegistrationEnabled: Boolean = true
 ): ManagementAuthSettingsPayload = ManagementAuthSettingsPayload(
     availableAuthProviders = availableAuthProvidersPayloadMock(),
     maxTotalIdentifiers = maxTotalIdentifiers,
@@ -22,5 +23,6 @@ fun managementAuthSettingsPayloadMock(
     maxActiveSessions = maxActiveSessions,
     accessTokenExpirationSeconds = accessTokenExpirationSeconds,
     refreshTokenExpirationSeconds = refreshTokenExpirationSeconds,
-    accountDeletionDelaySeconds = accountDeletionDelaySeconds
+    accountDeletionDelaySeconds = accountDeletionDelaySeconds,
+    isRegistrationEnabled = isRegistrationEnabled
 )

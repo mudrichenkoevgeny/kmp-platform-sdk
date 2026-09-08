@@ -5,8 +5,10 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.auth.r
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.auth.resetpassword.KtorSelfManagementResetPasswordApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.auth.settings.KtorManagementAuthSettingsApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.configuration.KtorManagementUserConfigurationApi
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.globalsettings.KtorManagementGlobalSettingsApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.identifier.KtorManagementIdentifierApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.identifier.KtorSelfManagementIdentifiersApi
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.security.settings.KtorManagementSecuritySettingsApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.session.KtorManagementSessionApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.session.KtorSelfManagementSessionApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user.KtorManagementUserApi
@@ -59,4 +61,10 @@ internal class ManagementUserNetworkModule(
     // Configuration
     /** API for management user configuration. */
     val userConfigurationApi by lazy { KtorManagementUserConfigurationApi(httpClient) }
+
+    // Settings
+    /** Administrative API for global settings. */
+    val globalSettingsApi by lazy { KtorManagementGlobalSettingsApi(httpClient) }
+    /** Administrative API for security settings. */
+    val securitySettingsApi by lazy { KtorManagementSecuritySettingsApi(httpClient) }
 }

@@ -1,13 +1,13 @@
 package io.github.mudrichenkoevgeny.kmp.feature.settingsapi.di
 
-import io.github.mudrichenkoevgeny.kmp.core.settings.network.globalsettings.GlobalSettingsApi
+import io.github.mudrichenkoevgeny.kmp.core.settings.network.globalsettings.OpenGlobalSettingsApi
 import io.ktor.client.HttpClient
 
 /**
  * Root wiring component for the `feature:settingsapi` module (networking implementation for `core:settings`).
  *
  * Exposes:
- * - [GlobalSettingsApi] (`globalSettingsApi`) for host registration
+ * - [OpenGlobalSettingsApi] (`globalSettingsApi`) for host registration
  *
  * @param httpClient Shared Ktor client (typically from `core:common`) for REST calls.
  */
@@ -21,7 +21,7 @@ class SettingsApiComponent(
     }
 
     /**
-     * Ktor-backed implementation of [GlobalSettingsApi].
+     * Ktor-backed implementation of [OpenGlobalSettingsApi].
      */
-    val globalSettingsApi get() = networkModule.globalSettingsApi
+    val openGlobalSettingsApi get() = networkModule.openGlobalSettingsApi
 }

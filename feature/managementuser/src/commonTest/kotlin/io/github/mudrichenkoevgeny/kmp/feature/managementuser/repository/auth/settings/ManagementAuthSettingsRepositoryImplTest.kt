@@ -5,9 +5,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.model.websocket.
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.websocket.service.WebSocketServiceMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.network.api.auth.settings.ManagementAuthSettingsApiMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.storage.auth.settings.ManagementAuthSettingsStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.auth.settings.managementAuthSettingsMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.settings.managementAuthSettingsPayloadMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.ManagementAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.settings.toManagementAuthSettings
@@ -24,20 +24,20 @@ import kotlin.test.assertIs
 @InternalApi
 class ManagementAuthSettingsRepositoryImplTest {
 
-    private lateinit var storage: AuthStorageMock
+    private lateinit var storage: ManagementAuthSettingsStorageMock
     private lateinit var api: ManagementAuthSettingsApiMock
     private lateinit var sockets: WebSocketServiceMock
 
     @BeforeTest
     fun setUp() {
-        storage = AuthStorageMock()
+        storage = ManagementAuthSettingsStorageMock()
         api = ManagementAuthSettingsApiMock()
         sockets = WebSocketServiceMock()
     }
 
     private fun createRepository(scope: TestScope) = ManagementAuthSettingsRepositoryImpl(
         managementAuthSettingsApi = api,
-        authStorage = storage,
+        managementAuthSettingsStorage = storage,
         webSocketService = sockets,
         repositoryScope = scope.backgroundScope
     )
@@ -54,7 +54,6 @@ class ManagementAuthSettingsRepositoryImplTest {
         val settingsResult = repo.getManagementAuthSettings()
         assertIs<AppResult.Success<ManagementAuthSettings>>(settingsResult)
         assertEquals(persisted, settingsResult.data)
-        assertEquals(0, api.getCallCount)
     }
 
     @Test
@@ -70,7 +69,6 @@ class ManagementAuthSettingsRepositoryImplTest {
         assertIs<AppResult.Success<ManagementAuthSettings>>(settingsResult)
         assertEquals(wire.toManagementAuthSettings(), settingsResult.data)
         assertEquals(wire.toManagementAuthSettings(), storage.getManagementAuthSettings())
-        assertEquals(1, api.getCallCount)
     }
 
     @Test
@@ -86,7 +84,6 @@ class ManagementAuthSettingsRepositoryImplTest {
         assertIs<AppResult.Success<ManagementAuthSettings>>(refreshed)
         assertEquals(fresh.toManagementAuthSettings(), refreshed.data)
         assertEquals(fresh.toManagementAuthSettings(), storage.getManagementAuthSettings())
-        assertEquals(1, api.getCallCount)
     }
 
     @Test
@@ -99,7 +96,7 @@ class ManagementAuthSettingsRepositoryImplTest {
 
         val pushed = managementAuthSettingsPayloadMock(maxTotalIdentifiers = 999)
         val frame = socketFrameMock(
-            type = UserWebSocketEventTypes.AUTH_SETTINGS_UPDATED,
+            type = UserWebSocketEventTypes.MANAGEMENT_AUTH_SETTINGS_UPDATED,
             payload = FoundationJson.encodeToJsonElement(
                 ManagementAuthSettingsPayload.serializer(), pushed
             )

@@ -9,6 +9,9 @@ import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.nav_home
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.nav_profile
 import org.jetbrains.compose.resources.StringResource
 
+import androidx.compose.material.icons.filled.Settings
+import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.nav_settings
+
 /**
  * UI-facing tab model: ties [MainScreenComponent.Config] to localized titles and toolbar icons.
  */
@@ -29,11 +32,17 @@ sealed interface MainScreenDestination {
         override val icon = Icons.Default.Person
     }
 
+    data object Settings : MainScreenDestination {
+        override val config = MainScreenComponent.Config.Settings
+        override val title = Res.string.nav_settings
+        override val icon = Icons.Default.Settings
+    }
+
     companion object {
         /**
          * Tabs shown in mobile bottom navigation (order matches display).
          */
-        val allDestinations = listOf(Home, Profile)
+        val allDestinations = listOf(Home, Profile, Settings)
 
         /**
          * @param config Stack configuration for the active child.
@@ -43,6 +52,7 @@ sealed interface MainScreenDestination {
             when (config) {
                 is MainScreenComponent.Config.Home -> Home
                 is MainScreenComponent.Config.Profile -> Profile
+                is MainScreenComponent.Config.Settings -> Settings
             }
     }
 }

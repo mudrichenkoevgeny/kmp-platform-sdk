@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
-import io.github.mudrichenkoevgeny.kmp.core.settings.mock.network.globalsettings.GlobalSettingsApiMock
+import io.github.mudrichenkoevgeny.kmp.core.settings.mock.network.globalsettings.OpenGlobalSettingsApiMock
 import io.ktor.client.HttpClient
 
 /**
@@ -32,7 +32,7 @@ fun settingsComponentMock(
 ): SettingsComponent {
     return SettingsComponent(
         webSocketService = webSocketService,
-        globalSettingsApi = GlobalSettingsApiMock(),
+        openGlobalSettingsApi = OpenGlobalSettingsApiMock(),
         encryptedSettings = EncryptedSettingsMock(),
         parentScope = parentScope
     )

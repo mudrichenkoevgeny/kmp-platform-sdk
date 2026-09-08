@@ -1,10 +1,10 @@
 package io.github.mudrichenkoevgeny.kmp.feature.clientuser.di
 
-import io.github.mudrichenkoevgeny.kmp.core.security.repository.SecuritySettingsRepository
-import io.github.mudrichenkoevgeny.kmp.core.settings.repository.GlobalSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySettingsRepository
+import io.github.mudrichenkoevgeny.kmp.core.settings.repository.OpenGlobalSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.google.DisabledGoogleAuthService
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.configuration.UserConfigurationApi
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.configuration.OpenUserConfigurationApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserStorageModule
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
@@ -45,7 +45,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.Regene
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.SetupTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.RestoreUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.usecase.auth.settings.RefreshAuthSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.usecase.auth.settings.RefreshOpenAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.usecase.configuration.RefreshClientUserConfigurationUseCase
 
 /**
@@ -55,7 +55,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.usecase.configuration.
  * @param authStorage Token and cached auth settings.
  * @param storageModule User-scoped storage for post-login data.
  * @param authServices Platform auth helpers; missing Google service falls back to [DisabledGoogleAuthService].
- * @param userConfigurationApi Remote user configuration endpoint.
+ * @param openUserConfigurationApi Remote user configuration endpoint.
  * @param openAuthSettingsRepository Auth provider and policy snapshot repository.
  */
 internal class ClientUserUseCaseModule(
@@ -63,10 +63,10 @@ internal class ClientUserUseCaseModule(
     private val authStorage: AuthStorage,
     private val storageModule: UserStorageModule,
     private val authServices: UserAuthServices,
-    private val userConfigurationApi: UserConfigurationApi,
+    private val openUserConfigurationApi: OpenUserConfigurationApi,
     private val openAuthSettingsRepository: OpenAuthSettingsRepository,
-    private val globalSettingsRepository: GlobalSettingsRepository,
-    private val securitySettingsRepository: SecuritySettingsRepository
+    private val openGlobalSettingsRepository: OpenGlobalSettingsRepository,
+    private val openSecuritySettingsRepository: OpenSecuritySettingsRepository
 ) {
 
     // Auth
@@ -148,8 +148,8 @@ internal class ClientUserUseCaseModule(
     }
 
     /** Forces a refresh of allowed auth providers. */
-    val refreshAuthSettingsUseCase by lazy {
-        RefreshAuthSettingsUseCase(
+    val refreshOpenAuthSettingsUseCase by lazy {
+        RefreshOpenAuthSettingsUseCase(
             openAuthSettingsRepository = openAuthSettingsRepository
         )
     }
@@ -193,9 +193,9 @@ internal class ClientUserUseCaseModule(
     /** Full state refresh for the authenticated user. */
     val refreshUserConfigurationUseCase by lazy {
         RefreshClientUserConfigurationUseCase(
-            userConfigurationApi = userConfigurationApi,
-            globalSettingsRepository = globalSettingsRepository,
-            securitySettingsRepository = securitySettingsRepository,
+            openUserConfigurationApi = openUserConfigurationApi,
+            openGlobalSettingsRepository = openGlobalSettingsRepository,
+            openSecuritySettingsRepository = openSecuritySettingsRepository,
             openAuthSettingsRepository = openAuthSettingsRepository
         )
     }

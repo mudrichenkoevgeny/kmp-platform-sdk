@@ -22,7 +22,7 @@ interface ManagementAuthSettingsRepository {
      * @param authSettings New configuration payload to apply.
      * @return Empty success indicator, or an error result when the remote update fails.
      */
-    suspend fun saveRemoteAuthSettings(authSettings: ManagementAuthSettings): AppResult<Unit>
+    suspend fun saveRemoteManagementAuthSettings(authSettings: ManagementAuthSettings): AppResult<Unit>
 
     /**
      * Forces a network reload and updates the observable snapshot on success.

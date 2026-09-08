@@ -2,9 +2,9 @@ package io.github.mudrichenkoevgeny.kmp.sampleclient.app.usecase
 
 import co.touchlab.kermit.Logger
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.core.security.usecase.RefreshSecuritySettingsUseCase
-import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.RefreshGlobalSettingsUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.usecase.auth.settings.RefreshAuthSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.core.security.usecase.RefreshOpenSecuritySettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.RefreshOpenGlobalSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.usecase.auth.settings.RefreshOpenAuthSettingsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -13,23 +13,23 @@ import kotlinx.coroutines.withContext
 /**
  * Runs global, security, and auth settings refresh use cases concurrently and logs failures without throwing.
  *
- * @param refreshGlobalSettingsUseCase Settings module refresh.
- * @param refreshSecuritySettingsUseCase Security module refresh.
- * @param refreshAuthSettingsUseCase User auth settings refresh.
+ * @param refreshOpenGlobalSettingsUseCase Settings module refresh.
+ * @param refreshOpenSecuritySettingsUseCase Security module refresh.
+ * @param refreshOpenAuthSettingsUseCase User auth settings refresh.
  */
 class SyncDataUseCase(
-    private val refreshGlobalSettingsUseCase: RefreshGlobalSettingsUseCase,
-    private val refreshSecuritySettingsUseCase: RefreshSecuritySettingsUseCase,
-    private val refreshAuthSettingsUseCase: RefreshAuthSettingsUseCase
+    private val refreshOpenGlobalSettingsUseCase: RefreshOpenGlobalSettingsUseCase,
+    private val refreshOpenSecuritySettingsUseCase: RefreshOpenSecuritySettingsUseCase,
+    private val refreshOpenAuthSettingsUseCase: RefreshOpenAuthSettingsUseCase
 ) {
     /**
      * Awaits all three refresh jobs; errors are logged and swallowed.
      */
     suspend operator fun invoke(): Unit = withContext(Dispatchers.Default) {
         val tasks = listOf(
-            async { refreshGlobalSettingsUseCase().logIfError("GlobalSettings") },
-            async { refreshSecuritySettingsUseCase().logIfError("SecuritySettings") },
-            async { refreshAuthSettingsUseCase().logIfError("AuthSettings") }
+            async { refreshOpenGlobalSettingsUseCase().logIfError("GlobalSettings") },
+            async { refreshOpenSecuritySettingsUseCase().logIfError("SecuritySettings") },
+            async { refreshOpenAuthSettingsUseCase().logIfError("AuthSettings") }
         )
 
         tasks.awaitAll()

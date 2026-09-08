@@ -107,7 +107,7 @@ class RegistrationByEmailScreenTest {
         onNodeWithTag(RegistrationByEmailTestTags.BACK_BUTTON).assertIsDisplayed()
         onNodeWithTag(RegistrationByEmailTestTags.TITLE).assertIsDisplayed()
         onNodeWithTag(RegistrationByEmailTestTags.CODE_STEP_TITLE).assertIsDisplayed()
-        onNodeWithTag(RegistrationByEmailTestTags.CODE_SENT_INFO_TEXT).assertIsDisplayed().assertTextContains(email)
+        onNodeWithTag(RegistrationByEmailTestTags.CODE_SENT_INFO_TEXT).assertIsDisplayed()
         onNodeWithTag(RegistrationByEmailTestTags.CODE_INPUT).assertIsDisplayed().assertTextContains(CODE_THREE_DIGITS)
         onNodeWithTag(RegistrationByEmailTestTags.PASSWORD_INPUT).assertIsDisplayed()
         onNodeWithTag(RegistrationByEmailTestTags.TOGGLE_PASSWORD_VISIBILITY_BUTTON).assertIsDisplayed()

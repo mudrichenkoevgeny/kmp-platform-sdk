@@ -1,21 +1,21 @@
 package io.github.mudrichenkoevgeny.kmp.core.security.di
 
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
-import io.github.mudrichenkoevgeny.kmp.core.security.storage.securitysettings.EncryptedSecuritySettingsStorage
-import io.github.mudrichenkoevgeny.kmp.core.security.storage.securitysettings.SecuritySettingsStorage
+import io.github.mudrichenkoevgeny.kmp.core.security.storage.securitysettings.EncryptedOpenSecuritySettingsStorage
+import io.github.mudrichenkoevgeny.kmp.core.security.storage.securitysettings.OpenSecuritySettingsStorage
 
 /**
  * Internal storage wiring for `core/security`.
  *
- * Binds [EncryptedSettings] to a concrete [SecuritySettingsStorage] implementation used by the
+ * Binds [EncryptedSettings] to a concrete [OpenSecuritySettingsStorage] implementation used by the
  * repository layer.
  */
 internal class SecurityStorageModule(encryptedSettings: EncryptedSettings) {
     /**
-     * Encrypted implementation of [SecuritySettingsStorage].
+     * Encrypted implementation of [OpenSecuritySettingsStorage].
      */
-    val securitySettingsStorage: SecuritySettingsStorage by lazy {
-        EncryptedSecuritySettingsStorage(
+    val openSecuritySettingsStorage: OpenSecuritySettingsStorage by lazy {
+        EncryptedOpenSecuritySettingsStorage(
             encryptedSettings
         )
     }

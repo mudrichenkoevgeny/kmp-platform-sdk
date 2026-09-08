@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorag
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.auth.markAsPublic
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.auth.refreshtoken.OpenRefreshTokenRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -111,7 +112,8 @@ class HttpClientAuthConfigTest {
             setupAuthConfig(
                 baseUrl = API_ORIGIN,
                 networkLogger = SilentLogger,
-                authStorage = storage
+                authStorage = storage,
+                refreshTokenRoute = OpenRefreshTokenRoutes.REFRESH_TOKEN
             )
         }
         try {

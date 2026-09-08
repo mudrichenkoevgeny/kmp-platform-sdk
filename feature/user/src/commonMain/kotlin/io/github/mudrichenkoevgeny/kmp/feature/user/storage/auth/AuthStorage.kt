@@ -1,15 +1,13 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.ManagementAuthSettings
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.PublicAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.time.Instant
 
 /**
- * Persists session tokens and cached auth settings for the user feature. Implementations are supplied by the host
+ * Persists session tokens for the user feature. Implementations are supplied by the host
  * (e.g. encrypted DataStore) and are read by the user HTTP client auth setup and use cases.
  */
 interface AuthStorage : AccessTokenProvider {
@@ -40,22 +38,4 @@ interface AuthStorage : AccessTokenProvider {
 
     /** Removes tokens from storage (logout / invalid session). */
     suspend fun clearTokens()
-
-    /** @return Last known public auth settings snapshot, or null if never loaded. */
-    suspend fun getPublicAuthSettings(): PublicAuthSettings?
-
-    /** @param publicAuthSettings Replaces cached public provider/policy settings from the backend or WebSocket. */
-    suspend fun updatePublicAuthSettings(publicAuthSettings: PublicAuthSettings)
-
-    /** Clears cached public auth settings. */
-    suspend fun clearPublicAuthSettings()
-
-    /** @return Last known management auth settings snapshot, or null if never loaded. */
-    suspend fun getManagementAuthSettings(): ManagementAuthSettings?
-
-    /** @param managementAuthSettings Replaces cached management configuration from the backend. */
-    suspend fun updateManagementAuthSettings(managementAuthSettings: ManagementAuthSettings)
-
-    /** Clears cached management auth settings. */
-    suspend fun clearManagementAuthSettings()
 }

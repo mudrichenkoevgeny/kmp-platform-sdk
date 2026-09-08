@@ -20,6 +20,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.EncryptedAuthSt
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.MainScreenComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.ClientMainScreenComponentImpl
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceInfo
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.contract.WebSocketContract
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.auth.refreshtoken.OpenRefreshTokenRoutes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -101,7 +103,8 @@ class ClientAppComponent(
     private val authHttpClientConfigPlugin by lazy {
         AuthHttpClientConfigPlugin(
             baseUrl = baseUrl,
-            authStorage = authStorage
+            authStorage = authStorage,
+            refreshTokenRoute = OpenRefreshTokenRoutes.REFRESH_TOKEN
         )
     }
 
@@ -115,6 +118,7 @@ class ClientAppComponent(
             encryptedSettings = encryptedSettings,
             deviceInfo = deviceInfo,
             baseUrl = baseUrl,
+            webSocketPath = WebSocketContract.WS_OPEN_REALTIME_PATH,
             httpClientConfigPlugins = listOf(authHttpClientConfigPlugin),
             accessTokenProvider = authStorage,
             appScope = appScope,
@@ -129,7 +133,7 @@ class ClientAppComponent(
     }
 
     /** REST API for global settings. */
-    val globalSettingsApi = settingsApiComponent.globalSettingsApi
+    val globalSettingsApi = settingsApiComponent.openGlobalSettingsApi
 
     private var mockSettingsComponent: SettingsComponent? = null
 
@@ -137,7 +141,7 @@ class ClientAppComponent(
     val settingsComponent: SettingsComponent by lazy {
         mockSettingsComponent ?: SettingsComponent(
             webSocketService = commonComponent.webSocketService,
-            globalSettingsApi = globalSettingsApi,
+            openGlobalSettingsApi = globalSettingsApi,
             encryptedSettings = encryptedSettings,
             parentScope = appScope
         )
@@ -150,7 +154,7 @@ class ClientAppComponent(
     }
 
     /** REST API for security metadata. */
-    val securitySettingsApi = securityApiComponent.securitySettingsApi
+    val securitySettingsApi = securityApiComponent.openSecuritySettingsApi
 
     private var mockSecurityComponent: SecurityComponent? = null
 
@@ -158,7 +162,7 @@ class ClientAppComponent(
     val securityComponent: SecurityComponent by lazy {
         mockSecurityComponent ?: SecurityComponent(
             webSocketService = commonComponent.webSocketService,
-            securitySettingsApi = securitySettingsApi,
+            openSecuritySettingsApi = securitySettingsApi,
             encryptedSettings = encryptedSettings,
             parentScope = appScope
         )
@@ -187,9 +191,9 @@ class ClientAppComponent(
      */
     private val clientAppUseCaseModule by lazy {
         ClientAppUseCaseModule(
-            refreshGlobalSettingsUseCase = settingsComponent.refreshGlobalSettingsUseCase,
-            refreshSecuritySettingsUseCase = securityComponent.refreshSecuritySettingsUseCase,
-            refreshAuthSettingsUseCase = clientUserComponent.refreshAuthSettingsUseCase
+            refreshOpenGlobalSettingsUseCase = settingsComponent.refreshGlobalSettingsUseCase,
+            refreshOpenSecuritySettingsUseCase = securityComponent.refreshSecuritySettingsUseCase,
+            refreshOpenAuthSettingsUseCase = clientUserComponent.refreshOpenAuthSettingsUseCase
         )
     }
 

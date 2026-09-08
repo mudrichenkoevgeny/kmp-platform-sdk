@@ -31,7 +31,7 @@ class ManagementAuthSettingsRepositoryMock : ManagementAuthSettingsRepository {
 
     override suspend fun refreshManagementAuthSettings(): AppResult<ManagementAuthSettings> = resultProvider()
 
-    override suspend fun saveRemoteAuthSettings(authSettings: ManagementAuthSettings): AppResult<Unit> {
+    override suspend fun saveRemoteManagementAuthSettings(authSettings: ManagementAuthSettings): AppResult<Unit> {
         val result = saveResultProvider()
         if (result is AppResult.Success) {
             authSettingsFlow.value = authSettings

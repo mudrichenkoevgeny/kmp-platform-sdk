@@ -6,7 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.settings.OpenAuthSettingsRepositoryMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.AvailableAuthProviders
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.PublicAuthSettings
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.OpenAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -22,12 +22,13 @@ class GetAvailableUserAuthProvidersUseCaseTest {
         secondary = listOf(UserAuthProvider.PHONE)
     )
 
-    private val authSettingsMock = PublicAuthSettings(
+    private val authSettingsMock = OpenAuthSettings(
         availableAuthProviders = providersMock,
         maxTotalIdentifiers = 5,
         maxEmailIdentifiers = 1,
         maxPhoneIdentifiers = 1,
-        maxIdentifiersPerExternalProvider = 1
+        maxIdentifiersPerExternalProvider = 1,
+        isRegistrationEnabled = true
     )
 
     @Test

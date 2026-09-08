@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,9 +20,13 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
@@ -276,6 +281,24 @@ private fun ErrorText(error: AppError?, tag: String) {
                     .padding(top = Dimens.paddingSmall)
                     .testTag(tag)
             )
+        }
+    }
+}
+
+@InternalApi
+@Preview(showBackground = true)
+@Composable
+private fun ResetEmailPasswordScreenPreview() {
+    MaterialTheme {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+            Surface {
+                EmailInputContent(
+                    state = ResetEmailPasswordScreenState.EmailInput(email = "test@example.com"),
+                    onEmailChanged = {},
+                    onSendCodeClick = {},
+                    onBackClick = {}
+                )
+            }
         }
     }
 }

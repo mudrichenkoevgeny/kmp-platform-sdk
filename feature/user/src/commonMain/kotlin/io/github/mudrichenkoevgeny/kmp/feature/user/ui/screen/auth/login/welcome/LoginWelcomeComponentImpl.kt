@@ -7,7 +7,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.platform.externallauncher.ExternalLauncher
-import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.GetGlobalSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.GetOpenGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
  * @param componentContext Decompose [ComponentContext].
  * @param appType Operational context (Client or Management).
  * @param externalLauncher opens privacy/terms URLs in the system browser or equivalent.
- * @param getGlobalSettingsUseCase loads legal URLs and related settings.
+ * @param getOpenGlobalSettingsUseCase loads legal URLs and related settings.
  * @param getAvailableUserAuthProvidersUseCase loads which [UserAuthProvider] values are enabled.
  * @param loginByGoogleUseCase performs Google sign-in when that provider is chosen.
  * @param onNavigateToLoginByEmail Pushes the email login destination on the parent stack.
@@ -41,7 +41,7 @@ class LoginWelcomeComponentImpl(
     componentContext: ComponentContext,
     private val appType: AppType,
     private val externalLauncher: ExternalLauncher,
-    private val getGlobalSettingsUseCase: GetGlobalSettingsUseCase,
+    private val getOpenGlobalSettingsUseCase: GetOpenGlobalSettingsUseCase,
     private val getAvailableUserAuthProvidersUseCase: GetAvailableUserAuthProvidersUseCase,
     private val loginByGoogleUseCase: LoginByGoogleUseCase?,
     private val onNavigateToLoginByEmail: () -> Unit,
@@ -67,7 +67,7 @@ class LoginWelcomeComponentImpl(
             _state.value = LoginWelcomeScreenState.Loading
 
             val authProvidersDeferred = async { getAvailableUserAuthProvidersUseCase() }
-            val globalSettingsDeferred = async { getGlobalSettingsUseCase() }
+            val globalSettingsDeferred = async { getOpenGlobalSettingsUseCase() }
 
             val authProvidersResult = authProvidersDeferred.await()
             val globalSettingsResult = globalSettingsDeferred.await()

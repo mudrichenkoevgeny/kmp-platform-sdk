@@ -17,6 +17,6 @@ class SaveRemoteAuthSettingsUseCase(
      * @return Empty success indicator, or an error result when the remote update fails.
      */
     suspend operator fun invoke(authSettings: ManagementAuthSettings): AppResult<Unit> {
-        return managementAuthSettingsRepository.saveRemoteAuthSettings(authSettings)
+        return managementAuthSettingsRepository.saveRemoteManagementAuthSettings(authSettings)
     }
 }

@@ -1,28 +1,31 @@
 package io.github.mudrichenkoevgeny.kmp.feature.clientuser.di
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginRepository
+import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.login.OpenLoginRepositoryImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpassword.ResetPasswordRepository
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.resetpassword.OpenResetPasswordRepositoryImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.refreshtoken.RefreshTokenRepository
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.refreshtoken.OpenRefreshTokenRepositoryImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.registration.RegistrationRepository
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.registration.OpenRegistrationRepositoryImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.resetpassword.OpenResetPasswordRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.settings.OpenAuthSettingsRepositoryImpl
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.identifier.OpenIdentifierRepositoryImpl
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.session.OpenSessionRepositoryImpl
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.user.OpenUserRepositoryImpl
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.user.security.OpenUserSecurityRepositoryImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserStorageModule
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.refreshtoken.RefreshTokenRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.registration.RegistrationRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpassword.ResetPasswordRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.identifier.OpenIdentifierRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.session.SessionRepository
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.session.OpenSessionRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.user.OpenUserRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.security.UserSecurityRepository
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.user.security.OpenUserSecurityRepositoryImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserStorageModule
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
+import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.settings.EncryptedOpenAuthSettingsStorage
+import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.settings.OpenAuthSettingsStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlin.time.Clock
 
@@ -31,7 +34,8 @@ import kotlin.time.Clock
  * confirmation timing, and user profile loading against user storage and network APIs.
  *
  * @param networkModule Lazy Ktor API accessors.
- * @param authStorage Token and auth-settings persistence.
+ * @param authStorage Token persistence.
+ * @param encryptedSettings Encrypted settings.
  * @param storageModule User profile storage.
  * @param webSocketService Used by auth-settings repository for reactive updates.
  * @param repositoryScope Coroutine scope for long-lived repository jobs.
@@ -39,6 +43,7 @@ import kotlin.time.Clock
 internal class ClientUserRepositoryModule(
     private val networkModule: ClientUserNetworkModule,
     private val authStorage: AuthStorage,
+    private val encryptedSettings: EncryptedSettings,
     private val storageModule: UserStorageModule,
     private val webSocketService: WebSocketService,
     repositoryScope: CoroutineScope
@@ -66,11 +71,15 @@ internal class ClientUserRepositoryModule(
     val resetPasswordRepository: ResetPasswordRepository by lazy {
         OpenResetPasswordRepositoryImpl(networkModule.resetPasswordApi, confirmationRepository)
     }
+    /** Storage for open auth settings. */
+    val openAuthSettingsStorage: OpenAuthSettingsStorage by lazy {
+        EncryptedOpenAuthSettingsStorage(encryptedSettings)
+    }
     /** Repository for public authentication settings. */
     val openAuthSettingsRepository: OpenAuthSettingsRepository by lazy {
         OpenAuthSettingsRepositoryImpl(
             openAuthSettingsApi = networkModule.authSettingsApi,
-            authStorage = authStorage,
+            openAuthSettingsStorage = openAuthSettingsStorage,
             webSocketService = webSocketService,
             repositoryScope = repositoryScope
         )

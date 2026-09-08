@@ -14,14 +14,14 @@ class KtorManagementAuthSettingsApi(
     private val client: HttpClient
 ) : ManagementAuthSettingsApi {
 
-    override suspend fun getAuthSettings(): AppResult<ManagementAuthSettingsPayload> = client.callResult {
-        get(ManagementAuthSettingsRoutes.GET_AUTH_SETTINGS_MANAGEMENT)
+    override suspend fun getManagementAuthSettings(): AppResult<ManagementAuthSettingsPayload> = client.callResult {
+        get(ManagementAuthSettingsRoutes.GET_MANAGEMENT_AUTH_SETTINGS)
     }
 
-    override suspend fun updateAuthSettings(
+    override suspend fun updateManagementAuthSettings(
         request: ManagementAuthSettingsPayload
     ): AppResult<Unit> = client.callResult {
-        put(ManagementAuthSettingsRoutes.UPDATE_AUTH_SETTINGS) {
+        put(ManagementAuthSettingsRoutes.UPDATE_MANAGEMENT_AUTH_SETTINGS) {
             setBody(request)
         }
     }

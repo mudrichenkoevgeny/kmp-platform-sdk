@@ -4,18 +4,14 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
-import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
-import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.ClientSecurityErrorCodes as LocalSecurityErrorCodes
-import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ValidatePasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 /**
@@ -24,7 +20,6 @@ import kotlinx.coroutines.launch
  * @param componentContext Decompose [ComponentContext].
  * @param appType Defines the application context (Client/Management) to toggle features like registration.
  * @param loginByEmailUseCase Performs sign-in with email and password.
- * @param validatePasswordUseCase Enforces password rules before network calls.
  * @param onNavigateToRegistrationByEmail Opens the registration screen on the parent stack.
  * @param onNavigateToForgotPassword Opens the reset-password screen on the parent stack.
  * @param onNavigateToTotp Opens the MFA/TOTP screen on the parent stack.
@@ -36,7 +31,6 @@ class LoginByEmailComponentImpl(
     componentContext: ComponentContext,
     appType: AppType,
     private val loginByEmailUseCase: LoginByEmailUseCase,
-    private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val onNavigateToRegistrationByEmail: () -> Unit,
     private val onNavigateToForgotPassword: () -> Unit,
     private val onNavigateToTotp: (mfaToken: String) -> Unit,
@@ -46,7 +40,6 @@ class LoginByEmailComponentImpl(
 ) : LoginByEmailComponent, ComponentContext by componentContext {
 
     private val scope = componentCoroutineScope()
-    private var passwordValidationJob: Job? = null
 
     private val _state = MutableValue<LoginByEmailScreenState>(
         LoginByEmailScreenState.Content(
@@ -69,24 +62,9 @@ class LoginByEmailComponentImpl(
 
         _state.value = current.copy(
             password = password,
+            isPasswordValid = password.isNotBlank(),
             actionError = null
         )
-
-        passwordValidationJob?.cancel()
-        passwordValidationJob = scope.launch {
-            val result = validatePasswordUseCase(password)
-
-            val isPasswordValid = when (result) {
-                is AppResult.Success -> true
-                is AppResult.Error -> result.error.code != LocalSecurityErrorCodes.PASSWORD_TOO_SHORT &&
-                        result.error.code != LocalSecurityErrorCodes.PASSWORD_POLICY_UNAVAILABLE
-            }
-
-            val updated = _state.value as? LoginByEmailScreenState.Content ?: return@launch
-            _state.value = updated.copy(
-                isPasswordValid = isPasswordValid
-            )
-        }
     }
 
     override fun onTogglePasswordVisibility() {
@@ -96,37 +74,30 @@ class LoginByEmailComponentImpl(
 
     override fun onLoginClick() {
         val current = _state.value as? LoginByEmailScreenState.Content ?: return
-        if (!current.canLogin) return
+        if (!current.canLogin) {
+            return
+        }
 
         _state.value = current.copy(actionLoading = true, actionError = null)
 
         scope.launch {
-            validatePasswordUseCase(current.password)
-                .onSuccess {
-                    loginByEmailUseCase.execute(current.email, current.password)
-                        .onSuccess { authData ->
-                            if (authData.userDetails.accountStatus == UserAccountStatus.PENDING_DELETION) {
-                                onNavigateToPendingDeletion()
-                            } else {
-                                onFinished()
-                            }
-                        }
-                        .onError { error ->
-                            if (error.code == SecurityErrorCodes.TOTP_CONFIRMATION_REQUIRED) {
-                                val mfaToken = error.args?.get(SecurityErrorArgs.MFA_TOKEN)
-                                if (mfaToken != null) {
-                                    onNavigateToTotp(mfaToken)
-                                    return@onError
-                                }
-                            }
-
-                            _state.value = current.copy(
-                                actionLoading = false,
-                                actionError = error
-                            )
-                        }
+            loginByEmailUseCase.execute(current.email, current.password)
+                .onSuccess { authData ->
+                    if (authData.userDetails.accountStatus == UserAccountStatus.PENDING_DELETION) {
+                        onNavigateToPendingDeletion()
+                    } else {
+                        onFinished()
+                    }
                 }
                 .onError { error ->
+                    if (error.code == SecurityErrorCodes.TOTP_CONFIRMATION_REQUIRED) {
+                        val mfaToken = error.args?.get(SecurityErrorArgs.MFA_TOKEN)
+                        if (mfaToken != null) {
+                            onNavigateToTotp(mfaToken)
+                            return@onError
+                        }
+                    }
+
                     _state.value = current.copy(
                         actionLoading = false,
                         actionError = error

@@ -10,11 +10,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.platform.externallaunche
 import io.github.mudrichenkoevgeny.kmp.core.common.platform.externallauncher.ExternalLauncher
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.core.settings.mock.repository.GlobalSettingsRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.GetGlobalSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.core.settings.mock.domain.model.globalsettings.openGlobalSettingsMock
+import io.github.mudrichenkoevgeny.kmp.core.settings.mock.repository.OpenGlobalSettingsRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.GetOpenGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.auth.google.GoogleAuthServiceMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.auth.settings.publicAuthSettingsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.auth.settings.openAuthSettingsMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.data.authDataPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.login.LoginRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.settings.OpenAuthSettingsRepositoryMock
@@ -23,7 +24,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorag
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByGoogleUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.model.globalsettings.GlobalSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.AvailableAuthProviders
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
@@ -74,7 +74,7 @@ class LoginWelcomeComponentImplTest {
             advanceUntilIdle()
             assertIs<LoginWelcomeScreenState.InitializationError>(context.component.state.value)
 
-            val settings = publicAuthSettingsMock()
+            val settings = openAuthSettingsMock()
             authRepo.resultProvider = { AppResult.Success(settings) }
 
             context.component.onRetryInitClick()
@@ -181,18 +181,16 @@ class LoginWelcomeComponentImplTest {
 
     private fun createLoginWelcomeComponentTestContext(
         authSettingsRepository: OpenAuthSettingsRepositoryMock = OpenAuthSettingsRepositoryMock().apply {
-            resultProvider = { AppResult.Success(publicAuthSettingsMock()) }
+            resultProvider = { AppResult.Success(openAuthSettingsMock()) }
         },
-        globalSettingsRepository: GlobalSettingsRepositoryMock = GlobalSettingsRepositoryMock().apply {
-            resultProvider = {
-                AppResult.Success(
-                    GlobalSettings(
-                        privacyPolicyUrl = PRIVACY_POLICY_URL,
-                        termsOfServiceUrl = TERMS_OF_SERVICE_URL,
-                        contactSupportEmail = null
-                    )
+        globalSettingsRepository: OpenGlobalSettingsRepositoryMock = OpenGlobalSettingsRepositoryMock().apply {
+            getGlobalSettingsResult = AppResult.Success(
+                openGlobalSettingsMock(
+                    privacy = PRIVACY_POLICY_URL,
+                    terms = TERMS_OF_SERVICE_URL,
+                    email = null
                 )
-            }
+            )
         },
         externalLauncher: ExternalLauncher = ExternalLauncherMock(),
         loginRepository: LoginRepositoryMock = LoginRepositoryMock().apply {
@@ -201,12 +199,12 @@ class LoginWelcomeComponentImplTest {
     ): LoginWelcomeComponentTestContext {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
-        
+
         val context = LoginWelcomeComponentTestContext(
             lifecycle = lifecycle,
             expectedProviders = when (val authResult = authSettingsRepository.resultProvider()) {
                 is AppResult.Success -> authResult.data.availableAuthProviders
-                is AppResult.Error -> publicAuthSettingsMock().availableAuthProviders
+                is AppResult.Error -> openAuthSettingsMock().availableAuthProviders
             }
         )
 
@@ -214,7 +212,7 @@ class LoginWelcomeComponentImplTest {
             componentContext = DefaultComponentContext(lifecycle),
             appType = AppType.CLIENT,
             externalLauncher = externalLauncher,
-            getGlobalSettingsUseCase = GetGlobalSettingsUseCase(globalSettingsRepository),
+            getOpenGlobalSettingsUseCase = GetOpenGlobalSettingsUseCase(globalSettingsRepository),
             getAvailableUserAuthProvidersUseCase = GetAvailableUserAuthProvidersUseCase(
                 appType = AppType.CLIENT,
                 openAuthSettingsRepository = authSettingsRepository
@@ -231,7 +229,7 @@ class LoginWelcomeComponentImplTest {
             onNavigateToPendingDeletion = { context.onNavigateToPendingDeletionCalls++ },
             onFinished = { context.onFinishedCalls++ }
         )
-        
+
         return context
     }
 

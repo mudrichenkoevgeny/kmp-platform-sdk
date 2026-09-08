@@ -2,8 +2,6 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.ManagementAuthSettings
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.PublicAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,16 +19,8 @@ class AuthStorageMock : AuthStorage {
     private var accessToken: AccessToken? = null
     private var refreshToken: RefreshToken? = null
     private var expiresAt: Long = 0L
-    private var publicAuthSettings: PublicAuthSettings? = null
-    private var managementAuthSettings: ManagementAuthSettings? = null
 
     var isTokensCleared = false
-        private set
-
-    var isPublicAuthSettingsCleared = false
-        private set
-
-    var isManagementAuthSettingsCleared = false
         private set
 
     private val _accessTokenFlow = MutableStateFlow<String?>(null)
@@ -55,27 +45,5 @@ class AuthStorageMock : AuthStorage {
         expiresAt = 0L
         _accessTokenFlow.value = null
         isTokensCleared = true
-    }
-
-    override suspend fun getPublicAuthSettings(): PublicAuthSettings? = publicAuthSettings
-
-    override suspend fun updatePublicAuthSettings(publicAuthSettings: PublicAuthSettings) {
-        this.publicAuthSettings = publicAuthSettings
-    }
-
-    override suspend fun clearPublicAuthSettings() {
-        publicAuthSettings = null
-        isPublicAuthSettingsCleared = true
-    }
-
-    override suspend fun getManagementAuthSettings(): ManagementAuthSettings? = managementAuthSettings
-
-    override suspend fun updateManagementAuthSettings(managementAuthSettings: ManagementAuthSettings) {
-        this.managementAuthSettings = managementAuthSettings
-    }
-
-    override suspend fun clearManagementAuthSettings() {
-        managementAuthSettings = null
-        isManagementAuthSettingsCleared = true
     }
 }

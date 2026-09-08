@@ -58,6 +58,7 @@ class ClientUserComponent(
     private val clientUserRepositoryModule = ClientUserRepositoryModule(
         networkModule,
         authStorage,
+        commonComponent.encryptedSettings,
         storageModule,
         commonComponent.webSocketService,
         componentScope
@@ -86,10 +87,10 @@ class ClientUserComponent(
         authStorage = authStorage,
         storageModule = storageModule,
         authServices = authServices,
-        userConfigurationApi = networkModule.userConfigurationApi,
+        openUserConfigurationApi = networkModule.userConfigurationApi,
         openAuthSettingsRepository = clientUserRepositoryModule.openAuthSettingsRepository,
-        globalSettingsRepository = settingsComponent.globalSettingsRepository,
-        securitySettingsRepository = securityComponent.securitySettingsRepository
+        openGlobalSettingsRepository = settingsComponent.globalSettingsRepository,
+        openSecuritySettingsRepository = securityComponent.securitySettingsRepository
     )
 
     /** Refreshes the session using the stored refresh token. */
@@ -114,7 +115,7 @@ class ClientUserComponent(
     val loginByGoogleUseCase get() = useCaseModule.loginByGoogleUseCase
 
     /** Refreshes the available auth providers from the network. */
-    val refreshAuthSettingsUseCase get() = useCaseModule.refreshAuthSettingsUseCase
+    val refreshOpenAuthSettingsUseCase get() = useCaseModule.refreshOpenAuthSettingsUseCase
 
     /** Sends a registration verification code to the specified email. */
     val sendRegistrationConfirmationToEmailUseCase get() = useCaseModule.sendRegistrationConfirmationToEmailUseCase

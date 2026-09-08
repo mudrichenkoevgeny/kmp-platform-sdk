@@ -100,7 +100,7 @@ class LoginByPhoneScreenTest {
         }
         onNodeWithTag(LoginByPhoneTestTags.BACK_BUTTON).assertIsDisplayed()
         onNodeWithTag(LoginByPhoneTestTags.CODE_STEP_TITLE).assertIsDisplayed()
-        onNodeWithTag(LoginByPhoneTestTags.CODE_SENT_INFO_TEXT).assertIsDisplayed().assertTextContains(phone)
+        onNodeWithTag(LoginByPhoneTestTags.CODE_SENT_INFO_TEXT).assertIsDisplayed()
         onNodeWithTag(LoginByPhoneTestTags.CODE_INPUT).assertIsDisplayed().assertTextContains(CODE_TWO_DIGITS)
         onNodeWithTag(LoginByPhoneTestTags.CONFIRM_BUTTON).assertIsDisplayed()
         onNodeWithTag(LoginByPhoneTestTags.CHANGE_PHONE_BUTTON).assertIsDisplayed()

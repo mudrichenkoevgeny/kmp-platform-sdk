@@ -5,7 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.websocket.servic
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.storage.EncryptedSettingsMock
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.network.securitysettings.SecuritySettingsApiMock
+import io.github.mudrichenkoevgeny.kmp.core.security.mock.network.securitysettings.OpenSecuritySettingsApiMock
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +32,7 @@ fun securityComponentMock(
 ): SecurityComponent {
     return SecurityComponent(
         webSocketService = webSocketService,
-        securitySettingsApi = SecuritySettingsApiMock(),
+        openSecuritySettingsApi = OpenSecuritySettingsApiMock(),
         encryptedSettings = EncryptedSettingsMock(),
         parentScope = parentScope
     )

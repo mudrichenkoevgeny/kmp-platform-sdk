@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main
 
+import android.app.Application
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.arkivanov.decompose.DefaultComponentContext
@@ -18,7 +19,7 @@ import kotlin.test.assertIs
 
 @InternalApi
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [ROBOLECTRIC_SDK])
+@Config(sdk = [ROBOLECTRIC_SDK], application = Application::class)
 class ManagementMainScreenComponentImplTest {
 
     @Test

@@ -43,6 +43,7 @@ import kotlin.uuid.Uuid
 class KtorWebSocketService(
     private val httpClient: HttpClient,
     private val baseUrl: String,
+    private val webSocketPath: String,
     private val networkLogger: Logger,
     private val accessTokenProvider: AccessTokenProvider,
     private val deviceInfo: ClientDeviceInfo,
@@ -129,20 +130,20 @@ class KtorWebSocketService(
 
                     val accessToken = accessTokenProvider.accessTokenFlow.value
 
-                    val webSocketPath = if (accessToken != null) {
-                        "${WebSocketContract.WS_REALTIME_PATH}?token=$accessToken"
+                    val webSocketFullPath = if (accessToken != null) {
+                        "$webSocketPath?token=$accessToken"
                     } else {
-                        WebSocketContract.WS_REALTIME_PATH
+                        webSocketPath
                     }
 
                     httpClient.webSocket(
                         method = HttpMethod.Get,
                         host = socketHost,
-                        path = webSocketPath
+                        path = webSocketFullPath
                     ) {
                         currentDelay = INITIAL_RECONNECT_DELAY_MS
 
-                        networkLogger.log("$LOGGER_SOCKET_PREFIX: Connected to $socketHost${WebSocketContract.WS_REALTIME_PATH}")
+                        networkLogger.log("$LOGGER_SOCKET_PREFIX: Connected to $socketHost$webSocketPath")
 
                         sendInitializeFrame()
 
