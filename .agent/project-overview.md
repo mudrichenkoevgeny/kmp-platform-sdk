@@ -32,11 +32,12 @@ alwaysApply: true
 ### Feature Modules (`feature/`)
 *Pluggable domain logic and shared UI components.*
 
+- **`feature/auditapi`:** Administrative audit log viewing and event inspection features for management users.
+- **`feature/securityapi`:** Ktor-based networking for security policy management and MFA requirement synchronization.
+- **`feature/settingsapi`:** Ktor-based networking implementation for fetching and syncing global application configurations.
 - **`feature/user`:** Base Identity & Auth logic. Core models, use cases, and token storage.
 - **`feature/clientuser`:** Identity solution for standard users. Multi-method auth (Email, Phone, Google), and **Decompose** components for auth flows.
 - **`feature/managementuser`:** Administrative identity solution. Management-specific auth, session control, and resource oversight.
-- **`feature/settingsapi`:** Ktor-based networking implementation for fetching and syncing global application configurations.
-- **`feature/securityapi`:** Ktor-based networking for security policy management and MFA requirement synchronization.
 
 ### Other
 - **`bom`:** Bill of Materials (Gradle platform).

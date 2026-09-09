@@ -42,6 +42,13 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsett
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.GetManagementSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.RefreshManagementSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.SaveRemoteSecuritySettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUsersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.CreateUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.DeleteUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
 
 /**
  * Internal dependency wiring for management use cases.
@@ -313,6 +320,55 @@ internal class ManagementUserUseCaseModule(
     val saveRemoteSecuritySettingsUseCase by lazy {
         SaveRemoteSecuritySettingsUseCase(
             managementSecuritySettingsRepository = managementUserRepositoryModule.managementSecuritySettingsRepository
+        )
+    }
+
+    /** Returns paginated list of users. */
+    val getUsersUseCase by lazy {
+        GetUsersUseCase(
+            managementUserRepository = managementUserRepositoryModule.managementUserRepository
+        )
+    }
+
+    /** Retrieves specific user details. */
+    val getUserUseCase by lazy {
+        GetUserUseCase(
+            managementUserRepository = managementUserRepositoryModule.managementUserRepository
+        )
+    }
+
+    /** Creates a new user account. */
+    val createUserUseCase by lazy {
+        CreateUserUseCase(
+            managementUserRepository = managementUserRepositoryModule.managementUserRepository
+        )
+    }
+
+    /** Updates user details. */
+    val updateUserUseCase by lazy {
+        UpdateUserUseCase(
+            managementUserRepository = managementUserRepositoryModule.managementUserRepository
+        )
+    }
+
+    /** Deletes user account. */
+    val deleteUserUseCase by lazy {
+        DeleteUserUseCase(
+            managementUserRepository = managementUserRepositoryModule.managementUserRepository
+        )
+    }
+
+    /** Retrieves user sessions administratively. */
+    val managementGetSessionsUseCase by lazy {
+        ManagementGetSessionsUseCase(
+            managementSessionRepository = managementUserRepositoryModule.managementSessionRepository
+        )
+    }
+
+    /** Retrieves user identifiers administratively. */
+    val managementGetIdentifiersUseCase by lazy {
+        ManagementGetIdentifiersUseCase(
+            managementIdentifierRepository = managementUserRepositoryModule.managementIdentifierRepository
         )
     }
 }

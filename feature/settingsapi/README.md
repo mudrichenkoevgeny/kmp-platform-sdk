@@ -1,4 +1,4 @@
-# feature/settings-api
+# feature/settingsapi
 
 Public API surface and networking implementation for **Global Settings**. This module provides the communication bridge to fetch application-level configurations and metadata using Ktor. It serves as the networking provider for settings-related features within the KMP SDK.
 

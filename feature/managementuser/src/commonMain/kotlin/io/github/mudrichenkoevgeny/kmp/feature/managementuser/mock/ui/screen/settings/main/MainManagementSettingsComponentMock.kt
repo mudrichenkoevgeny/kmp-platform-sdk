@@ -8,4 +8,6 @@ class MainManagementSettingsComponentMock : MainManagementSettingsComponent {
     override fun onEditAuthSettingsClick() {}
     override fun onEditGlobalSettingsClick() {}
     override fun onEditSecuritySettingsClick() {}
+    override fun onUsersManagementClick() {}
+    override fun onAuditLogsClick() {}
 }

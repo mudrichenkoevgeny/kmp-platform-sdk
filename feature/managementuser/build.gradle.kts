@@ -53,6 +53,7 @@ kotlin {
             implementation(project(":core:common"))
             implementation(project(":core:settings"))
             implementation(project(":core:security"))
+            implementation(project(":feature:auditapi"))
             implementation(project(":feature:user"))
 
             // Shared Foundation

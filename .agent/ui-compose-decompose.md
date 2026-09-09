@@ -25,5 +25,9 @@ The following components must remain untested by automated suites:
 - **Placement:** Keep preview-specific logic inside the `ui` package of the relevant feature module, or in the `sample` app if it is not part of the core SDK.
 - **Naming:** Follow the project conventions for preview helpers (e.g., `*PreviewParameterProvider`) to clearly distinguish them from production code.
 
+## 5. Mandatory Compose Previews
+- **All UI components** (screens, list items, custom buttons, cards, and other views) **must** be annotated with `@Preview` (and `@InternalApi` where appropriate).
+- Previews must wrap the component in `MaterialTheme` (and `Surface` where needed) and provide `LocalErrorParser provides AppErrorParserMock` via `CompositionLocalProvider` using representative mock data (`*Mock` functions).
+
 ---
 *Refer to `AGENTS.md` for the full list of project standards.*

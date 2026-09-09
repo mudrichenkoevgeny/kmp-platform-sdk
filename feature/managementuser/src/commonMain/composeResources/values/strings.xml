@@ -7,6 +7,7 @@
 
     <!-- Main Management Settings Screen -->
     <string name="management_settings_title">Management Settings</string>
+    <string name="audit_logs">Audit Logs</string>
 
     <!-- Edit Auth Settings Screen -->
     <string name="edit_auth_settings_title">Edit Auth Settings</string>
@@ -22,12 +23,31 @@
     <string name="refresh_token_expiration_seconds">Refresh Token Expiration (seconds)</string>
     <string name="account_deletion_delay_seconds">Account Deletion Delay (seconds)</string>
 
-    <!-- Edit Global Settings Screen -->
+    <!-- Navigation Buttons -->
     <string name="edit_global_settings">Edit Global Settings</string>
     <string name="edit_auth_settings">Edit Auth Settings</string>
     <string name="edit_security_settings">Edit Security Settings</string>
+    <string name="users_management">Users Management</string>
 
     <!-- Edit Global Settings Screen -->
+    <string name="users_management_title">Users Management</string>
+    <string name="create_user">Create User</string>
+    <string name="create_user_title">Create User</string>
+    <string name="user_details_title">User Details</string>
+    <string name="update_user">Update User</string>
+    <string name="delete_user">Delete User</string>
+    <string name="user_id">User ID</string>
+    <string name="user_role">Role</string>
+    <string name="user_account_status">Status</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="authority_level">Authority Level</string>
+    <string name="user_sessions">User Sessions</string>
+    <string name="user_identifiers">User Identifiers</string>
+    <string name="error_authority_level_too_high">Authority level must be strictly less than your authority level (%d)</string>
+    <string name="error_role_too_high">You cannot create a user with a role higher than your own</string>
+
+    <!-- Edit Security Settings Screen -->
     <string name="edit_global_settings_title">Edit Global Settings</string>
     <string name="privacy_policy_url">Privacy Policy URL</string>
     <string name="terms_of_service_url">Terms of Service URL</string>

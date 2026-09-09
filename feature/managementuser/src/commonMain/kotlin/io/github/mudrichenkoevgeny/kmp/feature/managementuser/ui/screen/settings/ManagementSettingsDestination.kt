@@ -22,4 +22,12 @@ sealed class ManagementSettingsDestination {
     /** Screen for editing security policies and settings. */
     @Serializable
     object EditSecuritySettings : ManagementSettingsDestination()
+
+    /** Screen for users management. */
+    @Serializable
+    object UsersManagement : ManagementSettingsDestination()
+
+    /** Screen for viewing audit logs. */
+    @Serializable
+    object AuditLogs : ManagementSettingsDestination()
 }

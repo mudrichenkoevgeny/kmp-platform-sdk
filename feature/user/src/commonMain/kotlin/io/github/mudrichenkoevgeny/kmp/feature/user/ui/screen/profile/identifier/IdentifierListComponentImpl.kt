@@ -201,7 +201,7 @@ class IdentifierListComponentImpl(
         if (!paging.canLoadMore) return
 
         _state.value = currentContent.copy(paging = paging.toNextPageLoading())
-        loadPage(paging.pageNumber + 1)
+        fetchPage(pageNumber = paging.nextPageNumber)
     }
 
     private fun loadIdentifiers() {
@@ -218,10 +218,10 @@ class IdentifierListComponentImpl(
             _state.value = IdentifierListScreenState.Loading
         }
 
-        loadPage(pageNumber = ListingConstants.INITIAL_PAGE_NUMBER)
+        fetchPage(pageNumber = ListingConstants.INITIAL_PAGE_NUMBER)
     }
 
-    private fun loadPage(pageNumber: Int) {
+    private fun fetchPage(pageNumber: Int) {
         scope.launch {
             getUserIdentifiersUseCase(pageNumber = pageNumber, pageSize = ListingConstants.DEFAULT_PAGE_SIZE)
                 .onSuccess { pagedResult ->
@@ -232,9 +232,8 @@ class IdentifierListComponentImpl(
                 .onError { error ->
                     val currentContent = _state.value as? IdentifierListScreenState.Content
                     if (currentContent != null) {
-                        val isInitial = pageNumber == ListingConstants.INITIAL_PAGE_NUMBER
                         _state.value = currentContent.copy(
-                            paging = currentContent.paging.toError(error, isInitial = isInitial)
+                            paging = currentContent.paging.toError(error, pageNumber = pageNumber)
                         )
                     } else {
                         _state.value = IdentifierListScreenState.Error(error)

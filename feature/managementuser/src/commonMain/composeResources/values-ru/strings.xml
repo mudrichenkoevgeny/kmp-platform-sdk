@@ -7,6 +7,7 @@
 
     <!-- Main Management Settings Screen -->
     <string name="management_settings_title">Настройки управления</string>
+    <string name="audit_logs">Аудит логи</string>
 
     <!-- Edit Auth Settings Screen -->
     <string name="edit_auth_settings_title">Редактировать настройки авторизации</string>
@@ -26,8 +27,27 @@
     <string name="edit_global_settings">Редактировать глобальные настройки</string>
     <string name="edit_auth_settings">Редактировать настройки авторизации</string>
     <string name="edit_security_settings">Редактировать настройки безопасности</string>
+    <string name="users_management">Управление пользователями</string>
 
     <!-- Edit Global Settings Screen -->
+    <string name="users_management_title">Управление пользователями</string>
+    <string name="create_user">Создать пользователя</string>
+    <string name="create_user_title">Создание пользователя</string>
+    <string name="user_details_title">Информация о пользователе</string>
+    <string name="update_user">Обновить пользователя</string>
+    <string name="delete_user">Удалить пользователя</string>
+    <string name="user_id">ID пользователя</string>
+    <string name="user_role">Роль</string>
+    <string name="user_account_status">Статус</string>
+    <string name="email">Email</string>
+    <string name="password">Пароль</string>
+    <string name="authority_level">Уровень привилегий</string>
+    <string name="user_sessions">Сессии пользователя</string>
+    <string name="user_identifiers">Идентификаторы пользователя</string>
+    <string name="error_authority_level_too_high">Уровень привилегий должен быть строго меньше вашего (%d)</string>
+    <string name="error_role_too_high">Вы не можете создать пользователя с ролью выше вашей</string>
+
+    <!-- Edit Security Settings Screen -->
     <string name="edit_global_settings_title">Редактировать глобальные настройки</string>
     <string name="privacy_policy_url">URL политики конфиденциальности</string>
     <string name="terms_of_service_url">URL условий использования</string>

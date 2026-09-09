@@ -12,4 +12,10 @@ interface MainManagementSettingsComponent {
 
     /** Navigates to edit security settings. */
     fun onEditSecuritySettingsClick()
+
+    /** Navigates to users management screen. */
+    fun onUsersManagementClick()
+
+    /** Navigates to audit logs screen. */
+    fun onAuditLogsClick()
 }

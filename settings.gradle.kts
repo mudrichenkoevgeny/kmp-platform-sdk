@@ -34,6 +34,7 @@ registerModules("core", coreModules)
 
 val featureModules = listOf(
     "user",
+    "auditapi",
     "securityapi",
     "settingsapi",
     "clientuser",

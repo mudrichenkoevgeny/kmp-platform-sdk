@@ -7,6 +7,10 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
+import io.github.mudrichenkoevgeny.kmp.feature.auditapi.ui.screen.root.AuditApiRootComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.auditapi.usecase.GetAuditEventUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.auditapi.usecase.GetAuditEventsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.UsersManagementRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.auth.EditAuthSettingsComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.global.EditGlobalSettingsComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.main.MainManagementSettingsComponentImpl
@@ -17,9 +21,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsett
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.SaveRemoteGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.GetManagementSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.SaveRemoteSecuritySettingsUseCase
-
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.CreateUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.DeleteUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUsersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
 import com.arkivanov.decompose.DelicateDecomposeApi
-import com.arkivanov.decompose.router.stack.pushToFront
 
 /**
  * Default implementation of [ManagementSettingsRootComponent].
@@ -32,7 +41,16 @@ class ManagementSettingsRootComponentImpl(
     private val getManagementGlobalSettingsUseCase: GetManagementGlobalSettingsUseCase,
     private val saveRemoteGlobalSettingsUseCase: SaveRemoteGlobalSettingsUseCase,
     private val getManagementSecuritySettingsUseCase: GetManagementSecuritySettingsUseCase,
-    private val saveRemoteSecuritySettingsUseCase: SaveRemoteSecuritySettingsUseCase
+    private val saveRemoteSecuritySettingsUseCase: SaveRemoteSecuritySettingsUseCase,
+    private val getUsersUseCase: GetUsersUseCase,
+    private val getUserUseCase: GetUserUseCase,
+    private val createUserUseCase: CreateUserUseCase,
+    private val updateUserUseCase: UpdateUserUseCase,
+    private val deleteUserUseCase: DeleteUserUseCase,
+    private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
+    private val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase,
+    private val getAuditEventsUseCase: GetAuditEventsUseCase,
+    private val getAuditEventUseCase: GetAuditEventUseCase
 ) : ManagementSettingsRootComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<ManagementSettingsDestination>()
@@ -55,7 +73,9 @@ class ManagementSettingsRootComponentImpl(
                 componentContext = context,
                 onNavigateToEditAuthSettings = { navigation.push(ManagementSettingsDestination.EditAuthSettings) },
                 onNavigateToEditGlobalSettings = { navigation.push(ManagementSettingsDestination.EditGlobalSettings) },
-                onNavigateToEditSecuritySettings = { navigation.push(ManagementSettingsDestination.EditSecuritySettings) }
+                onNavigateToEditSecuritySettings = { navigation.push(ManagementSettingsDestination.EditSecuritySettings) },
+                onNavigateToUsersManagement = { navigation.push(ManagementSettingsDestination.UsersManagement) },
+                onNavigateToAuditLogs = { navigation.push(ManagementSettingsDestination.AuditLogs) }
             )
         )
         is ManagementSettingsDestination.EditAuthSettings -> ManagementSettingsRootComponent.Child.EditAuthSettings(
@@ -79,6 +99,27 @@ class ManagementSettingsRootComponentImpl(
                 componentContext = context,
                 getManagementSecuritySettingsUseCase = getManagementSecuritySettingsUseCase,
                 saveRemoteSecuritySettingsUseCase = saveRemoteSecuritySettingsUseCase,
+                onBack = navigation::pop
+            )
+        )
+        is ManagementSettingsDestination.UsersManagement -> ManagementSettingsRootComponent.Child.UsersManagement(
+            UsersManagementRootComponentImpl(
+                componentContext = context,
+                getUsersUseCase = getUsersUseCase,
+                getUserUseCase = getUserUseCase,
+                createUserUseCase = createUserUseCase,
+                updateUserUseCase = updateUserUseCase,
+                deleteUserUseCase = deleteUserUseCase,
+                managementGetSessionsUseCase = managementGetSessionsUseCase,
+                managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+                onBack = navigation::pop
+            )
+        )
+        is ManagementSettingsDestination.AuditLogs -> ManagementSettingsRootComponent.Child.AuditLogs(
+            AuditApiRootComponentImpl(
+                componentContext = context,
+                getAuditEventsUseCase = getAuditEventsUseCase,
+                getAuditEventUseCase = getAuditEventUseCase,
                 onBack = navigation::pop
             )
         )

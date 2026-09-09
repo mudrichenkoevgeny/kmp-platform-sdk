@@ -56,6 +56,24 @@ fun MainManagementSettingsScreen(component: MainManagementSettingsComponent) {
             verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium)
         ) {
             Button(
+                onClick = component::onUsersManagementClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(MainManagementSettingsTestTags.USERS_MANAGEMENT_BUTTON)
+            ) {
+                Text(text = stringResource(Res.string.users_management))
+            }
+
+            Button(
+                onClick = component::onAuditLogsClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(MainManagementSettingsTestTags.AUDIT_LOGS_BUTTON)
+            ) {
+                Text(text = stringResource(Res.string.audit_logs))
+            }
+
+            Button(
                 onClick = component::onEditAuthSettingsClick,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -102,6 +120,24 @@ private fun MainManagementSettingsPreview() {
                         onClick = {},
                         modifier = Modifier
                             .fillMaxWidth()
+                            .testTag(MainManagementSettingsTestTags.USERS_MANAGEMENT_BUTTON)
+                    ) {
+                        Text(text = stringResource(Res.string.users_management))
+                    }
+
+                    Button(
+                        onClick = {},
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag(MainManagementSettingsTestTags.AUDIT_LOGS_BUTTON)
+                    ) {
+                        Text(text = stringResource(Res.string.audit_logs))
+                    }
+
+                    Button(
+                        onClick = {},
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .testTag(MainManagementSettingsTestTags.EDIT_AUTH_SETTINGS_BUTTON)
                     ) {
                         Text(text = stringResource(Res.string.edit_auth_settings))
@@ -132,6 +168,8 @@ private fun MainManagementSettingsPreview() {
 
 object MainManagementSettingsTestTags {
     const val TITLE = "MainManagementSettings_Title"
+    const val USERS_MANAGEMENT_BUTTON = "MainManagementSettings_UsersManagementButton"
+    const val AUDIT_LOGS_BUTTON = "MainManagementSettings_AuditLogsButton"
     const val EDIT_AUTH_SETTINGS_BUTTON = "MainManagementSettings_EditAuthSettingsButton"
     const val EDIT_GLOBAL_SETTINGS_BUTTON = "MainManagementSettings_EditGlobalSettingsButton"
     const val EDIT_SECURITY_SETTINGS_BUTTON = "MainManagementSettings_EditSecuritySettingsButton"

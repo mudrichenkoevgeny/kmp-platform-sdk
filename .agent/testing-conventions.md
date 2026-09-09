@@ -25,6 +25,7 @@ This document defines the testing methodology for the `kmp-platform-sdk`. These 
 - **Mocking Strategy:**
   - Use MockK for JVM-based tests.
   - For `commonTest`, prefer **Hand-written Fakes/Stubs** or test doubles to avoid JVM-only library constraints.
+  - **No Inline Dummy Objects:** Never create local `dummyPayload`, `dummyUser`, or test fixtures directly inside test classes. Instead, create reusable mock factory functions (e.g. `auditEventPayloadMock(...)`) annotated with `@InternalApi` in the corresponding module `mock` package structure (e.g., `io.github.mudrichenkoevgeny.kmp.<module>.mock.network.model...`).
 - **Coroutines:** Use `runTest` from `kotlinx-coroutines-test` for all suspending logic.
 
 ## 4. Organization & Naming

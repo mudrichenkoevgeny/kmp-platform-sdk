@@ -10,6 +10,7 @@ dependencies {
         api(project(":feature:user"))
         api(project(":feature:settingsapi"))
         api(project(":feature:securityapi"))
+        api(project(":feature:auditapi"))
         api(project(":feature:clientuser"))
         api(project(":feature:managementuser"))
     }

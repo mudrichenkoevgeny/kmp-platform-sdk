@@ -20,18 +20,47 @@ data class PaginationState<T>(
     val isNextPageLoading: Boolean = false,
     val error: AppError? = null,
     val pageNumber: Int = 0,
-    val totalPages: Long = 0
+    val totalPages: Long = 0,
 ) {
     /**
-     * True if more items can be requested from the server.
+     * One-based index of the next page to fetch.
      */
-    val canLoadMore: Boolean get() = pageNumber < totalPages
-            && !isNextPageLoading
-            && !isInitialLoading
+    val nextPageNumber: Int
+        get() = if (pageNumber == 0) ListingConstants.INITIAL_PAGE_NUMBER else pageNumber + 1
+
+    /**
+     * True if the list contains no items.
+     */
+    val isEmpty: Boolean get() = items.isEmpty()
+
+    /**
+     * True if the list contains one or more items.
+     */
+    val isNotEmpty: Boolean get() = items.isNotEmpty()
+
+    /**
+     * True if an error occurred during the last fetch attempt.
+     */
+    val hasError: Boolean get() = error != null
+
+    /**
+     * True if more pages are available on the server.
+     */
+    val hasMorePages: Boolean get() = pageNumber < totalPages
+
+    /**
+     * True if no fetch operation is currently in progress.
+     */
+    val isIdle: Boolean get() = !isInitialLoading && !isNextPageLoading
+
+    /**
+     * True if a subsequent page can be fetched from the server.
+     */
+    val canLoadMore: Boolean get() = hasMorePages && isIdle
 }
 
 /**
- * Transitions state to initial loading (clears everything).
+ * Transitions state to initial loading.
  */
 fun <T> PaginationState<T>.toInitialLoading(): PaginationState<T> = copy(
     items = emptyList(),
@@ -39,21 +68,20 @@ fun <T> PaginationState<T>.toInitialLoading(): PaginationState<T> = copy(
     isNextPageLoading = false,
     error = null,
     pageNumber = 0,
-    totalPages = 0
+    totalPages = 0,
 )
 
 /**
- * Transitions state to next page loading (keeps current items).
+ * Transitions state to next page loading.
  */
 fun <T> PaginationState<T>.toNextPageLoading(): PaginationState<T> = copy(
     isInitialLoading = false,
     isNextPageLoading = true,
-    error = null
+    error = null,
 )
 
 /**
  * Updates state with a new page from [PagedResult].
- * Appends new items to the existing list.
  */
 fun <T> PaginationState<T>.appendResult(result: PagedResult<T>): PaginationState<T> = copy(
     items = items + result.items,
@@ -61,19 +89,24 @@ fun <T> PaginationState<T>.appendResult(result: PagedResult<T>): PaginationState
     isNextPageLoading = false,
     error = null,
     pageNumber = result.pageNumber,
-    totalPages = result.totalPages
+    totalPages = result.totalPages,
 )
 
 /**
  * Transitions state to error.
- * [isInitial] defines if it was a failure during the first page fetch.
  */
 fun <T> PaginationState<T>.toError(error: AppError, isInitial: Boolean): PaginationState<T> = copy(
     isInitialLoading = false,
     isNextPageLoading = false,
     error = error,
-    items = if (isInitial)
-        emptyList()
-    else
-        items
+    items = if (isInitial) emptyList() else items,
+)
+
+/**
+ * Transitions state to error for a requested [pageNumber].
+ * Automatically determines if it was the initial page fetch.
+ */
+fun <T> PaginationState<T>.toError(error: AppError, pageNumber: Int): PaginationState<T> = toError(
+    error = error,
+    isInitial = pageNumber == ListingConstants.INITIAL_PAGE_NUMBER,
 )

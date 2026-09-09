@@ -88,7 +88,7 @@ class SessionListComponentImpl(
         if (!paging.canLoadMore) return
 
         _state.value = currentContent.copy(paging = paging.toNextPageLoading())
-        loadPage(paging.pageNumber + 1)
+        fetchPage(pageNumber = paging.nextPageNumber)
     }
 
     private fun loadSessions() {
@@ -102,10 +102,10 @@ class SessionListComponentImpl(
             _state.value = SessionListScreenState.Loading
         }
 
-        loadPage(pageNumber = ListingConstants.INITIAL_PAGE_NUMBER)
+        fetchPage(pageNumber = ListingConstants.INITIAL_PAGE_NUMBER)
     }
 
-    private fun loadPage(pageNumber: Int) {
+    private fun fetchPage(pageNumber: Int) {
         scope.launch {
             getSessionsUseCase(pageNumber = pageNumber, pageSize = ListingConstants.DEFAULT_PAGE_SIZE)
                 .onSuccess { pagedResult ->
@@ -116,9 +116,8 @@ class SessionListComponentImpl(
                 .onError { error ->
                     val currentContent = _state.value as? SessionListScreenState.Content
                     if (currentContent != null) {
-                        val isInitial = pageNumber == ListingConstants.INITIAL_PAGE_NUMBER
                         _state.value = currentContent.copy(
-                            paging = currentContent.paging.toError(error, isInitial = isInitial)
+                            paging = currentContent.paging.toError(error, pageNumber = pageNumber)
                         )
                     } else {
                         _state.value = SessionListScreenState.Error(error)

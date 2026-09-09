@@ -1,0 +1,14 @@
+<resources>
+    <string name="back">Назад</string>
+    <string name="retry">Повторить</string>
+    <string name="auditLogs">Аудит логи</string>
+    <string name="audit_logs_title">Аудит логи</string>
+    <string name="audit_event_details_title">Детали аудит события</string>
+    <string name="audit_event_id">ID события</string>
+    <string name="audit_event_action">Действие</string>
+    <string name="audit_event_resource">Ресурс</string>
+    <string name="audit_event_status">Статус</string>
+    <string name="audit_event_actor">Субъект</string>
+    <string name="audit_event_message">Сообщение</string>
+    <string name="audit_event_timestamp">Время</string>
+</resources>

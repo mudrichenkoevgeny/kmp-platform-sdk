@@ -1,0 +1,21 @@
+# Auto-detect text files and enforce LF
+* text=auto eol=lf
+
+# Source code & docs
+*.kt text eol=lf
+*.kts text eol=lf
+*.md text eol=lf
+*.xml text eol=lf
+*.json text eol=lf
+*.properties text eol=lf
+
+# Executables & scripts
+gradlew text eol=lf
+gradlew.bat text eol=crlf
+
+# Binary formats
+*.png binary
+*.jpg binary
+*.jar binary
+*.klib binary
+*.keystore binary

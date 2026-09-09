@@ -4,16 +4,30 @@ import com.arkivanov.decompose.ComponentContext
 import io.github.mudrichenkoevgeny.kmp.core.common.di.CommonComponent
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
+import io.github.mudrichenkoevgeny.kmp.feature.auditapi.di.AuditApiComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserStorageModule
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.UsersManagementRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.UsersManagementRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.ManagementSettingsRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.ManagementSettingsRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponentImpl
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.action.CompositeAuditActionTypeParser
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.metadata.CommonAuditMetadataKey
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.metadata.CompositeAuditMetadataKeyParser
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.resource.CompositeAuditResourceTypeParser
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.action.UserAuditActionType
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.metadata.UserAuditMetadataKey
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
+import io.github.mudrichenkoevgeny.shared.foundation.feature.securityapi.domain.audit.action.SecurityAuditActionType
+import io.github.mudrichenkoevgeny.shared.foundation.feature.securityapi.domain.audit.resource.SecurityAuditResourceType
+import io.github.mudrichenkoevgeny.shared.foundation.feature.settingsapi.domain.audit.action.SettingsAuditActionType
+import io.github.mudrichenkoevgeny.shared.foundation.feature.settingsapi.domain.audit.resource.SettingsAuditResourceType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -52,6 +66,30 @@ class ManagementUserComponent(
         storageModule = storageModule,
         webSocketService = commonComponent.webSocketService,
         repositoryScope = componentScope
+    )
+
+    private val auditApiComponent = AuditApiComponent(
+        httpClient = commonComponent.httpClient,
+        compositeAuditActionTypeParser = CompositeAuditActionTypeParser(
+            setOf(
+                UserAuditActionType.entries.first(),
+                SecurityAuditActionType.entries.first(),
+                SettingsAuditActionType.entries.first()
+            )
+        ),
+        compositeAuditResourceTypeParser = CompositeAuditResourceTypeParser(
+            setOf(
+                UserAuditResourceType.entries.first(),
+                SecurityAuditResourceType.entries.first(),
+                SettingsAuditResourceType.entries.first()
+            )
+        ),
+        compositeAuditMetadataKeyParser = CompositeAuditMetadataKeyParser(
+            setOf(
+                CommonAuditMetadataKey.entries.first(),
+                UserAuditMetadataKey.entries.first()
+            )
+        )
     )
 
     /** Repository for self-management login (email/totp). */
@@ -167,6 +205,33 @@ class ManagementUserComponent(
     /** Updates account password. */
     val emailChangePasswordUseCase get() = useCaseModule.emailChangePasswordUseCase
 
+    /** Returns paginated list of users. */
+    val getUsersUseCase get() = useCaseModule.getUsersUseCase
+
+    /** Retrieves specific user details. */
+    val getUserUseCase get() = useCaseModule.getUserUseCase
+
+    /** Creates a new user account. */
+    val createUserUseCase get() = useCaseModule.createUserUseCase
+
+    /** Updates user details. */
+    val updateUserUseCase get() = useCaseModule.updateUserUseCase
+
+    /** Deletes user account. */
+    val deleteUserUseCase get() = useCaseModule.deleteUserUseCase
+
+    /** Retrieves user sessions administratively. */
+    val managementGetSessionsUseCase get() = useCaseModule.managementGetSessionsUseCase
+
+    /** Retrieves user identifiers administratively. */
+    val managementGetIdentifiersUseCase get() = useCaseModule.managementGetIdentifiersUseCase
+
+    /** Returns paginated audit events. */
+    val getAuditEventsUseCase get() = auditApiComponent.getAuditEventsUseCase
+
+    /** Retrieves specific audit event by ID. */
+    val getAuditEventUseCase get() = auditApiComponent.getAuditEventUseCase
+
     /**
      * Creates the root Decompose component for the management profile flow.
      *
@@ -241,7 +306,7 @@ class ManagementUserComponent(
     /** Saves remote auth settings. */
     val saveRemoteAuthSettingsUseCase get() = useCaseModule.saveRemoteAuthSettingsUseCase
 
-    /** Returns management global settings. */
+    /** Returns management global settings. `*/
     val getManagementGlobalSettingsUseCase get() = useCaseModule.getManagementGlobalSettingsUseCase
 
     /** Saves remote global settings. */
@@ -254,7 +319,29 @@ class ManagementUserComponent(
     val saveRemoteSecuritySettingsUseCase get() = useCaseModule.saveRemoteSecuritySettingsUseCase
 
     /**
-     * Creates the root Decompose component for management settings flow (Auth, Global, Security settings).
+     * Creates the root Decompose component for users management flow.
+     *
+     * @param componentContext Decompose context.
+     * @param onBack Navigation back callback.
+     * @return A new instance of [UsersManagementRootComponent].
+     */
+    fun createUsersManagementComponent(
+        componentContext: ComponentContext,
+        onBack: () -> Unit
+    ): UsersManagementRootComponent = UsersManagementRootComponentImpl(
+        componentContext = componentContext,
+        getUsersUseCase = getUsersUseCase,
+        getUserUseCase = getUserUseCase,
+        createUserUseCase = createUserUseCase,
+        updateUserUseCase = updateUserUseCase,
+        deleteUserUseCase = deleteUserUseCase,
+        managementGetSessionsUseCase = managementGetSessionsUseCase,
+        managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+        onBack = onBack
+    )
+
+    /**
+     * Creates the root Decompose component for management settings flow (Auth, Global, Security, and Users settings).
      *
      * @param componentContext Decompose context for the component.
      * @return A new instance of [ManagementSettingsRootComponent].
@@ -269,6 +356,15 @@ class ManagementUserComponent(
             getManagementGlobalSettingsUseCase = getManagementGlobalSettingsUseCase,
             saveRemoteGlobalSettingsUseCase = saveRemoteGlobalSettingsUseCase,
             getManagementSecuritySettingsUseCase = getManagementSecuritySettingsUseCase,
-            saveRemoteSecuritySettingsUseCase = saveRemoteSecuritySettingsUseCase
+            saveRemoteSecuritySettingsUseCase = saveRemoteSecuritySettingsUseCase,
+            getUsersUseCase = getUsersUseCase,
+            getUserUseCase = getUserUseCase,
+            createUserUseCase = createUserUseCase,
+            updateUserUseCase = updateUserUseCase,
+            deleteUserUseCase = deleteUserUseCase,
+            managementGetSessionsUseCase = managementGetSessionsUseCase,
+            managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+            getAuditEventsUseCase = getAuditEventsUseCase,
+            getAuditEventUseCase = getAuditEventUseCase
         )
 }
