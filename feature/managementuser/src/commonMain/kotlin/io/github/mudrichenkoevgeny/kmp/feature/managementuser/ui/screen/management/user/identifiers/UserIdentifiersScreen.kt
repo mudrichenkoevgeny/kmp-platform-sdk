@@ -1,16 +1,19 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.identifiers
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,12 +36,15 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessa
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.identifiers.UserIdentifiersComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_identifiers
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.identifier.item.IdentifierItem
 import org.jetbrains.compose.resources.stringResource
 
@@ -66,6 +72,12 @@ fun UserIdentifiersScreen(component: UserIdentifiersComponent) {
                 },
                 actions = {
                     IconButton(
+                        onClick = component::onToggleFilterPanel,
+                        modifier = Modifier.testTag(UserIdentifiersTestTags.FILTER_BUTTON)
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)
+                    }
+                    IconButton(
                         onClick = component::onRefresh,
                         modifier = Modifier.testTag(UserIdentifiersTestTags.REFRESH_BUTTON)
                     ) {
@@ -84,11 +96,12 @@ fun UserIdentifiersScreen(component: UserIdentifiersComponent) {
             when (val currentState = state) {
                 is UserIdentifiersScreenState.Loading -> FullscreenLoading()
                 is UserIdentifiersScreenState.Content -> {
-                    if (currentState.paging.isInitialLoading) {
+                    if (currentState.paging.isInitialLoading && currentState.paging.items.isEmpty()) {
                         FullscreenLoading()
                     } else {
                         Content(
                             state = currentState,
+                            component = component,
                             onLoadNextPage = component::onLoadNextPage
                         )
                     }
@@ -108,6 +121,7 @@ fun UserIdentifiersScreen(component: UserIdentifiersComponent) {
 @Composable
 private fun Content(
     state: UserIdentifiersScreenState.Content,
+    component: UserIdentifiersComponent,
     onLoadNextPage: () -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -117,6 +131,20 @@ private fun Content(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
+        AnimatedVisibility(visible = state.isFilterPanelExpanded) {
+            ListingOptionsPanel(
+                config = getUserIdentifiersListingConfig(),
+                sortState = state.sortState,
+                filterStates = state.filterStates,
+                onSortChanged = component::onSortChanged,
+                onFilterChanged = component::onFilterChanged,
+                onApplyClick = component::onApplyFilters,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(Dimens.paddingMedium)
+            )
+        }
+
         LazyColumn(
             state = listState,
             modifier = Modifier
@@ -146,6 +174,7 @@ private fun Content(
 object UserIdentifiersTestTags {
     const val TITLE = "UserIdentifiers_Title"
     const val BACK_BUTTON = "UserIdentifiers_BackButton"
+    const val FILTER_BUTTON = "UserIdentifiers_FilterButton"
     const val REFRESH_BUTTON = "UserIdentifiers_RefreshButton"
     const val GLOBAL_ERROR_TEXT = "UserIdentifiers_GlobalErrorText"
     const val IDENTIFIER_LIST = "UserIdentifiers_List"
@@ -162,11 +191,12 @@ private fun UserIdentifiersPreview() {
                     state = UserIdentifiersScreenState.Content(
                         paging = PaginationState(
                             items = listOf(
-                                io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock(),
-                                io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock()
+                                userIdentifierMock(),
+                                userIdentifierMock()
                             )
                         )
                     ),
+                    component = UserIdentifiersComponentMock(),
                     onLoadNextPage = {}
                 )
             }

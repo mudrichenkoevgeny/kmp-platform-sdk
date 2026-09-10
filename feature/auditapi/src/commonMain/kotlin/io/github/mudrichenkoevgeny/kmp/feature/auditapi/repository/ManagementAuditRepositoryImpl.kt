@@ -8,6 +8,9 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedresult.mapItems
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.action.CompositeAuditActionTypeParser
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEvent
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.metadata.CompositeAuditMetadataKeyParser
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.resource.CompositeAuditResourceTypeParser
@@ -32,13 +35,29 @@ class ManagementAuditRepositoryImpl(
         pageNumber: Int?,
         pageSize: Int?,
         sortBy: AuditSortValues.AuditEventSortBy?,
-        sortOrder: SortOrder?
+        sortOrder: SortOrder?,
+        actorIds: List<String>?,
+        actorTypes: List<AuditActorType>?,
+        actorUserRoles: List<UserRole>?,
+        actions: List<String>?,
+        resources: List<String>?,
+        resourceIds: List<String>?,
+        statuses: List<AuditStatus>?,
+        messages: List<String>?
     ): AppResult<PagedResult<AuditEvent>> {
         return managementAuditApi.getAuditEvents(
             pageNumber = pageNumber,
             pageSize = pageSize,
             sortBy = sortBy,
-            sortOrder = sortOrder
+            sortOrder = sortOrder,
+            actorIds = actorIds,
+            actorTypes = actorTypes,
+            actorUserRoles = actorUserRoles,
+            actions = actions,
+            resources = resources,
+            resourceIds = resourceIds,
+            statuses = statuses,
+            messages = messages
         ).mapSuccess { pagedPayload ->
             pagedPayload.mapItems { payload ->
                 payload.toAuditEvent(

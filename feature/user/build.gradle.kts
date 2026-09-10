@@ -83,7 +83,7 @@ kotlin {
             implementation(libs.decompose.compose)
 
             // QR Code
-            implementation(libs.qr.kit)
+            implementation(libs.qrose)
 
             // Logging
             implementation(libs.kermit)

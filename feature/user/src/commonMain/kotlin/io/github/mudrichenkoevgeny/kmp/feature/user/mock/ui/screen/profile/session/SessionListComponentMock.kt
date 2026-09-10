@@ -3,6 +3,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.sess
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterState
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.SessionListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.SessionListScreenState
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
@@ -20,6 +22,7 @@ class SessionListComponentMock(
     var revokeAllOtherSessionsCalls: Int = 0
     var loadNextPageCalls: Int = 0
     var backCalls: Int = 0
+    var toggleFilterPanelCalls: Int = 0
 
     fun updateState(state: SessionListScreenState) {
         _state.value = state
@@ -43,5 +46,30 @@ class SessionListComponentMock(
 
     override fun onBackClick() {
         backCalls++
+    }
+
+    override fun onToggleFilterPanel() {
+        toggleFilterPanelCalls++
+    }
+
+    override fun onSortChanged(sortState: ListingSortState) {
+        val current = _state.value as? SessionListScreenState.Content ?: return
+        _state.value = current.copy(sortState = sortState)
+    }
+
+    override fun onFilterChanged(filterId: String, filterState: ListingFilterState?) {
+        val current = _state.value as? SessionListScreenState.Content ?: return
+        val newFilters = current.filterStates.toMutableMap()
+        if (filterState == null) {
+            newFilters.remove(filterId)
+        } else {
+            newFilters[filterId] = filterState
+        }
+        _state.value = current.copy(filterStates = newFilters)
+    }
+
+    override fun onApplyFilters() {
+        val current = _state.value as? SessionListScreenState.Content ?: return
+        _state.value = current.copy(isFilterPanelExpanded = false)
     }
 }

@@ -1,6 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session
 
 import com.arkivanov.decompose.value.Value
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterState
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 
 /**
@@ -24,4 +26,16 @@ interface SessionListComponent {
 
     /** Navigates back. */
     fun onBackClick()
+
+    /** Toggles the filter/sort panel visibility. */
+    fun onToggleFilterPanel()
+
+    /** Updates current sort state and reloads sessions. */
+    fun onSortChanged(sortState: ListingSortState)
+
+    /** Updates current filter state and reloads sessions. */
+    fun onFilterChanged(filterId: String, filterState: ListingFilterState?)
+
+    /** Applies current filters and reloads events. */
+    fun onApplyFilters()
 }

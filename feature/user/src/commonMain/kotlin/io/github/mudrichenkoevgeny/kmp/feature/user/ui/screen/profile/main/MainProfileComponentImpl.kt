@@ -8,6 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.asValue
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
+import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.LogoutUseCase
@@ -122,6 +123,9 @@ class MainProfileComponentImpl(
 
         scope.launch {
             scheduleUserDeletionUseCase()
+                .onSuccess {
+                    actionState.value = ActionState.Idle
+                }
                 .onError { error ->
                     actionState.value = ActionState.Error(error)
                 }
@@ -133,6 +137,9 @@ class MainProfileComponentImpl(
 
         scope.launch {
             restoreUserUseCase()
+                .onSuccess {
+                    actionState.value = ActionState.Idle
+                }
                 .onError { error ->
                     actionState.value = ActionState.Error(error)
                 }

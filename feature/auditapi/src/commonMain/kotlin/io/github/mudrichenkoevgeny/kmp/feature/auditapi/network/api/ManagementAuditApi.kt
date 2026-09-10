@@ -3,6 +3,9 @@ package io.github.mudrichenkoevgeny.kmp.feature.auditapi.network.api
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.model.event.AuditEventPayload
 
@@ -23,7 +26,15 @@ interface ManagementAuditApi {
         pageNumber: Int? = null,
         pageSize: Int? = null,
         sortBy: AuditSortValues.AuditEventSortBy? = null,
-        sortOrder: SortOrder? = null
+        sortOrder: SortOrder? = null,
+        actorIds: List<String>? = null,
+        actorTypes: List<AuditActorType>? = null,
+        actorUserRoles: List<UserRole>? = null,
+        actions: List<String>? = null,
+        resources: List<String>? = null,
+        resourceIds: List<String>? = null,
+        statuses: List<AuditStatus>? = null,
+        messages: List<String>? = null
     ): AppResult<PagedResult<AuditEventPayload>>
 
     /**

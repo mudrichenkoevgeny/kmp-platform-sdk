@@ -20,5 +20,10 @@ object Dimens {
     val rowHeight = 64.dp
 
     val progressIndicatorStrokeWidth = 4.dp
+    val progressIndicatorStrokeWidthSmall = 2.dp
+    val progressIndicatorSizeSmall = 24.dp
     val progressIndicatorSizeLarge = 52.dp
+
+    val qrCodeSize = 200.dp
+    val previewContainerHeight = 300.dp
 }

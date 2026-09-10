@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,13 +44,16 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessa
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.create_user
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.main.UsersManagementMainComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.component.user.item.UserItem
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.users_management_title
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import org.jetbrains.compose.resources.stringResource
@@ -78,6 +82,12 @@ fun UsersManagementMainScreen(component: UsersManagementMainComponent) {
                 },
                 actions = {
                     IconButton(
+                        onClick = component::onToggleFilterPanel,
+                        modifier = Modifier.testTag(UsersManagementMainTestTags.FILTER_BUTTON)
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)
+                    }
+                    IconButton(
                         onClick = component::onRefresh,
                         modifier = Modifier.testTag(UsersManagementMainTestTags.REFRESH_BUTTON)
                     ) {
@@ -104,11 +114,12 @@ fun UsersManagementMainScreen(component: UsersManagementMainComponent) {
             when (val currentState = state) {
                 is UsersManagementMainScreenState.Loading -> FullscreenLoading()
                 is UsersManagementMainScreenState.Content -> {
-                    if (currentState.paging.isInitialLoading) {
+                    if (currentState.paging.isInitialLoading && currentState.paging.items.isEmpty()) {
                         FullscreenLoading()
                     } else {
                         Content(
                             state = currentState,
+                            component = component,
                             onUserClick = component::onUserClick,
                             onLoadNextPage = component::onLoadNextPage
                         )
@@ -129,6 +140,7 @@ fun UsersManagementMainScreen(component: UsersManagementMainComponent) {
 @Composable
 private fun Content(
     state: UsersManagementMainScreenState.Content,
+    component: UsersManagementMainComponent,
     onUserClick: (UserId) -> Unit,
     onLoadNextPage: () -> Unit
 ) {
@@ -139,6 +151,20 @@ private fun Content(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
+        AnimatedVisibility(visible = state.isFilterPanelExpanded) {
+            ListingOptionsPanel(
+                config = getUsersManagementMainListingConfig(),
+                sortState = state.sortState,
+                filterStates = state.filterStates,
+                onSortChanged = component::onSortChanged,
+                onFilterChanged = component::onFilterChanged,
+                onApplyClick = component::onApplyFilters,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(Dimens.paddingMedium)
+            )
+        }
+
         LazyColumn(
             state = listState,
             modifier = Modifier
@@ -207,6 +233,7 @@ private fun UsersManagementMainPreview() {
                             )
                         )
                     ),
+                    component = UsersManagementMainComponentMock(),
                     onUserClick = {},
                     onLoadNextPage = {}
                 )
@@ -218,6 +245,7 @@ private fun UsersManagementMainPreview() {
 object UsersManagementMainTestTags {
     const val TITLE = "UsersManagementMain_Title"
     const val BACK_BUTTON = "UsersManagementMain_BackButton"
+    const val FILTER_BUTTON = "UsersManagementMain_FilterButton"
     const val REFRESH_BUTTON = "UsersManagementMain_RefreshButton"
     const val CREATE_USER_FAB = "UsersManagementMain_CreateUserFab"
     const val GLOBAL_ERROR_TEXT = "UsersManagementMain_GlobalErrorText"

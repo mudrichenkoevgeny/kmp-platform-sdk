@@ -1,16 +1,19 @@
 package io.github.mudrichenkoevgeny.kmp.feature.auditapi.ui.screen.events
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,12 +29,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 import io.github.mudrichenkoevgeny.kmp.feature.auditapi.Res
-import io.github.mudrichenkoevgeny.kmp.feature.auditapi.*
+import io.github.mudrichenkoevgeny.kmp.feature.auditapi.audit_logs_title
 import io.github.mudrichenkoevgeny.kmp.feature.auditapi.ui.component.audit.item.AuditItem
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventId
 import org.jetbrains.compose.resources.stringResource
@@ -60,6 +64,12 @@ fun AuditEventsScreen(component: AuditEventsComponent) {
                 },
                 actions = {
                     IconButton(
+                        onClick = component::onToggleFilterPanel,
+                        modifier = Modifier.testTag(AuditEventsTestTags.FILTER_BUTTON)
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)
+                    }
+                    IconButton(
                         onClick = component::onRefresh,
                         modifier = Modifier.testTag(AuditEventsTestTags.REFRESH_BUTTON)
                     ) {
@@ -78,11 +88,12 @@ fun AuditEventsScreen(component: AuditEventsComponent) {
             when (val currentState = state) {
                 is AuditEventsScreenState.Loading -> FullscreenLoading()
                 is AuditEventsScreenState.Content -> {
-                    if (currentState.paging.isInitialLoading) {
+                    if (currentState.paging.isInitialLoading && currentState.paging.items.isEmpty()) {
                         FullscreenLoading()
                     } else {
                         Content(
                             state = currentState,
+                            component = component,
                             onEventClick = component::onEventClick,
                             onLoadNextPage = component::onLoadNextPage
                         )
@@ -103,6 +114,7 @@ fun AuditEventsScreen(component: AuditEventsComponent) {
 @Composable
 private fun Content(
     state: AuditEventsScreenState.Content,
+    component: AuditEventsComponent,
     onEventClick: (AuditEventId) -> Unit,
     onLoadNextPage: () -> Unit
 ) {
@@ -113,6 +125,20 @@ private fun Content(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
+        AnimatedVisibility(visible = state.isFilterPanelExpanded) {
+            ListingOptionsPanel(
+                config = getAuditEventsListingConfig(),
+                sortState = state.sortState,
+                filterStates = state.filterStates,
+                onSortChanged = component::onSortChanged,
+                onFilterChanged = component::onFilterChanged,
+                onApplyClick = component::onApplyFilters,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(Dimens.paddingMedium)
+            )
+        }
+
         LazyColumn(
             state = listState,
             modifier = Modifier
@@ -141,6 +167,7 @@ private fun Content(
 object AuditEventsTestTags {
     const val TITLE = "AuditEvents_Title"
     const val BACK_BUTTON = "AuditEvents_BackButton"
+    const val FILTER_BUTTON = "AuditEvents_FilterButton"
     const val REFRESH_BUTTON = "AuditEvents_RefreshButton"
     const val GLOBAL_ERROR_TEXT = "AuditEvents_GlobalErrorText"
     const val EVENT_LIST = "AuditEvents_List"

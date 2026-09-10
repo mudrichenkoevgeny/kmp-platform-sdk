@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
@@ -60,8 +59,8 @@ fun PagingFooter(
 @Composable
 fun PagingLoadingFooter() {
     CircularProgressIndicator(
-        modifier = Modifier.size(24.dp),
-        strokeWidth = 2.dp,
+        modifier = Modifier.size(Dimens.progressIndicatorSizeSmall),
+        strokeWidth = Dimens.progressIndicatorStrokeWidthSmall,
         color = MaterialTheme.colorScheme.primary
     )
 }

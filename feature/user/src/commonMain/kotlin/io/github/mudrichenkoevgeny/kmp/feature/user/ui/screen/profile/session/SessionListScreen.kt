@@ -9,23 +9,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,10 +35,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
@@ -50,21 +44,17 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessa
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.session.SessionListComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_revoke
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_revoke_all_others
 import io.github.mudrichenkoevgeny.kmp.feature.user.sessions
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_expires_at
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_last_accessed
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_ip_address
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.session.item.SessionItem
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import org.jetbrains.compose.resources.stringResource
 
@@ -92,6 +82,12 @@ fun SessionListScreen(component: SessionListComponent) {
                 },
                 actions = {
                     IconButton(
+                        onClick = component::onToggleFilterPanel,
+                        modifier = Modifier.testTag(SessionListTestTags.FILTER_BUTTON)
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)
+                    }
+                    IconButton(
                         onClick = component::onRefresh,
                         modifier = Modifier.testTag(SessionListTestTags.REFRESH_BUTTON)
                     ) {
@@ -110,11 +106,12 @@ fun SessionListScreen(component: SessionListComponent) {
             when (val currentState = state) {
                 is SessionListScreenState.Loading -> FullscreenLoading()
                 is SessionListScreenState.Content -> {
-                    if (currentState.paging.isInitialLoading) {
+                    if (currentState.paging.isInitialLoading && currentState.paging.items.isEmpty()) {
                         FullscreenLoading()
                     } else {
                         Content(
                             state = currentState,
+                            component = component,
                             onRevokeSession = component::onRevokeSessionClick,
                             onRevokeAllOthers = component::onRevokeAllOtherSessionsClick,
                             onLoadNextPage = component::onLoadNextPage
@@ -136,6 +133,7 @@ fun SessionListScreen(component: SessionListComponent) {
 @Composable
 private fun Content(
     state: SessionListScreenState.Content,
+    component: SessionListComponent,
     onRevokeSession: (UserSessionId) -> Unit,
     onRevokeAllOthers: () -> Unit,
     onLoadNextPage: () -> Unit
@@ -147,12 +145,26 @@ private fun Content(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
+        AnimatedVisibility(visible = state.isFilterPanelExpanded) {
+            ListingOptionsPanel(
+                config = getSessionListListingConfig(),
+                sortState = state.sortState,
+                filterStates = state.filterStates,
+                onSortChanged = component::onSortChanged,
+                onFilterChanged = component::onFilterChanged,
+                onApplyClick = component::onApplyFilters,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(Dimens.paddingMedium)
+            )
+        }
+
         if (state.paging.items.size > 1) {
             Button(
                 onClick = onRevokeAllOthers,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Dimens.paddingMedium)
+                    .padding(horizontal = Dimens.paddingMedium)
                     .testTag(SessionListTestTags.REVOKE_ALL_OTHERS_BUTTON),
                 enabled = !state.actionLoading,
                 colors = ButtonDefaults.buttonColors(
@@ -232,6 +244,7 @@ private fun SessionListContentPreview() {
                             )
                         )
                     ),
+                    component = SessionListComponentMock(),
                     onRevokeSession = {},
                     onRevokeAllOthers = {},
                     onLoadNextPage = {}
@@ -244,6 +257,7 @@ private fun SessionListContentPreview() {
 internal object SessionListTestTags {
     const val TITLE = "SessionList_Title"
     const val BACK_BUTTON = "SessionList_BackButton"
+    const val FILTER_BUTTON = "SessionList_FilterButton"
     const val REFRESH_BUTTON = "SessionList_RefreshButton"
     const val GLOBAL_ERROR_TEXT = "SessionList_GlobalErrorText"
     const val SESSION_LIST = "SessionList_List"

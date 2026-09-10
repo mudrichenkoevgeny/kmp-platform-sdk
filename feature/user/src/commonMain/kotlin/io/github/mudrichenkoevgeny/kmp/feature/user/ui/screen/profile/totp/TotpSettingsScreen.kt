@@ -61,7 +61,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totprecoverycodes.TotpRecoveryCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totpsetup.TotpSetup
-import qrgenerator.QRCodeImage
+import androidx.compose.foundation.Image
+import io.github.alexzhirkevich.qrose.rememberQrCodePainter
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -197,8 +198,8 @@ private fun SetupInProgressContent(
                 .testTag(TotpSettingsTestTags.QR_CODE_BOX),
             contentAlignment = Alignment.Center
         ) {
-            QRCodeImage(
-                url = state.setup.otpAuthUrl,
+            Image(
+                painter = rememberQrCodePainter(state.setup.otpAuthUrl),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize()
             )

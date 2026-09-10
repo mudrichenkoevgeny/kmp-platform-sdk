@@ -21,7 +21,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -63,10 +63,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorPar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.identifier.IdentifierListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.identifier.item.IdentifierItem
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
@@ -97,6 +99,12 @@ fun IdentifierListScreen(component: IdentifierListComponent) {
                 },
                 actions = {
                     IconButton(
+                        onClick = component::onToggleFilterPanel,
+                        modifier = Modifier.testTag(IdentifierListTestTags.FILTER_BUTTON)
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)
+                    }
+                    IconButton(
                         onClick = component::onRefresh,
                         modifier = Modifier.testTag(IdentifierListTestTags.REFRESH_BUTTON)
                     ) {
@@ -115,11 +123,12 @@ fun IdentifierListScreen(component: IdentifierListComponent) {
             when (val currentState = state) {
                 is IdentifierListScreenState.Loading -> FullscreenLoading()
                 is IdentifierListScreenState.Content -> {
-                    if (currentState.paging.isInitialLoading) {
+                    if (currentState.paging.isInitialLoading && currentState.paging.items.isEmpty()) {
                         FullscreenLoading()
                     } else {
                         Content(
                             state = currentState,
+                            component = component,
                             onDeleteIdentifier = component::onDeleteIdentifierClick,
                             onChangePasswordClick = component::onChangePasswordClick,
                             onConfirmChangePassword = component::onConfirmChangePasswordClick,
@@ -150,6 +159,7 @@ fun IdentifierListScreen(component: IdentifierListComponent) {
 @Composable
 private fun Content(
     state: IdentifierListScreenState.Content,
+    component: IdentifierListComponent,
     onDeleteIdentifier: (UserIdentifierId) -> Unit,
     onChangePasswordClick: (String) -> Unit,
     onConfirmChangePassword: (oldPassword: String, newPassword: String) -> Unit,
@@ -173,8 +183,23 @@ private fun Content(
     var passwordInput by remember { mutableStateOf("") }
     var phoneInput by remember { mutableStateOf("") }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
+    Column(modifier = Modifier.fillMaxSize()) {
+        AnimatedVisibility(visible = state.isFilterPanelExpanded) {
+            ListingOptionsPanel(
+                config = getIdentifierListListingConfig(),
+                sortState = state.sortState,
+                filterStates = state.filterStates,
+                onSortChanged = component::onSortChanged,
+                onFilterChanged = component::onFilterChanged,
+                onApplyClick = component::onApplyFilters,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(Dimens.paddingMedium)
+            )
+        }
+
+        Box(modifier = Modifier.weight(1f)) {
+            LazyColumn(
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
@@ -195,67 +220,68 @@ private fun Content(
                 )
             }
 
-        item {
-            PagingFooter(
-                state = state.paging,
-                onRetry = onLoadNextPage
+                item {
+                    PagingFooter(
+                        state = state.paging,
+                        onRetry = onLoadNextPage
+                    )
+                }
+
+                item {
+                    Spacer(Modifier.height(Dimens.paddingMedium))
+                    HorizontalDivider()
+                    Spacer(Modifier.height(Dimens.paddingMedium))
+                }
+
+                item {
+                    AddEmailSection(
+                        state = state.addEmailState,
+                        emailInput = emailInput,
+                        onEmailInputChange = { emailInput = it },
+                        passwordInput = passwordInput,
+                        onPasswordInputChange = { passwordInput = it },
+                        onAddClick = { onAddEmail(emailInput) },
+                        onCodeChanged = onEmailCodeChanged,
+                        onConfirmClick = { onConfirmEmail(passwordInput) },
+                        onCancelClick = onCancelAdd,
+                        enabled = !state.actionLoading && state.addPhoneState is IdentifierListScreenState.AddIdentifierState.Idle
+                    )
+                }
+
+                item {
+                    Spacer(Modifier.height(Dimens.paddingMedium))
+                }
+
+                item {
+                    AddPhoneSection(
+                        state = state.addPhoneState,
+                        phoneInput = phoneInput,
+                        onPhoneInputChange = { phoneInput = it },
+                        onAddClick = { onAddPhone(phoneInput) },
+                        onCodeChanged = onPhoneCodeChanged,
+                        onConfirmClick = onConfirmPhone,
+                        onCancelClick = onCancelAdd,
+                        enabled = !state.actionLoading && state.addEmailState is IdentifierListScreenState.AddIdentifierState.Idle
+                    )
+                }
+
+                item {
+                    ErrorText(
+                        error = state.actionError,
+                        testTag = IdentifierListTestTags.ACTION_ERROR_TEXT
+                    )
+                }
+            }
+        }
+
+        if (state.changePasswordEmail != null) {
+            ChangePasswordDialog(
+                email = state.changePasswordEmail,
+                onConfirm = onConfirmChangePassword,
+                onDismiss = onDismissChangePassword,
+                enabled = !state.actionLoading
             )
         }
-
-        item {
-            Spacer(Modifier.height(Dimens.paddingMedium))
-            HorizontalDivider()
-            Spacer(Modifier.height(Dimens.paddingMedium))
-        }
-
-        item {
-            AddEmailSection(
-                state = state.addEmailState,
-                emailInput = emailInput,
-                onEmailInputChange = { emailInput = it },
-                passwordInput = passwordInput,
-                onPasswordInputChange = { passwordInput = it },
-                onAddClick = { onAddEmail(emailInput) },
-                onCodeChanged = onEmailCodeChanged,
-                onConfirmClick = { onConfirmEmail(passwordInput) },
-                onCancelClick = onCancelAdd,
-                enabled = !state.actionLoading && state.addPhoneState is IdentifierListScreenState.AddIdentifierState.Idle
-            )
-        }
-
-        item {
-            Spacer(Modifier.height(Dimens.paddingMedium))
-        }
-
-        item {
-            AddPhoneSection(
-                state = state.addPhoneState,
-                phoneInput = phoneInput,
-                onPhoneInputChange = { phoneInput = it },
-                onAddClick = { onAddPhone(phoneInput) },
-                onCodeChanged = onPhoneCodeChanged,
-                onConfirmClick = onConfirmPhone,
-                onCancelClick = onCancelAdd,
-                enabled = !state.actionLoading && state.addEmailState is IdentifierListScreenState.AddIdentifierState.Idle
-            )
-        }
-
-        item {
-            ErrorText(
-                error = state.actionError,
-                testTag = IdentifierListTestTags.ACTION_ERROR_TEXT
-            )
-        }
-    }
-
-    if (state.changePasswordEmail != null) {
-        ChangePasswordDialog(
-            email = state.changePasswordEmail,
-            onConfirm = onConfirmChangePassword,
-            onDismiss = onDismissChangePassword,
-            enabled = !state.actionLoading
-        )
-    }
     }
 }
 
@@ -501,6 +527,7 @@ private fun IdentifierListContentPreview() {
                             )
                         )
                     ),
+                    component = IdentifierListComponentMock(),
                     onDeleteIdentifier = {},
                     onChangePasswordClick = {},
                     onConfirmChangePassword = { _, _ -> },
@@ -519,9 +546,10 @@ private fun IdentifierListContentPreview() {
     }
 }
 
-internal object IdentifierListTestTags {
+object IdentifierListTestTags {
     const val TITLE = "IdentifierList_Title"
     const val BACK_BUTTON = "IdentifierList_BackButton"
+    const val FILTER_BUTTON = "IdentifierList_FilterButton"
     const val REFRESH_BUTTON = "IdentifierList_RefreshButton"
     const val GLOBAL_ERROR_TEXT = "IdentifierList_GlobalErrorText"
     const val IDENTIFIER_LIST = "IdentifierList_List"

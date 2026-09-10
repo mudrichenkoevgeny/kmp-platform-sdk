@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
@@ -250,7 +249,7 @@ private fun LoginWelcomeScreenContentWithActionLoadingPreview() {
 private fun LoginWelcomeScreenLoadingPreview() {
     MaterialTheme {
         Surface {
-            Box(Modifier.fillMaxWidth().height(300.dp), contentAlignment = Alignment.Center) {
+            Box(Modifier.fillMaxWidth().height(Dimens.previewContainerHeight), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
         }

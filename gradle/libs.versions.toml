@@ -41,7 +41,7 @@ androidx-datastorePreferences = "1.3.0-alpha07"
 kermit = "2.1.0"
 
 # QR Code
-qr-kit = "3.1.3"
+qrose = "1.0.1"
 
 # Android
 androidx-activityCompose = "1.13.0"
@@ -119,7 +119,7 @@ androidx-datastorePreferences = { module = "androidx.datastore:datastore-prefere
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
 # QR Code
-qr-kit = { module = "network.chaintech:qr-kit", version.ref = "qr-kit" }
+qrose = { module = "io.github.alexzhirkevich:qrose", version.ref = "qrose" }
 
 # Android
 androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
