@@ -2,23 +2,20 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.session.SessionRepository
-import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
-import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 
 /**
- * Ends the active session on the server (best effort) and clears local storage regardless of network outcome.
+ * Ends the active session on the server (best effort) and clears local user session regardless of network outcome.
  *
  * @param sessionRepository Remote session management API.
- * @param authStorage Token storage to be cleared.
- * @param userStorage User profile storage to be cleared.
+ * @param userRepository User repository for clearing local session state.
  */
 open class LogoutUseCase(
     private val sessionRepository: SessionRepository,
-    private val authStorage: AuthStorage,
-    private val userStorage: UserStorage
+    private val userRepository: UserRepository
 ) {
     /**
-     * Clears local storage and returns success regardless of whether remote logout succeeds or fails.
+     * Clears local session and returns success regardless of whether remote logout succeeds or fails.
      *
      * @return Success result after local tokens and user data are cleared.
      */
@@ -27,8 +24,7 @@ open class LogoutUseCase(
             sessionRepository.logout()
         } catch (_: Exception) {
         } finally {
-            authStorage.clearTokens()
-            userStorage.clear()
+            userRepository.clearSession()
         }
         return AppResult.Success(Unit)
     }

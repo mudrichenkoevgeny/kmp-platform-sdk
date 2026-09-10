@@ -269,8 +269,7 @@ internal class ClientUserUseCaseModule(
     val logoutUseCase by lazy {
         LogoutUseCase(
             sessionRepository = clientUserRepositoryModule.sessionRepository,
-            authStorage = authStorage,
-            userStorage = storageModule.userStorage
+            userRepository = clientUserRepositoryModule.userRepository
         )
     }
 

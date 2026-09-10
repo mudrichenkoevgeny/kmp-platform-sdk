@@ -106,7 +106,8 @@ class ManagementAppComponent(
         AuthHttpClientConfigPlugin(
             baseUrl = baseUrl,
             authStorage = authStorage,
-            refreshTokenRoute = SelfManagementRefreshTokenRoutes.REFRESH_TOKEN
+            refreshTokenRoute = SelfManagementRefreshTokenRoutes.REFRESH_TOKEN,
+            onSessionCleared = { managementUserComponent.userRepository.clearSession() }
         )
     }
 

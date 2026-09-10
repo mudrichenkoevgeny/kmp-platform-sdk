@@ -104,7 +104,8 @@ class ClientAppComponent(
         AuthHttpClientConfigPlugin(
             baseUrl = baseUrl,
             authStorage = authStorage,
-            refreshTokenRoute = OpenRefreshTokenRoutes.REFRESH_TOKEN
+            refreshTokenRoute = OpenRefreshTokenRoutes.REFRESH_TOKEN,
+            onSessionCleared = { clientUserComponent.userRepository.clearSession() }
         )
     }
 

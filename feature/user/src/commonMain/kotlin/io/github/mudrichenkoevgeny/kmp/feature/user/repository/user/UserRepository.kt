@@ -27,4 +27,9 @@ interface UserRepository {
      * Cancels a pending account deletion request and updates local state.
      */
     suspend fun restoreUser(): AppResult<UserDetails>
+
+    /**
+     * Clears local user profile storage and authentication tokens.
+     */
+    suspend fun clearSession()
 }

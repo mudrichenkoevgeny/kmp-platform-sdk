@@ -3,7 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.network.websocket.messageha
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandler
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandlerResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.refreshtoken.RefreshTokenUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.model.websocket.SocketFrame
@@ -23,13 +23,13 @@ import kotlinx.serialization.json.decodeFromJsonElement
  * Auth settings updates (`AUTH_SETTINGS_UPDATED`) are handled directly by the corresponding repositories.
  *
  * @param userStorage Storage for updating the current user snapshot.
- * @param authStorage Storage for clearing tokens on session deletion.
+ * @param userRepository User repository for clearing local session state on deletion.
  * @param refreshTokenUseCase Use case to trigger session refresh on unauthorized frames.
  * @param scope Coroutine scope for launching background update/clear tasks.
  */
 class UserWebSocketMessageHandler(
     private val userStorage: UserStorage,
-    private val authStorage: AuthStorage,
+    private val userRepository: UserRepository,
     private val refreshTokenUseCase: RefreshTokenUseCase,
     private val scope: CoroutineScope
 ) : WebSocketMessageHandler {
@@ -67,8 +67,7 @@ class UserWebSocketMessageHandler(
 
     private fun handleSessionDeleted(): WebSocketMessageHandlerResult {
         scope.launch {
-            userStorage.clear()
-            authStorage.clearTokens()
+            userRepository.clearSession()
         }
 
         return WebSocketMessageHandlerResult.Handled

@@ -33,6 +33,10 @@ open class UserRepositoryMock : UserRepository {
 
     override suspend fun restoreUser(): AppResult<UserDetails> = handleUpdate()
 
+    override suspend fun clearSession() {
+        _currentUser.value = null
+    }
+
     private fun handleUpdate(): AppResult<UserDetails> {
         val result = resultProvider()
         if (result is AppResult.Success) {

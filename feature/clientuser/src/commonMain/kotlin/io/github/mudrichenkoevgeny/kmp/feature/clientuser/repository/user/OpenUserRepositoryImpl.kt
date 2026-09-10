@@ -90,6 +90,11 @@ class OpenUserRepositoryImpl(
         }
     }
 
+    override suspend fun clearSession() {
+        userStorage.clear()
+        authStorage.clearTokens()
+    }
+
     private suspend fun handleUserUpdated(payload: JsonElement?): WebSocketMessageHandlerResult {
         if (payload == null) {
             return WebSocketMessageHandlerResult.Error(CommonError.ContractViolation())
@@ -108,7 +113,6 @@ class OpenUserRepositoryImpl(
 
     private suspend fun handleSessionDeleted() {
         Logger.i { "Received SESSION_DELETED: clearing local user and auth data" }
-        userStorage.clear()
-        authStorage.clearTokens()
+        clearSession()
     }
 }

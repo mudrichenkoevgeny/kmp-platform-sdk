@@ -19,7 +19,8 @@ import io.ktor.client.plugins.logging.Logger
 class AuthHttpClientConfigPlugin(
     private val baseUrl: String,
     private val authStorage: AuthStorage,
-    private val refreshTokenRoute: String
+    private val refreshTokenRoute: String,
+    private val onSessionCleared: (suspend () -> Unit)? = null
 ) : HttpClientConfigPlugin {
     override fun install(
         config: HttpClientConfig<out HttpClientEngineConfig>,
@@ -29,7 +30,8 @@ class AuthHttpClientConfigPlugin(
             baseUrl = baseUrl,
             networkLogger = networkLogger,
             authStorage = authStorage,
-            refreshTokenRoute = refreshTokenRoute
+            refreshTokenRoute = refreshTokenRoute,
+            onSessionCleared = onSessionCleared
         )
     }
 }

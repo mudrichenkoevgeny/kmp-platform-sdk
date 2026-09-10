@@ -35,7 +35,8 @@ fun HttpClientConfig<*>.setupAuthConfig(
     baseUrl: String,
     networkLogger: Logger,
     authStorage: AuthStorage,
-    refreshTokenRoute: String
+    refreshTokenRoute: String,
+    onSessionCleared: (suspend () -> Unit)? = null
 ) {
     install(Auth) {
         bearer {
@@ -89,7 +90,7 @@ fun HttpClientConfig<*>.setupAuthConfig(
                     )
                 } catch (e: Exception) {
                     networkLogger.log("$LOGGER_AUTH_PREFIX: Token refresh failed: ${e.message}")
-                    authStorage.clearTokens()
+                    onSessionCleared?.invoke() ?: authStorage.clearTokens()
                     null
                 }
             }

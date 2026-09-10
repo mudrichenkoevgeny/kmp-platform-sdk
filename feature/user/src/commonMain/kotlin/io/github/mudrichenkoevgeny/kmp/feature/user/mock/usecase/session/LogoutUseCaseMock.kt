@@ -3,15 +3,13 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.session.SessionRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.UserRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.LogoutUseCase
 
 @InternalApi
 class LogoutUseCaseMock : LogoutUseCase(
     sessionRepository = SessionRepositoryMock(),
-    authStorage = AuthStorageMock(),
-    userStorage = UserStorageMock()
+    userRepository = UserRepositoryMock()
 ) {
     var executeCalls: Int = 0
 

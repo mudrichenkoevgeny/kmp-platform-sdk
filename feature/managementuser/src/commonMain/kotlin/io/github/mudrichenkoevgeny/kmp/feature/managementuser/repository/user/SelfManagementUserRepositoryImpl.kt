@@ -91,10 +91,14 @@ class SelfManagementUserRepositoryImpl(
         return WebSocketMessageHandlerResult.Handled
     }
 
-    private suspend fun handleSessionDeleted() {
-        Logger.i { "Received SESSION_DELETED: clearing local user and auth data" }
+    override suspend fun clearSession() {
         userStorage.clear()
         authStorage.clearTokens()
+    }
+
+    private suspend fun handleSessionDeleted() {
+        Logger.i { "Received SESSION_DELETED: clearing local user and auth data" }
+        clearSession()
     }
 
     private fun <T> methodNotSupported(): AppResult<T> = AppResult.Error(
