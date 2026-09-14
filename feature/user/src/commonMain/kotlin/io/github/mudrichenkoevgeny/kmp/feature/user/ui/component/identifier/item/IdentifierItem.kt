@@ -18,7 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.change_password
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_delete
@@ -45,10 +45,10 @@ fun IdentifierItem(
         modifier = Modifier
             .fillMaxWidth()
             .testTag(IdentifierListTestTags.IDENTIFIER_ITEM_PREFIX + identifier.id.value),
-        elevation = CardDefaults.cardElevation(defaultElevation = Dimens.elevationHeader)
+        elevation = CardDefaults.cardElevation(defaultElevation = CoreTheme.dimens.elevationHeader)
     ) {
         Row(
-            modifier = Modifier.padding(Dimens.paddingMedium),
+            modifier = Modifier.padding(CoreTheme.dimens.paddingMedium),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {

@@ -32,13 +32,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.ui.screen.auth.registration.email.RegistrationByEmailComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import org.jetbrains.compose.resources.stringResource
@@ -78,10 +86,10 @@ fun RegistrationByEmailScreen(component: RegistrationByEmailComponent) {
         ) {
             Column(
                 modifier = Modifier
-                    .padding(Dimens.paddingLarge)
+                    .padding(CoreTheme.dimens.paddingLarge)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium)
+                verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
             ) {
                 when (val s = state) {
                     is RegistrationByEmailScreenState.EmailInput -> {
@@ -245,31 +253,12 @@ private fun RegistrationInputContent(
     }
 }
 
-@InternalApi
-@Preview(showBackground = true)
-@Composable
-private fun RegistrationByEmailScreenPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                EmailInputContent(
-                    state = RegistrationByEmailScreenState.EmailInput(email = "test@example.com"),
-                    onEmailChanged = {},
-                    onSendCodeClick = {}
-                )
-            }
-        }
-    }
-}
-
 internal object RegistrationByEmailTestTags {
     const val BACK_BUTTON = "RegistrationByEmail_BackButton"
     const val TITLE = "RegistrationByEmail_Title"
-
     const val EMAIL_INPUT = "RegistrationByEmail_EmailInput"
     const val SEND_CODE_BUTTON = "RegistrationByEmail_SendCodeButton"
     const val EMAIL_STEP_ERROR_TEXT = "RegistrationByEmail_EmailStepErrorText"
-
     const val CODE_STEP_TITLE = "RegistrationByEmail_CodeStepTitle"
     const val CODE_SENT_INFO_TEXT = "RegistrationByEmail_CodeSentInfoText"
     const val CODE_INPUT = "RegistrationByEmail_CodeInput"
@@ -279,4 +268,102 @@ internal object RegistrationByEmailTestTags {
     const val RESEND_TIMER_TEXT = "RegistrationByEmail_ResendTimerText"
     const val RESEND_CODE_BUTTON = "RegistrationByEmail_ResendCodeButton"
     const val REGISTRATION_STEP_ERROR_TEXT = "RegistrationByEmail_RegistrationStepErrorText"
+}
+
+@InternalApi
+internal class RegistrationByEmailPreviewProvider :
+    PreviewParameterProvider<RegistrationByEmailScreenState> {
+
+    private val items: List<Pair<String, RegistrationByEmailScreenState>> = listOf(
+        "Email Input" to RegistrationByEmailScreenState.EmailInput(
+            email = "user@example.com"
+        ),
+        "Email Error" to RegistrationByEmailScreenState.EmailInput(
+            email = "invalid-email",
+            actionError = CommonError.Unknown()
+        ),
+        "Code & Password Input" to RegistrationByEmailScreenState.RegistrationInput(
+            email = "user@example.com",
+            code = "123456",
+            password = "SecretPassword123!"
+        ),
+        "Code Resend Timer" to RegistrationByEmailScreenState.RegistrationInput(
+            email = "user@example.com",
+            code = "",
+            password = "",
+            resendTimerSeconds = 45
+        ),
+        "Action Loading" to RegistrationByEmailScreenState.EmailInput(
+            email = "user@example.com",
+            actionLoading = true
+        ),
+        "Long Text Overflow" to RegistrationByEmailScreenState.RegistrationInput(
+            email = "this_is_an_extremely_long_email_address_for_testing_overflow_behavior@example.domain.com",
+            code = "",
+            password = "",
+            resendTimerSeconds = 120
+        )
+    )
+
+    override val values: Sequence<RegistrationByEmailScreenState> =
+        items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? =
+        items.getOrNull(index)?.first
+}
+
+@InternalApi
+@Composable
+private fun RegistrationByEmailScreenPreviewContent(state: RegistrationByEmailScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        Surface {
+            RegistrationByEmailScreen(
+                component = RegistrationByEmailComponentMock(initialState = state)
+            )
+        }
+    }
+}
+
+private val defaultPreviewState = RegistrationByEmailScreenState.RegistrationInput(
+    email = "user@example.com",
+    code = "123",
+    password = "pass"
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(RegistrationByEmailPreviewProvider::class) state: RegistrationByEmailScreenState
+) {
+    ScreenPreviewContainer {
+        RegistrationByEmailScreenPreviewContent(state = state)
+    }
+}
+
+@InternalApi
+@ScreenSizePreviews
+@Composable
+private fun AdaptivePreview() {
+    ScreenPreviewContainer {
+        RegistrationByEmailScreenPreviewContent(state = defaultPreviewState)
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    ScreenPreviewContainer {
+        RegistrationByEmailScreenPreviewContent(state = defaultPreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    ScreenPreviewContainer {
+        RegistrationByEmailScreenPreviewContent(state = defaultPreviewState)
+    }
 }

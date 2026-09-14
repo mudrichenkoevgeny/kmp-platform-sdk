@@ -56,7 +56,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessa
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totprecoverycodes.TotpRecoveryCodes
@@ -135,7 +135,7 @@ private fun DisabledContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(Dimens.paddingLarge),
+            .padding(CoreTheme.dimens.paddingLarge),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -144,7 +144,7 @@ private fun DisabledContent(
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.testTag(TotpSettingsTestTags.DISABLED_DESC_TEXT)
         )
-        Spacer(Modifier.height(Dimens.paddingLarge))
+        Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
         Button(
             onClick = onSetupClick,
             modifier = Modifier
@@ -172,7 +172,7 @@ private fun SetupInProgressContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(Dimens.paddingLarge)
+            .padding(CoreTheme.dimens.paddingLarge)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -189,11 +189,11 @@ private fun SetupInProgressContent(
             modifier = Modifier.testTag(TotpSettingsTestTags.STEP1_DESC)
         )
 
-        Spacer(Modifier.height(Dimens.paddingMedium))
+        Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
 
         Box(
             modifier = Modifier
-                .padding(Dimens.paddingMedium)
+                .padding(CoreTheme.dimens.paddingMedium)
                 .size(200.dp)
                 .testTag(TotpSettingsTestTags.QR_CODE_BOX),
             contentAlignment = Alignment.Center
@@ -205,7 +205,7 @@ private fun SetupInProgressContent(
             )
         }
 
-        Spacer(Modifier.height(Dimens.paddingMedium))
+        Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
 
         Text(
             text = stringResource(Res.string.totp_manual_key),
@@ -230,12 +230,12 @@ private fun SetupInProgressContent(
                 Icon(
                     imageVector = Icons.Default.ContentCopy,
                     contentDescription = null,
-                    modifier = Modifier.size(Dimens.paddingMedium)
+                    modifier = Modifier.size(CoreTheme.dimens.paddingMedium)
                 )
             }
         }
 
-        Spacer(Modifier.height(Dimens.paddingLarge))
+        Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
         Text(
             text = stringResource(Res.string.totp_setup_step2),
@@ -250,7 +250,7 @@ private fun SetupInProgressContent(
             modifier = Modifier.testTag(TotpSettingsTestTags.STEP2_DESC)
         )
 
-        Spacer(Modifier.height(Dimens.paddingMedium))
+        Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
 
         OutlinedTextField(
             value = state.code,
@@ -269,7 +269,7 @@ private fun SetupInProgressContent(
             testTag = TotpSettingsTestTags.SETUP_ACTION_ERROR_TEXT
         )
 
-        Spacer(Modifier.height(Dimens.paddingLarge))
+        Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
         Button(
             onClick = onConfirmClick,
@@ -298,7 +298,7 @@ private fun EnabledContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(Dimens.paddingLarge)
+                .padding(CoreTheme.dimens.paddingLarge)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -310,7 +310,7 @@ private fun EnabledContent(
                 modifier = Modifier.testTag(TotpSettingsTestTags.ENABLED_TITLE)
             )
 
-            Spacer(Modifier.height(Dimens.paddingLarge))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             Text(
                 text = stringResource(Res.string.recovery_codes_title),
@@ -325,7 +325,7 @@ private fun EnabledContent(
                 modifier = Modifier.testTag(TotpSettingsTestTags.RECOVERY_CODES_DESC)
             )
 
-            Spacer(Modifier.height(Dimens.paddingMedium))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
 
             Column(
                 modifier = Modifier
@@ -342,7 +342,7 @@ private fun EnabledContent(
                 }
             }
 
-            Spacer(Modifier.height(Dimens.paddingSmall))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
             TextButton(
                 onClick = {
@@ -354,7 +354,7 @@ private fun EnabledContent(
                 Text(text = stringResource(Res.string.copy_all))
             }
 
-            Spacer(Modifier.height(Dimens.paddingLarge))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             OutlinedButton(
                 onClick = onRegenerateClick,
@@ -366,7 +366,7 @@ private fun EnabledContent(
                 Text(text = stringResource(Res.string.regenerate_recovery_codes))
             }
 
-            Spacer(Modifier.height(Dimens.paddingSmall))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
             Button(
                 onClick = onDisableClick,
@@ -439,7 +439,7 @@ private fun ErrorText(error: AppError?, testTag: String) {
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(top = Dimens.paddingSmall)
+                    .padding(top = CoreTheme.dimens.paddingSmall)
                     .testTag(testTag)
             )
         }

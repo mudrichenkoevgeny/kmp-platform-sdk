@@ -17,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_expires_at
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_ip_address
@@ -46,15 +46,15 @@ fun SessionItem(
         modifier = Modifier
             .fillMaxWidth()
             .testTag(SessionListTestTags.SESSION_ITEM_PREFIX + session.id.value),
-        elevation = CardDefaults.cardElevation(defaultElevation = Dimens.elevationHeader)
+        elevation = CardDefaults.cardElevation(defaultElevation = CoreTheme.dimens.elevationHeader)
     ) {
-        Column(modifier = Modifier.padding(Dimens.paddingMedium)) {
+        Column(modifier = Modifier.padding(CoreTheme.dimens.paddingMedium)) {
             Text(
                 text = session.userAgent ?: "Unknown device",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(Modifier.height(Dimens.paddingSmall))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
             Text(
                 text = stringResource(Res.string.session_ip_address, session.ipAddress ?: "Unknown"),
                 style = MaterialTheme.typography.bodySmall
@@ -67,9 +67,9 @@ fun SessionItem(
                 text = stringResource(Res.string.session_expires_at, session.expiresAt.toString()),
                 style = MaterialTheme.typography.bodySmall
             )
-            Spacer(Modifier.height(Dimens.paddingSmall))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
             HorizontalDivider()
-            Spacer(Modifier.height(Dimens.paddingSmall))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
             Button(
                 onClick = onRevokeClick,
                 modifier = Modifier.align(Alignment.End),

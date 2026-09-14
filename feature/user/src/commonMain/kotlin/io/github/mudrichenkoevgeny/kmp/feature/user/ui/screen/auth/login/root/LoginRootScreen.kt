@@ -16,7 +16,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalCommonComponent
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +45,7 @@ private fun <C : Any, T : Any> LoginDialogSurface(
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth().wrapContentHeight(),
-        shape = RoundedCornerShape(Dimens.roundedCornerShape),
+        shape = RoundedCornerShape(CoreTheme.dimens.roundedCornerShape),
         color = MaterialTheme.colorScheme.surface
     ) {
         Children(

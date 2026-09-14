@@ -12,7 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import androidx.compose.ui.unit.dp
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
  * A fullscreen overlay with a loading spinner.
@@ -37,10 +42,49 @@ fun BoxScope.FullscreenOverlayLoading(
     ) {
         Box(contentAlignment = Alignment.Center) {
             CircularProgressIndicator(
-                modifier = Modifier.size(Dimens.progressIndicatorSizeLarge),
+                modifier = Modifier.size(CoreTheme.dimens.progressIndicatorSizeLarge),
                 color = MaterialTheme.colorScheme.primary,
-                strokeWidth = Dimens.progressIndicatorStrokeWidth
+                strokeWidth = CoreTheme.dimens.progressIndicatorStrokeWidth
             )
+        }
+    }
+}
+
+@InternalApi
+@ComponentSizePreviews
+@Composable
+private fun FullscreenOverlayLoadingComponentSizePreview() {
+    CoreTheme {
+        Surface {
+            Box(modifier = Modifier.size(200.dp)) {
+                FullscreenOverlayLoading()
+            }
+        }
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun FullscreenOverlayLoadingThemePreview() {
+    CoreTheme {
+        Surface {
+            Box(modifier = Modifier.size(200.dp)) {
+                FullscreenOverlayLoading()
+            }
+        }
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FullscreenOverlayLoadingFontScalePreview() {
+    CoreTheme {
+        Surface {
+            Box(modifier = Modifier.size(200.dp)) {
+                FullscreenOverlayLoading()
+            }
         }
     }
 }

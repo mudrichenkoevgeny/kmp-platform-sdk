@@ -40,7 +40,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
@@ -89,7 +89,7 @@ private fun UnauthorizedContent(onLoginClick: () -> Unit) {
             text = stringResource(Res.string.not_authorized),
             modifier = Modifier.testTag(MainProfileTestTags.UNAUTHORIZED_TEXT)
         )
-        Spacer(Modifier.height(Dimens.paddingMedium))
+        Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
         Button(
             onClick = onLoginClick,
             modifier = Modifier.testTag(MainProfileTestTags.LOGIN_BUTTON)
@@ -118,14 +118,14 @@ private fun ProfileContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(Dimens.paddingLarge),
+                .padding(CoreTheme.dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (isPendingDeletion) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = Dimens.paddingMedium)
+                        .padding(bottom = CoreTheme.dimens.paddingMedium)
                         .testTag(MainProfileTestTags.PENDING_DELETION_CARD),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.errorContainer,
@@ -135,7 +135,7 @@ private fun ProfileContent(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(Dimens.paddingMedium),
+                            .padding(CoreTheme.dimens.paddingMedium),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
@@ -143,13 +143,13 @@ private fun ProfileContent(
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.error
                         )
-                        Spacer(Modifier.height(Dimens.paddingSmall))
+                        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
                         Text(
                             text = stringResource(Res.string.account_pending_deletion_desc),
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center
                         )
-                        Spacer(Modifier.height(Dimens.paddingMedium))
+                        Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
                         Button(
                             onClick = onRestoreAccountClick,
                             modifier = Modifier
@@ -169,7 +169,7 @@ private fun ProfileContent(
                 modifier = Modifier.testTag(MainProfileTestTags.USER_ID_TEXT)
             )
 
-            Spacer(Modifier.height(Dimens.paddingLarge))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             OutlinedButton(
                 onClick = onTotpSettingsClick,
@@ -181,7 +181,7 @@ private fun ProfileContent(
                 Text(text = stringResource(Res.string.totp_settings))
             }
 
-            Spacer(Modifier.height(Dimens.paddingSmall))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
             OutlinedButton(
                 onClick = onSessionsClick,
@@ -193,7 +193,7 @@ private fun ProfileContent(
                 Text(text = stringResource(Res.string.sessions))
             }
 
-            Spacer(Modifier.height(Dimens.paddingSmall))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
             OutlinedButton(
                 onClick = onIdentifiersClick,
@@ -205,7 +205,7 @@ private fun ProfileContent(
                 Text(text = stringResource(Res.string.identifiers))
             }
 
-            Spacer(Modifier.height(Dimens.paddingLarge))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             if (state.isAccountDeletionAvailable && !isPendingDeletion) {
                 OutlinedButton(
@@ -220,7 +220,7 @@ private fun ProfileContent(
                         color = MaterialTheme.colorScheme.error
                     )
                 }
-                Spacer(Modifier.height(Dimens.paddingSmall))
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
             }
 
             Button(
@@ -292,7 +292,7 @@ private fun ErrorText(error: AppError?) {
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(top = Dimens.paddingSmall)
+                    .padding(top = CoreTheme.dimens.paddingSmall)
                     .testTag(MainProfileTestTags.ACTION_ERROR_TEXT)
             )
         }

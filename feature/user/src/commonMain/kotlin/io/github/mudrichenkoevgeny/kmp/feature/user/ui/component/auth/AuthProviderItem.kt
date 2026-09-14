@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
@@ -35,13 +35,13 @@ fun AuthProviderItem(
 ) {
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(Dimens.roundedCornerShape),
+        shape = RoundedCornerShape(CoreTheme.dimens.roundedCornerShape),
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
-        modifier = Modifier.size(Dimens.iconButtonSize)
+        modifier = Modifier.size(CoreTheme.dimens.iconButtonSize)
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.padding(Dimens.paddingSmall)
+            modifier = Modifier.padding(CoreTheme.dimens.paddingSmall)
         ) {
             val iconRes = when (authProvider) {
                 UserAuthProvider.EMAIL -> Res.drawable.auth_logo_email
@@ -79,7 +79,7 @@ private fun AuthProviderItemPreview(
 ) {
     MaterialTheme {
         Box(
-            modifier = Modifier.padding(Dimens.paddingLarge),
+            modifier = Modifier.padding(CoreTheme.dimens.paddingLarge),
             contentAlignment = Alignment.Center
         ) {
             AuthProviderItem(

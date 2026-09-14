@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.junit.runner.RunWith
@@ -25,7 +25,7 @@ class AuthProviderItemTest {
         var clicks = 0
         setContent {
             MaterialTheme {
-                Box(modifier = Modifier.padding(Dimens.paddingLarge)) {
+                Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
                     AuthProviderItem(
                         authProvider = UserAuthProvider.EMAIL,
                         onClick = { clicks++ }

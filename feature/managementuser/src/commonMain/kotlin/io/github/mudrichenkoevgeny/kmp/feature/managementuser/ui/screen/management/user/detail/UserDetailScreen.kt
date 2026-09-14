@@ -35,7 +35,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error.FullscreenError
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
@@ -108,9 +108,9 @@ private fun Content(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(Dimens.paddingMedium)
+            .padding(CoreTheme.dimens.paddingMedium)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium)
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
         Text(
             text = "${stringResource(Res.string.user_id)}: ${state.user.id.value}",

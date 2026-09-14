@@ -55,7 +55,8 @@ googleid = "1.2.0"
 # Testing (Android JVM / Robolectric)
 androidx-test-core = "1.7.0"
 robolectric = "4.16.1"
-androidx-compose-ui-test-manifest = "1.10.5"
+androidx-compose-ui = "1.10.5"
+roborazzi = "1.74.0"
 
 [libraries]
 # Shared Foundation
@@ -134,7 +135,11 @@ googleid = { module = "com.google.android.libraries.identity.googleid:googleid",
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
-androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "androidx-compose-ui-test-manifest" }
+androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "androidx-compose-ui" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "androidx-compose-ui" }
+roborazzi = { module = "io.github.takahirom.roborazzi:roborazzi", version.ref = "roborazzi" }
+roborazzi-compose = { module = "io.github.takahirom.roborazzi:roborazzi-compose", version.ref = "roborazzi" }
+roborazzi-junit-rule = { module = "io.github.takahirom.roborazzi:roborazzi-junit-rule", version.ref = "roborazzi" }
 
 [plugins]
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -148,3 +153,4 @@ buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig
 maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependency-analysis" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }

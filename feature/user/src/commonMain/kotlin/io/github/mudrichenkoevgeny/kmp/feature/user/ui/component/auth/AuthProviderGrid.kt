@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 
 /**
@@ -30,8 +30,8 @@ fun AuthProviderGrid(
 ) {
     FlowRow(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(Dimens.paddingSmall, Alignment.CenterHorizontally),
-        verticalArrangement = Arrangement.spacedBy(Dimens.paddingSmall),
+        horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall, Alignment.CenterHorizontally),
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall),
         maxItemsInEachRow = Int.MAX_VALUE
     ) {
         authProviders.forEach { provider ->
@@ -70,7 +70,7 @@ private fun AuthProviderGridPreview(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.paddingLarge),
+                .padding(CoreTheme.dimens.paddingLarge),
             contentAlignment = Alignment.Center
         ) {
             AuthProviderGrid(

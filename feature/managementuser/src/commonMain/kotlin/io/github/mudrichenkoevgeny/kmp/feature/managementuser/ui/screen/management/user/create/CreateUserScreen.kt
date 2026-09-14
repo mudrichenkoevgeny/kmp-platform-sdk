@@ -30,7 +30,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
 import org.jetbrains.compose.resources.stringResource
@@ -71,7 +71,7 @@ fun CreateUserScreen(component: CreateUserComponent) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(Dimens.paddingMedium)
+                .padding(CoreTheme.dimens.paddingMedium)
                 .verticalScroll(rememberScrollState()),
         )
     }
@@ -90,7 +90,7 @@ private fun CreateUserForm(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium),
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium),
     ) {
         OutlinedTextField(
             value = state.email,

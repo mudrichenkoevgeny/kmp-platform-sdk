@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.model.websocket.
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandlerResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.user.userDetailsPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.refreshtoken.RefreshTokenRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.UserRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.refreshtoken.RefreshTokenUseCase
@@ -21,6 +22,7 @@ class UserWebSocketMessageHandlerTest {
 
     private val userStorage = UserStorageMock()
     private val authStorage = AuthStorageMock()
+    private val userRepository = UserRepositoryMock()
     private val refreshTokenUseCase = RefreshTokenUseCase(
         refreshTokenRepository = RefreshTokenRepositoryMock(),
         authStorage = authStorage
@@ -28,7 +30,7 @@ class UserWebSocketMessageHandlerTest {
 
     private fun createHandler(scope: TestScope) = UserWebSocketMessageHandler(
         userStorage = userStorage,
-        authStorage = authStorage,
+        userRepository = userRepository,
         refreshTokenUseCase = refreshTokenUseCase,
         scope = scope
     )

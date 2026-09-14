@@ -72,3 +72,32 @@ Performs a complete deployment workflow, including uploading, closing the stagin
 ```bash
 ./gradlew publishAndReleaseToMavenCentral
 ```
+
+## Screenshot Testing (Roborazzi)
+
+The project uses Roborazzi for Compose UI screenshot regression testing.
+
+### 1. Recording / Updating Golden Screenshots
+When you create new screenshot tests or intentionally update UI designs, record or update the baseline reference images:
+
+```bash
+./gradlew recordRoborazziDebug
+```
+Or for a specific module:
+```bash
+./gradlew :feature:clientuser:recordRoborazziDebug
+```
+Baseline reference images are stored in version control under `src/androidUnitTest/snapshots/images/...`.
+
+### 2. Verifying Screenshots
+To run screenshot tests in verification mode (comparing current UI against committed baselines and failing on any discrepancy):
+
+```bash
+./gradlew verifyRoborazziDebug
+```
+Or for a specific module:
+```bash
+./gradlew :feature:clientuser:verifyRoborazziDebug
+```
+When verification fails, diff images and HTML reports are generated under `build/outputs/roborazzi/` and `build/reports/roborazzi/index.html`.
+

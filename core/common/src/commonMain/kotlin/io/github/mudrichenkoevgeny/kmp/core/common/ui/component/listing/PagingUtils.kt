@@ -9,12 +9,6 @@ import androidx.compose.runtime.snapshotFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 
-/**
- * Monitors the scroll position and triggers [onBottomReached] when the user scrolls near the end.
- *
- * @param buffer How many items before the end to trigger the callback.
- * @param onBottomReached Callback to load the next page.
- */
 @Composable
 fun LazyListState.OnBottomReached(
     buffer: Int = 3,

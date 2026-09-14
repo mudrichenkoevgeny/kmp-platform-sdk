@@ -48,7 +48,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottom
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.session.SessionListComponentMock
@@ -155,7 +155,7 @@ private fun Content(
                 onApplyClick = component::onApplyFilters,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Dimens.paddingMedium)
+                    .padding(CoreTheme.dimens.paddingMedium)
             )
         }
 
@@ -164,7 +164,7 @@ private fun Content(
                 onClick = onRevokeAllOthers,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = Dimens.paddingMedium)
+                    .padding(horizontal = CoreTheme.dimens.paddingMedium)
                     .testTag(SessionListTestTags.REVOKE_ALL_OTHERS_BUTTON),
                 enabled = !state.actionLoading,
                 colors = ButtonDefaults.buttonColors(
@@ -180,8 +180,8 @@ private fun Content(
             modifier = Modifier
                 .weight(1f)
                 .testTag(SessionListTestTags.SESSION_LIST),
-            contentPadding = PaddingValues(Dimens.paddingMedium),
-            verticalArrangement = Arrangement.spacedBy(Dimens.paddingSmall)
+            contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
+            verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
         ) {
             items(state.paging.items, key = { it.id.value }) { session ->
                 SessionItem(
@@ -220,7 +220,7 @@ private fun ErrorText(error: AppError?, testTag: String) {
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(Dimens.paddingMedium)
+                    .padding(CoreTheme.dimens.paddingMedium)
                     .fillMaxWidth()
                     .testTag(testTag)
             )

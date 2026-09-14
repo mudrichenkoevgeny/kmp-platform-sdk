@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -13,7 +14,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import kotlinx.coroutines.delay
 
 /**
@@ -44,9 +49,9 @@ fun FullscreenLoading(
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator(
-                modifier = Modifier.size(Dimens.progressIndicatorSizeLarge),
+                modifier = Modifier.size(CoreTheme.dimens.progressIndicatorSizeLarge),
                 color = MaterialTheme.colorScheme.primary,
-                strokeWidth = Dimens.progressIndicatorStrokeWidth
+                strokeWidth = CoreTheme.dimens.progressIndicatorStrokeWidth
             )
         }
     }
@@ -60,4 +65,37 @@ object FullscreenLoadingConfig {
      * Default delay to prevent flickering for fast operations.
      */
     const val DELAY_MILLIS = 250L
+}
+
+@InternalApi
+@ComponentSizePreviews
+@Composable
+private fun FullscreenLoadingComponentSizePreview() {
+    CoreTheme {
+        Surface {
+            FullscreenLoading(delayMillis = 0L)
+        }
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun FullscreenLoadingThemePreview() {
+    CoreTheme {
+        Surface {
+            FullscreenLoading(delayMillis = 0L)
+        }
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FullscreenLoadingFontScalePreview() {
+    CoreTheme {
+        Surface {
+            FullscreenLoading(delayMillis = 0L)
+        }
+    }
 }

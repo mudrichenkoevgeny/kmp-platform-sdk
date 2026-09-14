@@ -11,7 +11,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.junit.runner.RunWith
@@ -32,7 +32,7 @@ class AuthProviderButtonTest {
             MaterialTheme {
                 Box(
                     modifier = Modifier
-                        .padding(Dimens.paddingLarge)
+                        .padding(CoreTheme.dimens.paddingLarge)
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
@@ -55,7 +55,7 @@ class AuthProviderButtonTest {
             MaterialTheme {
                 Box(
                     modifier = Modifier
-                        .padding(Dimens.paddingLarge)
+                        .padding(CoreTheme.dimens.paddingLarge)
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
@@ -78,7 +78,7 @@ class AuthProviderButtonTest {
             MaterialTheme {
                 Box(
                     modifier = Modifier
-                        .padding(Dimens.paddingLarge)
+                        .padding(CoreTheme.dimens.paddingLarge)
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
@@ -101,7 +101,7 @@ class AuthProviderButtonTest {
             MaterialTheme {
                 Box(
                     modifier = Modifier
-                        .padding(Dimens.paddingLarge)
+                        .padding(CoreTheme.dimens.paddingLarge)
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {

@@ -64,7 +64,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.Fullscre
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
@@ -194,7 +194,7 @@ private fun Content(
                 onApplyClick = component::onApplyFilters,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Dimens.paddingMedium)
+                    .padding(CoreTheme.dimens.paddingMedium)
             )
         }
 
@@ -204,8 +204,8 @@ private fun Content(
             modifier = Modifier
                 .fillMaxSize()
                 .testTag(IdentifierListTestTags.IDENTIFIER_LIST),
-            contentPadding = PaddingValues(Dimens.paddingMedium),
-            verticalArrangement = Arrangement.spacedBy(Dimens.paddingSmall)
+            contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
+            verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
         ) {
             items(state.paging.items, key = { it.id.value }) { identifier ->
                 IdentifierItem(
@@ -228,9 +228,9 @@ private fun Content(
                 }
 
                 item {
-                    Spacer(Modifier.height(Dimens.paddingMedium))
+                    Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
                     HorizontalDivider()
-                    Spacer(Modifier.height(Dimens.paddingMedium))
+                    Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
                 }
 
                 item {
@@ -249,7 +249,7 @@ private fun Content(
                 }
 
                 item {
-                    Spacer(Modifier.height(Dimens.paddingMedium))
+                    Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
                 }
 
                 item {
@@ -304,7 +304,7 @@ private fun ChangePasswordDialog(
                     text = "Email: $email",
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Spacer(Modifier.height(Dimens.paddingSmall))
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
                 OutlinedTextField(
                     value = oldPassword,
                     onValueChange = { oldPassword = it },
@@ -314,7 +314,7 @@ private fun ChangePasswordDialog(
                     enabled = enabled,
                     singleLine = true
                 )
-                Spacer(Modifier.height(Dimens.paddingSmall))
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
                 OutlinedTextField(
                     value = newPassword,
                     onValueChange = { newPassword = it },
@@ -365,7 +365,7 @@ private fun AddEmailSection(
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
-        Spacer(Modifier.height(Dimens.paddingSmall))
+        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
         when (state) {
             is IdentifierListScreenState.AddIdentifierState.Idle -> {
@@ -377,7 +377,7 @@ private fun AddEmailSection(
                     enabled = enabled,
                     singleLine = true
                 )
-                Spacer(Modifier.height(Dimens.paddingSmall))
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
                 Button(
                     onClick = onAddClick,
                     modifier = Modifier.fillMaxWidth().testTag(IdentifierListTestTags.ADD_EMAIL_BUTTON),
@@ -406,7 +406,7 @@ private fun AddEmailSection(
                     enabled = enabled,
                     singleLine = true
                 )
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.paddingSmall)) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)) {
                     TextButton(onClick = onCancelClick, modifier = Modifier.weight(1f)) {
                         Text("Cancel")
                     }
@@ -440,7 +440,7 @@ private fun AddPhoneSection(
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
-        Spacer(Modifier.height(Dimens.paddingSmall))
+        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
         when (state) {
             is IdentifierListScreenState.AddIdentifierState.Idle -> {
@@ -453,7 +453,7 @@ private fun AddPhoneSection(
                     enabled = enabled,
                     singleLine = true
                 )
-                Spacer(Modifier.height(Dimens.paddingSmall))
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
                 Button(
                     onClick = onAddClick,
                     modifier = Modifier.fillMaxWidth().testTag(IdentifierListTestTags.ADD_PHONE_BUTTON),
@@ -473,7 +473,7 @@ private fun AddPhoneSection(
                     enabled = enabled,
                     singleLine = true
                 )
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.paddingSmall)) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)) {
                     TextButton(onClick = onCancelClick, modifier = Modifier.weight(1f)) {
                         Text("Cancel")
                     }
@@ -504,7 +504,7 @@ private fun ErrorText(error: AppError?, testTag: String) {
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(Dimens.paddingMedium)
+                    .padding(CoreTheme.dimens.paddingMedium)
                     .fillMaxWidth()
                     .testTag(testTag)
             )

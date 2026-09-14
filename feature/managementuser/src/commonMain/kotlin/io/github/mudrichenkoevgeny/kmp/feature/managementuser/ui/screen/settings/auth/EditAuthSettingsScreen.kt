@@ -45,7 +45,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error.FullscreenError
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
@@ -115,7 +115,7 @@ fun EditAuthSettingsScreen(component: EditAuthSettingsComponent) {
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(padding)
-                        .padding(Dimens.paddingMedium)
+                        .padding(CoreTheme.dimens.paddingMedium)
                         .verticalScroll(rememberScrollState())
                 )
             }
@@ -141,7 +141,7 @@ private fun EditAuthSettingsForm(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium)
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
         Text(
             text = stringResource(Res.string.enabled_auth_providers),
@@ -164,7 +164,7 @@ private fun EditAuthSettingsForm(
                 Text(
                     text = provider.name,
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(start = Dimens.paddingSmall)
+                    modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
                 )
             }
         }
@@ -181,7 +181,7 @@ private fun EditAuthSettingsForm(
             Text(
                 text = stringResource(Res.string.is_registration_enabled),
                 style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(start = Dimens.paddingSmall)
+                modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
             )
         }
 
@@ -302,7 +302,7 @@ private fun ErrorText(error: AppError?, testTag: String) {
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(top = Dimens.paddingSmall)
+                    .padding(top = CoreTheme.dimens.paddingSmall)
                     .testTag(testTag)
             )
         }

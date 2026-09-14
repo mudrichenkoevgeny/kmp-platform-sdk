@@ -7,11 +7,12 @@ plugins {
     // 2. Add alias(libs.plugins.android.kotlin.multiplatform.library)
     // 3. Uncomment androidLibrary block
     // 4. Remove android block
-     id("com.android.library")
+    id("com.android.library")
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose)
     alias(libs.plugins.maven.publish)
+    alias(libs.plugins.roborazzi)
 }
 
 kotlin {
@@ -102,10 +103,13 @@ kotlin {
         androidUnitTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
-            implementation(libs.compose.ui.test)
+            implementation(libs.androidx.compose.ui.test.junit4)
             implementation(libs.androidx.compose.ui.test.manifest)
             implementation(libs.androidx.test.core)
             implementation(libs.robolectric)
+            implementation(libs.roborazzi)
+            implementation(libs.roborazzi.compose)
+            implementation(libs.roborazzi.junit.rule)
         }
 
         wasmJsTest.dependencies {

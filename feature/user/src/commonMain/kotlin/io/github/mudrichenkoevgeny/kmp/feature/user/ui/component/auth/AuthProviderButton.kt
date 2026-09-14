@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
@@ -44,13 +44,13 @@ fun AuthProviderButton(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
-            .height(Dimens.actionButtonHeight),
-        shape = RoundedCornerShape(Dimens.roundedCornerShape),
+            .height(CoreTheme.dimens.actionButtonHeight),
+        shape = RoundedCornerShape(CoreTheme.dimens.roundedCornerShape),
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
-        tonalElevation = Dimens.shadowElevation
+        tonalElevation = CoreTheme.dimens.shadowElevation
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = Dimens.paddingMedium),
+            modifier = Modifier.padding(horizontal = CoreTheme.dimens.paddingMedium),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
@@ -71,10 +71,10 @@ fun AuthProviderButton(
                 painter = painterResource(iconRes),
                 contentDescription = null,
                 tint = tint,
-                modifier = Modifier.size(Dimens.actionButtonIconSize)
+                modifier = Modifier.size(CoreTheme.dimens.actionButtonIconSize)
             )
 
-            Spacer(modifier = Modifier.width(Dimens.paddingSmall))
+            Spacer(modifier = Modifier.width(CoreTheme.dimens.paddingSmall))
 
             val authProviderText = when (authProvider) {
                 UserAuthProvider.EMAIL -> stringResource(Res.string.sign_in_with_email)
@@ -100,7 +100,7 @@ private fun AuthProviderButtonPreview(
     MaterialTheme {
         Box(
             modifier = Modifier
-                .padding(Dimens.paddingLarge)
+                .padding(CoreTheme.dimens.paddingLarge)
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {

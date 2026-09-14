@@ -12,6 +12,7 @@ import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.ClientAppComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.LocalClientAppComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.MainScreen
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.splash.SplashScreen
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
  * Top-level sample UI: shows [SplashScreen] until [ClientAppComponent.isInitialized], then provides
@@ -34,7 +35,9 @@ fun RootContent(clientAppComponent: ClientAppComponent) {
             LocalErrorParser provides clientAppComponent.commonComponent.appErrorParser,
             LocalClientAppComponent provides clientAppComponent
         ) {
-            MainScreen(mainComponent)
+            CoreTheme {
+                MainScreen(mainComponent)
+            }
         }
     } else {
         SplashScreen()

@@ -9,17 +9,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
+import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
-import io.github.mudrichenkoevgeny.kmp.core.common.retry
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -27,7 +31,7 @@ import org.jetbrains.compose.resources.stringResource
  * Shows a loading indicator or an error with a retry button based on [state].
  *
  * @param state Current [PaginationState] of the list.
- * @param onRetry Callback invoked when the retry button is clicked (usually triggers [state.toNextPageLoading]).
+ * @param onRetry Callback invoked when the retry button is clicked.
  */
 @Composable
 fun PagingFooter(
@@ -39,7 +43,7 @@ fun PagingFooter(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(Dimens.paddingMedium),
+            .padding(CoreTheme.dimens.paddingMedium),
         contentAlignment = Alignment.Center
     ) {
         if (state.isNextPageLoading) {
@@ -59,8 +63,8 @@ fun PagingFooter(
 @Composable
 fun PagingLoadingFooter() {
     CircularProgressIndicator(
-        modifier = Modifier.size(Dimens.progressIndicatorSizeSmall),
-        strokeWidth = Dimens.progressIndicatorStrokeWidthSmall,
+        modifier = Modifier.size(CoreTheme.dimens.progressIndicatorSizeSmall),
+        strokeWidth = CoreTheme.dimens.progressIndicatorStrokeWidthSmall,
         color = MaterialTheme.colorScheme.primary
     )
 }
@@ -81,10 +85,43 @@ fun PagingErrorFooter(
             textAlign = TextAlign.Center
         )
         if (error.isRetryable) {
-            Spacer(Modifier.height(Dimens.paddingSmall))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
             TextButton(onClick = onRetry) {
                 Text(text = stringResource(Res.string.retry))
             }
+        }
+    }
+}
+
+@InternalApi
+@ComponentSizePreviews
+@Composable
+private fun PagingLoadingFooterComponentSizePreview() {
+    CoreTheme {
+        Surface {
+            PagingLoadingFooter()
+        }
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun PagingLoadingFooterThemePreview() {
+    CoreTheme {
+        Surface {
+            PagingLoadingFooter()
+        }
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun PagingLoadingFooterFontScalePreview() {
+    CoreTheme {
+        Surface {
+            PagingLoadingFooter()
         }
     }
 }

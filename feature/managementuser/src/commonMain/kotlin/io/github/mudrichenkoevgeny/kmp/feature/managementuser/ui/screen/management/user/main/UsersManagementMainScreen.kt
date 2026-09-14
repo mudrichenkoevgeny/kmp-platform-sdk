@@ -48,7 +48,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottom
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.create_user
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.main.UsersManagementMainComponentMock
@@ -161,7 +161,7 @@ private fun Content(
                 onApplyClick = component::onApplyFilters,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Dimens.paddingMedium)
+                    .padding(CoreTheme.dimens.paddingMedium)
             )
         }
 
@@ -170,8 +170,8 @@ private fun Content(
             modifier = Modifier
                 .weight(1f)
                 .testTag(UsersManagementMainTestTags.USER_LIST),
-            contentPadding = PaddingValues(Dimens.paddingMedium),
-            verticalArrangement = Arrangement.spacedBy(Dimens.paddingSmall)
+            contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
+            verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
         ) {
             items(state.paging.items, key = { it.id.value }) { user ->
                 UserItem(
@@ -209,7 +209,7 @@ private fun ErrorText(error: AppError?, testTag: String) {
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(Dimens.paddingMedium)
+                    .padding(CoreTheme.dimens.paddingMedium)
                     .fillMaxWidth()
                     .testTag(testTag)
             )

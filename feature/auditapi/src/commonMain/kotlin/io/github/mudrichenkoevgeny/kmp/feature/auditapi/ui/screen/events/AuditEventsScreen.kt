@@ -33,7 +33,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottom
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.auditapi.Res
 import io.github.mudrichenkoevgeny.kmp.feature.auditapi.audit_logs_title
 import io.github.mudrichenkoevgeny.kmp.feature.auditapi.ui.component.audit.item.AuditItem
@@ -135,7 +135,7 @@ private fun Content(
                 onApplyClick = component::onApplyFilters,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Dimens.paddingMedium)
+                    .padding(CoreTheme.dimens.paddingMedium)
             )
         }
 
@@ -144,8 +144,8 @@ private fun Content(
             modifier = Modifier
                 .weight(1f)
                 .testTag(AuditEventsTestTags.EVENT_LIST),
-            contentPadding = PaddingValues(Dimens.paddingMedium),
-            verticalArrangement = Arrangement.spacedBy(Dimens.paddingSmall)
+            contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
+            verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
         ) {
             items(state.paging.items, key = { it.id.value }) { event ->
                 AuditItem(

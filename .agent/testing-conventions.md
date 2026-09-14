@@ -48,5 +48,11 @@ This document defines the testing methodology for the `kmp-platform-sdk`. These 
 - **Platform Logic:** For components with platform-specific implementations (e.g., `EncryptedSettings`), verify behavior in both `androidMain` and `commonMain` where possible.
 - **Exclusions:** No UI/Unit tests for Preview-only helpers (`PreviewParameterProvider`, etc.).
 
+## 7. Screenshot Testing (Roborazzi)
+- **Tooling:** Use Roborazzi with Robolectric and `captureAppScreen` utility from `:core:common` (`androidMain`).
+- **Baseline Storage:** Golden reference images must be stored in source control under `src/androidUnitTest/snapshots/images/...` and committed to Git.
+- **Verification:** Run `./gradlew verifyRoborazziDebug` to compare UI against baselines.
+- **Recording:** Run `./gradlew recordRoborazziDebug` to update reference images.
+
 ---
 *Refer to `AGENTS.md` for the full list of project standards.*

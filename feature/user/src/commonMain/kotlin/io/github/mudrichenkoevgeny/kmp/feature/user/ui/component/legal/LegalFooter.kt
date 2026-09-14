@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,7 +15,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.and
 import io.github.mudrichenkoevgeny.kmp.feature.user.legal_agreement_prefix
@@ -60,7 +64,7 @@ fun LegalFooter(
     FlowRow(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = Dimens.paddingMedium),
+            .padding(horizontal = CoreTheme.dimens.paddingMedium),
         horizontalArrangement = Arrangement.Center,
     ) {
         Text(
@@ -110,28 +114,75 @@ private data class LegalFooterPreviewState(
 )
 
 private class LegalFooterPreviewProvider : PreviewParameterProvider<LegalFooterPreviewState> {
-    override val values: Sequence<LegalFooterPreviewState> = sequenceOf(
-        LegalFooterPreviewState(isPrivacyPolicyVisible = true, isTermsOfServiceVisible = false),
-        LegalFooterPreviewState(isPrivacyPolicyVisible = false, isTermsOfServiceVisible = true),
-        LegalFooterPreviewState(isPrivacyPolicyVisible = true, isTermsOfServiceVisible = true),
-        LegalFooterPreviewState(isPrivacyPolicyVisible = false, isTermsOfServiceVisible = false)
+    private val items: List<Pair<String, LegalFooterPreviewState>> = listOf(
+        "Privacy Policy Only" to LegalFooterPreviewState(
+            isPrivacyPolicyVisible = true,
+            isTermsOfServiceVisible = false
+        ),
+        "Terms Of Service Only" to LegalFooterPreviewState(
+            isPrivacyPolicyVisible = false,
+            isTermsOfServiceVisible = true
+        ),
+        "Both Visible" to LegalFooterPreviewState(
+            isPrivacyPolicyVisible = true,
+            isTermsOfServiceVisible = true
+        ),
+        "Both Hidden" to LegalFooterPreviewState(
+            isPrivacyPolicyVisible = false,
+            isTermsOfServiceVisible = false
+        )
     )
+
+    override val values: Sequence<LegalFooterPreviewState> =
+        items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? =
+        items.getOrNull(index)?.first
 }
 
-@Preview(showBackground = true, name = "Narrow", widthDp = 280)
-@Preview(showBackground = true, name = "Standard", widthDp = 400)
 @Composable
-private fun LegalFooterPreview(
-    @PreviewParameter(LegalFooterPreviewProvider::class) state: LegalFooterPreviewState
-) {
-    MaterialTheme {
-        Box(modifier = Modifier.padding(Dimens.paddingLarge)) {
-            LegalFooter(
-                isPrivacyPolicyVisible = state.isPrivacyPolicyVisible,
-                isTermsOfServiceVisible = state.isTermsOfServiceVisible,
-                onPrivacyPolicyClick = {},
-                onTermsOfServiceClick = {}
-            )
+private fun LegalFooterPreviewContent(state: LegalFooterPreviewState) {
+    CoreTheme {
+        Surface {
+            Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
+                LegalFooter(
+                    isPrivacyPolicyVisible = state.isPrivacyPolicyVisible,
+                    isTermsOfServiceVisible = state.isTermsOfServiceVisible,
+                    onPrivacyPolicyClick = {},
+                    onTermsOfServiceClick = {}
+                )
+            }
         }
     }
+}
+
+private val defaultLegalFooterPreviewState = LegalFooterPreviewState(
+    isPrivacyPolicyVisible = true,
+    isTermsOfServiceVisible = true
+)
+
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun LegalFooterStatesPreview(
+    @PreviewParameter(LegalFooterPreviewProvider::class) state: LegalFooterPreviewState
+) {
+    LegalFooterPreviewContent(state = state)
+}
+
+@ComponentSizePreviews
+@Composable
+private fun LegalFooterComponentSizePreview() {
+    LegalFooterPreviewContent(state = defaultLegalFooterPreviewState)
+}
+
+@ThemePreviews
+@Composable
+private fun LegalFooterThemePreview() {
+    LegalFooterPreviewContent(state = defaultLegalFooterPreviewState)
+}
+
+@FontScalePreviews
+@Composable
+private fun LegalFooterFontScalePreview() {
+    LegalFooterPreviewContent(state = defaultLegalFooterPreviewState)
 }

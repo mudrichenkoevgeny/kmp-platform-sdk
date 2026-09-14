@@ -17,7 +17,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_account_status
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_id
@@ -38,15 +38,15 @@ fun UserItem(
             .fillMaxWidth()
             .clickable(onClick = onClick)
             .testTag(UsersManagementMainTestTags.USER_ITEM_PREFIX + user.id.value),
-        elevation = CardDefaults.cardElevation(defaultElevation = Dimens.elevationHeader)
+        elevation = CardDefaults.cardElevation(defaultElevation = CoreTheme.dimens.elevationHeader)
     ) {
-        Column(modifier = Modifier.padding(Dimens.paddingMedium)) {
+        Column(modifier = Modifier.padding(CoreTheme.dimens.paddingMedium)) {
             Text(
                 text = "${stringResource(Res.string.user_id)}: ${user.id.value}",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(Modifier.height(Dimens.paddingSmall))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
             Text(
                 text = "${stringResource(Res.string.user_role)}: ${user.role.name}",
                 style = MaterialTheme.typography.bodySmall

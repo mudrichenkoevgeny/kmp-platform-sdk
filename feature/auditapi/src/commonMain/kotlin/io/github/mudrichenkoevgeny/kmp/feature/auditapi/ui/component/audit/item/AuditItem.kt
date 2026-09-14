@@ -17,7 +17,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.auditapi.Res
 import io.github.mudrichenkoevgeny.kmp.feature.auditapi.audit_event_id
 import io.github.mudrichenkoevgeny.kmp.feature.auditapi.audit_event_status
@@ -48,15 +48,15 @@ fun AuditItem(
             .fillMaxWidth()
             .clickable(onClick = onClick)
             .testTag(AuditEventsTestTags.AUDIT_ITEM_PREFIX + event.id.value),
-        elevation = CardDefaults.cardElevation(defaultElevation = Dimens.elevationHeader)
+        elevation = CardDefaults.cardElevation(defaultElevation = CoreTheme.dimens.elevationHeader)
     ) {
-        Column(modifier = Modifier.padding(Dimens.paddingMedium)) {
+        Column(modifier = Modifier.padding(CoreTheme.dimens.paddingMedium)) {
             Text(
                 text = "${stringResource(Res.string.audit_event_id)}: ${event.id.value}",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(Modifier.height(Dimens.paddingSmall))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
             Text(
                 text = "${stringResource(Res.string.audit_event_status)}: ${event.status}",
                 style = MaterialTheme.typography.bodySmall

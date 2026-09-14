@@ -29,7 +29,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import org.jetbrains.compose.resources.stringResource
@@ -85,7 +85,7 @@ private fun EmailInputContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.paddingLarge),
+                .padding(CoreTheme.dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
@@ -112,7 +112,7 @@ private fun EmailInputContent(
                 )
             }
 
-            Spacer(Modifier.height(Dimens.paddingLarge))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             OutlinedTextField(
                 value = state.email,
@@ -128,7 +128,7 @@ private fun EmailInputContent(
 
             ErrorText(state.actionError, ResetEmailPasswordTestTags.EMAIL_STEP_ERROR_TEXT)
 
-            Spacer(Modifier.height(Dimens.paddingLarge))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             Button(
                 onClick = onSendCodeClick,
@@ -158,7 +158,7 @@ private fun ResetInputContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.paddingLarge),
+                .padding(CoreTheme.dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
@@ -190,11 +190,11 @@ private fun ResetInputContent(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.outline,
                 modifier = Modifier
-                    .padding(top = Dimens.paddingSmall)
+                    .padding(top = CoreTheme.dimens.paddingSmall)
                     .testTag(ResetEmailPasswordTestTags.CODE_SENT_INFO_TEXT)
             )
 
-            Spacer(Modifier.height(Dimens.paddingLarge))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             OutlinedTextField(
                 value = state.code,
@@ -207,7 +207,7 @@ private fun ResetInputContent(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
             )
 
-            Spacer(Modifier.height(Dimens.paddingMedium))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
 
             OutlinedTextField(
                 value = state.newPassword,
@@ -223,7 +223,7 @@ private fun ResetInputContent(
 
             ErrorText(state.actionError, ResetEmailPasswordTestTags.RESET_STEP_ERROR_TEXT)
 
-            Spacer(Modifier.height(Dimens.paddingMedium))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
 
             if (!state.canResendCode) {
                 Text(
@@ -241,7 +241,7 @@ private fun ResetInputContent(
                 }
             }
 
-            Spacer(Modifier.height(Dimens.paddingLarge))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             Button(
                 onClick = onConfirmResetClick,
@@ -278,7 +278,7 @@ private fun ErrorText(error: AppError?, tag: String) {
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(top = Dimens.paddingSmall)
+                    .padding(top = CoreTheme.dimens.paddingSmall)
                     .testTag(tag)
             )
         }

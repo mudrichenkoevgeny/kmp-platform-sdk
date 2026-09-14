@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -28,7 +29,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -49,7 +53,7 @@ fun FullscreenError(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(Dimens.paddingLarge),
+            .padding(CoreTheme.dimens.paddingLarge),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -57,10 +61,10 @@ fun FullscreenError(
             imageVector = Icons.Default.Warning,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.error,
-            modifier = Modifier.size(Dimens.iconButtonSize)
+            modifier = Modifier.size(CoreTheme.dimens.iconButtonSize)
         )
 
-        Spacer(Modifier.height(Dimens.paddingMedium))
+        Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
 
         Text(
             text = error.toLocalizedMessage(),
@@ -70,11 +74,11 @@ fun FullscreenError(
         )
 
         if (error.isRetryable) {
-            Spacer(Modifier.height(Dimens.paddingLarge))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             Button(
                 onClick = onRetry,
-                shape = RoundedCornerShape(Dimens.roundedCornerShape)
+                shape = RoundedCornerShape(CoreTheme.dimens.roundedCornerShape)
             ) {
                 Text(text = stringResource(Res.string.retry))
             }
@@ -82,30 +86,84 @@ fun FullscreenError(
     }
 }
 
+private val defaultFullscreenErrorPreviewState = CommonError.Unknown(isRetryable = true)
+
 @InternalApi
-@Preview(showBackground = true)
+@Preview(showBackground = true, group = "States")
 @Composable
-private fun FullscreenErrorPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            FullscreenError(
-                error = CommonError.Unknown(isRetryable = false),
-                onRetry = {}
-            )
+private fun FullscreenErrorNonRetryablePreview() {
+    CoreTheme {
+        Surface {
+            CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+                FullscreenError(
+                    error = CommonError.Unknown(isRetryable = false),
+                    onRetry = {}
+                )
+            }
         }
     }
 }
 
 @InternalApi
-@Preview(showBackground = true)
+@Preview(showBackground = true, group = "States")
 @Composable
 private fun FullscreenErrorRetryablePreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            FullscreenError(
-                error = CommonError.Unknown(isRetryable = true),
-                onRetry = {}
-            )
+    CoreTheme {
+        Surface {
+            CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+                FullscreenError(
+                    error = defaultFullscreenErrorPreviewState,
+                    onRetry = {}
+                )
+            }
+        }
+    }
+}
+
+@InternalApi
+@ComponentSizePreviews
+@Composable
+private fun FullscreenErrorComponentSizePreview() {
+    CoreTheme {
+        Surface {
+            CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+                FullscreenError(
+                    error = defaultFullscreenErrorPreviewState,
+                    onRetry = {}
+                )
+            }
+        }
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun FullscreenErrorThemePreview() {
+    CoreTheme {
+        Surface {
+            CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+                FullscreenError(
+                    error = defaultFullscreenErrorPreviewState,
+                    onRetry = {}
+                )
+            }
+        }
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FullscreenErrorFontScalePreview() {
+    CoreTheme {
+        Surface {
+            CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+                FullscreenError(
+                    error = defaultFullscreenErrorPreviewState,
+                    onRetry = {}
+                )
+            }
         }
     }
 }

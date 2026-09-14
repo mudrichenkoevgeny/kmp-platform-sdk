@@ -1,29 +1,33 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.ui.theme
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /**
- * Centralized dimension constants used by shared UI components.
+ * Centralized dimension data class used by shared UI components.
  */
-object Dimens {
-    val paddingSmall = 8.dp
-    val paddingMedium = 16.dp
-    val paddingLarge = 24.dp
-    val headerHeight = 64.dp
-    val iconSizeHeader = 32.dp
-    val iconButtonSize = 48.dp
-    val actionButtonHeight = 52.dp
-    val actionButtonIconSize = 20.dp
-    val elevationHeader = 2.dp
-    val roundedCornerShape = 8.dp
-    val shadowElevation = 4.dp
-    val rowHeight = 64.dp
+@Immutable
+data class CoreDimens(
+    val paddingSmall: Dp = 8.dp,
+    val paddingMedium: Dp = 16.dp,
+    val paddingLarge: Dp = 24.dp,
+    val headerHeight: Dp = 64.dp,
+    val iconSizeHeader: Dp = 32.dp,
+    val iconButtonSize: Dp = 48.dp,
+    val actionButtonHeight: Dp = 52.dp,
+    val actionButtonIconSize: Dp = 20.dp,
+    val elevationHeader: Dp = 2.dp,
+    val roundedCornerShape: Dp = 8.dp,
+    val shadowElevation: Dp = 4.dp,
+    val rowHeight: Dp = 64.dp,
+    val progressIndicatorStrokeWidth: Dp = 4.dp,
+    val progressIndicatorStrokeWidthSmall: Dp = 2.dp,
+    val progressIndicatorSizeSmall: Dp = 24.dp,
+    val progressIndicatorSizeLarge: Dp = 52.dp,
+    val qrCodeSize: Dp = 200.dp,
+    val previewContainerHeight: Dp = 300.dp
+)
 
-    val progressIndicatorStrokeWidth = 4.dp
-    val progressIndicatorStrokeWidthSmall = 2.dp
-    val progressIndicatorSizeSmall = 24.dp
-    val progressIndicatorSizeLarge = 52.dp
-
-    val qrCodeSize = 200.dp
-    val previewContainerHeight = 300.dp
-}
+internal val LocalCoreDimens = staticCompositionLocalOf { CoreDimens() }

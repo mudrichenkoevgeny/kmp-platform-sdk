@@ -33,7 +33,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorPar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error.FullscreenError
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth.AuthProviderButton
@@ -91,7 +91,7 @@ private fun LoginWelcomeContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.paddingLarge),
+                .padding(CoreTheme.dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -100,14 +100,14 @@ private fun LoginWelcomeContent(
                 modifier = Modifier.testTag(LoginWelcomeTestTags.TITLE)
             )
 
-            Spacer(Modifier.height(Dimens.paddingLarge))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             state.availableAuthProviders.primary.forEach { provider ->
                 AuthProviderButton(
                     authProvider = provider,
                     onClick = { onLoginClick(provider) },
                     modifier = Modifier
-                        .padding(bottom = Dimens.paddingSmall)
+                        .padding(bottom = CoreTheme.dimens.paddingSmall)
                         .testTag(LoginWelcomeTestTags.getAuthProviderTag(provider))
                 )
             }
@@ -120,7 +120,7 @@ private fun LoginWelcomeContent(
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.outline,
                     modifier = Modifier
-                        .padding(vertical = Dimens.paddingMedium)
+                        .padding(vertical = CoreTheme.dimens.paddingMedium)
                         .testTag(LoginWelcomeTestTags.OR_DIVIDER)
                 )
             }
@@ -143,13 +143,13 @@ private fun LoginWelcomeContent(
                         style = MaterialTheme.typography.labelMedium,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
-                            .padding(top = Dimens.paddingMedium)
+                            .padding(top = CoreTheme.dimens.paddingMedium)
                             .testTag(LoginWelcomeTestTags.ACTION_ERROR_TEXT)
                     )
                 }
             }
 
-            Spacer(Modifier.height(Dimens.paddingLarge))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             LegalFooter(
                 isPrivacyPolicyVisible = state.hasPrivacyPolicy,
@@ -249,7 +249,7 @@ private fun LoginWelcomeScreenContentWithActionLoadingPreview() {
 private fun LoginWelcomeScreenLoadingPreview() {
     MaterialTheme {
         Surface {
-            Box(Modifier.fillMaxWidth().height(Dimens.previewContainerHeight), contentAlignment = Alignment.Center) {
+            Box(Modifier.fillMaxWidth().height(CoreTheme.dimens.previewContainerHeight), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
         }

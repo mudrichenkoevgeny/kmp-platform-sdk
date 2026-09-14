@@ -45,7 +45,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import org.jetbrains.compose.resources.stringResource
@@ -100,7 +100,7 @@ private fun LoginByEmailContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.paddingLarge),
+                .padding(CoreTheme.dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
@@ -127,7 +127,7 @@ private fun LoginByEmailContent(
                 )
             }
 
-            Spacer(Modifier.height(Dimens.paddingLarge))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             OutlinedTextField(
                 value = state.email,
@@ -142,7 +142,7 @@ private fun LoginByEmailContent(
                 singleLine = true
             )
 
-            Spacer(Modifier.height(Dimens.paddingMedium))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
 
             OutlinedTextField(
                 value = state.password,
@@ -182,7 +182,7 @@ private fun LoginByEmailContent(
                 )
             }
 
-            Spacer(Modifier.height(Dimens.paddingLarge))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             Button(
                 onClick = onLoginClick,
@@ -194,7 +194,7 @@ private fun LoginByEmailContent(
                 Text(stringResource(Res.string.login))
             }
 
-            Spacer(Modifier.height(Dimens.paddingMedium))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
 
             if (state.isRegistrationAvailable) {
                 TextButton(
@@ -230,7 +230,7 @@ private fun ErrorText(error: AppError?) {
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(top = Dimens.paddingSmall)
+                    .padding(top = CoreTheme.dimens.paddingSmall)
                     .testTag(LoginByEmailTestTags.ERROR_TEXT)
             )
         }

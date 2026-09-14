@@ -34,7 +34,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessa
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import org.jetbrains.compose.resources.stringResource
@@ -69,10 +69,10 @@ fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
         ) {
             Column(
                 modifier = Modifier
-                    .padding(Dimens.paddingLarge)
+                    .padding(CoreTheme.dimens.paddingLarge)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium)
+                verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
             ) {
                 when (val s = state) {
                     is LoginByPhoneScreenState.PhoneInput -> {

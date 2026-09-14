@@ -41,7 +41,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.totp.LoginByTotpComponentMock
@@ -91,7 +91,7 @@ private fun LoginByTotpContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.paddingLarge),
+                .padding(CoreTheme.dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
@@ -123,7 +123,7 @@ private fun LoginByTotpContent(
                 )
             }
 
-            Spacer(Modifier.height(Dimens.paddingLarge))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             val labelRes = when (state.mode) {
                 LoginByTotpScreenState.Mode.TOTP -> Res.string.totp_code
@@ -150,7 +150,7 @@ private fun LoginByTotpContent(
 
             ErrorText(state.actionError)
 
-            Spacer(Modifier.height(Dimens.paddingLarge))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             Button(
                 onClick = onSubmitClick,
@@ -162,7 +162,7 @@ private fun LoginByTotpContent(
                 Text(stringResource(Res.string.login))
             }
 
-            Spacer(Modifier.height(Dimens.paddingMedium))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
 
             val toggleTextRes = when (state.mode) {
                 LoginByTotpScreenState.Mode.TOTP -> Res.string.use_recovery_code
@@ -201,7 +201,7 @@ private fun ErrorText(error: AppError?) {
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(top = Dimens.paddingSmall)
+                    .padding(top = CoreTheme.dimens.paddingSmall)
                     .testTag(LoginByTotpTestTags.ERROR_TEXT)
             )
         }

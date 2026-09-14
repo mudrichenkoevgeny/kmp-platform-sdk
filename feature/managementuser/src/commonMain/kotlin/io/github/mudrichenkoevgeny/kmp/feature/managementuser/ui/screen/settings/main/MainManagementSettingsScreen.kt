@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
 import org.jetbrains.compose.resources.stringResource
@@ -51,9 +51,9 @@ fun MainManagementSettingsScreen(component: MainManagementSettingsComponent) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(Dimens.paddingMedium)
+                .padding(CoreTheme.dimens.paddingMedium)
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium)
+            verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
         ) {
             Button(
                 onClick = component::onUsersManagementClick,
@@ -113,8 +113,8 @@ private fun MainManagementSettingsPreview() {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(Dimens.paddingMedium),
-                    verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium)
+                        .padding(CoreTheme.dimens.paddingMedium),
+                    verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
                 ) {
                     Button(
                         onClick = {},

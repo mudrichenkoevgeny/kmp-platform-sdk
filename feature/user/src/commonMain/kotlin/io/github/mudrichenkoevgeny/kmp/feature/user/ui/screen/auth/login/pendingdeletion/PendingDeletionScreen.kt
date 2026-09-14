@@ -37,7 +37,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessa
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.account_pending_deletion_desc
 import io.github.mudrichenkoevgeny.kmp.feature.user.account_pending_deletion_title
@@ -71,7 +71,7 @@ fun PendingDeletionScreen(component: PendingDeletionComponent) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Dimens.paddingLarge),
+                    .padding(CoreTheme.dimens.paddingLarge),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Card(
@@ -84,7 +84,7 @@ fun PendingDeletionScreen(component: PendingDeletionComponent) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(Dimens.paddingMedium),
+                            .padding(CoreTheme.dimens.paddingMedium),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
@@ -93,7 +93,7 @@ fun PendingDeletionScreen(component: PendingDeletionComponent) {
                             color = MaterialTheme.colorScheme.error,
                             modifier = Modifier.testTag(PendingDeletionTestTags.CARD_TITLE)
                         )
-                        Spacer(Modifier.height(Dimens.paddingSmall))
+                        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
                         Text(
                             text = stringResource(Res.string.account_pending_deletion_desc),
                             style = MaterialTheme.typography.bodyMedium,
@@ -103,7 +103,7 @@ fun PendingDeletionScreen(component: PendingDeletionComponent) {
                     }
                 }
 
-                Spacer(Modifier.height(Dimens.paddingLarge))
+                Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
                 Button(
                     onClick = component::onRestoreAccountClick,
@@ -115,7 +115,7 @@ fun PendingDeletionScreen(component: PendingDeletionComponent) {
                     Text(text = stringResource(Res.string.restore_account))
                 }
 
-                Spacer(Modifier.height(Dimens.paddingSmall))
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
                 OutlinedButton(
                     onClick = component::onSignOutClick,
@@ -154,7 +154,7 @@ private fun ErrorText(error: AppError?, testTag: String) {
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(top = Dimens.paddingSmall)
+                    .padding(top = CoreTheme.dimens.paddingSmall)
                     .testTag(testTag)
             )
         }

@@ -17,6 +17,7 @@ plugins {
     alias(libs.plugins.maven.publish).apply(false)
     alias(libs.plugins.dependency.analysis).apply(false)
     alias(libs.plugins.jetbrains.kotlin.jvm).apply(false)
+    alias(libs.plugins.roborazzi).apply(false)
 }
 
 subprojects {

@@ -43,7 +43,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error.FullscreenError
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
 import org.jetbrains.compose.resources.stringResource
@@ -112,7 +112,7 @@ fun EditGlobalSettingsScreen(component: EditGlobalSettingsComponent) {
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(padding)
-                        .padding(Dimens.paddingMedium)
+                        .padding(CoreTheme.dimens.paddingMedium)
                         .verticalScroll(rememberScrollState())
                 )
             }
@@ -138,7 +138,7 @@ private fun EditGlobalSettingsForm(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium)
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
         OutlinedTextField(
             value = state.privacyPolicyUrl,
@@ -272,7 +272,7 @@ private fun ToggleRow(
         Text(
             text = label,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(start = Dimens.paddingSmall)
+            modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
         )
     }
 }
@@ -291,7 +291,7 @@ private fun ErrorText(error: AppError?, testTag: String) {
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(top = Dimens.paddingSmall)
+                    .padding(top = CoreTheme.dimens.paddingSmall)
                     .testTag(testTag)
             )
         }

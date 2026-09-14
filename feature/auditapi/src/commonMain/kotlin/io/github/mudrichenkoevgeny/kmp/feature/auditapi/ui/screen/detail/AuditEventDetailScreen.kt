@@ -25,7 +25,7 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error.FullscreenError
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.auditapi.Res
 import io.github.mudrichenkoevgeny.kmp.feature.auditapi.*
 import org.jetbrains.compose.resources.stringResource
@@ -81,9 +81,9 @@ private fun Content(state: AuditEventDetailScreenState.Content) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(Dimens.paddingMedium)
+            .padding(CoreTheme.dimens.paddingMedium)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium)
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
         Text(
             text = "${stringResource(Res.string.audit_event_id)}: ${state.event.id.value}",

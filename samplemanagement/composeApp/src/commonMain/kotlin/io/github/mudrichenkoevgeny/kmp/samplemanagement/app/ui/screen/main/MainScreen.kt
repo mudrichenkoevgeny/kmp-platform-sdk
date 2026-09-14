@@ -18,11 +18,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.Child
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
@@ -31,21 +33,19 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di.LocalManagementAppComponent
-import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home.HomeScreen
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootScreen
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.ManagementSettingsRootScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootScreen
+import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di.LocalManagementAppComponent
+import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home.HomeScreen
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home.HomeScreenComponent
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Sample shell with bottom navigation (mobile) or header actions (web), Decompose stack for tabs, and an
- * optional login dialog slot.
- *
- * @param screenComponent Root Decompose component for home and profile stacks plus login overlay.
- */
 @Composable
 fun MainScreen(screenComponent: MainScreenComponent) {
     val appComponent = LocalManagementAppComponent.current
@@ -74,15 +74,6 @@ fun MainScreen(screenComponent: MainScreenComponent) {
     }
 }
 
-/**
- * Shared layout for tab content: renders the Decompose [ChildStack] inside either mobile scaffold or web header.
- *
- * @param isMobile Chooses bottom bar versus top header navigation chrome.
- * @param screenStack Active stack driving [Children] animation and tab bodies.
- * @param currentDestination Currently selected tab for highlighting.
- * @param destinations Ordered tabs for the mobile bar.
- * @param onDestinationChange Invoked when the user selects a tab.
- */
 @Composable
 fun MainContent(
     isMobile: Boolean,
@@ -162,12 +153,12 @@ private fun WebLayout(
     content: @Composable () -> Unit
 ) {
     Column(Modifier.fillMaxSize()) {
-        Surface(shadowElevation = Dimens.shadowElevation) {
+        Surface(shadowElevation = CoreTheme.dimens.shadowElevation) {
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .height(Dimens.rowHeight)
-                    .padding(horizontal = Dimens.paddingMedium),
+                    .height(CoreTheme.dimens.rowHeight)
+                    .padding(horizontal = CoreTheme.dimens.paddingMedium),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -180,7 +171,7 @@ private fun WebLayout(
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(Dimens.paddingSmall)
+                    horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
                 ) {
                     destinations.filter { it != MainScreenDestination.Home }.forEach { dest ->
                         IconButton(onClick = { onDestinationChange(dest) }) {
@@ -216,30 +207,78 @@ private val screenStackMock = MutableValue(
     )
 )
 
-@Preview
+private class MainScreenPreviewProvider : PreviewParameterProvider<MainScreenDestination> {
+    private val items: List<Pair<String, MainScreenDestination>> = listOf(
+        "Home Tab Active" to MainScreenDestination.Home,
+        "Profile Tab Active" to MainScreenDestination.Profile,
+        "Settings Tab Active" to MainScreenDestination.Settings
+    )
+
+    override val values: Sequence<MainScreenDestination> =
+        items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? =
+        items.getOrNull(index)?.first
+}
+
 @Composable
-private fun MobileMainScreenPreview() {
-    MaterialTheme {
+private fun MainScreenPreviewContent(
+    destination: MainScreenDestination,
+    isMobile: Boolean
+) {
+    Surface {
         MainContent(
-            isMobile = true,
+            isMobile = isMobile,
             screenStack = screenStackMock,
-            currentDestination = MainScreenDestination.Home,
+            currentDestination = destination,
             destinations = MainScreenDestination.allDestinations,
             onDestinationChange = { }
         )
     }
 }
 
-@Preview
+@Preview(showBackground = true, group = "States")
 @Composable
-private fun WebMainScreenPreview() {
-    MaterialTheme {
-        MainContent(
-            isMobile = false,
-            screenStack = screenStackMock,
-            currentDestination = MainScreenDestination.Home,
-            destinations = MainScreenDestination.allDestinations,
-            onDestinationChange = { }
+private fun MainScreenStatesPreview(
+    @PreviewParameter(MainScreenPreviewProvider::class) destination: MainScreenDestination
+) {
+    ScreenPreviewContainer { isMobile ->
+        MainScreenPreviewContent(
+            destination = destination,
+            isMobile = isMobile
+        )
+    }
+}
+
+@ScreenSizePreviews
+@Composable
+private fun MainScreenAdaptivePreview() {
+    ScreenPreviewContainer { isMobile ->
+        MainScreenPreviewContent(
+            destination = MainScreenDestination.Home,
+            isMobile = isMobile
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun MainScreenThemePreview() {
+    ScreenPreviewContainer { isMobile ->
+        MainScreenPreviewContent(
+            destination = MainScreenDestination.Home,
+            isMobile = isMobile
+        )
+    }
+}
+
+@FontScalePreviews
+@Composable
+private fun MainScreenFontScalePreview() {
+    ScreenPreviewContainer { isMobile ->
+        MainScreenPreviewContent(
+            destination = MainScreenDestination.Home,
+            isMobile = isMobile
         )
     }
 }

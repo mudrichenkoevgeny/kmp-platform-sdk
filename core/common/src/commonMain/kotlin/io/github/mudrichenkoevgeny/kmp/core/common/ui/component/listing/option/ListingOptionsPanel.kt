@@ -25,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.BooleanListingFilterDefinition
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.BooleanListingFilterState
@@ -41,7 +40,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.option.ListingOptionsConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortDefinition
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -56,7 +58,7 @@ fun ListingOptionsPanel(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium)
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
         if (config.sortOptions.isNotEmpty()) {
             ListingSortSection(
@@ -94,7 +96,7 @@ private fun ListingSortSection(
 
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(Dimens.paddingSmall),
+        horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ExposedDropdownMenuBox(
@@ -165,7 +167,7 @@ private fun ListingFiltersSection(
     onFilterChanged: (String, ListingFilterState?) -> Unit
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(Dimens.paddingMedium),
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium),
         modifier = Modifier.fillMaxWidth()
     ) {
         filters.forEach { filter ->
@@ -187,7 +189,7 @@ private fun ListingFilterItem(
     onFilterChanged: (ListingFilterState?) -> Unit
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(Dimens.paddingSmall),
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall),
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
@@ -240,7 +242,7 @@ private fun ListingFilterItem(
                     stringResource(Res.string.ui_common_no)
                 }
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(Dimens.paddingSmall)
+                    horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
                 ) {
                     FilterChip(
                         selected = booleanState?.value == true,
@@ -319,8 +321,8 @@ private fun ListingChoiceChips(
     onSelectionChanged: (Set<String>) -> Unit
 ) {
     FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(Dimens.paddingSmall),
-        verticalArrangement = Arrangement.spacedBy(Dimens.paddingSmall),
+        horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall),
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall),
         modifier = Modifier.fillMaxWidth()
     ) {
         filter.options.forEach { option ->
@@ -345,10 +347,72 @@ private fun ListingChoiceChips(
     }
 }
 
-@Preview(showBackground = true)
+@ComponentSizePreviews
 @Composable
-private fun ListingOptionsPanelPreview() {
-    MaterialTheme {
+private fun ListingOptionsPanelComponentSizePreview() {
+    CoreTheme {
+        Surface {
+            ListingOptionsPanel(
+                config = ListingOptionsConfig(
+                    sortOptions = listOf(
+                        ListingSortDefinition(
+                            ListingOptionsPanelTestData.SORT_ID_CREATED_AT,
+                            ListingOptionsPanelTestData.SORT_TITLE_CREATED_AT
+                        )
+                    ),
+                    filters = listOf(
+                        TextListingFilterDefinition(
+                            ListingOptionsPanelTestData.FILTER_ID_ACTION,
+                            ListingOptionsPanelTestData.FILTER_TITLE_ACTION,
+                            ListingOptionsPanelTestData.FILTER_PLACEHOLDER_SEARCH
+                        )
+                    )
+                ),
+                sortState = ListingSortState(ListingOptionsPanelTestData.SORT_ID_CREATED_AT, false),
+                filterStates = emptyMap(),
+                onSortChanged = {},
+                onFilterChanged = { _, _ -> },
+                onApplyClick = {}
+            )
+        }
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun ListingOptionsPanelThemePreview() {
+    CoreTheme {
+        Surface {
+            ListingOptionsPanel(
+                config = ListingOptionsConfig(
+                    sortOptions = listOf(
+                        ListingSortDefinition(
+                            ListingOptionsPanelTestData.SORT_ID_CREATED_AT,
+                            ListingOptionsPanelTestData.SORT_TITLE_CREATED_AT
+                        )
+                    ),
+                    filters = listOf(
+                        TextListingFilterDefinition(
+                            ListingOptionsPanelTestData.FILTER_ID_ACTION,
+                            ListingOptionsPanelTestData.FILTER_TITLE_ACTION,
+                            ListingOptionsPanelTestData.FILTER_PLACEHOLDER_SEARCH
+                        )
+                    )
+                ),
+                sortState = ListingSortState(ListingOptionsPanelTestData.SORT_ID_CREATED_AT, false),
+                filterStates = emptyMap(),
+                onSortChanged = {},
+                onFilterChanged = { _, _ -> },
+                onApplyClick = {}
+            )
+        }
+    }
+}
+
+@FontScalePreviews
+@Composable
+private fun ListingOptionsPanelFontScalePreview() {
+    CoreTheme {
         Surface {
             ListingOptionsPanel(
                 config = ListingOptionsConfig(

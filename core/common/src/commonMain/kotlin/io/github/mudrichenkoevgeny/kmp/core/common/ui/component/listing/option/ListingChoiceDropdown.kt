@@ -24,11 +24,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ChoiceListingFilterDefinition
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterChoiceOption
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.Dimens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,8 +81,8 @@ fun ListingChoiceDropdown(
             }
         ) {
             Column(
-                modifier = Modifier.padding(vertical = Dimens.paddingSmall),
-                verticalArrangement = Arrangement.spacedBy(Dimens.paddingSmall)
+                modifier = Modifier.padding(vertical = CoreTheme.dimens.paddingSmall),
+                verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
             ) {
                 if (filter.isSearchable || filter.options.size > 8) {
                     OutlinedTextField(
@@ -89,7 +91,7 @@ fun ListingChoiceDropdown(
                         placeholder = { Text(text = stringResource(Res.string.ui_common_search_placeholder)) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = Dimens.paddingMedium)
+                            .padding(horizontal = CoreTheme.dimens.paddingMedium)
                     )
                 }
 
@@ -97,7 +99,7 @@ fun ListingChoiceDropdown(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = Dimens.paddingMedium),
+                            .padding(horizontal = CoreTheme.dimens.paddingMedium),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -162,10 +164,64 @@ fun ListingChoiceDropdown(
     }
 }
 
-@Preview(showBackground = true)
+@ComponentSizePreviews
 @Composable
-private fun ListingChoiceDropdownPreview() {
-    MaterialTheme {
+private fun ListingChoiceDropdownComponentSizePreview() {
+    CoreTheme {
+        Surface {
+            ListingChoiceDropdown(
+                filter = ChoiceListingFilterDefinition(
+                    id = ListingChoiceDropdownTestData.FILTER_ID_STATUS,
+                    title = ListingChoiceDropdownTestData.FILTER_TITLE_STATUS,
+                    options = listOf(
+                        ListingFilterChoiceOption(
+                            ListingChoiceDropdownTestData.OPTION_ACTIVE_ID,
+                            ListingChoiceDropdownTestData.OPTION_ACTIVE_TITLE
+                        ),
+                        ListingFilterChoiceOption(
+                            ListingChoiceDropdownTestData.OPTION_INACTIVE_ID,
+                            ListingChoiceDropdownTestData.OPTION_INACTIVE_TITLE
+                        )
+                    )
+                ),
+                selectedIds = setOf(ListingChoiceDropdownTestData.OPTION_ACTIVE_ID),
+                onSelectionChanged = {}
+            )
+        }
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun ListingChoiceDropdownThemePreview() {
+    CoreTheme {
+        Surface {
+            ListingChoiceDropdown(
+                filter = ChoiceListingFilterDefinition(
+                    id = ListingChoiceDropdownTestData.FILTER_ID_STATUS,
+                    title = ListingChoiceDropdownTestData.FILTER_TITLE_STATUS,
+                    options = listOf(
+                        ListingFilterChoiceOption(
+                            ListingChoiceDropdownTestData.OPTION_ACTIVE_ID,
+                            ListingChoiceDropdownTestData.OPTION_ACTIVE_TITLE
+                        ),
+                        ListingFilterChoiceOption(
+                            ListingChoiceDropdownTestData.OPTION_INACTIVE_ID,
+                            ListingChoiceDropdownTestData.OPTION_INACTIVE_TITLE
+                        )
+                    )
+                ),
+                selectedIds = setOf(ListingChoiceDropdownTestData.OPTION_ACTIVE_ID),
+                onSelectionChanged = {}
+            )
+        }
+    }
+}
+
+@FontScalePreviews
+@Composable
+private fun ListingChoiceDropdownFontScalePreview() {
+    CoreTheme {
         Surface {
             ListingChoiceDropdown(
                 filter = ChoiceListingFilterDefinition(

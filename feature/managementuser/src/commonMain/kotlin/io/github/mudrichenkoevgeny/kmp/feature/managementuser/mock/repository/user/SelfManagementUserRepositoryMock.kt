@@ -41,6 +41,10 @@ open class SelfManagementUserRepositoryMock : UserRepository {
         )
     )
 
+    override suspend fun clearSession() {
+        _currentUser.value = null
+    }
+
     private fun handleUpdate(): AppResult<UserDetails> {
         val result = resultProvider()
         if (result is AppResult.Success) {
