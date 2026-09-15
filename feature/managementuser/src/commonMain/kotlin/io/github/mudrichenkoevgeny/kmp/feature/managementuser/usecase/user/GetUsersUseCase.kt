@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.user.Ma
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.permission.PermissionCode
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
@@ -26,6 +27,7 @@ class GetUsersUseCase(
      * @param roles Filters users by their assigned role types.
      * @param accountStatuses Filters users by current account statuses.
      * @param accountStatusesBeforeDeletion Filters users by status held prior to scheduled deletion.
+     * @param accountLockoutTypes Filters users by account lockout state types.
      * @param authorityLevelFrom Lower bound filter for authority level.
      * @param authorityLevelTo Upper bound filter for authority level.
      * @param isTotpEnabled Filters users by whether TOTP second-factor authentication is active.
@@ -40,6 +42,7 @@ class GetUsersUseCase(
         roles: List<UserRole>? = null,
         accountStatuses: List<UserAccountStatus>? = null,
         accountStatusesBeforeDeletion: List<UserAccountStatus>? = null,
+        accountLockoutTypes: List<AccountLockoutType>? = null,
         authorityLevelFrom: Int? = null,
         authorityLevelTo: Int? = null,
         isTotpEnabled: Boolean? = null,
@@ -53,6 +56,7 @@ class GetUsersUseCase(
             roles = roles,
             accountStatuses = accountStatuses,
             accountStatusesBeforeDeletion = accountStatusesBeforeDeletion,
+            accountLockoutTypes = accountLockoutTypes,
             authorityLevelFrom = authorityLevelFrom,
             authorityLevelTo = authorityLevelTo,
             isTotpEnabled = isTotpEnabled,

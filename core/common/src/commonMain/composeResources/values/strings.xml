@@ -68,4 +68,9 @@
     <string name="ui_common_identifier">Identifier</string>
     <string name="ui_common_client_type">Client Type</string>
     <string name="ui_common_auth_provider">Auth Provider</string>
+    <string name="ui_common_lockout_type">Lockout Type</string>
+    <string name="ui_common_lockout_until">Lockout Until</string>
+    <string name="ui_common_lockout_none">None</string>
+    <string name="ui_common_lockout_indefinite">Indefinite</string>
+    <string name="ui_common_lockout_temporary">Temporary</string>
 </resources>

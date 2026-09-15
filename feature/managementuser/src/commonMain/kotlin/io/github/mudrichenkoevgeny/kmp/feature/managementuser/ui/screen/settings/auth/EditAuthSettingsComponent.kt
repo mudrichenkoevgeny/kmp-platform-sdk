@@ -28,8 +28,11 @@ interface EditAuthSettingsComponent {
     /** Updates max external provider identifiers field. */
     fun onMaxIdentifiersPerExternalProviderChanged(value: String)
 
-    /** Updates max active sessions field. */
-    fun onMaxActiveSessionsChanged(value: String)
+    /** Updates max active sessions for open user field. */
+    fun onMaxActiveSessionsForOpenUserChanged(value: String)
+
+    /** Updates max active sessions for management user field. */
+    fun onMaxActiveSessionsForManagementUserChanged(value: String)
 
     /** Updates access token expiration seconds field. */
     fun onAccessTokenExpirationSecondsChanged(value: String)
@@ -37,11 +40,38 @@ interface EditAuthSettingsComponent {
     /** Updates refresh token expiration seconds field. */
     fun onRefreshTokenExpirationSecondsChanged(value: String)
 
-    /** Updates account deletion delay seconds field. */
-    fun onAccountDeletionDelaySecondsChanged(value: String)
+    /** Updates account deletion grace period seconds field. */
+    fun onAccountDeletionGracePeriodSecondsChanged(value: String)
+
+    /** Updates account deletion check interval seconds field. */
+    fun onAccountDeletionCheckIntervalSecondsChanged(value: String)
 
     /** Toggles registration enabled. */
     fun onRegistrationEnabledToggled(enabled: Boolean)
+
+    /** Toggles open email blacklist. */
+    fun onOpenEmailBlacklistEnabledToggled(enabled: Boolean)
+
+    /** Updates open email blacklist value. */
+    fun onOpenEmailBlacklistChanged(value: String)
+
+    /** Toggles open email whitelist. */
+    fun onOpenEmailWhitelistEnabledToggled(enabled: Boolean)
+
+    /** Updates open email whitelist value. */
+    fun onOpenEmailWhitelistChanged(value: String)
+
+    /** Toggles management email blacklist. */
+    fun onManagementEmailBlacklistEnabledToggled(enabled: Boolean)
+
+    /** Updates management email blacklist value. */
+    fun onManagementEmailBlacklistChanged(value: String)
+
+    /** Toggles management email whitelist. */
+    fun onManagementEmailWhitelistEnabledToggled(enabled: Boolean)
+
+    /** Updates management email whitelist value. */
+    fun onManagementEmailWhitelistChanged(value: String)
 
     /** Saves updated auth settings to the backend. */
     fun onSaveClick()

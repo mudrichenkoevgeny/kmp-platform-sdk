@@ -4,6 +4,7 @@
     <string name="error_user_invalid_refresh_token">The refresh token is invalid.</string>
     <string name="error_user_invalid_session">The session is invalid.</string>
     <string name="error_user_blocked">This account has been blocked.</string>
+    <string name="error_user_blocked_until">This account has been blocked until %1$s.</string>
     <string name="error_user_read_only">This account is read-only.</string>
     <string name="error_user_security_hold">This account is temporarily restricted for security reasons.</string>
     <string name="error_user_pending_deletion">This account is pending deletion and cannot be used.</string>
@@ -23,6 +24,7 @@
     <string name="error_user_identifier_limit_reached_args">The limit of %1$s identifiers for "%2$s" has been reached.</string>
     <string name="error_user_total_identifiers_limit_reached">The maximum total limit of identifiers has been reached.</string>
     <string name="error_user_total_identifiers_limit_reached_args">The maximum total limit of %1$s identifiers per account has been reached.</string>
+    <string name="error_user_email_not_allowed">The email address or domain is not permitted by restriction policy.</string>
 
     <string name="login">Login</string>
     <string name="login_with">Login with:</string>
@@ -119,4 +121,8 @@
     <string name="and">and</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="terms_of_service">Terms of service</string>
+    <string name="email_prefix">Email: %1$s</string>
+    <string name="phone_prefix">Phone: %1$s</string>
+    <string name="cancel">Cancel</string>
+    <string name="error_user_registration_disabled">Registration is currently disabled</string>
 </resources>

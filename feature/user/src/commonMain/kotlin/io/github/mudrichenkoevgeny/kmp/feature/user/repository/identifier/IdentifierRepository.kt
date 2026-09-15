@@ -73,7 +73,7 @@ interface IdentifierRepository {
      */
     suspend fun addUserIdentifierExternalAuthProvider(
         authProvider: String,
-        token: String
+        externalProviderToken: String
     ): AppResult<UserIdentifier>
 
     /**

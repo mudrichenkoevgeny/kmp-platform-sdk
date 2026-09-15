@@ -10,6 +10,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.setti
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.AvailableAuthProviders
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.ManagementAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.emailrestriction.EmailRestrictionPolicy
 import kotlinx.coroutines.launch
 
 /**
@@ -48,11 +49,21 @@ class EditAuthSettingsComponentImpl(
                         maxEmailIdentifiers = settings.maxEmailIdentifiers.toString(),
                         maxPhoneIdentifiers = settings.maxPhoneIdentifiers.toString(),
                         maxIdentifiersPerExternalProvider = settings.maxIdentifiersPerExternalProvider.toString(),
-                        maxActiveSessions = settings.maxActiveSessions.toString(),
+                        maxActiveSessionsForOpenUser = settings.maxActiveSessionsForOpenUser.toString(),
+                        maxActiveSessionsForManagementUser = settings.maxActiveSessionsForManagementUser.toString(),
                         accessTokenExpirationSeconds = settings.accessTokenExpirationSeconds.toString(),
                         refreshTokenExpirationSeconds = settings.refreshTokenExpirationSeconds.toString(),
-                        accountDeletionDelaySeconds = settings.accountDeletionDelaySeconds.toString(),
-                        isRegistrationEnabled = settings.isRegistrationEnabled
+                        accountDeletionGracePeriodSeconds = settings.accountDeletionGracePeriodSeconds.toString(),
+                        accountDeletionCheckIntervalSeconds = settings.accountDeletionCheckIntervalSeconds.toString(),
+                        isRegistrationEnabled = settings.isRegistrationEnabled,
+                        openEmailBlacklistEnabled = settings.openEmailRestrictionPolicy.isBlacklistEnabled,
+                        openEmailBlacklist = settings.openEmailRestrictionPolicy.blacklist.joinToString(","),
+                        openEmailWhitelistEnabled = settings.openEmailRestrictionPolicy.isWhitelistEnabled,
+                        openEmailWhitelist = settings.openEmailRestrictionPolicy.whitelist.joinToString(","),
+                        managementEmailBlacklistEnabled = settings.managementEmailRestrictionPolicy.isBlacklistEnabled,
+                        managementEmailBlacklist = settings.managementEmailRestrictionPolicy.blacklist.joinToString(","),
+                        managementEmailWhitelistEnabled = settings.managementEmailRestrictionPolicy.isWhitelistEnabled,
+                        managementEmailWhitelist = settings.managementEmailRestrictionPolicy.whitelist.joinToString(",")
                     )
                 }
                 is AppResult.Error -> EditAuthSettingsScreenState.Error(result.error)
@@ -87,8 +98,12 @@ class EditAuthSettingsComponentImpl(
         updateContent { copy(maxIdentifiersPerExternalProvider = value, saveError = null) }
     }
 
-    override fun onMaxActiveSessionsChanged(value: String) {
-        updateContent { copy(maxActiveSessions = value, saveError = null) }
+    override fun onMaxActiveSessionsForOpenUserChanged(value: String) {
+        updateContent { copy(maxActiveSessionsForOpenUser = value, saveError = null) }
+    }
+
+    override fun onMaxActiveSessionsForManagementUserChanged(value: String) {
+        updateContent { copy(maxActiveSessionsForManagementUser = value, saveError = null) }
     }
 
     override fun onAccessTokenExpirationSecondsChanged(value: String) {
@@ -99,12 +114,48 @@ class EditAuthSettingsComponentImpl(
         updateContent { copy(refreshTokenExpirationSeconds = value, saveError = null) }
     }
 
-    override fun onAccountDeletionDelaySecondsChanged(value: String) {
-        updateContent { copy(accountDeletionDelaySeconds = value, saveError = null) }
+    override fun onAccountDeletionGracePeriodSecondsChanged(value: String) {
+        updateContent { copy(accountDeletionGracePeriodSeconds = value, saveError = null) }
+    }
+
+    override fun onAccountDeletionCheckIntervalSecondsChanged(value: String) {
+        updateContent { copy(accountDeletionCheckIntervalSeconds = value, saveError = null) }
     }
 
     override fun onRegistrationEnabledToggled(enabled: Boolean) {
         updateContent { copy(isRegistrationEnabled = enabled, saveError = null) }
+    }
+
+    override fun onOpenEmailBlacklistEnabledToggled(enabled: Boolean) {
+        updateContent { copy(openEmailBlacklistEnabled = enabled, saveError = null) }
+    }
+
+    override fun onOpenEmailBlacklistChanged(value: String) {
+        updateContent { copy(openEmailBlacklist = value, saveError = null) }
+    }
+
+    override fun onOpenEmailWhitelistEnabledToggled(enabled: Boolean) {
+        updateContent { copy(openEmailWhitelistEnabled = enabled, saveError = null) }
+    }
+
+    override fun onOpenEmailWhitelistChanged(value: String) {
+        updateContent { copy(openEmailWhitelist = value, saveError = null) }
+    }
+
+    override fun onManagementEmailBlacklistEnabledToggled(enabled: Boolean) {
+        updateContent { copy(managementEmailBlacklistEnabled = enabled, saveError = null) }
+    }
+
+    override fun onManagementEmailBlacklistChanged(value: String) {
+        updateContent { copy(managementEmailBlacklist = value, saveError = null) }
+    }
+
+    override fun onManagementEmailWhitelistEnabledToggled(enabled: Boolean) {
+        updateContent { copy(managementEmailWhitelistEnabled = enabled, saveError = null) }
+    }
+
+    override fun onManagementEmailWhitelistChanged(value: String) {
+        updateContent { copy(managementEmailWhitelist = value, saveError = null) }
     }
 
     private inline fun updateContent(transform: EditAuthSettingsScreenState.Content.() -> EditAuthSettingsScreenState.Content) {
@@ -129,11 +180,25 @@ class EditAuthSettingsComponentImpl(
                 maxEmailIdentifiers = current.maxEmailIdentifiers.toIntOrNull() ?: 5,
                 maxPhoneIdentifiers = current.maxPhoneIdentifiers.toIntOrNull() ?: 5,
                 maxIdentifiersPerExternalProvider = current.maxIdentifiersPerExternalProvider.toIntOrNull() ?: 2,
-                maxActiveSessions = current.maxActiveSessions.toIntOrNull() ?: 3,
+                maxActiveSessionsForOpenUser = current.maxActiveSessionsForOpenUser.toIntOrNull() ?: 3,
+                maxActiveSessionsForManagementUser = current.maxActiveSessionsForManagementUser.toIntOrNull() ?: 5,
                 accessTokenExpirationSeconds = current.accessTokenExpirationSeconds.toIntOrNull() ?: 3600,
                 refreshTokenExpirationSeconds = current.refreshTokenExpirationSeconds.toIntOrNull() ?: 86400,
-                accountDeletionDelaySeconds = current.accountDeletionDelaySeconds.toIntOrNull() ?: 604800,
-                isRegistrationEnabled = current.isRegistrationEnabled
+                accountDeletionGracePeriodSeconds = current.accountDeletionGracePeriodSeconds.toIntOrNull() ?: 604800,
+                accountDeletionCheckIntervalSeconds = current.accountDeletionCheckIntervalSeconds.toIntOrNull() ?: 86400,
+                isRegistrationEnabled = current.isRegistrationEnabled,
+                openEmailRestrictionPolicy = EmailRestrictionPolicy(
+                    isBlacklistEnabled = current.openEmailBlacklistEnabled,
+                    blacklist = current.openEmailBlacklist.split(",").map { it.trim() }.filter { it.isNotBlank() },
+                    isWhitelistEnabled = current.openEmailWhitelistEnabled,
+                    whitelist = current.openEmailWhitelist.split(",").map { it.trim() }.filter { it.isNotBlank() }
+                ),
+                managementEmailRestrictionPolicy = EmailRestrictionPolicy(
+                    isBlacklistEnabled = current.managementEmailBlacklistEnabled,
+                    blacklist = current.managementEmailBlacklist.split(",").map { it.trim() }.filter { it.isNotBlank() },
+                    isWhitelistEnabled = current.managementEmailWhitelistEnabled,
+                    whitelist = current.managementEmailWhitelist.split(",").map { it.trim() }.filter { it.isNotBlank() }
+                )
             )
 
             val saveResult = saveRemoteAuthSettingsUseCase(settings)

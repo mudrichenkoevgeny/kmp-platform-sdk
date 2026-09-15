@@ -24,6 +24,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.auditapi.audit_event_status
 import io.github.mudrichenkoevgeny.kmp.feature.auditapi.ui.screen.events.AuditEventsTestTags
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEvent
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditValueSensitivity
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.action.UserAuditActionType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
@@ -73,10 +74,16 @@ private fun AuditItemPreview() {
         Surface {
             AuditItem(
                 event = AuditEvent(
+                    actorId = null,
                     actorType = AuditActorType.USER,
+                    actorUserRole = null,
                     action = UserAuditActionType.MANAGEMENT_UPDATE_USER,
                     resource = UserAuditResourceType.USER,
+                    resourceId = null,
+                    resourceValueSensitivity = AuditValueSensitivity.NON_SENSITIVE,
                     status = AuditStatus.SUCCESS,
+                    metadata = emptySet(),
+                    message = null,
                     createdAt = Instant.fromEpochMilliseconds(0)
                 ),
                 onClick = {}

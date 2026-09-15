@@ -94,10 +94,10 @@ class OpenIdentifierRepositoryImpl(
 
     override suspend fun addUserIdentifierExternalAuthProvider(
         authProvider: String,
-        token: String
+        externalProviderToken: String
     ): AppResult<UserIdentifier> {
         return openIdentifiersApi.addUserIdentifierExternalAuthProvider(
-            AddUserIdentifierExternalAuthProviderRequest(authProvider, token)
+            AddUserIdentifierExternalAuthProviderRequest(authProvider, externalProviderToken)
         ).mapSuccess { payload ->
             val identifier = payload.toUserIdentifier()
             userStorage.addUserIdentifier(identifier)

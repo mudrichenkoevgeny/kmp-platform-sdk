@@ -19,6 +19,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUsersUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
@@ -123,16 +124,16 @@ class UsersManagementMainComponentImpl(
         filterStates: Map<String, ListingFilterState>?
     ) {
         val sortOrder = if (sortState?.isAscending == true) SortOrder.ASC else SortOrder.DESC
-        val sortBy = if (sortState?.optionId == "created_at") {
-            UserSortValues.UserSortBy.CREATED_AT
-        } else {
-            null
+        val sortBy = sortState?.optionId?.let { optionId ->
+            runCatching { UserSortValues.UserSortBy.valueOf(optionId) }.getOrNull()
         }
 
         val roles = (filterStates?.get(UserFilterValues.UserFilterValues.ROLE) as? ChoiceListingFilterState)
             ?.selectedIds?.map { UserRole.valueOf(it) }
         val accountStatuses = (filterStates?.get(UserFilterValues.UserFilterValues.ACCOUNT_STATUS) as? ChoiceListingFilterState)
             ?.selectedIds?.map { UserAccountStatus.valueOf(it) }
+        val accountLockoutTypes = (filterStates?.get(UserFilterValues.UserFilterValues.ACCOUNT_LOCKOUT_TYPE) as? ChoiceListingFilterState)
+            ?.selectedIds?.map { AccountLockoutType.valueOf(it) }
         val isTotpEnabled = (filterStates?.get(UserFilterValues.UserFilterValues.IS_TOTP_ENABLED) as? BooleanListingFilterState)
             ?.value
         val authorityLevelFrom = (filterStates?.get(UserFilterValues.UserFilterValues.AUTHORITY_LEVEL_FROM) as? NumberListingFilterState)
@@ -148,6 +149,7 @@ class UsersManagementMainComponentImpl(
                 sortOrder = sortOrder,
                 roles = roles,
                 accountStatuses = accountStatuses,
+                accountLockoutTypes = accountLockoutTypes,
                 isTotpEnabled = isTotpEnabled,
                 authorityLevelFrom = authorityLevelFrom,
                 authorityLevelTo = authorityLevelTo

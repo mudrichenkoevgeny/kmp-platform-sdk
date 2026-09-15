@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.permission.PermissionCode
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
@@ -43,6 +44,7 @@ class KtorManagementUserApi(
         roles: List<UserRole>?,
         accountStatuses: List<UserAccountStatus>?,
         accountStatusesBeforeDeletion: List<UserAccountStatus>?,
+        accountLockoutTypes: List<AccountLockoutType>?,
         authorityLevelFrom: Int?,
         authorityLevelTo: Int?,
         isTotpEnabled: Boolean?,
@@ -63,6 +65,12 @@ class KtorManagementUserApi(
                 parameter(
                     UserFilterValues.UserFilterValues.ACCOUNT_STATUS_BEFORE_DELETION,
                     accountStatusBeforeDeletion.serialName
+                )
+            }
+            accountLockoutTypes?.forEach { accountLockoutType ->
+                parameter(
+                    UserFilterValues.UserFilterValues.ACCOUNT_LOCKOUT_TYPE,
+                    accountLockoutType.serialName
                 )
             }
             parameter(UserFilterValues.UserFilterValues.AUTHORITY_LEVEL_FROM, authorityLevelFrom)

@@ -77,7 +77,7 @@ class SelfManagementIdentifierRepositoryImpl(
 
     override suspend fun addUserIdentifierExternalAuthProvider(
         authProvider: String,
-        token: String
+        externalProviderToken: String
     ): AppResult<UserIdentifier> {
         return methodNotSupported()
     }

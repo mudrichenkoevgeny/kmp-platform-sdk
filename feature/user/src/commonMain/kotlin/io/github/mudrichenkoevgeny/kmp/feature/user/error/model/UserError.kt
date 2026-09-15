@@ -63,4 +63,11 @@ sealed class UserError(
         code = ClientUserErrorCodes.TOO_MANY_CONFIRMATION_REQUESTS,
         isRetryable = false
     )
+
+    /** Registration is disabled by administrator in auth settings. */
+    class RegistrationDisabled : UserError(
+        id = ErrorId.generate(),
+        code = ClientUserErrorCodes.REGISTRATION_DISABLED,
+        isRetryable = false
+    )
 }

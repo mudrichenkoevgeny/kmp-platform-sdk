@@ -73,6 +73,9 @@ object SecurityErrorParser : AppErrorParser {
             SecurityErrorCodes.INVALID_MFA_TOKEN ->
                 stringResource(Res.string.error_security_invalid_mfa_token)
 
+            SecurityErrorCodes.IP_NOT_ALLOWED ->
+                stringResource(Res.string.error_security_ip_not_allowed)
+
             ClientSecurityErrorCodes.PASSWORD_POLICY_UNAVAILABLE ->
                 stringResource(Res.string.error_security_password_policy_unavailable)
 

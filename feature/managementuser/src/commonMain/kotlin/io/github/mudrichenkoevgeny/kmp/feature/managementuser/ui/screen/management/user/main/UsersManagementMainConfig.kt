@@ -10,8 +10,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.NumberListingFilterDefinition
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.option.ListingOptionsConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortDefinition
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import org.jetbrains.compose.resources.stringResource
 
@@ -19,8 +21,16 @@ import org.jetbrains.compose.resources.stringResource
 fun getUsersManagementMainListingConfig(): ListingOptionsConfig = ListingOptionsConfig(
     sortOptions = listOf(
         ListingSortDefinition(
-            id = "created_at",
+            id = UserSortValues.UserSortBy.CREATED_AT.name,
             title = stringResource(CommonRes.string.ui_common_created_at)
+        ),
+        ListingSortDefinition(
+            id = UserSortValues.UserSortBy.ACCOUNT_LOCKOUT_TYPE.name,
+            title = stringResource(CommonRes.string.ui_common_lockout_type)
+        ),
+        ListingSortDefinition(
+            id = UserSortValues.UserSortBy.TEMPORARY_LOCKOUT_UNTIL.name,
+            title = stringResource(CommonRes.string.ui_common_lockout_until)
         )
     ),
     filters = listOf(
@@ -43,6 +53,17 @@ fun getUsersManagementMainListingConfig(): ListingOptionsConfig = ListingOptions
                 ListingFilterChoiceOption(UserAccountStatus.BANNED.name, stringResource(CommonRes.string.ui_common_banned)),
                 ListingFilterChoiceOption(UserAccountStatus.SECURITY_HOLD.name, stringResource(CommonRes.string.ui_common_security_hold)),
                 ListingFilterChoiceOption(UserAccountStatus.PENDING_DELETION.name, stringResource(CommonRes.string.ui_common_pending_deletion))
+            ),
+            isMultiple = true,
+            presentationStyle = ChoiceFilterPresentationStyle.DROPDOWN
+        ),
+        ChoiceListingFilterDefinition(
+            id = UserFilterValues.UserFilterValues.ACCOUNT_LOCKOUT_TYPE,
+            title = stringResource(CommonRes.string.ui_common_lockout_type),
+            options = listOf(
+                ListingFilterChoiceOption(AccountLockoutType.NONE.name, stringResource(CommonRes.string.ui_common_lockout_none)),
+                ListingFilterChoiceOption(AccountLockoutType.INDEFINITE.name, stringResource(CommonRes.string.ui_common_lockout_indefinite)),
+                ListingFilterChoiceOption(AccountLockoutType.TEMPORARY.name, stringResource(CommonRes.string.ui_common_lockout_temporary))
             ),
             isMultiple = true,
             presentationStyle = ChoiceFilterPresentationStyle.DROPDOWN

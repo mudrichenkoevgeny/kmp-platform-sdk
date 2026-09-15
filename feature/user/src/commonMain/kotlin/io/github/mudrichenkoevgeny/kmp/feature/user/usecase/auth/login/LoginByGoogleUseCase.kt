@@ -31,8 +31,8 @@ class LoginByGoogleUseCase(
      */
     suspend fun execute(): AppResult<AuthData> {
         return authService.signIn()
-            .flatMap { authToken ->
-                loginRepository.loginByExternalAuthProvider(UserAuthProvider.GOOGLE, authToken)
+            .flatMap { externalProviderToken ->
+                loginRepository.loginByExternalAuthProvider(UserAuthProvider.GOOGLE, externalProviderToken)
             }
             .onSuccess { authData ->
                 authStorage.updateTokens(

@@ -10,6 +10,8 @@ sealed interface UserDetailScreenState {
         val user: UserDetails,
         val authorityLevelInput: String,
         val accountStatusInput: String,
+        val lockoutTypeInput: String,
+        val temporaryLockoutUntilInput: String,
         val isSaving: Boolean = false,
         val saveError: AppError? = null,
         val isDeleting: Boolean = false,

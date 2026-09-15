@@ -16,6 +16,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.SessionListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.TotpSettingsComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAuthSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.ObserveAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierPhoneUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.DeleteUserIdentifierUseCase
@@ -44,6 +46,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.SetupT
  * @param logoutUseCase Ends the current session and clears local storage.
  * @param scheduleUserDeletionUseCase Initiates account deletion for end-users.
  * @param restoreUserUseCase Restores an account scheduled for deletion.
+ * @param getAuthSettingsUseCase Retrieves current remote auth settings.
+ * @param observeAuthSettingsUseCase Observes current remote auth settings updates in real time.
  * @param setupTotpUseCase Generates TOTP secret and setup URI.
  * @param enableTotpUseCase Verifies initial code and enables TOTP.
  * @param disableTotpUseCase Turns off TOTP for the account.
@@ -68,6 +72,8 @@ class ProfileRootComponentImpl(
     private val logoutUseCase: LogoutUseCase,
     private val scheduleUserDeletionUseCase: ScheduleUserDeletionUseCase,
     private val restoreUserUseCase: RestoreUserUseCase,
+    private val getAuthSettingsUseCase: GetAuthSettingsUseCase? = null,
+    private val observeAuthSettingsUseCase: ObserveAuthSettingsUseCase? = null,
     private val setupTotpUseCase: SetupTotpUseCase,
     private val enableTotpUseCase: EnableTotpUseCase,
     private val disableTotpUseCase: DisableTotpUseCase,
@@ -120,6 +126,8 @@ class ProfileRootComponentImpl(
                 logoutUseCase = logoutUseCase,
                 scheduleUserDeletionUseCase = scheduleUserDeletionUseCase,
                 restoreUserUseCase = restoreUserUseCase,
+                getAuthSettingsUseCase = getAuthSettingsUseCase,
+                observeAuthSettingsUseCase = observeAuthSettingsUseCase,
                 onNavigateToLogin = onNavigateToLogin,
                 onNavigateToTotp = { navigation.push(ProfileDestination.TotpSettings) },
                 onNavigateToSessions = { navigation.push(ProfileDestination.Sessions) },

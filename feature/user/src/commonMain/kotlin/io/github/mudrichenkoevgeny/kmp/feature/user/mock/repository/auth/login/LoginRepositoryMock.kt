@@ -52,10 +52,10 @@ class LoginRepositoryMock : LoginRepository {
 
     override suspend fun loginByExternalAuthProvider(
         authProvider: UserAuthProvider,
-        token: String
+        externalProviderToken: String
     ): AppResult<AuthData> {
         lastAuthProvider = authProvider
-        lastToken = token
+        lastToken = externalProviderToken
         return authDataResultProvider()
     }
 

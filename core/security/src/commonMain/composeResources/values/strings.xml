@@ -20,4 +20,5 @@
     <string name="error_security_password_no_digit">Password must contain at least one digit.</string>
     <string name="error_security_password_no_special_char">Password must contain at least one special character.</string>
     <string name="error_security_password_too_common">Password is too common and insecure.</string>
+    <string name="error_security_ip_not_allowed">Request was rejected because the client IP address is not permitted.</string>
 </resources>

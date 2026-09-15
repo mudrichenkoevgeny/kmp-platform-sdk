@@ -1,6 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.user
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserDetailsPayload
@@ -21,5 +22,7 @@ fun userDetailsPayloadMock(
     lastActiveAt = null,
     createdAt = createdAtEpochMs,
     updatedAt = null,
-    scheduledPermanentDeletionAt = null
+    scheduledPermanentDeletionAt = null,
+    lockoutType = AccountLockoutType.NONE.serialName,
+    temporaryLockoutUntil = null
 )

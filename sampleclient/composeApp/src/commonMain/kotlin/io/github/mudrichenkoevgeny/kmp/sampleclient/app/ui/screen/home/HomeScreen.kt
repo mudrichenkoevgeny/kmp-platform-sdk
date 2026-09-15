@@ -7,6 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import io.github.mudrichenkoevgeny.kmp.sampleclient.app.Res
+import io.github.mudrichenkoevgeny.kmp.sampleclient.app.*
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Placeholder home tab content for the sample.
@@ -20,7 +23,7 @@ fun HomeScreen(screenComponent: HomeScreenComponent) {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "Home Screen",
+            text = stringResource(Res.string.home_screen_title),
             modifier = Modifier.testTag(HomeScreenTestTags.TITLE)
         )
     }

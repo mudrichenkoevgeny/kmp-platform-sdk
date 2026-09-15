@@ -42,10 +42,22 @@ class UserDetailComponentImpl(
         _state.value = current.copy(accountStatusInput = value, saveError = null)
     }
 
+    override fun onLockoutTypeChanged(value: String) {
+        val current = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = current.copy(lockoutTypeInput = value, saveError = null)
+    }
+
+    override fun onTemporaryLockoutUntilChanged(value: String) {
+        val current = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = current.copy(temporaryLockoutUntilInput = value, saveError = null)
+    }
+
     override fun onUpdateClick() {
         val current = _state.value as? UserDetailScreenState.Content ?: return
         val authLevel = current.authorityLevelInput.toIntOrNull() ?: current.user.authorityLevel
         val status = current.accountStatusInput.takeIf { it.isNotBlank() } ?: current.user.accountStatus.name
+        val lockoutType = current.lockoutTypeInput.takeIf { it.isNotBlank() } ?: current.user.lockoutType.serialName
+        val temporaryLockoutUntil = current.temporaryLockoutUntilInput.toLongOrNull() ?: current.user.temporaryLockoutUntil?.toEpochMilliseconds()
 
         _state.value = current.copy(isSaving = true, saveError = null)
 
@@ -55,7 +67,9 @@ class UserDetailComponentImpl(
                 request = UpdateUserRequest(
                     accountStatus = status,
                     authorityLevel = authLevel,
-                    permissionCodes = null
+                    permissionCodes = null,
+                    lockoutType = lockoutType,
+                    temporaryLockoutUntil = temporaryLockoutUntil
                 )
             ).onSuccess {
                 loadUser()
@@ -104,7 +118,9 @@ class UserDetailComponentImpl(
                     _state.value = UserDetailScreenState.Content(
                         user = user,
                         authorityLevelInput = user.authorityLevel.toString(),
-                        accountStatusInput = user.accountStatus.name
+                        accountStatusInput = user.accountStatus.name,
+                        lockoutTypeInput = user.lockoutType.serialName,
+                        temporaryLockoutUntilInput = user.temporaryLockoutUntil?.toEpochMilliseconds()?.toString() ?: ""
                     )
                 }
                 .onError { error ->

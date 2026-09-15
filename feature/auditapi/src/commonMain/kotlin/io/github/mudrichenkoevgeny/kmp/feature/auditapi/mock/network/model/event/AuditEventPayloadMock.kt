@@ -17,6 +17,9 @@ fun auditEventPayloadMock(
     status: String = AuditStatus.SUCCESS.name,
     createdAt: Long = 1000L,
     actorId: String? = null,
+    actorUserRole: String? = null,
+    resourceId: String? = null,
+    message: String? = null,
     metadata: List<AuditEventMetadataPayload> = emptyList(),
 ) = AuditEventPayload(
     id = id,
@@ -26,5 +29,8 @@ fun auditEventPayloadMock(
     status = status,
     createdAt = createdAt,
     actorId = actorId,
+    actorUserRole = actorUserRole,
+    resourceId = resourceId,
+    message = message,
     metadata = metadata,
 )

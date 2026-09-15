@@ -31,13 +31,16 @@ interface LoginRepository {
     suspend fun loginByPhone(phoneNumber: String, confirmationCode: String): AppResult<AuthData>
 
     /**
-     * Signs in via an external [authProvider] using an identity [token].
+     * Signs in via an external [authProvider] using an identity [externalProviderToken].
      *
      * @param authProvider OAuth/OIDC/social backend integration.
-     * @param token Provider-issued credential.
+     * @param externalProviderToken Provider-issued credential.
      * @return [AuthData] on success, or an error result.
      */
-    suspend fun loginByExternalAuthProvider(authProvider: UserAuthProvider, token: String): AppResult<AuthData>
+    suspend fun loginByExternalAuthProvider(
+        authProvider: UserAuthProvider,
+        externalProviderToken: String
+    ): AppResult<AuthData>
 
     /**
      * Completes the MFA flow using a time-based one-time password (TOTP).

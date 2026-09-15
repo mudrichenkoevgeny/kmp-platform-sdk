@@ -40,7 +40,7 @@ class SelfManagementLoginRepositoryImpl(
 
     override suspend fun loginByExternalAuthProvider(
         authProvider: UserAuthProvider,
-        token: String
+        externalProviderToken: String
     ): AppResult<AuthData> {
         return methodNotSupported()
     }

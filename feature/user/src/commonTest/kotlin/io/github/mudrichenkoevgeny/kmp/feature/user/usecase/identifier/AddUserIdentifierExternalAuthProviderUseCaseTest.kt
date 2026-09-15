@@ -22,12 +22,12 @@ class AddUserIdentifierExternalAuthProviderUseCaseTest {
         }
         val useCase = AddUserIdentifierExternalAuthProviderUseCase(repository)
 
-        val result = useCase(TEST_PROVIDER, TEST_TOKEN)
+        val result = useCase(TEST_PROVIDER, TEST_EXTERNAL_PROVIDER_TOKEN)
 
         assertIs<AppResult.Success<UserIdentifier>>(result)
         assertEquals(expectedIdentifier, result.data)
         assertEquals(TEST_PROVIDER, repository.lastAuthProvider)
-        assertEquals(TEST_TOKEN, repository.lastToken)
+        assertEquals(TEST_EXTERNAL_PROVIDER_TOKEN, repository.lastToken)
     }
 
     @Test
@@ -38,7 +38,7 @@ class AddUserIdentifierExternalAuthProviderUseCaseTest {
         }
         val useCase = AddUserIdentifierExternalAuthProviderUseCase(repository)
 
-        val result = useCase(TEST_PROVIDER, TEST_TOKEN)
+        val result = useCase(TEST_PROVIDER, TEST_EXTERNAL_PROVIDER_TOKEN)
 
         assertIs<AppResult.Error>(result)
         assertEquals(expectedError, result.error)
@@ -46,6 +46,6 @@ class AddUserIdentifierExternalAuthProviderUseCaseTest {
 
     private companion object {
         private const val TEST_PROVIDER = "google"
-        private const val TEST_TOKEN = "test_token"
+        private const val TEST_EXTERNAL_PROVIDER_TOKEN = "test_token"
     }
 }

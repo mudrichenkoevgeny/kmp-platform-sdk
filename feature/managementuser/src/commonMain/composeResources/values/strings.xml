@@ -19,9 +19,20 @@
     <string name="max_phone_identifiers">Max Phone Identifiers</string>
     <string name="max_identifiers_per_external_provider">Max Identifiers Per External Provider</string>
     <string name="max_active_sessions">Max Active Sessions</string>
+    <string name="max_active_sessions_open">Max Active Sessions (Open User)</string>
+    <string name="max_active_sessions_management">Max Active Sessions (Management User)</string>
     <string name="access_token_expiration_seconds">Access Token Expiration (seconds)</string>
     <string name="refresh_token_expiration_seconds">Refresh Token Expiration (seconds)</string>
     <string name="account_deletion_delay_seconds">Account Deletion Delay (seconds)</string>
+    <string name="account_deletion_check_interval_seconds">Account Deletion Check Interval (seconds)</string>
+    <string name="open_email_restriction_policy">Open Email Restriction Policy</string>
+    <string name="management_email_restriction_policy">Management Email Restriction Policy</string>
+    <string name="blacklist_enabled">Blacklist Enabled</string>
+    <string name="whitelist_enabled">Whitelist Enabled</string>
+    <string name="email_blacklist_placeholder">Blacklist (comma separated)</string>
+    <string name="email_whitelist_placeholder">Whitelist (comma separated)</string>
+    <string name="blacklist_placeholder">Blacklist (comma separated)</string>
+    <string name="whitelist_placeholder">Whitelist (comma separated)</string>
 
     <!-- Navigation Buttons -->
     <string name="edit_global_settings">Edit Global Settings</string>
@@ -68,6 +79,7 @@
     <string name="recent_authentication_validity_seconds">Recent Auth Validity (seconds)</string>
     <string name="recent_authentication_validity_for_management">Recent Management Auth Validity (seconds)</string>
     <string name="mfa_token_expiration_seconds">MFA Token Expiration (seconds)</string>
+    <string name="refresh_token_rotation_grace_period_seconds">Refresh Token Rotation Grace Period (seconds)</string>
     <string name="rate_limiting">Rate Limiting</string>
     <string name="max_requests_per_period">Max Requests Per Period</string>
     <string name="rate_limit_period_seconds">Rate Limit Period (seconds)</string>
@@ -78,8 +90,26 @@
     <string name="password_require_lowercase">Require Lowercase</string>
     <string name="password_require_digit">Require Digit</string>
     <string name="password_require_special_char">Require Special Character</string>
+    <string name="common_passwords_placeholder">Common Passwords (comma separated)</string>
+    <string name="account_lockout_policy_section">Account Lockout Policy</string>
+    <string name="max_failed_password_attempts">Max Failed Password Attempts</string>
+    <string name="max_failed_otp_attempts">Max Failed OTP Attempts</string>
+    <string name="max_failed_totp_attempts">Max Failed TOTP Attempts</string>
+    <string name="failed_attempts_window_seconds">Failed Attempts Window (seconds)</string>
+    <string name="lockout_duration_seconds">Lockout Duration (seconds)</string>
+    <string name="indefinite_lockout_threshold">Indefinite Lockout Threshold</string>
+    <string name="self_service_unlock_enabled">Self Service Unlock Enabled</string>
+    <string name="account_lockout_check_interval_seconds">Account Lockout Check Interval (seconds)</string>
+    <string name="open_ip_restriction_policy">Open IP Restriction Policy</string>
+    <string name="management_ip_restriction_policy">Management IP Restriction Policy</string>
     <string name="otp_confirmation">OTP Confirmation</string>
     <string name="otp_retry_after_seconds">Retry After (seconds)</string>
     <string name="otp_number_of_symbols">Number of Symbols</string>
     <string name="otp_expiration_seconds">OTP Expiration (seconds)</string>
+    <string name="totp_enabled_label">TOTP Enabled: %1$s</string>
+    <string name="created_at_label">Created At: %1$s</string>
+    <string name="last_login_at_label">Last Login At: %1$s</string>
+    <string name="last_active_at_label">Last Active At: %1$s</string>
+    <string name="scheduled_deletion_at_label">Scheduled Deletion At: %1$s</string>
+    <string name="not_available">N/A</string>
 </resources>

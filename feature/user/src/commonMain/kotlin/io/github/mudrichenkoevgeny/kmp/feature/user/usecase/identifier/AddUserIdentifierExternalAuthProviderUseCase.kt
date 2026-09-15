@@ -14,13 +14,13 @@ class AddUserIdentifierExternalAuthProviderUseCase(
 ) {
     /**
      * @param authProvider External provider name.
-     * @param token Provider-issued identity token.
+     * @param externalProviderToken Provider-issued identity token.
      * @return New [UserIdentifier] on success, or a mapped failure.
      */
     suspend operator fun invoke(
         authProvider: String,
-        token: String
+        externalProviderToken: String
     ): AppResult<UserIdentifier> {
-        return identifierRepository.addUserIdentifierExternalAuthProvider(authProvider, token)
+        return identifierRepository.addUserIdentifierExternalAuthProvider(authProvider, externalProviderToken)
     }
 }

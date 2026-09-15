@@ -19,9 +19,20 @@
     <string name="max_phone_identifiers">Макс. число Phone-идентификаторов</string>
     <string name="max_identifiers_per_external_provider">Макс. идентификаторов на внешнего провайдера</string>
     <string name="max_active_sessions">Макс. активных сессий</string>
+    <string name="max_active_sessions_open">Макс. активных сессий (открытый польз.)</string>
+    <string name="max_active_sessions_management">Макс. активных сессий (админ.)</string>
     <string name="access_token_expiration_seconds">Срок действия Access Token (сек)</string>
     <string name="refresh_token_expiration_seconds">Срок действия Refresh Token (сек)</string>
     <string name="account_deletion_delay_seconds">Задержка удаления аккаунта (сек)</string>
+    <string name="account_deletion_check_interval_seconds">Интервал проверки удаления аккаунта (сек)</string>
+    <string name="open_email_restriction_policy">Политика ограничений email (открытый API)</string>
+    <string name="management_email_restriction_policy">Политика ограничений email (админ. API)</string>
+    <string name="blacklist_enabled">Черный список включен</string>
+    <string name="whitelist_enabled">Белый список включен</string>
+    <string name="email_blacklist_placeholder">Черный список (через запятую)</string>
+    <string name="email_whitelist_placeholder">Белый список (через запятую)</string>
+    <string name="blacklist_placeholder">Черный список (через запятую)</string>
+    <string name="whitelist_placeholder">Белый список (через запятую)</string>
 
     <!-- Navigation Buttons -->
     <string name="edit_global_settings">Редактировать глобальные настройки</string>
@@ -54,7 +65,7 @@
     <string name="contact_support_email">Email службы поддержки</string>
     <string name="telemetry_and_logging">Телеметрия и логирование</string>
     <string name="is_tracing_enabled">Включить трассировку запросов</string>
-    <string name="is_metrics_enabled">Включить сбор метрик</string>
+    <string name="is_metrics_enabled">Inключить сбор метрик</string>
     <string name="is_verbose_logging_enabled">Включить подробный логинг</string>
     <string name="min_supported_app_versions">Минимальные поддерживаемые версии приложений</string>
     <string name="min_version_android">Мин. версия Android</string>
@@ -68,6 +79,7 @@
     <string name="recent_authentication_validity_seconds">Срок действия недавней аутентификации (сек)</string>
     <string name="recent_authentication_validity_for_management">Срок действия недавней аутентификации админа (сек)</string>
     <string name="mfa_token_expiration_seconds">Срок действия MFA токена (сек)</string>
+    <string name="refresh_token_rotation_grace_period_seconds">Период отсрочки ротации Refresh Token (сек)</string>
     <string name="rate_limiting">Ограничение частоты запросов</string>
     <string name="max_requests_per_period">Макс. запросов за период</string>
     <string name="rate_limit_period_seconds">Период ограничения (сек)</string>
@@ -78,8 +90,26 @@
     <string name="password_require_lowercase">Требовать строчную букву</string>
     <string name="password_require_digit">Требовать цифру</string>
     <string name="password_require_special_char">Требовать спецсимвол</string>
+    <string name="common_passwords_placeholder">Популярные пароли (через запятую)</string>
+    <string name="account_lockout_policy_section">Политика блокировки аккаунта</string>
+    <string name="max_failed_password_attempts">Макс. неудачных попыток ввода пароля</string>
+    <string name="max_failed_otp_attempts">Макс. неудачных попыток OTP</string>
+    <string name="max_failed_totp_attempts">Макс. неудачных попыток TOTP</string>
+    <string name="failed_attempts_window_seconds">Окно неудачных попыток (сек)</string>
+    <string name="lockout_duration_seconds">Длительность блокировки (сек)</string>
+    <string name="indefinite_lockout_threshold">Порог бессрочной блокировки</string>
+    <string name="self_service_unlock_enabled">Разрешить самостоятельную разблокировку</string>
+    <string name="account_lockout_check_interval_seconds">Интервал проверки блокировок (сек)</string>
+    <string name="open_ip_restriction_policy">Политика ограничений IP (открытый API)</string>
+    <string name="management_ip_restriction_policy">Политика ограничений IP (админ. API)</string>
     <string name="otp_confirmation">OTP подтверждение</string>
     <string name="otp_retry_after_seconds">Повторный запрос через (сек)</string>
     <string name="otp_number_of_symbols">Количество символов</string>
     <string name="otp_expiration_seconds">Срок действия OTP (сек)</string>
+    <string name="totp_enabled_label">TOTP включен: %1$s</string>
+    <string name="created_at_label">Дата создания: %1$s</string>
+    <string name="last_login_at_label">Последний вход: %1$s</string>
+    <string name="last_active_at_label">Последняя активность: %1$s</string>
+    <string name="scheduled_deletion_at_label">Запланировано удаление: %1$s</string>
+    <string name="not_available">Н/Д</string>
 </resources>

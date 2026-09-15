@@ -88,10 +88,10 @@ open class IdentifierRepositoryMock : IdentifierRepository {
 
     override suspend fun addUserIdentifierExternalAuthProvider(
         authProvider: String,
-        token: String
+        externalProviderToken: String
     ): AppResult<UserIdentifier> {
         lastAuthProvider = authProvider
-        lastToken = token
+        lastToken = externalProviderToken
         return addUserIdentifierResultProvider()
     }
 

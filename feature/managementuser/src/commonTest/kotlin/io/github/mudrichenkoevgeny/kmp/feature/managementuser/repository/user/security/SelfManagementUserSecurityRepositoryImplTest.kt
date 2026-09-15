@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.user.s
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.network.api.user.security.SelfManagementUserSecurityApiMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.mapper.totprecoverycodes.toTotpRecoveryCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.mapper.totpsetup.toTotpSetup
@@ -24,13 +25,7 @@ class SelfManagementUserSecurityRepositoryImplTest {
     private val userStorage = UserStorageMock()
     private val repository = SelfManagementUserSecurityRepositoryImpl(api, userStorage)
 
-    private val initialUser = UserDetails(
-        role = UserRole.USER,
-        accountStatus = UserAccountStatus.ACTIVE,
-        accountStatusBeforeDeletion = null,
-        authorityLevel = 1,
-        permissionCodes = emptySet(),
-        isTotpEnabled = false,
+    private val initialUser = userDetailsMock(
         createdAt = Instant.DISTANT_PAST
     )
 

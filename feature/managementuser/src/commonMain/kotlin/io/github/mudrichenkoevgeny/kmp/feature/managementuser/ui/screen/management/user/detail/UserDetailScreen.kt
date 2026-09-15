@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -27,8 +28,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
+import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
@@ -39,6 +43,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,6 +89,8 @@ fun UserDetailScreen(component: UserDetailComponent) {
                         state = currentState,
                         onAuthorityLevelChanged = component::onAuthorityLevelChanged,
                         onAccountStatusChanged = component::onAccountStatusChanged,
+                        onLockoutTypeChanged = component::onLockoutTypeChanged,
+                        onTemporaryLockoutUntilChanged = component::onTemporaryLockoutUntilChanged,
                         onUpdateClick = component::onUpdateClick,
                         onDeleteClick = component::onDeleteClick,
                         onSessionsClick = component::onSessionsClick,
@@ -100,11 +107,14 @@ private fun Content(
     state: UserDetailScreenState.Content,
     onAuthorityLevelChanged: (String) -> Unit,
     onAccountStatusChanged: (String) -> Unit,
+    onLockoutTypeChanged: (String) -> Unit,
+    onTemporaryLockoutUntilChanged: (String) -> Unit,
     onUpdateClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onSessionsClick: () -> Unit,
     onIdentifiersClick: () -> Unit
 ) {
+    val notAvailableText = stringResource(Res.string.not_available)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -120,6 +130,30 @@ private fun Content(
             text = "${stringResource(Res.string.user_role)}: ${state.user.role.name}",
             style = MaterialTheme.typography.bodyMedium
         )
+        Text(
+            text = stringResource(Res.string.totp_enabled_label, state.user.isTotpEnabled),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            text = stringResource(Res.string.created_at_label, state.user.createdAt.toString()),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            text = stringResource(Res.string.last_login_at_label, state.user.lastLoginAt?.toString() ?: notAvailableText),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            text = stringResource(Res.string.last_active_at_label, state.user.lastActiveAt?.toString() ?: notAvailableText),
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        if (state.user.accountStatus == UserAccountStatus.PENDING_DELETION && state.user.scheduledPermanentDeletionAt != null) {
+            Text(
+                text = stringResource(Res.string.scheduled_deletion_at_label, state.user.scheduledPermanentDeletionAt.toString()),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
 
         Button(
             onClick = onSessionsClick,
@@ -153,9 +187,31 @@ private fun Content(
             value = state.authorityLevelInput,
             onValueChange = onAuthorityLevelChanged,
             label = { Text(stringResource(Res.string.authority_level)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag(UserDetailTestTags.AUTHORITY_LEVEL_INPUT),
+            enabled = !state.isSaving && !state.isDeleting
+        )
+
+        OutlinedTextField(
+            value = state.lockoutTypeInput,
+            onValueChange = onLockoutTypeChanged,
+            label = { Text(stringResource(CommonRes.string.ui_common_lockout_type)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(UserDetailTestTags.LOCKOUT_TYPE_INPUT),
+            enabled = !state.isSaving && !state.isDeleting
+        )
+
+        OutlinedTextField(
+            value = state.temporaryLockoutUntilInput,
+            onValueChange = onTemporaryLockoutUntilChanged,
+            label = { Text(stringResource(CommonRes.string.ui_common_lockout_until)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(UserDetailTestTags.TEMPORARY_LOCKOUT_UNTIL_INPUT),
             enabled = !state.isSaving && !state.isDeleting
         )
 
@@ -211,10 +267,14 @@ private fun UserDetailPreview() {
                     state = UserDetailScreenState.Content(
                         user = userDetailsMock(),
                         authorityLevelInput = "0",
-                        accountStatusInput = "ACTIVE"
+                        accountStatusInput = "ACTIVE",
+                        lockoutTypeInput = "NONE",
+                        temporaryLockoutUntilInput = ""
                     ),
                     onAuthorityLevelChanged = {},
                     onAccountStatusChanged = {},
+                    onLockoutTypeChanged = {},
+                    onTemporaryLockoutUntilChanged = {},
                     onUpdateClick = {},
                     onDeleteClick = {},
                     onSessionsClick = {},
@@ -231,6 +291,8 @@ object UserDetailTestTags {
     const val GLOBAL_ERROR = "UserDetail_GlobalError"
     const val ACCOUNT_STATUS_INPUT = "UserDetail_AccountStatusInput"
     const val AUTHORITY_LEVEL_INPUT = "UserDetail_AuthorityLevelInput"
+    const val LOCKOUT_TYPE_INPUT = "UserDetail_LockoutTypeInput"
+    const val TEMPORARY_LOCKOUT_UNTIL_INPUT = "UserDetail_TemporaryLockoutUntilInput"
     const val UPDATE_BUTTON = "UserDetail_UpdateButton"
     const val DELETE_BUTTON = "UserDetail_DeleteButton"
     const val SESSIONS_BUTTON = "UserDetail_SessionsButton"

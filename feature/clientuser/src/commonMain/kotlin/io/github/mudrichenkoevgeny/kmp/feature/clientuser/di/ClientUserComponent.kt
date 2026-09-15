@@ -189,6 +189,12 @@ class ClientUserComponent(
     /** Updates account password. */
     val emailChangePasswordUseCase get() = useCaseModule.emailChangePasswordUseCase
 
+    /** Returns current public auth settings. */
+    val getAuthSettingsUseCase get() = useCaseModule.getAuthSettingsUseCase
+
+    /** Observes public auth settings updates. */
+    val observeAuthSettingsUseCase get() = useCaseModule.observeAuthSettingsUseCase
+
     /**
      * Creates the root Decompose component for the profile management flow.
      *
@@ -206,6 +212,8 @@ class ClientUserComponent(
         logoutUseCase = logoutUseCase,
         scheduleUserDeletionUseCase = scheduleUserDeletionUseCase,
         restoreUserUseCase = restoreUserUseCase,
+        getAuthSettingsUseCase = getAuthSettingsUseCase,
+        observeAuthSettingsUseCase = observeAuthSettingsUseCase,
         setupTotpUseCase = setupTotpUseCase,
         enableTotpUseCase = enableTotpUseCase,
         disableTotpUseCase = disableTotpUseCase,

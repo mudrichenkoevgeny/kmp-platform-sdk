@@ -7,6 +7,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedresult.mapItems
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.permission.PermissionCode
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
@@ -39,6 +40,7 @@ class ManagementUserRepositoryImpl(
         roles: List<UserRole>?,
         accountStatuses: List<UserAccountStatus>?,
         accountStatusesBeforeDeletion: List<UserAccountStatus>?,
+        accountLockoutTypes: List<AccountLockoutType>?,
         authorityLevelFrom: Int?,
         authorityLevelTo: Int?,
         isTotpEnabled: Boolean?,
@@ -52,6 +54,7 @@ class ManagementUserRepositoryImpl(
             roles = roles,
             accountStatuses = accountStatuses,
             accountStatusesBeforeDeletion = accountStatusesBeforeDeletion,
+            accountLockoutTypes = accountLockoutTypes,
             authorityLevelFrom = authorityLevelFrom,
             authorityLevelTo = authorityLevelTo,
             isTotpEnabled = isTotpEnabled,

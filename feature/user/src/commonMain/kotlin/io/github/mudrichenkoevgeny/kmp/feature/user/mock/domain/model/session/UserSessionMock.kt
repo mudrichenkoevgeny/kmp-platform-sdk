@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceInfo
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.client.clientDeviceInfoMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
@@ -17,7 +17,7 @@ fun userSessionMock() = UserSession(
     identifier = "user@example.com",
     identifierId = UserIdentifierId.generate(),
     identifierAuthProvider = UserAuthProvider.EMAIL,
-    deviceInfo = ClientDeviceInfo(),
+    deviceInfo = clientDeviceInfoMock(),
     userAgent = "MockUserAgent/1.0",
     ipAddress = "127.0.0.1",
     expiresAt = Clock.System.now().plus(30.days),

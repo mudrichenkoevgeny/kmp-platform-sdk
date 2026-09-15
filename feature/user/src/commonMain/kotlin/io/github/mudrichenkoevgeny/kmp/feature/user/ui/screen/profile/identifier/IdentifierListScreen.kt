@@ -108,7 +108,7 @@ fun IdentifierListScreen(component: IdentifierListComponent) {
                         onClick = component::onRefresh,
                         modifier = Modifier.testTag(IdentifierListTestTags.REFRESH_BUTTON)
                     ) {
-                        Icon(Icons.Default.Refresh, contentDescription = null)
+                        Icon(Icons.Filled.Refresh, contentDescription = null)
                     }
                 }
             )
@@ -301,7 +301,7 @@ private fun ChangePasswordDialog(
         text = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "Email: $email",
+                    text = stringResource(Res.string.email_prefix, email),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
@@ -387,7 +387,7 @@ private fun AddEmailSection(
                 }
             }
             is IdentifierListScreenState.AddIdentifierState.EnteringCode -> {
-                Text(text = "Email: ${state.value}")
+                Text(text = stringResource(Res.string.email_prefix, state.value))
                 OutlinedTextField(
                     value = passwordInput,
                     onValueChange = onPasswordInputChange,
@@ -408,7 +408,7 @@ private fun AddEmailSection(
                 )
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)) {
                     TextButton(onClick = onCancelClick, modifier = Modifier.weight(1f)) {
-                        Text("Cancel")
+                        Text(stringResource(Res.string.cancel))
                     }
                     Button(
                         onClick = onConfirmClick,
@@ -463,7 +463,7 @@ private fun AddPhoneSection(
                 }
             }
             is IdentifierListScreenState.AddIdentifierState.EnteringCode -> {
-                Text(text = "Phone: ${state.value}")
+                Text(text = stringResource(Res.string.phone_prefix, state.value))
                 OutlinedTextField(
                     value = state.code,
                     onValueChange = onCodeChanged,
@@ -475,7 +475,7 @@ private fun AddPhoneSection(
                 )
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)) {
                     TextButton(onClick = onCancelClick, modifier = Modifier.weight(1f)) {
-                        Text("Cancel")
+                        Text(stringResource(Res.string.cancel))
                     }
                     Button(
                         onClick = onConfirmClick,

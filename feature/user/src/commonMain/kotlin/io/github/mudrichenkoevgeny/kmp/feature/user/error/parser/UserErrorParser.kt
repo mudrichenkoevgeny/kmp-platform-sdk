@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.AppErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.resolveLocalizedString
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
+import io.github.mudrichenkoevgeny.kmp.feature.user.error.naming.ClientUserErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorArgs
 import org.jetbrains.compose.resources.StringResource
@@ -36,8 +37,12 @@ object UserErrorParser : AppErrorParser {
             UserErrorCodes.INVALID_SESSION ->
                 stringResource(Res.string.error_user_invalid_session)
 
-            UserErrorCodes.USER_BLOCKED ->
-                stringResource(Res.string.error_user_blocked)
+            UserErrorCodes.USER_BLOCKED -> resolveLocalizedString(
+                args = args,
+                key = UserErrorArgs.BLOCKED_UNTIL,
+                withArgsRes = Res.string.error_user_blocked_until,
+                fallbackRes = Res.string.error_user_blocked
+            )
 
             UserErrorCodes.USER_READ_ONLY ->
                 stringResource(Res.string.error_user_read_only)
@@ -84,6 +89,9 @@ object UserErrorParser : AppErrorParser {
             UserErrorCodes.CAN_NOT_CREATE_USER_IDENTIFIER ->
                 stringResource(Res.string.error_user_can_not_create_identifier)
 
+            UserErrorCodes.EMAIL_NOT_ALLOWED ->
+                stringResource(Res.string.error_user_email_not_allowed)
+
             UserErrorCodes.USER_IDENTIFIER_LIMIT_REACHED -> resolveLimit(
                 args = args,
                 providerKey = UserErrorArgs.USER_AUTH_PROVIDER,
@@ -98,6 +106,9 @@ object UserErrorParser : AppErrorParser {
                 withArgsRes = Res.string.error_user_total_identifiers_limit_reached_args,
                 fallbackRes = Res.string.error_user_total_identifiers_limit_reached
             )
+
+            ClientUserErrorCodes.REGISTRATION_DISABLED ->
+                stringResource(Res.string.error_user_registration_disabled)
 
             else -> null
         }

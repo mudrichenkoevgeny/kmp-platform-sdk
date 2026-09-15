@@ -10,15 +10,17 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 @InternalApi
 class EditAuthSettingsComponentMock(
     initialState: EditAuthSettingsScreenState = EditAuthSettingsScreenState.Content(
-        enabledProviders = setOf(UserAuthProvider.EMAIL, UserAuthProvider.PHONE, UserAuthProvider.GOOGLE),
+        enabledProviders = setOf(UserAuthProvider.EMAIL, UserAuthProvider.GOOGLE),
         maxTotalIdentifiers = "10",
         maxEmailIdentifiers = "5",
         maxPhoneIdentifiers = "5",
         maxIdentifiersPerExternalProvider = "2",
-        maxActiveSessions = "3",
+        maxActiveSessionsForOpenUser = "3",
+        maxActiveSessionsForManagementUser = "5",
         accessTokenExpirationSeconds = "3600",
         refreshTokenExpirationSeconds = "86400",
-        accountDeletionDelaySeconds = "604800",
+        accountDeletionGracePeriodSeconds = "604800",
+        accountDeletionCheckIntervalSeconds = "86400",
         isRegistrationEnabled = true
     )
 ) : EditAuthSettingsComponent {
@@ -30,11 +32,21 @@ class EditAuthSettingsComponentMock(
     override fun onMaxEmailIdentifiersChanged(value: String) {}
     override fun onMaxPhoneIdentifiersChanged(value: String) {}
     override fun onMaxIdentifiersPerExternalProviderChanged(value: String) {}
-    override fun onMaxActiveSessionsChanged(value: String) {}
+    override fun onMaxActiveSessionsForOpenUserChanged(value: String) {}
+    override fun onMaxActiveSessionsForManagementUserChanged(value: String) {}
     override fun onAccessTokenExpirationSecondsChanged(value: String) {}
     override fun onRefreshTokenExpirationSecondsChanged(value: String) {}
-    override fun onAccountDeletionDelaySecondsChanged(value: String) {}
+    override fun onAccountDeletionGracePeriodSecondsChanged(value: String) {}
+    override fun onAccountDeletionCheckIntervalSecondsChanged(value: String) {}
     override fun onRegistrationEnabledToggled(enabled: Boolean) {}
+    override fun onOpenEmailBlacklistEnabledToggled(enabled: Boolean) {}
+    override fun onOpenEmailBlacklistChanged(value: String) {}
+    override fun onOpenEmailWhitelistEnabledToggled(enabled: Boolean) {}
+    override fun onOpenEmailWhitelistChanged(value: String) {}
+    override fun onManagementEmailBlacklistEnabledToggled(enabled: Boolean) {}
+    override fun onManagementEmailBlacklistChanged(value: String) {}
+    override fun onManagementEmailWhitelistEnabledToggled(enabled: Boolean) {}
+    override fun onManagementEmailWhitelistChanged(value: String) {}
     override fun onSaveClick() {}
     override fun onBackClick() {}
 }

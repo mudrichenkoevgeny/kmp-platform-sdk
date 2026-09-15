@@ -8,6 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userD
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.permission.PermissionCode
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
@@ -58,6 +59,7 @@ open class ManagementUserRepositoryMock : ManagementUserRepository {
         roles: List<UserRole>?,
         accountStatuses: List<UserAccountStatus>?,
         accountStatusesBeforeDeletion: List<UserAccountStatus>?,
+        accountLockoutTypes: List<AccountLockoutType>?,
         authorityLevelFrom: Int?,
         authorityLevelTo: Int?,
         isTotpEnabled: Boolean?,

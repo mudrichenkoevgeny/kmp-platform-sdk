@@ -22,6 +22,8 @@ class UserDetailComponentMock(
     var backCalls = 0
     var lastAuthorityLevelChanged: String? = null
     var lastAccountStatusChanged: String? = null
+    var lastLockoutTypeChanged: String? = null
+    var lastTemporaryLockoutUntilChanged: String? = null
 
     fun updateState(state: UserDetailScreenState) {
         _state.value = state
@@ -33,6 +35,14 @@ class UserDetailComponentMock(
 
     override fun onAccountStatusChanged(value: String) {
         lastAccountStatusChanged = value
+    }
+
+    override fun onLockoutTypeChanged(value: String) {
+        lastLockoutTypeChanged = value
+    }
+
+    override fun onTemporaryLockoutUntilChanged(value: String) {
+        lastTemporaryLockoutUntilChanged = value
     }
 
     override fun onUpdateClick() {

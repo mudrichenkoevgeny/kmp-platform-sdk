@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.core.security.usecase
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.security.error.model.SecurityError
 import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySettingsRepository
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.ManagementPasswordPolicy
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.OpenPasswordPolicy
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.PasswordPolicyFailReason
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.PasswordPolicyValidatorResult
@@ -28,7 +29,14 @@ open class ValidatePasswordUseCase(
         val securitySettingsResult = openSecuritySettingsRepository.getOpenSecuritySettings()
         val passwordPolicy = when (securitySettingsResult) {
             is AppResult.Success -> securitySettingsResult.data.passwordPolicy
-            is AppResult.Error -> OpenPasswordPolicy()
+            is AppResult.Error -> OpenPasswordPolicy(
+                minLength = ManagementPasswordPolicy.DEFAULT_MIN_LENGTH,
+                requireLetter = true,
+                requireUpperCase = false,
+                requireLowerCase = false,
+                requireDigit = false,
+                requireSpecialChar = false
+            )
         }
 
         val validationResult = passwordPolicyValidator.validate(

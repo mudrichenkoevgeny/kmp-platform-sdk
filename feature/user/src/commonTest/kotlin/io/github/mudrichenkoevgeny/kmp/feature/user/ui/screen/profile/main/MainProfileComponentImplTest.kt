@@ -35,7 +35,7 @@ class MainProfileComponentImplTest {
             userRepository.emit(null)
             runCurrent()
             val state = assertIs<MainProfileScreenState.Unauthorized>(context.component.state.value)
-            assertEquals(MainProfileScreenState.Unauthorized, state)
+            assertEquals(MainProfileScreenState.Unauthorized(), state)
         } finally {
             context.destroy()
         }

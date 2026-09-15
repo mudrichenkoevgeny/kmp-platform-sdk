@@ -39,7 +39,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
-import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
@@ -106,11 +105,21 @@ fun EditAuthSettingsScreen(component: EditAuthSettingsComponent) {
                     onMaxEmailIdentifiersChanged = component::onMaxEmailIdentifiersChanged,
                     onMaxPhoneIdentifiersChanged = component::onMaxPhoneIdentifiersChanged,
                     onMaxIdentifiersPerExternalProviderChanged = component::onMaxIdentifiersPerExternalProviderChanged,
-                    onMaxActiveSessionsChanged = component::onMaxActiveSessionsChanged,
+                    onMaxActiveSessionsForOpenUserChanged = component::onMaxActiveSessionsForOpenUserChanged,
+                    onMaxActiveSessionsForManagementUserChanged = component::onMaxActiveSessionsForManagementUserChanged,
                     onAccessTokenExpirationSecondsChanged = component::onAccessTokenExpirationSecondsChanged,
                     onRefreshTokenExpirationSecondsChanged = component::onRefreshTokenExpirationSecondsChanged,
-                    onAccountDeletionDelaySecondsChanged = component::onAccountDeletionDelaySecondsChanged,
+                    onAccountDeletionGracePeriodSecondsChanged = component::onAccountDeletionGracePeriodSecondsChanged,
+                    onAccountDeletionCheckIntervalSecondsChanged = component::onAccountDeletionCheckIntervalSecondsChanged,
                     onRegistrationEnabledToggled = component::onRegistrationEnabledToggled,
+                    onOpenEmailBlacklistEnabledToggled = component::onOpenEmailBlacklistEnabledToggled,
+                    onOpenEmailBlacklistChanged = component::onOpenEmailBlacklistChanged,
+                    onOpenEmailWhitelistEnabledToggled = component::onOpenEmailWhitelistEnabledToggled,
+                    onOpenEmailWhitelistChanged = component::onOpenEmailWhitelistChanged,
+                    onManagementEmailBlacklistEnabledToggled = component::onManagementEmailBlacklistEnabledToggled,
+                    onManagementEmailBlacklistChanged = component::onManagementEmailBlacklistChanged,
+                    onManagementEmailWhitelistEnabledToggled = component::onManagementEmailWhitelistEnabledToggled,
+                    onManagementEmailWhitelistChanged = component::onManagementEmailWhitelistChanged,
                     onSaveClick = component::onSaveClick,
                     modifier = Modifier
                         .fillMaxSize()
@@ -131,11 +140,21 @@ private fun EditAuthSettingsForm(
     onMaxEmailIdentifiersChanged: (String) -> Unit,
     onMaxPhoneIdentifiersChanged: (String) -> Unit,
     onMaxIdentifiersPerExternalProviderChanged: (String) -> Unit,
-    onMaxActiveSessionsChanged: (String) -> Unit,
+    onMaxActiveSessionsForOpenUserChanged: (String) -> Unit,
+    onMaxActiveSessionsForManagementUserChanged: (String) -> Unit,
     onAccessTokenExpirationSecondsChanged: (String) -> Unit,
     onRefreshTokenExpirationSecondsChanged: (String) -> Unit,
-    onAccountDeletionDelaySecondsChanged: (String) -> Unit,
+    onAccountDeletionGracePeriodSecondsChanged: (String) -> Unit,
+    onAccountDeletionCheckIntervalSecondsChanged: (String) -> Unit,
     onRegistrationEnabledToggled: (Boolean) -> Unit,
+    onOpenEmailBlacklistEnabledToggled: (Boolean) -> Unit,
+    onOpenEmailBlacklistChanged: (String) -> Unit,
+    onOpenEmailWhitelistEnabledToggled: (Boolean) -> Unit,
+    onOpenEmailWhitelistChanged: (String) -> Unit,
+    onManagementEmailBlacklistEnabledToggled: (Boolean) -> Unit,
+    onManagementEmailBlacklistChanged: (String) -> Unit,
+    onManagementEmailWhitelistEnabledToggled: (Boolean) -> Unit,
+    onManagementEmailWhitelistChanged: (String) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -232,13 +251,23 @@ private fun EditAuthSettingsForm(
         )
 
         OutlinedTextField(
-            value = state.maxActiveSessions,
-            onValueChange = onMaxActiveSessionsChanged,
-            label = { Text(text = stringResource(Res.string.max_active_sessions)) },
+            value = state.maxActiveSessionsForOpenUser,
+            onValueChange = onMaxActiveSessionsForOpenUserChanged,
+            label = { Text(text = stringResource(Res.string.max_active_sessions_open)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier
                 .fillMaxWidth()
-                .testTag(EditAuthSettingsTestTags.MAX_ACTIVE_SESSIONS_INPUT)
+                .testTag(EditAuthSettingsTestTags.MAX_ACTIVE_SESSIONS_OPEN_INPUT)
+        )
+
+        OutlinedTextField(
+            value = state.maxActiveSessionsForManagementUser,
+            onValueChange = onMaxActiveSessionsForManagementUserChanged,
+            label = { Text(text = stringResource(Res.string.max_active_sessions_management)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(EditAuthSettingsTestTags.MAX_ACTIVE_SESSIONS_MANAGEMENT_INPUT)
         )
 
         OutlinedTextField(
@@ -262,13 +291,105 @@ private fun EditAuthSettingsForm(
         )
 
         OutlinedTextField(
-            value = state.accountDeletionDelaySeconds,
-            onValueChange = onAccountDeletionDelaySecondsChanged,
+            value = state.accountDeletionGracePeriodSeconds,
+            onValueChange = onAccountDeletionGracePeriodSecondsChanged,
             label = { Text(text = stringResource(Res.string.account_deletion_delay_seconds)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag(EditAuthSettingsTestTags.ACCOUNT_DELETION_DELAY_INPUT)
+        )
+
+        OutlinedTextField(
+            value = state.accountDeletionCheckIntervalSeconds,
+            onValueChange = onAccountDeletionCheckIntervalSecondsChanged,
+            label = { Text(text = stringResource(Res.string.account_deletion_check_interval_seconds)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(EditAuthSettingsTestTags.ACCOUNT_DELETION_CHECK_INTERVAL_INPUT)
+        )
+
+        Text(
+            text = stringResource(Res.string.open_email_restriction_policy),
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Checkbox(
+                checked = state.openEmailBlacklistEnabled,
+                onCheckedChange = onOpenEmailBlacklistEnabledToggled
+            )
+            Text(text = stringResource(Res.string.blacklist_enabled), modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
+        }
+
+        OutlinedTextField(
+            value = state.openEmailBlacklist,
+            onValueChange = onOpenEmailBlacklistChanged,
+            label = { Text(text = stringResource(Res.string.email_blacklist_placeholder)) },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Checkbox(
+                checked = state.openEmailWhitelistEnabled,
+                onCheckedChange = onOpenEmailWhitelistEnabledToggled
+            )
+            Text(text = stringResource(Res.string.whitelist_enabled), modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
+        }
+
+        OutlinedTextField(
+            value = state.openEmailWhitelist,
+            onValueChange = onOpenEmailWhitelistChanged,
+            label = { Text(text = stringResource(Res.string.email_whitelist_placeholder)) },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Text(
+            text = stringResource(Res.string.management_email_restriction_policy),
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Checkbox(
+                checked = state.managementEmailBlacklistEnabled,
+                onCheckedChange = onManagementEmailBlacklistEnabledToggled
+            )
+            Text(text = stringResource(Res.string.blacklist_enabled), modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
+        }
+
+        OutlinedTextField(
+            value = state.managementEmailBlacklist,
+            onValueChange = onManagementEmailBlacklistChanged,
+            label = { Text(text = stringResource(Res.string.email_blacklist_placeholder)) },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Checkbox(
+                checked = state.managementEmailWhitelistEnabled,
+                onCheckedChange = onManagementEmailWhitelistEnabledToggled
+            )
+            Text(text = stringResource(Res.string.whitelist_enabled), modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
+        }
+
+        OutlinedTextField(
+            value = state.managementEmailWhitelist,
+            onValueChange = onManagementEmailWhitelistChanged,
+            label = { Text(text = stringResource(Res.string.email_whitelist_placeholder)) },
+            modifier = Modifier.fillMaxWidth()
         )
 
         ErrorText(
@@ -323,10 +444,12 @@ private fun EditAuthSettingsContentPreview() {
                         maxEmailIdentifiers = "5",
                         maxPhoneIdentifiers = "5",
                         maxIdentifiersPerExternalProvider = "2",
-                        maxActiveSessions = "3",
+                        maxActiveSessionsForOpenUser = "3",
+                        maxActiveSessionsForManagementUser = "5",
                         accessTokenExpirationSeconds = "3600",
                         refreshTokenExpirationSeconds = "86400",
-                        accountDeletionDelaySeconds = "604800",
+                        accountDeletionGracePeriodSeconds = "604800",
+                        accountDeletionCheckIntervalSeconds = "86400",
                         isRegistrationEnabled = true
                     ),
                     onProviderToggled = { _, _ -> },
@@ -334,49 +457,21 @@ private fun EditAuthSettingsContentPreview() {
                     onMaxEmailIdentifiersChanged = {},
                     onMaxPhoneIdentifiersChanged = {},
                     onMaxIdentifiersPerExternalProviderChanged = {},
-                    onMaxActiveSessionsChanged = {},
+                    onMaxActiveSessionsForOpenUserChanged = {},
+                    onMaxActiveSessionsForManagementUserChanged = {},
                     onAccessTokenExpirationSecondsChanged = {},
                     onRefreshTokenExpirationSecondsChanged = {},
-                    onAccountDeletionDelaySecondsChanged = {},
+                    onAccountDeletionGracePeriodSecondsChanged = {},
+                    onAccountDeletionCheckIntervalSecondsChanged = {},
                     onRegistrationEnabledToggled = {},
-                    onSaveClick = {}
-                )
-            }
-        }
-    }
-}
-
-@InternalApi
-@Preview(showBackground = true)
-@Composable
-private fun EditAuthSettingsErrorPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                EditAuthSettingsForm(
-                    state = EditAuthSettingsScreenState.Content(
-                        enabledProviders = setOf(UserAuthProvider.EMAIL),
-                        maxTotalIdentifiers = "10",
-                        maxEmailIdentifiers = "5",
-                        maxPhoneIdentifiers = "5",
-                        maxIdentifiersPerExternalProvider = "2",
-                        maxActiveSessions = "3",
-                        accessTokenExpirationSeconds = "3600",
-                        refreshTokenExpirationSeconds = "86400",
-                        accountDeletionDelaySeconds = "604800",
-                        isRegistrationEnabled = true,
-                        saveError = CommonError.Unknown()
-                    ),
-                    onProviderToggled = { _, _ -> },
-                    onMaxTotalIdentifiersChanged = {},
-                    onMaxEmailIdentifiersChanged = {},
-                    onMaxPhoneIdentifiersChanged = {},
-                    onMaxIdentifiersPerExternalProviderChanged = {},
-                    onMaxActiveSessionsChanged = {},
-                    onAccessTokenExpirationSecondsChanged = {},
-                    onRefreshTokenExpirationSecondsChanged = {},
-                    onAccountDeletionDelaySecondsChanged = {},
-                    onRegistrationEnabledToggled = {},
+                    onOpenEmailBlacklistEnabledToggled = {},
+                    onOpenEmailBlacklistChanged = {},
+                    onOpenEmailWhitelistEnabledToggled = {},
+                    onOpenEmailWhitelistChanged = {},
+                    onManagementEmailBlacklistEnabledToggled = {},
+                    onManagementEmailBlacklistChanged = {},
+                    onManagementEmailWhitelistEnabledToggled = {},
+                    onManagementEmailWhitelistChanged = {},
                     onSaveClick = {}
                 )
             }
@@ -398,10 +493,12 @@ object EditAuthSettingsTestTags {
     const val MAX_EMAIL_IDENTIFIERS_INPUT = "EditAuthSettings_MaxEmailIdentifiersInput"
     const val MAX_PHONE_IDENTIFIERS_INPUT = "EditAuthSettings_MaxPhoneIdentifiersInput"
     const val MAX_IDENTIFIERS_PER_EXTERNAL_PROVIDER_INPUT = "EditAuthSettings_MaxIdentifiersPerExternalProviderInput"
-    const val MAX_ACTIVE_SESSIONS_INPUT = "EditAuthSettings_MaxActiveSessionsInput"
+    const val MAX_ACTIVE_SESSIONS_OPEN_INPUT = "EditAuthSettings_MaxActiveSessionsOpenInput"
+    const val MAX_ACTIVE_SESSIONS_MANAGEMENT_INPUT = "EditAuthSettings_MaxActiveSessionsManagementInput"
     const val ACCESS_TOKEN_EXPIRATION_INPUT = "EditAuthSettings_AccessTokenExpirationInput"
     const val REFRESH_TOKEN_EXPIRATION_INPUT = "EditAuthSettings_RefreshTokenExpirationInput"
     const val ACCOUNT_DELETION_DELAY_INPUT = "EditAuthSettings_AccountDeletionDelayInput"
+    const val ACCOUNT_DELETION_CHECK_INTERVAL_INPUT = "EditAuthSettings_AccountDeletionCheckIntervalInput"
 
     const val SAVE_ERROR_TEXT = "EditAuthSettings_SaveErrorText"
     const val SAVE_BUTTON = "EditAuthSettings_SaveButton"

@@ -7,6 +7,8 @@ interface UserDetailComponent {
 
     fun onAuthorityLevelChanged(value: String)
     fun onAccountStatusChanged(value: String)
+    fun onLockoutTypeChanged(value: String)
+    fun onTemporaryLockoutUntilChanged(value: String)
     fun onUpdateClick()
     fun onDeleteClick()
     fun onSessionsClick()

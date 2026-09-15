@@ -1,75 +1,128 @@
 <resources>
-    <string name="error_user_invalid_access_token">Недействительный токен доступа.</string>
-    <string name="error_user_access_token_expired">Срок действия токена доступа истёк.</string>
-    <string name="error_user_invalid_refresh_token">Недействительный токен обновления.</string>
-    <string name="error_user_invalid_session">Недействительная сессия.</string>
+    <string name="error_user_invalid_access_token">Токен доступа недействителен.</string>
+    <string name="error_user_access_token_expired">Срок действия токена доступа истек.</string>
+    <string name="error_user_invalid_refresh_token">Токен обновления недействителен.</string>
+    <string name="error_user_invalid_session">Сеанс недействителен.</string>
     <string name="error_user_blocked">Учётная запись заблокирована.</string>
+    <string name="error_user_blocked_until">Учётная запись заблокирована до %1$s.</string>
     <string name="error_user_read_only">Учётная запись доступна только для чтения.</string>
-    <string name="error_user_security_hold">Учётная запись временно ограничена по соображениям безопасности.</string>
-    <string name="error_user_pending_deletion">Учётная запись помечена на удаление и недоступна для использования.</string>
-    <string name="error_user_illegal_status">Текущий статус аккаунта не позволяет выполнить это действие.</string>
-    <string name="error_user_forbidden">Доступ к этому ресурсу запрещён.</string>
-    <string name="error_user_role_not_allowed">Ваша роль не позволяет выполнить это действие.</string>
-    <string name="error_user_missing_permissions">У вас нет необходимых прав для выполнения этого действия.</string>
-    <string name="error_user_insufficient_authority">Вашего уровня полномочий недостаточно для выполнения этого действия.</string>
+    <string name="error_user_security_hold">Учётная запись временно заблокирована в целях безопасности.</string>
+    <string name="error_user_pending_deletion">Учётная запись ожидает удаления и не может быть использована.</string>
+    <string name="error_user_illegal_status">Текущий статус учётной записи не позволяет выполнить эту операцию.</string>г
+    <string name="error_user_forbidden">Доступ к этому ресурсу запрещен.</string>
+    <string name="error_user_role_not_allowed">Ваша роль не позволяет выполнять это действие.</string>
+    <string name="error_user_missing_permissions">У вас нет необходимых прав для этого действия.</string>
+    <string name="error_user_insufficient_authority">Ваш уровень полномочий недостаточен для этого действия.</string>
     <string name="error_user_not_found">Пользователь не найден.</string>
     <string name="error_user_invalid_credentials">Неверный email или пароль.</string>
     <string name="error_user_wrong_password">Текущий пароль указан неверно.</string>
-    <string name="error_user_wrong_confirmation_code">Код подтверждения неверен или истёк.</string>
-    <string name="error_user_external_linkage_failed">Не удалось привязать внешний аккаунт.</string>
-    <string name="error_user_can_not_delete_identifier">Этот способ входа нельзя удалить.</string>
-    <string name="error_user_can_not_create_identifier">Не удалось добавить этот способ входа.</string>
-    <string name="error_user_identifier_limit_reached">Достигнут лимит идентификаторов.</string>
-    <string name="error_user_identifier_limit_reached_args">Достигнут лимит идентификаторов для "%2$s" (%1$s).</string>
-    <string name="error_user_total_identifiers_limit_reached">Достигнут общий лимит идентификаторов.</string>
-    <string name="error_user_total_identifiers_limit_reached_args">Достигнут общий лимит идентификаторов на один аккаунт (%1$s).</string>
+    <string name="error_user_wrong_confirmation_code">Код подтверждения неверчен или истек.</string>
+    <string name="error_user_external_linkage_failed">Не удалось связать внешний аккаунт.</string>
+    <string name="error_user_can_not_delete_identifier">Этот способ входа не может быть удален.</string>
+    <string name="error_user_can_not_create_identifier">Этот способ входа не может быть добавлен.</string>
+    <string name="error_user_identifier_limit_reached">Достигнут лимит способов входа.</string>
+    <string name="error_user_identifier_limit_reached_args">Достигнут лимит в %1$s способов входа для «%2$s».</string>
+    <string name="error_user_total_identifiers_limit_reached">Достигнут максимальный общий лимит способов входа.</string>
+    <string name="error_user_total_identifiers_limit_reached_args">Достигнут максимальный общий лимит в %1$s способов входа для аккаунта.</string>
+    <string name="error_user_email_not_allowed">Email-адрес или домен не разрешен политикой ограничений.</string>
 
     <string name="login">Вход</string>
+    <string name="login_with">Войти через:</string>
+    <string name="sign_in">Войти</string>
+    <string name="sign_in_with_email">Вход по Email</string>
+    <string name="sign_in_with_phone">Вход по телефону</string>
+    <string name="sign_in_with_google">Вход через Google</string>
+    <string name="sign_in_with_apple">Вход через Apple</string>
+    <string name="or_sign_in_with">Или войдите через</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Номер телефона</string>
+
+    <string name="enter_phone_number">Введите номер телефона</string>
+    <string name="send_code">Отправить код</string>
+
+    <string name="enter_confirmation_code">Введите код</string>
+    <string name="code_sent_to">Код отправлен на %1$s</string>
+    <string name="confirmation_code">Код подтверждения</string>
+    <string name="resend_code_timer">Повторная отправка через %1$d сек</string>
+    <string name="resend_code">Отправить код повторно</string>
+    <string name="change_phone_number">Изменить номер телефона</string>
+    <string name="confirm">Подтвердить</string>
+
     <string name="login_by_email">Вход по Email</string>
     <string name="login_by_totp">Вход по TOTP</string>
-    <string name="login_by_recovery_code">Вход по резервному коду</string>
+    <string name="login_by_recovery_code">Вход по коду восстановления</string>
     <string name="totp_code">Код TOTP</string>
-    <string name="recovery_code">Резервный код</string>
-    <string name="use_recovery_code">Использовать резервный код</string>
+    <string name="recovery_code">Код восстановления</string>
+    <string name="use_recovery_code">Использовать код восстановления</string>
     <string name="use_totp">Использовать TOTP</string>
+    <string name="password">Пароль</string>
 
     <string name="profile">Профиль</string>
     <string name="logout">Выйти</string>
     <string name="totp_settings">Настройки TOTP</string>
-    <string name="sessions">Сессии</string>
+    <string name="sessions">Сеансы</string>
     <string name="identifiers">Идентификаторы</string>
+    <string name="session_revoke">Завершить</string>
+    <string name="session_revoke_all_others">Завершить все остальные сеансы</string>
+    <string name="session_current">Это устройство</string>
+    <string name="session_expires_at">И истекает: %1$s</string>
+    <string name="session_last_accessed">Последний доступ: %1$s</string>
+    <string name="session_ip_address">IP: %1$s</string>
+
+    <string name="identifier_delete">Удалить</string>
+    <string name="identifier_add_email">Добавить Email</string>
+    <string name="identifier_add_phone">Добавить телефон</string>
+    <string name="identifier_primary">Основной</string>
     <string name="delete_account">Удалить аккаунт</string>
-    <string name="not_authorized">Вы не авторизованы!</string>
+    <string name="not_authorized">Не авторизован!</string>
     <string name="user_id">ID пользователя: %1$s</string>
 
-    <string name="totp_disabled_desc">Двухфакторная аутентификация (TOTP) добавляет дополнительный уровень безопасности вашему аккаунту. После включения вам нужно будет вводить код из приложения-аутентификатора при входе.</string>
+    <string name="totp_disabled_desc">Двухфакторная аутентификация (TOTP) повышает безопасность вашего аккаунта. При ее включении для входа потребуется вводить код из приложения-аутентификатора.</string>
     <string name="setup_totp">Настроить TOTP</string>
-    <string name="totp_setup_step1">Шаг 1: Привяжите приложение</string>
-    <string name="totp_setup_step1_desc">Откройте приложение-аутентификатор (например, Google Authenticator или Authy) и введите следующий ключ вручную.</string>
-    <string name="totp_manual_key">Ключ для ввода вручную:</string>
-    <string name="totp_setup_step2">Шаг 2: Проверьте код</string>
-    <string name="totp_setup_step2_desc">Введите 6-значный код из приложения для подтверждения настройки.</string>
+    <string name="totp_setup_step1">Шаг 1: Привязка приложения</string>
+    <string name="totp_setup_step1_desc">Откройте приложение-аутентификатор (например, Google Authenticator или Authy) и введите ключ вручную.</string>
+    <string name="totp_manual_key">Ключ ручного ввода:</string>
+    <string name="totp_setup_step2">Шаг 2: Проверка кода</string>
+    <string name="totp_setup_step2_desc">Введите 6-значный код, сгенерированный вашим приложением, для подтверждения настройки.</string>
     <string name="totp_enabled_title">Двухфакторная аутентификация активна</string>
-    <string name="recovery_codes_title">Резервные коды</string>
-    <string name="recovery_codes_desc">Храните эти коды в безопасном месте. Они помогут войти в аккаунт, если вы потеряете доступ к приложению.</string>
-    <string name="regenerate_recovery_codes">Обновить коды</string>
-    <string name="disable_totp">Выключить TOTP</string>
+    <string name="recovery_codes_title">Коды восстановления</string>
+    <string name="recovery_codes_desc">Сохраните эти коды в надежном месте. Они могут быть использованы для доступа к аккаунту в случае потери устройства.</string>
+    <string name="regenerate_recovery_codes">Пересоздать коды</string>
+    <string name="disable_totp">Отключить TOTP</string>
     <string name="copy_all">Копировать все</string>
 
     <string name="dialog_confirm_title">Вы уверены?</string>
     <string name="dialog_cancel">Отмена</string>
     <string name="dialog_confirm">Подтвердить</string>
 
-    <string name="delete_account_confirm_msg">Это действие запланирует безвозвратное удаление вашего аккаунта. Это можно будет отменить только в течение ограниченного времени.</string>
-    <string name="logout_confirm_msg">Вы уверены, что хотите выйти из аккаунта?</string>
-    <string name="disable_totp_confirm_msg">Отключение двухфакторной аутентификации сделает ваш аккаунт менее защищенным. Вы уверены, что хотите продолжить?</string>
-    <string name="regenerate_codes_confirm_msg">Обновление кодов восстановления сделает все текущие коды недействительными. Обязательно сохраните новые коды сразу после генерации.</string>
+    <string name="delete_account_confirm_msg">Ваш аккаунт будет запланирован на постоянное удаление. Это действие можно отменить только в течение ограниченного времени.</string>
+    <string name="logout_confirm_msg">Вы действительно хотите выйти из аккаунта?</string>
+    <string name="disable_totp_confirm_msg">Отключение двухфакторной аутентификации снизит безопасность вашего аккаунта. Вы действительно хотите продолжить?</string>
+    <string name="regenerate_codes_confirm_msg">Пересоздание кодов восстановления сделает все текущие резервные коды недействительными. Обязательно сохраните новые немедленно.</string>
 
-    <string name="account_pending_deletion_title">Аккаунт ожидает удаления</string>
-    <string name="account_pending_deletion_desc">Ваш аккаунт запланирован к безвозвратному удалению. Вы можете восстановить его, чтобы продолжить использование.</string>
+    <string name="account_pending_deletion_title">Аккаунт запланирован на удаление</string>
+    <string name="account_pending_deletion_desc">Ваш аккаунт в настоящее время запланирован на постоянное удаление. Вы можете восстановить его для продолжения использования приложения.</string>
     <string name="restore_account">Восстановить аккаунт</string>
 
-    <string name="change_password">Сменить пароль</string>
+    <string name="change_password">Изменить пароль</string>
     <string name="old_password">Текущий пароль</string>
     <string name="new_password">Новый пароль</string>
+
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="no_account_register">Нет аккаунта? Зарегистрироваться</string>
+
+    <string name="registration_by_email">Регистрация по Email</string>
+    <string name="register">Зарегистрироваться</string>
+
+    <string name="reset_password">Сброс пароля</string>
+    <string name="change_email">Изменение email</string>
+
+    <string name="legal_agreement_prefix">Входя в систему, вы соглашаетесь с нашими</string>
+    <string name="and">и</string>
+    <string name="privacy_policy">Политикой конфиденциальности</string>
+    <string name="terms_of_service">Условиями обслуживания</string>
+    <string name="email_prefix">Email: %1$s</string>
+    <string name="phone_prefix">Телефон: %1$s</string>
+    <string name="cancel">Отмена</string>
+    <string name="error_user_registration_disabled">Регистрация временно отключена</string>
 </resources>

@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.session
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.model.client.ClientDeviceInfoPayload
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.model.client.clientDeviceInfoPayloadMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPayload
 import kotlin.uuid.Uuid
 
@@ -25,7 +25,7 @@ fun userSessionPayloadMock(
     identifier = identifier,
     identifierId = identifierId,
     identifierAuthProvider = identifierAuthProvider,
-    clientDeviceInfo = ClientDeviceInfoPayload(),
+    clientDeviceInfo = clientDeviceInfoPayloadMock(),
     userAgent = "Mozilla/5.0",
     ipAddress = "127.0.0.1",
     expiresAt = expiresAt,

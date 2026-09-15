@@ -1,9 +1,13 @@
 package io.github.mudrichenkoevgeny.kmp.core.security.mock.network.model.securitysettings
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.security.mock.network.model.accountlockout.accountLockoutPolicyPayloadMock
+import io.github.mudrichenkoevgeny.kmp.core.security.mock.network.model.iprestriction.ipRestrictionPolicyPayloadMock
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.network.model.otpconfirmation.otpConfirmationPayloadMock
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.network.model.passwordpolicy.managementPasswordPolicyPayloadMock
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.network.model.passwordpolicy.openPasswordPolicyPayloadMock
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.accountlockout.AccountLockoutPolicyPayload
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.iprestriction.IpRestrictionPolicyPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.otpconfirmation.OtpConfirmationPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.passwordpolicy.ManagementPasswordPolicyPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.passwordpolicy.OpenPasswordPolicyPayload
@@ -21,19 +25,29 @@ fun openSecuritySettingsPayloadMock(
 
 @InternalApi
 fun managementSecuritySettingsPayloadMock(
-    recentAuthenticationValiditySeconds: Int = 300,
-    recentAuthenticationValiditySecondsForManagement: Int = 60,
+    recentAuthenticationValiditySecondsForOpenUser: Int = 300,
+    recentAuthenticationValiditySecondsForManagementUser: Int = 60,
     passwordPolicy: ManagementPasswordPolicyPayload = managementPasswordPolicyPayloadMock(),
     otpConfirmation: OtpConfirmationPayload = otpConfirmationPayloadMock(),
+    accountLockoutPolicy: AccountLockoutPolicyPayload = accountLockoutPolicyPayloadMock(),
+    accountLockoutCheckIntervalSeconds: Int = 60,
+    openIpRestrictionPolicy: IpRestrictionPolicyPayload = ipRestrictionPolicyPayloadMock(),
+    managementIpRestrictionPolicy: IpRestrictionPolicyPayload = ipRestrictionPolicyPayloadMock(),
     mfaTokenExpirationSeconds: Int = 180,
     maxRequestsPerPeriod: Int = 100,
-    rateLimitPeriodSeconds: Int = 60
+    rateLimitPeriodSeconds: Int = 60,
+    refreshTokenRotationGracePeriodSeconds: Int = 30
 ) = ManagementSecuritySettingsPayload(
-    recentAuthenticationValiditySeconds = recentAuthenticationValiditySeconds,
-    recentAuthenticationValiditySecondsForManagement = recentAuthenticationValiditySecondsForManagement,
+    recentAuthenticationValiditySecondsForOpenUser = recentAuthenticationValiditySecondsForOpenUser,
+    recentAuthenticationValiditySecondsForManagementUser = recentAuthenticationValiditySecondsForManagementUser,
     passwordPolicy = passwordPolicy,
     otpConfirmation = otpConfirmation,
+    accountLockoutPolicy = accountLockoutPolicy,
+    accountLockoutCheckIntervalSeconds = accountLockoutCheckIntervalSeconds,
+    openIpRestrictionPolicy = openIpRestrictionPolicy,
+    managementIpRestrictionPolicy = managementIpRestrictionPolicy,
     mfaTokenExpirationSeconds = mfaTokenExpirationSeconds,
     maxRequestsPerPeriod = maxRequestsPerPeriod,
-    rateLimitPeriodSeconds = rateLimitPeriodSeconds
+    rateLimitPeriodSeconds = rateLimitPeriodSeconds,
+    refreshTokenRotationGracePeriodSeconds = refreshTokenRotationGracePeriodSeconds
 )

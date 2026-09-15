@@ -9,8 +9,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings
 @InternalApi
 class EditSecuritySettingsComponentMock(
     initialState: EditSecuritySettingsScreenState = EditSecuritySettingsScreenState.Content(
-        recentAuthenticationValiditySeconds = "300",
-        recentAuthenticationValiditySecondsForManagement = "300",
+        recentAuthenticationValiditySecondsForOpenUser = "300",
+        recentAuthenticationValiditySecondsForManagementUser = "300",
         mfaTokenExpirationSeconds = "300",
         passwordMinLength = "8",
         passwordRequireLetter = true,
@@ -18,6 +18,24 @@ class EditSecuritySettingsComponentMock(
         passwordRequireLowerCase = false,
         passwordRequireDigit = true,
         passwordRequireSpecialChar = false,
+        commonPasswords = "password,123456",
+        accountLockoutMaxFailedPasswordAttempts = "5",
+        accountLockoutMaxFailedOtpAttempts = "5",
+        accountLockoutMaxFailedTotpAttempts = "5",
+        accountLockoutFailedAttemptsWindowSeconds = "300",
+        accountLockoutDurationSeconds = "300",
+        accountLockoutIndefiniteLockoutThreshold = "3",
+        accountLockoutIsSelfServiceUnlockEnabled = true,
+        accountLockoutCheckIntervalSeconds = "60",
+        refreshTokenRotationGracePeriodSeconds = "30",
+        openIpBlacklistEnabled = false,
+        openIpBlacklist = "",
+        openIpWhitelistEnabled = false,
+        openIpWhitelist = "",
+        managementIpBlacklistEnabled = false,
+        managementIpBlacklist = "",
+        managementIpWhitelistEnabled = false,
+        managementIpWhitelist = "",
         otpRetryAfterSeconds = "60",
         otpNumberOfSymbols = "6",
         otpExpirationSeconds = "300",
@@ -28,8 +46,8 @@ class EditSecuritySettingsComponentMock(
     override val state: Value<EditSecuritySettingsScreenState> = MutableValue(initialState)
 
     override fun onRetry() {}
-    override fun onRecentAuthenticationValiditySecondsChanged(value: String) {}
-    override fun onRecentAuthenticationValidityForManagementChanged(value: String) {}
+    override fun onRecentAuthenticationValidityForOpenUserChanged(value: String) {}
+    override fun onRecentAuthenticationValidityForManagementUserChanged(value: String) {}
     override fun onMfaTokenExpirationSecondsChanged(value: String) {}
     override fun onPasswordMinLengthChanged(value: String) {}
     override fun onPasswordRequireLetterToggled(enabled: Boolean) {}
@@ -37,6 +55,24 @@ class EditSecuritySettingsComponentMock(
     override fun onPasswordRequireLowerCaseToggled(enabled: Boolean) {}
     override fun onPasswordRequireDigitToggled(enabled: Boolean) {}
     override fun onPasswordRequireSpecialCharToggled(enabled: Boolean) {}
+    override fun onCommonPasswordsChanged(value: String) {}
+    override fun onAccountLockoutMaxFailedPasswordAttemptsChanged(value: String) {}
+    override fun onAccountLockoutMaxFailedOtpAttemptsChanged(value: String) {}
+    override fun onAccountLockoutMaxFailedTotpAttemptsChanged(value: String) {}
+    override fun onAccountLockoutFailedAttemptsWindowSecondsChanged(value: String) {}
+    override fun onAccountLockoutDurationSecondsChanged(value: String) {}
+    override fun onAccountLockoutIndefiniteLockoutThresholdChanged(value: String) {}
+    override fun onAccountLockoutIsSelfServiceUnlockEnabledToggled(enabled: Boolean) {}
+    override fun onAccountLockoutCheckIntervalSecondsChanged(value: String) {}
+    override fun onRefreshTokenRotationGracePeriodSecondsChanged(value: String) {}
+    override fun onOpenIpBlacklistEnabledToggled(enabled: Boolean) {}
+    override fun onOpenIpBlacklistChanged(value: String) {}
+    override fun onOpenIpWhitelistEnabledToggled(enabled: Boolean) {}
+    override fun onOpenIpWhitelistChanged(value: String) {}
+    override fun onManagementIpBlacklistEnabledToggled(enabled: Boolean) {}
+    override fun onManagementIpBlacklistChanged(value: String) {}
+    override fun onManagementIpWhitelistEnabledToggled(enabled: Boolean) {}
+    override fun onManagementIpWhitelistChanged(value: String) {}
     override fun onOtpRetryAfterSecondsChanged(value: String) {}
     override fun onOtpNumberOfSymbolsChanged(value: String) {}
     override fun onOtpExpirationSecondsChanged(value: String) {}

@@ -35,6 +35,8 @@ class CommonWebSocketMessageHandler() : WebSocketMessageHandler {
             SocketFrame(
                 id = Uuid.random().toHexDashString(),
                 type = CommonWebSocketEventTypes.PONG,
+                payload = null,
+                metadata = emptyMap(),
                 timestamp = Clock.System.now().toEpochMilliseconds()
             )
         )

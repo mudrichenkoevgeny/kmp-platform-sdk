@@ -43,7 +43,7 @@ class ProfileContentTest {
 
     @Test
     fun unauthorized_showsMessageAndLogin_invokesCallback() = runComposeUiTest {
-        val component = MainProfileComponentMock(MainProfileScreenState.Unauthorized)
+        val component = MainProfileComponentMock(MainProfileScreenState.Unauthorized())
         setContent {
             ComponentTestHarness {
                 MainProfileScreen(component)

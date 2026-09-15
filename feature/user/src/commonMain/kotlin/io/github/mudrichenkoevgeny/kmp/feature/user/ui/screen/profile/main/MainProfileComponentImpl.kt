@@ -7,13 +7,18 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.asValue
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
+import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
+import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAuthSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.ObserveAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.LogoutUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.RestoreUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.OpenAuthSettings
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
@@ -28,6 +33,8 @@ import kotlinx.coroutines.launch
  * @param logoutUseCase Ends the current session and clears local storage.
  * @param scheduleUserDeletionUseCase Initiates account deletion for end-users.
  * @param restoreUserUseCase Restores an account scheduled for deletion.
+ * @param getAuthSettingsUseCase Retrieves current remote auth settings.
+ * @param observeAuthSettingsUseCase Observes current remote auth settings updates in real time.
  * @param onNavigateToLogin Invoked when the user needs to sign in.
  * @param onNavigateToTotp Opens the TOTP settings screen.
  * @param onNavigateToSessions Opens the active sessions list.
@@ -40,6 +47,8 @@ class MainProfileComponentImpl(
     private val logoutUseCase: LogoutUseCase,
     private val scheduleUserDeletionUseCase: ScheduleUserDeletionUseCase,
     private val restoreUserUseCase: RestoreUserUseCase,
+    private val getAuthSettingsUseCase: GetAuthSettingsUseCase? = null,
+    private val observeAuthSettingsUseCase: ObserveAuthSettingsUseCase? = null,
     private val onNavigateToLogin: () -> Unit,
     private val onNavigateToTotp: () -> Unit,
     private val onNavigateToSessions: () -> Unit,
@@ -50,6 +59,17 @@ class MainProfileComponentImpl(
     private val showDeleteConfirmation = MutableStateFlow(false)
     private val showLogoutConfirmation = MutableStateFlow(false)
     private val actionState = MutableStateFlow<ActionState>(ActionState.Idle)
+    private val authSettings = MutableStateFlow<OpenAuthSettings?>(null)
+
+    init {
+        observeAuthSettingsUseCase?.let { observeUseCase ->
+            scope.launch {
+                observeUseCase().collect { settings ->
+                    authSettings.value = settings
+                }
+            }
+        }
+    }
 
     override val state: Value<MainProfileScreenState> = combine(
         userRepository.currentUser,
@@ -58,7 +78,9 @@ class MainProfileComponentImpl(
         actionState
     ) { user, showDeleteConfirm, showLogoutConfirm, action ->
         if (user == null) {
-            MainProfileScreenState.Unauthorized
+            MainProfileScreenState.Unauthorized(
+                actionError = (action as? ActionState.Error)?.error
+            )
         } else {
             MainProfileScreenState.Content(
                 user = user,
@@ -84,7 +106,36 @@ class MainProfileComponentImpl(
     }
 
     override fun onLoginClick() {
-        onNavigateToLogin()
+        val currentSettings = authSettings.value
+        if (currentSettings != null) {
+            if (!currentSettings.isRegistrationEnabled) {
+                actionState.value = ActionState.Error(UserError.RegistrationDisabled())
+                return
+            }
+            actionState.value = ActionState.Idle
+            onNavigateToLogin()
+        } else if (getAuthSettingsUseCase != null) {
+            actionState.value = ActionState.Loading
+            scope.launch {
+                when (val result = getAuthSettingsUseCase()) {
+                    is AppResult.Success -> {
+                        if (!result.data.isRegistrationEnabled) {
+                            actionState.value = ActionState.Error(UserError.RegistrationDisabled())
+                        } else {
+                            actionState.value = ActionState.Idle
+                            onNavigateToLogin()
+                        }
+                    }
+                    is AppResult.Error -> {
+                        actionState.value = ActionState.Idle
+                        onNavigateToLogin()
+                    }
+                }
+            }
+        } else {
+            actionState.value = ActionState.Idle
+            onNavigateToLogin()
+        }
     }
 
     override fun onLogoutClick() {

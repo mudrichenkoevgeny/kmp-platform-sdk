@@ -7,6 +7,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user.M
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.permission.PermissionCode
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
@@ -29,7 +30,7 @@ class ManagementUserApiMock : ManagementUserApi {
     override suspend fun getUsers(
         pageNumber: Int?, pageSize: Int?, sortBy: UserSortValues.UserSortBy?,
         sortOrder: SortOrder?, roles: List<UserRole>?, accountStatuses: List<UserAccountStatus>?,
-        accountStatusesBeforeDeletion: List<UserAccountStatus>?, authorityLevelFrom: Int?,
+        accountStatusesBeforeDeletion: List<UserAccountStatus>?, accountLockoutTypes: List<AccountLockoutType>?, authorityLevelFrom: Int?,
         authorityLevelTo: Int?, isTotpEnabled: Boolean?, permissionCodes: List<PermissionCode>?
     ) = getUsersResult
 

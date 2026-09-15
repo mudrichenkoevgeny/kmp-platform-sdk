@@ -51,10 +51,10 @@ class OpenLoginRepositoryImpl(
 
     override suspend fun loginByExternalAuthProvider(
         authProvider: UserAuthProvider,
-        token: String
+        externalProviderToken: String
     ): AppResult<AuthData> {
         return openLoginApi.loginByExternalAuthProvider(
-            LoginByExternalAuthProviderRequest(authProvider.serialName, token)
+            LoginByExternalAuthProviderRequest(authProvider.serialName, externalProviderToken)
         ).mapSuccess { authDataPayload ->
             authDataPayload.toAuthData()
         }

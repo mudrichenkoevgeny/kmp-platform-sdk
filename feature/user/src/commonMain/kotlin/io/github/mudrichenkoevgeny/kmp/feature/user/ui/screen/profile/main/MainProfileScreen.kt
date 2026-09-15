@@ -58,7 +58,10 @@ fun MainProfileScreen(component: MainProfileComponent) {
     ) {
         when (val currentState = state) {
             is MainProfileScreenState.Loading -> FullscreenLoading()
-            is MainProfileScreenState.Unauthorized -> UnauthorizedContent(onLoginClick = component::onLoginClick)
+            is MainProfileScreenState.Unauthorized -> UnauthorizedContent(
+                state = currentState,
+                onLoginClick = component::onLoginClick
+            )
             is MainProfileScreenState.Content -> ProfileContent(
                 state = currentState,
                 onLogoutClick = component::onLogoutClick,
@@ -83,7 +86,10 @@ fun MainProfileScreen(component: MainProfileComponent) {
 }
 
 @Composable
-private fun UnauthorizedContent(onLoginClick: () -> Unit) {
+private fun UnauthorizedContent(
+    state: MainProfileScreenState.Unauthorized,
+    onLoginClick: () -> Unit
+) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = stringResource(Res.string.not_authorized),
@@ -96,6 +102,7 @@ private fun UnauthorizedContent(onLoginClick: () -> Unit) {
         ) {
             Text(text = stringResource(Res.string.login))
         }
+        ErrorText(state.actionError)
     }
 }
 
@@ -306,7 +313,10 @@ private fun MainProfileScreenUnauthorizedPreview() {
     MaterialTheme {
         CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             Surface {
-                UnauthorizedContent(onLoginClick = {})
+                UnauthorizedContent(
+                    state = MainProfileScreenState.Unauthorized(),
+                    onLoginClick = {}
+                )
             }
         }
     }

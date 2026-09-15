@@ -100,8 +100,8 @@ fun EditSecuritySettingsScreen(component: EditSecuritySettingsComponent) {
             is EditSecuritySettingsScreenState.Content -> {
                 EditSecuritySettingsForm(
                     state = currentState,
-                    onRecentAuthenticationValiditySecondsChanged = component::onRecentAuthenticationValiditySecondsChanged,
-                    onRecentAuthenticationValidityForManagementChanged = component::onRecentAuthenticationValidityForManagementChanged,
+                    onRecentAuthenticationValidityForOpenUserChanged = component::onRecentAuthenticationValidityForOpenUserChanged,
+                    onRecentAuthenticationValidityForManagementUserChanged = component::onRecentAuthenticationValidityForManagementUserChanged,
                     onMfaTokenExpirationSecondsChanged = component::onMfaTokenExpirationSecondsChanged,
                     onPasswordMinLengthChanged = component::onPasswordMinLengthChanged,
                     onPasswordRequireLetterToggled = component::onPasswordRequireLetterToggled,
@@ -109,6 +109,24 @@ fun EditSecuritySettingsScreen(component: EditSecuritySettingsComponent) {
                     onPasswordRequireLowerCaseToggled = component::onPasswordRequireLowerCaseToggled,
                     onPasswordRequireDigitToggled = component::onPasswordRequireDigitToggled,
                     onPasswordRequireSpecialCharToggled = component::onPasswordRequireSpecialCharToggled,
+                    onCommonPasswordsChanged = component::onCommonPasswordsChanged,
+                    onAccountLockoutMaxFailedPasswordAttemptsChanged = component::onAccountLockoutMaxFailedPasswordAttemptsChanged,
+                    onAccountLockoutMaxFailedOtpAttemptsChanged = component::onAccountLockoutMaxFailedOtpAttemptsChanged,
+                    onAccountLockoutMaxFailedTotpAttemptsChanged = component::onAccountLockoutMaxFailedTotpAttemptsChanged,
+                    onAccountLockoutFailedAttemptsWindowSecondsChanged = component::onAccountLockoutFailedAttemptsWindowSecondsChanged,
+                    onAccountLockoutDurationSecondsChanged = component::onAccountLockoutDurationSecondsChanged,
+                    onAccountLockoutIndefiniteLockoutThresholdChanged = component::onAccountLockoutIndefiniteLockoutThresholdChanged,
+                    onAccountLockoutIsSelfServiceUnlockEnabledToggled = component::onAccountLockoutIsSelfServiceUnlockEnabledToggled,
+                    onAccountLockoutCheckIntervalSecondsChanged = component::onAccountLockoutCheckIntervalSecondsChanged,
+                    onRefreshTokenRotationGracePeriodSecondsChanged = component::onRefreshTokenRotationGracePeriodSecondsChanged,
+                    onOpenIpBlacklistEnabledToggled = component::onOpenIpBlacklistEnabledToggled,
+                    onOpenIpBlacklistChanged = component::onOpenIpBlacklistChanged,
+                    onOpenIpWhitelistEnabledToggled = component::onOpenIpWhitelistEnabledToggled,
+                    onOpenIpWhitelistChanged = component::onOpenIpWhitelistChanged,
+                    onManagementIpBlacklistEnabledToggled = component::onManagementIpBlacklistEnabledToggled,
+                    onManagementIpBlacklistChanged = component::onManagementIpBlacklistChanged,
+                    onManagementIpWhitelistEnabledToggled = component::onManagementIpWhitelistEnabledToggled,
+                    onManagementIpWhitelistChanged = component::onManagementIpWhitelistChanged,
                     onOtpRetryAfterSecondsChanged = component::onOtpRetryAfterSecondsChanged,
                     onOtpNumberOfSymbolsChanged = component::onOtpNumberOfSymbolsChanged,
                     onOtpExpirationSecondsChanged = component::onOtpExpirationSecondsChanged,
@@ -129,8 +147,8 @@ fun EditSecuritySettingsScreen(component: EditSecuritySettingsComponent) {
 @Composable
 private fun EditSecuritySettingsForm(
     state: EditSecuritySettingsScreenState.Content,
-    onRecentAuthenticationValiditySecondsChanged: (String) -> Unit,
-    onRecentAuthenticationValidityForManagementChanged: (String) -> Unit,
+    onRecentAuthenticationValidityForOpenUserChanged: (String) -> Unit,
+    onRecentAuthenticationValidityForManagementUserChanged: (String) -> Unit,
     onMfaTokenExpirationSecondsChanged: (String) -> Unit,
     onPasswordMinLengthChanged: (String) -> Unit,
     onPasswordRequireLetterToggled: (Boolean) -> Unit,
@@ -138,6 +156,24 @@ private fun EditSecuritySettingsForm(
     onPasswordRequireLowerCaseToggled: (Boolean) -> Unit,
     onPasswordRequireDigitToggled: (Boolean) -> Unit,
     onPasswordRequireSpecialCharToggled: (Boolean) -> Unit,
+    onCommonPasswordsChanged: (String) -> Unit,
+    onAccountLockoutMaxFailedPasswordAttemptsChanged: (String) -> Unit,
+    onAccountLockoutMaxFailedOtpAttemptsChanged: (String) -> Unit,
+    onAccountLockoutMaxFailedTotpAttemptsChanged: (String) -> Unit,
+    onAccountLockoutFailedAttemptsWindowSecondsChanged: (String) -> Unit,
+    onAccountLockoutDurationSecondsChanged: (String) -> Unit,
+    onAccountLockoutIndefiniteLockoutThresholdChanged: (String) -> Unit,
+    onAccountLockoutIsSelfServiceUnlockEnabledToggled: (Boolean) -> Unit,
+    onAccountLockoutCheckIntervalSecondsChanged: (String) -> Unit,
+    onRefreshTokenRotationGracePeriodSecondsChanged: (String) -> Unit,
+    onOpenIpBlacklistEnabledToggled: (Boolean) -> Unit,
+    onOpenIpBlacklistChanged: (String) -> Unit,
+    onOpenIpWhitelistEnabledToggled: (Boolean) -> Unit,
+    onOpenIpWhitelistChanged: (String) -> Unit,
+    onManagementIpBlacklistEnabledToggled: (Boolean) -> Unit,
+    onManagementIpBlacklistChanged: (String) -> Unit,
+    onManagementIpWhitelistEnabledToggled: (Boolean) -> Unit,
+    onManagementIpWhitelistChanged: (String) -> Unit,
     onOtpRetryAfterSecondsChanged: (String) -> Unit,
     onOtpNumberOfSymbolsChanged: (String) -> Unit,
     onOtpExpirationSecondsChanged: (String) -> Unit,
@@ -157,8 +193,8 @@ private fun EditSecuritySettingsForm(
         )
 
         OutlinedTextField(
-            value = state.recentAuthenticationValiditySeconds,
-            onValueChange = onRecentAuthenticationValiditySecondsChanged,
+            value = state.recentAuthenticationValiditySecondsForOpenUser,
+            onValueChange = onRecentAuthenticationValidityForOpenUserChanged,
             label = { Text(text = stringResource(Res.string.recent_authentication_validity_seconds)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier
@@ -167,8 +203,8 @@ private fun EditSecuritySettingsForm(
         )
 
         OutlinedTextField(
-            value = state.recentAuthenticationValiditySecondsForManagement,
-            onValueChange = onRecentAuthenticationValidityForManagementChanged,
+            value = state.recentAuthenticationValiditySecondsForManagementUser,
+            onValueChange = onRecentAuthenticationValidityForManagementUserChanged,
             label = { Text(text = stringResource(Res.string.recent_authentication_validity_for_management)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier
@@ -184,6 +220,16 @@ private fun EditSecuritySettingsForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag(EditSecuritySettingsTestTags.MFA_TOKEN_EXPIRATION_INPUT)
+        )
+
+        OutlinedTextField(
+            value = state.refreshTokenRotationGracePeriodSeconds,
+            onValueChange = onRefreshTokenRotationGracePeriodSecondsChanged,
+            label = { Text(text = stringResource(Res.string.refresh_token_rotation_grace_period_seconds)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(EditSecuritySettingsTestTags.REFRESH_TOKEN_ROTATION_GRACE_PERIOD_INPUT)
         )
 
         Text(
@@ -261,6 +307,149 @@ private fun EditSecuritySettingsForm(
             checked = state.passwordRequireSpecialChar,
             onCheckedChange = onPasswordRequireSpecialCharToggled,
             testTag = EditSecuritySettingsTestTags.PASSWORD_REQUIRE_SPECIAL_CHAR_CHECKBOX
+        )
+
+        OutlinedTextField(
+            value = state.commonPasswords,
+            onValueChange = onCommonPasswordsChanged,
+            label = { Text(text = stringResource(Res.string.common_passwords_placeholder)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(EditSecuritySettingsTestTags.COMMON_PASSWORDS_INPUT)
+        )
+
+        Text(
+            text = stringResource(Res.string.account_lockout_policy_section),
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        OutlinedTextField(
+            value = state.accountLockoutMaxFailedPasswordAttempts,
+            onValueChange = onAccountLockoutMaxFailedPasswordAttemptsChanged,
+            label = { Text(text = stringResource(Res.string.max_failed_password_attempts)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = state.accountLockoutMaxFailedOtpAttempts,
+            onValueChange = onAccountLockoutMaxFailedOtpAttemptsChanged,
+            label = { Text(text = stringResource(Res.string.max_failed_otp_attempts)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = state.accountLockoutMaxFailedTotpAttempts,
+            onValueChange = onAccountLockoutMaxFailedTotpAttemptsChanged,
+            label = { Text(text = stringResource(Res.string.max_failed_totp_attempts)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = state.accountLockoutFailedAttemptsWindowSeconds,
+            onValueChange = onAccountLockoutFailedAttemptsWindowSecondsChanged,
+            label = { Text(text = stringResource(Res.string.failed_attempts_window_seconds)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = state.accountLockoutDurationSeconds,
+            onValueChange = onAccountLockoutDurationSecondsChanged,
+            label = { Text(text = stringResource(Res.string.lockout_duration_seconds)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = state.accountLockoutIndefiniteLockoutThreshold,
+            onValueChange = onAccountLockoutIndefiniteLockoutThresholdChanged,
+            label = { Text(text = stringResource(Res.string.indefinite_lockout_threshold)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        PolicyCheckboxRow(
+            label = stringResource(Res.string.self_service_unlock_enabled),
+            checked = state.accountLockoutIsSelfServiceUnlockEnabled,
+            onCheckedChange = onAccountLockoutIsSelfServiceUnlockEnabledToggled,
+            testTag = EditSecuritySettingsTestTags.LOCKOUT_SELF_SERVICE_CHECKBOX
+        )
+
+        OutlinedTextField(
+            value = state.accountLockoutCheckIntervalSeconds,
+            onValueChange = onAccountLockoutCheckIntervalSecondsChanged,
+            label = { Text(text = stringResource(Res.string.account_lockout_check_interval_seconds)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Text(
+            text = stringResource(Res.string.open_ip_restriction_policy),
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        PolicyCheckboxRow(
+            label = stringResource(Res.string.blacklist_enabled),
+            checked = state.openIpBlacklistEnabled,
+            onCheckedChange = onOpenIpBlacklistEnabledToggled,
+            testTag = EditSecuritySettingsTestTags.OPEN_IP_BLACKLIST_CHECKBOX
+        )
+
+        OutlinedTextField(
+            value = state.openIpBlacklist,
+            onValueChange = onOpenIpBlacklistChanged,
+            label = { Text(text = stringResource(Res.string.blacklist_placeholder)) },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        PolicyCheckboxRow(
+            label = stringResource(Res.string.whitelist_enabled),
+            checked = state.openIpWhitelistEnabled,
+            onCheckedChange = onOpenIpWhitelistEnabledToggled,
+            testTag = EditSecuritySettingsTestTags.OPEN_IP_WHITELIST_CHECKBOX
+        )
+
+        OutlinedTextField(
+            value = state.openIpWhitelist,
+            onValueChange = onOpenIpWhitelistChanged,
+            label = { Text(text = stringResource(Res.string.whitelist_placeholder)) },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Text(
+            text = stringResource(Res.string.management_ip_restriction_policy),
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        PolicyCheckboxRow(
+            label = stringResource(Res.string.blacklist_enabled),
+            checked = state.managementIpBlacklistEnabled,
+            onCheckedChange = onManagementIpBlacklistEnabledToggled,
+            testTag = EditSecuritySettingsTestTags.MGMT_IP_BLACKLIST_CHECKBOX
+        )
+
+        OutlinedTextField(
+            value = state.managementIpBlacklist,
+            onValueChange = onManagementIpBlacklistChanged,
+            label = { Text(text = stringResource(Res.string.blacklist_placeholder)) },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        PolicyCheckboxRow(
+            label = stringResource(Res.string.whitelist_enabled),
+            checked = state.managementIpWhitelistEnabled,
+            onCheckedChange = onManagementIpWhitelistEnabledToggled,
+            testTag = EditSecuritySettingsTestTags.MGMT_IP_WHITELIST_CHECKBOX
+        )
+
+        OutlinedTextField(
+            value = state.managementIpWhitelist,
+            onValueChange = onManagementIpWhitelistChanged,
+            label = { Text(text = stringResource(Res.string.whitelist_placeholder)) },
+            modifier = Modifier.fillMaxWidth()
         )
 
         Text(
@@ -370,8 +559,8 @@ private fun EditSecuritySettingsContentPreview() {
             Surface {
                 EditSecuritySettingsForm(
                     state = EditSecuritySettingsScreenState.Content(
-                        recentAuthenticationValiditySeconds = "300",
-                        recentAuthenticationValiditySecondsForManagement = "300",
+                        recentAuthenticationValiditySecondsForOpenUser = "300",
+                        recentAuthenticationValiditySecondsForManagementUser = "300",
                         mfaTokenExpirationSeconds = "300",
                         passwordMinLength = "8",
                         passwordRequireLetter = true,
@@ -379,14 +568,32 @@ private fun EditSecuritySettingsContentPreview() {
                         passwordRequireLowerCase = false,
                         passwordRequireDigit = true,
                         passwordRequireSpecialChar = false,
+                        commonPasswords = "password,123456",
+                        accountLockoutMaxFailedPasswordAttempts = "5",
+                        accountLockoutMaxFailedOtpAttempts = "5",
+                        accountLockoutMaxFailedTotpAttempts = "5",
+                        accountLockoutFailedAttemptsWindowSeconds = "300",
+                        accountLockoutDurationSeconds = "300",
+                        accountLockoutIndefiniteLockoutThreshold = "3",
+                        accountLockoutIsSelfServiceUnlockEnabled = true,
+                        accountLockoutCheckIntervalSeconds = "60",
+                        refreshTokenRotationGracePeriodSeconds = "30",
+                        openIpBlacklistEnabled = false,
+                        openIpBlacklist = "",
+                        openIpWhitelistEnabled = false,
+                        openIpWhitelist = "",
+                        managementIpBlacklistEnabled = false,
+                        managementIpBlacklist = "",
+                        managementIpWhitelistEnabled = false,
+                        managementIpWhitelist = "",
                         otpRetryAfterSeconds = "60",
                         otpNumberOfSymbols = "6",
                         otpExpirationSeconds = "300",
                         maxRequestsPerPeriod = "100",
                         rateLimitPeriodSeconds = "60"
                     ),
-                    onRecentAuthenticationValiditySecondsChanged = {},
-                    onRecentAuthenticationValidityForManagementChanged = {},
+                    onRecentAuthenticationValidityForOpenUserChanged = {},
+                    onRecentAuthenticationValidityForManagementUserChanged = {},
                     onMfaTokenExpirationSecondsChanged = {},
                     onPasswordMinLengthChanged = {},
                     onPasswordRequireLetterToggled = {},
@@ -394,52 +601,24 @@ private fun EditSecuritySettingsContentPreview() {
                     onPasswordRequireLowerCaseToggled = {},
                     onPasswordRequireDigitToggled = {},
                     onPasswordRequireSpecialCharToggled = {},
-                    onOtpRetryAfterSecondsChanged = {},
-                    onOtpNumberOfSymbolsChanged = {},
-                    onOtpExpirationSecondsChanged = {},
-                    onMaxRequestsPerPeriodChanged = {},
-                    onRateLimitPeriodSecondsChanged = {},
-                    onSaveClick = {}
-                )
-            }
-        }
-    }
-}
-
-@InternalApi
-@Preview(showBackground = true)
-@Composable
-private fun EditSecuritySettingsErrorPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                EditSecuritySettingsForm(
-                    state = EditSecuritySettingsScreenState.Content(
-                        recentAuthenticationValiditySeconds = "300",
-                        recentAuthenticationValiditySecondsForManagement = "300",
-                        mfaTokenExpirationSeconds = "300",
-                        passwordMinLength = "8",
-                        passwordRequireLetter = true,
-                        passwordRequireUpperCase = false,
-                        passwordRequireLowerCase = false,
-                        passwordRequireDigit = true,
-                        passwordRequireSpecialChar = false,
-                        otpRetryAfterSeconds = "60",
-                        otpNumberOfSymbols = "6",
-                        otpExpirationSeconds = "300",
-                        maxRequestsPerPeriod = "100",
-                        rateLimitPeriodSeconds = "60",
-                        saveError = CommonError.Unknown()
-                    ),
-                    onRecentAuthenticationValiditySecondsChanged = {},
-                    onRecentAuthenticationValidityForManagementChanged = {},
-                    onMfaTokenExpirationSecondsChanged = {},
-                    onPasswordMinLengthChanged = {},
-                    onPasswordRequireLetterToggled = {},
-                    onPasswordRequireUpperCaseToggled = {},
-                    onPasswordRequireLowerCaseToggled = {},
-                    onPasswordRequireDigitToggled = {},
-                    onPasswordRequireSpecialCharToggled = {},
+                    onCommonPasswordsChanged = {},
+                    onAccountLockoutMaxFailedPasswordAttemptsChanged = {},
+                    onAccountLockoutMaxFailedOtpAttemptsChanged = {},
+                    onAccountLockoutMaxFailedTotpAttemptsChanged = {},
+                    onAccountLockoutFailedAttemptsWindowSecondsChanged = {},
+                    onAccountLockoutDurationSecondsChanged = {},
+                    onAccountLockoutIndefiniteLockoutThresholdChanged = {},
+                    onAccountLockoutIsSelfServiceUnlockEnabledToggled = {},
+                    onAccountLockoutCheckIntervalSecondsChanged = {},
+                    onRefreshTokenRotationGracePeriodSecondsChanged = {},
+                    onOpenIpBlacklistEnabledToggled = {},
+                    onOpenIpBlacklistChanged = {},
+                    onOpenIpWhitelistEnabledToggled = {},
+                    onOpenIpWhitelistChanged = {},
+                    onManagementIpBlacklistEnabledToggled = {},
+                    onManagementIpBlacklistChanged = {},
+                    onManagementIpWhitelistEnabledToggled = {},
+                    onManagementIpWhitelistChanged = {},
                     onOtpRetryAfterSecondsChanged = {},
                     onOtpNumberOfSymbolsChanged = {},
                     onOtpExpirationSecondsChanged = {},
@@ -461,6 +640,7 @@ object EditSecuritySettingsTestTags {
     const val RECENT_AUTH_VALIDITY_INPUT = "EditSecuritySettings_RecentAuthValidityInput"
     const val RECENT_MANAGEMENT_AUTH_VALIDITY_INPUT = "EditSecuritySettings_RecentManagementAuthValidityInput"
     const val MFA_TOKEN_EXPIRATION_INPUT = "EditSecuritySettings_MfaTokenExpirationInput"
+    const val REFRESH_TOKEN_ROTATION_GRACE_PERIOD_INPUT = "EditSecuritySettings_RefreshTokenRotationGracePeriodInput"
 
     const val SECTION_RATE_LIMITING_TITLE = "EditSecuritySettings_SectionRateLimitingTitle"
     const val MAX_REQUESTS_PER_PERIOD_INPUT = "EditSecuritySettings_MaxRequestsPerPeriodInput"
@@ -473,6 +653,13 @@ object EditSecuritySettingsTestTags {
     const val PASSWORD_REQUIRE_LOWERCASE_CHECKBOX = "EditSecuritySettings_PasswordRequireLowercaseCheckbox"
     const val PASSWORD_REQUIRE_DIGIT_CHECKBOX = "EditSecuritySettings_PasswordRequireDigitCheckbox"
     const val PASSWORD_REQUIRE_SPECIAL_CHAR_CHECKBOX = "EditSecuritySettings_PasswordRequireSpecialCharCheckbox"
+    const val COMMON_PASSWORDS_INPUT = "EditSecuritySettings_CommonPasswordsInput"
+
+    const val LOCKOUT_SELF_SERVICE_CHECKBOX = "EditSecuritySettings_LockoutSelfServiceCheckbox"
+    const val OPEN_IP_BLACKLIST_CHECKBOX = "EditSecuritySettings_OpenIpBlacklistCheckbox"
+    const val OPEN_IP_WHITELIST_CHECKBOX = "EditSecuritySettings_OpenIpWhitelistCheckbox"
+    const val MGMT_IP_BLACKLIST_CHECKBOX = "EditSecuritySettings_MgmtIpBlacklistCheckbox"
+    const val MGMT_IP_WHITELIST_CHECKBOX = "EditSecuritySettings_MgmtIpWhitelistCheckbox"
 
     const val SECTION_OTP_TITLE = "EditSecuritySettings_SectionOtpTitle"
     const val OTP_RETRY_AFTER_INPUT = "EditSecuritySettings_OtpRetryAfterInput"

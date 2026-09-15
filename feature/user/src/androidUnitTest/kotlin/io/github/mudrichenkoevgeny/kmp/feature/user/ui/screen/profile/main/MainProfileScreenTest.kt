@@ -41,7 +41,7 @@ class MainProfileScreenTest {
 
     @Test
     fun unauthorized_displaysTextAndLoginButton_invokesOnLoginClick() = runComposeUiTest {
-        val component = MainProfileComponentMock(MainProfileScreenState.Unauthorized)
+        val component = MainProfileComponentMock(MainProfileScreenState.Unauthorized())
         setContent {
             ComponentTestHarness {
                 MainProfileScreen(component)

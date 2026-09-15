@@ -12,7 +12,9 @@ sealed interface MainProfileScreenState {
     data object Loading : MainProfileScreenState
 
     /** User is not signed in. */
-    data object Unauthorized : MainProfileScreenState
+    data class Unauthorized(
+        val actionError: AppError? = null
+    ) : MainProfileScreenState
 
     /** User profile content with management options. */
     data class Content(
