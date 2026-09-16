@@ -2,6 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.clientuser.di
 
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.login.KtorOpenLoginApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.resetpassword.KtorResetPasswordApi
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.unlock.KtorOpenUnlockApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.refreshtoken.KtorOpenRefreshTokenApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.registration.KtorRegistrationApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.settings.KtorOpenAuthSettingsApi
@@ -30,6 +31,8 @@ internal class ClientUserNetworkModule(
     val refreshTokenApi by lazy { KtorOpenRefreshTokenApi(httpClient) }
     /** API for password recovery. */
     val resetPasswordApi by lazy { KtorResetPasswordApi(httpClient) }
+    /** API for account unlocking. */
+    val unlockApi by lazy { KtorOpenUnlockApi(httpClient) }
     /** API for public authentication settings. */
     val authSettingsApi by lazy { KtorOpenAuthSettingsApi(httpClient) }
 

@@ -52,7 +52,8 @@ class MainProfileComponentImpl(
     private val onNavigateToLogin: () -> Unit,
     private val onNavigateToTotp: () -> Unit,
     private val onNavigateToSessions: () -> Unit,
-    private val onNavigateToIdentifiers: () -> Unit
+    private val onNavigateToIdentifiers: () -> Unit,
+    private val onNavigateToUnlock: (() -> Unit)? = null
 ) : MainProfileComponent, ComponentContext by componentContext {
 
     private val scope = componentCoroutineScope()
@@ -195,6 +196,10 @@ class MainProfileComponentImpl(
                     actionState.value = ActionState.Error(error)
                 }
         }
+    }
+
+    override fun onUnlockAccountClick() {
+        onNavigateToUnlock?.invoke()
     }
 
     override fun onDismissDialog() {

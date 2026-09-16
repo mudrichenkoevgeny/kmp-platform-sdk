@@ -76,6 +76,9 @@ class ClientUserComponent(
     /** Repository for password recovery and change operations. */
     val passwordRepository get() = clientUserRepositoryModule.resetPasswordRepository
 
+    /** Repository for self-service account unlocking. */
+    val unlockRepository get() = clientUserRepositoryModule.unlockRepository
+
     /** Repository for fetching available authentication providers and policies. */
     val authSettingsRepository get() = clientUserRepositoryModule.openAuthSettingsRepository
 
@@ -131,6 +134,24 @@ class ClientUserComponent(
 
     /** Sends a password-reset verification code to the specified email. */
     val sendResetPasswordConfirmationToEmailUseCase get() = useCaseModule.sendResetPasswordConfirmationToEmailUseCase
+
+    /** Sends an account unlock code to the specified email. */
+    val sendUnlockEmailConfirmationUseCase get() = useCaseModule.sendUnlockEmailConfirmationUseCase
+
+    /** Unlocks an account using an email code. */
+    val unlockByEmailUseCase get() = useCaseModule.unlockByEmailUseCase
+
+    /** Sends an account unlock code to the specified phone. */
+    val sendUnlockPhoneConfirmationUseCase get() = useCaseModule.sendUnlockPhoneConfirmationUseCase
+
+    /** Unlocks an account using a phone code. */
+    val unlockByPhoneUseCase get() = useCaseModule.unlockByPhoneUseCase
+
+    /** Unlocks an account using an external provider. */
+    val unlockByExternalAuthProviderUseCase get() = useCaseModule.unlockByExternalAuthProviderUseCase
+
+    /** Unlocks an account using Google. */
+    val unlockByGoogleUseCase get() = useCaseModule.unlockByGoogleUseCase
 
     /** Refreshes all user-related configurations (global, security, auth). */
     val refreshUserConfigurationUseCase get() = useCaseModule.refreshUserConfigurationUseCase

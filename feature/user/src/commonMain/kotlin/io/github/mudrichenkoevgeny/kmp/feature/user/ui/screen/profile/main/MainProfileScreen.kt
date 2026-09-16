@@ -1,5 +1,3 @@
-@file:OptIn(InternalApi::class)
-
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main
 
 import androidx.compose.animation.AnimatedVisibility
@@ -44,6 +42,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import org.jetbrains.compose.resources.stringResource
 
@@ -72,6 +71,7 @@ fun MainProfileScreen(component: MainProfileComponent) {
                 onDeleteAccountClick = component::onDeleteAccountClick,
                 onConfirmDeleteAccount = component::onConfirmDeleteAccount,
                 onRestoreAccountClick = component::onRestoreAccountClick,
+                onUnlockAccountClick = component::onUnlockAccountClick,
                 onDismissDialog = component::onDismissDialog
             )
             is MainProfileScreenState.Error -> {
@@ -117,9 +117,12 @@ private fun ProfileContent(
     onDeleteAccountClick: () -> Unit,
     onConfirmDeleteAccount: () -> Unit,
     onRestoreAccountClick: () -> Unit,
+    onUnlockAccountClick: () -> Unit,
     onDismissDialog: () -> Unit
 ) {
     val isPendingDeletion = state.user.accountStatus == UserAccountStatus.PENDING_DELETION
+    val isLocked = state.user.lockoutType != AccountLockoutType.NONE ||
+            state.user.accountStatus == UserAccountStatus.SECURITY_HOLD
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -128,6 +131,48 @@ private fun ProfileContent(
                 .padding(CoreTheme.dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if (isLocked) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = CoreTheme.dimens.paddingMedium)
+                        .testTag(MainProfileTestTags.LOCKED_CARD),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(CoreTheme.dimens.paddingMedium),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.account_locked_title),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+                        Text(
+                            text = stringResource(Res.string.account_locked_desc),
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
+                        Button(
+                            onClick = onUnlockAccountClick,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag(MainProfileTestTags.UNLOCK_ACCOUNT_BUTTON),
+                            enabled = !state.actionLoading
+                        ) {
+                            Text(text = stringResource(Res.string.unlock_account))
+                        }
+                    }
+                }
+            }
+
             if (isPendingDeletion) {
                 Card(
                     modifier = Modifier
@@ -342,6 +387,7 @@ private fun MainProfileScreenContentPreview() {
                     onDeleteAccountClick = {},
                     onConfirmDeleteAccount = {},
                     onRestoreAccountClick = {},
+                    onUnlockAccountClick = {},
                     onDismissDialog = {}
                 )
             }
@@ -369,6 +415,7 @@ private fun MainProfileScreenContentLoadingPreview() {
                     onDeleteAccountClick = {},
                     onConfirmDeleteAccount = {},
                     onRestoreAccountClick = {},
+                    onUnlockAccountClick = {},
                     onDismissDialog = {}
                 )
             }
@@ -396,6 +443,7 @@ private fun MainProfileScreenContentErrorPreview() {
                     onDeleteAccountClick = {},
                     onConfirmDeleteAccount = {},
                     onRestoreAccountClick = {},
+                    onUnlockAccountClick = {},
                     onDismissDialog = {}
                 )
             }
@@ -403,10 +451,12 @@ private fun MainProfileScreenContentErrorPreview() {
     }
 }
 
-@InternalApi
-object MainProfileTestTags {
+internal object MainProfileTestTags {
     const val UNAUTHORIZED_TEXT = "MainProfile_UnauthorizedText"
     const val LOGIN_BUTTON = "MainProfile_LoginButton"
+
+    const val LOCKED_CARD = "MainProfile_LockedCard"
+    const val UNLOCK_ACCOUNT_BUTTON = "MainProfile_UnlockAccountButton"
 
     const val PENDING_DELETION_CARD = "MainProfile_PendingDeletionCard"
     const val RESTORE_ACCOUNT_BUTTON = "MainProfile_RestoreAccountButton"

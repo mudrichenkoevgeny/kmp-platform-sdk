@@ -5,14 +5,19 @@ import io.github.mudrichenkoevgeny.kmp.core.common.di.CommonComponent
 import io.github.mudrichenkoevgeny.kmp.core.common.di.EncryptedSettingsComponent
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.platform.model.deviceInfoMock
+import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
+import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.security.error.parser.SecurityErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.security.network.securitysettings.OpenSecuritySettingsApi
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
 import io.github.mudrichenkoevgeny.kmp.core.settings.network.globalsettings.OpenGlobalSettingsApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.di.ManagementUserComponent
-import io.github.mudrichenkoevgeny.kmp.feature.securityapi.network.securitysettings.KtorOpenSecuritySettingsApi
-import io.github.mudrichenkoevgeny.kmp.feature.settingsapi.network.globalsettings.KtorOpenGlobalSettingsApi
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.globalsettings.KtorManagementGlobalSettingsApi
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.security.settings.KtorManagementSecuritySettingsApi
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.passwordpolicy.OpenPasswordPolicyPayload
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.securitysettings.OpenSecuritySettingsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.model.globalsettings.OpenGlobalSettingsPayload
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.parser.UserErrorParser
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.auth.UserAuthServicesMock
@@ -129,11 +134,22 @@ class ManagementAppComponent(
         )
     }
 
-    /** REST API for global settings using open routes (/global-settings). */
+    /** REST API for global settings adapting management routes (/management/global-settings). */
     val openGlobalSettingsApi: OpenGlobalSettingsApi by lazy {
-        KtorOpenGlobalSettingsApi(
-            client = commonComponent.httpClient
-        )
+        val managementApi = KtorManagementGlobalSettingsApi(client = commonComponent.httpClient)
+        object : OpenGlobalSettingsApi {
+            override suspend fun getOpenGlobalSettings(): AppResult<OpenGlobalSettingsPayload> {
+                return managementApi.getManagementGlobalSettings().mapSuccess { payload ->
+                    OpenGlobalSettingsPayload(
+                        privacyPolicyUrl = payload.privacyPolicyUrl,
+                        termsOfServiceUrl = payload.termsOfServiceUrl,
+                        contactSupportEmail = payload.contactSupportEmail,
+                        maintenanceUntilEpochMillis = payload.maintenanceUntilEpochMillis,
+                        minSupportedAppVersions = payload.minSupportedAppVersions
+                    )
+                }
+            }
+        }
     }
 
     private var mockSettingsComponent: SettingsComponent? = null
@@ -148,11 +164,26 @@ class ManagementAppComponent(
         )
     }
 
-    /** REST API for security metadata using open routes (/security/settings). */
+    /** REST API for security metadata adapting management routes (/management/security/settings). */
     val openSecuritySettingsApi: OpenSecuritySettingsApi by lazy {
-        KtorOpenSecuritySettingsApi(
-            client = commonComponent.httpClient
-        )
+        val managementApi = KtorManagementSecuritySettingsApi(client = commonComponent.httpClient)
+        object : OpenSecuritySettingsApi {
+            override suspend fun getSecuritySettings(): AppResult<OpenSecuritySettingsPayload> {
+                return managementApi.getManagementSecuritySettings().mapSuccess { payload ->
+                    OpenSecuritySettingsPayload(
+                        passwordPolicy = OpenPasswordPolicyPayload(
+                            minLength = payload.passwordPolicy.minLength,
+                            requireLetter = payload.passwordPolicy.requireLetter,
+                            requireUpperCase = payload.passwordPolicy.requireUpperCase,
+                            requireLowerCase = payload.passwordPolicy.requireLowerCase,
+                            requireDigit = payload.passwordPolicy.requireDigit,
+                            requireSpecialChar = payload.passwordPolicy.requireSpecialChar
+                        ),
+                        otpConfirmation = payload.otpConfirmation
+                    )
+                }
+            }
+        }
     }
 
     private var mockSecurityComponent: SecurityComponent? = null

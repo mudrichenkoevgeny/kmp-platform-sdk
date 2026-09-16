@@ -125,4 +125,15 @@
     <string name="phone_prefix">Телефон: %1$s</string>
     <string name="cancel">Отмена</string>
     <string name="error_user_registration_disabled">Регистрация временно отключена</string>
+
+    <string name="account_locked_title">Учётная запись временно заблокирована</string>
+    <string name="account_locked_desc">Ваш аккаунт был заблокирован из-за политики безопасности или нескольких неудачных попыток входа. Вы можете разблокировать его через один из подтверждённых способов идентификации.</string>
+    <string name="unlock_account">Разблокировать аккаунт</string>
+    <string name="unlock_by_email">Разблокировать по Email</string>
+    <string name="unlock_by_phone">Разблокировать по SMS</string>
+    <string name="unlock_by_google">Разблокировать через Google</string>
+    <string name="unlock_by_apple">Разблокировать через Apple</string>
+    <string name="unlock_choose_method">Выберите способ разблокировки</string>
+    <string name="unlock_success_title">Учётная запись успешно разблокирована</string>
+    <string name="unlock_success_desc">Ваш аккаунт разблокирован. Вы можете продолжить использование всех функций системы.</string>
 </resources>

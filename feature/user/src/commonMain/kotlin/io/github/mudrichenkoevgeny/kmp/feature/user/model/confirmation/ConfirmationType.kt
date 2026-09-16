@@ -15,5 +15,11 @@ enum class ConfirmationType {
     LOGIN_PHONE,
 
     /** Confirmation for adding a new phone number to an existing account. */
-    ADD_PHONE
+    ADD_PHONE,
+
+    /** Confirmation for unlocking an account via email. */
+    UNLOCK_EMAIL,
+
+    /** Confirmation for unlocking an account via phone. */
+    UNLOCK_PHONE
 }

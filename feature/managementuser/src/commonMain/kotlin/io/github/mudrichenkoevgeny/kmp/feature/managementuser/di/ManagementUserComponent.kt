@@ -95,6 +95,9 @@ class ManagementUserComponent(
     /** Repository for self-management login (email/totp). */
     val loginRepository get() = repositoryModule.selfManagementLoginRepository
 
+    /** Repository for self-management account unlock operations. */
+    val unlockRepository get() = repositoryModule.selfManagementUnlockRepository
+
     /** Repository for current management user profile. */
     val userRepository get() = repositoryModule.selfManagementUserRepository
 
@@ -150,6 +153,21 @@ class ManagementUserComponent(
 
     /** Refreshes full configuration for the management user. */
     val refreshUserConfigurationUseCase get() = useCaseModule.refreshUserConfigurationUseCase
+
+    /** Sends an account unlock code to the specified email. */
+    val sendUnlockEmailConfirmationUseCase get() = useCaseModule.sendUnlockEmailConfirmationUseCase
+
+    /** Unlocks an account using an email code. */
+    val unlockByEmailUseCase get() = useCaseModule.unlockByEmailUseCase
+
+    /** Sends an account unlock code to the specified phone. */
+    val sendUnlockPhoneConfirmationUseCase get() = useCaseModule.sendUnlockPhoneConfirmationUseCase
+
+    /** Unlocks an account using a phone code. */
+    val unlockByPhoneUseCase get() = useCaseModule.unlockByPhoneUseCase
+
+    /** Unlocks an account using an external provider. */
+    val unlockByExternalAuthProviderUseCase get() = useCaseModule.unlockByExternalAuthProviderUseCase
 
     /** Signs out the manager. */
     val logoutUseCase get() = useCaseModule.logoutUseCase

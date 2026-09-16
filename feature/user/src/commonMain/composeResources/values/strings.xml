@@ -125,4 +125,15 @@
     <string name="phone_prefix">Phone: %1$s</string>
     <string name="cancel">Cancel</string>
     <string name="error_user_registration_disabled">Registration is currently disabled</string>
+
+    <string name="account_locked_title">Account Temporarily Locked</string>
+    <string name="account_locked_desc">Your account has been locked due to security policy or multiple failed login attempts. You can unlock it using one of your verified identification methods.</string>
+    <string name="unlock_account">Unlock account</string>
+    <string name="unlock_by_email">Unlock via Email</string>
+    <string name="unlock_by_phone">Unlock via SMS</string>
+    <string name="unlock_by_google">Unlock via Google</string>
+    <string name="unlock_by_apple">Unlock via Apple</string>
+    <string name="unlock_choose_method">Choose unlock method</string>
+    <string name="unlock_success_title">Account Successfully Unlocked</string>
+    <string name="unlock_success_desc">Your account has been unlocked. You may now continue using all services.</string>
 </resources>

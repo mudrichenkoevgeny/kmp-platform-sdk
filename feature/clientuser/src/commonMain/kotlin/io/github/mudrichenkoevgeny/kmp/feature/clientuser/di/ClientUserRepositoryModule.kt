@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.login.
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.refreshtoken.OpenRefreshTokenRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.registration.OpenRegistrationRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.resetpassword.OpenResetPasswordRepositoryImpl
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.unlock.OpenUnlockRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.settings.OpenAuthSettingsRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.identifier.OpenIdentifierRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.session.OpenSessionRepositoryImpl
@@ -16,6 +17,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginR
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.refreshtoken.RefreshTokenRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.registration.RegistrationRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpassword.ResetPasswordRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.unlock.UnlockRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepositoryImpl
@@ -70,6 +72,10 @@ internal class ClientUserRepositoryModule(
     /** Repository for password recovery. */
     val resetPasswordRepository: ResetPasswordRepository by lazy {
         OpenResetPasswordRepositoryImpl(networkModule.resetPasswordApi, confirmationRepository)
+    }
+    /** Repository for self-service account unlocking. */
+    val unlockRepository: UnlockRepository by lazy {
+        OpenUnlockRepositoryImpl(networkModule.unlockApi, confirmationRepository)
     }
     /** Storage for open auth settings. */
     val openAuthSettingsStorage: OpenAuthSettingsStorage by lazy {

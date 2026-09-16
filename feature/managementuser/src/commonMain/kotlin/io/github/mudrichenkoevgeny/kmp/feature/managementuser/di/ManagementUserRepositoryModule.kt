@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.auth.login.SelfManagementLoginRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.auth.refreshtoken.SelfManagementRefreshTokenRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.auth.resetpassword.SelfManagementResetPasswordRepositoryImpl
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.auth.unlock.SelfManagementUnlockRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.auth.settings.ManagementAuthSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.auth.settings.ManagementAuthSettingsRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.globalsettings.ManagementGlobalSettingsRepository
@@ -33,6 +34,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserStorageModule
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.refreshtoken.RefreshTokenRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpassword.ResetPasswordRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.unlock.UnlockRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
@@ -81,6 +83,13 @@ internal class ManagementUserRepositoryModule(
     val selfManagementResetPasswordRepository: ResetPasswordRepository by lazy {
         SelfManagementResetPasswordRepositoryImpl(
             resetPasswordApi = networkModule.resetPasswordApi,
+            confirmationRepository = confirmationRepository
+        )
+    }
+    /** Repository for self-management account unlocking. */
+    val selfManagementUnlockRepository: UnlockRepository by lazy {
+        SelfManagementUnlockRepositoryImpl(
+            selfManagementUnlockApi = networkModule.selfManagementUnlockApi,
             confirmationRepository = confirmationRepository
         )
     }

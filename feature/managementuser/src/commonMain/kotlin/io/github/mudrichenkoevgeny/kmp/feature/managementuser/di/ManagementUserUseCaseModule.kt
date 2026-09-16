@@ -13,6 +13,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByTo
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.refreshtoken.RefreshTokenUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.ResetEmailPasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.SendResetPasswordConfirmationToEmailUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.SendUnlockEmailConfirmationUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.SendUnlockPhoneConfirmationUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockByEmailUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockByExternalAuthProviderUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockByPhoneUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierPhoneUseCase
@@ -132,6 +137,41 @@ internal class ManagementUserUseCaseModule(
     val sendResetPasswordConfirmationToEmailUseCase by lazy {
         SendResetPasswordConfirmationToEmailUseCase(
             resetPasswordRepository = managementUserRepositoryModule.selfManagementResetPasswordRepository
+        )
+    }
+
+    /** Requests an account unlock code for an email. */
+    val sendUnlockEmailConfirmationUseCase by lazy {
+        SendUnlockEmailConfirmationUseCase(
+            unlockRepository = managementUserRepositoryModule.selfManagementUnlockRepository
+        )
+    }
+
+    /** Unlocks an account using an email code. */
+    val unlockByEmailUseCase by lazy {
+        UnlockByEmailUseCase(
+            unlockRepository = managementUserRepositoryModule.selfManagementUnlockRepository
+        )
+    }
+
+    /** Requests an account unlock code for a phone number. */
+    val sendUnlockPhoneConfirmationUseCase by lazy {
+        SendUnlockPhoneConfirmationUseCase(
+            unlockRepository = managementUserRepositoryModule.selfManagementUnlockRepository
+        )
+    }
+
+    /** Unlocks an account using a phone code. */
+    val unlockByPhoneUseCase by lazy {
+        UnlockByPhoneUseCase(
+            unlockRepository = managementUserRepositoryModule.selfManagementUnlockRepository
+        )
+    }
+
+    /** Unlocks an account using an external auth provider token. */
+    val unlockByExternalAuthProviderUseCase by lazy {
+        UnlockByExternalAuthProviderUseCase(
+            unlockRepository = managementUserRepositoryModule.selfManagementUnlockRepository
         )
     }
 
