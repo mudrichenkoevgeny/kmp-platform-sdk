@@ -8,6 +8,7 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
+        mavenLocal() // todo remove after shared lib release in public maven
         google()
         mavenCentral()
     }
@@ -34,9 +35,6 @@ registerModules("core", coreModules)
 
 val featureModules = listOf(
     "user",
-    "auditapi",
-    "securityapi",
-    "settingsapi",
     "clientuser",
     "managementuser"
 )

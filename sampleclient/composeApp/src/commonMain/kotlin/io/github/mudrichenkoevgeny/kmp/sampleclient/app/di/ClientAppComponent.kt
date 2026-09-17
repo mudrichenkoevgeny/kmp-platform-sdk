@@ -9,8 +9,6 @@ import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.security.error.parser.SecurityErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.di.ClientUserComponent
-import io.github.mudrichenkoevgeny.kmp.feature.securityapi.di.SecurityApiComponent
-import io.github.mudrichenkoevgeny.kmp.feature.settingsapi.di.SettingsApiComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.parser.UserErrorParser
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.auth.UserAuthServicesMock
@@ -127,35 +125,17 @@ class ClientAppComponent(
         )
     }
 
-    private val settingsApiComponent by lazy {
-        SettingsApiComponent(
-            httpClient = commonComponent.httpClient
-        )
-    }
-
-    /** REST API for global settings. */
-    val globalSettingsApi = settingsApiComponent.openGlobalSettingsApi
-
     private var mockSettingsComponent: SettingsComponent? = null
 
     /** Domain logic for global app settings. */
     val settingsComponent: SettingsComponent by lazy {
         mockSettingsComponent ?: SettingsComponent(
             webSocketService = commonComponent.webSocketService,
-            openGlobalSettingsApi = globalSettingsApi,
+            httpClient = commonComponent.httpClient,
             encryptedSettings = encryptedSettings,
             parentScope = appScope
         )
     }
-
-    private val securityApiComponent by lazy {
-        SecurityApiComponent(
-            httpClient = commonComponent.httpClient
-        )
-    }
-
-    /** REST API for security metadata. */
-    val securitySettingsApi = securityApiComponent.openSecuritySettingsApi
 
     private var mockSecurityComponent: SecurityComponent? = null
 
@@ -163,7 +143,7 @@ class ClientAppComponent(
     val securityComponent: SecurityComponent by lazy {
         mockSecurityComponent ?: SecurityComponent(
             webSocketService = commonComponent.webSocketService,
-            openSecuritySettingsApi = securitySettingsApi,
+            httpClient = commonComponent.httpClient,
             encryptedSettings = encryptedSettings,
             parentScope = appScope
         )

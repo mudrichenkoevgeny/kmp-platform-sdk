@@ -9,14 +9,11 @@ A modular **Kotlin Multiplatform (KMP)** client SDK for Android and Web (Wasm). 
 | Module | Purpose |
 | :--- | :--- |
 | **core/common** | **Foundation:** Ktor bootstrap, WebSocket lifecycle, `EncryptedSettings` abstraction, platform metadata, and error parsing. |
-| **core/settings** | **Global Settings:** Logic for application configuration, encrypted caching, and reactive state management. |
-| **core/security** | **Security Domain:** Password policy validation, MFA state management, and localized security errors. |
-| **feature/auditapi** | **Audit Logs:** Ktor networking and UI for administrative audit logs and event inspection. |
-| **feature/securityapi** | **Security Network:** Ktor implementation for fetching security policies and MFA requirements. |
-| **feature/settingsapi** | **Settings Network:** Ktor implementation for fetching global application configurations. |
+| **core/settings** | **Global Settings:** Logic for application configuration, Ktor network client, encrypted caching, and reactive state management. |
+| **core/security** | **Security Domain:** Password policy validation, MFA state management, Ktor network client, and localized security errors. |
 | **feature/user** | **Base Identity:** Foundational models, use cases, and storage for user identity and authentication. |
 | **feature/clientuser** | **Client Identity:** Identity solution for standard user applications, including UI and social login. |
-| **feature/managementuser** | **Management Identity:** Administrative identity solution for internal staff and resource oversight. |
+| **feature/managementuser** | **Management Identity:** Administrative identity solution for internal staff, resource oversight, and audit logs. |
 | **bom** | **Bill of Materials:** Gradle platform to ensure version alignment across all SDK modules. |
 
 ## Installation
@@ -54,23 +51,20 @@ val commonComponent = CommonComponent(
 )
 ```
 
-### 2. Feature API & Components
-Construct the networking providers and domain components by sharing the core `HttpClient` and `WebSocketService`.
+### 2. Feature Components
+Construct domain components by sharing the core `HttpClient` and `WebSocketService`.
 
 ```kotlin
-val securityApi = SecurityApiComponent(httpClient = commonComponent.httpClient).securitySettingsApi
-val settingsApi = SettingsApiComponent(httpClient = commonComponent.httpClient).globalSettingsApi
-
 val securityComponent = SecurityComponent(
     webSocketService = commonComponent.webSocketService,
-    securitySettingsApi = securityApi,
+    httpClient = commonComponent.httpClient,
     encryptedSettings = commonComponent.encryptedSettings,
     parentScope = appScope
 )
 
 val settingsComponent = SettingsComponent(
     webSocketService = commonComponent.webSocketService,
-    globalSettingsApi = settingsApi,
+    httpClient = commonComponent.httpClient,
     encryptedSettings = commonComponent.encryptedSettings,
     parentScope = appScope
 )

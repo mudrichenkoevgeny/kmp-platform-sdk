@@ -9,6 +9,17 @@
     <string name="management_settings_title">Настройки управления</string>
     <string name="audit_logs">Аудит логи</string>
 
+    <!-- Audit Logs Screen -->
+    <string name="audit_logs_title">Аудит логи</string>
+    <string name="audit_event_details_title">Детали аудит события</string>
+    <string name="audit_event_id">ID события</string>
+    <string name="audit_event_action">Действие</string>
+    <string name="audit_event_resource">Ресурс</string>
+    <string name="audit_event_status">Статус</string>
+    <string name="audit_event_actor">Субъект</string>
+    <string name="audit_event_message">Сообщение</string>
+    <string name="audit_event_timestamp">Время</string>
+
     <!-- Edit Auth Settings Screen -->
     <string name="edit_auth_settings_title">Редактировать настройки авторизации</string>
     <string name="enabled_auth_providers">Включенные провайдеры авторизации</string>

@@ -56,11 +56,11 @@ kotlin {
             implementation(project(":core:security"))
             implementation(project(":feature:user"))
             implementation(project(":feature:clientuser"))
-            implementation(project(":feature:settingsapi"))
-            implementation(project(":feature:securityapi"))
 
             // Shared Foundation
             implementation(libs.shared.foundation.core.common)
+            implementation(libs.shared.foundation.core.settings)
+            implementation(libs.shared.foundation.core.security)
             implementation(libs.shared.foundation.feature.user)
 
             // Kotlin

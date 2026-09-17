@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.core.security.network.securitysettings.Op
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator.PasswordPolicyValidator
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator.PasswordPolicyValidatorImpl
 import io.github.mudrichenkoevgeny.kmp.core.security.storage.securitysettings.OpenSecuritySettingsStorage
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -23,8 +24,9 @@ import kotlinx.coroutines.SupervisorJob
  */
 class SecurityComponent(
     webSocketService: WebSocketService,
-    openSecuritySettingsApi: OpenSecuritySettingsApi,
+    httpClient: HttpClient,
     encryptedSettings: EncryptedSettings,
+    openSecuritySettingsApi: OpenSecuritySettingsApi? = null,
     parentScope: CoroutineScope? = null
 ) {
     private val componentScope = parentScope
@@ -41,9 +43,13 @@ class SecurityComponent(
         PasswordPolicyValidatorImpl()
     }
 
+    private val networkModule by lazy {
+        SecurityNetworkModule(httpClient)
+    }
+
     private val repositoryModule by lazy {
         SecurityRepositoryModule(
-            openSecuritySettingsApi = openSecuritySettingsApi,
+            openSecuritySettingsApi = openSecuritySettingsApi ?: networkModule.openSecuritySettingsApi,
             openSecuritySettingsStorage = securitySettingsStorage,
             webSocketService = webSocketService,
             repositoryScope = componentScope

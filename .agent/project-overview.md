@@ -26,18 +26,15 @@ alwaysApply: true
 *Infrastructure primitives and shared abstractions.*
 
 - **`core/common`:** The foundation. Ktor client bootstrap, WebSocket lifecycle, `AppError` model, error parsing pipeline (Chain of Responsibility), and platform metadata.
-- **`core/settings`:** Global application settings logic, encrypted storage implementations, and reactive state management.
-- **`core/security`:** Password policy validation, MFA state management primitives, and domain-specific security error parsing.
+- **`core/settings`:** Global application settings logic, Ktor network client for global settings, encrypted storage implementations, and reactive state management.
+- **`core/security`:** Password policy validation, MFA state management primitives, Ktor network client for security settings, and domain-specific security error parsing.
 
 ### Feature Modules (`feature/`)
 *Pluggable domain logic and shared UI components.*
 
-- **`feature/auditapi`:** Administrative audit log viewing and event inspection features for management users.
-- **`feature/securityapi`:** Ktor-based networking for security policy management and MFA requirement synchronization.
-- **`feature/settingsapi`:** Ktor-based networking implementation for fetching and syncing global application configurations.
 - **`feature/user`:** Base Identity & Auth logic. Core models, use cases, and token storage.
 - **`feature/clientuser`:** Identity solution for standard users. Multi-method auth (Email, Phone, Google), and **Decompose** components for auth flows.
-- **`feature/managementuser`:** Administrative identity solution. Management-specific auth, session control, and resource oversight.
+- **`feature/managementuser`:** Administrative identity solution. Management-specific auth, session control, resource oversight, and administrative audit log inspection.
 
 ### Other
 - **`bom`:** Bill of Materials (Gradle platform).

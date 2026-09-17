@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
-import io.github.mudrichenkoevgeny.kmp.feature.auditapi.ui.screen.root.AuditApiRootScreen
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.root.AuditApiRootScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.UsersManagementRootScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.auth.EditAuthSettingsScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.global.EditGlobalSettingsScreen

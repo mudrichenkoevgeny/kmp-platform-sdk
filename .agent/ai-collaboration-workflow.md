@@ -31,13 +31,15 @@ This document defines the interaction model and workflow requirements for AI-ass
 
 Ensure code is placed in the correct module based on the following taxonomy:
 
-| Category | Core Module (`core/`) - Infra | Feature Module (`feature/`) - Domain |
-| :--- | :--- | :--- |
-| **Foundation** | `common`: Ktor client, WebSocket service, `AppError` pipe, `EncryptedSettings` base. | — |
-| **Settings** | `settings`: Global config logic, encrypted state management. | `settingsapi`: Ktor fetching logic for configs. |
-| **Security** | `security`: Password policies, MFA state, security error parsing. | `securityapi`: Ktor sync for policies and MFA. |
-| **Identity** | — | `user`: Auth methods (Google, Email), JWT sessions, Decompose UI flows. |
-| **Alignment** | — | `bom`: Bill of Materials for version consistency. |
+| Category | Core Module (`core/`) - Infra | Feature Module (`feature/`) - Domain | SDK Root Module |
+| :--- | :--- | :--- | :--- |
+| **Foundation** | `common`: Ktor client, WebSocket service, `AppError` pipe, `EncryptedSettings` base. | — | — |
+| **Settings** | `settings`: Global config logic, Ktor network client, encrypted state management. | — | — |
+| **Security** | `security`: Password policies, MFA state, Ktor network client, security error parsing. | — | — |
+| **Identity Base** | — | `user`: Core identity models, base auth use cases, encrypted session storage. | — |
+| **Client Identity** | — | `clientuser`: Multi-method auth (Email, Phone, Google), Decompose UI & navigation for client apps. | — |
+| **Management Identity** | — | `managementuser`: Admin auth, session control, resource oversight, audit log, Decompose UI for admin apps. | — |
+| **Alignment** | — | — | `bom`: Bill of Materials (Gradle platform) for SDK version consistency. |
 
 **Strict Boundary:** Avoid moving app-specific logic from the `sample` module into SDK core modules. Core modules must remain generic, cross-platform, and configuration-driven.
 

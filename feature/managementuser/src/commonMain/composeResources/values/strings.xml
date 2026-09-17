@@ -9,6 +9,17 @@
     <string name="management_settings_title">Management Settings</string>
     <string name="audit_logs">Audit Logs</string>
 
+    <!-- Audit Logs Screen -->
+    <string name="audit_logs_title">Audit Logs</string>
+    <string name="audit_event_details_title">Audit Event Details</string>
+    <string name="audit_event_id">Event ID</string>
+    <string name="audit_event_action">Action</string>
+    <string name="audit_event_resource">Resource</string>
+    <string name="audit_event_status">Status</string>
+    <string name="audit_event_actor">Actor</string>
+    <string name="audit_event_message">Message</string>
+    <string name="audit_event_timestamp">Timestamp</string>
+
     <!-- Edit Auth Settings Screen -->
     <string name="edit_auth_settings_title">Edit Auth Settings</string>
     <string name="enabled_auth_providers">Enabled Auth Providers</string>

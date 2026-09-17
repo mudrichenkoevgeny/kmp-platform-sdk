@@ -32,6 +32,7 @@ fun settingsComponentMock(
 ): SettingsComponent {
     return SettingsComponent(
         webSocketService = webSocketService,
+        httpClient = httpClient,
         openGlobalSettingsApi = OpenGlobalSettingsApiMock(),
         encryptedSettings = EncryptedSettingsMock(),
         parentScope = parentScope

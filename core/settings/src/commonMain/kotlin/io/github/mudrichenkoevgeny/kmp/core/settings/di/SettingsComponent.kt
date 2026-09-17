@@ -4,6 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.Web
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
 import io.github.mudrichenkoevgeny.kmp.core.settings.network.globalsettings.OpenGlobalSettingsApi
 import io.github.mudrichenkoevgeny.kmp.core.settings.storage.globalsettings.OpenGlobalSettingsStorage
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -20,8 +21,9 @@ import kotlinx.coroutines.SupervisorJob
  */
 class SettingsComponent(
     webSocketService: WebSocketService,
-    openGlobalSettingsApi: OpenGlobalSettingsApi,
+    httpClient: HttpClient,
     encryptedSettings: EncryptedSettings,
+    openGlobalSettingsApi: OpenGlobalSettingsApi? = null,
     parentScope: CoroutineScope? = null
 ) {
     private val componentScope = parentScope
@@ -34,9 +36,13 @@ class SettingsComponent(
     }
     val globalSettingsStorage get() = storageModule.openGlobalSettingsStorage
 
+    private val networkModule by lazy {
+        SettingsNetworkModule(httpClient)
+    }
+
     private val repositoryModule by lazy {
         SettingsRepositoryModule(
-            openGlobalSettingsApi = openGlobalSettingsApi,
+            openGlobalSettingsApi = openGlobalSettingsApi ?: networkModule.openGlobalSettingsApi,
             openGlobalSettingsStorage = globalSettingsStorage,
             webSocketService = webSocketService,
             repositoryScope = componentScope

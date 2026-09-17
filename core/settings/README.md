@@ -41,7 +41,7 @@ Construct the [SettingsComponent] by passing the core infrastructure shared with
 ```kotlin
 val settingsComponent = SettingsComponent(
     webSocketService = commonComponent.webSocketService,
-    globalSettingsApi = globalSettingsApi,
+    httpClient = commonComponent.httpClient,
     encryptedSettings = commonComponent.encryptedSettings,
     parentScope = appScope // Optional: Defaults to SupervisorJob + Default dispatcher
 )

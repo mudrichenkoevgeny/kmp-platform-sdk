@@ -45,7 +45,7 @@ Construct [SecurityComponent] by providing core infrastructure dependencies:
 ```kotlin
 val securityComponent = SecurityComponent(
     webSocketService = commonComponent.webSocketService,
-    securitySettingsApi = securitySettingsApi,
+    httpClient = commonComponent.httpClient,
     encryptedSettings = commonComponent.encryptedSettings,
     parentScope = appScope
 )

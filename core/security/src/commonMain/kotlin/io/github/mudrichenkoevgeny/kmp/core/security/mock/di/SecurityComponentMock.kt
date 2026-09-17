@@ -32,6 +32,7 @@ fun securityComponentMock(
 ): SecurityComponent {
     return SecurityComponent(
         webSocketService = webSocketService,
+        httpClient = httpClient,
         openSecuritySettingsApi = OpenSecuritySettingsApiMock(),
         encryptedSettings = EncryptedSettingsMock(),
         parentScope = parentScope
