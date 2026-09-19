@@ -4,7 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySett
 import io.github.mudrichenkoevgeny.kmp.core.settings.repository.OpenGlobalSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.google.DisabledGoogleAuthService
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.configuration.OpenUserConfigurationApi
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration.OpenUserConfigurationApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserStorageModule
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType

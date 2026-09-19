@@ -8,7 +8,6 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
-        mavenLocal() // todo remove after shared lib release in public maven
         google()
         mavenCentral()
     }

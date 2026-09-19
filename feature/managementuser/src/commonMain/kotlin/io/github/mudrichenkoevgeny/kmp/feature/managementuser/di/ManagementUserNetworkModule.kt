@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.auth.r
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.auth.resetpassword.KtorSelfManagementResetPasswordApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.auth.unlock.KtorSelfManagementUnlockApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.auth.settings.KtorManagementAuthSettingsApi
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration.KtorOpenUserConfigurationApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.configuration.KtorManagementUserConfigurationApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.globalsettings.KtorManagementGlobalSettingsApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.identifier.KtorManagementIdentifierApi
@@ -62,8 +63,10 @@ internal class ManagementUserNetworkModule(
     val managementUserSecurityApi by lazy { KtorManagementUserSecurityApi(httpClient) }
 
     // Configuration
+    /** API for open user configuration. */
+    val openUserConfigurationApi by lazy { KtorOpenUserConfigurationApi(httpClient) }
     /** API for management user configuration. */
-    val userConfigurationApi by lazy { KtorManagementUserConfigurationApi(httpClient) }
+    val managementUserConfigurationApi by lazy { KtorManagementUserConfigurationApi(httpClient) }
 
     // Settings
     /** Administrative API for global settings. */

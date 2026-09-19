@@ -1,7 +1,9 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.di
 
+import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySettingsRepository
+import io.github.mudrichenkoevgeny.kmp.core.settings.repository.OpenGlobalSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration.OpenUserConfigurationApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.configuration.ManagementUserConfigurationApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.auth.settings.ManagementAuthSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.globalsettings.ManagementGlobalSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.security.settings.ManagementSecuritySettingsRepository
@@ -63,7 +65,9 @@ internal class ManagementUserUseCaseModule(
     private val authStorage: AuthStorage,
     private val storageModule: UserStorageModule,
     private val authServices: UserAuthServices,
-    private val managementUserConfigurationApi: ManagementUserConfigurationApi,
+    private val openUserConfigurationApi: OpenUserConfigurationApi,
+    private val openGlobalSettingsRepository: OpenGlobalSettingsRepository,
+    private val openSecuritySettingsRepository: OpenSecuritySettingsRepository,
     private val managementAuthSettingsRepository: ManagementAuthSettingsRepository,
     private val managementGlobalSettingsRepository: ManagementGlobalSettingsRepository,
     private val managementSecuritySettingsRepository: ManagementSecuritySettingsRepository
@@ -186,10 +190,9 @@ internal class ManagementUserUseCaseModule(
     /** Refreshes full configuration for the management user. */
     val refreshUserConfigurationUseCase by lazy {
         RefreshManagementUserConfigurationUseCase(
-            userConfigurationApi = managementUserConfigurationApi,
-            managementGlobalSettingsRepository = managementGlobalSettingsRepository,
-            managementSecuritySettingsRepository = managementSecuritySettingsRepository,
-            managementAuthSettingsRepository = managementAuthSettingsRepository
+            openUserConfigurationApi = openUserConfigurationApi,
+            openGlobalSettingsRepository = openGlobalSettingsRepository,
+            openSecuritySettingsRepository = openSecuritySettingsRepository
         )
     }
 

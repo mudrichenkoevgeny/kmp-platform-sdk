@@ -6,7 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.unloc
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.refreshtoken.KtorOpenRefreshTokenApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.registration.KtorRegistrationApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.settings.KtorOpenAuthSettingsApi
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.configuration.KtorOpenUserConfigurationApi
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration.KtorOpenUserConfigurationApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.identifier.KtorOpenIdentifiersApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.session.KtorOpenSessionApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.user.KtorOpenUserApi

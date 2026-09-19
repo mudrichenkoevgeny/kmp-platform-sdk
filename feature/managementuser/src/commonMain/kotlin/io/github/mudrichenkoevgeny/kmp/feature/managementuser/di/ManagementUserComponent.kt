@@ -115,7 +115,9 @@ class ManagementUserComponent(
         authStorage = authStorage,
         storageModule = storageModule,
         authServices = authServices,
-        managementUserConfigurationApi = networkModule.userConfigurationApi,
+        openUserConfigurationApi = networkModule.openUserConfigurationApi,
+        openGlobalSettingsRepository = settingsComponent.globalSettingsRepository,
+        openSecuritySettingsRepository = securityComponent.securitySettingsRepository,
         managementAuthSettingsRepository = repositoryModule.managementAuthSettingsRepository,
         managementGlobalSettingsRepository = repositoryModule.managementGlobalSettingsRepository,
         managementSecuritySettingsRepository = repositoryModule.managementSecuritySettingsRepository

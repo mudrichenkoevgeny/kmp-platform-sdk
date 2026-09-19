@@ -4,7 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
 import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySettingsRepository
 import io.github.mudrichenkoevgeny.kmp.core.settings.repository.OpenGlobalSettingsRepository
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.configuration.OpenUserConfigurationApi
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration.OpenUserConfigurationApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.configuration.OpenUserConfiguration
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.configuration.toOpenUserConfiguration
