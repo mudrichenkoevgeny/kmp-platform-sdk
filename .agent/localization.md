@@ -1,5 +1,5 @@
 ---
-description: Compose localization resource layout and naming conventions
+description: Compose localization resource layout, naming conventions, and UI usage rules
 globs: "**/composeResources/**/*.xml"
 alwaysApply: true
 ---
@@ -24,11 +24,15 @@ This document defines the structure and naming standards for all localized resou
   - UI Elements: `ui_[feature]_[element]_*` (e.g., `ui_user_button_login`)
 - **Code Alignment:** Resource IDs must strictly match the codes used in `AppError` hierarchies and their corresponding `AppErrorParser` implementations.
 
-## 3. Message Formatting
+## 3. UI Usage Enforcement
+- **Production UI:** All user-facing text strings in production `@Composable` functions must be retrieved via `stringResource(Res.string.*)`. Hardcoded string literals in production UI code are strictly forbidden.
+- **Tests & Previews Exception:** Raw string literals are allowed only inside unit tests, screenshot tests, and Compose preview functions.
+
+## 4. Message Formatting
 - **Placeholders:** Use standard XML string placeholders (e.g., `%1$s`, `%d`) that correspond to the `args` provided in the `AppError` models.
 - **Conciseness:** Keep localized strings descriptive but brief, avoiding generic filler text that might overflow on small mobile screens or Wasm-based web layouts.
 
-## 4. Resource Integrity (Definition of Done)
+## 5. Resource Integrity (Definition of Done)
 When adding new error codes or UI text:
 - **Locales Parity:** Add the corresponding `<string>` tag in **every** existing locale folder within the module.
 - **Fallback Rule:** Ensure that unknown or unmapped codes are gracefully handled by the `CommonErrorParser` fallback logic.

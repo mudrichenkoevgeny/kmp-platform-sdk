@@ -1,36 +1,17 @@
 package io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -40,12 +21,23 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.container.CoreScrollableScreenContent
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreCodeTextField
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreEmailTextField
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CorePasswordTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreSmallText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.ui.screen.auth.registration.email.RegistrationByEmailComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
@@ -60,21 +52,16 @@ fun RegistrationByEmailScreen(component: RegistrationByEmailComponent) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    CoreScreenTitleText(
                         text = stringResource(Res.string.registration_by_email),
                         modifier = Modifier.testTag(RegistrationByEmailTestTags.TITLE)
                     )
                 },
                 navigationIcon = {
-                    IconButton(
+                    CoreBackButton(
                         onClick = component::onBackClick,
                         modifier = Modifier.testTag(RegistrationByEmailTestTags.BACK_BUTTON)
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
+                    )
                 }
             )
         }
@@ -84,13 +71,7 @@ fun RegistrationByEmailScreen(component: RegistrationByEmailComponent) {
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(CoreTheme.dimens.paddingLarge)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
-            ) {
+            CoreScrollableScreenContent {
                 when (val s = state) {
                     is RegistrationByEmailScreenState.EmailInput -> {
                         EmailInputContent(s, component::onEmailChanged, component::onSendCodeClick)
@@ -123,34 +104,23 @@ private fun EmailInputContent(
     onEmailChanged: (String) -> Unit,
     onSendCodeClick: () -> Unit
 ) {
-    OutlinedTextField(
+    CoreEmailTextField(
         value = state.email,
         onValueChange = onEmailChanged,
-        label = { Text(stringResource(Res.string.email)) },
-        placeholder = { Text(stringResource(Res.string.email)) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag(RegistrationByEmailTestTags.EMAIL_INPUT),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-        singleLine = true,
+        modifier = Modifier.testTag(RegistrationByEmailTestTags.EMAIL_INPUT),
         isError = state.actionError != null
     )
 
-    Button(
+    CoreButton(
+        text = stringResource(Res.string.send_code),
         onClick = onSendCodeClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag(RegistrationByEmailTestTags.SEND_CODE_BUTTON),
+        modifier = Modifier.testTag(RegistrationByEmailTestTags.SEND_CODE_BUTTON),
         enabled = state.canSendCode
-    ) {
-        Text(stringResource(Res.string.send_code))
-    }
+    )
 
     state.actionError?.let { error ->
-        Text(
+        CoreErrorText(
             text = error.toLocalizedMessage(),
-            color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.testTag(RegistrationByEmailTestTags.EMAIL_STEP_ERROR_TEXT)
         )
     }
@@ -165,89 +135,61 @@ private fun RegistrationInputContent(
     onRegisterClick: () -> Unit,
     onResendClick: () -> Unit
 ) {
-    Text(
+    CoreTitleText(
         text = stringResource(Res.string.enter_confirmation_code),
-        style = MaterialTheme.typography.titleLarge,
         modifier = Modifier.testTag(RegistrationByEmailTestTags.CODE_STEP_TITLE)
     )
 
-    Text(
+    CoreBodyText(
         text = stringResource(Res.string.code_sent_to, state.email),
-        style = MaterialTheme.typography.bodyMedium,
         modifier = Modifier.testTag(RegistrationByEmailTestTags.CODE_SENT_INFO_TEXT)
     )
 
-    OutlinedTextField(
+    CoreCodeTextField(
         value = state.code,
         onValueChange = onCodeChanged,
-        label = { Text(stringResource(Res.string.confirmation_code)) },
-        placeholder = { Text(stringResource(Res.string.enter_confirmation_code)) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag(RegistrationByEmailTestTags.CODE_INPUT),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        singleLine = true,
+        label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
+        placeholder = { CoreBodyText(stringResource(Res.string.enter_confirmation_code)) },
+        modifier = Modifier.testTag(RegistrationByEmailTestTags.CODE_INPUT),
         isError = state.actionError != null
     )
 
-    OutlinedTextField(
+    CorePasswordTextField(
         value = state.password,
         onValueChange = onPasswordChanged,
-        label = { Text(stringResource(Res.string.password)) },
-        placeholder = { Text(stringResource(Res.string.password)) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag(RegistrationByEmailTestTags.PASSWORD_INPUT),
-        visualTransformation = if (state.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        singleLine = true,
-        trailingIcon = {
-            IconButton(
-                onClick = onTogglePasswordVisibility,
-                modifier = Modifier.testTag(RegistrationByEmailTestTags.TOGGLE_PASSWORD_VISIBILITY_BUTTON)
-            ) {
-                Icon(
-                    imageVector = if (state.isPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                    contentDescription = null
-                )
-            }
-        },
-        isError = !state.isPasswordValid || state.actionError != null
+        isPasswordVisible = state.isPasswordVisible,
+        onTogglePasswordVisibility = onTogglePasswordVisibility,
+        label = { CoreBodyText(stringResource(Res.string.password)) },
+        placeholder = { CoreBodyText(stringResource(Res.string.password)) },
+        modifier = Modifier.testTag(RegistrationByEmailTestTags.PASSWORD_INPUT),
+        isError = (!state.isPasswordValid) || (state.actionError != null),
+        toggleModifier = Modifier.testTag(RegistrationByEmailTestTags.TOGGLE_PASSWORD_VISIBILITY_BUTTON)
     )
 
-    Button(
+    CoreButton(
+        text = stringResource(Res.string.register),
         onClick = onRegisterClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag(RegistrationByEmailTestTags.REGISTER_BUTTON),
+        modifier = Modifier.testTag(RegistrationByEmailTestTags.REGISTER_BUTTON),
         enabled = state.canRegister
-    ) {
-        Text(stringResource(Res.string.register))
-    }
+    )
 
     if (state.resendTimerSeconds > 0) {
-        Text(
+        CoreSmallText(
             text = stringResource(Res.string.resend_code_timer, state.resendTimerSeconds),
-            style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.testTag(RegistrationByEmailTestTags.RESEND_TIMER_TEXT)
         )
     } else {
-        TextButton(
+        CoreTextButton(
+            text = stringResource(Res.string.resend_code),
             onClick = onResendClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(RegistrationByEmailTestTags.RESEND_CODE_BUTTON),
+            modifier = Modifier.testTag(RegistrationByEmailTestTags.RESEND_CODE_BUTTON),
             enabled = state.canResendCode
-        ) {
-            Text(stringResource(Res.string.resend_code))
-        }
+        )
     }
 
     state.actionError?.let { error ->
-        Text(
+        CoreErrorText(
             text = error.toLocalizedMessage(),
-            color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.testTag(RegistrationByEmailTestTags.REGISTRATION_STEP_ERROR_TEXT)
         )
     }

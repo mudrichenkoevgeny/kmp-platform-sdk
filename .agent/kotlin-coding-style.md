@@ -1,5 +1,5 @@
 ---
-description: Naming conventions, when subject rules, brace requirements, and FQN/Comments ban
+description: Naming conventions, when subject rules, brace requirements, FQN/Comments ban, and Trailing Commas ban
 globs: "**/*.kt"
 alwaysApply: true
 ---
@@ -18,6 +18,9 @@ This document defines the mandatory Kotlin syntax and formatting standards for t
 ### Comments
 - **Strict Ban:** Do not write or preserve comments in the code.
 - **Self-Documentation:** Logic must be clear through expressive naming and clean structure. If a complex algorithm requires explanation, refactor it into smaller, well-named functions or use KDoc for public APIs.
+
+### Trailing Commas
+- **Strict Ban:** Do not write trailing commas at the end of argument, parameter, or entry lists.
 
 ## 2. Control Flow
 
@@ -45,7 +48,7 @@ This document defines the mandatory Kotlin syntax and formatting standards for t
 - **Complex Logic:** Use block-body functions (`fun process() { ... }`) for anything involving multiple steps, branching, or lifecycle-sensitive operations to ensure readability.
 
 ## 5. Sealed Types and Enums
-- **Exhaustiveness:** When using `when` on a `sealed class` or `enum`, do not provide an `else` branch. Handle all cases explicitly to ensure the compiler catches new variants.
+- **Exhaustiveness:** When using `when` on `sealed class` or `enum`, do not provide an `else` branch. Handle all cases explicitly to ensure the compiler catches new variants.
 - **State Naming:** Use clear, state-describing names for sealed UI states (e.g., `Authorized`, `MfaRequired`).
 
 ---

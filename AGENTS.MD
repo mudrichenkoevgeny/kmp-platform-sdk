@@ -8,6 +8,9 @@ This document is the entry point for architectural and coding standards. These r
 - **SDK Nature:** This is a **foundational library**, not a standalone application. Avoid hardcoded assumptions; prefer configuration via constructor parameters, DI, and optional wiring in `sample/*`.
 - **FQN Forbidden:** Do not write fully qualified names (FQN) in expressions, types, or generics. Use imports or typealiases. Minimal FQN is allowed only if technically unavoidable (must be explained in the commit).
 - **No Comments:** Do not write comments in the code. Logic must be self-documenting through naming and structural clarity.
+- **No Trailing Commas:** Do not use trailing commas at the end of argument, parameter, or entry lists.
+- **Mandatory UI Testing & Previews:** Every created UI screen (`*Screen.kt`) or component must be accompanied by its corresponding Unit/UI Test (`*Test.kt`), Screenshot Test (`*ScreenshotTest.kt` with Roborazzi), and Compose Previews using dedicated preview annotations (`@ComponentSizePreviews`, `@ScreenSizePreviews`, `@ThemePreviews`, `@FontScalePreviews`).
+- **Mandatory UI Localization:** Production UI code must strictly use localized string resources (`Res.string.*` via `stringResource(...)`). Hardcoded string literals are strictly forbidden in production UI code (permitted only in tests and previews).
 - **Manual Test Execution:** AI agents must not run tests or suggest running them. Execution is always triggered explicitly by the developer.
 
 ## Module Map
@@ -36,7 +39,7 @@ This document is the entry point for architectural and coding standards. These r
 - **`docs-kdoc-basics.md`** — Language standards (English) and KDoc Definition of Done (mandatory for every public interface member).
 - **`docs-kdoc-type-requirements.md`** — Specific KDoc patterns for DTOs, Sealed classes, and platform-specific implementations.
 - **`localization.md`** — Compose Multiplatform resource layout and naming conventions for UI strings.
-- **`kotlin-coding-style.md`** — Naming conventions, `when` subject rules, brace requirements (no one-line `if`), and the FQN/Comments ban.
-- **`ui-compose-decompose.md`** — Rules for `CompositionLocal` usage, state hoisting in Decompose components, and Wasm-specific UI constraints.
-- **`testing-conventions.md`** — Test conventions, manual execution policy, and `PreviewParameterProvider` guidance for Compose.
+- **`kotlin-coding-style.md`** — Naming conventions, `when` subject rules, brace requirements (no one-line `if`), FQN/Comments ban, and Trailing Commas ban.
+- **`ui-compose-decompose.md`** — Rules for `CompositionLocal` usage, state hoisting in Decompose components, UI previews, tests, and localization constraints.
+- **`testing-conventions.md`** — Test conventions, manual execution policy, Roborazzi screenshot tests, and `PreviewParameterProvider` guidance for Compose.
 - **`ai-collaboration-workflow.md`** — AI constraints, Version Catalog (libs.versions.toml) management, and SDK vs Sample application boundaries.

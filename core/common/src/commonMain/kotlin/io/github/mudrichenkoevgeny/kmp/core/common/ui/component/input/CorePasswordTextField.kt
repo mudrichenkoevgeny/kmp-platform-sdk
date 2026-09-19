@@ -1,0 +1,116 @@
+package io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input
+
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+
+/**
+ * Specialized password input text field with toggleable password visibility.
+ *
+ * @param value Current password text.
+ * @param onValueChange Callback invoked when text changes.
+ * @param isPasswordVisible Whether password characters are visible.
+ * @param onTogglePasswordVisibility Callback invoked when toggle icon is clicked.
+ * @param modifier [Modifier] applied to the text field.
+ * @param label Optional composable label.
+ * @param placeholder Optional composable placeholder.
+ * @param isError Controls error state.
+ * @param toggleModifier [Modifier] applied to the visibility toggle icon button.
+ */
+@Composable
+fun CorePasswordTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    isPasswordVisible: Boolean,
+    onTogglePasswordVisibility: () -> Unit,
+    modifier: Modifier = Modifier,
+    label: @Composable (() -> Unit)? = null,
+    placeholder: @Composable (() -> Unit)? = null,
+    isError: Boolean = false,
+    toggleModifier: Modifier = Modifier
+) {
+    CoreOutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier,
+        label = label,
+        placeholder = placeholder,
+        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        singleLine = true,
+        isError = isError,
+        trailingIcon = {
+            IconButton(
+                onClick = onTogglePasswordVisibility,
+                modifier = toggleModifier
+            ) {
+                Icon(
+                    imageVector = if (isPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                    contentDescription = null
+                )
+            }
+        }
+    )
+}
+
+@InternalApi
+@ComponentSizePreviews
+@Composable
+private fun CorePasswordTextFieldComponentSizePreview() {
+    CoreTheme {
+        Surface {
+            CorePasswordTextField(
+                value = "secret123",
+                onValueChange = {},
+                isPasswordVisible = false,
+                onTogglePasswordVisibility = {}
+            )
+        }
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun CorePasswordTextFieldThemePreview() {
+    CoreTheme {
+        Surface {
+            CorePasswordTextField(
+                value = "secret123",
+                onValueChange = {},
+                isPasswordVisible = false,
+                onTogglePasswordVisibility = {}
+            )
+        }
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun CorePasswordTextFieldFontScalePreview() {
+    CoreTheme {
+        Surface {
+            CorePasswordTextField(
+                value = "secret123",
+                onValueChange = {},
+                isPasswordVisible = false,
+                onTogglePasswordVisibility = {}
+            )
+        }
+    }
+}

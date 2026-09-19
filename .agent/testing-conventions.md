@@ -1,5 +1,5 @@
 ---
-description: Unit and integration test standards, KMP testing frameworks, and manual execution rule
+description: Unit and integration test standards, KMP testing frameworks, UI testing requirements, and manual execution rule
 globs: "**/src/**/*Test/**/*.kt"
 alwaysApply: true
 ---
@@ -34,16 +34,21 @@ This document defines the testing methodology for the `kmp-platform-sdk`. These 
 - **Nomenclature:**
   - Standard Tests: `[Subject]Test.kt`.
   - Integration/Component Tests: `[Component]IntegrationTest.kt`.
+  - Screenshot Tests: `[Subject]ScreenshotTest.kt`.
 - **Test Names:** Use descriptive backticked names in English: ``fun `should return error when session is expired`()``.
 
 ## 5. Coding Standards in Tests
 - **No FQN:** Fully Qualified Names are **strictly forbidden**. Use imports.
 - **No Comments:** Tests must be self-documenting. No narrative comments.
+- **No Trailing Commas:** Do not use trailing commas in test argument or parameter lists.
 - **Test Constants:** If a literal (String, UUID, Key) is used **more than once** in a test class, it **must** be extracted into a `private const val`.
 - **Isolation:** Tests must be stateless and not rely on execution order.
 
 ## 6. Scope of Testing
 - **Observable Behavior:** Focus on public APIs, Decompose components, Repositories, and Use Cases.
+- **Mandatory UI Testing:** Every created UI screen (`*Screen.kt`) and reusable UI component (`Core*` or custom composable) must have:
+  1. A Compose UI unit test (`*Test.kt`).
+  2. A Roborazzi screenshot test (`*ScreenshotTest.kt` in `src/androidUnitTest`).
 - **Serialization:** Ensure `core/common` serialization logic is tested for all DTOs and WebSocket messages.
 - **Platform Logic:** For components with platform-specific implementations (e.g., `EncryptedSettings`), verify behavior in both `androidMain` and `commonMain` where possible.
 - **Exclusions:** No UI/Unit tests for Preview-only helpers (`PreviewParameterProvider`, etc.).

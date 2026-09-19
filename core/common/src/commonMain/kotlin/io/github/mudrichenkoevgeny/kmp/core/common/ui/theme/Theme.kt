@@ -10,24 +10,36 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 
 /**
- * Main theme object to access theme properties.
+ * Main theme object to access theme properties across SDK components.
  */
 object CoreTheme {
+    /**
+     * Color scheme for the current theme.
+     */
     val colorScheme: ColorScheme
         @Composable
         @ReadOnlyComposable
         get() = MaterialTheme.colorScheme
 
+    /**
+     * Typography settings for the current theme.
+     */
     val typography: Typography
         @Composable
         @ReadOnlyComposable
         get() = MaterialTheme.typography
 
+    /**
+     * Shape definitions for the current theme.
+     */
     val shapes: Shapes
         @Composable
         @ReadOnlyComposable
         get() = MaterialTheme.shapes
 
+    /**
+     * Dimension settings for the current theme.
+     */
     val dimens: CoreDimens
         @Composable
         @ReadOnlyComposable
@@ -36,8 +48,14 @@ object CoreTheme {
 
 /**
  * The core theme for the KMP Platform SDK.
- * Users can wrap their app or specific screens with this to apply the SDK's styling.
- * They can customize the theme by passing a custom [colorScheme], [typography], [shapes], or [dimens].
+ * Wrap screens or app roots with this composable to apply SDK styling.
+ *
+ * @param darkTheme Whether dark theme should be applied. Defaults to system setting.
+ * @param colorScheme Color palette for the theme.
+ * @param typography Typography styles for the theme. Defaults to [CoreTypography].
+ * @param shapes Shapes for component corners. Defaults to [CoreShapes].
+ * @param dimens Layout dimensions and paddings. Defaults to default [CoreDimens].
+ * @param content The composable UI tree to render inside this theme.
  */
 @Composable
 fun CoreTheme(

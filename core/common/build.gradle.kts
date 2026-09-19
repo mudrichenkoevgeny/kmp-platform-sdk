@@ -58,6 +58,7 @@ kotlin {
             implementation(libs.compose.resources)
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.compose.icons.core)
+            implementation(libs.compose.icons.extended)
             implementation(libs.compose.material3)
 
             // Ktor

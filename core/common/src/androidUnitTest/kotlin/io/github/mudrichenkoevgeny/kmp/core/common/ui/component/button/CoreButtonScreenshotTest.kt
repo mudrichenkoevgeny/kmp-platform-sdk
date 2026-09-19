@@ -1,0 +1,65 @@
+package io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button
+
+import android.app.Application
+import androidx.compose.material3.Surface
+import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.runComposeUiTest
+import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
+import io.github.mudrichenkoevgeny.kmp.core.common.Res
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.captureAppScreen
+import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_apply
+import org.jetbrains.compose.resources.stringResource
+import org.junit.runner.RunWith
+import org.robolectric.ParameterizedRobolectricTestRunner
+import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
+import kotlin.test.Test
+
+@InternalApi
+@RunWith(ParameterizedRobolectricTestRunner::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+@Config(
+    sdk = [ROBOLECTRIC_SDK],
+    application = Application::class,
+    qualifiers = RobolectricDeviceQualifiers.Pixel5
+)
+class CoreButtonScreenshotTest(
+    private val stateName: String,
+    private val enabled: Boolean
+) {
+
+    @Test
+    fun capture() = runComposeUiTest {
+        setContent {
+            ComponentTestHarness {
+                Surface {
+                    CoreButton(
+                        text = stringResource(Res.string.ui_common_apply),
+                        onClick = {},
+                        enabled = enabled
+                    )
+                }
+            }
+        }
+
+        onRoot().captureAppScreen(
+            testInstance = this@CoreButtonScreenshotTest,
+            stateName = stateName
+        )
+    }
+
+    companion object {
+        @Suppress("Unused")
+        @JvmStatic
+        @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
+        fun data(): Collection<Array<Any>> {
+            return listOf(
+                arrayOf("Enabled", true),
+                arrayOf("Disabled", false)
+            )
+        }
+    }
+}
