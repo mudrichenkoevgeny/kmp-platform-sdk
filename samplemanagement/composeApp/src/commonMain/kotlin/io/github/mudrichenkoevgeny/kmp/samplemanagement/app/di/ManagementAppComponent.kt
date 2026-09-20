@@ -13,6 +13,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.parser.UserErrorParser
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.auth.UserAuthServicesMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.AuthHttpClientConfigPlugin
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.mfa.DefaultMfaChallengeHandler
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.mfa.MfaStepUpHttpClientConfigPlugin
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.EncryptedAuthStorage
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main.MainScreenComponent
@@ -20,6 +22,7 @@ import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main.Manag
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceInfo
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.contract.WebSocketContract
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.auth.refreshtoken.SelfManagementRefreshTokenRoutes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.session.SelfManagementSessionRoutes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -107,6 +110,19 @@ class ManagementAppComponent(
         )
     }
 
+    val mfaChallengeHandler by lazy {
+        DefaultMfaChallengeHandler()
+    }
+
+    private val mfaStepUpHttpClientConfigPlugin by lazy {
+        MfaStepUpHttpClientConfigPlugin(
+            baseUrl = baseUrl,
+            reauthenticateRoute = SelfManagementSessionRoutes.REAUTHENTICATE_SESSION,
+            mfaChallengeHandler = mfaChallengeHandler,
+            authClientProvider = { commonComponent.httpClient }
+        )
+    }
+
     private var mockCommonComponent: CommonComponent? = null
 
     /**
@@ -118,7 +134,7 @@ class ManagementAppComponent(
             deviceInfo = deviceInfo,
             baseUrl = baseUrl,
             webSocketPath = WebSocketContract.WS_MANAGEMENT_REALTIME_PATH,
-            httpClientConfigPlugins = listOf(authHttpClientConfigPlugin),
+            httpClientConfigPlugins = listOf(authHttpClientConfigPlugin, mfaStepUpHttpClientConfigPlugin),
             accessTokenProvider = authStorage,
             appScope = appScope,
             platformContext = platformContext

@@ -68,8 +68,8 @@ fun HttpClientConfig<*>.setupCommonConfig(
     defaultRequest {
         url(baseUrl)
         header(HttpHeaders.ContentType, ContentType.Application.Json)
-        header(CommonHttpHeaders.CLIENT_TYPE_HEADER_NAME, deviceInfo.clientType)
-        header(CommonHttpHeaders.DEVICE_ID_HEADER_NAME, deviceInfo.deviceId)
+        header(CommonHttpHeaders.CLIENT_TYPE_HEADER_NAME, deviceInfo.clientType?.serialName)
+        header(CommonHttpHeaders.DEVICE_ID_HEADER_NAME, deviceInfo.deviceId?.asHexDashString())
         header(CommonHttpHeaders.DEVICE_NAME_HEADER_NAME, deviceInfo.deviceName)
         header(CommonHttpHeaders.APP_VERSION_HEADER_NAME, deviceInfo.appVersion)
         header(CommonHttpHeaders.OPERATION_SYSTEM_VERSION_HEADER_NAME, deviceInfo.operationSystemVersion)

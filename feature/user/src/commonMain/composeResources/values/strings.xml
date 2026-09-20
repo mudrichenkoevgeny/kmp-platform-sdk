@@ -139,4 +139,6 @@
     <string name="unlock_choose_method">Choose unlock method</string>
     <string name="unlock_success_title">Account Successfully Unlocked</string>
     <string name="unlock_success_desc">Your account has been unlocked. You may now continue using all services.</string>
+    <string name="mfa_step_up_title">Security Confirmation</string>
+    <string name="mfa_step_up_desc">This operation requires additional verification. Enter the 6-digit code from your authenticator app.</string>
 </resources>

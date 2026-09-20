@@ -139,4 +139,6 @@
     <string name="unlock_choose_method">Выберите способ разблокировки</string>
     <string name="unlock_success_title">Учётная запись успешно разблокирована</string>
     <string name="unlock_success_desc">Ваш аккаунт разблокирован. Вы можете продолжить использование всех функций системы.</string>
+    <string name="mfa_step_up_title">Подтверждение безопасности</string>
+    <string name="mfa_step_up_desc">Эта операция требует дополнительного подтверждения. Введите 6-значный код из приложения-аутентификатора.</string>
 </resources>

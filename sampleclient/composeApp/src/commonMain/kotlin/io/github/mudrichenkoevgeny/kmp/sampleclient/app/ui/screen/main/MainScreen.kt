@@ -22,6 +22,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -43,6 +44,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.root.ClientLoginRootScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.mfa.MfaChallengeDialog
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootScreen
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.LocalClientAppComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.home.HomeScreen
@@ -62,6 +64,7 @@ fun MainScreen(screenComponent: MainScreenComponent) {
 
     val screenStackState by screenComponent.stack.subscribeAsState()
     val loginDialogSlot by screenComponent.loginDialogSlot.subscribeAsState()
+    val mfaChallengeRequest by appComponent.mfaChallengeHandler.challengeRequest.collectAsState()
 
     val currentNavigation = remember(screenStackState.active.configuration) {
         MainScreenDestination.fromConfig(screenStackState.active.configuration)
@@ -80,6 +83,14 @@ fun MainScreen(screenComponent: MainScreenComponent) {
 
         loginDialogSlot.child?.instance?.let { component ->
             ClientLoginRootScreen(component = component)
+        }
+
+        mfaChallengeRequest?.let { request ->
+            MfaChallengeDialog(
+                request = request,
+                onConfirm = appComponent.mfaChallengeHandler::onConfirm,
+                onCancel = appComponent.mfaChallengeHandler::onCancel
+            )
         }
     }
 }

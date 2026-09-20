@@ -13,6 +13,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.parser.UserErrorParser
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.auth.UserAuthServicesMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.AuthHttpClientConfigPlugin
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.mfa.DefaultMfaChallengeHandler
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.mfa.MfaStepUpHttpClientConfigPlugin
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.EncryptedAuthStorage
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.MainScreenComponent
@@ -20,6 +22,7 @@ import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.ClientMai
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceInfo
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.contract.WebSocketContract
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.auth.refreshtoken.OpenRefreshTokenRoutes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.session.OpenSessionRoutes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -107,6 +110,19 @@ class ClientAppComponent(
         )
     }
 
+    val mfaChallengeHandler by lazy {
+        DefaultMfaChallengeHandler()
+    }
+
+    private val mfaStepUpHttpClientConfigPlugin by lazy {
+        MfaStepUpHttpClientConfigPlugin(
+            baseUrl = baseUrl,
+            reauthenticateRoute = OpenSessionRoutes.REAUTHENTICATE_SESSION,
+            mfaChallengeHandler = mfaChallengeHandler,
+            authClientProvider = { commonComponent.httpClient }
+        )
+    }
+
     private var mockCommonComponent: CommonComponent? = null
 
     /**
@@ -118,7 +134,7 @@ class ClientAppComponent(
             deviceInfo = deviceInfo,
             baseUrl = baseUrl,
             webSocketPath = WebSocketContract.WS_OPEN_REALTIME_PATH,
-            httpClientConfigPlugins = listOf(authHttpClientConfigPlugin),
+            httpClientConfigPlugins = listOf(authHttpClientConfigPlugin, mfaStepUpHttpClientConfigPlugin),
             accessTokenProvider = authStorage,
             appScope = appScope,
             platformContext = platformContext
