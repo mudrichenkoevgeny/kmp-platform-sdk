@@ -24,6 +24,13 @@ interface ManagementSecuritySettingsRepository {
     suspend fun saveRemoteManagementSecuritySettings(securitySettings: ManagementSecuritySettings): AppResult<Unit>
 
     /**
+     * Resets security settings on the remote server to default values and updates local state.
+     *
+     * @return Fresh [ManagementSecuritySettings] on success, or an error result when the remote reset fails.
+     */
+    suspend fun resetRemoteManagementSecuritySettings(): AppResult<ManagementSecuritySettings>
+
+    /**
      * Forces a network reload and updates the observable snapshot on success.
      *
      * @return Fresh [ManagementSecuritySettings] on success, or an error result when the request fails.

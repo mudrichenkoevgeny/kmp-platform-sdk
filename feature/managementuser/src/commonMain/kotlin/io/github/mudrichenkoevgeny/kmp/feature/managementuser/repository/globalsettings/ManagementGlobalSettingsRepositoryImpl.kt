@@ -83,6 +83,17 @@ class ManagementGlobalSettingsRepositoryImpl(
             }
     }
 
+    override suspend fun resetRemoteManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
+        return updateMutex.withLock {
+            managementGlobalSettingsApi.resetManagementGlobalSettings()
+                .mapSuccess { response ->
+                    val settings = response.toManagementGlobalSettings()
+                    applySettingsUpdate(settings)
+                    settings
+                }
+        }
+    }
+
     override suspend fun refreshManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
         return updateMutex.withLock {
             refreshManagementGlobalSettingsInternal()

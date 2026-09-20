@@ -12,6 +12,7 @@ class ManagementAuthSettingsApiMock : ManagementAuthSettingsApi {
     var lastRequest: ManagementAuthSettingsPayload? = null
     var getCallCount = 0
     var updateCallCount = 0
+    var resetCallCount = 0
 
     var getResultProvider: () -> AppResult<ManagementAuthSettingsPayload> = {
         AppResult.Error(CommonError.Unknown(isRetryable = false))
@@ -19,6 +20,10 @@ class ManagementAuthSettingsApiMock : ManagementAuthSettingsApi {
 
     var updateResultProvider: () -> AppResult<Unit> = {
         AppResult.Success(Unit)
+    }
+
+    var resetResultProvider: () -> AppResult<ManagementAuthSettingsPayload> = {
+        getResultProvider()
     }
 
     override suspend fun getManagementAuthSettings(): AppResult<ManagementAuthSettingsPayload> {
@@ -30,5 +35,10 @@ class ManagementAuthSettingsApiMock : ManagementAuthSettingsApi {
         updateCallCount++
         lastRequest = request
         return updateResultProvider()
+    }
+
+    override suspend fun resetManagementAuthSettings(): AppResult<ManagementAuthSettingsPayload> {
+        resetCallCount++
+        return resetResultProvider()
     }
 }

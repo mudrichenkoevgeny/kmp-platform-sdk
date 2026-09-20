@@ -9,10 +9,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model
 @InternalApi
 class ManagementSecuritySettingsApiMock(
     var getResult: AppResult<ManagementSecuritySettingsPayload> = AppResult.Success(managementSecuritySettingsPayloadMock()),
-    var updateResult: AppResult<Unit> = AppResult.Success(Unit)
+    var updateResult: AppResult<Unit> = AppResult.Success(Unit),
+    var resetResult: AppResult<ManagementSecuritySettingsPayload> = AppResult.Success(managementSecuritySettingsPayloadMock())
 ) : ManagementSecuritySettingsApi {
 
     override suspend fun getManagementSecuritySettings(): AppResult<ManagementSecuritySettingsPayload> = getResult
 
     override suspend fun updateManagementSecuritySettings(request: ManagementSecuritySettingsPayload): AppResult<Unit> = updateResult
+
+    override suspend fun resetManagementSecuritySettings(): AppResult<ManagementSecuritySettingsPayload> = resetResult
 }

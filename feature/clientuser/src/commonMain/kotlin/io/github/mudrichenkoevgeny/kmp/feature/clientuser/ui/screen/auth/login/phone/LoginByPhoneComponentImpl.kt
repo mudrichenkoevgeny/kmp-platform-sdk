@@ -116,7 +116,7 @@ class LoginByPhoneComponentImpl(
                     }
                 }
                 .onError { error ->
-                    if (error.code == SecurityErrorCodes.TOTP_CONFIRMATION_REQUIRED) {
+                    if (error.code == SecurityErrorCodes.MFA_CONFIRMATION_REQUIRED) {
                         val mfaToken = error.args?.get(SecurityErrorArgs.MFA_TOKEN)
                         if (mfaToken != null) {
                             onNavigateToTotp(mfaToken)

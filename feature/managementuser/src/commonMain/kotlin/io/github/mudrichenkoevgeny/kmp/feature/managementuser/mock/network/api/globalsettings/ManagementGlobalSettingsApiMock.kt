@@ -9,10 +9,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.model
 @InternalApi
 class ManagementGlobalSettingsApiMock(
     var getResult: AppResult<ManagementGlobalSettingsPayload> = AppResult.Success(managementGlobalSettingsPayloadMock()),
-    var updateResult: AppResult<Unit> = AppResult.Success(Unit)
+    var updateResult: AppResult<Unit> = AppResult.Success(Unit),
+    var resetResult: AppResult<ManagementGlobalSettingsPayload> = AppResult.Success(managementGlobalSettingsPayloadMock())
 ) : ManagementGlobalSettingsApi {
 
     override suspend fun getManagementGlobalSettings(): AppResult<ManagementGlobalSettingsPayload> = getResult
 
     override suspend fun updateManagementGlobalSettings(request: ManagementGlobalSettingsPayload): AppResult<Unit> = updateResult
+
+    override suspend fun resetManagementGlobalSettings(): AppResult<ManagementGlobalSettingsPayload> = resetResult
 }

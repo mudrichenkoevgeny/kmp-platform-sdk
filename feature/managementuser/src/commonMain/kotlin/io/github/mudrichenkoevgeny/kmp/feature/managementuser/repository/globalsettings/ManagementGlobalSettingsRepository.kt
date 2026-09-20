@@ -24,6 +24,13 @@ interface ManagementGlobalSettingsRepository {
     suspend fun saveRemoteManagementGlobalSettings(globalSettings: ManagementGlobalSettings): AppResult<Unit>
 
     /**
+     * Resets global settings on the remote server to default values and updates local state.
+     *
+     * @return Fresh [ManagementGlobalSettings] on success, or an error result when the remote reset fails.
+     */
+    suspend fun resetRemoteManagementGlobalSettings(): AppResult<ManagementGlobalSettings>
+
+    /**
      * Forces a network reload and updates the observable snapshot on success.
      *
      * @return Fresh [ManagementGlobalSettings] on success, or an error result when the request fails.

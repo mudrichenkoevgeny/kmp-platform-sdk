@@ -12,14 +12,10 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.de
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.events.AuditEventsComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.usecase.GetAuditEventUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.usecase.GetAuditEventsUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.mock.domain.model.event.auditEventMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEvent
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventId
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.action.UserAuditActionType
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -32,14 +28,7 @@ class AuditApiRootComponentImplTest {
 
     @Test
     fun initialStack_startsAtMain() = runComponentTest {
-        val event = AuditEvent(
-            id = AuditEventId.generate(),
-            actorType = AuditActorType.USER,
-            action = UserAuditActionType.MANAGEMENT_UPDATE_USER,
-            resource = UserAuditResourceType.USER,
-            status = AuditStatus.SUCCESS,
-            createdAt = Instant.fromEpochMilliseconds(0),
-        )
+        val event = auditEventMock()
         val repository = object : ManagementAuditRepository {
             override suspend fun getAuditEvents(
                 pageNumber: Int?,
@@ -76,14 +65,7 @@ class AuditApiRootComponentImplTest {
 
     @Test
     fun navigateToDetail_pushesDetailScreenAndPopsBack() = runComponentTest {
-        val event = AuditEvent(
-            id = AuditEventId.generate(),
-            actorType = AuditActorType.USER,
-            action = UserAuditActionType.MANAGEMENT_UPDATE_USER,
-            resource = UserAuditResourceType.USER,
-            status = AuditStatus.SUCCESS,
-            createdAt = Instant.fromEpochMilliseconds(0),
-        )
+        val event = auditEventMock()
         val repository = object : ManagementAuditRepository {
             override suspend fun getAuditEvents(
                 pageNumber: Int?,

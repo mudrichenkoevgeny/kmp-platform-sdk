@@ -66,6 +66,22 @@ class CreateUserComponentImplTest {
         advanceTimeBy(100.milliseconds)
         assertEquals(1, context.onSuccessCalls)
         assertEquals("user@example.com", repository.lastCreateRequest?.email)
+        assertEquals("pass12345", repository.lastCreateRequest?.password)
+    }
+
+    @Test
+    fun onCreateClick_passesNullPassword_whenPasswordIsBlank() = runComponentTest {
+        val repository = ManagementUserRepositoryMock()
+        repository.createUserResultProvider = { AppResult.Success(userDetailsMock()) }
+        val context = createTestContext(repository = repository)
+
+        context.component.onEmailChanged("user@example.com")
+        context.component.onPasswordChanged("")
+        context.component.onCreateClick()
+
+        advanceTimeBy(100.milliseconds)
+        assertEquals(1, context.onSuccessCalls)
+        assertEquals(null, repository.lastCreateRequest?.password)
     }
 
     @Test

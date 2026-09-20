@@ -21,4 +21,11 @@ interface ManagementGlobalSettingsApi {
      * @return Empty success indicator, or a mapped failure.
      */
     suspend fun updateManagementGlobalSettings(request: ManagementGlobalSettingsPayload): AppResult<Unit>
+
+    /**
+     * Resets platform-wide global settings to default values.
+     *
+     * @return Fresh default [ManagementGlobalSettingsPayload], or a mapped failure.
+     */
+    suspend fun resetManagementGlobalSettings(): AppResult<ManagementGlobalSettingsPayload>
 }

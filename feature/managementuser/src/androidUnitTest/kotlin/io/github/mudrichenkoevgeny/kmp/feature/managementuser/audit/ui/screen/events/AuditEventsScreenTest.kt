@@ -14,18 +14,13 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.Fullscre
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.mock.ui.screen.events.AuditEventsComponentMock
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEvent
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventId
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.action.UserAuditActionType
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.mock.domain.model.event.auditEventMock
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.time.Instant
+
 
 @InternalApi
 @RunWith(RobolectricTestRunner::class)
@@ -47,14 +42,7 @@ class AuditEventsScreenTest {
 
     @Test
     fun content_displaysElements() = runComposeUiTest {
-        val event = AuditEvent(
-            id = AuditEventId.generate(),
-            actorType = AuditActorType.USER,
-            action = UserAuditActionType.MANAGEMENT_UPDATE_USER,
-            resource = UserAuditResourceType.USER,
-            status = AuditStatus.SUCCESS,
-            createdAt = Instant.fromEpochMilliseconds(0),
-        )
+        val event = auditEventMock()
         val component = AuditEventsComponentMock(
             AuditEventsScreenState.Content(
                 paging = PaginationState(

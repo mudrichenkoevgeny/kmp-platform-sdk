@@ -79,5 +79,6 @@ class EditSecuritySettingsComponentMock(
     override fun onMaxRequestsPerPeriodChanged(value: String) {}
     override fun onRateLimitPeriodSecondsChanged(value: String) {}
     override fun onSaveClick() {}
+    override fun onResetClick() {}
     override fun onBackClick() {}
 }

@@ -42,13 +42,16 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDel
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings.GetManagementAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings.RefreshManagementAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings.SaveRemoteAuthSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings.ResetRemoteAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.configuration.RefreshManagementUserConfigurationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.GetManagementGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.RefreshManagementGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.SaveRemoteGlobalSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.ResetRemoteGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.GetManagementSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.RefreshManagementSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.SaveRemoteSecuritySettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.ResetRemoteSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUsersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.CreateUserUseCase
@@ -56,6 +59,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.Updat
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.DeleteUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierPasswordUseCase
 
 /**
  * Internal dependency wiring for management use cases.
@@ -365,6 +370,27 @@ internal class ManagementUserUseCaseModule(
         )
     }
 
+    /** Resets remote auth settings. */
+    val resetRemoteAuthSettingsUseCase by lazy {
+        ResetRemoteAuthSettingsUseCase(
+            managementAuthSettingsRepository = managementUserRepositoryModule.managementAuthSettingsRepository
+        )
+    }
+
+    /** Resets remote global settings. */
+    val resetRemoteGlobalSettingsUseCase by lazy {
+        ResetRemoteGlobalSettingsUseCase(
+            managementGlobalSettingsRepository = managementUserRepositoryModule.managementGlobalSettingsRepository
+        )
+    }
+
+    /** Resets remote security settings. */
+    val resetRemoteSecuritySettingsUseCase by lazy {
+        ResetRemoteSecuritySettingsUseCase(
+            managementSecuritySettingsRepository = managementUserRepositoryModule.managementSecuritySettingsRepository
+        )
+    }
+
     /** Returns paginated list of users. */
     val getUsersUseCase by lazy {
         GetUsersUseCase(
@@ -410,6 +436,20 @@ internal class ManagementUserUseCaseModule(
     /** Retrieves user identifiers administratively. */
     val managementGetIdentifiersUseCase by lazy {
         ManagementGetIdentifiersUseCase(
+            managementIdentifierRepository = managementUserRepositoryModule.managementIdentifierRepository
+        )
+    }
+
+    /** Removes user identifier administratively. */
+    val managementDeleteIdentifierUseCase by lazy {
+        ManagementDeleteIdentifierUseCase(
+            managementIdentifierRepository = managementUserRepositoryModule.managementIdentifierRepository
+        )
+    }
+
+    /** Removes user identifier password administratively. */
+    val managementDeleteIdentifierPasswordUseCase by lazy {
+        ManagementDeleteIdentifierPasswordUseCase(
             managementIdentifierRepository = managementUserRepositoryModule.managementIdentifierRepository
         )
     }

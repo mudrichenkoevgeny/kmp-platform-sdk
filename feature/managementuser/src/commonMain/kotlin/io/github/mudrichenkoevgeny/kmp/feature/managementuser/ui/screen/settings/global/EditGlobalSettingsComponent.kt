@@ -45,6 +45,9 @@ interface EditGlobalSettingsComponent {
     /** Saves global settings to the backend. */
     fun onSaveClick()
 
+    /** Resets global settings to defaults on the backend. */
+    fun onResetClick()
+
     /** Navigates back. */
     fun onBackClick()
 }

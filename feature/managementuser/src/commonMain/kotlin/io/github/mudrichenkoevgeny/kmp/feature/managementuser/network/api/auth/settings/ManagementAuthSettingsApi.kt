@@ -19,4 +19,11 @@ interface ManagementAuthSettingsApi {
      * @return Empty success indicator, or a mapped failure.
      */
     suspend fun updateManagementAuthSettings(request: ManagementAuthSettingsPayload): AppResult<Unit>
+
+    /**
+     * Resets global authentication settings to default values.
+     *
+     * @return Fresh default [ManagementAuthSettingsPayload], or a mapped failure.
+     */
+    suspend fun resetManagementAuthSettings(): AppResult<ManagementAuthSettingsPayload>
 }

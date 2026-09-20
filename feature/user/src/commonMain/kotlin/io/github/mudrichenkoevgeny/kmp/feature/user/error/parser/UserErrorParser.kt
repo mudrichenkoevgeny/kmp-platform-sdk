@@ -77,6 +77,15 @@ object UserErrorParser : AppErrorParser {
             UserErrorCodes.WRONG_PASSWORD ->
                 stringResource(Res.string.error_user_wrong_password)
 
+            UserErrorCodes.PASSWORD_SETUP_REQUIRED ->
+                stringResource(Res.string.error_user_password_setup_required)
+
+            UserErrorCodes.USER_IDENTIFIER_PASSWORD_NOT_SUPPORTED ->
+                stringResource(Res.string.error_user_identifier_password_not_supported)
+
+            UserErrorCodes.USER_IDENTIFIER_PASSWORD_NOT_SET ->
+                stringResource(Res.string.error_user_identifier_password_not_set)
+
             UserErrorCodes.WRONG_CONFIRMATION_CODE ->
                 stringResource(Res.string.error_user_wrong_confirmation_code)
 

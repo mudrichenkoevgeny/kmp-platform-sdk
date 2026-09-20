@@ -142,7 +142,7 @@ class LoginWelcomeComponentImpl(
                     }
                 }
                 .onError { appError ->
-                    if (appError.code == SecurityErrorCodes.TOTP_CONFIRMATION_REQUIRED) {
+                    if (appError.code == SecurityErrorCodes.MFA_CONFIRMATION_REQUIRED) {
                         val mfaToken = appError.args?.get(SecurityErrorArgs.MFA_TOKEN)
                         if (mfaToken != null) {
                             onNavigateToTotp(mfaToken)

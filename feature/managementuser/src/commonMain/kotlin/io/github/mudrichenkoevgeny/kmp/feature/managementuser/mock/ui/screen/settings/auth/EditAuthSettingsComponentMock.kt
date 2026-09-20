@@ -48,5 +48,6 @@ class EditAuthSettingsComponentMock(
     override fun onManagementEmailWhitelistEnabledToggled(enabled: Boolean) {}
     override fun onManagementEmailWhitelistChanged(value: String) {}
     override fun onSaveClick() {}
+    override fun onResetClick() {}
     override fun onBackClick() {}
 }

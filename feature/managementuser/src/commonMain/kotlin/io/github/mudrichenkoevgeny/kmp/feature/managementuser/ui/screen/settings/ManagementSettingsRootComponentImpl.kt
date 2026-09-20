@@ -16,10 +16,13 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.main.MainManagementSettingsComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.security.EditSecuritySettingsComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings.GetManagementAuthSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings.ResetRemoteAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings.SaveRemoteAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.GetManagementGlobalSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.ResetRemoteGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.SaveRemoteGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.GetManagementSecuritySettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.ResetRemoteSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.SaveRemoteSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
@@ -38,10 +41,13 @@ class ManagementSettingsRootComponentImpl(
     componentContext: ComponentContext,
     private val getManagementAuthSettingsUseCase: GetManagementAuthSettingsUseCase,
     private val saveRemoteAuthSettingsUseCase: SaveRemoteAuthSettingsUseCase,
+    private val resetRemoteAuthSettingsUseCase: ResetRemoteAuthSettingsUseCase,
     private val getManagementGlobalSettingsUseCase: GetManagementGlobalSettingsUseCase,
     private val saveRemoteGlobalSettingsUseCase: SaveRemoteGlobalSettingsUseCase,
+    private val resetRemoteGlobalSettingsUseCase: ResetRemoteGlobalSettingsUseCase,
     private val getManagementSecuritySettingsUseCase: GetManagementSecuritySettingsUseCase,
     private val saveRemoteSecuritySettingsUseCase: SaveRemoteSecuritySettingsUseCase,
+    private val resetRemoteSecuritySettingsUseCase: ResetRemoteSecuritySettingsUseCase,
     private val getUsersUseCase: GetUsersUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val createUserUseCase: CreateUserUseCase,
@@ -83,6 +89,7 @@ class ManagementSettingsRootComponentImpl(
                 componentContext = context,
                 getManagementAuthSettingsUseCase = getManagementAuthSettingsUseCase,
                 saveRemoteAuthSettingsUseCase = saveRemoteAuthSettingsUseCase,
+                resetRemoteAuthSettingsUseCase = resetRemoteAuthSettingsUseCase,
                 onBack = navigation::pop
             )
         )
@@ -91,6 +98,7 @@ class ManagementSettingsRootComponentImpl(
                 componentContext = context,
                 getManagementGlobalSettingsUseCase = getManagementGlobalSettingsUseCase,
                 saveRemoteGlobalSettingsUseCase = saveRemoteGlobalSettingsUseCase,
+                resetRemoteGlobalSettingsUseCase = resetRemoteGlobalSettingsUseCase,
                 onBack = navigation::pop
             )
         )
@@ -99,6 +107,7 @@ class ManagementSettingsRootComponentImpl(
                 componentContext = context,
                 getManagementSecuritySettingsUseCase = getManagementSecuritySettingsUseCase,
                 saveRemoteSecuritySettingsUseCase = saveRemoteSecuritySettingsUseCase,
+                resetRemoteSecuritySettingsUseCase = resetRemoteSecuritySettingsUseCase,
                 onBack = navigation::pop
             )
         )

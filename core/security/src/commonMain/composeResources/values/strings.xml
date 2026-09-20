@@ -1,6 +1,6 @@
 <resources>
-    <string name="error_security_totp_confirmation_required">Authentication confirmation is required.</string>
-    <string name="error_security_totp_confirmation_required_args">Authentication confirmation is required. MFA token: %1$s</string>
+    <string name="error_security_mfa_confirmation_required">Authentication confirmation is required.</string>
+    <string name="error_security_mfa_confirmation_required_args">Authentication confirmation is required. MFA token: %1$s</string>
     <string name="error_security_totp_already_enabled">Two-factor authentication is already enabled for this account.</string>
     <string name="error_security_totp_not_enabled">Two-factor authentication is not enabled for this account.</string>
     <string name="error_security_mfa_token_expired">The MFA token has expired. Please request a new one.</string>

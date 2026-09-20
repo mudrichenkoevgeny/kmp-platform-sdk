@@ -22,13 +22,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_id
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_status
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.events.AuditEventsTestTags
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.mock.domain.model.event.auditEventMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEvent
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditValueSensitivity
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.action.UserAuditActionType
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
-import kotlin.time.Instant
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -73,19 +68,7 @@ private fun AuditItemPreview() {
     MaterialTheme {
         Surface {
             AuditItem(
-                event = AuditEvent(
-                    actorId = null,
-                    actorType = AuditActorType.USER,
-                    actorUserRole = null,
-                    action = UserAuditActionType.MANAGEMENT_UPDATE_USER,
-                    resource = UserAuditResourceType.USER,
-                    resourceId = null,
-                    resourceValueSensitivity = AuditValueSensitivity.NON_SENSITIVE,
-                    status = AuditStatus.SUCCESS,
-                    metadata = emptySet(),
-                    message = null,
-                    createdAt = Instant.fromEpochMilliseconds(0)
-                ),
+                event = auditEventMock(),
                 onClick = {}
             )
         }

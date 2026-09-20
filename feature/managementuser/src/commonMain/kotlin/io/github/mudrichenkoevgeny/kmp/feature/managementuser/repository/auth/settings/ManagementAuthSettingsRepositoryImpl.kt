@@ -89,6 +89,17 @@ class ManagementAuthSettingsRepositoryImpl(
             }
     }
 
+    override suspend fun resetRemoteManagementAuthSettings(): AppResult<ManagementAuthSettings> {
+        return updateMutex.withLock {
+            managementAuthSettingsApi.resetManagementAuthSettings()
+                .mapSuccess { response ->
+                    val settings = response.toManagementAuthSettings()
+                    applySettingsUpdate(settings)
+                    settings
+                }
+        }
+    }
+
     override suspend fun refreshManagementAuthSettings(): AppResult<ManagementAuthSettings> {
         return updateMutex.withLock {
             refreshManagementAuthSettingsInternal()

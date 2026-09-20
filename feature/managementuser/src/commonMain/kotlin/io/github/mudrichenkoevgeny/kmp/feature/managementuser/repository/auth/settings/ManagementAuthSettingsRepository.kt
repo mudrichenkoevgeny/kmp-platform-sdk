@@ -25,6 +25,13 @@ interface ManagementAuthSettingsRepository {
     suspend fun saveRemoteManagementAuthSettings(authSettings: ManagementAuthSettings): AppResult<Unit>
 
     /**
+     * Resets auth settings on the remote server to default values and updates local state.
+     *
+     * @return Fresh [ManagementAuthSettings] on success, or an error result when the remote reset fails.
+     */
+    suspend fun resetRemoteManagementAuthSettings(): AppResult<ManagementAuthSettings>
+
+    /**
      * Forces a network reload and updates the observable snapshot on success.
      *
      * @return Fresh [ManagementAuthSettings] on success, or an error result when the request fails.

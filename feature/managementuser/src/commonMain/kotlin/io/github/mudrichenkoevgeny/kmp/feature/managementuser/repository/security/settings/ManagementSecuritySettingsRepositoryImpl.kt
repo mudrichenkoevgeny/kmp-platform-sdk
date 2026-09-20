@@ -83,6 +83,17 @@ class ManagementSecuritySettingsRepositoryImpl(
             }
     }
 
+    override suspend fun resetRemoteManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
+        return updateMutex.withLock {
+            managementSecuritySettingsApi.resetManagementSecuritySettings()
+                .mapSuccess { response ->
+                    val settings = response.toManagementSecuritySettings()
+                    applySettingsUpdate(settings)
+                    settings
+                }
+        }
+    }
+
     override suspend fun refreshManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
         return updateMutex.withLock {
             refreshManagementSecuritySettingsInternal()

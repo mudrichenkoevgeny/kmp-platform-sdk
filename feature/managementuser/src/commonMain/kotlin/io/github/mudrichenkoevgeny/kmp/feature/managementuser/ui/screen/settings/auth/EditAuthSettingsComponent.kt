@@ -76,6 +76,9 @@ interface EditAuthSettingsComponent {
     /** Saves updated auth settings to the backend. */
     fun onSaveClick()
 
+    /** Resets auth settings to defaults on the backend. */
+    fun onResetClick()
+
     /** Navigates back. */
     fun onBackClick()
 }

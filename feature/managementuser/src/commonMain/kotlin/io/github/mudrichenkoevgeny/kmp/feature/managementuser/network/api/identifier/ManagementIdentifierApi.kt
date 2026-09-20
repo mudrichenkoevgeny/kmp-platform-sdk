@@ -49,4 +49,13 @@ interface ManagementIdentifierApi {
      * @return Empty success indicator, or a mapped failure.
      */
     suspend fun deleteIdentifier(userId: UserId, identifierId: String): AppResult<Unit>
+
+    /**
+     * Removes the password credential for the given user's identifier record.
+     *
+     * @param userId Unique identifier of the record owner.
+     * @param identifierId Unique identifier record ID to remove password for.
+     * @return Empty success indicator, or a mapped failure.
+     */
+    suspend fun deleteIdentifierPassword(userId: UserId, identifierId: String): AppResult<Unit>
 }

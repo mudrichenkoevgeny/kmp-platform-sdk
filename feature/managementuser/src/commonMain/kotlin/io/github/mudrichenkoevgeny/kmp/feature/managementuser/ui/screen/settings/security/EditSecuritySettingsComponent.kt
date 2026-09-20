@@ -111,6 +111,9 @@ interface EditSecuritySettingsComponent {
     /** Saves security settings to the backend. */
     fun onSaveClick()
 
+    /** Resets security settings to defaults on the backend. */
+    fun onResetClick()
+
     /** Navigates back. */
     fun onBackClick()
 }

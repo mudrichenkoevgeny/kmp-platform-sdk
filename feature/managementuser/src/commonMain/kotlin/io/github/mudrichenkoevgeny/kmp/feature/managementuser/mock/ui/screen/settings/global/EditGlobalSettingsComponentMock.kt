@@ -35,5 +35,6 @@ class EditGlobalSettingsComponentMock(
     override fun onMetricsEnabledToggled(enabled: Boolean) {}
     override fun onVerboseLoggingEnabledToggled(enabled: Boolean) {}
     override fun onSaveClick() {}
+    override fun onResetClick() {}
     override fun onBackClick() {}
 }

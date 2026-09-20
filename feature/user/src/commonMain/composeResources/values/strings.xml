@@ -16,6 +16,9 @@
     <string name="error_user_not_found">User not found.</string>
     <string name="error_user_invalid_credentials">Invalid email or password.</string>
     <string name="error_user_wrong_password">The current password is incorrect.</string>
+    <string name="error_user_password_setup_required">Password setup is required for this account.</string>
+    <string name="error_user_identifier_password_not_supported">Passwords are not supported for this identification method.</string>
+    <string name="error_user_identifier_password_not_set">A password has not been set for this identification method.</string>
     <string name="error_user_wrong_confirmation_code">The confirmation code is incorrect or has expired.</string>
     <string name="error_user_external_linkage_failed">External account could not be linked.</string>
     <string name="error_user_can_not_delete_identifier">This sign-in method cannot be removed.</string>

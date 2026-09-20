@@ -6,6 +6,7 @@ import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.GetManagementGlobalSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.ResetRemoteGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.SaveRemoteGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.model.globalsettings.ManagementGlobalSettings
@@ -18,6 +19,7 @@ class EditGlobalSettingsComponentImpl(
     componentContext: ComponentContext,
     private val getManagementGlobalSettingsUseCase: GetManagementGlobalSettingsUseCase,
     private val saveRemoteGlobalSettingsUseCase: SaveRemoteGlobalSettingsUseCase,
+    private val resetRemoteGlobalSettingsUseCase: ResetRemoteGlobalSettingsUseCase,
     private val onBack: () -> Unit
 ) : EditGlobalSettingsComponent, ComponentContext by componentContext {
 
@@ -134,6 +136,22 @@ class EditGlobalSettingsComponentImpl(
                     current.copy(isSaving = false)
                 }
                 is AppResult.Error -> current.copy(isSaving = false, saveError = saveResult.error)
+            }
+            _state.value = nextState
+        }
+    }
+
+    override fun onResetClick() {
+        val current = _state.value as? EditGlobalSettingsScreenState.Content ?: return
+        scope.launch {
+            _state.value = current.copy(isSaving = true, saveError = null)
+            val result = resetRemoteGlobalSettingsUseCase()
+            val nextState = when (result) {
+                is AppResult.Success -> {
+                    onBack()
+                    current.copy(isSaving = false)
+                }
+                is AppResult.Error -> current.copy(isSaving = false, saveError = result.error)
             }
             _state.value = nextState
         }

@@ -57,4 +57,11 @@ class ManagementIdentifierRepositoryImpl(
             identifierId = identifierId
         )
     }
+
+    override suspend fun deleteIdentifierPassword(userId: UserId, identifierId: String): AppResult<Unit> {
+        return managementIdentifierApi.deleteIdentifierPassword(
+            userId = userId,
+            identifierId = identifierId
+        )
+    }
 }

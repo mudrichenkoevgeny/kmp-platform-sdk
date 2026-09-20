@@ -68,4 +68,14 @@ class KtorManagementIdentifierApi(
             parameter(UserApiPaths.USER_IDENTIFIER_ID, identifierId)
         }
     }
+
+    override suspend fun deleteIdentifierPassword(
+        userId: UserId,
+        identifierId: String
+    ): AppResult<Unit> = client.callResult {
+        delete(ManagementIdentifierRoutes.DELETE_IDENTIFIER_PASSWORD) {
+            parameter(UserApiPaths.USER_ID, userId.value)
+            parameter(UserApiPaths.USER_IDENTIFIER_ID, identifierId)
+        }
+    }
 }

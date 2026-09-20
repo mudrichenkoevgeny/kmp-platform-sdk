@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.auth.settings.ManagementAuthSettingsRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
+import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 
@@ -14,15 +15,22 @@ class KtorManagementAuthSettingsApi(
     private val client: HttpClient
 ) : ManagementAuthSettingsApi {
 
-    override suspend fun getManagementAuthSettings(): AppResult<ManagementAuthSettingsPayload> = client.callResult {
-        get(ManagementAuthSettingsRoutes.GET_MANAGEMENT_AUTH_SETTINGS)
-    }
+    override suspend fun getManagementAuthSettings(): AppResult<ManagementAuthSettingsPayload> =
+        client.callResult {
+            get(ManagementAuthSettingsRoutes.GET_MANAGEMENT_AUTH_SETTINGS)
+        }
 
     override suspend fun updateManagementAuthSettings(
         request: ManagementAuthSettingsPayload
-    ): AppResult<Unit> = client.callResult {
-        put(ManagementAuthSettingsRoutes.UPDATE_MANAGEMENT_AUTH_SETTINGS) {
-            setBody(request)
+    ): AppResult<Unit> =
+        client.callResult {
+            put(ManagementAuthSettingsRoutes.UPDATE_MANAGEMENT_AUTH_SETTINGS) {
+                setBody(request)
+            }
         }
-    }
+
+    override suspend fun resetManagementAuthSettings(): AppResult<ManagementAuthSettingsPayload> =
+        client.callResult {
+            post(ManagementAuthSettingsRoutes.RESET_MANAGEMENT_AUTH_SETTINGS)
+        }
 }

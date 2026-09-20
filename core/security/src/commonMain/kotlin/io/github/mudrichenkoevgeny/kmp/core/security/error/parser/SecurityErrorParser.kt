@@ -25,11 +25,11 @@ object SecurityErrorParser : AppErrorParser {
         val args = appError.args ?: emptyMap()
 
         return when (appError.code) {
-            SecurityErrorCodes.TOTP_CONFIRMATION_REQUIRED -> resolveLocalizedString(
+            SecurityErrorCodes.MFA_CONFIRMATION_REQUIRED -> resolveLocalizedString(
                 args = args,
                 key = SecurityErrorArgs.MFA_TOKEN,
-                withArgsRes = Res.string.error_security_totp_confirmation_required_args,
-                fallbackRes = Res.string.error_security_totp_confirmation_required
+                withArgsRes = Res.string.error_security_mfa_confirmation_required_args,
+                fallbackRes = Res.string.error_security_mfa_confirmation_required
             )
 
             SecurityErrorCodes.OTP_RETRY_TOO_SOON -> resolveLocalizedString(

@@ -21,4 +21,11 @@ interface ManagementSecuritySettingsApi {
      * @return Empty success indicator, or a mapped failure.
      */
     suspend fun updateManagementSecuritySettings(request: ManagementSecuritySettingsPayload): AppResult<Unit>
+
+    /**
+     * Resets global security settings and policies to default values.
+     *
+     * @return Fresh default [ManagementSecuritySettingsPayload], or a mapped failure.
+     */
+    suspend fun resetManagementSecuritySettings(): AppResult<ManagementSecuritySettingsPayload>
 }

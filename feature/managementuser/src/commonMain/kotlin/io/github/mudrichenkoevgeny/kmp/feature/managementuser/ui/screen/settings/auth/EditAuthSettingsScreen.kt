@@ -22,6 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -121,6 +122,7 @@ fun EditAuthSettingsScreen(component: EditAuthSettingsComponent) {
                     onManagementEmailWhitelistEnabledToggled = component::onManagementEmailWhitelistEnabledToggled,
                     onManagementEmailWhitelistChanged = component::onManagementEmailWhitelistChanged,
                     onSaveClick = component::onSaveClick,
+                    onResetClick = component::onResetClick,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(padding)
@@ -156,6 +158,7 @@ private fun EditAuthSettingsForm(
     onManagementEmailWhitelistEnabledToggled: (Boolean) -> Unit,
     onManagementEmailWhitelistChanged: (String) -> Unit,
     onSaveClick: () -> Unit,
+    onResetClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -406,6 +409,16 @@ private fun EditAuthSettingsForm(
         ) {
             Text(text = stringResource(if (state.isSaving) Res.string.saving else Res.string.save))
         }
+
+        OutlinedButton(
+            onClick = onResetClick,
+            enabled = !state.isSaving,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(EditAuthSettingsTestTags.RESET_BUTTON)
+        ) {
+            Text(text = stringResource(Res.string.reset_to_defaults))
+        }
     }
 }
 
@@ -472,7 +485,8 @@ private fun EditAuthSettingsContentPreview() {
                     onManagementEmailBlacklistChanged = {},
                     onManagementEmailWhitelistEnabledToggled = {},
                     onManagementEmailWhitelistChanged = {},
-                    onSaveClick = {}
+                    onSaveClick = {},
+                    onResetClick = {}
                 )
             }
         }
@@ -502,4 +516,5 @@ object EditAuthSettingsTestTags {
 
     const val SAVE_ERROR_TEXT = "EditAuthSettings_SaveErrorText"
     const val SAVE_BUTTON = "EditAuthSettings_SaveButton"
+    const val RESET_BUTTON = "EditAuthSettings_ResetButton"
 }

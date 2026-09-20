@@ -17,6 +17,7 @@ class ManagementIdentifierApiMock : ManagementIdentifierApi {
     var getIdentifiersResult: AppResult<PagedResult<UserIdentifierPayload>> = AppResult.Error(CommonError.Unknown())
     var getIdentifierResult: AppResult<UserIdentifierPayload> = AppResult.Error(CommonError.Unknown())
     var deleteIdentifierResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
+    var deleteIdentifierPasswordResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
 
     override suspend fun getIdentifiers(
         pageNumber: Int?,
@@ -31,4 +32,6 @@ class ManagementIdentifierApiMock : ManagementIdentifierApi {
     override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPayload> = getIdentifierResult
 
     override suspend fun deleteIdentifier(userId: UserId, identifierId: String): AppResult<Unit> = deleteIdentifierResult
+
+    override suspend fun deleteIdentifierPassword(userId: UserId, identifierId: String): AppResult<Unit> = deleteIdentifierPasswordResult
 }

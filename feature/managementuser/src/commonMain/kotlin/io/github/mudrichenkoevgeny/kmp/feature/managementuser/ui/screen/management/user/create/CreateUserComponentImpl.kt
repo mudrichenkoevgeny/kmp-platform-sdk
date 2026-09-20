@@ -50,7 +50,7 @@ class CreateUserComponentImpl(
             createUserUseCase(
                 CreateByEmailRequest(
                     email = current.email,
-                    password = current.password,
+                    password = current.password.ifBlank { null },
                     role = current.role,
                     status = current.status,
                     authorityLevel = authLevel,

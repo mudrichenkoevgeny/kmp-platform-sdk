@@ -326,17 +326,26 @@ class ManagementUserComponent(
     /** Saves remote auth settings. */
     val saveRemoteAuthSettingsUseCase get() = useCaseModule.saveRemoteAuthSettingsUseCase
 
-    /** Returns management global settings. `*/
+    /** Resets remote auth settings. */
+    val resetRemoteAuthSettingsUseCase get() = useCaseModule.resetRemoteAuthSettingsUseCase
+
+    /** Returns management global settings. */
     val getManagementGlobalSettingsUseCase get() = useCaseModule.getManagementGlobalSettingsUseCase
 
     /** Saves remote global settings. */
     val saveRemoteGlobalSettingsUseCase get() = useCaseModule.saveRemoteGlobalSettingsUseCase
+
+    /** Resets remote global settings. */
+    val resetRemoteGlobalSettingsUseCase get() = useCaseModule.resetRemoteGlobalSettingsUseCase
 
     /** Returns management security settings. */
     val getManagementSecuritySettingsUseCase get() = useCaseModule.getManagementSecuritySettingsUseCase
 
     /** Saves remote security settings. */
     val saveRemoteSecuritySettingsUseCase get() = useCaseModule.saveRemoteSecuritySettingsUseCase
+
+    /** Resets remote security settings. */
+    val resetRemoteSecuritySettingsUseCase get() = useCaseModule.resetRemoteSecuritySettingsUseCase
 
     /**
      * Creates the root Decompose component for users management flow.
@@ -373,10 +382,13 @@ class ManagementUserComponent(
             componentContext = componentContext,
             getManagementAuthSettingsUseCase = getManagementAuthSettingsUseCase,
             saveRemoteAuthSettingsUseCase = saveRemoteAuthSettingsUseCase,
+            resetRemoteAuthSettingsUseCase = resetRemoteAuthSettingsUseCase,
             getManagementGlobalSettingsUseCase = getManagementGlobalSettingsUseCase,
             saveRemoteGlobalSettingsUseCase = saveRemoteGlobalSettingsUseCase,
+            resetRemoteGlobalSettingsUseCase = resetRemoteGlobalSettingsUseCase,
             getManagementSecuritySettingsUseCase = getManagementSecuritySettingsUseCase,
             saveRemoteSecuritySettingsUseCase = saveRemoteSecuritySettingsUseCase,
+            resetRemoteSecuritySettingsUseCase = resetRemoteSecuritySettingsUseCase,
             getUsersUseCase = getUsersUseCase,
             getUserUseCase = getUserUseCase,
             createUserUseCase = createUserUseCase,

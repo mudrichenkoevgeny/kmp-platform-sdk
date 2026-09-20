@@ -6,6 +6,7 @@ import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.GetManagementSecuritySettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.ResetRemoteSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.SaveRemoteSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutPolicy
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.iprestriction.IpRestrictionPolicy
@@ -21,6 +22,7 @@ class EditSecuritySettingsComponentImpl(
     componentContext: ComponentContext,
     private val getManagementSecuritySettingsUseCase: GetManagementSecuritySettingsUseCase,
     private val saveRemoteSecuritySettingsUseCase: SaveRemoteSecuritySettingsUseCase,
+    private val resetRemoteSecuritySettingsUseCase: ResetRemoteSecuritySettingsUseCase,
     private val onBack: () -> Unit
 ) : EditSecuritySettingsComponent, ComponentContext by componentContext {
 
@@ -274,6 +276,22 @@ class EditSecuritySettingsComponentImpl(
                     current.copy(isSaving = false)
                 }
                 is AppResult.Error -> current.copy(isSaving = false, saveError = saveResult.error)
+            }
+            _state.value = nextState
+        }
+    }
+
+    override fun onResetClick() {
+        val current = _state.value as? EditSecuritySettingsScreenState.Content ?: return
+        scope.launch {
+            _state.value = current.copy(isSaving = true, saveError = null)
+            val result = resetRemoteSecuritySettingsUseCase()
+            val nextState = when (result) {
+                is AppResult.Success -> {
+                    onBack()
+                    current.copy(isSaving = false)
+                }
+                is AppResult.Error -> current.copy(isSaving = false, saveError = result.error)
             }
             _state.value = nextState
         }

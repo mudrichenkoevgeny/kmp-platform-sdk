@@ -57,6 +57,16 @@ class ManagementIdentifierRepositoryImplTest {
     }
 
     @Test
+    fun `deleteIdentifierPassword forwards request`() = runTest {
+        api.deleteIdentifierPasswordResult = AppResult.Success(Unit)
+        val userId = "550e8400-e29b-41d4-a716-446655440000".toUserIdOrThrow()
+
+        val result = repo.deleteIdentifierPassword(userId, "id-1")
+
+        assertIs<AppResult.Success<Unit>>(result)
+    }
+
+    @Test
     fun `repository propagates api errors`() = runTest {
         api.getIdentifierResult = AppResult.Error(CommonError.Unknown())
 

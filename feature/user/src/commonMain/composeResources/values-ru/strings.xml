@@ -16,6 +16,9 @@
     <string name="error_user_not_found">Пользователь не найден.</string>
     <string name="error_user_invalid_credentials">Неверный email или пароль.</string>
     <string name="error_user_wrong_password">Текущий пароль указан неверно.</string>
+    <string name="error_user_password_setup_required">Требуется установка пароля для этой учётной записи.</string>
+    <string name="error_user_identifier_password_not_supported">Пароли не поддерживаются для этого способа идентификации.</string>
+    <string name="error_user_identifier_password_not_set">Пароль не установлен для этого способа идентификации.</string>
     <string name="error_user_wrong_confirmation_code">Код подтверждения неверчен или истек.</string>
     <string name="error_user_external_linkage_failed">Не удалось связать внешний аккаунт.</string>
     <string name="error_user_can_not_delete_identifier">Этот способ входа не может быть удален.</string>

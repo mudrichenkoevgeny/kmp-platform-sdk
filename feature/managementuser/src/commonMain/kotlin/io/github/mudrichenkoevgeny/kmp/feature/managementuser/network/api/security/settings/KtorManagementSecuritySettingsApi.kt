@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.route.management.security.settings.ManagementSecuritySettingsRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
+import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 
@@ -18,15 +19,22 @@ class KtorManagementSecuritySettingsApi(
     private val client: HttpClient
 ) : ManagementSecuritySettingsApi {
 
-    override suspend fun getManagementSecuritySettings(): AppResult<ManagementSecuritySettingsPayload> = client.callResult {
-        get(ManagementSecuritySettingsRoutes.GET_MANAGEMENT_SECURITY_SETTINGS)
-    }
+    override suspend fun getManagementSecuritySettings(): AppResult<ManagementSecuritySettingsPayload> =
+        client.callResult {
+            get(ManagementSecuritySettingsRoutes.GET_MANAGEMENT_SECURITY_SETTINGS)
+        }
 
     override suspend fun updateManagementSecuritySettings(
         request: ManagementSecuritySettingsPayload
-    ): AppResult<Unit> = client.callResult {
-        put(ManagementSecuritySettingsRoutes.UPDATE_MANAGEMENT_SECURITY_SETTINGS) {
-            setBody(request)
+    ): AppResult<Unit> =
+        client.callResult {
+            put(ManagementSecuritySettingsRoutes.UPDATE_MANAGEMENT_SECURITY_SETTINGS) {
+                setBody(request)
+            }
         }
-    }
+
+    override suspend fun resetManagementSecuritySettings(): AppResult<ManagementSecuritySettingsPayload> =
+        client.callResult {
+            post(ManagementSecuritySettingsRoutes.RESET_MANAGEMENT_SECURITY_SETTINGS)
+        }
 }

@@ -27,6 +27,7 @@ open class ManagementIdentifierRepositoryMock : ManagementIdentifierRepository {
     }
 
     var deleteIdentifierResultProvider: (UserId, String) -> AppResult<Unit> = { _, _ -> AppResult.Success(Unit) }
+    var deleteIdentifierPasswordResultProvider: (UserId, String) -> AppResult<Unit> = { _, _ -> AppResult.Success(Unit) }
 
     var lastUserId: UserId? = null
     var lastIdentifierId: String? = null
@@ -50,5 +51,11 @@ open class ManagementIdentifierRepositoryMock : ManagementIdentifierRepository {
         lastUserId = userId
         lastIdentifierId = identifierId
         return deleteIdentifierResultProvider(userId, identifierId)
+    }
+
+    override suspend fun deleteIdentifierPassword(userId: UserId, identifierId: String): AppResult<Unit> {
+        lastUserId = userId
+        lastIdentifierId = identifierId
+        return deleteIdentifierPasswordResultProvider(userId, identifierId)
     }
 }

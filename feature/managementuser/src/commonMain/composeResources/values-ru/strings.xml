@@ -3,6 +3,7 @@
     <string name="back">Назад</string>
     <string name="save">Сохранить</string>
     <string name="saving">Сохранение...</string>
+    <string name="reset_to_defaults">Сбросить по умолчанию</string>
     <string name="retry">Повторить</string>
 
     <!-- Main Management Settings Screen -->
