@@ -77,7 +77,16 @@ class ManagementUserRepositoryImplTest {
     fun updateUser_returnsResultFromApi() = runTest {
         api.updateUserResult = AppResult.Success(Unit)
 
-        val result = repository.updateUser(testUserId, UpdateUserRequest())
+        val result = repository.updateUser(
+            testUserId,
+            UpdateUserRequest(
+                accountStatus = null,
+                authorityLevel = null,
+                permissionCodes = null,
+                lockoutType = null,
+                temporaryLockoutUntil = null
+            )
+        )
 
         assertIs<AppResult.Success<Unit>>(result)
     }

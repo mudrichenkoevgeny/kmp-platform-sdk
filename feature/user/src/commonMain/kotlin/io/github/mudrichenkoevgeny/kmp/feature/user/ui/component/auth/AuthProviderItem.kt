@@ -16,6 +16,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
@@ -72,20 +76,45 @@ fun AuthProviderItem(
     }
 }
 
-@Preview(showBackground = true)
+@InternalApi
 @Composable
-private fun AuthProviderItemPreview(
-    @PreviewParameter(AuthProviderPreviewProvider::class) provider: UserAuthProvider
-) {
-    MaterialTheme {
-        Box(
-            modifier = Modifier.padding(CoreTheme.dimens.paddingLarge),
-            contentAlignment = Alignment.Center
-        ) {
-            AuthProviderItem(
-                authProvider = provider,
-                onClick = {}
-            )
+private fun AuthProviderItemPreviewContent(provider: UserAuthProvider) {
+    CoreTheme {
+        Surface {
+            Box(
+                modifier = Modifier.padding(CoreTheme.dimens.paddingLarge),
+                contentAlignment = Alignment.Center
+            ) {
+                AuthProviderItem(
+                    authProvider = provider,
+                    onClick = {}
+                )
+            }
         }
     }
+}
+
+private val defaultAuthProviderItemPreviewState = UserAuthProvider.GOOGLE
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun AuthProviderItemStatesPreview(
+    @PreviewParameter(AuthProviderPreviewProvider::class) provider: UserAuthProvider
+) {
+    AuthProviderItemPreviewContent(provider = provider)
+}
+
+@InternalApi
+@ComponentSizePreviews
+@Composable
+private fun AuthProviderItemComponentSizePreview() {
+    AuthProviderItemPreviewContent(provider = defaultAuthProviderItemPreviewState)
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun AuthProviderItemThemePreview() {
+    AuthProviderItemPreviewContent(provider = defaultAuthProviderItemPreviewState)
 }

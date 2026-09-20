@@ -20,17 +20,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -43,23 +39,39 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreCodeTextField
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreEmailTextField
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CorePasswordTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
@@ -80,7 +92,7 @@ fun IdentifierListScreen(component: IdentifierListComponent) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    CoreScreenTitleText(
                         text = stringResource(Res.string.identifiers),
                         modifier = Modifier.testTag(IdentifierListTestTags.TITLE)
                     )
@@ -97,7 +109,7 @@ fun IdentifierListScreen(component: IdentifierListComponent) {
                         modifier = Modifier.testTag(IdentifierListTestTags.FILTER_BUTTON)
                     ) {
                         Icon(
-                            painter = painterResource(CommonRes.drawable.ic_settings),
+                            painter = painterResource(CommonRes.drawable.ic_filter),
                             contentDescription = null,
                             modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
                         )
@@ -107,7 +119,7 @@ fun IdentifierListScreen(component: IdentifierListComponent) {
                         modifier = Modifier.testTag(IdentifierListTestTags.REFRESH_BUTTON)
                     ) {
                         Icon(
-                            painter = painterResource(CommonRes.drawable.ic_settings),
+                            painter = painterResource(CommonRes.drawable.ic_refresh),
                             contentDescription = null,
                             modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
                         )
@@ -147,9 +159,8 @@ fun IdentifierListScreen(component: IdentifierListComponent) {
                     }
                 }
                 is IdentifierListScreenState.Error -> {
-                    Text(
+                    CoreErrorText(
                         text = currentState.error.toLocalizedMessage(),
-                        color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.testTag(IdentifierListTestTags.GLOBAL_ERROR_TEXT)
                     )
                 }
@@ -296,54 +307,56 @@ private fun ChangePasswordDialog(
 ) {
     var oldPassword by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
+    var isOldPasswordVisible by remember { mutableStateOf(false) }
+    var isNewPasswordVisible by remember { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(Res.string.change_password)) },
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+        title = { CoreTitleText(text = stringResource(Res.string.change_password)) },
         text = {
             Column(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = stringResource(Res.string.email_prefix, email),
-                    style = MaterialTheme.typography.bodyMedium
+                CoreBodyText(
+                    text = stringResource(Res.string.email_prefix, email)
                 )
                 Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                OutlinedTextField(
+                CorePasswordTextField(
                     value = oldPassword,
                     onValueChange = { oldPassword = it },
-                    modifier = Modifier.fillMaxWidth().testTag(IdentifierListTestTags.CHANGE_PASSWORD_OLD_INPUT),
-                    label = { Text(stringResource(Res.string.old_password)) },
-                    visualTransformation = PasswordVisualTransformation(),
+                    isPasswordVisible = isOldPasswordVisible,
+                    onTogglePasswordVisibility = { isOldPasswordVisible = !isOldPasswordVisible },
+                    label = { CoreBodyText(stringResource(Res.string.old_password)) },
+                    placeholder = { CoreBodyText(stringResource(Res.string.old_password)) },
                     enabled = enabled,
-                    singleLine = true
+                    modifier = Modifier.testTag(IdentifierListTestTags.CHANGE_PASSWORD_OLD_INPUT)
                 )
                 Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                OutlinedTextField(
+                CorePasswordTextField(
                     value = newPassword,
                     onValueChange = { newPassword = it },
-                    modifier = Modifier.fillMaxWidth().testTag(IdentifierListTestTags.CHANGE_PASSWORD_NEW_INPUT),
-                    label = { Text(stringResource(Res.string.new_password)) },
-                    visualTransformation = PasswordVisualTransformation(),
+                    isPasswordVisible = isNewPasswordVisible,
+                    onTogglePasswordVisibility = { isNewPasswordVisible = !isNewPasswordVisible },
+                    label = { CoreBodyText(stringResource(Res.string.new_password)) },
+                    placeholder = { CoreBodyText(stringResource(Res.string.new_password)) },
                     enabled = enabled,
-                    singleLine = true
+                    modifier = Modifier.testTag(IdentifierListTestTags.CHANGE_PASSWORD_NEW_INPUT)
                 )
             }
         },
         confirmButton = {
-            Button(
+            CoreButton(
+                text = stringResource(Res.string.confirm),
                 onClick = { onConfirm(oldPassword, newPassword) },
                 enabled = enabled && oldPassword.isNotBlank() && newPassword.isNotBlank(),
                 modifier = Modifier.testTag(IdentifierListTestTags.CONFIRM_CHANGE_PASSWORD_BUTTON)
-            ) {
-                Text(text = stringResource(Res.string.confirm))
-            }
+            )
         },
         dismissButton = {
-            TextButton(
+            CoreTextButton(
+                text = stringResource(Res.string.dialog_cancel),
                 onClick = onDismiss,
                 enabled = enabled
-            ) {
-                Text(text = stringResource(Res.string.dialog_cancel))
-            }
+            )
         }
     )
 }
@@ -361,64 +374,73 @@ private fun AddEmailSection(
     onCancelClick: () -> Unit,
     enabled: Boolean
 ) {
+    var isPasswordVisible by remember { mutableStateOf(false) }
+
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.identifier_add_email),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
         )
         Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
         when (state) {
             is IdentifierListScreenState.AddIdentifierState.Idle -> {
-                OutlinedTextField(
+                CoreEmailTextField(
                     value = emailInput,
                     onValueChange = onEmailInputChange,
-                    modifier = Modifier.fillMaxWidth().testTag(IdentifierListTestTags.ADD_EMAIL_INPUT),
-                    label = { Text(stringResource(Res.string.email)) },
+                    label = { CoreBodyText(stringResource(Res.string.email)) },
+                    placeholder = { CoreBodyText(stringResource(Res.string.email)) },
                     enabled = enabled,
-                    singleLine = true
+                    modifier = Modifier.testTag(IdentifierListTestTags.ADD_EMAIL_INPUT)
                 )
                 Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                Button(
+                CoreButton(
+                    text = stringResource(Res.string.identifier_add_email),
                     onClick = onAddClick,
-                    modifier = Modifier.fillMaxWidth().testTag(IdentifierListTestTags.ADD_EMAIL_BUTTON),
-                    enabled = enabled && emailInput.isNotBlank()
-                ) {
-                    Text(stringResource(Res.string.identifier_add_email))
-                }
+                    enabled = enabled && emailInput.isNotBlank(),
+                    modifier = Modifier.testTag(IdentifierListTestTags.ADD_EMAIL_BUTTON)
+                )
             }
             is IdentifierListScreenState.AddIdentifierState.EnteringCode -> {
-                Text(text = stringResource(Res.string.email_prefix, state.value))
-                OutlinedTextField(
+                CoreBodyText(text = stringResource(Res.string.email_prefix, state.value))
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+                CorePasswordTextField(
                     value = passwordInput,
                     onValueChange = onPasswordInputChange,
-                    modifier = Modifier.fillMaxWidth().testTag(IdentifierListTestTags.ADD_EMAIL_PASSWORD_INPUT),
-                    label = { Text(stringResource(Res.string.password)) },
-                    visualTransformation = PasswordVisualTransformation(),
+                    isPasswordVisible = isPasswordVisible,
+                    onTogglePasswordVisibility = { isPasswordVisible = !isPasswordVisible },
+                    label = { CoreBodyText(stringResource(Res.string.password)) },
+                    placeholder = { CoreBodyText(stringResource(Res.string.password)) },
                     enabled = enabled,
-                    singleLine = true
+                    modifier = Modifier.testTag(IdentifierListTestTags.ADD_EMAIL_PASSWORD_INPUT)
                 )
-                OutlinedTextField(
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+                CoreCodeTextField(
                     value = state.code,
                     onValueChange = onCodeChanged,
-                    modifier = Modifier.fillMaxWidth().testTag(IdentifierListTestTags.ADD_EMAIL_CODE_INPUT),
-                    label = { Text(stringResource(Res.string.confirmation_code)) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
+                    placeholder = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
                     enabled = enabled,
-                    singleLine = true
+                    modifier = Modifier.testTag(IdentifierListTestTags.ADD_EMAIL_CODE_INPUT)
                 )
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)) {
-                    TextButton(onClick = onCancelClick, modifier = Modifier.weight(1f)) {
-                        Text(stringResource(Res.string.cancel))
-                    }
-                    Button(
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+                ) {
+                    CoreTextButton(
+                        text = stringResource(Res.string.cancel),
+                        onClick = onCancelClick,
+                        modifier = Modifier.weight(1f)
+                    )
+                    CoreButton(
+                        text = stringResource(Res.string.confirm),
                         onClick = onConfirmClick,
-                        modifier = Modifier.weight(1f).testTag(IdentifierListTestTags.CONFIRM_ADD_EMAIL_BUTTON),
-                        enabled = enabled && state.code.length == 6 && passwordInput.isNotBlank()
-                    ) {
-                        Text(stringResource(Res.string.confirm))
-                    }
+                        enabled = enabled && state.code.length == 6 && passwordInput.isNotBlank(),
+                        modifier = Modifier
+                            .weight(1f)
+                            .testTag(IdentifierListTestTags.CONFIRM_ADD_EMAIL_BUTTON)
+                    )
                 }
             }
         }
@@ -437,55 +459,60 @@ private fun AddPhoneSection(
     enabled: Boolean
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.identifier_add_phone),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
         )
         Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
         when (state) {
             is IdentifierListScreenState.AddIdentifierState.Idle -> {
-                OutlinedTextField(
+                CoreOutlinedTextField(
                     value = phoneInput,
                     onValueChange = onPhoneInputChange,
-                    modifier = Modifier.fillMaxWidth().testTag(IdentifierListTestTags.ADD_PHONE_INPUT),
-                    label = { Text(stringResource(Res.string.phone_number)) },
+                    label = { CoreBodyText(stringResource(Res.string.phone_number)) },
+                    placeholder = { CoreBodyText(stringResource(Res.string.phone_number)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     enabled = enabled,
-                    singleLine = true
+                    modifier = Modifier.testTag(IdentifierListTestTags.ADD_PHONE_INPUT)
                 )
                 Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                Button(
+                CoreButton(
+                    text = stringResource(Res.string.identifier_add_phone),
                     onClick = onAddClick,
-                    modifier = Modifier.fillMaxWidth().testTag(IdentifierListTestTags.ADD_PHONE_BUTTON),
-                    enabled = enabled && phoneInput.isNotBlank()
-                ) {
-                    Text(stringResource(Res.string.identifier_add_phone))
-                }
+                    enabled = enabled && phoneInput.isNotBlank(),
+                    modifier = Modifier.testTag(IdentifierListTestTags.ADD_PHONE_BUTTON)
+                )
             }
             is IdentifierListScreenState.AddIdentifierState.EnteringCode -> {
-                Text(text = stringResource(Res.string.phone_prefix, state.value))
-                OutlinedTextField(
+                CoreBodyText(text = stringResource(Res.string.phone_prefix, state.value))
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+                CoreCodeTextField(
                     value = state.code,
                     onValueChange = onCodeChanged,
-                    modifier = Modifier.fillMaxWidth().testTag(IdentifierListTestTags.ADD_PHONE_CODE_INPUT),
-                    label = { Text(stringResource(Res.string.confirmation_code)) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
+                    placeholder = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
                     enabled = enabled,
-                    singleLine = true
+                    modifier = Modifier.testTag(IdentifierListTestTags.ADD_PHONE_CODE_INPUT)
                 )
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)) {
-                    TextButton(onClick = onCancelClick, modifier = Modifier.weight(1f)) {
-                        Text(stringResource(Res.string.cancel))
-                    }
-                    Button(
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+                ) {
+                    CoreTextButton(
+                        text = stringResource(Res.string.cancel),
+                        onClick = onCancelClick,
+                        modifier = Modifier.weight(1f)
+                    )
+                    CoreButton(
+                        text = stringResource(Res.string.confirm),
                         onClick = onConfirmClick,
-                        modifier = Modifier.weight(1f).testTag(IdentifierListTestTags.CONFIRM_ADD_PHONE_BUTTON),
-                        enabled = enabled && state.code.length == 6
-                    ) {
-                        Text(stringResource(Res.string.confirm))
-                    }
+                        enabled = enabled && state.code.length == 6,
+                        modifier = Modifier
+                            .weight(1f)
+                            .testTag(IdentifierListTestTags.CONFIRM_ADD_PHONE_BUTTON)
+                    )
                 }
             }
         }
@@ -500,10 +527,8 @@ private fun ErrorText(error: AppError?, testTag: String) {
         exit = fadeOut() + shrinkVertically()
     ) {
         error?.let {
-            Text(
+            CoreErrorText(
                 text = it.toLocalizedMessage(),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(CoreTheme.dimens.paddingMedium)
@@ -515,36 +540,88 @@ private fun ErrorText(error: AppError?, testTag: String) {
 }
 
 @InternalApi
-@Preview(showBackground = true)
+internal class IdentifierListPreviewProvider : PreviewParameterProvider<IdentifierListScreenState> {
+    private val items: List<Pair<String, IdentifierListScreenState>> = listOf(
+        "Content List" to IdentifierListScreenState.Content(
+            paging = PaginationState(
+                items = listOf(userIdentifierMock())
+            )
+        ),
+        "Add Email Entering Code" to IdentifierListScreenState.Content(
+            paging = PaginationState(items = listOf(userIdentifierMock())),
+            addEmailState = IdentifierListScreenState.AddIdentifierState.EnteringCode("user@example.com", "123456")
+        ),
+        "Add Phone Entering Code" to IdentifierListScreenState.Content(
+            paging = PaginationState(items = listOf(userIdentifierMock())),
+            addPhoneState = IdentifierListScreenState.AddIdentifierState.EnteringCode("+1234567890", "123456")
+        ),
+        "Change Password Active" to IdentifierListScreenState.Content(
+            paging = PaginationState(items = listOf(userIdentifierMock())),
+            changePasswordEmail = "user@example.com"
+        ),
+        "Action Loading" to IdentifierListScreenState.Content(
+            paging = PaginationState(items = listOf(userIdentifierMock())),
+            actionLoading = true
+        ),
+        "Global Error" to IdentifierListScreenState.Error(error = CommonError.Unknown()),
+        "Fullscreen Loading" to IdentifierListScreenState.Loading
+    )
+
+    override val values: Sequence<IdentifierListScreenState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
+}
+
+@InternalApi
 @Composable
-private fun IdentifierListContentPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                Content(
-                    state = IdentifierListScreenState.Content(
-                        paging = PaginationState(
-                            items = listOf(
-                                userIdentifierMock()
-                            )
-                        )
-                    ),
-                    component = IdentifierListComponentMock(),
-                    onDeleteIdentifier = {},
-                    onChangePasswordClick = {},
-                    onConfirmChangePassword = { _, _ -> },
-                    onDismissChangePassword = {},
-                    onAddEmail = {},
-                    onEmailCodeChanged = {},
-                    onConfirmEmail = {},
-                    onAddPhone = {},
-                    onPhoneCodeChanged = {},
-                    onConfirmPhone = {},
-                    onCancelAdd = {},
-                    onLoadNextPage = {}
-                )
-            }
-        }
+private fun IdentifierListScreenPreviewContent(state: IdentifierListScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        IdentifierListScreen(
+            component = IdentifierListComponentMock(initialState = state)
+        )
+    }
+}
+
+@InternalApi
+private val defaultIdentifierListPreviewState = IdentifierListScreenState.Content(
+    paging = PaginationState(items = listOf(userIdentifierMock()))
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(IdentifierListPreviewProvider::class) state: IdentifierListScreenState
+) {
+    ScreenPreviewContainer {
+        IdentifierListScreenPreviewContent(state = state)
+    }
+}
+
+@InternalApi
+@ScreenSizePreviews
+@Composable
+private fun ScreenSizePreview() {
+    ScreenPreviewContainer {
+        IdentifierListScreenPreviewContent(state = defaultIdentifierListPreviewState)
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    ScreenPreviewContainer {
+        IdentifierListScreenPreviewContent(state = defaultIdentifierListPreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    ScreenPreviewContainer {
+        IdentifierListScreenPreviewContent(state = defaultIdentifierListPreviewState)
     }
 }
 

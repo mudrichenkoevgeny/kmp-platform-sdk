@@ -14,15 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -33,18 +29,33 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error.FullscreenError
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.settings.security.EditSecuritySettingsComponentMock
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -61,7 +72,7 @@ fun EditSecuritySettingsScreen(component: EditSecuritySettingsComponent) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    CoreScreenTitleText(
                         text = stringResource(Res.string.edit_security_settings_title),
                         modifier = Modifier.testTag(EditSecuritySettingsTestTags.TITLE)
                     )
@@ -180,92 +191,85 @@ private fun EditSecuritySettingsForm(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.general_security),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.testTag(EditSecuritySettingsTestTags.SECTION_GENERAL_TITLE)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.recentAuthenticationValiditySecondsForOpenUser,
             onValueChange = onRecentAuthenticationValidityForOpenUserChanged,
-            label = { Text(text = stringResource(Res.string.recent_authentication_validity_seconds)) },
+            label = { CoreBodyText(stringResource(Res.string.recent_authentication_validity_seconds)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.recent_authentication_validity_seconds)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditSecuritySettingsTestTags.RECENT_AUTH_VALIDITY_INPUT)
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.RECENT_AUTH_VALIDITY_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.recentAuthenticationValiditySecondsForManagementUser,
             onValueChange = onRecentAuthenticationValidityForManagementUserChanged,
-            label = { Text(text = stringResource(Res.string.recent_authentication_validity_for_management)) },
+            label = { CoreBodyText(stringResource(Res.string.recent_authentication_validity_for_management)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.recent_authentication_validity_for_management)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditSecuritySettingsTestTags.RECENT_MANAGEMENT_AUTH_VALIDITY_INPUT)
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.RECENT_MANAGEMENT_AUTH_VALIDITY_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.mfaTokenExpirationSeconds,
             onValueChange = onMfaTokenExpirationSecondsChanged,
-            label = { Text(text = stringResource(Res.string.mfa_token_expiration_seconds)) },
+            label = { CoreBodyText(stringResource(Res.string.mfa_token_expiration_seconds)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.mfa_token_expiration_seconds)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditSecuritySettingsTestTags.MFA_TOKEN_EXPIRATION_INPUT)
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.MFA_TOKEN_EXPIRATION_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.refreshTokenRotationGracePeriodSeconds,
             onValueChange = onRefreshTokenRotationGracePeriodSecondsChanged,
-            label = { Text(text = stringResource(Res.string.refresh_token_rotation_grace_period_seconds)) },
+            label = { CoreBodyText(stringResource(Res.string.refresh_token_rotation_grace_period_seconds)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.refresh_token_rotation_grace_period_seconds)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditSecuritySettingsTestTags.REFRESH_TOKEN_ROTATION_GRACE_PERIOD_INPUT)
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.REFRESH_TOKEN_ROTATION_GRACE_PERIOD_INPUT)
         )
 
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.rate_limiting),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.testTag(EditSecuritySettingsTestTags.SECTION_RATE_LIMITING_TITLE)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.maxRequestsPerPeriod,
             onValueChange = onMaxRequestsPerPeriodChanged,
-            label = { Text(text = stringResource(Res.string.max_requests_per_period)) },
+            label = { CoreBodyText(stringResource(Res.string.max_requests_per_period)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.max_requests_per_period)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditSecuritySettingsTestTags.MAX_REQUESTS_PER_PERIOD_INPUT)
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.MAX_REQUESTS_PER_PERIOD_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.rateLimitPeriodSeconds,
             onValueChange = onRateLimitPeriodSecondsChanged,
-            label = { Text(text = stringResource(Res.string.rate_limit_period_seconds)) },
+            label = { CoreBodyText(stringResource(Res.string.rate_limit_period_seconds)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.rate_limit_period_seconds)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditSecuritySettingsTestTags.RATE_LIMIT_PERIOD_INPUT)
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.RATE_LIMIT_PERIOD_INPUT)
         )
 
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.password_policy),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.testTag(EditSecuritySettingsTestTags.SECTION_PASSWORD_POLICY_TITLE)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.passwordMinLength,
             onValueChange = onPasswordMinLengthChanged,
-            label = { Text(text = stringResource(Res.string.password_min_length)) },
+            label = { CoreBodyText(stringResource(Res.string.password_min_length)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.password_min_length)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditSecuritySettingsTestTags.PASSWORD_MIN_LENGTH_INPUT)
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.PASSWORD_MIN_LENGTH_INPUT)
         )
 
         PolicyCheckboxRow(
@@ -303,66 +307,65 @@ private fun EditSecuritySettingsForm(
             testTag = EditSecuritySettingsTestTags.PASSWORD_REQUIRE_SPECIAL_CHAR_CHECKBOX
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.commonPasswords,
             onValueChange = onCommonPasswordsChanged,
-            label = { Text(text = stringResource(Res.string.common_passwords_placeholder)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditSecuritySettingsTestTags.COMMON_PASSWORDS_INPUT)
+            label = { CoreBodyText(stringResource(Res.string.common_passwords_placeholder)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.common_passwords_placeholder)) },
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.COMMON_PASSWORDS_INPUT)
         )
 
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.account_lockout_policy_section),
             style = MaterialTheme.typography.titleMedium
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.accountLockoutMaxFailedPasswordAttempts,
             onValueChange = onAccountLockoutMaxFailedPasswordAttemptsChanged,
-            label = { Text(text = stringResource(Res.string.max_failed_password_attempts)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
+            label = { CoreBodyText(stringResource(Res.string.max_failed_password_attempts)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.max_failed_password_attempts)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.accountLockoutMaxFailedOtpAttempts,
             onValueChange = onAccountLockoutMaxFailedOtpAttemptsChanged,
-            label = { Text(text = stringResource(Res.string.max_failed_otp_attempts)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
+            label = { CoreBodyText(stringResource(Res.string.max_failed_otp_attempts)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.max_failed_otp_attempts)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.accountLockoutMaxFailedTotpAttempts,
             onValueChange = onAccountLockoutMaxFailedTotpAttemptsChanged,
-            label = { Text(text = stringResource(Res.string.max_failed_totp_attempts)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
+            label = { CoreBodyText(stringResource(Res.string.max_failed_totp_attempts)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.max_failed_totp_attempts)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.accountLockoutFailedAttemptsWindowSeconds,
             onValueChange = onAccountLockoutFailedAttemptsWindowSecondsChanged,
-            label = { Text(text = stringResource(Res.string.failed_attempts_window_seconds)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
+            label = { CoreBodyText(stringResource(Res.string.failed_attempts_window_seconds)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.failed_attempts_window_seconds)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.accountLockoutDurationSeconds,
             onValueChange = onAccountLockoutDurationSecondsChanged,
-            label = { Text(text = stringResource(Res.string.lockout_duration_seconds)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
+            label = { CoreBodyText(stringResource(Res.string.lockout_duration_seconds)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.lockout_duration_seconds)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.accountLockoutIndefiniteLockoutThreshold,
             onValueChange = onAccountLockoutIndefiniteLockoutThresholdChanged,
-            label = { Text(text = stringResource(Res.string.indefinite_lockout_threshold)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
+            label = { CoreBodyText(stringResource(Res.string.indefinite_lockout_threshold)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.indefinite_lockout_threshold)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
         PolicyCheckboxRow(
@@ -372,15 +375,15 @@ private fun EditSecuritySettingsForm(
             testTag = EditSecuritySettingsTestTags.LOCKOUT_SELF_SERVICE_CHECKBOX
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.accountLockoutCheckIntervalSeconds,
             onValueChange = onAccountLockoutCheckIntervalSecondsChanged,
-            label = { Text(text = stringResource(Res.string.account_lockout_check_interval_seconds)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
+            label = { CoreBodyText(stringResource(Res.string.account_lockout_check_interval_seconds)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.account_lockout_check_interval_seconds)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.open_ip_restriction_policy),
             style = MaterialTheme.typography.titleMedium
         )
@@ -392,11 +395,11 @@ private fun EditSecuritySettingsForm(
             testTag = EditSecuritySettingsTestTags.OPEN_IP_BLACKLIST_CHECKBOX
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.openIpBlacklist,
             onValueChange = onOpenIpBlacklistChanged,
-            label = { Text(text = stringResource(Res.string.blacklist_placeholder)) },
-            modifier = Modifier.fillMaxWidth()
+            label = { CoreBodyText(stringResource(Res.string.blacklist_placeholder)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.blacklist_placeholder)) }
         )
 
         PolicyCheckboxRow(
@@ -406,14 +409,14 @@ private fun EditSecuritySettingsForm(
             testTag = EditSecuritySettingsTestTags.OPEN_IP_WHITELIST_CHECKBOX
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.openIpWhitelist,
             onValueChange = onOpenIpWhitelistChanged,
-            label = { Text(text = stringResource(Res.string.whitelist_placeholder)) },
-            modifier = Modifier.fillMaxWidth()
+            label = { CoreBodyText(stringResource(Res.string.whitelist_placeholder)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.whitelist_placeholder)) }
         )
 
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.management_ip_restriction_policy),
             style = MaterialTheme.typography.titleMedium
         )
@@ -425,11 +428,11 @@ private fun EditSecuritySettingsForm(
             testTag = EditSecuritySettingsTestTags.MGMT_IP_BLACKLIST_CHECKBOX
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.managementIpBlacklist,
             onValueChange = onManagementIpBlacklistChanged,
-            label = { Text(text = stringResource(Res.string.blacklist_placeholder)) },
-            modifier = Modifier.fillMaxWidth()
+            label = { CoreBodyText(stringResource(Res.string.blacklist_placeholder)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.blacklist_placeholder)) }
         )
 
         PolicyCheckboxRow(
@@ -439,47 +442,44 @@ private fun EditSecuritySettingsForm(
             testTag = EditSecuritySettingsTestTags.MGMT_IP_WHITELIST_CHECKBOX
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.managementIpWhitelist,
             onValueChange = onManagementIpWhitelistChanged,
-            label = { Text(text = stringResource(Res.string.whitelist_placeholder)) },
-            modifier = Modifier.fillMaxWidth()
+            label = { CoreBodyText(stringResource(Res.string.whitelist_placeholder)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.whitelist_placeholder)) }
         )
 
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.otp_confirmation),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.testTag(EditSecuritySettingsTestTags.SECTION_OTP_TITLE)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.otpRetryAfterSeconds,
             onValueChange = onOtpRetryAfterSecondsChanged,
-            label = { Text(text = stringResource(Res.string.otp_retry_after_seconds)) },
+            label = { CoreBodyText(stringResource(Res.string.otp_retry_after_seconds)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.otp_retry_after_seconds)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditSecuritySettingsTestTags.OTP_RETRY_AFTER_INPUT)
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.OTP_RETRY_AFTER_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.otpNumberOfSymbols,
             onValueChange = onOtpNumberOfSymbolsChanged,
-            label = { Text(text = stringResource(Res.string.otp_number_of_symbols)) },
+            label = { CoreBodyText(stringResource(Res.string.otp_number_of_symbols)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.otp_number_of_symbols)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditSecuritySettingsTestTags.OTP_NUMBER_OF_SYMBOLS_INPUT)
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.OTP_NUMBER_OF_SYMBOLS_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.otpExpirationSeconds,
             onValueChange = onOtpExpirationSecondsChanged,
-            label = { Text(text = stringResource(Res.string.otp_expiration_seconds)) },
+            label = { CoreBodyText(stringResource(Res.string.otp_expiration_seconds)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.otp_expiration_seconds)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditSecuritySettingsTestTags.OTP_EXPIRATION_INPUT)
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.OTP_EXPIRATION_INPUT)
         )
 
         ErrorText(
@@ -487,25 +487,19 @@ private fun EditSecuritySettingsForm(
             testTag = EditSecuritySettingsTestTags.SAVE_ERROR_TEXT
         )
 
-        Button(
+        CoreButton(
+            text = stringResource(if (state.isSaving) Res.string.saving else Res.string.save),
             onClick = onSaveClick,
             enabled = !state.isSaving,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditSecuritySettingsTestTags.SAVE_BUTTON)
-        ) {
-            Text(text = stringResource(if (state.isSaving) Res.string.saving else Res.string.save))
-        }
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.SAVE_BUTTON)
+        )
 
-        OutlinedButton(
+        CoreTextButton(
+            text = stringResource(Res.string.reset_to_defaults),
             onClick = onResetClick,
             enabled = !state.isSaving,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditSecuritySettingsTestTags.RESET_BUTTON)
-        ) {
-            Text(text = stringResource(Res.string.reset_to_defaults))
-        }
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.RESET_BUTTON)
+        )
     }
 }
 
@@ -525,9 +519,8 @@ private fun PolicyCheckboxRow(
             onCheckedChange = onCheckedChange,
             modifier = Modifier.testTag(testTag)
         )
-        Text(
+        CoreBodyText(
             text = label,
-            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
         )
     }
@@ -541,10 +534,8 @@ private fun ErrorText(error: AppError?, testTag: String) {
         exit = fadeOut() + shrinkVertically()
     ) {
         error?.let {
-            Text(
+            CoreErrorText(
                 text = it.toLocalizedMessage(),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(top = CoreTheme.dimens.paddingSmall)
@@ -555,84 +546,135 @@ private fun ErrorText(error: AppError?, testTag: String) {
 }
 
 @InternalApi
-@Preview(showBackground = true)
+internal class EditSecuritySettingsPreviewProvider : PreviewParameterProvider<EditSecuritySettingsScreenState> {
+    private val sampleContent = EditSecuritySettingsScreenState.Content(
+        recentAuthenticationValiditySecondsForOpenUser = "300",
+        recentAuthenticationValiditySecondsForManagementUser = "300",
+        mfaTokenExpirationSeconds = "300",
+        passwordMinLength = "8",
+        passwordRequireLetter = true,
+        passwordRequireUpperCase = false,
+        passwordRequireLowerCase = false,
+        passwordRequireDigit = true,
+        passwordRequireSpecialChar = false,
+        commonPasswords = "password,123456",
+        accountLockoutMaxFailedPasswordAttempts = "5",
+        accountLockoutMaxFailedOtpAttempts = "5",
+        accountLockoutMaxFailedTotpAttempts = "5",
+        accountLockoutFailedAttemptsWindowSeconds = "300",
+        accountLockoutDurationSeconds = "300",
+        accountLockoutIndefiniteLockoutThreshold = "3",
+        accountLockoutIsSelfServiceUnlockEnabled = true,
+        accountLockoutCheckIntervalSeconds = "60",
+        refreshTokenRotationGracePeriodSeconds = "30",
+        openIpBlacklistEnabled = false,
+        openIpBlacklist = "",
+        openIpWhitelistEnabled = false,
+        openIpWhitelist = "",
+        managementIpBlacklistEnabled = false,
+        managementIpBlacklist = "",
+        managementIpWhitelistEnabled = false,
+        managementIpWhitelist = "",
+        otpRetryAfterSeconds = "60",
+        otpNumberOfSymbols = "6",
+        otpExpirationSeconds = "300",
+        maxRequestsPerPeriod = "100",
+        rateLimitPeriodSeconds = "60"
+    )
+
+    private val items: List<Pair<String, EditSecuritySettingsScreenState>> = listOf(
+        "Content" to sampleContent,
+        "Saving" to sampleContent.copy(isSaving = true),
+        "Save Error" to sampleContent.copy(saveError = CommonError.Unknown()),
+        "Error" to EditSecuritySettingsScreenState.Error(error = CommonError.Unknown()),
+        "Loading" to EditSecuritySettingsScreenState.Loading
+    )
+
+    override val values: Sequence<EditSecuritySettingsScreenState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
+}
+
+@InternalApi
 @Composable
-private fun EditSecuritySettingsContentPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                EditSecuritySettingsForm(
-                    state = EditSecuritySettingsScreenState.Content(
-                        recentAuthenticationValiditySecondsForOpenUser = "300",
-                        recentAuthenticationValiditySecondsForManagementUser = "300",
-                        mfaTokenExpirationSeconds = "300",
-                        passwordMinLength = "8",
-                        passwordRequireLetter = true,
-                        passwordRequireUpperCase = false,
-                        passwordRequireLowerCase = false,
-                        passwordRequireDigit = true,
-                        passwordRequireSpecialChar = false,
-                        commonPasswords = "password,123456",
-                        accountLockoutMaxFailedPasswordAttempts = "5",
-                        accountLockoutMaxFailedOtpAttempts = "5",
-                        accountLockoutMaxFailedTotpAttempts = "5",
-                        accountLockoutFailedAttemptsWindowSeconds = "300",
-                        accountLockoutDurationSeconds = "300",
-                        accountLockoutIndefiniteLockoutThreshold = "3",
-                        accountLockoutIsSelfServiceUnlockEnabled = true,
-                        accountLockoutCheckIntervalSeconds = "60",
-                        refreshTokenRotationGracePeriodSeconds = "30",
-                        openIpBlacklistEnabled = false,
-                        openIpBlacklist = "",
-                        openIpWhitelistEnabled = false,
-                        openIpWhitelist = "",
-                        managementIpBlacklistEnabled = false,
-                        managementIpBlacklist = "",
-                        managementIpWhitelistEnabled = false,
-                        managementIpWhitelist = "",
-                        otpRetryAfterSeconds = "60",
-                        otpNumberOfSymbols = "6",
-                        otpExpirationSeconds = "300",
-                        maxRequestsPerPeriod = "100",
-                        rateLimitPeriodSeconds = "60"
-                    ),
-                    onRecentAuthenticationValidityForOpenUserChanged = {},
-                    onRecentAuthenticationValidityForManagementUserChanged = {},
-                    onMfaTokenExpirationSecondsChanged = {},
-                    onPasswordMinLengthChanged = {},
-                    onPasswordRequireLetterToggled = {},
-                    onPasswordRequireUpperCaseToggled = {},
-                    onPasswordRequireLowerCaseToggled = {},
-                    onPasswordRequireDigitToggled = {},
-                    onPasswordRequireSpecialCharToggled = {},
-                    onCommonPasswordsChanged = {},
-                    onAccountLockoutMaxFailedPasswordAttemptsChanged = {},
-                    onAccountLockoutMaxFailedOtpAttemptsChanged = {},
-                    onAccountLockoutMaxFailedTotpAttemptsChanged = {},
-                    onAccountLockoutFailedAttemptsWindowSecondsChanged = {},
-                    onAccountLockoutDurationSecondsChanged = {},
-                    onAccountLockoutIndefiniteLockoutThresholdChanged = {},
-                    onAccountLockoutIsSelfServiceUnlockEnabledToggled = {},
-                    onAccountLockoutCheckIntervalSecondsChanged = {},
-                    onRefreshTokenRotationGracePeriodSecondsChanged = {},
-                    onOpenIpBlacklistEnabledToggled = {},
-                    onOpenIpBlacklistChanged = {},
-                    onOpenIpWhitelistEnabledToggled = {},
-                    onOpenIpWhitelistChanged = {},
-                    onManagementIpBlacklistEnabledToggled = {},
-                    onManagementIpBlacklistChanged = {},
-                    onManagementIpWhitelistEnabledToggled = {},
-                    onManagementIpWhitelistChanged = {},
-                    onOtpRetryAfterSecondsChanged = {},
-                    onOtpNumberOfSymbolsChanged = {},
-                    onOtpExpirationSecondsChanged = {},
-                    onMaxRequestsPerPeriodChanged = {},
-                    onRateLimitPeriodSecondsChanged = {},
-                    onSaveClick = {},
-                    onResetClick = {}
-                )
-            }
-        }
+private fun EditSecuritySettingsScreenPreviewContent(state: EditSecuritySettingsScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        EditSecuritySettingsScreen(
+            component = EditSecuritySettingsComponentMock(initialState = state)
+        )
+    }
+}
+
+private val defaultEditSecuritySettingsPreviewState = EditSecuritySettingsScreenState.Content(
+    recentAuthenticationValiditySecondsForOpenUser = "300",
+    recentAuthenticationValiditySecondsForManagementUser = "300",
+    mfaTokenExpirationSeconds = "300",
+    passwordMinLength = "8",
+    passwordRequireLetter = true,
+    passwordRequireUpperCase = false,
+    passwordRequireLowerCase = false,
+    passwordRequireDigit = true,
+    passwordRequireSpecialChar = false,
+    commonPasswords = "password,123456",
+    accountLockoutMaxFailedPasswordAttempts = "5",
+    accountLockoutMaxFailedOtpAttempts = "5",
+    accountLockoutMaxFailedTotpAttempts = "5",
+    accountLockoutFailedAttemptsWindowSeconds = "300",
+    accountLockoutDurationSeconds = "300",
+    accountLockoutIndefiniteLockoutThreshold = "3",
+    accountLockoutIsSelfServiceUnlockEnabled = true,
+    accountLockoutCheckIntervalSeconds = "60",
+    refreshTokenRotationGracePeriodSeconds = "30",
+    openIpBlacklistEnabled = false,
+    openIpBlacklist = "",
+    openIpWhitelistEnabled = false,
+    openIpWhitelist = "",
+    managementIpBlacklistEnabled = false,
+    managementIpBlacklist = "",
+    managementIpWhitelistEnabled = false,
+    managementIpWhitelist = "",
+    otpRetryAfterSeconds = "60",
+    otpNumberOfSymbols = "6",
+    otpExpirationSeconds = "300",
+    maxRequestsPerPeriod = "100",
+    rateLimitPeriodSeconds = "60"
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(EditSecuritySettingsPreviewProvider::class) state: EditSecuritySettingsScreenState
+) {
+    ScreenPreviewContainer {
+        EditSecuritySettingsScreenPreviewContent(state = state)
+    }
+}
+
+@InternalApi
+@ScreenSizePreviews
+@Composable
+private fun ScreenSizePreview() {
+    ScreenPreviewContainer {
+        EditSecuritySettingsScreenPreviewContent(state = defaultEditSecuritySettingsPreviewState)
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    ScreenPreviewContainer {
+        EditSecuritySettingsScreenPreviewContent(state = defaultEditSecuritySettingsPreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    ScreenPreviewContainer {
+        EditSecuritySettingsScreenPreviewContent(state = defaultEditSecuritySettingsPreviewState)
     }
 }
 

@@ -9,17 +9,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -27,7 +21,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -40,7 +33,13 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessa
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreCodeTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
@@ -61,7 +60,7 @@ fun UnlockOtpScreen(component: UnlockOtpComponent) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    CoreScreenTitleText(
                         text = stringResource(Res.string.unlock_account),
                         modifier = Modifier.testTag(UnlockOtpTestTags.TITLE)
                     )
@@ -87,42 +86,34 @@ fun UnlockOtpScreen(component: UnlockOtpComponent) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
             ) {
-                Text(
+                CoreBodyText(
                     text = state.target,
-                    style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.testTag(UnlockOtpTestTags.TARGET_TEXT)
                 )
 
-                OutlinedTextField(
+                CoreCodeTextField(
                     value = state.codeInput,
                     onValueChange = component::onCodeChanged,
-                    label = { Text(text = stringResource(Res.string.totp_setup_step2)) },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag(UnlockOtpTestTags.CODE_INPUT)
+                    label = { CoreBodyText(stringResource(Res.string.totp_setup_step2)) },
+                    placeholder = { CoreBodyText(stringResource(Res.string.totp_setup_step2)) },
+                    modifier = Modifier.testTag(UnlockOtpTestTags.CODE_INPUT),
+                    isError = state.actionError != null,
+                    enabled = !state.actionLoading
                 )
 
-                Button(
+                CoreButton(
+                    text = stringResource(Res.string.unlock_account),
                     onClick = component::onUnlockClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag(UnlockOtpTestTags.UNLOCK_BUTTON),
+                    modifier = Modifier.testTag(UnlockOtpTestTags.UNLOCK_BUTTON),
                     enabled = !state.actionLoading && state.codeInput.isNotBlank()
-                ) {
-                    Text(text = stringResource(Res.string.unlock_account))
-                }
+                )
 
-                TextButton(
+                CoreTextButton(
+                    text = stringResource(Res.string.setup_totp),
                     onClick = component::onResendCodeClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag(UnlockOtpTestTags.RESEND_BUTTON),
+                    modifier = Modifier.testTag(UnlockOtpTestTags.RESEND_BUTTON),
                     enabled = !state.actionLoading && state.remainingDelaySeconds == 0
-                ) {
-                    Text(text = stringResource(Res.string.setup_totp))
-                }
+                )
 
                 ErrorText(state.actionError)
             }
@@ -144,10 +135,8 @@ private fun ErrorText(error: AppError?) {
         exit = fadeOut() + shrinkVertically()
     ) {
         error?.let {
-            Text(
+            CoreErrorText(
                 text = it.toLocalizedMessage(),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(top = CoreTheme.dimens.paddingSmall)
@@ -209,7 +198,7 @@ internal class UnlockOtpPreviewProvider :
         items.getOrNull(index)?.first
 }
 
-@OptIn(InternalApi::class)
+@InternalApi
 @Composable
 private fun UnlockOtpScreenPreviewContent(state: UnlockOtpScreenState) {
     CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
@@ -227,7 +216,7 @@ private val defaultOtpPreviewState = UnlockOtpScreenState(
     codeInput = "123456"
 )
 
-@OptIn(InternalApi::class)
+@InternalApi
 @Preview(showBackground = true, group = "States")
 @Composable
 private fun StatesPreview(
@@ -238,7 +227,7 @@ private fun StatesPreview(
     }
 }
 
-@OptIn(InternalApi::class)
+@InternalApi
 @ScreenSizePreviews
 @Composable
 private fun AdaptivePreview() {
@@ -247,7 +236,7 @@ private fun AdaptivePreview() {
     }
 }
 
-@OptIn(InternalApi::class)
+@InternalApi
 @ThemePreviews
 @Composable
 private fun ThemePreview() {
@@ -256,7 +245,7 @@ private fun ThemePreview() {
     }
 }
 
-@OptIn(InternalApi::class)
+@InternalApi
 @FontScalePreviews
 @Composable
 private fun FontScalePreview() {

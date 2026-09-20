@@ -21,7 +21,13 @@ class UpdateUserUseCaseTest {
         }
         val useCase = UpdateUserUseCase(repository)
         val userId = UserId.generate()
-        val request = UpdateUserRequest()
+        val request = UpdateUserRequest(
+            accountStatus = null,
+            authorityLevel = null,
+            permissionCodes = null,
+            lockoutType = null,
+            temporaryLockoutUntil = null
+        )
 
         val result = useCase(userId, request)
 
@@ -38,7 +44,13 @@ class UpdateUserUseCaseTest {
         }
         val useCase = UpdateUserUseCase(repository)
         val userId = UserId.generate()
-        val request = UpdateUserRequest()
+        val request = UpdateUserRequest(
+            accountStatus = null,
+            authorityLevel = null,
+            permissionCodes = null,
+            lockoutType = null,
+            temporaryLockoutUntil = null
+        )
 
         val result = useCase(userId, request)
 

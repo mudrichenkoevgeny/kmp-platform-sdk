@@ -4,7 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.main.MainManagementSettingsComponent
 
 @InternalApi
-class MainManagementSettingsComponentMock : MainManagementSettingsComponent {
+open class MainManagementSettingsComponentMock : MainManagementSettingsComponent {
     override fun onEditAuthSettingsClick() {}
     override fun onEditGlobalSettingsClick() {}
     override fun onEditSecuritySettingsClick() {}

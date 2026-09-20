@@ -10,12 +10,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -24,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
@@ -33,9 +32,17 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorPar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error.FullscreenError
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.welcome.LoginWelcomeComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth.AuthProviderButton
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth.AuthProviderGrid
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.legal.LegalFooter
@@ -92,9 +99,8 @@ private fun LoginWelcomeContent(
                 .padding(CoreTheme.dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
+            CoreScreenTitleText(
                 text = stringResource(Res.string.sign_in),
-                style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.testTag(LoginWelcomeTestTags.TITLE)
             )
 
@@ -118,7 +124,7 @@ private fun LoginWelcomeContent(
                 if (state.availableAuthProviders.primary.isNotEmpty() &&
                     state.availableAuthProviders.secondary.isNotEmpty()) {
 
-                    Text(
+                    CoreBodyText(
                         text = stringResource(Res.string.or_sign_in_with),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.outline,
@@ -140,10 +146,8 @@ private fun LoginWelcomeContent(
                     exit = fadeOut() + shrinkVertically()
                 ) {
                     state.actionError?.let { error ->
-                        Text(
+                        CoreErrorText(
                             text = error.toLocalizedMessage(),
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.labelMedium,
                             textAlign = TextAlign.Center,
                             modifier = Modifier
                                 .padding(top = CoreTheme.dimens.paddingMedium)
@@ -168,93 +172,85 @@ private fun LoginWelcomeContent(
 }
 
 @InternalApi
-@Preview(showBackground = true)
-@Composable
-private fun LoginWelcomeScreenContentPreview() {
-    val mockProviders = AvailableAuthProviders(
+internal class LoginWelcomePreviewProvider : PreviewParameterProvider<LoginWelcomeScreenState> {
+    private val mockProviders = AvailableAuthProviders(
         primary = listOf(UserAuthProvider.EMAIL, UserAuthProvider.PHONE),
         secondary = listOf(UserAuthProvider.GOOGLE, UserAuthProvider.APPLE)
     )
 
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                LoginWelcomeContent(
-                    state = LoginWelcomeScreenState.Content(
-                        availableAuthProviders = mockProviders,
-                        actionError = null
-                    ),
-                    onLoginClick = {},
-                    onPrivacyPolicyClick = {},
-                    onTermsOfServiceClick = {}
-                )
-            }
-        }
-    }
-}
-
-@InternalApi
-@Preview(showBackground = true)
-@Composable
-private fun LoginWelcomeScreenContentWithActionErrorPreview() {
-    val mockProviders = AvailableAuthProviders(
-        primary = listOf(UserAuthProvider.EMAIL, UserAuthProvider.PHONE),
-        secondary = listOf(UserAuthProvider.GOOGLE, UserAuthProvider.APPLE)
+    private val items: List<Pair<String, LoginWelcomeScreenState>> = listOf(
+        "Default Content" to LoginWelcomeScreenState.Content(availableAuthProviders = mockProviders),
+        "Content With Action Error" to LoginWelcomeScreenState.Content(
+            availableAuthProviders = mockProviders,
+            actionError = CommonError.Unknown()
+        ),
+        "Action Loading" to LoginWelcomeScreenState.Content(
+            availableAuthProviders = mockProviders,
+            actionLoading = true
+        ),
+        "Fullscreen Loading" to LoginWelcomeScreenState.Loading,
+        "Initialization Error" to LoginWelcomeScreenState.InitializationError(CommonError.Unknown())
     )
 
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                LoginWelcomeContent(
-                    state = LoginWelcomeScreenState.Content(
-                        availableAuthProviders = mockProviders,
-                        actionError = CommonError.Unknown()
-                    ),
-                    onLoginClick = {},
-                    onPrivacyPolicyClick = {},
-                    onTermsOfServiceClick = {}
-                )
-            }
-        }
-    }
+    override val values: Sequence<LoginWelcomeScreenState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
 }
 
 @InternalApi
-@Preview(showBackground = true)
 @Composable
-private fun LoginWelcomeScreenContentWithActionLoadingPreview() {
-    val mockProviders = AvailableAuthProviders(
-        primary = listOf(UserAuthProvider.EMAIL, UserAuthProvider.PHONE),
-        secondary = listOf(UserAuthProvider.GOOGLE, UserAuthProvider.APPLE)
-    )
-
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                LoginWelcomeContent(
-                    state = LoginWelcomeScreenState.Content(
-                        availableAuthProviders = mockProviders,
-                        actionLoading = true
-                    ),
-                    onLoginClick = {},
-                    onPrivacyPolicyClick = {},
-                    onTermsOfServiceClick = {}
-                )
-            }
-        }
-    }
-}
-
-@InternalApi
-@Preview(showBackground = true)
-@Composable
-private fun LoginWelcomeScreenLoadingPreview() {
-    MaterialTheme {
+private fun LoginWelcomeScreenPreviewContent(state: LoginWelcomeScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
         Surface {
-            Box(Modifier.fillMaxWidth().height(CoreTheme.dimens.previewContainerHeight), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
+            LoginWelcomeScreen(
+                component = LoginWelcomeComponentMock(initialState = state)
+            )
         }
+    }
+}
+
+private val defaultLoginWelcomePreviewState = LoginWelcomeScreenState.Content(
+    availableAuthProviders = AvailableAuthProviders(
+        primary = listOf(UserAuthProvider.EMAIL, UserAuthProvider.PHONE),
+        secondary = listOf(UserAuthProvider.GOOGLE, UserAuthProvider.APPLE)
+    )
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(LoginWelcomePreviewProvider::class) state: LoginWelcomeScreenState
+) {
+    DialogPreviewContainer {
+        LoginWelcomeScreenPreviewContent(state = state)
+    }
+}
+
+@InternalApi
+@DialogSizePreviews
+@Composable
+private fun DialogSizePreview() {
+    DialogPreviewContainer {
+        LoginWelcomeScreenPreviewContent(state = defaultLoginWelcomePreviewState)
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    DialogPreviewContainer {
+        LoginWelcomeScreenPreviewContent(state = defaultLoginWelcomePreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    DialogPreviewContainer {
+        LoginWelcomeScreenPreviewContent(state = defaultLoginWelcomePreviewState)
     }
 }
 

@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -23,7 +22,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -33,20 +31,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
@@ -67,7 +75,7 @@ fun SessionListScreen(component: SessionListComponent) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    CoreScreenTitleText(
                         text = stringResource(Res.string.sessions),
                         modifier = Modifier.testTag(SessionListTestTags.TITLE)
                     )
@@ -84,7 +92,7 @@ fun SessionListScreen(component: SessionListComponent) {
                         modifier = Modifier.testTag(SessionListTestTags.FILTER_BUTTON)
                     ) {
                         Icon(
-                            painter = painterResource(CommonRes.drawable.ic_settings),
+                            painter = painterResource(CommonRes.drawable.ic_filter),
                             contentDescription = null,
                             modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
                         )
@@ -94,7 +102,7 @@ fun SessionListScreen(component: SessionListComponent) {
                         modifier = Modifier.testTag(SessionListTestTags.REFRESH_BUTTON)
                     ) {
                         Icon(
-                            painter = painterResource(CommonRes.drawable.ic_settings),
+                            painter = painterResource(CommonRes.drawable.ic_refresh),
                             contentDescription = null,
                             modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
                         )
@@ -125,9 +133,8 @@ fun SessionListScreen(component: SessionListComponent) {
                     }
                 }
                 is SessionListScreenState.Error -> {
-                    Text(
+                    CoreErrorText(
                         text = currentState.error.toLocalizedMessage(),
-                        color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.testTag(SessionListTestTags.GLOBAL_ERROR_TEXT)
                     )
                 }
@@ -166,19 +173,17 @@ private fun Content(
         }
 
         if (state.paging.items.size > 1) {
-            Button(
+            CoreButton(
+                text = stringResource(Res.string.session_revoke_all_others),
                 onClick = onRevokeAllOthers,
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(horizontal = CoreTheme.dimens.paddingMedium)
                     .testTag(SessionListTestTags.REVOKE_ALL_OTHERS_BUTTON),
                 enabled = !state.actionLoading,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.error
                 )
-            ) {
-                Text(stringResource(Res.string.session_revoke_all_others))
-            }
+            )
         }
 
         LazyColumn(
@@ -220,10 +225,8 @@ private fun ErrorText(error: AppError?, testTag: String) {
         exit = fadeOut() + shrinkVertically()
     ) {
         error?.let {
-            Text(
+            CoreErrorText(
                 text = it.toLocalizedMessage(),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(CoreTheme.dimens.paddingMedium)
@@ -235,28 +238,83 @@ private fun ErrorText(error: AppError?, testTag: String) {
 }
 
 @InternalApi
-@Preview(showBackground = true)
+internal class SessionListPreviewProvider : PreviewParameterProvider<SessionListScreenState> {
+    private val items: List<Pair<String, SessionListScreenState>> = listOf(
+        "Multiple Sessions" to SessionListScreenState.Content(
+            paging = PaginationState(
+                items = listOf(userSessionMock(), userSessionMock())
+            )
+        ),
+        "Single Session" to SessionListScreenState.Content(
+            paging = PaginationState(
+                items = listOf(userSessionMock())
+            )
+        ),
+        "Action Loading" to SessionListScreenState.Content(
+            paging = PaginationState(
+                items = listOf(userSessionMock())
+            ),
+            actionLoading = true
+        ),
+        "Global Error" to SessionListScreenState.Error(error = CommonError.Unknown()),
+        "Fullscreen Loading" to SessionListScreenState.Loading
+    )
+
+    override val values: Sequence<SessionListScreenState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
+}
+
+@InternalApi
 @Composable
-private fun SessionListContentPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                Content(
-                    state = SessionListScreenState.Content(
-                        paging = PaginationState(
-                            items = listOf(
-                                userSessionMock(),
-                                userSessionMock()
-                            )
-                        )
-                    ),
-                    component = SessionListComponentMock(),
-                    onRevokeSession = {},
-                    onRevokeAllOthers = {},
-                    onLoadNextPage = {}
-                )
-            }
-        }
+private fun SessionListScreenPreviewContent(state: SessionListScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        SessionListScreen(
+            component = SessionListComponentMock(initialState = state)
+        )
+    }
+}
+
+@InternalApi
+private val defaultSessionListPreviewState = SessionListScreenState.Content(
+    paging = PaginationState(items = listOf(userSessionMock(), userSessionMock()))
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(SessionListPreviewProvider::class) state: SessionListScreenState
+) {
+    ScreenPreviewContainer {
+        SessionListScreenPreviewContent(state = state)
+    }
+}
+
+@InternalApi
+@ScreenSizePreviews
+@Composable
+private fun ScreenSizePreview() {
+    ScreenPreviewContainer {
+        SessionListScreenPreviewContent(state = defaultSessionListPreviewState)
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    ScreenPreviewContainer {
+        SessionListScreenPreviewContent(state = defaultSessionListPreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    ScreenPreviewContainer {
+        SessionListScreenPreviewContent(state = defaultSessionListPreviewState)
     }
 }
 

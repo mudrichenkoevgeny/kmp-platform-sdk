@@ -18,6 +18,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePrevi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Fullscreen loading indicator.
@@ -36,7 +37,7 @@ fun FullscreenLoading(
 
     LaunchedEffect(Unit) {
         if (delayMillis > 0L) {
-            delay(delayMillis)
+            delay(delayMillis.milliseconds)
             isVisible = true
         }
     }

@@ -17,7 +17,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -26,10 +25,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
@@ -39,6 +41,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottom
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.sessions.UserSessionsComponentMock
@@ -57,7 +65,7 @@ fun UserSessionsScreen(component: UserSessionsComponent) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    CoreScreenTitleText(
                         text = stringResource(Res.string.user_sessions),
                         modifier = Modifier.testTag(UserSessionsTestTags.TITLE)
                     )
@@ -74,7 +82,7 @@ fun UserSessionsScreen(component: UserSessionsComponent) {
                         modifier = Modifier.testTag(UserSessionsTestTags.FILTER_BUTTON)
                     ) {
                         Icon(
-                            painter = painterResource(CommonRes.drawable.ic_settings),
+                            painter = painterResource(CommonRes.drawable.ic_filter),
                             contentDescription = null,
                             modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
                         )
@@ -84,7 +92,7 @@ fun UserSessionsScreen(component: UserSessionsComponent) {
                         modifier = Modifier.testTag(UserSessionsTestTags.REFRESH_BUTTON)
                     ) {
                         Icon(
-                            painter = painterResource(CommonRes.drawable.ic_settings),
+                            painter = painterResource(CommonRes.drawable.ic_refresh),
                             contentDescription = null,
                             modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
                         )
@@ -113,9 +121,8 @@ fun UserSessionsScreen(component: UserSessionsComponent) {
                     }
                 }
                 is UserSessionsScreenState.Error -> {
-                    Text(
+                    CoreErrorText(
                         text = currentState.error.toLocalizedMessage(),
-                        color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.testTag(UserSessionsTestTags.GLOBAL_ERROR_TEXT)
                     )
                 }
@@ -178,23 +185,72 @@ private fun Content(
 }
 
 @InternalApi
-@Preview(showBackground = true)
+internal class UserSessionsPreviewProvider : PreviewParameterProvider<UserSessionsScreenState> {
+    private val items: List<Pair<String, UserSessionsScreenState>> = listOf(
+        "Content" to UserSessionsScreenState.Content(
+            paging = PaginationState(
+                items = listOf(userSessionMock(), userSessionMock())
+            )
+        ),
+        "Error" to UserSessionsScreenState.Error(error = CommonError.Unknown()),
+        "Loading" to UserSessionsScreenState.Loading
+    )
+
+    override val values: Sequence<UserSessionsScreenState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
+}
+
+@InternalApi
 @Composable
-private fun UserSessionsPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                Content(
-                    state = UserSessionsScreenState.Content(
-                        paging = PaginationState(
-                            items = listOf(userSessionMock(), userSessionMock())
-                        )
-                    ),
-                    component = UserSessionsComponentMock(),
-                    onLoadNextPage = {}
-                )
-            }
-        }
+private fun UserSessionsScreenPreviewContent(state: UserSessionsScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        UserSessionsScreen(
+            component = UserSessionsComponentMock(initialState = state)
+        )
+    }
+}
+
+@InternalApi
+private val defaultUserSessionsPreviewState = UserSessionsScreenState.Content(
+    paging = PaginationState(items = listOf(userSessionMock(), userSessionMock()))
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(UserSessionsPreviewProvider::class) state: UserSessionsScreenState
+) {
+    ScreenPreviewContainer {
+        UserSessionsScreenPreviewContent(state = state)
+    }
+}
+
+@InternalApi
+@ScreenSizePreviews
+@Composable
+private fun ScreenSizePreview() {
+    ScreenPreviewContainer {
+        UserSessionsScreenPreviewContent(state = defaultUserSessionsPreviewState)
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    ScreenPreviewContainer {
+        UserSessionsScreenPreviewContent(state = defaultUserSessionsPreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    ScreenPreviewContainer {
+        UserSessionsScreenPreviewContent(state = defaultUserSessionsPreviewState)
     }
 }
 

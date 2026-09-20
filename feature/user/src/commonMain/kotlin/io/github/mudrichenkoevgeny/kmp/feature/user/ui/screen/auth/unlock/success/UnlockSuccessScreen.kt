@@ -70,7 +70,7 @@ internal object UnlockSuccessTestTags {
     const val FINISH_BUTTON = "UnlockSuccess_FinishButton"
 }
 
-@OptIn(InternalApi::class)
+@InternalApi
 @Composable
 private fun UnlockSuccessScreenPreviewContent() {
     CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
@@ -80,7 +80,7 @@ private fun UnlockSuccessScreenPreviewContent() {
     }
 }
 
-@OptIn(InternalApi::class)
+@InternalApi
 @Preview(showBackground = true)
 @Composable
 private fun DefaultPreview() {
@@ -89,7 +89,7 @@ private fun DefaultPreview() {
     }
 }
 
-@OptIn(InternalApi::class)
+@InternalApi
 @ScreenSizePreviews
 @Composable
 private fun AdaptivePreview() {
@@ -98,7 +98,7 @@ private fun AdaptivePreview() {
     }
 }
 
-@OptIn(InternalApi::class)
+@InternalApi
 @ThemePreviews
 @Composable
 private fun ThemePreview() {
@@ -107,7 +107,7 @@ private fun ThemePreview() {
     }
 }
 
-@OptIn(InternalApi::class)
+@InternalApi
 @FontScalePreviews
 @Composable
 private fun FontScalePreview() {

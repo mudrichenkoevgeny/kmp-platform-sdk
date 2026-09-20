@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
@@ -161,6 +162,7 @@ private val defaultLegalFooterPreviewState = LegalFooterPreviewState(
     isTermsOfServiceVisible = true
 )
 
+@InternalApi
 @Preview(showBackground = true, group = "States")
 @Composable
 private fun LegalFooterStatesPreview(
@@ -169,18 +171,21 @@ private fun LegalFooterStatesPreview(
     LegalFooterPreviewContent(state = state)
 }
 
+@InternalApi
 @ComponentSizePreviews
 @Composable
 private fun LegalFooterComponentSizePreview() {
     LegalFooterPreviewContent(state = defaultLegalFooterPreviewState)
 }
 
+@InternalApi
 @ThemePreviews
 @Composable
 private fun LegalFooterThemePreview() {
     LegalFooterPreviewContent(state = defaultLegalFooterPreviewState)
 }
 
+@InternalApi
 @FontScalePreviews
 @Composable
 private fun LegalFooterFontScalePreview() {

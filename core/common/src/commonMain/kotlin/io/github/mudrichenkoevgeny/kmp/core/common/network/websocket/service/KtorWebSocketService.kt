@@ -6,7 +6,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehand
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceInfo
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.websocket.toWebSocketInitializePayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.contract.CommonWebSocketEventTypes
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.contract.WebSocketContract
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.model.websocket.SocketFrame
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 import io.ktor.client.HttpClient
@@ -29,6 +28,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.uuid.Uuid
 
 /**
@@ -161,7 +161,7 @@ class KtorWebSocketService(
 
                 if (isActive && isConnectionStarted) {
                     networkLogger.log("Socket: Next retry in $currentDelay ms")
-                    delay(currentDelay)
+                    delay(currentDelay.milliseconds)
                     currentDelay = (currentDelay * 2).coerceAtMost(MAX_RECONNECT_DELAY_MS)
                 }
             }

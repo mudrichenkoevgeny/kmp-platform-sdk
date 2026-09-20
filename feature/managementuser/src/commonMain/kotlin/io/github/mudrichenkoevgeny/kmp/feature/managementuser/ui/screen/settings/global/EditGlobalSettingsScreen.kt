@@ -13,15 +13,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -31,6 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
@@ -39,11 +37,23 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessa
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error.FullscreenError
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.settings.global.EditGlobalSettingsComponentMock
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -60,7 +70,7 @@ fun EditGlobalSettingsScreen(component: EditGlobalSettingsComponent) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    CoreScreenTitleText(
                         text = stringResource(Res.string.edit_global_settings_title),
                         modifier = Modifier.testTag(EditGlobalSettingsTestTags.TITLE)
                     )
@@ -135,34 +145,31 @@ private fun EditGlobalSettingsForm(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.privacyPolicyUrl,
             onValueChange = onPrivacyPolicyUrlChanged,
-            label = { Text(text = stringResource(Res.string.privacy_policy_url)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditGlobalSettingsTestTags.PRIVACY_POLICY_URL_INPUT)
+            label = { CoreBodyText(stringResource(Res.string.privacy_policy_url)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.privacy_policy_url)) },
+            modifier = Modifier.testTag(EditGlobalSettingsTestTags.PRIVACY_POLICY_URL_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.termsOfServiceUrl,
             onValueChange = onTermsOfServiceUrlChanged,
-            label = { Text(text = stringResource(Res.string.terms_of_service_url)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditGlobalSettingsTestTags.TERMS_OF_SERVICE_URL_INPUT)
+            label = { CoreBodyText(stringResource(Res.string.terms_of_service_url)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.terms_of_service_url)) },
+            modifier = Modifier.testTag(EditGlobalSettingsTestTags.TERMS_OF_SERVICE_URL_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.contactSupportEmail,
             onValueChange = onContactSupportEmailChanged,
-            label = { Text(text = stringResource(Res.string.contact_support_email)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditGlobalSettingsTestTags.CONTACT_SUPPORT_EMAIL_INPUT)
+            label = { CoreBodyText(stringResource(Res.string.contact_support_email)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.contact_support_email)) },
+            modifier = Modifier.testTag(EditGlobalSettingsTestTags.CONTACT_SUPPORT_EMAIL_INPUT)
         )
 
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.telemetry_and_logging),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.SECTION_TELEMETRY_TITLE)
@@ -189,46 +196,42 @@ private fun EditGlobalSettingsForm(
             testTag = EditGlobalSettingsTestTags.IS_VERBOSE_LOGGING_ENABLED_CHECKBOX
         )
 
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.min_supported_app_versions),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.SECTION_MIN_VERSIONS_TITLE)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.minVersionAndroid,
             onValueChange = onMinVersionAndroidChanged,
-            label = { Text(text = stringResource(Res.string.min_version_android)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditGlobalSettingsTestTags.MIN_VERSION_ANDROID_INPUT)
+            label = { CoreBodyText(stringResource(Res.string.min_version_android)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.min_version_android)) },
+            modifier = Modifier.testTag(EditGlobalSettingsTestTags.MIN_VERSION_ANDROID_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.minVersionIos,
             onValueChange = onMinVersionIosChanged,
-            label = { Text(text = stringResource(Res.string.min_version_ios)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditGlobalSettingsTestTags.MIN_VERSION_IOS_INPUT)
+            label = { CoreBodyText(stringResource(Res.string.min_version_ios)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.min_version_ios)) },
+            modifier = Modifier.testTag(EditGlobalSettingsTestTags.MIN_VERSION_IOS_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.minVersionWeb,
             onValueChange = onMinVersionWebChanged,
-            label = { Text(text = stringResource(Res.string.min_version_web)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditGlobalSettingsTestTags.MIN_VERSION_WEB_INPUT)
+            label = { CoreBodyText(stringResource(Res.string.min_version_web)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.min_version_web)) },
+            modifier = Modifier.testTag(EditGlobalSettingsTestTags.MIN_VERSION_WEB_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.minVersionDesktop,
             onValueChange = onMinVersionDesktopChanged,
-            label = { Text(text = stringResource(Res.string.min_version_desktop)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditGlobalSettingsTestTags.MIN_VERSION_DESKTOP_INPUT)
+            label = { CoreBodyText(stringResource(Res.string.min_version_desktop)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.min_version_desktop)) },
+            modifier = Modifier.testTag(EditGlobalSettingsTestTags.MIN_VERSION_DESKTOP_INPUT)
         )
 
         ErrorText(
@@ -236,25 +239,19 @@ private fun EditGlobalSettingsForm(
             testTag = EditGlobalSettingsTestTags.SAVE_ERROR_TEXT
         )
 
-        Button(
+        CoreButton(
+            text = stringResource(if (state.isSaving) Res.string.saving else Res.string.save),
             onClick = onSaveClick,
             enabled = !state.isSaving,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditGlobalSettingsTestTags.SAVE_BUTTON)
-        ) {
-            Text(text = stringResource(if (state.isSaving) Res.string.saving else Res.string.save))
-        }
+            modifier = Modifier.testTag(EditGlobalSettingsTestTags.SAVE_BUTTON)
+        )
 
-        OutlinedButton(
+        CoreTextButton(
+            text = stringResource(Res.string.reset_to_defaults),
             onClick = onResetClick,
             enabled = !state.isSaving,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditGlobalSettingsTestTags.RESET_BUTTON)
-        ) {
-            Text(text = stringResource(Res.string.reset_to_defaults))
-        }
+            modifier = Modifier.testTag(EditGlobalSettingsTestTags.RESET_BUTTON)
+        )
     }
 }
 
@@ -274,9 +271,8 @@ private fun ToggleRow(
             onCheckedChange = onCheckedChange,
             modifier = Modifier.testTag(testTag)
         )
-        Text(
+        CoreBodyText(
             text = label,
-            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
         )
     }
@@ -290,10 +286,8 @@ private fun ErrorText(error: AppError?, testTag: String) {
         exit = fadeOut() + shrinkVertically()
     ) {
         error?.let {
-            Text(
+            CoreErrorText(
                 text = it.toLocalizedMessage(),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(top = CoreTheme.dimens.paddingSmall)
@@ -304,79 +298,91 @@ private fun ErrorText(error: AppError?, testTag: String) {
 }
 
 @InternalApi
-@Preview(showBackground = true)
+internal class EditGlobalSettingsPreviewProvider : PreviewParameterProvider<EditGlobalSettingsScreenState> {
+    private val sampleContent = EditGlobalSettingsScreenState.Content(
+        privacyPolicyUrl = "https://example.com/privacy",
+        termsOfServiceUrl = "https://example.com/terms",
+        contactSupportEmail = "support@example.com",
+        minVersionAndroid = "1.0.0",
+        minVersionIos = "1.0.0",
+        minVersionWeb = "1.0.0",
+        minVersionDesktop = "1.0.0",
+        isTracingEnabled = true,
+        isMetricsEnabled = true,
+        isVerboseLoggingEnabled = false
+    )
+
+    private val items: List<Pair<String, EditGlobalSettingsScreenState>> = listOf(
+        "Content" to sampleContent,
+        "Saving" to sampleContent.copy(isSaving = true),
+        "Save Error" to sampleContent.copy(saveError = CommonError.Unknown()),
+        "Error" to EditGlobalSettingsScreenState.Error(error = CommonError.Unknown()),
+        "Loading" to EditGlobalSettingsScreenState.Loading
+    )
+
+    override val values: Sequence<EditGlobalSettingsScreenState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
+}
+
+@InternalApi
 @Composable
-private fun EditGlobalSettingsContentPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                EditGlobalSettingsForm(
-                    state = EditGlobalSettingsScreenState.Content(
-                        privacyPolicyUrl = "https://example.com/privacy",
-                        termsOfServiceUrl = "https://example.com/terms",
-                        contactSupportEmail = "support@example.com",
-                        minVersionAndroid = "1.0.0",
-                        minVersionIos = "1.0.0",
-                        minVersionWeb = "1.0.0",
-                        minVersionDesktop = "1.0.0",
-                        isTracingEnabled = true,
-                        isMetricsEnabled = true,
-                        isVerboseLoggingEnabled = false
-                    ),
-                    onPrivacyPolicyUrlChanged = {},
-                    onTermsOfServiceUrlChanged = {},
-                    onContactSupportEmailChanged = {},
-                    onMinVersionAndroidChanged = {},
-                    onMinVersionIosChanged = {},
-                    onMinVersionWebChanged = {},
-                    onMinVersionDesktopChanged = {},
-                    onTracingEnabledToggled = {},
-                    onMetricsEnabledToggled = {},
-                    onVerboseLoggingEnabledToggled = {},
-                    onSaveClick = {},
-                    onResetClick = {}
-                )
-            }
-        }
+private fun EditGlobalSettingsScreenPreviewContent(state: EditGlobalSettingsScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        EditGlobalSettingsScreen(
+            component = EditGlobalSettingsComponentMock(initialState = state)
+        )
+    }
+}
+
+private val defaultEditGlobalSettingsPreviewState = EditGlobalSettingsScreenState.Content(
+    privacyPolicyUrl = "https://example.com/privacy",
+    termsOfServiceUrl = "https://example.com/terms",
+    contactSupportEmail = "support@example.com",
+    minVersionAndroid = "1.0.0",
+    minVersionIos = "1.0.0",
+    minVersionWeb = "1.0.0",
+    minVersionDesktop = "1.0.0",
+    isTracingEnabled = true,
+    isMetricsEnabled = true,
+    isVerboseLoggingEnabled = false
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(EditGlobalSettingsPreviewProvider::class) state: EditGlobalSettingsScreenState
+) {
+    ScreenPreviewContainer {
+        EditGlobalSettingsScreenPreviewContent(state = state)
     }
 }
 
 @InternalApi
-@Preview(showBackground = true)
+@ScreenSizePreviews
 @Composable
-private fun EditGlobalSettingsErrorPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                EditGlobalSettingsForm(
-                    state = EditGlobalSettingsScreenState.Content(
-                        privacyPolicyUrl = "https://example.com/privacy",
-                        termsOfServiceUrl = "https://example.com/terms",
-                        contactSupportEmail = "support@example.com",
-                        minVersionAndroid = "1.0.0",
-                        minVersionIos = "1.0.0",
-                        minVersionWeb = "1.0.0",
-                        minVersionDesktop = "1.0.0",
-                        isTracingEnabled = true,
-                        isMetricsEnabled = true,
-                        isVerboseLoggingEnabled = false,
-                        saveError = CommonError.Unknown()
-                    ),
-                    onPrivacyPolicyUrlChanged = {},
-                    onTermsOfServiceUrlChanged = {},
-                    onContactSupportEmailChanged = {},
-                    onMinVersionAndroidChanged = {},
-                    onMinVersionIosChanged = {},
-                    onMinVersionWebChanged = {},
-                    onMinVersionDesktopChanged = {},
-                    onTracingEnabledToggled = {},
-                    onMetricsEnabledToggled = {},
-                    onVerboseLoggingEnabledToggled = {},
-                    onSaveClick = {},
-                    onResetClick = {}
-                )
-            }
-        }
+private fun ScreenSizePreview() {
+    ScreenPreviewContainer {
+        EditGlobalSettingsScreenPreviewContent(state = defaultEditGlobalSettingsPreviewState)
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    ScreenPreviewContainer {
+        EditGlobalSettingsScreenPreviewContent(state = defaultEditGlobalSettingsPreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    ScreenPreviewContainer {
+        EditGlobalSettingsScreenPreviewContent(state = defaultEditGlobalSettingsPreviewState)
     }
 }
 

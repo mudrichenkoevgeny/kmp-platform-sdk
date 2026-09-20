@@ -10,27 +10,37 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error.FullscreenError
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreSmallText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_action
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_actor
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_details_title
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_id
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_message
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_resource
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_status
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_timestamp
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.mock.domain.model.event.auditEventMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.mock.ui.screen.detail.AuditEventDetailComponentMock
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +52,7 @@ fun AuditEventDetailScreen(component: AuditEventDetailComponent) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    CoreScreenTitleText(
                         text = stringResource(Res.string.audit_event_details_title),
                         modifier = Modifier.testTag(AuditEventDetailTestTags.TITLE)
                     )
@@ -86,36 +96,103 @@ private fun Content(state: AuditEventDetailScreenState.Content) {
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
-        Text(
+        CoreTitleText(
             text = "${stringResource(Res.string.audit_event_id)}: ${state.event.id.value}",
             style = MaterialTheme.typography.titleMedium
         )
-        Text(
+        CoreBodyText(
             text = stringResource(Res.string.audit_event_action) + ": " + state.event.action,
             style = MaterialTheme.typography.bodyMedium
         )
-        Text(
+        CoreBodyText(
             text = stringResource(Res.string.audit_event_resource) + ": " + state.event.resource,
             style = MaterialTheme.typography.bodyMedium
         )
-        Text(
+        CoreBodyText(
             text = "${stringResource(Res.string.audit_event_status)}: ${state.event.status}",
             style = MaterialTheme.typography.bodyMedium
         )
-        Text(
+        CoreBodyText(
             text = "${stringResource(Res.string.audit_event_actor)}: ${state.event.actorId ?: "N/A"}",
             style = MaterialTheme.typography.bodyMedium
         )
         state.event.message?.let { msg ->
-            Text(
+            CoreBodyText(
                 text = "${stringResource(Res.string.audit_event_message)}: $msg",
                 style = MaterialTheme.typography.bodyMedium
             )
         }
-        Text(
+        CoreSmallText(
             text = "${stringResource(Res.string.audit_event_timestamp)}: ${state.event.createdAt}",
             style = MaterialTheme.typography.bodySmall
         )
+    }
+}
+
+@InternalApi
+internal class AuditEventDetailPreviewProvider : PreviewParameterProvider<AuditEventDetailScreenState> {
+    @InternalApi
+    private val items: List<Pair<String, AuditEventDetailScreenState>> = listOf(
+        "Content" to AuditEventDetailScreenState.Content(event = auditEventMock()),
+        "Error" to AuditEventDetailScreenState.Error(error = CommonError.Unknown()),
+        "Loading" to AuditEventDetailScreenState.Loading
+    )
+
+    override val values: Sequence<AuditEventDetailScreenState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
+}
+
+@InternalApi
+@Composable
+private fun AuditEventDetailScreenPreviewContent(state: AuditEventDetailScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        AuditEventDetailScreen(
+            component = AuditEventDetailComponentMock(initialState = state)
+        )
+    }
+}
+
+@InternalApi
+private val defaultAuditEventDetailPreviewState = AuditEventDetailScreenState.Content(
+    event = auditEventMock()
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(AuditEventDetailPreviewProvider::class) state: AuditEventDetailScreenState
+) {
+    ScreenPreviewContainer {
+        AuditEventDetailScreenPreviewContent(state = state)
+    }
+}
+
+@InternalApi
+@ScreenSizePreviews
+@Composable
+private fun ScreenSizePreview() {
+    ScreenPreviewContainer {
+        AuditEventDetailScreenPreviewContent(state = defaultAuditEventDetailPreviewState)
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    ScreenPreviewContainer {
+        AuditEventDetailScreenPreviewContent(state = defaultAuditEventDetailPreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    ScreenPreviewContainer {
+        AuditEventDetailScreenPreviewContent(state = defaultAuditEventDetailPreviewState)
     }
 }
 

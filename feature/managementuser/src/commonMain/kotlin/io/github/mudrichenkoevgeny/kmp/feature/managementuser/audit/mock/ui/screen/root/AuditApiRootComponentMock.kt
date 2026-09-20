@@ -4,12 +4,13 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.mock.ui.screen.events.AuditEventsComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.root.AuditApiDestination
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.root.AuditApiRootComponent
 
 @InternalApi
 class AuditApiRootComponentMock(
-    initialChild: AuditApiRootComponent.Child,
+    initialChild: AuditApiRootComponent.Child = AuditApiRootComponent.Child.Main(AuditEventsComponentMock()),
     initialConfiguration: AuditApiDestination = AuditApiDestination.Main
 ) : AuditApiRootComponent {
 

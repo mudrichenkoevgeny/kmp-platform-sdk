@@ -14,14 +14,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -42,7 +38,13 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessa
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreEmailTextField
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
@@ -64,7 +66,7 @@ fun UnlockMethodSelectionScreen(component: UnlockMethodSelectionComponent) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    CoreScreenTitleText(
                         text = stringResource(Res.string.unlock_choose_method),
                         modifier = Modifier.testTag(UnlockMethodSelectionTestTags.TITLE)
                     )
@@ -97,83 +99,70 @@ fun UnlockMethodSelectionScreen(component: UnlockMethodSelectionComponent) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     if (state.isEmailAvailable) {
-                        OutlinedTextField(
+                        CoreEmailTextField(
                             value = state.emailInput,
                             onValueChange = component::onEmailInputChanged,
-                            label = { Text(text = stringResource(Res.string.unlock_by_email)) },
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .testTag(UnlockMethodSelectionTestTags.EMAIL_INPUT)
+                            label = { CoreBodyText(stringResource(Res.string.unlock_by_email)) },
+                            placeholder = { CoreBodyText(stringResource(Res.string.unlock_by_email)) },
+                            modifier = Modifier.testTag(UnlockMethodSelectionTestTags.EMAIL_INPUT),
+                            isError = state.actionError != null,
+                            enabled = !state.actionLoading
                         )
 
                         Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
-                        Button(
+                        CoreButton(
+                            text = stringResource(Res.string.unlock_by_email),
                             onClick = component::onSelectEmailUnlock,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .testTag(UnlockMethodSelectionTestTags.UNLOCK_EMAIL_BUTTON),
+                            modifier = Modifier.testTag(UnlockMethodSelectionTestTags.UNLOCK_EMAIL_BUTTON),
                             enabled = !state.actionLoading && state.emailInput.isNotBlank()
-                        ) {
-                            Text(text = stringResource(Res.string.unlock_by_email))
-                        }
+                        )
 
                         Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
                     }
 
                     if (state.isPhoneAvailable) {
-                        OutlinedTextField(
+                        CoreOutlinedTextField(
                             value = state.phoneInput,
                             onValueChange = component::onPhoneInputChanged,
-                            label = { Text(text = stringResource(Res.string.unlock_by_phone)) },
-                            singleLine = true,
+                            label = { CoreBodyText(stringResource(Res.string.unlock_by_phone)) },
+                            placeholder = { CoreBodyText(stringResource(Res.string.unlock_by_phone)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .testTag(UnlockMethodSelectionTestTags.PHONE_INPUT)
+                            modifier = Modifier.testTag(UnlockMethodSelectionTestTags.PHONE_INPUT),
+                            isError = state.actionError != null,
+                            enabled = !state.actionLoading
                         )
 
                         Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
-                        OutlinedButton(
+                        CoreButton(
+                            text = stringResource(Res.string.unlock_by_phone),
                             onClick = component::onSelectPhoneUnlock,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .testTag(UnlockMethodSelectionTestTags.UNLOCK_PHONE_BUTTON),
+                            modifier = Modifier.testTag(UnlockMethodSelectionTestTags.UNLOCK_PHONE_BUTTON),
                             enabled = !state.actionLoading && state.phoneInput.isNotBlank()
-                        ) {
-                            Text(text = stringResource(Res.string.unlock_by_phone))
-                        }
+                        )
 
                         Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
                     }
 
                     if (state.isGoogleAvailable) {
-                        OutlinedButton(
+                        CoreButton(
+                            text = stringResource(Res.string.unlock_by_google),
                             onClick = component::onSelectGoogleUnlock,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .testTag(UnlockMethodSelectionTestTags.UNLOCK_GOOGLE_BUTTON),
+                            modifier = Modifier.testTag(UnlockMethodSelectionTestTags.UNLOCK_GOOGLE_BUTTON),
                             enabled = !state.actionLoading
-                        ) {
-                            Text(text = stringResource(Res.string.unlock_by_google))
-                        }
+                        )
 
                         Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
                     }
 
                     if (state.isAppleAvailable) {
-                        OutlinedButton(
+                        CoreButton(
+                            text = stringResource(Res.string.unlock_by_apple),
                             onClick = component::onSelectAppleUnlock,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .testTag(UnlockMethodSelectionTestTags.UNLOCK_APPLE_BUTTON),
+                            modifier = Modifier.testTag(UnlockMethodSelectionTestTags.UNLOCK_APPLE_BUTTON),
                             enabled = !state.actionLoading
-                        ) {
-                            Text(text = stringResource(Res.string.unlock_by_apple))
-                        }
+                        )
                     }
 
                     ErrorText(state.actionError)
@@ -197,10 +186,8 @@ private fun ErrorText(error: AppError?) {
         exit = fadeOut() + shrinkVertically()
     ) {
         error?.let {
-            Text(
+            CoreErrorText(
                 text = it.toLocalizedMessage(),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(top = CoreTheme.dimens.paddingSmall)
@@ -255,7 +242,7 @@ internal class UnlockMethodSelectionPreviewProvider :
         items.getOrNull(index)?.first
 }
 
-@OptIn(InternalApi::class)
+@InternalApi
 @Composable
 private fun UnlockMethodSelectionScreenPreviewContent(state: UnlockMethodSelectionScreenState) {
     CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
@@ -272,7 +259,7 @@ private val defaultPreviewState = UnlockMethodSelectionScreenState(
     phoneInput = "+79991234567"
 )
 
-@OptIn(InternalApi::class)
+@InternalApi
 @Preview(showBackground = true, group = "States")
 @Composable
 private fun StatesPreview(
@@ -283,7 +270,7 @@ private fun StatesPreview(
     }
 }
 
-@OptIn(InternalApi::class)
+@InternalApi
 @ScreenSizePreviews
 @Composable
 private fun AdaptivePreview() {
@@ -292,7 +279,7 @@ private fun AdaptivePreview() {
     }
 }
 
-@OptIn(InternalApi::class)
+@InternalApi
 @ThemePreviews
 @Composable
 private fun ThemePreview() {
@@ -301,7 +288,7 @@ private fun ThemePreview() {
     }
 }
 
-@OptIn(InternalApi::class)
+@InternalApi
 @FontScalePreviews
 @Composable
 private fun FontScalePreview() {

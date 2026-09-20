@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose)
     alias(libs.plugins.maven.publish)
+    alias(libs.plugins.roborazzi)
 }
 
 kotlin {
@@ -105,6 +106,9 @@ kotlin {
             implementation(libs.androidx.compose.ui.test.manifest)
             implementation(libs.androidx.test.core)
             implementation(libs.robolectric)
+            implementation(libs.roborazzi)
+            implementation(libs.roborazzi.compose)
+            implementation(libs.roborazzi.junit.rule)
         }
 
         wasmJsTest.dependencies {

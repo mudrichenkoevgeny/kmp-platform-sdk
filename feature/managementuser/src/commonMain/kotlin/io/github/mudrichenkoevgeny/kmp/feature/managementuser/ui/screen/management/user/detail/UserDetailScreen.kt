@@ -9,14 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -26,19 +23,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error.FullscreenError
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.detail.UserDetailComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import org.jetbrains.compose.resources.stringResource
@@ -52,7 +63,7 @@ fun UserDetailScreen(component: UserDetailComponent) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    CoreScreenTitleText(
                         text = stringResource(Res.string.user_details_title),
                         modifier = Modifier.testTag(UserDetailTestTags.TITLE)
                     )
@@ -117,134 +128,109 @@ private fun Content(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
-        Text(
+        CoreTitleText(
             text = "${stringResource(Res.string.user_id)}: ${state.user.id.value}",
             style = MaterialTheme.typography.titleMedium
         )
-        Text(
-            text = "${stringResource(Res.string.user_role)}: ${state.user.role.name}",
-            style = MaterialTheme.typography.bodyMedium
+        CoreBodyText(
+            text = "${stringResource(Res.string.user_role)}: ${state.user.role.name}"
         )
-        Text(
-            text = stringResource(Res.string.totp_enabled_label, state.user.isTotpEnabled),
-            style = MaterialTheme.typography.bodyMedium
+        CoreBodyText(
+            text = stringResource(Res.string.totp_enabled_label, state.user.isTotpEnabled)
         )
-        Text(
-            text = stringResource(Res.string.created_at_label, state.user.createdAt.toString()),
-            style = MaterialTheme.typography.bodyMedium
+        CoreBodyText(
+            text = stringResource(Res.string.created_at_label, state.user.createdAt.toString())
         )
-        Text(
-            text = stringResource(Res.string.last_login_at_label, state.user.lastLoginAt?.toString() ?: notAvailableText),
-            style = MaterialTheme.typography.bodyMedium
+        CoreBodyText(
+            text = stringResource(Res.string.last_login_at_label, state.user.lastLoginAt?.toString() ?: notAvailableText)
         )
-        Text(
-            text = stringResource(Res.string.last_active_at_label, state.user.lastActiveAt?.toString() ?: notAvailableText),
-            style = MaterialTheme.typography.bodyMedium
+        CoreBodyText(
+            text = stringResource(Res.string.last_active_at_label, state.user.lastActiveAt?.toString() ?: notAvailableText)
         )
 
         if (state.user.accountStatus == UserAccountStatus.PENDING_DELETION && state.user.scheduledPermanentDeletionAt != null) {
-            Text(
-                text = stringResource(Res.string.scheduled_deletion_at_label, state.user.scheduledPermanentDeletionAt.toString()),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.error
+            CoreErrorText(
+                text = stringResource(Res.string.scheduled_deletion_at_label, state.user.scheduledPermanentDeletionAt.toString())
             )
         }
 
-        Button(
+        CoreButton(
+            text = stringResource(Res.string.user_sessions),
             onClick = onSessionsClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(UserDetailTestTags.SESSIONS_BUTTON)
-        ) {
-            Text(stringResource(Res.string.user_sessions))
-        }
+            modifier = Modifier.testTag(UserDetailTestTags.SESSIONS_BUTTON)
+        )
 
-        Button(
+        CoreButton(
+            text = stringResource(Res.string.user_identifiers),
             onClick = onIdentifiersClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(UserDetailTestTags.IDENTIFIERS_BUTTON)
-        ) {
-            Text(stringResource(Res.string.user_identifiers))
-        }
+            modifier = Modifier.testTag(UserDetailTestTags.IDENTIFIERS_BUTTON)
+        )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.accountStatusInput,
             onValueChange = onAccountStatusChanged,
-            label = { Text(stringResource(Res.string.user_account_status)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(UserDetailTestTags.ACCOUNT_STATUS_INPUT),
+            label = { CoreBodyText(stringResource(Res.string.user_account_status)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.user_account_status)) },
+            modifier = Modifier.testTag(UserDetailTestTags.ACCOUNT_STATUS_INPUT),
             enabled = !state.isSaving && !state.isDeleting
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.authorityLevelInput,
             onValueChange = onAuthorityLevelChanged,
-            label = { Text(stringResource(Res.string.authority_level)) },
+            label = { CoreBodyText(stringResource(Res.string.authority_level)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.authority_level)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(UserDetailTestTags.AUTHORITY_LEVEL_INPUT),
+            modifier = Modifier.testTag(UserDetailTestTags.AUTHORITY_LEVEL_INPUT),
             enabled = !state.isSaving && !state.isDeleting
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.lockoutTypeInput,
             onValueChange = onLockoutTypeChanged,
-            label = { Text(stringResource(CommonRes.string.ui_common_lockout_type)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(UserDetailTestTags.LOCKOUT_TYPE_INPUT),
+            label = { CoreBodyText(stringResource(CommonRes.string.ui_common_lockout_type)) },
+            placeholder = { CoreBodyText(stringResource(CommonRes.string.ui_common_lockout_type)) },
+            modifier = Modifier.testTag(UserDetailTestTags.LOCKOUT_TYPE_INPUT),
             enabled = !state.isSaving && !state.isDeleting
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.temporaryLockoutUntilInput,
             onValueChange = onTemporaryLockoutUntilChanged,
-            label = { Text(stringResource(CommonRes.string.ui_common_lockout_until)) },
+            label = { CoreBodyText(stringResource(CommonRes.string.ui_common_lockout_until)) },
+            placeholder = { CoreBodyText(stringResource(CommonRes.string.ui_common_lockout_until)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(UserDetailTestTags.TEMPORARY_LOCKOUT_UNTIL_INPUT),
+            modifier = Modifier.testTag(UserDetailTestTags.TEMPORARY_LOCKOUT_UNTIL_INPUT),
             enabled = !state.isSaving && !state.isDeleting
         )
 
-        Button(
+        CoreButton(
+            text = stringResource(if (state.isSaving) Res.string.saving else Res.string.update_user),
             onClick = onUpdateClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(UserDetailTestTags.UPDATE_BUTTON),
+            modifier = Modifier.testTag(UserDetailTestTags.UPDATE_BUTTON),
             enabled = !state.isSaving && !state.isDeleting
-        ) {
-            Text(stringResource(if (state.isSaving) Res.string.saving else Res.string.update_user))
-        }
+        )
 
         state.saveError?.let {
-            Text(
+            CoreErrorText(
                 text = it.toLocalizedMessage(),
-                color = MaterialTheme.colorScheme.error,
                 modifier = Modifier.testTag(UserDetailTestTags.SAVE_ERROR_TEXT)
             )
         }
 
-        Button(
+        CoreButton(
+            text = stringResource(Res.string.delete_user),
             onClick = onDeleteClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(UserDetailTestTags.DELETE_BUTTON),
+            modifier = Modifier.testTag(UserDetailTestTags.DELETE_BUTTON),
             enabled = !state.isSaving && !state.isDeleting,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.error
             )
-        ) {
-            Text(stringResource(Res.string.delete_user))
-        }
+        )
 
         state.deleteError?.let {
-            Text(
+            CoreErrorText(
                 text = it.toLocalizedMessage(),
-                color = MaterialTheme.colorScheme.error,
                 modifier = Modifier.testTag(UserDetailTestTags.DELETE_ERROR_TEXT)
             )
         }
@@ -252,31 +238,93 @@ private fun Content(
 }
 
 @InternalApi
-@Preview(showBackground = true)
+internal class UserDetailPreviewProvider : PreviewParameterProvider<UserDetailScreenState> {
+    private val items: List<Pair<String, UserDetailScreenState>> = listOf(
+        "Content" to UserDetailScreenState.Content(
+            user = userDetailsMock(),
+            authorityLevelInput = "0",
+            accountStatusInput = "ACTIVE",
+            lockoutTypeInput = "NONE",
+            temporaryLockoutUntilInput = ""
+        ),
+        "Pending Deletion" to UserDetailScreenState.Content(
+            user = userDetailsMock(accountStatus = UserAccountStatus.PENDING_DELETION),
+            authorityLevelInput = "0",
+            accountStatusInput = "PENDING_DELETION",
+            lockoutTypeInput = "NONE",
+            temporaryLockoutUntilInput = ""
+        ),
+        "Saving" to UserDetailScreenState.Content(
+            user = userDetailsMock(),
+            authorityLevelInput = "0",
+            accountStatusInput = "ACTIVE",
+            lockoutTypeInput = "NONE",
+            temporaryLockoutUntilInput = "",
+            isSaving = true
+        ),
+        "Error" to UserDetailScreenState.Error(error = CommonError.Unknown()),
+        "Loading" to UserDetailScreenState.Loading
+    )
+
+    override val values: Sequence<UserDetailScreenState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
+}
+
+@InternalApi
 @Composable
-private fun UserDetailPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                Content(
-                    state = UserDetailScreenState.Content(
-                        user = userDetailsMock(),
-                        authorityLevelInput = "0",
-                        accountStatusInput = "ACTIVE",
-                        lockoutTypeInput = "NONE",
-                        temporaryLockoutUntilInput = ""
-                    ),
-                    onAuthorityLevelChanged = {},
-                    onAccountStatusChanged = {},
-                    onLockoutTypeChanged = {},
-                    onTemporaryLockoutUntilChanged = {},
-                    onUpdateClick = {},
-                    onDeleteClick = {},
-                    onSessionsClick = {},
-                    onIdentifiersClick = {}
-                )
-            }
-        }
+private fun UserDetailScreenPreviewContent(state: UserDetailScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        UserDetailScreen(
+            component = UserDetailComponentMock(initialState = state)
+        )
+    }
+}
+
+@InternalApi
+private val defaultUserDetailPreviewState = UserDetailScreenState.Content(
+    user = userDetailsMock(),
+    authorityLevelInput = "0",
+    accountStatusInput = "ACTIVE",
+    lockoutTypeInput = "NONE",
+    temporaryLockoutUntilInput = ""
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(UserDetailPreviewProvider::class) state: UserDetailScreenState
+) {
+    ScreenPreviewContainer {
+        UserDetailScreenPreviewContent(state = state)
+    }
+}
+
+@InternalApi
+@ScreenSizePreviews
+@Composable
+private fun ScreenSizePreview() {
+    ScreenPreviewContainer {
+        UserDetailScreenPreviewContent(state = defaultUserDetailPreviewState)
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    ScreenPreviewContainer {
+        UserDetailScreenPreviewContent(state = defaultUserDetailPreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    ScreenPreviewContainer {
+        UserDetailScreenPreviewContent(state = defaultUserDetailPreviewState)
     }
 }
 

@@ -22,7 +22,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -32,11 +31,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
@@ -46,6 +48,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottom
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.create_user
@@ -66,7 +74,7 @@ fun UsersManagementMainScreen(component: UsersManagementMainComponent) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    CoreScreenTitleText(
                         text = stringResource(Res.string.users_management_title),
                         modifier = Modifier.testTag(UsersManagementMainTestTags.TITLE)
                     )
@@ -83,7 +91,7 @@ fun UsersManagementMainScreen(component: UsersManagementMainComponent) {
                         modifier = Modifier.testTag(UsersManagementMainTestTags.FILTER_BUTTON)
                     ) {
                         Icon(
-                            painter = painterResource(CommonRes.drawable.ic_settings),
+                            painter = painterResource(CommonRes.drawable.ic_filter),
                             contentDescription = null,
                             modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
                         )
@@ -93,7 +101,7 @@ fun UsersManagementMainScreen(component: UsersManagementMainComponent) {
                         modifier = Modifier.testTag(UsersManagementMainTestTags.REFRESH_BUTTON)
                     ) {
                         Icon(
-                            painter = painterResource(CommonRes.drawable.ic_settings),
+                            painter = painterResource(CommonRes.drawable.ic_refresh),
                             contentDescription = null,
                             modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
                         )
@@ -135,9 +143,8 @@ fun UsersManagementMainScreen(component: UsersManagementMainComponent) {
                     }
                 }
                 is UsersManagementMainScreenState.Error -> {
-                    Text(
+                    CoreErrorText(
                         text = currentState.error.toLocalizedMessage(),
-                        color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.testTag(UsersManagementMainTestTags.GLOBAL_ERROR_TEXT)
                     )
                 }
@@ -212,10 +219,8 @@ private fun ErrorText(error: AppError?, testTag: String) {
         exit = fadeOut() + shrinkVertically()
     ) {
         error?.let {
-            Text(
+            CoreErrorText(
                 text = it.toLocalizedMessage(),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(CoreTheme.dimens.paddingMedium)
@@ -227,27 +232,72 @@ private fun ErrorText(error: AppError?, testTag: String) {
 }
 
 @InternalApi
-@Preview(showBackground = true)
+internal class UsersManagementMainPreviewProvider : PreviewParameterProvider<UsersManagementMainScreenState> {
+    private val items: List<Pair<String, UsersManagementMainScreenState>> = listOf(
+        "Content" to UsersManagementMainScreenState.Content(
+            paging = PaginationState(
+                items = listOf(userDetailsMock(), userDetailsMock())
+            )
+        ),
+        "Error" to UsersManagementMainScreenState.Error(error = CommonError.Unknown()),
+        "Loading" to UsersManagementMainScreenState.Loading
+    )
+
+    override val values: Sequence<UsersManagementMainScreenState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
+}
+
+@InternalApi
 @Composable
-private fun UsersManagementMainPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                Content(
-                    state = UsersManagementMainScreenState.Content(
-                        paging = PaginationState(
-                            items = listOf(
-                                userDetailsMock(),
-                                userDetailsMock()
-                            )
-                        )
-                    ),
-                    component = UsersManagementMainComponentMock(),
-                    onUserClick = {},
-                    onLoadNextPage = {}
-                )
-            }
-        }
+private fun UsersManagementMainScreenPreviewContent(state: UsersManagementMainScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        UsersManagementMainScreen(
+            component = UsersManagementMainComponentMock(initialState = state)
+        )
+    }
+}
+
+@InternalApi
+private val defaultUsersManagementMainPreviewState = UsersManagementMainScreenState.Content(
+    paging = PaginationState(items = listOf(userDetailsMock(), userDetailsMock()))
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(UsersManagementMainPreviewProvider::class) state: UsersManagementMainScreenState
+) {
+    ScreenPreviewContainer {
+        UsersManagementMainScreenPreviewContent(state = state)
+    }
+}
+
+@InternalApi
+@ScreenSizePreviews
+@Composable
+private fun ScreenSizePreview() {
+    ScreenPreviewContainer {
+        UsersManagementMainScreenPreviewContent(state = defaultUsersManagementMainPreviewState)
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    ScreenPreviewContainer {
+        UsersManagementMainScreenPreviewContent(state = defaultUsersManagementMainPreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    ScreenPreviewContainer {
+        UsersManagementMainScreenPreviewContent(state = defaultUsersManagementMainPreviewState)
     }
 }
 

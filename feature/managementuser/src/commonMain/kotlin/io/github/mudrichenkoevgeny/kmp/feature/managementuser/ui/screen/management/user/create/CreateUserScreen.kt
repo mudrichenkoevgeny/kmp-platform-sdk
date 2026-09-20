@@ -3,17 +3,13 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -21,15 +17,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreEmailTextField
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.create.CreateUserComponentMock
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,7 +51,7 @@ fun CreateUserScreen(component: CreateUserComponent) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    CoreScreenTitleText(
                         text = stringResource(Res.string.create_user_title),
                         modifier = Modifier.testTag(CreateUserTestTags.TITLE)
                     )
@@ -87,70 +97,61 @@ private fun CreateUserForm(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
-        OutlinedTextField(
+        CoreEmailTextField(
             value = state.email,
             onValueChange = onEmailChanged,
-            label = { Text(stringResource(Res.string.email)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(CreateUserTestTags.EMAIL_INPUT),
+            label = { CoreBodyText(stringResource(Res.string.email)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.email)) },
+            modifier = Modifier.testTag(CreateUserTestTags.EMAIL_INPUT),
             enabled = !state.isLoading
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.password,
             onValueChange = onPasswordChanged,
-            label = { Text(stringResource(Res.string.password)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(CreateUserTestTags.PASSWORD_INPUT),
+            label = { CoreBodyText(stringResource(Res.string.password)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.password)) },
+            modifier = Modifier.testTag(CreateUserTestTags.PASSWORD_INPUT),
             enabled = !state.isLoading
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.role,
             onValueChange = onRoleChanged,
-            label = { Text(stringResource(Res.string.user_role)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(CreateUserTestTags.ROLE_INPUT),
+            label = { CoreBodyText(stringResource(Res.string.user_role)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.user_role)) },
+            modifier = Modifier.testTag(CreateUserTestTags.ROLE_INPUT),
             enabled = !state.isLoading
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.status,
             onValueChange = onStatusChanged,
-            label = { Text(stringResource(Res.string.user_account_status)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(CreateUserTestTags.STATUS_INPUT),
+            label = { CoreBodyText(stringResource(Res.string.user_account_status)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.user_account_status)) },
+            modifier = Modifier.testTag(CreateUserTestTags.STATUS_INPUT),
             enabled = !state.isLoading
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.authorityLevel,
             onValueChange = onAuthorityLevelChanged,
-            label = { Text(stringResource(Res.string.authority_level)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(CreateUserTestTags.AUTHORITY_LEVEL_INPUT),
+            label = { CoreBodyText(stringResource(Res.string.authority_level)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.authority_level)) },
+            modifier = Modifier.testTag(CreateUserTestTags.AUTHORITY_LEVEL_INPUT),
             enabled = !state.isLoading
         )
 
-        Button(
+        CoreButton(
+            text = stringResource(if (state.isLoading) Res.string.saving else Res.string.create_user),
             onClick = onCreateClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(CreateUserTestTags.CREATE_BUTTON),
+            modifier = Modifier.testTag(CreateUserTestTags.CREATE_BUTTON),
             enabled = !state.isLoading
-        ) {
-            Text(stringResource(if (state.isLoading) Res.string.saving else Res.string.create_user))
-        }
+        )
 
         state.error?.let {
-            Text(
+            CoreErrorText(
                 text = it.toLocalizedMessage(),
-                color = MaterialTheme.colorScheme.error,
                 modifier = Modifier.testTag(CreateUserTestTags.ERROR_TEXT)
             )
         }
@@ -158,26 +159,80 @@ private fun CreateUserForm(
 }
 
 @InternalApi
-@Preview(showBackground = true)
+internal class CreateUserPreviewProvider : PreviewParameterProvider<CreateUserScreenState> {
+    private val items: List<Pair<String, CreateUserScreenState>> = listOf(
+        "Default" to CreateUserScreenState(),
+        "Filled" to CreateUserScreenState(
+            email = "user@example.com",
+            password = "SecretPassword123!",
+            role = "USER",
+            status = "ACTIVE",
+            authorityLevel = "0"
+        ),
+        "Loading" to CreateUserScreenState(
+            email = "user@example.com",
+            isLoading = true
+        ),
+        "Error" to CreateUserScreenState(
+            email = "user@example.com",
+            error = CommonError.Unknown()
+        )
+    )
+
+    override val values: Sequence<CreateUserScreenState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
+}
+
+@InternalApi
 @Composable
-private fun CreateUserPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                CreateUserForm(
-                    state = CreateUserScreenState(
-                        email = "test@example.com",
-                        password = "password123"
-                    ),
-                    onEmailChanged = {},
-                    onPasswordChanged = {},
-                    onRoleChanged = {},
-                    onStatusChanged = {},
-                    onAuthorityLevelChanged = {},
-                    onCreateClick = {}
-                )
-            }
-        }
+private fun CreateUserScreenPreviewContent(state: CreateUserScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        CreateUserScreen(
+            component = CreateUserComponentMock(initialState = state)
+        )
+    }
+}
+
+private val defaultCreateUserPreviewState = CreateUserScreenState(
+    email = "user@example.com"
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(CreateUserPreviewProvider::class) state: CreateUserScreenState
+) {
+    ScreenPreviewContainer {
+        CreateUserScreenPreviewContent(state = state)
+    }
+}
+
+@InternalApi
+@ScreenSizePreviews
+@Composable
+private fun ScreenSizePreview() {
+    ScreenPreviewContainer {
+        CreateUserScreenPreviewContent(state = defaultCreateUserPreviewState)
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    ScreenPreviewContainer {
+        CreateUserScreenPreviewContent(state = defaultCreateUserPreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    ScreenPreviewContainer {
+        CreateUserScreenPreviewContent(state = defaultCreateUserPreviewState)
     }
 }
 

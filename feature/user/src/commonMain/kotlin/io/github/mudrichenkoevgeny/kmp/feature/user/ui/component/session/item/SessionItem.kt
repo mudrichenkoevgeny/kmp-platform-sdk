@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.session.item
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,14 +12,23 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_expires_at
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_ip_address
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_last_accessed
@@ -83,4 +93,84 @@ fun SessionItem(
             }
         }
     }
+}
+
+private data class SessionItemPreviewState(
+    val session: UserSession,
+    val enabled: Boolean
+)
+
+@InternalApi
+private class SessionItemPreviewProvider : PreviewParameterProvider<SessionItemPreviewState> {
+    private val items = listOf(
+        SessionItemPreviewState(
+            session = userSessionMock(),
+            enabled = true
+        ),
+        SessionItemPreviewState(
+            session = userSessionMock().copy(
+                userAgent = null,
+                ipAddress = null
+            ),
+            enabled = true
+        ),
+        SessionItemPreviewState(
+            session = userSessionMock(),
+            enabled = false
+        )
+    )
+
+    override val values: Sequence<SessionItemPreviewState> = items.asSequence()
+}
+
+@InternalApi
+@Composable
+private fun SessionItemPreviewContent(state: SessionItemPreviewState) {
+    CoreTheme {
+        Surface {
+            Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
+                SessionItem(
+                    session = state.session,
+                    onRevokeClick = {},
+                    enabled = state.enabled
+                )
+            }
+        }
+    }
+}
+
+@InternalApi
+private val defaultSessionItemPreviewState = SessionItemPreviewState(
+    session = userSessionMock(),
+    enabled = true
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun SessionItemStatesPreview(
+    @PreviewParameter(SessionItemPreviewProvider::class) state: SessionItemPreviewState
+) {
+    SessionItemPreviewContent(state = state)
+}
+
+@InternalApi
+@ComponentSizePreviews
+@Composable
+private fun SessionItemComponentSizePreview() {
+    SessionItemPreviewContent(state = defaultSessionItemPreviewState)
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun SessionItemThemePreview() {
+    SessionItemPreviewContent(state = defaultSessionItemPreviewState)
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun SessionItemFontScalePreview() {
+    SessionItemPreviewContent(state = defaultSessionItemPreviewState)
 }

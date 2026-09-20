@@ -13,15 +13,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -31,18 +28,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.account_pending_deletion_desc
 import io.github.mudrichenkoevgeny.kmp.feature.user.account_pending_deletion_title
 import io.github.mudrichenkoevgeny.kmp.feature.user.logout
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.pendingdeletion.PendingDeletionComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.restore_account
 import org.jetbrains.compose.resources.stringResource
 
@@ -55,7 +66,7 @@ fun PendingDeletionScreen(component: PendingDeletionComponent) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    CoreScreenTitleText(
                         text = stringResource(Res.string.account_pending_deletion_title),
                         modifier = Modifier.testTag(PendingDeletionTestTags.TITLE)
                     )
@@ -95,16 +106,15 @@ fun PendingDeletionScreen(component: PendingDeletionComponent) {
                                 .padding(CoreTheme.dimens.paddingMedium),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(
+                            CoreTitleText(
                                 text = stringResource(Res.string.account_pending_deletion_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.testTag(PendingDeletionTestTags.CARD_TITLE)
                             )
                             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                            Text(
+                            CoreBodyText(
                                 text = stringResource(Res.string.account_pending_deletion_desc),
-                                style = MaterialTheme.typography.bodyMedium,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.testTag(PendingDeletionTestTags.CARD_DESC)
                             )
@@ -117,27 +127,21 @@ fun PendingDeletionScreen(component: PendingDeletionComponent) {
                     )
                 }
 
-                Button(
+                CoreButton(
+                    text = stringResource(Res.string.restore_account),
                     onClick = component::onRestoreAccountClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag(PendingDeletionTestTags.RESTORE_BUTTON),
+                    modifier = Modifier.testTag(PendingDeletionTestTags.RESTORE_BUTTON),
                     enabled = !state.actionLoading
-                ) {
-                    Text(text = stringResource(Res.string.restore_account))
-                }
+                )
 
                 Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
-                OutlinedButton(
+                CoreTextButton(
+                    text = stringResource(Res.string.logout),
                     onClick = component::onSignOutClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag(PendingDeletionTestTags.SIGN_OUT_BUTTON),
+                    modifier = Modifier.testTag(PendingDeletionTestTags.SIGN_OUT_BUTTON),
                     enabled = !state.actionLoading
-                ) {
-                    Text(text = stringResource(Res.string.logout))
-                }
+                )
             }
 
             if (state.actionLoading) {
@@ -155,10 +159,8 @@ private fun ErrorText(error: AppError?, testTag: String) {
         exit = fadeOut() + shrinkVertically()
     ) {
         error?.let {
-            Text(
+            CoreErrorText(
                 text = it.toLocalizedMessage(),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(top = CoreTheme.dimens.paddingSmall)
@@ -169,21 +171,65 @@ private fun ErrorText(error: AppError?, testTag: String) {
 }
 
 @InternalApi
-@Preview(showBackground = true)
+internal class PendingDeletionPreviewProvider : PreviewParameterProvider<PendingDeletionScreenState> {
+    private val items: List<Pair<String, PendingDeletionScreenState>> = listOf(
+        "Default Content" to PendingDeletionScreenState(),
+        "Action Loading" to PendingDeletionScreenState(actionLoading = true),
+        "Inline Error" to PendingDeletionScreenState(actionError = CommonError.Unknown())
+    )
+
+    override val values: Sequence<PendingDeletionScreenState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
+}
+
+@InternalApi
 @Composable
-private fun PendingDeletionScreenPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                PendingDeletionScreen(
-                    component = object : PendingDeletionComponent {
-                        override val state = com.arkivanov.decompose.value.MutableValue(PendingDeletionScreenState())
-                        override fun onRestoreAccountClick() {}
-                        override fun onSignOutClick() {}
-                    }
-                )
-            }
-        }
+private fun PendingDeletionScreenPreviewContent(state: PendingDeletionScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        PendingDeletionScreen(
+            component = PendingDeletionComponentMock(initialState = state)
+        )
+    }
+}
+
+private val defaultPendingDeletionPreviewState = PendingDeletionScreenState()
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(PendingDeletionPreviewProvider::class) state: PendingDeletionScreenState
+) {
+    DialogPreviewContainer {
+        PendingDeletionScreenPreviewContent(state = state)
+    }
+}
+
+@InternalApi
+@DialogSizePreviews
+@Composable
+private fun DialogSizePreview() {
+    DialogPreviewContainer {
+        PendingDeletionScreenPreviewContent(state = defaultPendingDeletionPreviewState)
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    DialogPreviewContainer {
+        PendingDeletionScreenPreviewContent(state = defaultPendingDeletionPreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    DialogPreviewContainer {
+        PendingDeletionScreenPreviewContent(state = defaultPendingDeletionPreviewState)
     }
 }
 

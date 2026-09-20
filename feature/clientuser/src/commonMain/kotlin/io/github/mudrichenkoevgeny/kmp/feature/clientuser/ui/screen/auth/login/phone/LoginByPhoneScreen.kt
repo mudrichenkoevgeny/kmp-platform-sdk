@@ -9,14 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -26,14 +22,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreCodeTextField
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreSmallText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.ui.screen.auth.login.phone.LoginByPhoneComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import org.jetbrains.compose.resources.stringResource
@@ -46,7 +59,11 @@ fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(Res.string.sign_in_with_phone)) },
+                title = {
+                    CoreScreenTitleText(
+                        text = stringResource(Res.string.sign_in_with_phone)
+                    )
+                },
                 navigationIcon = {
                     CoreBackButton(
                         onClick = component::onBackClick,
@@ -104,47 +121,40 @@ private fun PhoneInputContent(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
+            CoreTitleText(
                 text = stringResource(Res.string.enter_phone_number),
-                style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.testTag(LoginByPhoneTestTags.PHONE_STEP_TITLE)
             )
 
             Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
 
-            OutlinedTextField(
+            CoreOutlinedTextField(
                 value = state.phoneNumber,
                 onValueChange = onPhoneChanged,
-                label = { Text(stringResource(Res.string.phone_number)) },
-                placeholder = { Text(stringResource(Res.string.phone_number)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(LoginByPhoneTestTags.PHONE_INPUT),
+                label = { CoreBodyText(stringResource(Res.string.phone_number)) },
+                placeholder = { CoreBodyText(stringResource(Res.string.phone_number)) },
+                modifier = Modifier.testTag(LoginByPhoneTestTags.PHONE_INPUT),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 singleLine = true,
-                isError = state.actionError != null
+                isError = state.actionError != null,
+                enabled = !state.actionLoading
             )
 
             state.actionError?.let { error ->
                 Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                Text(
+                CoreErrorText(
                     text = error.toLocalizedMessage(),
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.testTag(LoginByPhoneTestTags.PHONE_STEP_ERROR_TEXT)
                 )
             }
         }
 
-        Button(
+        CoreButton(
+            text = stringResource(Res.string.send_code),
             onClick = onSendCodeClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(LoginByPhoneTestTags.SEND_CODE_BUTTON),
+            modifier = Modifier.testTag(LoginByPhoneTestTags.SEND_CODE_BUTTON),
             enabled = state.canSendCode
-        ) {
-            Text(stringResource(Res.string.send_code))
-        }
+        )
     }
 }
 
@@ -162,15 +172,13 @@ private fun CodeInputContent(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.enter_confirmation_code),
-            style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_STEP_TITLE)
         )
 
-        Text(
+        CoreBodyText(
             text = stringResource(Res.string.code_sent_to, state.phoneNumber),
-            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_SENT_INFO_TEXT)
         )
 
@@ -181,25 +189,20 @@ private fun CodeInputContent(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            OutlinedTextField(
+            CoreCodeTextField(
                 value = state.code,
                 onValueChange = onCodeChanged,
-                label = { Text(stringResource(Res.string.confirmation_code)) },
-                placeholder = { Text(stringResource(Res.string.enter_confirmation_code)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(LoginByPhoneTestTags.CODE_INPUT),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true,
-                isError = state.actionError != null
+                label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
+                placeholder = { CoreBodyText(stringResource(Res.string.enter_confirmation_code)) },
+                modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_INPUT),
+                isError = state.actionError != null,
+                enabled = !state.actionLoading
             )
 
             state.actionError?.let { error ->
                 Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                Text(
+                CoreErrorText(
                     text = error.toLocalizedMessage(),
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_STEP_ERROR_TEXT)
                 )
             }
@@ -207,58 +210,119 @@ private fun CodeInputContent(
             Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
 
             if (state.resendTimerSeconds > 0) {
-                Text(
+                CoreSmallText(
                     text = stringResource(Res.string.resend_code_timer, state.resendTimerSeconds),
-                    style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.testTag(LoginByPhoneTestTags.RESEND_TIMER_TEXT)
                 )
             } else {
-                TextButton(
+                CoreTextButton(
+                    text = stringResource(Res.string.resend_code),
                     onClick = onResendClick,
                     modifier = Modifier.testTag(LoginByPhoneTestTags.RESEND_CODE_BUTTON),
                     enabled = state.canResendCode
-                ) {
-                    Text(stringResource(Res.string.resend_code))
-                }
+                )
             }
         }
 
-        Button(
+        CoreButton(
+            text = stringResource(Res.string.confirm),
             onClick = onConfirmClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(LoginByPhoneTestTags.CONFIRM_BUTTON),
+            modifier = Modifier.testTag(LoginByPhoneTestTags.CONFIRM_BUTTON),
             enabled = state.canConfirmCode
-        ) {
-            Text(stringResource(Res.string.confirm))
-        }
+        )
 
         Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
-        TextButton(
+        CoreTextButton(
+            text = stringResource(Res.string.change_phone_number),
             onClick = onChangePhoneClick,
             modifier = Modifier.testTag(LoginByPhoneTestTags.CHANGE_PHONE_BUTTON),
             enabled = !state.actionLoading
-        ) {
-            Text(stringResource(Res.string.change_phone_number))
-        }
+        )
     }
 }
 
 @InternalApi
-@Preview(showBackground = true)
+internal class LoginByPhonePreviewProvider : PreviewParameterProvider<LoginByPhoneScreenState> {
+    private val items: List<Pair<String, LoginByPhoneScreenState>> = listOf(
+        "Phone Input" to LoginByPhoneScreenState.PhoneInput(
+            phoneNumber = "+1234567890"
+        ),
+        "Phone Error" to LoginByPhoneScreenState.PhoneInput(
+            phoneNumber = "+1234567890",
+            actionError = CommonError.Unknown()
+        ),
+        "Code Input" to LoginByPhoneScreenState.CodeInput(
+            phoneNumber = "+1234567890",
+            code = "123456"
+        ),
+        "Code Timer Active" to LoginByPhoneScreenState.CodeInput(
+            phoneNumber = "+1234567890",
+            code = "",
+            resendTimerSeconds = 30
+        ),
+        "Action Loading" to LoginByPhoneScreenState.PhoneInput(
+            phoneNumber = "+1234567890",
+            actionLoading = true
+        )
+    )
+
+    override val values: Sequence<LoginByPhoneScreenState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
+}
+
+@InternalApi
 @Composable
-private fun LoginByPhoneScreenPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                PhoneInputContent(
-                    state = LoginByPhoneScreenState.PhoneInput(phoneNumber = "+1234567890"),
-                    onPhoneChanged = {},
-                    onSendCodeClick = {}
-                )
-            }
+private fun LoginByPhoneScreenPreviewContent(state: LoginByPhoneScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        Surface {
+            LoginByPhoneScreen(
+                component = LoginByPhoneComponentMock(initialState = state)
+            )
         }
+    }
+}
+
+private val defaultLoginByPhonePreviewState = LoginByPhoneScreenState.PhoneInput(
+    phoneNumber = "+1234567890"
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(LoginByPhonePreviewProvider::class) state: LoginByPhoneScreenState
+) {
+    ScreenPreviewContainer {
+        LoginByPhoneScreenPreviewContent(state = state)
+    }
+}
+
+@InternalApi
+@ScreenSizePreviews
+@Composable
+private fun ScreenSizePreview() {
+    ScreenPreviewContainer {
+        LoginByPhoneScreenPreviewContent(state = defaultLoginByPhonePreviewState)
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    ScreenPreviewContainer {
+        LoginByPhoneScreenPreviewContent(state = defaultLoginByPhonePreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    ScreenPreviewContainer {
+        LoginByPhoneScreenPreviewContent(state = defaultLoginByPhonePreviewState)
     }
 }
 

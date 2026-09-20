@@ -6,12 +6,17 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 
@@ -60,23 +65,52 @@ class AuthGridPreviewProvider : PreviewParameterProvider<List<UserAuthProvider>>
     )
 }
 
-@Preview(showBackground = true, name = "Narrow Screen", widthDp = 280)
-@Preview(showBackground = true, name = "Standard Screen", widthDp = 400)
+@InternalApi
 @Composable
-private fun AuthProviderGridPreview(
-    @PreviewParameter(AuthGridPreviewProvider::class) providers: List<UserAuthProvider>
-) {
-    MaterialTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(CoreTheme.dimens.paddingLarge),
-            contentAlignment = Alignment.Center
-        ) {
-            AuthProviderGrid(
-                authProviders = providers,
-                onProviderClick = {}
-            )
+private fun AuthProviderGridPreviewContent(providers: List<UserAuthProvider>) {
+    CoreTheme {
+        Surface {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(CoreTheme.dimens.paddingLarge),
+                contentAlignment = Alignment.Center
+            ) {
+                AuthProviderGrid(
+                    authProviders = providers,
+                    onProviderClick = {}
+                )
+            }
         }
     }
+}
+
+private val defaultAuthProviderGridPreviewState = listOf(
+    UserAuthProvider.EMAIL,
+    UserAuthProvider.PHONE,
+    UserAuthProvider.GOOGLE,
+    UserAuthProvider.APPLE
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun AuthProviderGridStatesPreview(
+    @PreviewParameter(AuthGridPreviewProvider::class) providers: List<UserAuthProvider>
+) {
+    AuthProviderGridPreviewContent(providers = providers)
+}
+
+@InternalApi
+@ComponentSizePreviews
+@Composable
+private fun AuthProviderGridComponentSizePreview() {
+    AuthProviderGridPreviewContent(providers = defaultAuthProviderGridPreviewState)
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun AuthProviderGridThemePreview() {
+    AuthProviderGridPreviewContent(providers = defaultAuthProviderGridPreviewState)
 }

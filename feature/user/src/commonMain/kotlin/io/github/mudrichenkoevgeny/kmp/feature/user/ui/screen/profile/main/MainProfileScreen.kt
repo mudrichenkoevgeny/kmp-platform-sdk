@@ -13,14 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -29,6 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
@@ -36,17 +34,26 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.MainProfileComponentMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(InternalApi::class)
 @Composable
 fun MainProfileScreen(component: MainProfileComponent) {
     val state by component.state.subscribeAsState()
@@ -75,9 +82,8 @@ fun MainProfileScreen(component: MainProfileComponent) {
                 onDismissDialog = component::onDismissDialog
             )
             is MainProfileScreenState.Error -> {
-                Text(
+                CoreErrorText(
                     text = currentState.error.toLocalizedMessage(),
-                    color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.testTag(MainProfileTestTags.GLOBAL_ERROR_TEXT)
                 )
             }
@@ -90,18 +96,22 @@ private fun UnauthorizedContent(
     state: MainProfileScreenState.Unauthorized,
     onLoginClick: () -> Unit
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(CoreTheme.dimens.paddingLarge),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        CoreBodyText(
             text = stringResource(Res.string.not_authorized),
             modifier = Modifier.testTag(MainProfileTestTags.UNAUTHORIZED_TEXT)
         )
         Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
-        Button(
+        CoreButton(
+            text = stringResource(Res.string.login),
             onClick = onLoginClick,
             modifier = Modifier.testTag(MainProfileTestTags.LOGIN_BUTTON)
-        ) {
-            Text(text = stringResource(Res.string.login))
-        }
+        )
         ErrorText(state.actionError)
     }
 }
@@ -148,27 +158,23 @@ private fun ProfileContent(
                             .padding(CoreTheme.dimens.paddingMedium),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(
+                        CoreTitleText(
                             text = stringResource(Res.string.account_locked_title),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.error
                         )
                         Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                        Text(
+                        CoreBodyText(
                             text = stringResource(Res.string.account_locked_desc),
-                            style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center
                         )
                         Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
-                        Button(
+                        CoreButton(
+                            text = stringResource(Res.string.unlock_account),
                             onClick = onUnlockAccountClick,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .testTag(MainProfileTestTags.UNLOCK_ACCOUNT_BUTTON),
+                            modifier = Modifier.testTag(MainProfileTestTags.UNLOCK_ACCOUNT_BUTTON),
                             enabled = !state.actionLoading
-                        ) {
-                            Text(text = stringResource(Res.string.unlock_account))
-                        }
+                        )
                     }
                 }
             }
@@ -190,32 +196,28 @@ private fun ProfileContent(
                             .padding(CoreTheme.dimens.paddingMedium),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(
+                        CoreTitleText(
                             text = stringResource(Res.string.account_pending_deletion_title),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.error
                         )
                         Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                        Text(
+                        CoreBodyText(
                             text = stringResource(Res.string.account_pending_deletion_desc),
-                            style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center
                         )
                         Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
-                        Button(
+                        CoreButton(
+                            text = stringResource(Res.string.restore_account),
                             onClick = onRestoreAccountClick,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .testTag(MainProfileTestTags.RESTORE_ACCOUNT_BUTTON),
+                            modifier = Modifier.testTag(MainProfileTestTags.RESTORE_ACCOUNT_BUTTON),
                             enabled = !state.actionLoading
-                        ) {
-                            Text(text = stringResource(Res.string.restore_account))
-                        }
+                        )
                     }
                 }
             }
 
-            Text(
+            CoreBodyText(
                 text = stringResource(Res.string.user_id, state.user.id.asHexDashString()),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.testTag(MainProfileTestTags.USER_ID_TEXT)
@@ -223,67 +225,49 @@ private fun ProfileContent(
 
             Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
-            OutlinedButton(
+            CoreButton(
+                text = stringResource(Res.string.totp_settings),
                 onClick = onTotpSettingsClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(MainProfileTestTags.TOTP_SETTINGS_BUTTON),
+                modifier = Modifier.testTag(MainProfileTestTags.TOTP_SETTINGS_BUTTON),
                 enabled = !state.actionLoading
-            ) {
-                Text(text = stringResource(Res.string.totp_settings))
-            }
+            )
 
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
-            OutlinedButton(
+            CoreButton(
+                text = stringResource(Res.string.sessions),
                 onClick = onSessionsClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(MainProfileTestTags.SESSIONS_BUTTON),
+                modifier = Modifier.testTag(MainProfileTestTags.SESSIONS_BUTTON),
                 enabled = !state.actionLoading
-            ) {
-                Text(text = stringResource(Res.string.sessions))
-            }
+            )
 
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
-            OutlinedButton(
+            CoreButton(
+                text = stringResource(Res.string.identifiers),
                 onClick = onIdentifiersClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(MainProfileTestTags.IDENTIFIERS_BUTTON),
+                modifier = Modifier.testTag(MainProfileTestTags.IDENTIFIERS_BUTTON),
                 enabled = !state.actionLoading
-            ) {
-                Text(text = stringResource(Res.string.identifiers))
-            }
+            )
 
             Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             if (state.isAccountDeletionAvailable && !isPendingDeletion) {
-                OutlinedButton(
+                CoreButton(
+                    text = stringResource(Res.string.delete_account),
                     onClick = onDeleteAccountClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag(MainProfileTestTags.DELETE_ACCOUNT_BUTTON),
+                    modifier = Modifier.testTag(MainProfileTestTags.DELETE_ACCOUNT_BUTTON),
                     enabled = !state.actionLoading
-                ) {
-                    Text(
-                        text = stringResource(Res.string.delete_account),
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
+                )
                 Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
             }
 
-            Button(
+            CoreButton(
+                text = stringResource(Res.string.logout),
                 onClick = onLogoutClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(MainProfileTestTags.LOGOUT_BUTTON),
+                modifier = Modifier.testTag(MainProfileTestTags.LOGOUT_BUTTON),
                 enabled = !state.actionLoading
-            ) {
-                Text(text = stringResource(Res.string.logout))
-            }
+            )
 
             ErrorText(state.actionError)
         }
@@ -291,17 +275,19 @@ private fun ProfileContent(
         if (state.showDeleteConfirmation) {
             AlertDialog(
                 onDismissRequest = onDismissDialog,
-                title = { Text(text = stringResource(Res.string.dialog_confirm_title)) },
-                text = { Text(text = stringResource(Res.string.delete_account_confirm_msg)) },
+                title = { CoreTitleText(text = stringResource(Res.string.dialog_confirm_title)) },
+                text = { CoreBodyText(text = stringResource(Res.string.delete_account_confirm_msg)) },
                 confirmButton = {
-                    TextButton(onClick = onConfirmDeleteAccount) {
-                        Text(text = stringResource(Res.string.dialog_confirm))
-                    }
+                    CoreTextButton(
+                        text = stringResource(Res.string.dialog_confirm),
+                        onClick = onConfirmDeleteAccount
+                    )
                 },
                 dismissButton = {
-                    TextButton(onClick = onDismissDialog) {
-                        Text(text = stringResource(Res.string.dialog_cancel))
-                    }
+                    CoreTextButton(
+                        text = stringResource(Res.string.dialog_cancel),
+                        onClick = onDismissDialog
+                    )
                 }
             )
         }
@@ -309,17 +295,19 @@ private fun ProfileContent(
         if (state.showLogoutConfirmation) {
             AlertDialog(
                 onDismissRequest = onDismissDialog,
-                title = { Text(text = stringResource(Res.string.dialog_confirm_title)) },
-                text = { Text(text = stringResource(Res.string.logout_confirm_msg)) },
+                title = { CoreTitleText(text = stringResource(Res.string.dialog_confirm_title)) },
+                text = { CoreBodyText(text = stringResource(Res.string.logout_confirm_msg)) },
                 confirmButton = {
-                    TextButton(onClick = onConfirmLogout) {
-                        Text(text = stringResource(Res.string.dialog_confirm))
-                    }
+                    CoreTextButton(
+                        text = stringResource(Res.string.dialog_confirm),
+                        onClick = onConfirmLogout
+                    )
                 },
                 dismissButton = {
-                    TextButton(onClick = onDismissDialog) {
-                        Text(text = stringResource(Res.string.dialog_cancel))
-                    }
+                    CoreTextButton(
+                        text = stringResource(Res.string.dialog_cancel),
+                        onClick = onDismissDialog
+                    )
                 }
             )
         }
@@ -338,10 +326,8 @@ private fun ErrorText(error: AppError?) {
         exit = fadeOut() + shrinkVertically()
     ) {
         error?.let {
-            Text(
+            CoreErrorText(
                 text = it.toLocalizedMessage(),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(top = CoreTheme.dimens.paddingSmall)
@@ -352,102 +338,74 @@ private fun ErrorText(error: AppError?) {
 }
 
 @InternalApi
-@Preview(showBackground = true)
+internal class MainProfilePreviewProvider : PreviewParameterProvider<MainProfileScreenState> {
+    private val items: List<Pair<String, MainProfileScreenState>> = listOf(
+        "Unauthorized" to MainProfileScreenState.Unauthorized(),
+        "Content Default" to MainProfileScreenState.Content(user = userDetailsMock(), isAccountDeletionAvailable = true),
+        "Content Locked" to MainProfileScreenState.Content(user = userDetailsMock(lockoutType = AccountLockoutType.INDEFINITE)),
+        "Content Pending Deletion" to MainProfileScreenState.Content(user = userDetailsMock(accountStatus = UserAccountStatus.PENDING_DELETION)),
+        "Action Loading" to MainProfileScreenState.Content(user = userDetailsMock(), actionLoading = true),
+        "Inline Error" to MainProfileScreenState.Content(user = userDetailsMock(), actionError = CommonError.Unknown()),
+        "Global Error" to MainProfileScreenState.Error(error = CommonError.Unknown()),
+        "Fullscreen Loading" to MainProfileScreenState.Loading
+    )
+
+    override val values: Sequence<MainProfileScreenState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
+}
+
+@InternalApi
 @Composable
-private fun MainProfileScreenUnauthorizedPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                UnauthorizedContent(
-                    state = MainProfileScreenState.Unauthorized(),
-                    onLoginClick = {}
-                )
-            }
-        }
+private fun MainProfileScreenPreviewContent(state: MainProfileScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        MainProfileScreen(
+            component = MainProfileComponentMock(initialState = state)
+        )
     }
 }
 
 @InternalApi
-@Preview(showBackground = true)
+private val defaultMainProfilePreviewState = MainProfileScreenState.Content(
+    user = userDetailsMock(),
+    isAccountDeletionAvailable = true
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
 @Composable
-private fun MainProfileScreenContentPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                ProfileContent(
-                    state = MainProfileScreenState.Content(
-                        user = userDetailsMock(),
-                        isAccountDeletionAvailable = true
-                    ),
-                    onLogoutClick = {},
-                    onConfirmLogout = {},
-                    onTotpSettingsClick = {},
-                    onSessionsClick = {},
-                    onIdentifiersClick = {},
-                    onDeleteAccountClick = {},
-                    onConfirmDeleteAccount = {},
-                    onRestoreAccountClick = {},
-                    onUnlockAccountClick = {},
-                    onDismissDialog = {}
-                )
-            }
-        }
+private fun StatesPreview(
+    @PreviewParameter(MainProfilePreviewProvider::class) state: MainProfileScreenState
+) {
+    ScreenPreviewContainer {
+        MainProfileScreenPreviewContent(state = state)
     }
 }
 
 @InternalApi
-@Preview(showBackground = true)
+@ScreenSizePreviews
 @Composable
-private fun MainProfileScreenContentLoadingPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                ProfileContent(
-                    state = MainProfileScreenState.Content(
-                        user = userDetailsMock(),
-                        actionLoading = true
-                    ),
-                    onLogoutClick = {},
-                    onConfirmLogout = {},
-                    onTotpSettingsClick = {},
-                    onSessionsClick = {},
-                    onIdentifiersClick = {},
-                    onDeleteAccountClick = {},
-                    onConfirmDeleteAccount = {},
-                    onRestoreAccountClick = {},
-                    onUnlockAccountClick = {},
-                    onDismissDialog = {}
-                )
-            }
-        }
+private fun ScreenSizePreview() {
+    ScreenPreviewContainer {
+        MainProfileScreenPreviewContent(state = defaultMainProfilePreviewState)
     }
 }
 
 @InternalApi
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
-private fun MainProfileScreenContentErrorPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                ProfileContent(
-                    state = MainProfileScreenState.Content(
-                        user = userDetailsMock(),
-                        actionError = CommonError.Unknown()
-                    ),
-                    onLogoutClick = {},
-                    onConfirmLogout = {},
-                    onTotpSettingsClick = {},
-                    onSessionsClick = {},
-                    onIdentifiersClick = {},
-                    onDeleteAccountClick = {},
-                    onConfirmDeleteAccount = {},
-                    onRestoreAccountClick = {},
-                    onUnlockAccountClick = {},
-                    onDismissDialog = {}
-                )
-            }
-        }
+private fun ThemePreview() {
+    ScreenPreviewContainer {
+        MainProfileScreenPreviewContent(state = defaultMainProfilePreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    ScreenPreviewContainer {
+        MainProfileScreenPreviewContent(state = defaultMainProfilePreviewState)
     }
 }
 

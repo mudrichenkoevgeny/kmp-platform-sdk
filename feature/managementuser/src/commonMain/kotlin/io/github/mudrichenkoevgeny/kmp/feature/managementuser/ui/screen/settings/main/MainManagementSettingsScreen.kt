@@ -3,16 +3,11 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.setting
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -22,9 +17,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.settings.main.MainManagementSettingsComponentMock
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -39,7 +41,7 @@ fun MainManagementSettingsScreen(component: MainManagementSettingsComponent) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    CoreScreenTitleText(
                         text = stringResource(Res.string.management_settings_title),
                         modifier = Modifier.testTag(MainManagementSettingsTestTags.TITLE)
                     )
@@ -55,51 +57,46 @@ fun MainManagementSettingsScreen(component: MainManagementSettingsComponent) {
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
         ) {
-            Button(
+            CoreButton(
+                text = stringResource(Res.string.users_management),
                 onClick = component::onUsersManagementClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(MainManagementSettingsTestTags.USERS_MANAGEMENT_BUTTON)
-            ) {
-                Text(text = stringResource(Res.string.users_management))
-            }
+                modifier = Modifier.testTag(MainManagementSettingsTestTags.USERS_MANAGEMENT_BUTTON)
+            )
 
-            Button(
+            CoreButton(
+                text = stringResource(Res.string.audit_logs),
                 onClick = component::onAuditLogsClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(MainManagementSettingsTestTags.AUDIT_LOGS_BUTTON)
-            ) {
-                Text(text = stringResource(Res.string.audit_logs))
-            }
+                modifier = Modifier.testTag(MainManagementSettingsTestTags.AUDIT_LOGS_BUTTON)
+            )
 
-            Button(
+            CoreButton(
+                text = stringResource(Res.string.edit_auth_settings),
                 onClick = component::onEditAuthSettingsClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(MainManagementSettingsTestTags.EDIT_AUTH_SETTINGS_BUTTON)
-            ) {
-                Text(text = stringResource(Res.string.edit_auth_settings))
-            }
+                modifier = Modifier.testTag(MainManagementSettingsTestTags.EDIT_AUTH_SETTINGS_BUTTON)
+            )
 
-            Button(
+            CoreButton(
+                text = stringResource(Res.string.edit_global_settings),
                 onClick = component::onEditGlobalSettingsClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(MainManagementSettingsTestTags.EDIT_GLOBAL_SETTINGS_BUTTON)
-            ) {
-                Text(text = stringResource(Res.string.edit_global_settings))
-            }
+                modifier = Modifier.testTag(MainManagementSettingsTestTags.EDIT_GLOBAL_SETTINGS_BUTTON)
+            )
 
-            Button(
+            CoreButton(
+                text = stringResource(Res.string.edit_security_settings),
                 onClick = component::onEditSecuritySettingsClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(MainManagementSettingsTestTags.EDIT_SECURITY_SETTINGS_BUTTON)
-            ) {
-                Text(text = stringResource(Res.string.edit_security_settings))
-            }
+                modifier = Modifier.testTag(MainManagementSettingsTestTags.EDIT_SECURITY_SETTINGS_BUTTON)
+            )
         }
+    }
+}
+
+@InternalApi
+@Composable
+private fun MainManagementSettingsPreviewContent() {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        MainManagementSettingsScreen(
+            component = MainManagementSettingsComponentMock()
+        )
     }
 }
 
@@ -107,62 +104,35 @@ fun MainManagementSettingsScreen(component: MainManagementSettingsComponent) {
 @Preview(showBackground = true)
 @Composable
 private fun MainManagementSettingsPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(CoreTheme.dimens.paddingMedium),
-                    verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
-                ) {
-                    Button(
-                        onClick = {},
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag(MainManagementSettingsTestTags.USERS_MANAGEMENT_BUTTON)
-                    ) {
-                        Text(text = stringResource(Res.string.users_management))
-                    }
+    ScreenPreviewContainer {
+        MainManagementSettingsPreviewContent()
+    }
+}
 
-                    Button(
-                        onClick = {},
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag(MainManagementSettingsTestTags.AUDIT_LOGS_BUTTON)
-                    ) {
-                        Text(text = stringResource(Res.string.audit_logs))
-                    }
+@InternalApi
+@ScreenSizePreviews
+@Composable
+private fun ScreenSizePreview() {
+    ScreenPreviewContainer {
+        MainManagementSettingsPreviewContent()
+    }
+}
 
-                    Button(
-                        onClick = {},
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag(MainManagementSettingsTestTags.EDIT_AUTH_SETTINGS_BUTTON)
-                    ) {
-                        Text(text = stringResource(Res.string.edit_auth_settings))
-                    }
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    ScreenPreviewContainer {
+        MainManagementSettingsPreviewContent()
+    }
+}
 
-                    Button(
-                        onClick = {},
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag(MainManagementSettingsTestTags.EDIT_GLOBAL_SETTINGS_BUTTON)
-                    ) {
-                        Text(text = stringResource(Res.string.edit_global_settings))
-                    }
-
-                    Button(
-                        onClick = {},
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag(MainManagementSettingsTestTags.EDIT_SECURITY_SETTINGS_BUTTON)
-                    ) {
-                        Text(text = stringResource(Res.string.edit_security_settings))
-                    }
-                }
-            }
-        }
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    ScreenPreviewContainer {
+        MainManagementSettingsPreviewContent()
     }
 }
 

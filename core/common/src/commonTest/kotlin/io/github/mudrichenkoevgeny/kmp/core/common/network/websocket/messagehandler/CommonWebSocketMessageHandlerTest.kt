@@ -22,7 +22,9 @@ class CommonWebSocketMessageHandlerTest {
     private fun frame(type: String) = SocketFrame(
         id = FRAME_ID,
         type = type,
-        timestamp = FRAME_TS
+        timestamp = FRAME_TS,
+        payload = null,
+        metadata = emptyMap()
     )
 
     @Test

@@ -1,6 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.component.audit.item
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_id
@@ -62,15 +66,47 @@ fun AuditItem(
 }
 
 @InternalApi
-@Preview(showBackground = true)
 @Composable
-private fun AuditItemPreview() {
-    MaterialTheme {
+private fun AuditItemPreviewContent(event: AuditEvent) {
+    CoreTheme {
         Surface {
-            AuditItem(
-                event = auditEventMock(),
-                onClick = {}
-            )
+            Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
+                AuditItem(
+                    event = event,
+                    onClick = {}
+                )
+            }
         }
     }
+}
+
+@InternalApi
+private val defaultAuditItemPreviewState = auditEventMock()
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun AuditItemStatesPreview() {
+    AuditItemPreviewContent(event = defaultAuditItemPreviewState)
+}
+
+@InternalApi
+@ComponentSizePreviews
+@Composable
+private fun AuditItemComponentSizePreview() {
+    AuditItemPreviewContent(event = defaultAuditItemPreviewState)
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun AuditItemThemePreview() {
+    AuditItemPreviewContent(event = defaultAuditItemPreviewState)
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun AuditItemFontScalePreview() {
+    AuditItemPreviewContent(event = defaultAuditItemPreviewState)
 }

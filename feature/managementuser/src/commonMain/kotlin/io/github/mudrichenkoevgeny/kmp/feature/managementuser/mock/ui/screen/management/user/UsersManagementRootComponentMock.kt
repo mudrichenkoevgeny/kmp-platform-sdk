@@ -4,13 +4,14 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.main.UsersManagementMainComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.UsersManagementDestination
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.UsersManagementRootComponent
 
 @InternalApi
 class UsersManagementRootComponentMock(
-    initialChild: UsersManagementRootComponent.Child,
-    initialConfiguration: UsersManagementDestination = UsersManagementDestination.Main,
+    initialChild: UsersManagementRootComponent.Child = UsersManagementRootComponent.Child.Main(UsersManagementMainComponentMock()),
+    initialConfiguration: UsersManagementDestination = UsersManagementDestination.Main
 ) : UsersManagementRootComponent {
 
     private val _stack = MutableValue(

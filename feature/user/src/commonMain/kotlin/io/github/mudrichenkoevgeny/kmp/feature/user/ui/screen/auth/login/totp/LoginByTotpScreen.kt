@@ -14,12 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -29,18 +25,32 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.totp.LoginByTotpComponentMock
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -105,9 +115,8 @@ private fun LoginByTotpContent(
                     LoginByTotpScreenState.Mode.RECOVERY_CODE -> Res.string.login_by_recovery_code
                 }
 
-                Text(
+                CoreScreenTitleText(
                     text = stringResource(titleRes),
-                    style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.testTag(LoginByTotpTestTags.TITLE)
                 )
             }
@@ -129,13 +138,12 @@ private fun LoginByTotpContent(
                     LoginByTotpScreenState.Mode.RECOVERY_CODE -> KeyboardType.Text
                 }
 
-                OutlinedTextField(
+                CoreOutlinedTextField(
                     value = state.code,
                     onValueChange = onCodeChanged,
                     modifier = Modifier
-                        .fillMaxWidth()
                         .testTag(LoginByTotpTestTags.CODE_INPUT),
-                    label = { Text(stringResource(labelRes)) },
+                    label = { CoreBodyText(stringResource(labelRes)) },
                     isError = state.actionError != null,
                     enabled = !state.actionLoading,
                     keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
@@ -145,15 +153,12 @@ private fun LoginByTotpContent(
                 ErrorText(state.actionError)
             }
 
-            Button(
+            CoreButton(
+                text = stringResource(Res.string.login),
                 onClick = onSubmitClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(LoginByTotpTestTags.SUBMIT_BUTTON),
+                modifier = Modifier.testTag(LoginByTotpTestTags.SUBMIT_BUTTON),
                 enabled = state.canSubmit
-            ) {
-                Text(stringResource(Res.string.login))
-            }
+            )
 
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
@@ -162,16 +167,12 @@ private fun LoginByTotpContent(
                 LoginByTotpScreenState.Mode.RECOVERY_CODE -> Res.string.use_totp
             }
 
-            TextButton(
+            CoreTextButton(
+                text = stringResource(toggleTextRes),
                 onClick = onToggleModeClick,
                 modifier = Modifier.testTag(LoginByTotpTestTags.TOGGLE_MODE_BUTTON),
                 enabled = !state.actionLoading
-            ) {
-                Text(
-                    text = stringResource(toggleTextRes),
-                    style = MaterialTheme.typography.labelLarge
-                )
-            }
+            )
         }
 
         if (state.actionLoading) {
@@ -188,10 +189,8 @@ private fun ErrorText(error: AppError?) {
         exit = fadeOut() + shrinkVertically()
     ) {
         error?.let {
-            Text(
+            CoreErrorText(
                 text = it.toLocalizedMessage(),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(top = CoreTheme.dimens.paddingSmall)
@@ -202,46 +201,89 @@ private fun ErrorText(error: AppError?) {
 }
 
 @InternalApi
-@Preview(showBackground = true)
+internal class LoginByTotpPreviewProvider : PreviewParameterProvider<LoginByTotpScreenState> {
+    private val items: List<Pair<String, LoginByTotpScreenState>> = listOf(
+        "TOTP Mode" to LoginByTotpScreenState.Content(
+            mfaToken = "token",
+            mode = LoginByTotpScreenState.Mode.TOTP,
+            code = "123456"
+        ),
+        "Recovery Code Mode" to LoginByTotpScreenState.Content(
+            mfaToken = "token",
+            mode = LoginByTotpScreenState.Mode.RECOVERY_CODE,
+            code = "RECOVERY-CODE-123"
+        ),
+        "Inline Error" to LoginByTotpScreenState.Content(
+            mfaToken = "token",
+            mode = LoginByTotpScreenState.Mode.TOTP,
+            code = "111111",
+            actionError = CommonError.Unknown()
+        ),
+        "Action Loading" to LoginByTotpScreenState.Content(
+            mfaToken = "token",
+            mode = LoginByTotpScreenState.Mode.TOTP,
+            code = "123456",
+            actionLoading = true
+        ),
+        "Fullscreen Loading" to LoginByTotpScreenState.Loading
+    )
+
+    override val values: Sequence<LoginByTotpScreenState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
+}
+
+@InternalApi
 @Composable
-private fun LoginByTotpContentPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                LoginByTotpContent(
-                    state = LoginByTotpScreenState.Content(
-                        mfaToken = "token",
-                        mode = LoginByTotpScreenState.Mode.TOTP
-                    ),
-                    onCodeChanged = {},
-                    onToggleModeClick = {},
-                    onSubmitClick = {},
-                    onBackClick = {}
-                )
-            }
-        }
+private fun LoginByTotpScreenPreviewContent(state: LoginByTotpScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        LoginByTotpScreen(
+            component = LoginByTotpComponentMock(initialState = state)
+        )
+    }
+}
+
+private val defaultLoginByTotpPreviewState = LoginByTotpScreenState.Content(
+    mfaToken = "token",
+    mode = LoginByTotpScreenState.Mode.TOTP,
+    code = "123456"
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(LoginByTotpPreviewProvider::class) state: LoginByTotpScreenState
+) {
+    DialogPreviewContainer {
+        LoginByTotpScreenPreviewContent(state = state)
     }
 }
 
 @InternalApi
-@Preview(showBackground = true)
+@DialogSizePreviews
 @Composable
-private fun LoginByTotpContentRecoveryPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                LoginByTotpContent(
-                    state = LoginByTotpScreenState.Content(
-                        mfaToken = "token",
-                        mode = LoginByTotpScreenState.Mode.RECOVERY_CODE
-                    ),
-                    onCodeChanged = {},
-                    onToggleModeClick = {},
-                    onSubmitClick = {},
-                    onBackClick = {}
-                )
-            }
-        }
+private fun DialogSizePreview() {
+    DialogPreviewContainer {
+        LoginByTotpScreenPreviewContent(state = defaultLoginByTotpPreviewState)
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    DialogPreviewContainer {
+        LoginByTotpScreenPreviewContent(state = defaultLoginByTotpPreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    DialogPreviewContainer {
+        LoginByTotpScreenPreviewContent(state = defaultLoginByTotpPreviewState)
     }
 }
 

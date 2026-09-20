@@ -17,21 +17,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -43,23 +37,37 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.alexzhirkevich.qrose.rememberQrCodePainter
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreCodeTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.totp.TotpSettingsComponentMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totprecoverycodes.TotpRecoveryCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totpsetup.TotpSetup
 import org.jetbrains.compose.resources.painterResource
@@ -74,7 +82,7 @@ fun TotpSettingsScreen(component: TotpSettingsComponent) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    CoreScreenTitleText(
                         text = stringResource(Res.string.totp_settings),
                         modifier = Modifier.testTag(TotpSettingsTestTags.TITLE)
                     )
@@ -114,9 +122,8 @@ fun TotpSettingsScreen(component: TotpSettingsComponent) {
                     onDismissDialogs = component::onDismissDialogs
                 )
                 is TotpSettingsScreenState.Error -> {
-                    Text(
+                    CoreErrorText(
                         text = currentState.error.toLocalizedMessage(),
-                        color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.testTag(TotpSettingsTestTags.GLOBAL_ERROR_TEXT)
                     )
                 }
@@ -136,22 +143,18 @@ private fun DisabledContent(
             .padding(CoreTheme.dimens.paddingLarge),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
+        CoreBodyText(
             text = stringResource(Res.string.totp_disabled_desc),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.testTag(TotpSettingsTestTags.DISABLED_DESC_TEXT)
         )
         Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
-        Button(
+        CoreButton(
+            text = stringResource(Res.string.setup_totp),
             onClick = onSetupClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(TotpSettingsTestTags.SETUP_TOTP_BUTTON),
+            modifier = Modifier.testTag(TotpSettingsTestTags.SETUP_TOTP_BUTTON),
             enabled = !state.actionLoading
-        ) {
-            Text(text = stringResource(Res.string.setup_totp))
-        }
+        )
         ErrorText(
             error = state.actionError,
             testTag = TotpSettingsTestTags.DISABLED_ACTION_ERROR_TEXT
@@ -174,16 +177,14 @@ private fun SetupInProgressContent(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.totp_setup_step1),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.testTag(TotpSettingsTestTags.STEP1_TITLE)
         )
-        Text(
+        CoreBodyText(
             text = stringResource(Res.string.totp_setup_step1_desc),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.testTag(TotpSettingsTestTags.STEP1_DESC)
         )
 
@@ -205,7 +206,7 @@ private fun SetupInProgressContent(
 
         Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
 
-        Text(
+        CoreBodyText(
             text = stringResource(Res.string.totp_manual_key),
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.testTag(TotpSettingsTestTags.MANUAL_KEY_LABEL)
@@ -214,11 +215,12 @@ private fun SetupInProgressContent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(
+            CoreTitleText(
                 text = state.setup.secretKey,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                ),
                 modifier = Modifier.testTag(TotpSettingsTestTags.SECRET_KEY_TEXT)
             )
             IconButton(
@@ -235,31 +237,27 @@ private fun SetupInProgressContent(
 
         Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.totp_setup_step2),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.testTag(TotpSettingsTestTags.STEP2_TITLE)
         )
-        Text(
+        CoreBodyText(
             text = stringResource(Res.string.totp_setup_step2_desc),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.testTag(TotpSettingsTestTags.STEP2_DESC)
         )
 
         Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
 
-        OutlinedTextField(
+        CoreCodeTextField(
             value = state.code,
             onValueChange = onCodeChanged,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(TotpSettingsTestTags.CODE_INPUT),
-            label = { Text(stringResource(Res.string.totp_code)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            label = { CoreBodyText(stringResource(Res.string.totp_code)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.totp_code)) },
             enabled = !state.actionLoading,
-            singleLine = true
+            isError = state.actionError != null,
+            modifier = Modifier.testTag(TotpSettingsTestTags.CODE_INPUT)
         )
 
         ErrorText(
@@ -269,15 +267,12 @@ private fun SetupInProgressContent(
 
         Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
-        Button(
+        CoreButton(
+            text = stringResource(Res.string.confirm),
             onClick = onConfirmClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(TotpSettingsTestTags.CONFIRM_SETUP_BUTTON),
+            modifier = Modifier.testTag(TotpSettingsTestTags.CONFIRM_SETUP_BUTTON),
             enabled = state.canConfirm
-        ) {
-            Text(text = stringResource(Res.string.confirm))
-        }
+        )
     }
 }
 
@@ -300,26 +295,25 @@ private fun EnabledContent(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
+            CoreTitleText(
                 text = stringResource(Res.string.totp_enabled_title),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                ),
                 modifier = Modifier.testTag(TotpSettingsTestTags.ENABLED_TITLE)
             )
 
             Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
-            Text(
+            CoreTitleText(
                 text = stringResource(Res.string.recovery_codes_title),
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.testTag(TotpSettingsTestTags.RECOVERY_CODES_TITLE)
             )
-            Text(
+            CoreBodyText(
                 text = stringResource(Res.string.recovery_codes_desc),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.testTag(TotpSettingsTestTags.RECOVERY_CODES_DESC)
             )
 
@@ -332,52 +326,44 @@ private fun EnabledContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 state.recoveryCodes.codes.forEach { code ->
-                    Text(
+                    CoreBodyText(
                         text = code,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontFamily = FontFamily.Monospace
+                        style = MaterialTheme.typography.bodyLarge.copy(fontFamily = FontFamily.Monospace)
                     )
                 }
             }
 
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
-            TextButton(
+            CoreTextButton(
+                text = stringResource(Res.string.copy_all),
                 onClick = {
                     val allCodes = state.recoveryCodes.codes.joinToString("\n")
                     clipboardManager.setText(AnnotatedString(allCodes))
                 },
                 modifier = Modifier.testTag(TotpSettingsTestTags.COPY_ALL_RECOVERY_CODES_BUTTON)
-            ) {
-                Text(text = stringResource(Res.string.copy_all))
-            }
+            )
 
             Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
-            OutlinedButton(
+            CoreButton(
+                text = stringResource(Res.string.regenerate_recovery_codes),
                 onClick = onRegenerateClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(TotpSettingsTestTags.REGENERATE_RECOVERY_CODES_BUTTON),
+                modifier = Modifier.testTag(TotpSettingsTestTags.REGENERATE_RECOVERY_CODES_BUTTON),
                 enabled = !state.actionLoading
-            ) {
-                Text(text = stringResource(Res.string.regenerate_recovery_codes))
-            }
+            )
 
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
-            Button(
+            CoreButton(
+                text = stringResource(Res.string.disable_totp),
                 onClick = onDisableClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(TotpSettingsTestTags.DISABLE_TOTP_BUTTON),
+                modifier = Modifier.testTag(TotpSettingsTestTags.DISABLE_TOTP_BUTTON),
                 enabled = !state.actionLoading,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.error
                 )
-            ) {
-                Text(text = stringResource(Res.string.disable_totp))
-            }
+            )
 
             ErrorText(
                 error = state.actionError,
@@ -388,17 +374,19 @@ private fun EnabledContent(
         if (state.showDisableConfirmation) {
             AlertDialog(
                 onDismissRequest = onDismissDialogs,
-                title = { Text(text = stringResource(Res.string.dialog_confirm_title)) },
-                text = { Text(text = stringResource(Res.string.disable_totp_confirm_msg)) },
+                title = { CoreTitleText(text = stringResource(Res.string.dialog_confirm_title)) },
+                text = { CoreBodyText(text = stringResource(Res.string.disable_totp_confirm_msg)) },
                 confirmButton = {
-                    TextButton(onClick = onConfirmDisable) {
-                        Text(text = stringResource(Res.string.dialog_confirm))
-                    }
+                    CoreTextButton(
+                        text = stringResource(Res.string.dialog_confirm),
+                        onClick = onConfirmDisable
+                    )
                 },
                 dismissButton = {
-                    TextButton(onClick = onDismissDialogs) {
-                        Text(text = stringResource(Res.string.dialog_cancel))
-                    }
+                    CoreTextButton(
+                        text = stringResource(Res.string.dialog_cancel),
+                        onClick = onDismissDialogs
+                    )
                 }
             )
         }
@@ -406,17 +394,19 @@ private fun EnabledContent(
         if (state.showRegenerateConfirmation) {
             AlertDialog(
                 onDismissRequest = onDismissDialogs,
-                title = { Text(text = stringResource(Res.string.dialog_confirm_title)) },
-                text = { Text(text = stringResource(Res.string.regenerate_codes_confirm_msg)) },
+                title = { CoreTitleText(text = stringResource(Res.string.dialog_confirm_title)) },
+                text = { CoreBodyText(text = stringResource(Res.string.regenerate_codes_confirm_msg)) },
                 confirmButton = {
-                    TextButton(onClick = onConfirmRegenerate) {
-                        Text(text = stringResource(Res.string.dialog_confirm))
-                    }
+                    CoreTextButton(
+                        text = stringResource(Res.string.dialog_confirm),
+                        onClick = onConfirmRegenerate
+                    )
                 },
                 dismissButton = {
-                    TextButton(onClick = onDismissDialogs) {
-                        Text(text = stringResource(Res.string.dialog_cancel))
-                    }
+                    CoreTextButton(
+                        text = stringResource(Res.string.dialog_cancel),
+                        onClick = onDismissDialogs
+                    )
                 }
             )
         }
@@ -431,10 +421,8 @@ private fun ErrorText(error: AppError?, testTag: String) {
         exit = fadeOut() + shrinkVertically()
     ) {
         error?.let {
-            Text(
+            CoreErrorText(
                 text = it.toLocalizedMessage(),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(top = CoreTheme.dimens.paddingSmall)
@@ -445,66 +433,79 @@ private fun ErrorText(error: AppError?, testTag: String) {
 }
 
 @InternalApi
-@Preview(showBackground = true)
+internal class TotpSettingsPreviewProvider : PreviewParameterProvider<TotpSettingsScreenState> {
+    private val items: List<Pair<String, TotpSettingsScreenState>> = listOf(
+        "Disabled" to TotpSettingsScreenState.Disabled(),
+        "Setup In Progress" to TotpSettingsScreenState.SetupInProgress(
+            setup = TotpSetup(
+                secretKey = "JBSWY3DPEHPK3PXP",
+                otpAuthUrl = "otpauth://totp/Example:user@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Example",
+                mfaToken = "mfa_token_sample"
+            ),
+            code = "123456"
+        ),
+        "Enabled" to TotpSettingsScreenState.Enabled(
+            recoveryCodes = TotpRecoveryCodes(
+                codes = listOf("1111-2222", "3333-4444", "5555-6666", "7777-8888")
+            )
+        ),
+        "Action Loading" to TotpSettingsScreenState.Disabled(actionLoading = true),
+        "Global Error" to TotpSettingsScreenState.Error(error = CommonError.Unknown()),
+        "Fullscreen Loading" to TotpSettingsScreenState.Loading
+    )
+
+    override val values: Sequence<TotpSettingsScreenState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
+}
+
+@InternalApi
 @Composable
-private fun TotpSettingsDisabledPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                DisabledContent(
-                    state = TotpSettingsScreenState.Disabled(),
-                    onSetupClick = {}
-                )
-            }
-        }
+private fun TotpSettingsScreenPreviewContent(state: TotpSettingsScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        TotpSettingsScreen(
+            component = TotpSettingsComponentMock(initialState = state)
+        )
+    }
+}
+
+private val defaultTotpSettingsPreviewState = TotpSettingsScreenState.Disabled()
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(TotpSettingsPreviewProvider::class) state: TotpSettingsScreenState
+) {
+    ScreenPreviewContainer {
+        TotpSettingsScreenPreviewContent(state = state)
     }
 }
 
 @InternalApi
-@Preview(showBackground = true)
+@ScreenSizePreviews
 @Composable
-private fun TotpSettingsSetupInProgressPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                SetupInProgressContent(
-                    state = TotpSettingsScreenState.SetupInProgress(
-                        setup = TotpSetup(
-                            secretKey = "JBSWY3DPEHPK3PXP",
-                            otpAuthUrl = "otpauth://totp/Example:user@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Example",
-                            mfaToken = "mfa_token_sample"
-                        ),
-                        code = "123456"
-                    ),
-                    onCodeChanged = {},
-                    onConfirmClick = {}
-                )
-            }
-        }
+private fun ScreenSizePreview() {
+    ScreenPreviewContainer {
+        TotpSettingsScreenPreviewContent(state = defaultTotpSettingsPreviewState)
     }
 }
 
 @InternalApi
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
-private fun TotpSettingsEnabledPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                EnabledContent(
-                    state = TotpSettingsScreenState.Enabled(
-                        recoveryCodes = TotpRecoveryCodes(
-                            codes = listOf("1111-2222", "3333-4444", "5555-6666", "7777-8888")
-                        )
-                    ),
-                    onDisableClick = {},
-                    onConfirmDisable = {},
-                    onRegenerateClick = {},
-                    onConfirmRegenerate = {},
-                    onDismissDialogs = {}
-                )
-            }
-        }
+private fun ThemePreview() {
+    ScreenPreviewContainer {
+        TotpSettingsScreenPreviewContent(state = defaultTotpSettingsPreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    ScreenPreviewContainer {
+        TotpSettingsScreenPreviewContent(state = defaultTotpSettingsPreviewState)
     }
 }
 

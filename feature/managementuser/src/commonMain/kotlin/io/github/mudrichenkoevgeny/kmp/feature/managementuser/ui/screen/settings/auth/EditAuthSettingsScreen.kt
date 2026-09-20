@@ -14,15 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -33,18 +29,33 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error.FullscreenError
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.settings.auth.EditAuthSettingsComponentMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.jetbrains.compose.resources.stringResource
 
@@ -62,7 +73,7 @@ fun EditAuthSettingsScreen(component: EditAuthSettingsComponent) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
+                    CoreScreenTitleText(
                         text = stringResource(Res.string.edit_auth_settings_title),
                         modifier = Modifier.testTag(EditAuthSettingsTestTags.TITLE)
                     )
@@ -157,7 +168,7 @@ private fun EditAuthSettingsForm(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.enabled_auth_providers),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.testTag(EditAuthSettingsTestTags.SECTION_PROVIDERS_TITLE)
@@ -175,9 +186,8 @@ private fun EditAuthSettingsForm(
                     },
                     modifier = Modifier.testTag(EditAuthSettingsTestTags.getProviderCheckboxTag(provider))
                 )
-                Text(
+                CoreBodyText(
                     text = provider.name,
-                    style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
                 )
             }
@@ -192,120 +202,109 @@ private fun EditAuthSettingsForm(
                 onCheckedChange = onRegistrationEnabledToggled,
                 modifier = Modifier.testTag(EditAuthSettingsTestTags.IS_REGISTRATION_ENABLED_CHECKBOX)
             )
-            Text(
+            CoreBodyText(
                 text = stringResource(Res.string.is_registration_enabled),
-                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
             )
         }
 
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.limits_and_expirations),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.testTag(EditAuthSettingsTestTags.SECTION_LIMITS_TITLE)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.maxTotalIdentifiers,
             onValueChange = onMaxTotalIdentifiersChanged,
-            label = { Text(text = stringResource(Res.string.max_total_identifiers)) },
+            label = { CoreBodyText(stringResource(Res.string.max_total_identifiers)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.max_total_identifiers)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditAuthSettingsTestTags.MAX_TOTAL_IDENTIFIERS_INPUT)
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_TOTAL_IDENTIFIERS_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.maxEmailIdentifiers,
             onValueChange = onMaxEmailIdentifiersChanged,
-            label = { Text(text = stringResource(Res.string.max_email_identifiers)) },
+            label = { CoreBodyText(stringResource(Res.string.max_email_identifiers)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.max_email_identifiers)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditAuthSettingsTestTags.MAX_EMAIL_IDENTIFIERS_INPUT)
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_EMAIL_IDENTIFIERS_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.maxPhoneIdentifiers,
             onValueChange = onMaxPhoneIdentifiersChanged,
-            label = { Text(text = stringResource(Res.string.max_phone_identifiers)) },
+            label = { CoreBodyText(stringResource(Res.string.max_phone_identifiers)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.max_phone_identifiers)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditAuthSettingsTestTags.MAX_PHONE_IDENTIFIERS_INPUT)
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_PHONE_IDENTIFIERS_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.maxIdentifiersPerExternalProvider,
             onValueChange = onMaxIdentifiersPerExternalProviderChanged,
-            label = { Text(text = stringResource(Res.string.max_identifiers_per_external_provider)) },
+            label = { CoreBodyText(stringResource(Res.string.max_identifiers_per_external_provider)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.max_identifiers_per_external_provider)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditAuthSettingsTestTags.MAX_IDENTIFIERS_PER_EXTERNAL_PROVIDER_INPUT)
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_IDENTIFIERS_PER_EXTERNAL_PROVIDER_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.maxActiveSessionsForOpenUser,
             onValueChange = onMaxActiveSessionsForOpenUserChanged,
-            label = { Text(text = stringResource(Res.string.max_active_sessions_open)) },
+            label = { CoreBodyText(stringResource(Res.string.max_active_sessions_open)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.max_active_sessions_open)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditAuthSettingsTestTags.MAX_ACTIVE_SESSIONS_OPEN_INPUT)
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_ACTIVE_SESSIONS_OPEN_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.maxActiveSessionsForManagementUser,
             onValueChange = onMaxActiveSessionsForManagementUserChanged,
-            label = { Text(text = stringResource(Res.string.max_active_sessions_management)) },
+            label = { CoreBodyText(stringResource(Res.string.max_active_sessions_management)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.max_active_sessions_management)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditAuthSettingsTestTags.MAX_ACTIVE_SESSIONS_MANAGEMENT_INPUT)
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_ACTIVE_SESSIONS_MANAGEMENT_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.accessTokenExpirationSeconds,
             onValueChange = onAccessTokenExpirationSecondsChanged,
-            label = { Text(text = stringResource(Res.string.access_token_expiration_seconds)) },
+            label = { CoreBodyText(stringResource(Res.string.access_token_expiration_seconds)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.access_token_expiration_seconds)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditAuthSettingsTestTags.ACCESS_TOKEN_EXPIRATION_INPUT)
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.ACCESS_TOKEN_EXPIRATION_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.refreshTokenExpirationSeconds,
             onValueChange = onRefreshTokenExpirationSecondsChanged,
-            label = { Text(text = stringResource(Res.string.refresh_token_expiration_seconds)) },
+            label = { CoreBodyText(stringResource(Res.string.refresh_token_expiration_seconds)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.refresh_token_expiration_seconds)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditAuthSettingsTestTags.REFRESH_TOKEN_EXPIRATION_INPUT)
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.REFRESH_TOKEN_EXPIRATION_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.accountDeletionGracePeriodSeconds,
             onValueChange = onAccountDeletionGracePeriodSecondsChanged,
-            label = { Text(text = stringResource(Res.string.account_deletion_delay_seconds)) },
+            label = { CoreBodyText(stringResource(Res.string.account_deletion_delay_seconds)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.account_deletion_delay_seconds)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditAuthSettingsTestTags.ACCOUNT_DELETION_DELAY_INPUT)
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.ACCOUNT_DELETION_DELAY_INPUT)
         )
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.accountDeletionCheckIntervalSeconds,
             onValueChange = onAccountDeletionCheckIntervalSecondsChanged,
-            label = { Text(text = stringResource(Res.string.account_deletion_check_interval_seconds)) },
+            label = { CoreBodyText(stringResource(Res.string.account_deletion_check_interval_seconds)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.account_deletion_check_interval_seconds)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditAuthSettingsTestTags.ACCOUNT_DELETION_CHECK_INTERVAL_INPUT)
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.ACCOUNT_DELETION_CHECK_INTERVAL_INPUT)
         )
 
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.open_email_restriction_policy),
             style = MaterialTheme.typography.titleMedium
         )
@@ -318,14 +317,14 @@ private fun EditAuthSettingsForm(
                 checked = state.openEmailBlacklistEnabled,
                 onCheckedChange = onOpenEmailBlacklistEnabledToggled
             )
-            Text(text = stringResource(Res.string.blacklist_enabled), modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
+            CoreBodyText(text = stringResource(Res.string.blacklist_enabled), modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
         }
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.openEmailBlacklist,
             onValueChange = onOpenEmailBlacklistChanged,
-            label = { Text(text = stringResource(Res.string.email_blacklist_placeholder)) },
-            modifier = Modifier.fillMaxWidth()
+            label = { CoreBodyText(stringResource(Res.string.email_blacklist_placeholder)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.email_blacklist_placeholder)) }
         )
 
         Row(
@@ -336,17 +335,17 @@ private fun EditAuthSettingsForm(
                 checked = state.openEmailWhitelistEnabled,
                 onCheckedChange = onOpenEmailWhitelistEnabledToggled
             )
-            Text(text = stringResource(Res.string.whitelist_enabled), modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
+            CoreBodyText(text = stringResource(Res.string.whitelist_enabled), modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
         }
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.openEmailWhitelist,
             onValueChange = onOpenEmailWhitelistChanged,
-            label = { Text(text = stringResource(Res.string.email_whitelist_placeholder)) },
-            modifier = Modifier.fillMaxWidth()
+            label = { CoreBodyText(stringResource(Res.string.email_whitelist_placeholder)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.email_whitelist_placeholder)) }
         )
 
-        Text(
+        CoreTitleText(
             text = stringResource(Res.string.management_email_restriction_policy),
             style = MaterialTheme.typography.titleMedium
         )
@@ -359,14 +358,14 @@ private fun EditAuthSettingsForm(
                 checked = state.managementEmailBlacklistEnabled,
                 onCheckedChange = onManagementEmailBlacklistEnabledToggled
             )
-            Text(text = stringResource(Res.string.blacklist_enabled), modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
+            CoreBodyText(text = stringResource(Res.string.blacklist_enabled), modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
         }
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.managementEmailBlacklist,
             onValueChange = onManagementEmailBlacklistChanged,
-            label = { Text(text = stringResource(Res.string.email_blacklist_placeholder)) },
-            modifier = Modifier.fillMaxWidth()
+            label = { CoreBodyText(stringResource(Res.string.email_blacklist_placeholder)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.email_blacklist_placeholder)) }
         )
 
         Row(
@@ -377,14 +376,14 @@ private fun EditAuthSettingsForm(
                 checked = state.managementEmailWhitelistEnabled,
                 onCheckedChange = onManagementEmailWhitelistEnabledToggled
             )
-            Text(text = stringResource(Res.string.whitelist_enabled), modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
+            CoreBodyText(text = stringResource(Res.string.whitelist_enabled), modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
         }
 
-        OutlinedTextField(
+        CoreOutlinedTextField(
             value = state.managementEmailWhitelist,
             onValueChange = onManagementEmailWhitelistChanged,
-            label = { Text(text = stringResource(Res.string.email_whitelist_placeholder)) },
-            modifier = Modifier.fillMaxWidth()
+            label = { CoreBodyText(stringResource(Res.string.email_whitelist_placeholder)) },
+            placeholder = { CoreBodyText(stringResource(Res.string.email_whitelist_placeholder)) }
         )
 
         ErrorText(
@@ -392,25 +391,19 @@ private fun EditAuthSettingsForm(
             testTag = EditAuthSettingsTestTags.SAVE_ERROR_TEXT
         )
 
-        Button(
+        CoreButton(
+            text = stringResource(if (state.isSaving) Res.string.saving else Res.string.save),
             onClick = onSaveClick,
             enabled = !state.isSaving,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditAuthSettingsTestTags.SAVE_BUTTON)
-        ) {
-            Text(text = stringResource(if (state.isSaving) Res.string.saving else Res.string.save))
-        }
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.SAVE_BUTTON)
+        )
 
-        OutlinedButton(
+        CoreTextButton(
+            text = stringResource(Res.string.reset_to_defaults),
             onClick = onResetClick,
             enabled = !state.isSaving,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(EditAuthSettingsTestTags.RESET_BUTTON)
-        ) {
-            Text(text = stringResource(Res.string.reset_to_defaults))
-        }
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.RESET_BUTTON)
+        )
     }
 }
 
@@ -422,10 +415,8 @@ private fun ErrorText(error: AppError?, testTag: String) {
         exit = fadeOut() + shrinkVertically()
     ) {
         error?.let {
-            Text(
+            CoreErrorText(
                 text = it.toLocalizedMessage(),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(top = CoreTheme.dimens.paddingSmall)
@@ -436,52 +427,94 @@ private fun ErrorText(error: AppError?, testTag: String) {
 }
 
 @InternalApi
-@Preview(showBackground = true)
+internal class EditAuthSettingsPreviewProvider : PreviewParameterProvider<EditAuthSettingsScreenState> {
+    private val sampleContent = EditAuthSettingsScreenState.Content(
+        enabledProviders = setOf(UserAuthProvider.EMAIL, UserAuthProvider.GOOGLE),
+        maxTotalIdentifiers = "10",
+        maxEmailIdentifiers = "5",
+        maxPhoneIdentifiers = "5",
+        maxIdentifiersPerExternalProvider = "2",
+        maxActiveSessionsForOpenUser = "3",
+        maxActiveSessionsForManagementUser = "5",
+        accessTokenExpirationSeconds = "3600",
+        refreshTokenExpirationSeconds = "86400",
+        accountDeletionGracePeriodSeconds = "604800",
+        accountDeletionCheckIntervalSeconds = "86400",
+        isRegistrationEnabled = true
+    )
+
+    private val items: List<Pair<String, EditAuthSettingsScreenState>> = listOf(
+        "Content" to sampleContent,
+        "Saving" to sampleContent.copy(isSaving = true),
+        "Save Error" to sampleContent.copy(saveError = CommonError.Unknown()),
+        "Error" to EditAuthSettingsScreenState.Error(error = CommonError.Unknown()),
+        "Loading" to EditAuthSettingsScreenState.Loading
+    )
+
+    override val values: Sequence<EditAuthSettingsScreenState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
+}
+
+@InternalApi
 @Composable
-private fun EditAuthSettingsContentPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                EditAuthSettingsForm(
-                    state = EditAuthSettingsScreenState.Content(
-                        enabledProviders = setOf(UserAuthProvider.EMAIL, UserAuthProvider.GOOGLE),
-                        maxTotalIdentifiers = "10",
-                        maxEmailIdentifiers = "5",
-                        maxPhoneIdentifiers = "5",
-                        maxIdentifiersPerExternalProvider = "2",
-                        maxActiveSessionsForOpenUser = "3",
-                        maxActiveSessionsForManagementUser = "5",
-                        accessTokenExpirationSeconds = "3600",
-                        refreshTokenExpirationSeconds = "86400",
-                        accountDeletionGracePeriodSeconds = "604800",
-                        accountDeletionCheckIntervalSeconds = "86400",
-                        isRegistrationEnabled = true
-                    ),
-                    onProviderToggled = { _, _ -> },
-                    onMaxTotalIdentifiersChanged = {},
-                    onMaxEmailIdentifiersChanged = {},
-                    onMaxPhoneIdentifiersChanged = {},
-                    onMaxIdentifiersPerExternalProviderChanged = {},
-                    onMaxActiveSessionsForOpenUserChanged = {},
-                    onMaxActiveSessionsForManagementUserChanged = {},
-                    onAccessTokenExpirationSecondsChanged = {},
-                    onRefreshTokenExpirationSecondsChanged = {},
-                    onAccountDeletionGracePeriodSecondsChanged = {},
-                    onAccountDeletionCheckIntervalSecondsChanged = {},
-                    onRegistrationEnabledToggled = {},
-                    onOpenEmailBlacklistEnabledToggled = {},
-                    onOpenEmailBlacklistChanged = {},
-                    onOpenEmailWhitelistEnabledToggled = {},
-                    onOpenEmailWhitelistChanged = {},
-                    onManagementEmailBlacklistEnabledToggled = {},
-                    onManagementEmailBlacklistChanged = {},
-                    onManagementEmailWhitelistEnabledToggled = {},
-                    onManagementEmailWhitelistChanged = {},
-                    onSaveClick = {},
-                    onResetClick = {}
-                )
-            }
-        }
+private fun EditAuthSettingsScreenPreviewContent(state: EditAuthSettingsScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        EditAuthSettingsScreen(
+            component = EditAuthSettingsComponentMock(initialState = state)
+        )
+    }
+}
+
+private val defaultEditAuthSettingsPreviewState = EditAuthSettingsScreenState.Content(
+    enabledProviders = setOf(UserAuthProvider.EMAIL, UserAuthProvider.GOOGLE),
+    maxTotalIdentifiers = "10",
+    maxEmailIdentifiers = "5",
+    maxPhoneIdentifiers = "5",
+    maxIdentifiersPerExternalProvider = "2",
+    maxActiveSessionsForOpenUser = "3",
+    maxActiveSessionsForManagementUser = "5",
+    accessTokenExpirationSeconds = "3600",
+    refreshTokenExpirationSeconds = "86400",
+    accountDeletionGracePeriodSeconds = "604800",
+    accountDeletionCheckIntervalSeconds = "86400"
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(EditAuthSettingsPreviewProvider::class) state: EditAuthSettingsScreenState
+) {
+    ScreenPreviewContainer {
+        EditAuthSettingsScreenPreviewContent(state = state)
+    }
+}
+
+@InternalApi
+@ScreenSizePreviews
+@Composable
+private fun ScreenSizePreview() {
+    ScreenPreviewContainer {
+        EditAuthSettingsScreenPreviewContent(state = defaultEditAuthSettingsPreviewState)
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    ScreenPreviewContainer {
+        EditAuthSettingsScreenPreviewContent(state = defaultEditAuthSettingsPreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    ScreenPreviewContainer {
+        EditAuthSettingsScreenPreviewContent(state = defaultEditAuthSettingsPreviewState)
     }
 }
 

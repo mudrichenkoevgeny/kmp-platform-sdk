@@ -40,6 +40,7 @@ fun CorePasswordTextField(
     isPasswordVisible: Boolean,
     onTogglePasswordVisibility: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
@@ -49,6 +50,7 @@ fun CorePasswordTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
+        enabled = enabled,
         label = label,
         placeholder = placeholder,
         visualTransformation = if (isPasswordVisible) {
@@ -62,6 +64,7 @@ fun CorePasswordTextField(
         trailingIcon = {
             IconButton(
                 onClick = onTogglePasswordVisibility,
+                enabled = enabled,
                 modifier = toggleModifier
             ) {
                 Icon(

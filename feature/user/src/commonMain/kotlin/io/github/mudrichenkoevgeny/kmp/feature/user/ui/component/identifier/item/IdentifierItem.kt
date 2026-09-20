@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.identifier.item
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,19 +10,29 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 import io.github.mudrichenkoevgeny.kmp.core.common.*
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.change_password
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_delete
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.IdentifierListTestTags
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -90,4 +101,90 @@ fun IdentifierItem(
             }
         }
     }
+}
+
+private data class IdentifierItemPreviewState(
+    val identifier: UserIdentifier,
+    val hasChangePassword: Boolean,
+    val enabled: Boolean
+)
+
+@InternalApi
+private class IdentifierItemPreviewProvider : PreviewParameterProvider<IdentifierItemPreviewState> {
+    private val items = listOf(
+        IdentifierItemPreviewState(
+            identifier = userIdentifierMock(),
+            hasChangePassword = true,
+            enabled = true
+        ),
+        IdentifierItemPreviewState(
+            identifier = userIdentifierMock().copy(
+                userAuthProvider = UserAuthProvider.PHONE,
+                identifier = "+1234567890"
+            ),
+            hasChangePassword = false,
+            enabled = true
+        ),
+        IdentifierItemPreviewState(
+            identifier = userIdentifierMock(),
+            hasChangePassword = true,
+            enabled = false
+        )
+    )
+
+    override val values: Sequence<IdentifierItemPreviewState> = items.asSequence()
+}
+
+@InternalApi
+@Composable
+private fun IdentifierItemPreviewContent(state: IdentifierItemPreviewState) {
+    CoreTheme {
+        Surface {
+            Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
+                IdentifierItem(
+                    identifier = state.identifier,
+                    onDeleteClick = {},
+                    onChangePasswordClick = if (state.hasChangePassword) { {} } else null,
+                    enabled = state.enabled
+                )
+            }
+        }
+    }
+}
+
+@InternalApi
+private val defaultIdentifierItemPreviewState = IdentifierItemPreviewState(
+    identifier = userIdentifierMock(),
+    hasChangePassword = true,
+    enabled = true
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun IdentifierItemStatesPreview(
+    @PreviewParameter(IdentifierItemPreviewProvider::class) state: IdentifierItemPreviewState
+) {
+    IdentifierItemPreviewContent(state = state)
+}
+
+@InternalApi
+@ComponentSizePreviews
+@Composable
+private fun IdentifierItemComponentSizePreview() {
+    IdentifierItemPreviewContent(state = defaultIdentifierItemPreviewState)
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun IdentifierItemThemePreview() {
+    IdentifierItemPreviewContent(state = defaultIdentifierItemPreviewState)
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun IdentifierItemFontScalePreview() {
+    IdentifierItemPreviewContent(state = defaultIdentifierItemPreviewState)
 }

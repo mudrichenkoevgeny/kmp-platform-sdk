@@ -5,15 +5,18 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.mock.network.model.event.auditEventPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.network.api.ManagementAuditApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.action.CompositeAuditActionTypeParser
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.metadata.CompositeAuditMetadataKeyParser
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.resource.CompositeAuditResourceTypeParser
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.mapper.audit.toAuditEvent
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.model.event.AuditEventPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.action.UserAuditActionType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -37,6 +40,14 @@ class ManagementAuditRepositoryImplTest {
             pageSize: Int?,
             sortBy: AuditSortValues.AuditEventSortBy?,
             sortOrder: SortOrder?,
+            actorIds: List<String>?,
+            actorTypes: List<AuditActorType>?,
+            actorUserRoles: List<UserRole>?,
+            actions: List<String>?,
+            resources: List<String>?,
+            resourceIds: List<String>?,
+            statuses: List<AuditStatus>?,
+            messages: List<String>?
         ): AppResult<PagedResult<AuditEventPayload>> = getAuditEventsResult
 
         override suspend fun getAuditEvent(eventId: String): AppResult<AuditEventPayload> = getAuditEventResult

@@ -11,9 +11,17 @@ open class UnlockOtpComponentMock(
     initialState: UnlockOtpScreenState = UnlockOtpScreenState()
 ) : UnlockOtpComponent {
 
-    override val state: Value<UnlockOtpScreenState> = MutableValue(initialState)
+    private val mutableState = MutableValue(initialState)
+    override val state: Value<UnlockOtpScreenState> = mutableState
 
-    override fun onCodeChanged(code: String) {}
+    fun updateState(state: UnlockOtpScreenState) {
+        mutableState.value = state
+    }
+
+    override fun onCodeChanged(code: String) {
+        mutableState.value = mutableState.value.copy(codeInput = code)
+    }
+
     override fun onUnlockClick() {}
     override fun onResendCodeClick() {}
     override fun onBackClick() {}

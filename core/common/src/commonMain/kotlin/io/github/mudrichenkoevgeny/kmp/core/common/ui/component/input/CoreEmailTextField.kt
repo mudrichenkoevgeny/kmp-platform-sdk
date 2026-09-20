@@ -30,6 +30,7 @@ fun CoreEmailTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     label: @Composable (() -> Unit)? = { Text(stringResource(Res.string.ui_common_email)) },
     placeholder: @Composable (() -> Unit)? = { Text(stringResource(Res.string.ui_common_email)) },
     isError: Boolean = false
@@ -38,6 +39,7 @@ fun CoreEmailTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
+        enabled = enabled,
         label = label,
         placeholder = placeholder,
         isError = isError,

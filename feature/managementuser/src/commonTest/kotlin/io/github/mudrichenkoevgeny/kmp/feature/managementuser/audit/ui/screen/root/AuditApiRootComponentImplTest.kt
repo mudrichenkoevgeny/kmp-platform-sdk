@@ -7,21 +7,17 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.repository.ManagementAuditRepository
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.mock.domain.model.event.auditEventMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.mock.repository.ManagementAuditRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.detail.AuditEventDetailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.events.AuditEventsComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.usecase.GetAuditEventUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.usecase.GetAuditEventsUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.mock.domain.model.event.auditEventMock
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEvent
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Instant
 
 @InternalApi
 class AuditApiRootComponentImplTest {
@@ -29,16 +25,10 @@ class AuditApiRootComponentImplTest {
     @Test
     fun initialStack_startsAtMain() = runComponentTest {
         val event = auditEventMock()
-        val repository = object : ManagementAuditRepository {
-            override suspend fun getAuditEvents(
-                pageNumber: Int?,
-                pageSize: Int?,
-                sortBy: AuditSortValues.AuditEventSortBy?,
-                sortOrder: SortOrder?
-            ) = AppResult.Success(pagedResultMock(listOf(event)))
-
-            override suspend fun getAuditEvent(eventId: String) = AppResult.Success(event)
-        }
+        val repository = ManagementAuditRepositoryMock(
+            getAuditEventsResult = AppResult.Success(pagedResultMock(listOf(event))),
+            getAuditEventResult = AppResult.Success(event)
+        )
         val getAuditEventsUseCase = GetAuditEventsUseCase(repository)
         val getAuditEventUseCase = GetAuditEventUseCase(repository)
 
@@ -66,16 +56,10 @@ class AuditApiRootComponentImplTest {
     @Test
     fun navigateToDetail_pushesDetailScreenAndPopsBack() = runComponentTest {
         val event = auditEventMock()
-        val repository = object : ManagementAuditRepository {
-            override suspend fun getAuditEvents(
-                pageNumber: Int?,
-                pageSize: Int?,
-                sortBy: AuditSortValues.AuditEventSortBy?,
-                sortOrder: SortOrder?
-            ) = AppResult.Success(pagedResultMock(listOf(event)))
-
-            override suspend fun getAuditEvent(eventId: String) = AppResult.Success(event)
-        }
+        val repository = ManagementAuditRepositoryMock(
+            getAuditEventsResult = AppResult.Success(pagedResultMock(listOf(event))),
+            getAuditEventResult = AppResult.Success(event)
+        )
         val getAuditEventsUseCase = GetAuditEventsUseCase(repository)
         val getAuditEventUseCase = GetAuditEventUseCase(repository)
 

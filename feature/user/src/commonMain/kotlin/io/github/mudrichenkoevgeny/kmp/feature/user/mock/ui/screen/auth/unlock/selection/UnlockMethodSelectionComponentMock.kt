@@ -11,10 +11,21 @@ open class UnlockMethodSelectionComponentMock(
     initialState: UnlockMethodSelectionScreenState = UnlockMethodSelectionScreenState()
 ) : UnlockMethodSelectionComponent {
 
-    override val state: Value<UnlockMethodSelectionScreenState> = MutableValue(initialState)
+    private val mutableState = MutableValue(initialState)
+    override val state: Value<UnlockMethodSelectionScreenState> = mutableState
 
-    override fun onEmailInputChanged(email: String) {}
-    override fun onPhoneInputChanged(phone: String) {}
+    fun updateState(state: UnlockMethodSelectionScreenState) {
+        mutableState.value = state
+    }
+
+    override fun onEmailInputChanged(email: String) {
+        mutableState.value = mutableState.value.copy(emailInput = email)
+    }
+
+    override fun onPhoneInputChanged(phone: String) {
+        mutableState.value = mutableState.value.copy(phoneInput = phone)
+    }
+
     override fun onSelectEmailUnlock() {}
     override fun onSelectPhoneUnlock() {}
     override fun onSelectGoogleUnlock() {}

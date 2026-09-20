@@ -22,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -99,25 +98,16 @@ fun MainContent(
     onDestinationChange: (MainScreenDestination) -> Unit
 ) {
     val content: @Composable () -> Unit = {
-        if (LocalInspectionMode.current) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                HomeScreen(object : HomeScreenComponent {})
-            }
-        } else {
-            Children(
-                stack = screenStack,
-                animation = stackAnimation(fade())
-            ) { child ->
-                when (val instance = child.instance) {
-                    is MainScreenComponent.Child.HomeChild -> {
-                        HomeScreen(instance.component)
-                    }
-                    is MainScreenComponent.Child.ProfileChild -> {
-                        ProfileRootScreen(instance.component)
-                    }
+        Children(
+            stack = screenStack,
+            animation = stackAnimation(fade())
+        ) { child ->
+            when (val instance = child.instance) {
+                is MainScreenComponent.Child.HomeChild -> {
+                    HomeScreen(instance.component)
+                }
+                is MainScreenComponent.Child.ProfileChild -> {
+                    ProfileRootScreen(instance.component)
                 }
             }
         }

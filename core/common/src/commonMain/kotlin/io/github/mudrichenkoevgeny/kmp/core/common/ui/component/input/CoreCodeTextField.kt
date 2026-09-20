@@ -26,6 +26,7 @@ fun CoreCodeTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
     isError: Boolean = false
@@ -34,6 +35,7 @@ fun CoreCodeTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
+        enabled = enabled,
         label = label,
         placeholder = placeholder,
         isError = isError,

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,7 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
@@ -80,22 +85,54 @@ fun AuthProviderButton(
     }
 }
 
-@Preview(showBackground = true)
+@InternalApi
 @Composable
-private fun AuthProviderButtonPreview(
-    @PreviewParameter(AuthProviderPreviewProvider::class) provider: UserAuthProvider
-) {
-    MaterialTheme {
-        Box(
-            modifier = Modifier
-                .padding(CoreTheme.dimens.paddingLarge)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            AuthProviderButton(
-                authProvider = provider,
-                onClick = {}
-            )
+private fun AuthProviderButtonPreviewContent(provider: UserAuthProvider) {
+    CoreTheme {
+        Surface {
+            Box(
+                modifier = Modifier
+                    .padding(CoreTheme.dimens.paddingLarge)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                AuthProviderButton(
+                    authProvider = provider,
+                    onClick = {}
+                )
+            }
         }
     }
+}
+
+private val defaultAuthProviderButtonPreviewState = UserAuthProvider.EMAIL
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun AuthProviderButtonStatesPreview(
+    @PreviewParameter(AuthProviderPreviewProvider::class) provider: UserAuthProvider
+) {
+    AuthProviderButtonPreviewContent(provider = provider)
+}
+
+@InternalApi
+@ComponentSizePreviews
+@Composable
+private fun AuthProviderButtonComponentSizePreview() {
+    AuthProviderButtonPreviewContent(provider = defaultAuthProviderButtonPreviewState)
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun AuthProviderButtonThemePreview() {
+    AuthProviderButtonPreviewContent(provider = defaultAuthProviderButtonPreviewState)
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun AuthProviderButtonFontScalePreview() {
+    AuthProviderButtonPreviewContent(provider = defaultAuthProviderButtonPreviewState)
 }
