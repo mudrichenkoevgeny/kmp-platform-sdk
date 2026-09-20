@@ -24,8 +24,13 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsett
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.GetManagementSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.ResetRemoteSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.SaveRemoteSecuritySettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierPasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteAllUserSessionsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.CreateUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.DeleteUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
@@ -55,6 +60,11 @@ class ManagementSettingsRootComponentImpl(
     private val deleteUserUseCase: DeleteUserUseCase,
     private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
     private val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase,
+    private val managementDisableTotpUseCase: ManagementDisableTotpUseCase,
+    private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase,
+    private val managementDeleteAllUserSessionsUseCase: ManagementDeleteAllUserSessionsUseCase,
+    private val managementDeleteIdentifierUseCase: ManagementDeleteIdentifierUseCase,
+    private val managementDeleteIdentifierPasswordUseCase: ManagementDeleteIdentifierPasswordUseCase,
     private val getAuditEventsUseCase: GetAuditEventsUseCase,
     private val getAuditEventUseCase: GetAuditEventUseCase
 ) : ManagementSettingsRootComponent, ComponentContext by componentContext {
@@ -121,6 +131,11 @@ class ManagementSettingsRootComponentImpl(
                 deleteUserUseCase = deleteUserUseCase,
                 managementGetSessionsUseCase = managementGetSessionsUseCase,
                 managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+                managementDisableTotpUseCase = managementDisableTotpUseCase,
+                managementDeleteSessionUseCase = managementDeleteSessionUseCase,
+                managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase,
+                managementDeleteIdentifierUseCase = managementDeleteIdentifierUseCase,
+                managementDeleteIdentifierPasswordUseCase = managementDeleteIdentifierPasswordUseCase,
                 onBack = navigation::pop
             )
         )

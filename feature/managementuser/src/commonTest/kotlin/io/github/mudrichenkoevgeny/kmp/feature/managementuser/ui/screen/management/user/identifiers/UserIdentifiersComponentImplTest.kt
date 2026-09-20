@@ -9,6 +9,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pag
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.identifier.ManagementIdentifierRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierPasswordUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
@@ -74,12 +76,16 @@ class UserIdentifiersComponentImplTest {
         lifecycle.resume()
 
         val useCase = ManagementGetIdentifiersUseCase(repository)
+        val deleteIdentifierUseCase = ManagementDeleteIdentifierUseCase(repository)
+        val deleteIdentifierPasswordUseCase = ManagementDeleteIdentifierPasswordUseCase(repository)
         val context = TestContext()
 
         context.component = UserIdentifiersComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
             userId = userId,
             managementGetIdentifiersUseCase = useCase,
+            managementDeleteIdentifierUseCase = deleteIdentifierUseCase,
+            managementDeleteIdentifierPasswordUseCase = deleteIdentifierPasswordUseCase,
             onBack = { context.onBackCalls++ },
         )
 

@@ -9,6 +9,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.DeleteUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
 import kotlinx.coroutines.launch
@@ -19,6 +20,7 @@ class UserDetailComponentImpl(
     private val getUserUseCase: GetUserUseCase,
     private val updateUserUseCase: UpdateUserUseCase,
     private val deleteUserUseCase: DeleteUserUseCase,
+    private val managementDisableTotpUseCase: ManagementDisableTotpUseCase,
     private val onNavigateToSessions: (UserId) -> Unit,
     private val onNavigateToIdentifiers: (UserId) -> Unit,
     private val onBack: () -> Unit
@@ -90,6 +92,21 @@ class UserDetailComponentImpl(
                 }
                 .onError { error ->
                     _state.value = current.copy(isDeleting = false, deleteError = error)
+                }
+        }
+    }
+
+    override fun onDisableTotpClick() {
+        val current = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = current.copy(isDisablingTotp = true, disableTotpError = null)
+
+        scope.launch {
+            managementDisableTotpUseCase(userId)
+                .onSuccess {
+                    loadUser()
+                }
+                .onError { error ->
+                    _state.value = current.copy(isDisablingTotp = false, disableTotpError = error)
                 }
         }
     }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonElevation
@@ -95,7 +96,7 @@ fun CoreTextButton(
 ) {
     TextButton(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.widthIn(max = CoreTheme.dimens.maxButtonWidth).fillMaxWidth(),
         enabled = enabled,
         shape = shape,
         colors = colors,

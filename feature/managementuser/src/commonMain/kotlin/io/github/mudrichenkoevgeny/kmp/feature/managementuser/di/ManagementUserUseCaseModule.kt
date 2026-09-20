@@ -61,6 +61,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.Ma
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierPasswordUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteAllUserSessionsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
 
 /**
  * Internal dependency wiring for management use cases.
@@ -451,6 +454,27 @@ internal class ManagementUserUseCaseModule(
     val managementDeleteIdentifierPasswordUseCase by lazy {
         ManagementDeleteIdentifierPasswordUseCase(
             managementIdentifierRepository = managementUserRepositoryModule.managementIdentifierRepository
+        )
+    }
+
+    /** Disables TOTP for a specific user administratively. */
+    val managementDisableTotpUseCase by lazy {
+        ManagementDisableTotpUseCase(
+            managementUserSecurityRepository = managementUserRepositoryModule.managementUserSecurityRepository
+        )
+    }
+
+    /** Revokes all active sessions for a specific user administratively. */
+    val managementDeleteAllUserSessionsUseCase by lazy {
+        ManagementDeleteAllUserSessionsUseCase(
+            managementSessionRepository = managementUserRepositoryModule.managementSessionRepository
+        )
+    }
+
+    /** Revokes a specific session for a specific user administratively. */
+    val managementDeleteSessionUseCase by lazy {
+        ManagementDeleteSessionUseCase(
+            managementSessionRepository = managementUserRepositoryModule.managementSessionRepository
         )
     }
 }

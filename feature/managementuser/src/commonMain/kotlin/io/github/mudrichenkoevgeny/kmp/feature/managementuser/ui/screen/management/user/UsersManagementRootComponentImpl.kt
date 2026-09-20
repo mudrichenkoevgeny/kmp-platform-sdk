@@ -12,14 +12,18 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.identifiers.UserIdentifiersComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.main.UsersManagementMainComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.sessions.UserSessionsComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierPasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteAllUserSessionsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.CreateUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.DeleteUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUsersUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
 import com.arkivanov.decompose.DelicateDecomposeApi
 
 @OptIn(DelicateDecomposeApi::class)
@@ -32,6 +36,11 @@ class UsersManagementRootComponentImpl(
     private val deleteUserUseCase: DeleteUserUseCase,
     private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
     private val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase,
+    private val managementDisableTotpUseCase: ManagementDisableTotpUseCase,
+    private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase,
+    private val managementDeleteAllUserSessionsUseCase: ManagementDeleteAllUserSessionsUseCase,
+    private val managementDeleteIdentifierUseCase: ManagementDeleteIdentifierUseCase,
+    private val managementDeleteIdentifierPasswordUseCase: ManagementDeleteIdentifierPasswordUseCase,
     private val onBack: () -> Unit
 ) : UsersManagementRootComponent, ComponentContext by componentContext {
 
@@ -70,6 +79,7 @@ class UsersManagementRootComponentImpl(
                 getUserUseCase = getUserUseCase,
                 updateUserUseCase = updateUserUseCase,
                 deleteUserUseCase = deleteUserUseCase,
+                managementDisableTotpUseCase = managementDisableTotpUseCase,
                 onNavigateToSessions = { userId -> navigation.bringToFront(UsersManagementDestination.Sessions(userId.value.toString())) },
                 onNavigateToIdentifiers = { userId -> navigation.bringToFront(UsersManagementDestination.Identifiers(userId.value.toString())) },
                 onBack = navigation::pop
@@ -88,6 +98,8 @@ class UsersManagementRootComponentImpl(
                 componentContext = context,
                 userId = config.userId,
                 managementGetSessionsUseCase = managementGetSessionsUseCase,
+                managementDeleteSessionUseCase = managementDeleteSessionUseCase,
+                managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase,
                 onBack = navigation::pop
             )
         )
@@ -96,6 +108,8 @@ class UsersManagementRootComponentImpl(
                 componentContext = context,
                 userId = config.userId,
                 managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+                managementDeleteIdentifierUseCase = managementDeleteIdentifierUseCase,
+                managementDeleteIdentifierPasswordUseCase = managementDeleteIdentifierPasswordUseCase,
                 onBack = navigation::pop
             )
         )

@@ -1,18 +1,22 @@
 package io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -123,6 +127,7 @@ fun MainContent(
     } else {
         WebLayout(
             currentDestination = currentDestination,
+            destinations = destinations,
             onDestinationChange = onDestinationChange,
             content = content
         )
@@ -165,41 +170,33 @@ private fun MobileLayout(
 @Composable
 private fun WebLayout(
     currentDestination: MainScreenDestination,
+    destinations: List<MainScreenDestination>,
     onDestinationChange: (MainScreenDestination) -> Unit,
     content: @Composable () -> Unit
 ) {
-    Column(Modifier.fillMaxSize()) {
-        Surface(shadowElevation = CoreTheme.dimens.shadowElevation) {
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .height(CoreTheme.dimens.rowHeight)
-                    .padding(horizontal = CoreTheme.dimens.paddingMedium),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                TextButton(onClick = { onDestinationChange(MainScreenDestination.Home) }) {
-                    Text(
-                        text = stringResource(MainScreenDestination.Home.title),
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
-
-                IconButton(onClick = { onDestinationChange(MainScreenDestination.Profile) }) {
-                    Icon(
-                        painter = painterResource(MainScreenDestination.Profile.iconRes),
-                        contentDescription = stringResource(MainScreenDestination.Profile.title),
-                        tint = if (currentDestination == MainScreenDestination.Profile)
-                            MaterialTheme.colorScheme.primary
-                        else
-                            MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
-                    )
-                }
+    Row(Modifier.fillMaxSize()) {
+        NavigationRail(
+            modifier = Modifier.width(CoreTheme.dimens.navigationRailWidth),
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ) {
+            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
+            destinations.forEach { dest ->
+                NavigationRailItem(
+                    selected = currentDestination == dest,
+                    onClick = { onDestinationChange(dest) },
+                    icon = {
+                        Icon(
+                            painter = painterResource(dest.iconRes),
+                            contentDescription = stringResource(dest.title)
+                        )
+                    },
+                    label = { Text(stringResource(dest.title)) }
+                )
             }
         }
 
-        Box(Modifier.fillMaxSize()) {
+        Box(Modifier.weight(1f).fillMaxHeight()) {
             content()
         }
     }

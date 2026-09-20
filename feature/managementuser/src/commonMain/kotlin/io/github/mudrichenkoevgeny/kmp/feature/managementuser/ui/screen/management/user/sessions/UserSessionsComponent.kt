@@ -14,4 +14,6 @@ interface UserSessionsComponent {
     fun onSortChanged(sortState: ListingSortState)
     fun onFilterChanged(filterId: String, filterState: ListingFilterState?)
     fun onApplyFilters()
+    fun onDeleteSessionClick(sessionId: String)
+    fun onDeleteAllSessionsClick()
 }

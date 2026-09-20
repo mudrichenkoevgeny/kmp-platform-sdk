@@ -27,6 +27,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.container.CoreScrollableScreenContent
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreEmailTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
@@ -65,20 +66,19 @@ fun CreateUserScreen(component: CreateUserComponent) {
             )
         }
     ) { padding ->
-        CreateUserForm(
-            state = state,
-            onEmailChanged = component::onEmailChanged,
-            onPasswordChanged = component::onPasswordChanged,
-            onRoleChanged = component::onRoleChanged,
-            onStatusChanged = component::onStatusChanged,
-            onAuthorityLevelChanged = component::onAuthorityLevelChanged,
-            onCreateClick = component::onCreateClick,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(CoreTheme.dimens.paddingMedium)
-                .verticalScroll(rememberScrollState())
-        )
+        CoreScrollableScreenContent(
+            modifier = Modifier.padding(padding)
+        ) {
+            CreateUserForm(
+                state = state,
+                onEmailChanged = component::onEmailChanged,
+                onPasswordChanged = component::onPasswordChanged,
+                onRoleChanged = component::onRoleChanged,
+                onStatusChanged = component::onStatusChanged,
+                onAuthorityLevelChanged = component::onAuthorityLevelChanged,
+                onCreateClick = component::onCreateClick
+            )
+        }
     }
 }
 
@@ -90,11 +90,9 @@ private fun CreateUserForm(
     onRoleChanged: (String) -> Unit,
     onStatusChanged: (String) -> Unit,
     onAuthorityLevelChanged: (String) -> Unit,
-    onCreateClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onCreateClick: () -> Unit
 ) {
     Column(
-        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
         CoreEmailTextField(

@@ -9,6 +9,9 @@ interface MainProfileComponent {
     /** Reactive state for the UI. */
     val state: Value<MainProfileScreenState>
 
+    /** Refreshes current user profile data. */
+    fun onRefresh()
+
     /** Opens the login flow. */
     fun onLoginClick()
 

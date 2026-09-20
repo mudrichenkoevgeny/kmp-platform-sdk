@@ -11,6 +11,7 @@ interface UserDetailComponent {
     fun onTemporaryLockoutUntilChanged(value: String)
     fun onUpdateClick()
     fun onDeleteClick()
+    fun onDisableTotpClick()
     fun onSessionsClick()
     fun onIdentifiersClick()
     fun onRetry()

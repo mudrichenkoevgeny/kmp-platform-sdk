@@ -16,6 +16,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toInit
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toNextPageLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierPasswordUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
@@ -29,6 +31,8 @@ class UserIdentifiersComponentImpl(
     componentContext: ComponentContext,
     private val userId: UserId,
     private val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase,
+    private val managementDeleteIdentifierUseCase: ManagementDeleteIdentifierUseCase,
+    private val managementDeleteIdentifierPasswordUseCase: ManagementDeleteIdentifierPasswordUseCase,
     private val onBack: () -> Unit
 ) : UserIdentifiersComponent, ComponentContext by componentContext {
 
@@ -86,6 +90,36 @@ class UserIdentifiersComponentImpl(
         val currentContent = _state.value as? UserIdentifiersScreenState.Content ?: return
         _state.value = currentContent.copy(isFilterPanelExpanded = false)
         loadIdentifiers()
+    }
+
+    override fun onDeleteIdentifierClick(identifierId: String) {
+        val currentContent = _state.value as? UserIdentifiersScreenState.Content ?: return
+        _state.value = currentContent.copy(actionLoading = true, actionError = null)
+
+        scope.launch {
+            managementDeleteIdentifierUseCase(userId = userId, identifierId = identifierId)
+                .onSuccess {
+                    loadIdentifiers()
+                }
+                .onError { error ->
+                    _state.value = currentContent.copy(actionLoading = false, actionError = error)
+                }
+        }
+    }
+
+    override fun onDeleteIdentifierPasswordClick(identifierId: String) {
+        val currentContent = _state.value as? UserIdentifiersScreenState.Content ?: return
+        _state.value = currentContent.copy(actionLoading = true, actionError = null)
+
+        scope.launch {
+            managementDeleteIdentifierPasswordUseCase(userId = userId, identifierId = identifierId)
+                .onSuccess {
+                    loadIdentifiers()
+                }
+                .onError { error ->
+                    _state.value = currentContent.copy(actionLoading = false, actionError = error)
+                }
+        }
     }
 
     private fun loadIdentifiers() {

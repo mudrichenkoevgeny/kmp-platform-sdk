@@ -10,13 +10,19 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.identifier.ManagementIdentifierRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.session.ManagementSessionRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.user.ManagementUserRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.user.security.ManagementUserSecurityRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierPasswordUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteAllUserSessionsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.CreateUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.DeleteUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUsersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
@@ -59,6 +65,11 @@ class UsersManagementRootComponentImplTest {
         val deleteUserUseCase = DeleteUserUseCase(userRepository)
         val managementGetSessionsUseCase = ManagementGetSessionsUseCase(sessionRepository)
         val managementGetIdentifiersUseCase = ManagementGetIdentifiersUseCase(identifierRepository)
+        val disableTotpUseCase = ManagementDisableTotpUseCase(ManagementUserSecurityRepositoryMock())
+        val deleteSessionUseCase = ManagementDeleteSessionUseCase(sessionRepository)
+        val deleteAllSessionsUseCase = ManagementDeleteAllUserSessionsUseCase(sessionRepository)
+        val deleteIdentifierUseCase = ManagementDeleteIdentifierUseCase(identifierRepository)
+        val deleteIdentifierPasswordUseCase = ManagementDeleteIdentifierPasswordUseCase(identifierRepository)
 
         val context = TestContext()
 
@@ -71,6 +82,11 @@ class UsersManagementRootComponentImplTest {
             deleteUserUseCase = deleteUserUseCase,
             managementGetSessionsUseCase = managementGetSessionsUseCase,
             managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+            managementDisableTotpUseCase = disableTotpUseCase,
+            managementDeleteSessionUseCase = deleteSessionUseCase,
+            managementDeleteAllUserSessionsUseCase = deleteAllSessionsUseCase,
+            managementDeleteIdentifierUseCase = deleteIdentifierUseCase,
+            managementDeleteIdentifierPasswordUseCase = deleteIdentifierPasswordUseCase,
             onBack = { context.onBackCalls++ },
         )
 

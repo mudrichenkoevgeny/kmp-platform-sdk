@@ -14,6 +14,7 @@ class MainProfileComponentMock(
     private val _state = MutableValue(initialState)
     override val state: Value<MainProfileScreenState> = _state
 
+    var refreshCalls = 0
     var loginCalls = 0
     var logoutCalls = 0
     var totpSettingsCalls = 0
@@ -23,6 +24,10 @@ class MainProfileComponentMock(
 
     fun updateState(state: MainProfileScreenState) {
         _state.value = state
+    }
+
+    override fun onRefresh() {
+        refreshCalls++
     }
 
     override fun onLoginClick() {

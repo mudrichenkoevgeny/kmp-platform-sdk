@@ -14,4 +14,6 @@ interface UserIdentifiersComponent {
     fun onSortChanged(sortState: ListingSortState)
     fun onFilterChanged(filterId: String, filterState: ListingFilterState?)
     fun onApplyFilters()
+    fun onDeleteIdentifierClick(identifierId: String)
+    fun onDeleteIdentifierPasswordClick(identifierId: String)
 }

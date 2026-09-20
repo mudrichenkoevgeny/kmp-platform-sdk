@@ -16,6 +16,7 @@ class UserDetailComponentMock(
 
     var updateCalls = 0
     var deleteCalls = 0
+    var disableTotpCalls = 0
     var sessionsCalls = 0
     var identifiersCalls = 0
     var retryCalls = 0
@@ -51,6 +52,10 @@ class UserDetailComponentMock(
 
     override fun onDeleteClick() {
         deleteCalls++
+    }
+
+    override fun onDisableTotpClick() {
+        disableTotpCalls++
     }
 
     override fun onSessionsClick() {

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -50,6 +51,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.sessions.UserSessionsComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.revoke_all_sessions
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_sessions
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.session.item.SessionItem
@@ -77,6 +79,17 @@ fun UserSessionsScreen(component: UserSessionsComponent) {
                     )
                 },
                 actions = {
+                    IconButton(
+                        onClick = component::onDeleteAllSessionsClick,
+                        modifier = Modifier.testTag(UserSessionsTestTags.REVOKE_ALL_BUTTON)
+                    ) {
+                        Icon(
+                            painter = painterResource(CommonRes.drawable.ic_delete),
+                            contentDescription = stringResource(Res.string.revoke_all_sessions),
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+                        )
+                    }
                     IconButton(
                         onClick = component::onToggleFilterPanel,
                         modifier = Modifier.testTag(UserSessionsTestTags.FILTER_BUTTON)
@@ -143,42 +156,61 @@ private fun Content(
         onLoadNextPage()
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        AnimatedVisibility(visible = state.isFilterPanelExpanded) {
-            ListingOptionsPanel(
-                config = getUserSessionsListingConfig(),
-                sortState = state.sortState,
-                filterStates = state.filterStates,
-                onSortChanged = component::onSortChanged,
-                onFilterChanged = component::onFilterChanged,
-                onApplyClick = component::onApplyFilters,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(CoreTheme.dimens.paddingMedium)
-            )
-        }
-
-        LazyColumn(
-            state = listState,
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.TopCenter
+    ) {
+        Column(
             modifier = Modifier
-                .weight(1f)
-                .testTag(UserSessionsTestTags.SESSION_LIST),
-            contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
-            verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+                .widthIn(max = CoreTheme.dimens.maxContentWidth)
+                .fillMaxSize()
         ) {
-            items(state.paging.items, key = { it.id.value }) { session ->
-                SessionItem(
-                    session = session,
-                    onRevokeClick = {},
-                    enabled = false
+            AnimatedVisibility(visible = state.isFilterPanelExpanded) {
+                ListingOptionsPanel(
+                    config = getUserSessionsListingConfig(),
+                    sortState = state.sortState,
+                    filterStates = state.filterStates,
+                    onSortChanged = component::onSortChanged,
+                    onFilterChanged = component::onFilterChanged,
+                    onApplyClick = component::onApplyFilters,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(CoreTheme.dimens.paddingMedium)
                 )
             }
 
-            item {
-                PagingFooter(
-                    state = state.paging,
-                    onRetry = onLoadNextPage
+            state.actionError?.let {
+                CoreErrorText(
+                    text = it.toLocalizedMessage(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(CoreTheme.dimens.paddingMedium)
+                        .testTag(UserSessionsTestTags.ACTION_ERROR_TEXT)
                 )
+            }
+
+            LazyColumn(
+                state = listState,
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag(UserSessionsTestTags.SESSION_LIST),
+                contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
+                verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+            ) {
+                items(state.paging.items, key = { it.id.value }) { session ->
+                    SessionItem(
+                        session = session,
+                        onRevokeClick = { component.onDeleteSessionClick(session.id.value.toString()) },
+                        enabled = !state.actionLoading
+                    )
+                }
+
+                item {
+                    PagingFooter(
+                        state = state.paging,
+                        onRetry = onLoadNextPage
+                    )
+                }
             }
         }
     }
@@ -257,8 +289,10 @@ private fun FontScalePreview() {
 object UserSessionsTestTags {
     const val TITLE = "UserSessions_Title"
     const val BACK_BUTTON = "UserSessions_BackButton"
+    const val REVOKE_ALL_BUTTON = "UserSessions_RevokeAllButton"
     const val FILTER_BUTTON = "UserSessions_FilterButton"
     const val REFRESH_BUTTON = "UserSessions_RefreshButton"
     const val GLOBAL_ERROR_TEXT = "UserSessions_GlobalErrorText"
+    const val ACTION_ERROR_TEXT = "UserSessions_ActionErrorText"
     const val SESSION_LIST = "UserSessions_List"
 }

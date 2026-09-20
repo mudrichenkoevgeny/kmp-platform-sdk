@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.stack.Children
-import com.arkivanov.decompose.extensions.compose.stack.animation.slide
+import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
@@ -30,7 +30,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings
 fun ManagementSettingsRootScreen(component: ManagementSettingsRootComponent) {
     Children(
         stack = component.stack,
-        animation = stackAnimation(slide())
+        animation = stackAnimation(fade())
     ) { child ->
         when (val instance = child.instance) {
             is ManagementSettingsRootComponent.Child.Main -> MainManagementSettingsScreen(instance.component)

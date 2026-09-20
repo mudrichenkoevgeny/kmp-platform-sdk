@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -166,48 +167,57 @@ private fun Content(
         onLoadNextPage()
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        AnimatedVisibility(visible = state.isFilterPanelExpanded) {
-            ListingOptionsPanel(
-                config = getUsersManagementMainListingConfig(),
-                sortState = state.sortState,
-                filterStates = state.filterStates,
-                onSortChanged = component::onSortChanged,
-                onFilterChanged = component::onFilterChanged,
-                onApplyClick = component::onApplyFilters,
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.TopCenter
+    ) {
+        Column(
+            modifier = Modifier
+                .widthIn(max = CoreTheme.dimens.maxContentWidth)
+                .fillMaxSize()
+        ) {
+            AnimatedVisibility(visible = state.isFilterPanelExpanded) {
+                ListingOptionsPanel(
+                    config = getUsersManagementMainListingConfig(),
+                    sortState = state.sortState,
+                    filterStates = state.filterStates,
+                    onSortChanged = component::onSortChanged,
+                    onFilterChanged = component::onFilterChanged,
+                    onApplyClick = component::onApplyFilters,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(CoreTheme.dimens.paddingMedium)
+                )
+            }
+
+            LazyColumn(
+                state = listState,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(CoreTheme.dimens.paddingMedium)
+                    .weight(1f)
+                    .testTag(UsersManagementMainTestTags.USER_LIST),
+                contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
+                verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+            ) {
+                items(state.paging.items, key = { it.id.value }) { user ->
+                    UserItem(
+                        user = user,
+                        onClick = { onUserClick(user.id) }
+                    )
+                }
+
+                item {
+                    PagingFooter(
+                        state = state.paging,
+                        onRetry = onLoadNextPage
+                    )
+                }
+            }
+
+            ErrorText(
+                error = state.actionError,
+                testTag = UsersManagementMainTestTags.ACTION_ERROR_TEXT
             )
         }
-
-        LazyColumn(
-            state = listState,
-            modifier = Modifier
-                .weight(1f)
-                .testTag(UsersManagementMainTestTags.USER_LIST),
-            contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
-            verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
-        ) {
-            items(state.paging.items, key = { it.id.value }) { user ->
-                UserItem(
-                    user = user,
-                    onClick = { onUserClick(user.id) }
-                )
-            }
-
-            item {
-                PagingFooter(
-                    state = state.paging,
-                    onRetry = onLoadNextPage
-                )
-            }
-        }
-
-        ErrorText(
-            error = state.actionError,
-            testTag = UsersManagementMainTestTags.ACTION_ERROR_TEXT
-        )
     }
 }
 

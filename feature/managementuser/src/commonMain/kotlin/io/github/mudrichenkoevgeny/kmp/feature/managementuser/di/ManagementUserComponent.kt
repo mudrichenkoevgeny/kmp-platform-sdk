@@ -246,6 +246,15 @@ class ManagementUserComponent(
     /** Retrieves user identifiers administratively. */
     val managementGetIdentifiersUseCase get() = useCaseModule.managementGetIdentifiersUseCase
 
+    /** Disables TOTP for a specific user administratively. */
+    val managementDisableTotpUseCase get() = useCaseModule.managementDisableTotpUseCase
+
+    /** Revokes all sessions for a specific user administratively. */
+    val managementDeleteAllUserSessionsUseCase get() = useCaseModule.managementDeleteAllUserSessionsUseCase
+
+    /** Revokes a specific session for a user administratively. */
+    val managementDeleteSessionUseCase get() = useCaseModule.managementDeleteSessionUseCase
+
     /** Returns paginated audit events. */
     val getAuditEventsUseCase get() = auditApiComponent.getAuditEventsUseCase
 
@@ -366,6 +375,11 @@ class ManagementUserComponent(
         deleteUserUseCase = deleteUserUseCase,
         managementGetSessionsUseCase = managementGetSessionsUseCase,
         managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+        managementDisableTotpUseCase = managementDisableTotpUseCase,
+        managementDeleteSessionUseCase = managementDeleteSessionUseCase,
+        managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase,
+        managementDeleteIdentifierUseCase = useCaseModule.managementDeleteIdentifierUseCase,
+        managementDeleteIdentifierPasswordUseCase = useCaseModule.managementDeleteIdentifierPasswordUseCase,
         onBack = onBack
     )
 
@@ -396,6 +410,11 @@ class ManagementUserComponent(
             deleteUserUseCase = deleteUserUseCase,
             managementGetSessionsUseCase = managementGetSessionsUseCase,
             managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+            managementDisableTotpUseCase = managementDisableTotpUseCase,
+            managementDeleteSessionUseCase = managementDeleteSessionUseCase,
+            managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase,
+            managementDeleteIdentifierUseCase = useCaseModule.managementDeleteIdentifierUseCase,
+            managementDeleteIdentifierPasswordUseCase = useCaseModule.managementDeleteIdentifierPasswordUseCase,
             getAuditEventsUseCase = getAuditEventsUseCase,
             getAuditEventUseCase = getAuditEventUseCase
         )

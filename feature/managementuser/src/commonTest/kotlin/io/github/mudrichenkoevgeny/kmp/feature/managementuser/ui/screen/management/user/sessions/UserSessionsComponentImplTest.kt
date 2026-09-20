@@ -9,6 +9,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pag
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.session.ManagementSessionRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteAllUserSessionsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
@@ -74,12 +76,16 @@ class UserSessionsComponentImplTest {
         lifecycle.resume()
 
         val useCase = ManagementGetSessionsUseCase(repository)
+        val deleteSessionUseCase = ManagementDeleteSessionUseCase(repository)
+        val deleteAllSessionsUseCase = ManagementDeleteAllUserSessionsUseCase(repository)
         val context = TestContext()
 
         context.component = UserSessionsComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
             userId = userId,
             managementGetSessionsUseCase = useCase,
+            managementDeleteSessionUseCase = deleteSessionUseCase,
+            managementDeleteAllUserSessionsUseCase = deleteAllSessionsUseCase,
             onBack = { context.onBackCalls++ },
         )
 

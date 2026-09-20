@@ -15,8 +15,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -28,6 +33,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
+import io.github.mudrichenkoevgeny.kmp.core.common.ic_refresh
+import io.github.mudrichenkoevgeny.kmp.core.common.retry
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
@@ -52,40 +60,64 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userD
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.MainProfileComponentMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainProfileScreen(component: MainProfileComponent) {
     val state by component.state.subscribeAsState()
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        when (val currentState = state) {
-            is MainProfileScreenState.Loading -> FullscreenLoading()
-            is MainProfileScreenState.Unauthorized -> UnauthorizedContent(
-                state = currentState,
-                onLoginClick = component::onLoginClick
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { },
+                actions = {
+                    IconButton(
+                        onClick = component::onRefresh,
+                        modifier = Modifier.testTag(MainProfileTestTags.REFRESH_BUTTON)
+                    ) {
+                        Icon(
+                            painter = painterResource(CommonRes.drawable.ic_refresh),
+                            contentDescription = stringResource(CommonRes.string.retry),
+                            modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+                        )
+                    }
+                }
             )
-            is MainProfileScreenState.Content -> ProfileContent(
-                state = currentState,
-                onLogoutClick = component::onLogoutClick,
-                onConfirmLogout = component::onConfirmLogout,
-                onTotpSettingsClick = component::onTotpSettingsClick,
-                onSessionsClick = component::onSessionsClick,
-                onIdentifiersClick = component::onIdentifiersClick,
-                onDeleteAccountClick = component::onDeleteAccountClick,
-                onConfirmDeleteAccount = component::onConfirmDeleteAccount,
-                onRestoreAccountClick = component::onRestoreAccountClick,
-                onUnlockAccountClick = component::onUnlockAccountClick,
-                onDismissDialog = component::onDismissDialog
-            )
-            is MainProfileScreenState.Error -> {
-                CoreErrorText(
-                    text = currentState.error.toLocalizedMessage(),
-                    modifier = Modifier.testTag(MainProfileTestTags.GLOBAL_ERROR_TEXT)
+        }
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            contentAlignment = Alignment.Center
+        ) {
+            when (val currentState = state) {
+                is MainProfileScreenState.Loading -> FullscreenLoading()
+                is MainProfileScreenState.Unauthorized -> UnauthorizedContent(
+                    state = currentState,
+                    onLoginClick = component::onLoginClick
                 )
+                is MainProfileScreenState.Content -> ProfileContent(
+                    state = currentState,
+                    onLogoutClick = component::onLogoutClick,
+                    onConfirmLogout = component::onConfirmLogout,
+                    onTotpSettingsClick = component::onTotpSettingsClick,
+                    onSessionsClick = component::onSessionsClick,
+                    onIdentifiersClick = component::onIdentifiersClick,
+                    onDeleteAccountClick = component::onDeleteAccountClick,
+                    onConfirmDeleteAccount = component::onConfirmDeleteAccount,
+                    onRestoreAccountClick = component::onRestoreAccountClick,
+                    onUnlockAccountClick = component::onUnlockAccountClick,
+                    onDismissDialog = component::onDismissDialog
+                )
+                is MainProfileScreenState.Error -> {
+                    CoreErrorText(
+                        text = currentState.error.toLocalizedMessage(),
+                        modifier = Modifier.testTag(MainProfileTestTags.GLOBAL_ERROR_TEXT)
+                    )
+                }
             }
         }
     }
@@ -428,4 +460,5 @@ internal object MainProfileTestTags {
 
     const val ACTION_ERROR_TEXT = "MainProfile_ActionErrorText"
     const val GLOBAL_ERROR_TEXT = "MainProfile_GlobalErrorText"
+    const val REFRESH_BUTTON = "MainProfile_RefreshButton"
 }

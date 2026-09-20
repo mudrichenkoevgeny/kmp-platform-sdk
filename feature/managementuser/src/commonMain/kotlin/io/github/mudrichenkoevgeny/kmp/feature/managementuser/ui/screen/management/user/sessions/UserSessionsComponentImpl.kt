@@ -16,6 +16,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toInit
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toNextPageLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteAllUserSessionsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
@@ -31,6 +33,8 @@ class UserSessionsComponentImpl(
     componentContext: ComponentContext,
     private val userId: UserId? = null,
     private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
+    private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase,
+    private val managementDeleteAllUserSessionsUseCase: ManagementDeleteAllUserSessionsUseCase,
     private val onBack: () -> Unit
 ) : UserSessionsComponent, ComponentContext by componentContext {
 
@@ -88,6 +92,38 @@ class UserSessionsComponentImpl(
         val currentContent = _state.value as? UserSessionsScreenState.Content ?: return
         _state.value = currentContent.copy(isFilterPanelExpanded = false)
         loadSessions()
+    }
+
+    override fun onDeleteSessionClick(sessionId: String) {
+        val targetUserId = userId ?: return
+        val currentContent = _state.value as? UserSessionsScreenState.Content ?: return
+        _state.value = currentContent.copy(actionLoading = true, actionError = null)
+
+        scope.launch {
+            managementDeleteSessionUseCase(userId = targetUserId, sessionId = sessionId)
+                .onSuccess {
+                    loadSessions()
+                }
+                .onError { error ->
+                    _state.value = currentContent.copy(actionLoading = false, actionError = error)
+                }
+        }
+    }
+
+    override fun onDeleteAllSessionsClick() {
+        val targetUserId = userId ?: return
+        val currentContent = _state.value as? UserSessionsScreenState.Content ?: return
+        _state.value = currentContent.copy(actionLoading = true, actionError = null)
+
+        scope.launch {
+            managementDeleteAllUserSessionsUseCase(userId = targetUserId)
+                .onSuccess {
+                    loadSessions()
+                }
+                .onError { error ->
+                    _state.value = currentContent.copy(actionLoading = false, actionError = error)
+                }
+        }
     }
 
     private fun loadSessions() {

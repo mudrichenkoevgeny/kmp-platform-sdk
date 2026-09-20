@@ -8,9 +8,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.user.ManagementUserRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.user.security.ManagementUserSecurityRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.DeleteUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
 import kotlinx.coroutines.test.advanceTimeBy
@@ -140,6 +142,7 @@ class UserDetailComponentImplTest {
         val getUserUseCase = GetUserUseCase(repository)
         val updateUserUseCase = UpdateUserUseCase(repository)
         val deleteUserUseCase = DeleteUserUseCase(repository)
+        val disableTotpUseCase = ManagementDisableTotpUseCase(ManagementUserSecurityRepositoryMock())
         val context = TestContext()
 
         context.component = UserDetailComponentImpl(
@@ -148,6 +151,7 @@ class UserDetailComponentImplTest {
             getUserUseCase = getUserUseCase,
             updateUserUseCase = updateUserUseCase,
             deleteUserUseCase = deleteUserUseCase,
+            managementDisableTotpUseCase = disableTotpUseCase,
             onNavigateToSessions = { context.onNavigateToSessionsCalls++ },
             onNavigateToIdentifiers = { context.onNavigateToIdentifiersCalls++ },
             onBack = { context.onBackCalls++ },

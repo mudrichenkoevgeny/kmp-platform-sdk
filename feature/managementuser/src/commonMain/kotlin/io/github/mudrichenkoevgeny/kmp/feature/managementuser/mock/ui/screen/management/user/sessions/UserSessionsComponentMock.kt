@@ -20,6 +20,8 @@ class UserSessionsComponentMock(
     var loadNextPageCalls = 0
     var backCalls = 0
     var toggleFilterPanelCalls = 0
+    var deleteSessionCalls = 0
+    var deleteAllSessionsCalls = 0
 
     fun updateState(state: UserSessionsScreenState) {
         _state.value = state
@@ -60,5 +62,13 @@ class UserSessionsComponentMock(
     override fun onApplyFilters() {
         val current = _state.value as? UserSessionsScreenState.Content ?: return
         _state.value = current.copy(isFilterPanelExpanded = false)
+    }
+
+    override fun onDeleteSessionClick(sessionId: String) {
+        deleteSessionCalls++
+    }
+
+    override fun onDeleteAllSessionsClick() {
+        deleteAllSessionsCalls++
     }
 }

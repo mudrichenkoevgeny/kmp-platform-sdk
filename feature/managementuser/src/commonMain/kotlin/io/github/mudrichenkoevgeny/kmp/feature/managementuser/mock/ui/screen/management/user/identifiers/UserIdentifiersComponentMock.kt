@@ -20,6 +20,8 @@ class UserIdentifiersComponentMock(
     var loadNextPageCalls = 0
     var backCalls = 0
     var toggleFilterPanelCalls = 0
+    var deleteIdentifierCalls = 0
+    var deleteIdentifierPasswordCalls = 0
 
     fun updateState(state: UserIdentifiersScreenState) {
         _state.value = state
@@ -60,5 +62,13 @@ class UserIdentifiersComponentMock(
     override fun onApplyFilters() {
         val current = _state.value as? UserIdentifiersScreenState.Content ?: return
         _state.value = current.copy(isFilterPanelExpanded = false)
+    }
+
+    override fun onDeleteIdentifierClick(identifierId: String) {
+        deleteIdentifierCalls++
+    }
+
+    override fun onDeleteIdentifierPasswordClick(identifierId: String) {
+        deleteIdentifierPasswordCalls++
     }
 }

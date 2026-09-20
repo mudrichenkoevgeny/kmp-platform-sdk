@@ -67,6 +67,9 @@
     <string name="authority_level">Authority Level</string>
     <string name="user_sessions">User Sessions</string>
     <string name="user_identifiers">User Identifiers</string>
+    <string name="disable_totp">Disable TOTP</string>
+    <string name="disabling_totp">Disabling TOTP...</string>
+    <string name="revoke_all_sessions">Revoke All Sessions</string>
     <string name="error_authority_level_too_high">Authority level must be strictly less than your authority level (%d)</string>
     <string name="error_role_too_high">You cannot create a user with a role higher than your own</string>
 

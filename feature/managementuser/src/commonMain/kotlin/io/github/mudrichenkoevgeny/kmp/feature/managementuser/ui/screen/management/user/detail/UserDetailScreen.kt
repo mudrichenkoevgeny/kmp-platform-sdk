@@ -35,6 +35,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.container.CoreScrollableScreenContent
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error.FullscreenError
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
@@ -99,6 +100,7 @@ fun UserDetailScreen(component: UserDetailComponent) {
                         onTemporaryLockoutUntilChanged = component::onTemporaryLockoutUntilChanged,
                         onUpdateClick = component::onUpdateClick,
                         onDeleteClick = component::onDeleteClick,
+                        onDisableTotpClick = component::onDisableTotpClick,
                         onSessionsClick = component::onSessionsClick,
                         onIdentifiersClick = component::onIdentifiersClick
                     )
@@ -117,17 +119,12 @@ private fun Content(
     onTemporaryLockoutUntilChanged: (String) -> Unit,
     onUpdateClick: () -> Unit,
     onDeleteClick: () -> Unit,
+    onDisableTotpClick: () -> Unit,
     onSessionsClick: () -> Unit,
     onIdentifiersClick: () -> Unit
 ) {
     val notAvailableText = stringResource(Res.string.not_available)
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(CoreTheme.dimens.paddingMedium)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
-    ) {
+    CoreScrollableScreenContent {
         CoreTitleText(
             text = "${stringResource(Res.string.user_id)}: ${state.user.id.value}",
             style = MaterialTheme.typography.titleMedium
@@ -138,6 +135,22 @@ private fun Content(
         CoreBodyText(
             text = stringResource(Res.string.totp_enabled_label, state.user.isTotpEnabled)
         )
+
+        if (state.user.isTotpEnabled) {
+            CoreButton(
+                text = stringResource(if (state.isDisablingTotp) Res.string.disabling_totp else Res.string.disable_totp),
+                onClick = onDisableTotpClick,
+                modifier = Modifier.testTag(UserDetailTestTags.DISABLE_TOTP_BUTTON),
+                enabled = !state.isSaving && !state.isDeleting && !state.isDisablingTotp
+            )
+
+            state.disableTotpError?.let {
+                CoreErrorText(
+                    text = it.toLocalizedMessage(),
+                    modifier = Modifier.testTag(UserDetailTestTags.DISABLE_TOTP_ERROR_TEXT)
+                )
+            }
+        }
         CoreBodyText(
             text = stringResource(Res.string.created_at_label, state.user.createdAt.toString())
         )
@@ -338,6 +351,8 @@ object UserDetailTestTags {
     const val TEMPORARY_LOCKOUT_UNTIL_INPUT = "UserDetail_TemporaryLockoutUntilInput"
     const val UPDATE_BUTTON = "UserDetail_UpdateButton"
     const val DELETE_BUTTON = "UserDetail_DeleteButton"
+    const val DISABLE_TOTP_BUTTON = "UserDetail_DisableTotpButton"
+    const val DISABLE_TOTP_ERROR_TEXT = "UserDetail_DisableTotpErrorText"
     const val SESSIONS_BUTTON = "UserDetail_SessionsButton"
     const val IDENTIFIERS_BUTTON = "UserDetail_IdentifiersButton"
     const val SAVE_ERROR_TEXT = "UserDetail_SaveErrorText"

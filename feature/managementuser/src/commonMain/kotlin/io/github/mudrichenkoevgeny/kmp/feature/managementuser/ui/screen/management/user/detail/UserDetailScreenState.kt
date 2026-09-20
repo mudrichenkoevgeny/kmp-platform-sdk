@@ -15,6 +15,8 @@ sealed interface UserDetailScreenState {
         val isSaving: Boolean = false,
         val saveError: AppError? = null,
         val isDeleting: Boolean = false,
-        val deleteError: AppError? = null
+        val deleteError: AppError? = null,
+        val isDisablingTotp: Boolean = false,
+        val disableTotpError: AppError? = null
     ) : UserDetailScreenState
 }

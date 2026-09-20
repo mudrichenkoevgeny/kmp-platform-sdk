@@ -16,6 +16,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserReposito
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.ObserveAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.LogoutUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.GetUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.RestoreUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.OpenAuthSettings
@@ -43,10 +44,11 @@ import kotlinx.coroutines.launch
 class MainProfileComponentImpl(
     componentContext: ComponentContext,
     appType: AppType,
-    userRepository: UserRepository,
+    private val userRepository: UserRepository,
     private val logoutUseCase: LogoutUseCase,
     private val scheduleUserDeletionUseCase: ScheduleUserDeletionUseCase,
     private val restoreUserUseCase: RestoreUserUseCase,
+    private val getUserUseCase: GetUserUseCase? = null,
     private val getAuthSettingsUseCase: GetAuthSettingsUseCase? = null,
     private val observeAuthSettingsUseCase: ObserveAuthSettingsUseCase? = null,
     private val onNavigateToLogin: () -> Unit,
@@ -104,6 +106,24 @@ class MainProfileComponentImpl(
         data object Idle : ActionState
         data object Loading : ActionState
         data class Error(val error: AppError) : ActionState
+    }
+
+    override fun onRefresh() {
+        actionState.value = ActionState.Loading
+        scope.launch {
+            val result = if (getUserUseCase != null) {
+                getUserUseCase()
+            } else {
+                userRepository.refreshCurrentUser()
+            }
+            result
+                .onSuccess {
+                    actionState.value = ActionState.Idle
+                }
+                .onError { error ->
+                    actionState.value = ActionState.Error(error)
+                }
+        }
     }
 
     override fun onLoginClick() {

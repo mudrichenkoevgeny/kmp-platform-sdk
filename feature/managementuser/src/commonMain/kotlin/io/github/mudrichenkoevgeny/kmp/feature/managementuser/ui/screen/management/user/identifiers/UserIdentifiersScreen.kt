@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -53,6 +54,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.man
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_identifiers
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.identifier.item.IdentifierItem
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -143,42 +145,64 @@ private fun Content(
         onLoadNextPage()
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        AnimatedVisibility(visible = state.isFilterPanelExpanded) {
-            ListingOptionsPanel(
-                config = getUserIdentifiersListingConfig(),
-                sortState = state.sortState,
-                filterStates = state.filterStates,
-                onSortChanged = component::onSortChanged,
-                onFilterChanged = component::onFilterChanged,
-                onApplyClick = component::onApplyFilters,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(CoreTheme.dimens.paddingMedium)
-            )
-        }
-
-        LazyColumn(
-            state = listState,
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.TopCenter
+    ) {
+        Column(
             modifier = Modifier
-                .weight(1f)
-                .testTag(UserIdentifiersTestTags.IDENTIFIER_LIST),
-            contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
-            verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+                .widthIn(max = CoreTheme.dimens.maxContentWidth)
+                .fillMaxSize()
         ) {
-            items(state.paging.items, key = { it.id.value }) { identifier ->
-                IdentifierItem(
-                    identifier = identifier,
-                    onDeleteClick = {},
-                    enabled = false
+            AnimatedVisibility(visible = state.isFilterPanelExpanded) {
+                ListingOptionsPanel(
+                    config = getUserIdentifiersListingConfig(),
+                    sortState = state.sortState,
+                    filterStates = state.filterStates,
+                    onSortChanged = component::onSortChanged,
+                    onFilterChanged = component::onFilterChanged,
+                    onApplyClick = component::onApplyFilters,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(CoreTheme.dimens.paddingMedium)
                 )
             }
 
-            item {
-                PagingFooter(
-                    state = state.paging,
-                    onRetry = onLoadNextPage
+            state.actionError?.let {
+                CoreErrorText(
+                    text = it.toLocalizedMessage(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(CoreTheme.dimens.paddingMedium)
+                        .testTag(UserIdentifiersTestTags.ACTION_ERROR_TEXT)
                 )
+            }
+
+            LazyColumn(
+                state = listState,
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag(UserIdentifiersTestTags.IDENTIFIER_LIST),
+                contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
+                verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+            ) {
+                items(state.paging.items, key = { it.id.value }) { identifier ->
+                    IdentifierItem(
+                        identifier = identifier,
+                        onDeleteClick = { component.onDeleteIdentifierClick(identifier.id.value.toString()) },
+                        onChangePasswordClick = if (identifier.userAuthProvider == UserAuthProvider.EMAIL) {
+                            { component.onDeleteIdentifierPasswordClick(identifier.id.value.toString()) }
+                        } else null,
+                        enabled = !state.actionLoading
+                    )
+                }
+
+                item {
+                    PagingFooter(
+                        state = state.paging,
+                        onRetry = onLoadNextPage
+                    )
+                }
             }
         }
     }
@@ -190,6 +214,7 @@ object UserIdentifiersTestTags {
     const val FILTER_BUTTON = "UserIdentifiers_FilterButton"
     const val REFRESH_BUTTON = "UserIdentifiers_RefreshButton"
     const val GLOBAL_ERROR_TEXT = "UserIdentifiers_GlobalErrorText"
+    const val ACTION_ERROR_TEXT = "UserIdentifiers_ActionErrorText"
     const val IDENTIFIER_LIST = "UserIdentifiers_List"
 }
 

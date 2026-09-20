@@ -30,7 +30,11 @@ data class CoreDimens(
     val qrCodeSize: Dp = 200.dp,
     val previewContainerHeight: Dp = 300.dp,
     val dialogWidth: Dp = 480.dp,
-    val dialogHeight: Dp = 520.dp
+    val dialogHeight: Dp = 520.dp,
+    val maxFormWidth: Dp = 480.dp,
+    val maxContentWidth: Dp = 800.dp,
+    val maxButtonWidth: Dp = 400.dp,
+    val navigationRailWidth: Dp = 80.dp
 )
 
 internal val LocalCoreDimens = staticCompositionLocalOf { CoreDimens() }
