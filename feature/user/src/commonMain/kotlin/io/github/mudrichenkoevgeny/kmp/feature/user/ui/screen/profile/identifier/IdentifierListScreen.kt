@@ -19,14 +19,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -52,14 +46,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
+import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
@@ -71,8 +67,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.identifier.IdentifierListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.identifier.item.IdentifierItem
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,25 +86,31 @@ fun IdentifierListScreen(component: IdentifierListComponent) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(
+                    CoreBackButton(
                         onClick = component::onBackClick,
                         modifier = Modifier.testTag(IdentifierListTestTags.BACK_BUTTON)
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-                    }
+                    )
                 },
                 actions = {
                     IconButton(
                         onClick = component::onToggleFilterPanel,
                         modifier = Modifier.testTag(IdentifierListTestTags.FILTER_BUTTON)
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)
+                        Icon(
+                            painter = painterResource(CommonRes.drawable.ic_settings),
+                            contentDescription = null,
+                            modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+                        )
                     }
                     IconButton(
                         onClick = component::onRefresh,
                         modifier = Modifier.testTag(IdentifierListTestTags.REFRESH_BUTTON)
                     ) {
-                        Icon(Icons.Filled.Refresh, contentDescription = null)
+                        Icon(
+                            painter = painterResource(CommonRes.drawable.ic_settings),
+                            contentDescription = null,
+                            modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+                        )
                     }
                 }
             )
@@ -200,25 +202,25 @@ private fun Content(
 
         Box(modifier = Modifier.weight(1f)) {
             LazyColumn(
-            state = listState,
-            modifier = Modifier
-                .fillMaxSize()
-                .testTag(IdentifierListTestTags.IDENTIFIER_LIST),
-            contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
-            verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
-        ) {
-            items(state.paging.items, key = { it.id.value }) { identifier ->
-                IdentifierItem(
-                    identifier = identifier,
-                    onDeleteClick = { onDeleteIdentifier(identifier.id) },
-                    onChangePasswordClick = if (identifier.userAuthProvider == UserAuthProvider.EMAIL) {
-                        { onChangePasswordClick(identifier.identifier) }
-                    } else null,
-                    enabled = !state.actionLoading &&
-                        state.addEmailState is IdentifierListScreenState.AddIdentifierState.Idle &&
-                        state.addPhoneState is IdentifierListScreenState.AddIdentifierState.Idle
-                )
-            }
+                state = listState,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag(IdentifierListTestTags.IDENTIFIER_LIST),
+                contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
+                verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+            ) {
+                items(state.paging.items, key = { it.id.value }) { identifier ->
+                    IdentifierItem(
+                        identifier = identifier,
+                        onDeleteClick = { onDeleteIdentifier(identifier.id) },
+                        onChangePasswordClick = if (identifier.userAuthProvider == UserAuthProvider.EMAIL) {
+                            { onChangePasswordClick(identifier.identifier) }
+                        } else null,
+                        enabled = !state.actionLoading &&
+                            state.addEmailState is IdentifierListScreenState.AddIdentifierState.Idle &&
+                            state.addPhoneState is IdentifierListScreenState.AddIdentifierState.Idle
+                    )
+                }
 
                 item {
                     PagingFooter(

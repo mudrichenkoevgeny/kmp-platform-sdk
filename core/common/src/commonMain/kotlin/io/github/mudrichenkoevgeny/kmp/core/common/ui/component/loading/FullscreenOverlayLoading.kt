@@ -12,10 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.unit.dp
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
@@ -56,7 +54,7 @@ fun BoxScope.FullscreenOverlayLoading(
 private fun FullscreenOverlayLoadingComponentSizePreview() {
     CoreTheme {
         Surface {
-            Box(modifier = Modifier.size(200.dp)) {
+            Box {
                 FullscreenOverlayLoading()
             }
         }
@@ -69,20 +67,7 @@ private fun FullscreenOverlayLoadingComponentSizePreview() {
 private fun FullscreenOverlayLoadingThemePreview() {
     CoreTheme {
         Surface {
-            Box(modifier = Modifier.size(200.dp)) {
-                FullscreenOverlayLoading()
-            }
-        }
-    }
-}
-
-@InternalApi
-@FontScalePreviews
-@Composable
-private fun FullscreenOverlayLoadingFontScalePreview() {
-    CoreTheme {
-        Surface {
-            Box(modifier = Modifier.size(200.dp)) {
+            Box {
                 FullscreenOverlayLoading()
             }
         }

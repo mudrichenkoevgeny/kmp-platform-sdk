@@ -19,6 +19,11 @@ interface MainScreenComponent {
     val stack: Value<ChildStack<Config, Child>>
 
     /**
+     * Emits `true` if the current user is authenticated, controlling the visibility of restricted tabs.
+     */
+    val isAuthorized: Value<Boolean>
+
+    /**
      * Optional overlay slot hosting [ManagementLoginRootComponent] when login is requested from profile.
      */
     val loginDialogSlot: Value<ChildSlot<DialogConfig, ManagementLoginRootComponent>>

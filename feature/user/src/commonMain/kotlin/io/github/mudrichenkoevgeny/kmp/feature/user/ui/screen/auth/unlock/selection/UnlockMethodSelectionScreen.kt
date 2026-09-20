@@ -14,12 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -45,6 +41,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
@@ -73,15 +70,10 @@ fun UnlockMethodSelectionScreen(component: UnlockMethodSelectionComponent) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(
+                    CoreBackButton(
                         onClick = component::onBackClick,
                         modifier = Modifier.testTag(UnlockMethodSelectionTestTags.BACK_BUTTON)
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
+                    )
                 }
             )
         }
@@ -95,84 +87,97 @@ fun UnlockMethodSelectionScreen(component: UnlockMethodSelectionComponent) {
                 modifier = Modifier
                     .padding(CoreTheme.dimens.paddingLarge)
                     .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (state.isEmailAvailable) {
-                    OutlinedTextField(
-                        value = state.emailInput,
-                        onValueChange = component::onEmailInputChanged,
-                        label = { Text(text = stringResource(Res.string.unlock_by_email)) },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag(UnlockMethodSelectionTestTags.EMAIL_INPUT)
-                    )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (state.isEmailAvailable) {
+                        OutlinedTextField(
+                            value = state.emailInput,
+                            onValueChange = component::onEmailInputChanged,
+                            label = { Text(text = stringResource(Res.string.unlock_by_email)) },
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag(UnlockMethodSelectionTestTags.EMAIL_INPUT)
+                        )
 
-                    Button(
-                        onClick = component::onSelectEmailUnlock,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag(UnlockMethodSelectionTestTags.UNLOCK_EMAIL_BUTTON),
-                        enabled = !state.actionLoading && state.emailInput.isNotBlank()
-                    ) {
-                        Text(text = stringResource(Res.string.unlock_by_email))
+                        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+
+                        Button(
+                            onClick = component::onSelectEmailUnlock,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag(UnlockMethodSelectionTestTags.UNLOCK_EMAIL_BUTTON),
+                            enabled = !state.actionLoading && state.emailInput.isNotBlank()
+                        ) {
+                            Text(text = stringResource(Res.string.unlock_by_email))
+                        }
+
+                        Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
                     }
 
-                    Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                }
+                    if (state.isPhoneAvailable) {
+                        OutlinedTextField(
+                            value = state.phoneInput,
+                            onValueChange = component::onPhoneInputChanged,
+                            label = { Text(text = stringResource(Res.string.unlock_by_phone)) },
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag(UnlockMethodSelectionTestTags.PHONE_INPUT)
+                        )
 
-                if (state.isPhoneAvailable) {
-                    OutlinedTextField(
-                        value = state.phoneInput,
-                        onValueChange = component::onPhoneInputChanged,
-                        label = { Text(text = stringResource(Res.string.unlock_by_phone)) },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag(UnlockMethodSelectionTestTags.PHONE_INPUT)
-                    )
+                        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
-                    OutlinedButton(
-                        onClick = component::onSelectPhoneUnlock,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag(UnlockMethodSelectionTestTags.UNLOCK_PHONE_BUTTON),
-                        enabled = !state.actionLoading && state.phoneInput.isNotBlank()
-                    ) {
-                        Text(text = stringResource(Res.string.unlock_by_phone))
+                        OutlinedButton(
+                            onClick = component::onSelectPhoneUnlock,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag(UnlockMethodSelectionTestTags.UNLOCK_PHONE_BUTTON),
+                            enabled = !state.actionLoading && state.phoneInput.isNotBlank()
+                        ) {
+                            Text(text = stringResource(Res.string.unlock_by_phone))
+                        }
+
+                        Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
                     }
 
-                    Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                }
+                    if (state.isGoogleAvailable) {
+                        OutlinedButton(
+                            onClick = component::onSelectGoogleUnlock,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag(UnlockMethodSelectionTestTags.UNLOCK_GOOGLE_BUTTON),
+                            enabled = !state.actionLoading
+                        ) {
+                            Text(text = stringResource(Res.string.unlock_by_google))
+                        }
 
-                if (state.isGoogleAvailable) {
-                    OutlinedButton(
-                        onClick = component::onSelectGoogleUnlock,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag(UnlockMethodSelectionTestTags.UNLOCK_GOOGLE_BUTTON),
-                        enabled = !state.actionLoading
-                    ) {
-                        Text(text = stringResource(Res.string.unlock_by_google))
+                        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
                     }
-                }
 
-                if (state.isAppleAvailable) {
-                    OutlinedButton(
-                        onClick = component::onSelectAppleUnlock,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag(UnlockMethodSelectionTestTags.UNLOCK_APPLE_BUTTON),
-                        enabled = !state.actionLoading
-                    ) {
-                        Text(text = stringResource(Res.string.unlock_by_apple))
+                    if (state.isAppleAvailable) {
+                        OutlinedButton(
+                            onClick = component::onSelectAppleUnlock,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag(UnlockMethodSelectionTestTags.UNLOCK_APPLE_BUTTON),
+                            enabled = !state.actionLoading
+                        ) {
+                            Text(text = stringResource(Res.string.unlock_by_apple))
+                        }
                     }
-                }
 
-                ErrorText(state.actionError)
+                    ErrorText(state.actionError)
+                }
             }
 
             if (state.actionLoading) {

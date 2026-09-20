@@ -4,9 +4,9 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
@@ -53,10 +53,10 @@ class ClientLoginRootComponentImpl(
                 getOpenGlobalSettingsUseCase = settingsComponent.getGlobalSettingsUseCase,
                 getAvailableUserAuthProvidersUseCase = clientUserComponent.getAvailableUserAuthProvidersUseCase,
                 loginByGoogleUseCase = clientUserComponent.loginByGoogleUseCase,
-                onNavigateToLoginByEmail = { navigation.push(ClientLoginDestination.LoginByEmail) },
-                onNavigateToLoginByPhone = { navigation.push(ClientLoginDestination.LoginByPhone) },
-                onNavigateToTotp = { mfaToken -> navigation.push(ClientLoginDestination.LoginByTotp(mfaToken)) },
-                onNavigateToPendingDeletion = { navigation.push(ClientLoginDestination.PendingDeletion) },
+                onNavigateToLoginByEmail = { navigation.bringToFront(ClientLoginDestination.LoginByEmail) },
+                onNavigateToLoginByPhone = { navigation.bringToFront(ClientLoginDestination.LoginByPhone) },
+                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ClientLoginDestination.LoginByTotp(mfaToken)) },
+                onNavigateToPendingDeletion = { navigation.bringToFront(ClientLoginDestination.PendingDeletion) },
                 onFinished = onFinished
             )
         )
@@ -65,10 +65,10 @@ class ClientLoginRootComponentImpl(
                 componentContext = context,
                 appType = AppType.CLIENT,
                 loginByEmailUseCase = clientUserComponent.loginByEmailUseCase,
-                onNavigateToRegistrationByEmail = { navigation.push(ClientLoginDestination.RegistrationByEmail) },
-                onNavigateToForgotPassword = { navigation.push(ClientLoginDestination.ResetEmailPassword) },
-                onNavigateToTotp = { mfaToken -> navigation.push(ClientLoginDestination.LoginByTotp(mfaToken)) },
-                onNavigateToPendingDeletion = { navigation.push(ClientLoginDestination.PendingDeletion) },
+                onNavigateToRegistrationByEmail = { navigation.bringToFront(ClientLoginDestination.RegistrationByEmail) },
+                onNavigateToForgotPassword = { navigation.bringToFront(ClientLoginDestination.ResetEmailPassword) },
+                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ClientLoginDestination.LoginByTotp(mfaToken)) },
+                onNavigateToPendingDeletion = { navigation.bringToFront(ClientLoginDestination.PendingDeletion) },
                 onBack = navigation::pop,
                 onFinished = onFinished
             )
@@ -79,8 +79,8 @@ class ClientLoginRootComponentImpl(
                 loginRepository = clientUserComponent.loginRepository,
                 sendLoginConfirmationToPhoneUseCase = clientUserComponent.sendLoginConfirmationToPhoneUseCase,
                 loginByPhoneUseCase = clientUserComponent.loginByPhoneUseCase,
-                onNavigateToTotp = { mfaToken -> navigation.push(ClientLoginDestination.LoginByTotp(mfaToken)) },
-                onNavigateToPendingDeletion = { navigation.push(ClientLoginDestination.PendingDeletion) },
+                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ClientLoginDestination.LoginByTotp(mfaToken)) },
+                onNavigateToPendingDeletion = { navigation.bringToFront(ClientLoginDestination.PendingDeletion) },
                 onBack = navigation::pop,
                 onFinished = onFinished
             )
@@ -113,7 +113,7 @@ class ClientLoginRootComponentImpl(
                 mfaToken = config.mfaToken,
                 loginByTotpUseCase = clientUserComponent.loginByTotpUseCase,
                 loginByTotpRecoveryCodeUseCase = clientUserComponent.loginByTotpRecoveryCodeUseCase,
-                onNavigateToPendingDeletion = { navigation.push(ClientLoginDestination.PendingDeletion) },
+                onNavigateToPendingDeletion = { navigation.bringToFront(ClientLoginDestination.PendingDeletion) },
                 onBack = navigation::pop,
                 onFinished = onFinished
             )

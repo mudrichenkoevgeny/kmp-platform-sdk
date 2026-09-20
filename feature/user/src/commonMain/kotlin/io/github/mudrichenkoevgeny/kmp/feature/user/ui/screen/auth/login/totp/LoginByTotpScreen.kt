@@ -1,23 +1,20 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -35,16 +32,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
-import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.totp.LoginByTotpComponentMock
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -57,9 +53,7 @@ fun LoginByTotpScreen(component: LoginByTotpComponent) {
     val state by component.state.subscribeAsState()
 
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .animateContentSize(),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         when (val currentState = state) {
@@ -87,10 +81,10 @@ private fun LoginByTotpContent(
     onSubmitClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxWidth()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(CoreTheme.dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -98,18 +92,13 @@ private fun LoginByTotpContent(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                IconButton(
+                CoreBackButton(
                     onClick = onBackClick,
                     modifier = Modifier
                         .align(Alignment.CenterStart)
                         .testTag(LoginByTotpTestTags.BACK_BUTTON),
                     enabled = !state.actionLoading
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null
-                    )
-                }
+                )
 
                 val titleRes = when (state.mode) {
                     LoginByTotpScreenState.Mode.TOTP -> Res.string.login_by_totp
@@ -123,34 +112,38 @@ private fun LoginByTotpContent(
                 )
             }
 
-            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
-
-            val labelRes = when (state.mode) {
-                LoginByTotpScreenState.Mode.TOTP -> Res.string.totp_code
-                LoginByTotpScreenState.Mode.RECOVERY_CODE -> Res.string.recovery_code
-            }
-
-            val keyboardType = when (state.mode) {
-                LoginByTotpScreenState.Mode.TOTP -> KeyboardType.Number
-                LoginByTotpScreenState.Mode.RECOVERY_CODE -> KeyboardType.Text
-            }
-
-            OutlinedTextField(
-                value = state.code,
-                onValueChange = onCodeChanged,
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(LoginByTotpTestTags.CODE_INPUT),
-                label = { Text(stringResource(labelRes)) },
-                isError = state.actionError != null,
-                enabled = !state.actionLoading,
-                keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-                singleLine = true
-            )
+                    .weight(1f)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val labelRes = when (state.mode) {
+                    LoginByTotpScreenState.Mode.TOTP -> Res.string.totp_code
+                    LoginByTotpScreenState.Mode.RECOVERY_CODE -> Res.string.recovery_code
+                }
 
-            ErrorText(state.actionError)
+                val keyboardType = when (state.mode) {
+                    LoginByTotpScreenState.Mode.TOTP -> KeyboardType.Number
+                    LoginByTotpScreenState.Mode.RECOVERY_CODE -> KeyboardType.Text
+                }
 
-            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
+                OutlinedTextField(
+                    value = state.code,
+                    onValueChange = onCodeChanged,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(LoginByTotpTestTags.CODE_INPUT),
+                    label = { Text(stringResource(labelRes)) },
+                    isError = state.actionError != null,
+                    enabled = !state.actionLoading,
+                    keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+                    singleLine = true
+                )
+
+                ErrorText(state.actionError)
+            }
 
             Button(
                 onClick = onSubmitClick,
@@ -162,7 +155,7 @@ private fun LoginByTotpContent(
                 Text(stringResource(Res.string.login))
             }
 
-            Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
+            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
             val toggleTextRes = when (state.mode) {
                 LoginByTotpScreenState.Mode.TOTP -> Res.string.use_recovery_code

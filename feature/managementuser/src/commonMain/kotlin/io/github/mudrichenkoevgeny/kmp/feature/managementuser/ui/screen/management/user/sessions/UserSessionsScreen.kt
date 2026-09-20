@@ -11,10 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,11 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
+import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
@@ -46,6 +45,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.man
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_sessions
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.session.item.SessionItem
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,25 +63,31 @@ fun UserSessionsScreen(component: UserSessionsComponent) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(
+                    CoreBackButton(
                         onClick = component::onBackClick,
                         modifier = Modifier.testTag(UserSessionsTestTags.BACK_BUTTON)
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-                    }
+                    )
                 },
                 actions = {
                     IconButton(
                         onClick = component::onToggleFilterPanel,
                         modifier = Modifier.testTag(UserSessionsTestTags.FILTER_BUTTON)
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)
+                        Icon(
+                            painter = painterResource(CommonRes.drawable.ic_settings),
+                            contentDescription = null,
+                            modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+                        )
                     }
                     IconButton(
                         onClick = component::onRefresh,
                         modifier = Modifier.testTag(UserSessionsTestTags.REFRESH_BUTTON)
                     ) {
-                        Icon(Icons.Default.Refresh, contentDescription = null)
+                        Icon(
+                            painter = painterResource(CommonRes.drawable.ic_settings),
+                            contentDescription = null,
+                            modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+                        )
                     }
                 }
             )

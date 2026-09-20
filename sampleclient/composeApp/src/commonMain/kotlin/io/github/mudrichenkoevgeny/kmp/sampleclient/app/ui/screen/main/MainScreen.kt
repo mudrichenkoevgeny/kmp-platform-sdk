@@ -18,11 +18,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -44,6 +44,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRoo
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.LocalClientAppComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.home.HomeScreen
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.home.HomeScreenComponent
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -152,7 +153,13 @@ private fun MobileLayout(
                     NavigationBarItem(
                         selected = currentDestination == dest,
                         onClick = { onDestinationChange(dest) },
-                        icon = { Icon(dest.icon, contentDescription = null) },
+                        icon = {
+                            Icon(
+                                painter = painterResource(dest.iconRes),
+                                contentDescription = null,
+                                modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+                            )
+                        },
                         label = { Text(stringResource(dest.title)) }
                     )
                 }
@@ -190,12 +197,13 @@ private fun WebLayout(
 
                 IconButton(onClick = { onDestinationChange(MainScreenDestination.Profile) }) {
                     Icon(
-                        imageVector = MainScreenDestination.Profile.icon,
+                        painter = painterResource(MainScreenDestination.Profile.iconRes),
                         contentDescription = stringResource(MainScreenDestination.Profile.title),
                         tint = if (currentDestination == MainScreenDestination.Profile)
                             MaterialTheme.colorScheme.primary
                         else
-                            MaterialTheme.colorScheme.onSurface
+                            MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
                     )
                 }
             }

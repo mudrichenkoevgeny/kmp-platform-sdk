@@ -1,9 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -12,11 +10,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import io.github.mudrichenkoevgeny.kmp.core.common.Res
+import io.github.mudrichenkoevgeny.kmp.core.common.ic_hide
+import io.github.mudrichenkoevgeny.kmp.core.common.ic_show
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import org.jetbrains.compose.resources.painterResource
 
 /**
  * Specialized password input text field with toggleable password visibility.
@@ -49,7 +51,11 @@ fun CorePasswordTextField(
         modifier = modifier,
         label = label,
         placeholder = placeholder,
-        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        visualTransformation = if (isPasswordVisible) {
+            VisualTransformation.None
+        } else {
+            PasswordVisualTransformation()
+        },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         singleLine = true,
         isError = isError,
@@ -59,8 +65,15 @@ fun CorePasswordTextField(
                 modifier = toggleModifier
             ) {
                 Icon(
-                    imageVector = if (isPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                    contentDescription = null
+                    painter = painterResource(
+                        if (isPasswordVisible) {
+                            Res.drawable.ic_hide
+                        } else {
+                            Res.drawable.ic_show
+                        }
+                    ),
+                    contentDescription = null,
+                    modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
                 )
             }
         }

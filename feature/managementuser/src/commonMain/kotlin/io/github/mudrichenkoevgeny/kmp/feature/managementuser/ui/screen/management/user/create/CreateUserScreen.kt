@@ -7,12 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -30,6 +26,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
@@ -46,17 +43,15 @@ fun CreateUserScreen(component: CreateUserComponent) {
                 title = {
                     Text(
                         text = stringResource(Res.string.create_user_title),
-                        modifier = Modifier.testTag(CreateUserTestTags.TITLE),
+                        modifier = Modifier.testTag(CreateUserTestTags.TITLE)
                     )
                 },
                 navigationIcon = {
-                    IconButton(
+                    CoreBackButton(
                         onClick = component::onBackClick,
-                        modifier = Modifier.testTag(CreateUserTestTags.BACK_BUTTON),
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-                    }
-                },
+                        modifier = Modifier.testTag(CreateUserTestTags.BACK_BUTTON)
+                    )
+                }
             )
         }
     ) { padding ->
@@ -72,7 +67,7 @@ fun CreateUserScreen(component: CreateUserComponent) {
                 .fillMaxSize()
                 .padding(padding)
                 .padding(CoreTheme.dimens.paddingMedium)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
         )
     }
 }
@@ -86,11 +81,11 @@ private fun CreateUserForm(
     onStatusChanged: (String) -> Unit,
     onAuthorityLevelChanged: (String) -> Unit,
     onCreateClick: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium),
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
         OutlinedTextField(
             value = state.email,
@@ -99,7 +94,7 @@ private fun CreateUserForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag(CreateUserTestTags.EMAIL_INPUT),
-            enabled = !state.isLoading,
+            enabled = !state.isLoading
         )
 
         OutlinedTextField(
@@ -109,7 +104,7 @@ private fun CreateUserForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag(CreateUserTestTags.PASSWORD_INPUT),
-            enabled = !state.isLoading,
+            enabled = !state.isLoading
         )
 
         OutlinedTextField(
@@ -119,7 +114,7 @@ private fun CreateUserForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag(CreateUserTestTags.ROLE_INPUT),
-            enabled = !state.isLoading,
+            enabled = !state.isLoading
         )
 
         OutlinedTextField(
@@ -129,7 +124,7 @@ private fun CreateUserForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag(CreateUserTestTags.STATUS_INPUT),
-            enabled = !state.isLoading,
+            enabled = !state.isLoading
         )
 
         OutlinedTextField(
@@ -139,7 +134,7 @@ private fun CreateUserForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag(CreateUserTestTags.AUTHORITY_LEVEL_INPUT),
-            enabled = !state.isLoading,
+            enabled = !state.isLoading
         )
 
         Button(
@@ -147,7 +142,7 @@ private fun CreateUserForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag(CreateUserTestTags.CREATE_BUTTON),
-            enabled = !state.isLoading,
+            enabled = !state.isLoading
         ) {
             Text(stringResource(if (state.isLoading) Res.string.saving else Res.string.create_user))
         }
@@ -156,7 +151,7 @@ private fun CreateUserForm(
             Text(
                 text = it.toLocalizedMessage(),
                 color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.testTag(CreateUserTestTags.ERROR_TEXT),
+                modifier = Modifier.testTag(CreateUserTestTags.ERROR_TEXT)
             )
         }
     }
@@ -172,14 +167,14 @@ private fun CreateUserPreview() {
                 CreateUserForm(
                     state = CreateUserScreenState(
                         email = "test@example.com",
-                        password = "password123",
+                        password = "password123"
                     ),
                     onEmailChanged = {},
                     onPasswordChanged = {},
                     onRoleChanged = {},
                     onStatusChanged = {},
                     onAuthorityLevelChanged = {},
-                    onCreateClick = {},
+                    onCreateClick = {}
                 )
             }
         }

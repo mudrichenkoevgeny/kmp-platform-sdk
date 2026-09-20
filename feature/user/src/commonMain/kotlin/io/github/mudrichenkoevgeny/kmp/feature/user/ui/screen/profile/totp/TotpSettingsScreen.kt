@@ -5,6 +5,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,9 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -48,21 +46,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import io.github.alexzhirkevich.qrose.rememberQrCodePainter
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
+import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totprecoverycodes.TotpRecoveryCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totpsetup.TotpSetup
-import androidx.compose.foundation.Image
-import io.github.alexzhirkevich.qrose.rememberQrCodePainter
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,12 +80,10 @@ fun TotpSettingsScreen(component: TotpSettingsComponent) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(
+                    CoreBackButton(
                         onClick = component::onBackClick,
                         modifier = Modifier.testTag(TotpSettingsTestTags.BACK_BUTTON)
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-                    }
+                    )
                 }
             )
         }
@@ -194,7 +192,7 @@ private fun SetupInProgressContent(
         Box(
             modifier = Modifier
                 .padding(CoreTheme.dimens.paddingMedium)
-                .size(200.dp)
+                .size(CoreTheme.dimens.qrCodeSize)
                 .testTag(TotpSettingsTestTags.QR_CODE_BOX),
             contentAlignment = Alignment.Center
         ) {
@@ -228,9 +226,9 @@ private fun SetupInProgressContent(
                 modifier = Modifier.testTag(TotpSettingsTestTags.COPY_SECRET_KEY_BUTTON)
             ) {
                 Icon(
-                    imageVector = Icons.Default.ContentCopy,
+                    painter = painterResource(CommonRes.drawable.ic_copy),
                     contentDescription = null,
-                    modifier = Modifier.size(CoreTheme.dimens.paddingMedium)
+                    modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
                 )
             }
         }

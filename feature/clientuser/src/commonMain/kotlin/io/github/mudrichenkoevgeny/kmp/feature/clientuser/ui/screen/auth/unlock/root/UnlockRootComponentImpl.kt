@@ -4,9 +4,9 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.di.ClientUserComponent
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.unlock.UnlockDestination
@@ -45,12 +45,12 @@ class UnlockRootComponentImpl(
                 sendUnlockPhoneConfirmationUseCase = clientUserComponent.sendUnlockPhoneConfirmationUseCase,
                 unlockByGoogleUseCase = clientUserComponent.unlockByGoogleUseCase,
                 onNavigateToEmailOtp = { email ->
-                    navigation.push(UnlockDestination.OtpInput(UnlockMethod.EMAIL, email))
+                    navigation.bringToFront(UnlockDestination.OtpInput(UnlockMethod.EMAIL, email))
                 },
                 onNavigateToPhoneOtp = { phone ->
-                    navigation.push(UnlockDestination.OtpInput(UnlockMethod.PHONE, phone))
+                    navigation.bringToFront(UnlockDestination.OtpInput(UnlockMethod.PHONE, phone))
                 },
-                onUnlockSuccess = { navigation.push(UnlockDestination.Success) },
+                onUnlockSuccess = { navigation.bringToFront(UnlockDestination.Success) },
                 onBack = { onFinished() }
             )
         )
@@ -64,7 +64,7 @@ class UnlockRootComponentImpl(
                 unlockByPhoneUseCase = clientUserComponent.unlockByPhoneUseCase,
                 sendUnlockEmailConfirmationUseCase = clientUserComponent.sendUnlockEmailConfirmationUseCase,
                 sendUnlockPhoneConfirmationUseCase = clientUserComponent.sendUnlockPhoneConfirmationUseCase,
-                onUnlockSuccess = { navigation.push(UnlockDestination.Success) },
+                onUnlockSuccess = { navigation.bringToFront(UnlockDestination.Success) },
                 onBack = { navigation.pop() }
             )
         )

@@ -3,10 +3,10 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.popTo
-import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import kotlinx.coroutines.launch
@@ -129,9 +129,9 @@ class ProfileRootComponentImpl(
                 getAuthSettingsUseCase = getAuthSettingsUseCase,
                 observeAuthSettingsUseCase = observeAuthSettingsUseCase,
                 onNavigateToLogin = onNavigateToLogin,
-                onNavigateToTotp = { navigation.push(ProfileDestination.TotpSettings) },
-                onNavigateToSessions = { navigation.push(ProfileDestination.Sessions) },
-                onNavigateToIdentifiers = { navigation.push(ProfileDestination.Identifiers) }
+                onNavigateToTotp = { navigation.bringToFront(ProfileDestination.TotpSettings) },
+                onNavigateToSessions = { navigation.bringToFront(ProfileDestination.Sessions) },
+                onNavigateToIdentifiers = { navigation.bringToFront(ProfileDestination.Identifiers) }
             )
         )
         is ProfileDestination.TotpSettings -> ProfileRootComponent.Child.TotpSettings(

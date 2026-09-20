@@ -40,7 +40,8 @@ object SecurityErrorParser : AppErrorParser {
             )
 
             SecurityErrorCodes.PASSWORD_TOO_WEAK -> {
-                if (args.isEmpty()) return stringResource(Res.string.error_security_password_too_weak)
+                if (args.isEmpty())
+                    return stringResource(Res.string.error_security_password_too_weak)
 
                 stringResource(
                     Res.string.error_security_password_too_weak_args,

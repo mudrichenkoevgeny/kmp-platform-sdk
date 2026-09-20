@@ -3,9 +3,9 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create.CreateUserComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailComponentImpl
@@ -58,8 +58,8 @@ class UsersManagementRootComponentImpl(
             UsersManagementMainComponentImpl(
                 componentContext = context,
                 getUsersUseCase = getUsersUseCase,
-                onNavigateToUserDetail = { userId -> navigation.push(UsersManagementDestination.Detail(userId.value.toString())) },
-                onNavigateToCreateUser = { navigation.push(UsersManagementDestination.Create) },
+                onNavigateToUserDetail = { userId -> navigation.bringToFront(UsersManagementDestination.Detail(userId.value.toString())) },
+                onNavigateToCreateUser = { navigation.bringToFront(UsersManagementDestination.Create) },
                 onBack = onBack
             )
         )
@@ -70,8 +70,8 @@ class UsersManagementRootComponentImpl(
                 getUserUseCase = getUserUseCase,
                 updateUserUseCase = updateUserUseCase,
                 deleteUserUseCase = deleteUserUseCase,
-                onNavigateToSessions = { userId -> navigation.push(UsersManagementDestination.Sessions(userId.value.toString())) },
-                onNavigateToIdentifiers = { userId -> navigation.push(UsersManagementDestination.Identifiers(userId.value.toString())) },
+                onNavigateToSessions = { userId -> navigation.bringToFront(UsersManagementDestination.Sessions(userId.value.toString())) },
+                onNavigateToIdentifiers = { userId -> navigation.bringToFront(UsersManagementDestination.Identifiers(userId.value.toString())) },
                 onBack = navigation::pop
             )
         )

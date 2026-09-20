@@ -15,11 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -38,12 +33,15 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
+import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
@@ -56,6 +54,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.component.user.
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.users_management_title
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,25 +72,31 @@ fun UsersManagementMainScreen(component: UsersManagementMainComponent) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(
+                    CoreBackButton(
                         onClick = component::onBackClick,
                         modifier = Modifier.testTag(UsersManagementMainTestTags.BACK_BUTTON)
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-                    }
+                    )
                 },
                 actions = {
                     IconButton(
                         onClick = component::onToggleFilterPanel,
                         modifier = Modifier.testTag(UsersManagementMainTestTags.FILTER_BUTTON)
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)
+                        Icon(
+                            painter = painterResource(CommonRes.drawable.ic_settings),
+                            contentDescription = null,
+                            modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+                        )
                     }
                     IconButton(
                         onClick = component::onRefresh,
                         modifier = Modifier.testTag(UsersManagementMainTestTags.REFRESH_BUTTON)
                     ) {
-                        Icon(Icons.Default.Refresh, contentDescription = null)
+                        Icon(
+                            painter = painterResource(CommonRes.drawable.ic_settings),
+                            contentDescription = null,
+                            modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+                        )
                     }
                 }
             )
@@ -101,7 +106,11 @@ fun UsersManagementMainScreen(component: UsersManagementMainComponent) {
                 onClick = component::onCreateUserClick,
                 modifier = Modifier.testTag(UsersManagementMainTestTags.CREATE_USER_FAB)
             ) {
-                Icon(Icons.Default.Add, contentDescription = stringResource(Res.string.create_user))
+                Icon(
+                    painter = painterResource(CommonRes.drawable.ic_profile),
+                    contentDescription = stringResource(Res.string.create_user),
+                    modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+                )
             }
         }
     ) { padding ->

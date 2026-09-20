@@ -1,12 +1,11 @@
 package io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.ui.graphics.vector.ImageVector
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
+import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.Res
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.nav_home
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.nav_profile
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
 /**
@@ -15,18 +14,18 @@ import org.jetbrains.compose.resources.StringResource
 sealed interface MainScreenDestination {
     val config: MainScreenComponent.Config
     val title: StringResource
-    val icon: ImageVector
+    val iconRes: DrawableResource
 
     data object Home : MainScreenDestination {
         override val config = MainScreenComponent.Config.Home
         override val title = Res.string.nav_home
-        override val icon = Icons.Default.Home
+        override val iconRes = CommonRes.drawable.ic_home
     }
 
     data object Profile : MainScreenDestination {
         override val config = MainScreenComponent.Config.Profile
         override val title = Res.string.nav_profile
-        override val icon = Icons.Default.Person
+        override val iconRes = CommonRes.drawable.ic_profile
     }
 
     companion object {

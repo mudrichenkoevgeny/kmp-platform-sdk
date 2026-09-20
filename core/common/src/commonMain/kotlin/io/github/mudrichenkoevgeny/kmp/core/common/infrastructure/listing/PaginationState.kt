@@ -26,7 +26,11 @@ data class PaginationState<T>(
      * One-based index of the next page to fetch.
      */
     val nextPageNumber: Int
-        get() = if (pageNumber == 0) ListingConstants.INITIAL_PAGE_NUMBER else pageNumber + 1
+        get() = if (pageNumber == 0) {
+            ListingConstants.INITIAL_PAGE_NUMBER
+        } else {
+            pageNumber + 1
+        }
 
     /**
      * True if the list contains no items.
@@ -99,7 +103,11 @@ fun <T> PaginationState<T>.toError(error: AppError, isInitial: Boolean): Paginat
     isInitialLoading = false,
     isNextPageLoading = false,
     error = error,
-    items = if (isInitial) emptyList() else items,
+    items = if (isInitial) {
+        emptyList()
+    } else {
+        items
+    },
 )
 
 /**

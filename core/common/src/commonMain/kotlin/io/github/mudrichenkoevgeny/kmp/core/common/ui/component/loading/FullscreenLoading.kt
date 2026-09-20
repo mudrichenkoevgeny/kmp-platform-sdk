@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import kotlinx.coroutines.delay
@@ -81,17 +80,6 @@ private fun FullscreenLoadingComponentSizePreview() {
 @ThemePreviews
 @Composable
 private fun FullscreenLoadingThemePreview() {
-    CoreTheme {
-        Surface {
-            FullscreenLoading(delayMillis = 0L)
-        }
-    }
-}
-
-@InternalApi
-@FontScalePreviews
-@Composable
-private fun FullscreenLoadingFontScalePreview() {
     CoreTheme {
         Surface {
             FullscreenLoading(delayMillis = 0L)

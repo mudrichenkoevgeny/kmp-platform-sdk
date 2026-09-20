@@ -44,6 +44,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRoo
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di.LocalManagementAppComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home.HomeScreen
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home.HomeScreenComponent
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -51,10 +52,15 @@ fun MainScreen(screenComponent: MainScreenComponent) {
     val appComponent = LocalManagementAppComponent.current
 
     val screenStackState by screenComponent.stack.subscribeAsState()
+    val isAuthorized by screenComponent.isAuthorized.subscribeAsState()
     val loginDialogSlot by screenComponent.loginDialogSlot.subscribeAsState()
 
     val currentNavigation = remember(screenStackState.active.configuration) {
         MainScreenDestination.fromConfig(screenStackState.active.configuration)
+    }
+
+    val destinations = remember(isAuthorized) {
+        MainScreenDestination.getDestinations(isAuthorized)
     }
 
     Box(Modifier.fillMaxSize()) {
@@ -62,7 +68,7 @@ fun MainScreen(screenComponent: MainScreenComponent) {
             isMobile = appComponent.commonComponent.platformRepository.getDeviceInfo().isMobileClient(),
             screenStack = screenComponent.stack,
             currentDestination = currentNavigation,
-            destinations = MainScreenDestination.allDestinations,
+            destinations = destinations,
             onDestinationChange = { navItem ->
                 screenComponent.onTabClick(navItem.config)
             }
@@ -132,7 +138,13 @@ private fun MobileLayout(
                     NavigationBarItem(
                         selected = currentDestination == dest,
                         onClick = { onDestinationChange(dest) },
-                        icon = { Icon(dest.icon, contentDescription = null) },
+                        icon = {
+                            Icon(
+                                painter = painterResource(dest.iconRes),
+                                contentDescription = null,
+                                modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+                            )
+                        },
                         label = { Text(stringResource(dest.title)) }
                     )
                 }
@@ -176,12 +188,13 @@ private fun WebLayout(
                     destinations.filter { it != MainScreenDestination.Home }.forEach { dest ->
                         IconButton(onClick = { onDestinationChange(dest) }) {
                             Icon(
-                                imageVector = dest.icon,
+                                painter = painterResource(dest.iconRes),
                                 contentDescription = stringResource(dest.title),
                                 tint = if (currentDestination == dest)
                                     MaterialTheme.colorScheme.primary
                                 else
-                                    MaterialTheme.colorScheme.onSurface
+                                    MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
                             )
                         }
                     }

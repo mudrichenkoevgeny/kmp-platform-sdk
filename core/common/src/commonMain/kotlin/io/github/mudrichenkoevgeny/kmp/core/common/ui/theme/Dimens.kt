@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
  */
 @Immutable
 data class CoreDimens(
+    val paddingExtraSmall: Dp = 4.dp,
     val paddingSmall: Dp = 8.dp,
     val paddingMedium: Dp = 16.dp,
     val paddingLarge: Dp = 24.dp,
@@ -27,7 +28,9 @@ data class CoreDimens(
     val progressIndicatorSizeSmall: Dp = 24.dp,
     val progressIndicatorSizeLarge: Dp = 52.dp,
     val qrCodeSize: Dp = 200.dp,
-    val previewContainerHeight: Dp = 300.dp
+    val previewContainerHeight: Dp = 300.dp,
+    val dialogWidth: Dp = 480.dp,
+    val dialogHeight: Dp = 520.dp
 )
 
 internal val LocalCoreDimens = staticCompositionLocalOf { CoreDimens() }

@@ -3,9 +3,9 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.setting
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.root.AuditApiRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.usecase.GetAuditEventUseCase
@@ -77,11 +77,11 @@ class ManagementSettingsRootComponentImpl(
         is ManagementSettingsDestination.Main -> ManagementSettingsRootComponent.Child.Main(
             MainManagementSettingsComponentImpl(
                 componentContext = context,
-                onNavigateToEditAuthSettings = { navigation.push(ManagementSettingsDestination.EditAuthSettings) },
-                onNavigateToEditGlobalSettings = { navigation.push(ManagementSettingsDestination.EditGlobalSettings) },
-                onNavigateToEditSecuritySettings = { navigation.push(ManagementSettingsDestination.EditSecuritySettings) },
-                onNavigateToUsersManagement = { navigation.push(ManagementSettingsDestination.UsersManagement) },
-                onNavigateToAuditLogs = { navigation.push(ManagementSettingsDestination.AuditLogs) }
+                onNavigateToEditAuthSettings = { navigation.bringToFront(ManagementSettingsDestination.EditAuthSettings) },
+                onNavigateToEditGlobalSettings = { navigation.bringToFront(ManagementSettingsDestination.EditGlobalSettings) },
+                onNavigateToEditSecuritySettings = { navigation.bringToFront(ManagementSettingsDestination.EditSecuritySettings) },
+                onNavigateToUsersManagement = { navigation.bringToFront(ManagementSettingsDestination.UsersManagement) },
+                onNavigateToAuditLogs = { navigation.bringToFront(ManagementSettingsDestination.AuditLogs) }
             )
         )
         is ManagementSettingsDestination.EditAuthSettings -> ManagementSettingsRootComponent.Child.EditAuthSettings(

@@ -1,41 +1,28 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
@@ -43,11 +30,24 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreEmailTextField
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CorePasswordTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.email.LoginByEmailComponentMock
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -60,9 +60,7 @@ fun LoginByEmailScreen(component: LoginByEmailComponent) {
     val state by component.state.subscribeAsState()
 
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .animateContentSize(),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         when (val currentState = state) {
@@ -96,10 +94,10 @@ private fun LoginByEmailContent(
     onRegistrationClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxWidth()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(CoreTheme.dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -107,106 +105,78 @@ private fun LoginByEmailContent(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                IconButton(
+                CoreBackButton(
                     onClick = onBackClick,
                     modifier = Modifier
                         .align(Alignment.CenterStart)
                         .testTag(LoginByEmailTestTags.BACK_BUTTON),
                     enabled = !state.actionLoading
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null
-                    )
-                }
+                )
 
-                Text(
+                CoreScreenTitleText(
                     text = stringResource(Res.string.login_by_email),
-                    style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.testTag(LoginByEmailTestTags.TITLE)
                 )
             }
 
-            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
-
-            OutlinedTextField(
-                value = state.email,
-                onValueChange = onEmailChanged,
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(LoginByEmailTestTags.EMAIL_INPUT),
-                label = { Text(stringResource(Res.string.email)) },
-                isError = state.actionError != null,
-                enabled = !state.actionLoading,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                singleLine = true
-            )
-
-            Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
-
-            OutlinedTextField(
-                value = state.password,
-                onValueChange = onPasswordChanged,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(LoginByEmailTestTags.PASSWORD_INPUT),
-                label = { Text(stringResource(Res.string.password)) },
-                isError = state.actionError != null,
-                enabled = !state.actionLoading,
-                visualTransformation = if (state.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                trailingIcon = {
-                    IconButton(
-                        onClick = onTogglePasswordVisibility,
-                        modifier = Modifier.testTag(LoginByEmailTestTags.TOGGLE_PASSWORD_VISIBILITY_BUTTON)
-                    ) {
-                        val icon = if (state.isPasswordVisible) Icons.Default.Check else Icons.Default.Info
-                        Icon(imageVector = icon, contentDescription = null)
-                    }
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                singleLine = true
-            )
-
-            ErrorText(state.actionError)
-
-            TextButton(
-                onClick = onForgotPasswordClick,
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .testTag(LoginByEmailTestTags.FORGOT_PASSWORD_BUTTON),
-                enabled = !state.actionLoading
+                    .weight(1f)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
+                CoreEmailTextField(
+                    value = state.email,
+                    onValueChange = onEmailChanged,
+                    label = { CoreBodyText(stringResource(Res.string.email)) },
+                    placeholder = { CoreBodyText(stringResource(Res.string.email)) },
+                    modifier = Modifier.testTag(LoginByEmailTestTags.EMAIL_INPUT),
+                    isError = state.actionError != null
+                )
+
+                Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
+
+                CorePasswordTextField(
+                    value = state.password,
+                    onValueChange = onPasswordChanged,
+                    isPasswordVisible = state.isPasswordVisible,
+                    onTogglePasswordVisibility = onTogglePasswordVisibility,
+                    label = { CoreBodyText(stringResource(Res.string.password)) },
+                    placeholder = { CoreBodyText(stringResource(Res.string.password)) },
+                    modifier = Modifier.testTag(LoginByEmailTestTags.PASSWORD_INPUT),
+                    isError = state.actionError != null,
+                    toggleModifier = Modifier.testTag(LoginByEmailTestTags.TOGGLE_PASSWORD_VISIBILITY_BUTTON)
+                )
+
+                ErrorText(state.actionError)
+
+                CoreTextButton(
                     text = stringResource(Res.string.forgot_password),
-                    style = MaterialTheme.typography.labelLarge
+                    onClick = onForgotPasswordClick,
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .testTag(LoginByEmailTestTags.FORGOT_PASSWORD_BUTTON),
+                    enabled = !state.actionLoading
                 )
             }
 
-            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
-
-            Button(
+            CoreButton(
+                text = stringResource(Res.string.login),
                 onClick = onLoginClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(LoginByEmailTestTags.LOGIN_BUTTON),
+                modifier = Modifier.testTag(LoginByEmailTestTags.LOGIN_BUTTON),
                 enabled = state.canLogin
-            ) {
-                Text(stringResource(Res.string.login))
-            }
-
-            Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
+            )
 
             if (state.isRegistrationAvailable) {
-                TextButton(
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+
+                CoreTextButton(
+                    text = stringResource(Res.string.no_account_register),
                     onClick = onRegistrationClick,
                     modifier = Modifier.testTag(LoginByEmailTestTags.REGISTRATION_BUTTON),
                     enabled = !state.actionLoading
-                ) {
-                    Text(
-                        text = stringResource(Res.string.no_account_register),
-                        style = MaterialTheme.typography.labelLarge
-                    )
-                }
+                )
             }
         }
 
@@ -224,91 +194,13 @@ private fun ErrorText(error: AppError?) {
         exit = fadeOut() + shrinkVertically()
     ) {
         error?.let {
-            Text(
+            CoreErrorText(
                 text = it.toLocalizedMessage(),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(top = CoreTheme.dimens.paddingSmall)
                     .testTag(LoginByEmailTestTags.ERROR_TEXT)
             )
-        }
-    }
-}
-
-@InternalApi
-@Preview(showBackground = true)
-@Composable
-private fun LoginByEmailContentPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                LoginByEmailContent(
-                    state = LoginByEmailScreenState.Content(
-                        email = "test@example.com",
-                        isEmailValid = true,
-                        isRegistrationAvailable = true
-                    ),
-                    onEmailChanged = {},
-                    onPasswordChanged = {},
-                    onTogglePasswordVisibility = {},
-                    onLoginClick = {},
-                    onForgotPasswordClick = {},
-                    onRegistrationClick = {},
-                    onBackClick = {}
-                )
-            }
-        }
-    }
-}
-
-@InternalApi
-@Preview(showBackground = true)
-@Composable
-private fun LoginByEmailContentLoadingPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                LoginByEmailContent(
-                    state = LoginByEmailScreenState.Content(
-                        email = "test@example.com",
-                        actionLoading = true
-                    ),
-                    onEmailChanged = {},
-                    onPasswordChanged = {},
-                    onTogglePasswordVisibility = {},
-                    onLoginClick = {},
-                    onForgotPasswordClick = {},
-                    onRegistrationClick = {},
-                    onBackClick = {}
-                )
-            }
-        }
-    }
-}
-
-@InternalApi
-@Preview(showBackground = true)
-@Composable
-private fun LoginByEmailContentErrorPreview() {
-    MaterialTheme {
-        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-            Surface {
-                LoginByEmailContent(
-                    state = LoginByEmailScreenState.Content(
-                        email = "wrong@email.com",
-                        actionError = CommonError.Unknown()
-                    ),
-                    onEmailChanged = {},
-                    onPasswordChanged = {},
-                    onTogglePasswordVisibility = {},
-                    onLoginClick = {},
-                    onForgotPasswordClick = {},
-                    onRegistrationClick = {},
-                    onBackClick = {}
-                )
-            }
         }
     }
 }
@@ -323,4 +215,96 @@ internal object LoginByEmailTestTags {
     const val LOGIN_BUTTON = "LoginByEmail_LoginButton"
     const val REGISTRATION_BUTTON = "LoginByEmail_RegistrationButton"
     const val ERROR_TEXT = "LoginByEmail_ErrorText"
+}
+
+@InternalApi
+internal class LoginByEmailPreviewProvider :
+    PreviewParameterProvider<LoginByEmailScreenState> {
+
+    private val items: List<Pair<String, LoginByEmailScreenState>> = listOf(
+        "Default Content" to LoginByEmailScreenState.Content(),
+        "Filled Content" to LoginByEmailScreenState.Content(
+            email = "user@example.com",
+            isEmailValid = true,
+            password = "SecretPassword123!",
+            isPasswordValid = true,
+            isRegistrationAvailable = true
+        ),
+        "Inline Error" to LoginByEmailScreenState.Content(
+            email = "wrong@example.com",
+            actionError = CommonError.Unknown(),
+            isRegistrationAvailable = true
+        ),
+        "Action Loading" to LoginByEmailScreenState.Content(
+            email = "user@example.com",
+            actionLoading = true
+        ),
+        "Fullscreen Loading" to LoginByEmailScreenState.Loading,
+        "Long Text Overflow" to LoginByEmailScreenState.Content(
+            email = "this_is_an_extremely_long_email_address_for_testing_overflow_behavior@example.domain.com",
+            isRegistrationAvailable = true
+        )
+    )
+
+    override val values: Sequence<LoginByEmailScreenState> =
+        items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? =
+        items.getOrNull(index)?.first
+}
+
+@InternalApi
+@Composable
+private fun LoginByEmailScreenPreviewContent(state: LoginByEmailScreenState) {
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        LoginByEmailScreen(
+            component = LoginByEmailComponentMock(initialState = state)
+        )
+    }
+}
+
+private val defaultPreviewState = LoginByEmailScreenState.Content(
+    email = "user@example.com",
+    isEmailValid = true,
+    password = "SecretPassword123!",
+    isPasswordValid = true,
+    isRegistrationAvailable = true
+)
+
+@InternalApi
+@Preview(showBackground = true, group = "States")
+@Composable
+private fun StatesPreview(
+    @PreviewParameter(LoginByEmailPreviewProvider::class) state: LoginByEmailScreenState
+) {
+    DialogPreviewContainer {
+        LoginByEmailScreenPreviewContent(state = state)
+    }
+}
+
+@InternalApi
+@DialogSizePreviews
+@Composable
+private fun DialogSizePreview() {
+    DialogPreviewContainer {
+        LoginByEmailScreenPreviewContent(state = defaultPreviewState)
+    }
+}
+
+@InternalApi
+@ThemePreviews
+@Composable
+private fun ThemePreview() {
+    DialogPreviewContainer {
+        LoginByEmailScreenPreviewContent(state = defaultPreviewState)
+    }
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun FontScalePreview() {
+    DialogPreviewContainer {
+        LoginByEmailScreenPreviewContent(state = defaultPreviewState)
+    }
 }

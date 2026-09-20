@@ -1,16 +1,25 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -27,6 +36,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
@@ -44,9 +54,7 @@ fun ResetEmailPasswordScreen(component: ResetEmailPasswordComponent) {
     val state by component.state.subscribeAsState()
 
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .animateContentSize(),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         when (val currentState = state) {
@@ -81,10 +89,10 @@ private fun EmailInputContent(
     onSendCodeClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxWidth()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(CoreTheme.dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -92,18 +100,13 @@ private fun EmailInputContent(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                IconButton(
+                CoreBackButton(
                     onClick = onBackClick,
                     modifier = Modifier
                         .align(Alignment.CenterStart)
                         .testTag(ResetEmailPasswordTestTags.EMAIL_STEP_BACK_BUTTON),
                     enabled = !state.actionLoading
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null
-                    )
-                }
+                )
 
                 Text(
                     text = stringResource(Res.string.reset_password),
@@ -112,23 +115,27 @@ private fun EmailInputContent(
                 )
             }
 
-            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
-
-            OutlinedTextField(
-                value = state.email,
-                onValueChange = onEmailChanged,
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(ResetEmailPasswordTestTags.EMAIL_INPUT),
-                label = { Text(stringResource(Res.string.email)) },
-                isError = state.actionError != null,
-                enabled = !state.actionLoading,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-            )
+                    .weight(1f)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                OutlinedTextField(
+                    value = state.email,
+                    onValueChange = onEmailChanged,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(ResetEmailPasswordTestTags.EMAIL_INPUT),
+                    label = { Text(stringResource(Res.string.email)) },
+                    isError = state.actionError != null,
+                    enabled = !state.actionLoading,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                )
 
-            ErrorText(state.actionError, ResetEmailPasswordTestTags.EMAIL_STEP_ERROR_TEXT)
-
-            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
+                ErrorText(state.actionError, ResetEmailPasswordTestTags.EMAIL_STEP_ERROR_TEXT)
+            }
 
             Button(
                 onClick = onSendCodeClick,
@@ -154,10 +161,10 @@ private fun ResetInputContent(
     onResetEmailClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxWidth()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(CoreTheme.dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -165,18 +172,13 @@ private fun ResetInputContent(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                IconButton(
+                CoreBackButton(
                     onClick = onBackClick,
                     modifier = Modifier
                         .align(Alignment.CenterStart)
                         .testTag(ResetEmailPasswordTestTags.RESET_STEP_BACK_BUTTON),
                     enabled = !state.actionLoading
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null
-                    )
-                }
+                )
 
                 Text(
                     text = stringResource(Res.string.enter_confirmation_code),
@@ -194,54 +196,58 @@ private fun ResetInputContent(
                     .testTag(ResetEmailPasswordTestTags.CODE_SENT_INFO_TEXT)
             )
 
-            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
-
-            OutlinedTextField(
-                value = state.code,
-                onValueChange = onCodeChanged,
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(ResetEmailPasswordTestTags.CODE_INPUT),
-                label = { Text(stringResource(Res.string.confirmation_code)) },
-                enabled = !state.actionLoading,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
-            )
-
-            Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
-
-            OutlinedTextField(
-                value = state.newPassword,
-                onValueChange = onPasswordChanged,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(ResetEmailPasswordTestTags.NEW_PASSWORD_INPUT),
-                label = { Text(stringResource(Res.string.new_password)) },
-                enabled = !state.actionLoading,
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-            )
-
-            ErrorText(state.actionError, ResetEmailPasswordTestTags.RESET_STEP_ERROR_TEXT)
-
-            Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
-
-            if (!state.canResendCode) {
-                Text(
-                    text = stringResource(Res.string.resend_code_timer, state.resendTimerSeconds),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.outline,
-                    modifier = Modifier.testTag(ResetEmailPasswordTestTags.RESEND_TIMER_TEXT)
+                    .weight(1f)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                OutlinedTextField(
+                    value = state.code,
+                    onValueChange = onCodeChanged,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(ResetEmailPasswordTestTags.CODE_INPUT),
+                    label = { Text(stringResource(Res.string.confirmation_code)) },
+                    enabled = !state.actionLoading,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
                 )
-            } else {
-                TextButton(
-                    onClick = onResendCodeClick,
-                    modifier = Modifier.testTag(ResetEmailPasswordTestTags.RESEND_CODE_BUTTON)
-                ) {
-                    Text(text = stringResource(Res.string.resend_code))
+
+                Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
+
+                OutlinedTextField(
+                    value = state.newPassword,
+                    onValueChange = onPasswordChanged,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(ResetEmailPasswordTestTags.NEW_PASSWORD_INPUT),
+                    label = { Text(stringResource(Res.string.new_password)) },
+                    enabled = !state.actionLoading,
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                )
+
+                ErrorText(state.actionError, ResetEmailPasswordTestTags.RESET_STEP_ERROR_TEXT)
+
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+
+                if (!state.canResendCode) {
+                    Text(
+                        text = stringResource(Res.string.resend_code_timer, state.resendTimerSeconds),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.outline,
+                        modifier = Modifier.testTag(ResetEmailPasswordTestTags.RESEND_TIMER_TEXT)
+                    )
+                } else {
+                    TextButton(
+                        onClick = onResendCodeClick,
+                        modifier = Modifier.testTag(ResetEmailPasswordTestTags.RESEND_CODE_BUTTON)
+                    ) {
+                        Text(text = stringResource(Res.string.resend_code))
+                    }
                 }
             }
-
-            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             Button(
                 onClick = onConfirmResetClick,
@@ -252,6 +258,8 @@ private fun ResetInputContent(
             ) {
                 Text(stringResource(Res.string.confirm))
             }
+
+            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
             TextButton(
                 onClick = onResetEmailClick,

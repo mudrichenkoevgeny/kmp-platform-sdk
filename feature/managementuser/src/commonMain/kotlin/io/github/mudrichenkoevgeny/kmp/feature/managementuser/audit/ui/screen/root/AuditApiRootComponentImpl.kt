@@ -3,9 +3,9 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.r
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.detail.AuditEventDetailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.events.AuditEventsComponentImpl
@@ -52,7 +52,7 @@ class AuditApiRootComponentImpl(
             AuditEventsComponentImpl(
                 componentContext = context,
                 getAuditEventsUseCase = getAuditEventsUseCase,
-                onNavigateToEventDetail = { eventId -> navigation.push(AuditApiDestination.Detail(eventId.value.toString())) },
+                onNavigateToEventDetail = { eventId -> navigation.bringToFront(AuditApiDestination.Detail(eventId.value.toString())) },
                 onBack = onBack
             )
         )

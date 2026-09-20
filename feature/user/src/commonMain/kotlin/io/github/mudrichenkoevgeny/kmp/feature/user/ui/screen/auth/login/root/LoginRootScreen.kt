@@ -1,7 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.root
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -43,8 +44,21 @@ private fun <C : Any, T : Any> LoginDialogSurface(
     stack: Value<ChildStack<C, T>>,
     content: @Composable (T) -> Unit
 ) {
+    val commonComponent = LocalCommonComponent.current
+    val isMobile = commonComponent.platformRepository.getDeviceInfo().isMobileClient()
+
+    val surfaceModifier = if (isMobile) {
+        Modifier
+            .fillMaxWidth()
+            .height(CoreTheme.dimens.dialogHeight)
+    } else {
+        Modifier
+            .width(CoreTheme.dimens.dialogWidth)
+            .height(CoreTheme.dimens.dialogHeight)
+    }
+
     Surface(
-        modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+        modifier = surfaceModifier,
         shape = RoundedCornerShape(CoreTheme.dimens.roundedCornerShape),
         color = MaterialTheme.colorScheme.surface
     ) {

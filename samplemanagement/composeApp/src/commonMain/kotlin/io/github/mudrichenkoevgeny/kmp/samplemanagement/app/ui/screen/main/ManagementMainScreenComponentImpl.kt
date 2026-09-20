@@ -11,10 +11,14 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.asValue
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di.ManagementAppComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home.HomeScreenComponentImpl
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 
 /**
  * Default [MainScreenComponent]: stack navigation for home and profile, slot for [ManagementLoginRootComponent].
@@ -26,6 +30,15 @@ class ManagementMainScreenComponentImpl(
     componentContext: ComponentContext,
     private val managementAppComponent: ManagementAppComponent
 ) : MainScreenComponent, ComponentContext by componentContext {
+
+    private val userRepository = managementAppComponent.managementUserComponent.userRepository
+
+    override val isAuthorized: Value<Boolean> = userRepository.currentUser
+        .map { user -> user != null }
+        .asValue(
+            initialValue = false,
+            lifecycle = lifecycle
+        )
 
     private val navigation = StackNavigation<MainScreenComponent.Config>()
     private val dialogSlotNavigation = SlotNavigation<MainScreenComponent.DialogConfig>()
@@ -46,6 +59,16 @@ class ManagementMainScreenComponentImpl(
         childFactory = ::createDialogChild
     )
 
+    init {
+        userRepository.currentUser
+            .onEach { user ->
+                if ((user == null) && (stack.value.active.configuration is MainScreenComponent.Config.Settings)) {
+                    navigation.bringToFront(MainScreenComponent.Config.Home)
+                }
+            }
+            .launchIn(componentCoroutineScope())
+    }
+
     private fun createChild(
         config: MainScreenComponent.Config,
         context: ComponentContext
@@ -60,7 +83,7 @@ class ManagementMainScreenComponentImpl(
                 MainScreenComponent.Child.ProfileChild(
                     managementAppComponent.managementUserComponent.createProfileComponent(
                         componentContext = context,
-                        onNavigateToLogin = { onShowLogin() }
+                        onNavigateToLogin = ::onShowLogin
                     )
                 )
             }
@@ -81,12 +104,15 @@ class ManagementMainScreenComponentImpl(
             is MainScreenComponent.DialogConfig.Login -> {
                 managementAppComponent.managementUserComponent.createLoginRootDialogComponent(
                     componentContext = context,
-                    onFinished = { onDismissLogin() }
+                    onFinished = ::onDismissLogin
                 )
             }
         }
 
     override fun onTabClick(config: MainScreenComponent.Config) {
+        if ((config is MainScreenComponent.Config.Settings) && (!isAuthorized.value)) {
+            return
+        }
         navigation.bringToFront(config)
     }
 

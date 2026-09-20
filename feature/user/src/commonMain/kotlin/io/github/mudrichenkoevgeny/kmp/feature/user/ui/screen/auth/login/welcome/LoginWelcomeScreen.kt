@@ -1,14 +1,14 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -53,9 +53,7 @@ fun LoginWelcomeScreen(component: LoginWelcomeComponent) {
     val state by component.state.subscribeAsState()
 
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .animateContentSize(),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         when (val currentState = state) {
@@ -87,10 +85,10 @@ private fun LoginWelcomeContent(
     onPrivacyPolicyClick: () -> Unit,
     onTermsOfServiceClick: () -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxWidth()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(CoreTheme.dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -100,62 +98,66 @@ private fun LoginWelcomeContent(
                 modifier = Modifier.testTag(LoginWelcomeTestTags.TITLE)
             )
 
-            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
-
-            state.availableAuthProviders.primary.forEach { provider ->
-                AuthProviderButton(
-                    authProvider = provider,
-                    onClick = { onLoginClick(provider) },
-                    modifier = Modifier
-                        .padding(bottom = CoreTheme.dimens.paddingSmall)
-                        .testTag(LoginWelcomeTestTags.getAuthProviderTag(provider))
-                )
-            }
-
-            if (state.availableAuthProviders.primary.isNotEmpty() &&
-                state.availableAuthProviders.secondary.isNotEmpty()) {
-
-                Text(
-                    text = stringResource(Res.string.or_sign_in_with),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.outline,
-                    modifier = Modifier
-                        .padding(vertical = CoreTheme.dimens.paddingMedium)
-                        .testTag(LoginWelcomeTestTags.OR_DIVIDER)
-                )
-            }
-
-            AuthProviderGrid(
-                authProviders = state.availableAuthProviders.secondary,
-                onProviderClick = onLoginClick,
-                modifier = Modifier.testTag(LoginWelcomeTestTags.SECONDARY_PROVIDERS_GRID)
-            )
-
-            AnimatedVisibility(
-                visible = state.actionError != null,
-                enter = fadeIn() + expandVertically(),
-                exit = fadeOut() + shrinkVertically()
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                state.actionError?.let { error ->
-                    Text(
-                        text = error.toLocalizedMessage(),
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.labelMedium,
-                        textAlign = TextAlign.Center,
+                state.availableAuthProviders.primary.forEach { provider ->
+                    AuthProviderButton(
+                        authProvider = provider,
+                        onClick = { onLoginClick(provider) },
                         modifier = Modifier
-                            .padding(top = CoreTheme.dimens.paddingMedium)
-                            .testTag(LoginWelcomeTestTags.ACTION_ERROR_TEXT)
+                            .padding(bottom = CoreTheme.dimens.paddingSmall)
+                            .testTag(LoginWelcomeTestTags.getAuthProviderTag(provider))
                     )
                 }
-            }
 
-            Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
+                if (state.availableAuthProviders.primary.isNotEmpty() &&
+                    state.availableAuthProviders.secondary.isNotEmpty()) {
+
+                    Text(
+                        text = stringResource(Res.string.or_sign_in_with),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.outline,
+                        modifier = Modifier
+                            .padding(vertical = CoreTheme.dimens.paddingMedium)
+                            .testTag(LoginWelcomeTestTags.OR_DIVIDER)
+                    )
+                }
+
+                AuthProviderGrid(
+                    authProviders = state.availableAuthProviders.secondary,
+                    onProviderClick = onLoginClick,
+                    modifier = Modifier.testTag(LoginWelcomeTestTags.SECONDARY_PROVIDERS_GRID)
+                )
+
+                AnimatedVisibility(
+                    visible = state.actionError != null,
+                    enter = fadeIn() + expandVertically(),
+                    exit = fadeOut() + shrinkVertically()
+                ) {
+                    state.actionError?.let { error ->
+                        Text(
+                            text = error.toLocalizedMessage(),
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.labelMedium,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .padding(top = CoreTheme.dimens.paddingMedium)
+                                .testTag(LoginWelcomeTestTags.ACTION_ERROR_TEXT)
+                        )
+                    }
+                }
+            }
 
             LegalFooter(
                 isPrivacyPolicyVisible = state.hasPrivacyPolicy,
                 isTermsOfServiceVisible = state.hasTermsOfService,
                 onPrivacyPolicyClick = onPrivacyPolicyClick,
-                onTermsOfServiceClick = onTermsOfServiceClick,
+                onTermsOfServiceClick = onTermsOfServiceClick
             )
         }
 

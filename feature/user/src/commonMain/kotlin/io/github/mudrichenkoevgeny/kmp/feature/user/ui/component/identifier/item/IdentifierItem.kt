@@ -4,9 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.LockReset
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -18,12 +15,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
+import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.change_password
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_delete
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.IdentifierListTestTags
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -69,9 +69,10 @@ fun IdentifierItem(
                     modifier = Modifier.testTag(IdentifierListTestTags.CHANGE_PASSWORD_BUTTON_PREFIX + identifier.id.value)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.LockReset,
+                        painter = painterResource(CommonRes.drawable.ic_password_reset),
                         contentDescription = stringResource(Res.string.change_password),
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
                     )
                 }
             }
@@ -81,9 +82,10 @@ fun IdentifierItem(
                 modifier = Modifier.testTag(IdentifierListTestTags.DELETE_BUTTON_PREFIX + identifier.id.value)
             ) {
                 Icon(
-                    imageVector = Icons.Default.Delete,
+                    painter = painterResource(CommonRes.drawable.ic_delete),
                     contentDescription = stringResource(Res.string.identifier_delete),
-                    tint = MaterialTheme.colorScheme.error
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
                 )
             }
         }

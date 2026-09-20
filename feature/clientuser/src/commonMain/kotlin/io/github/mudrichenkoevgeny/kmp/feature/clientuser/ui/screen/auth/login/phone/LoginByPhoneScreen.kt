@@ -3,16 +3,14 @@ package io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -33,6 +31,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
@@ -49,15 +48,10 @@ fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
             TopAppBar(
                 title = { Text(stringResource(Res.string.sign_in_with_phone)) },
                 navigationIcon = {
-                    IconButton(
+                    CoreBackButton(
                         onClick = component::onBackClick,
                         modifier = Modifier.testTag(LoginByPhoneTestTags.BACK_BUTTON)
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
+                    )
                 }
             )
         }
@@ -67,26 +61,18 @@ fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(CoreTheme.dimens.paddingLarge)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
-            ) {
-                when (val s = state) {
-                    is LoginByPhoneScreenState.PhoneInput -> {
-                        PhoneInputContent(s, component::onPhoneChanged, component::onSendCodeClick)
-                    }
-                    is LoginByPhoneScreenState.CodeInput -> {
-                        CodeInputContent(
-                            s,
-                            component::onCodeChanged,
-                            component::onConfirmCodeClick,
-                            component::onSendCodeClick,
-                            component::onResetPhoneClick
-                        )
-                    }
+            when (val s = state) {
+                is LoginByPhoneScreenState.PhoneInput -> {
+                    PhoneInputContent(s, component::onPhoneChanged, component::onSendCodeClick)
+                }
+                is LoginByPhoneScreenState.CodeInput -> {
+                    CodeInputContent(
+                        s,
+                        component::onCodeChanged,
+                        component::onConfirmCodeClick,
+                        component::onSendCodeClick,
+                        component::onResetPhoneClick
+                    )
                 }
             }
 
@@ -105,42 +91,60 @@ private fun PhoneInputContent(
     onPhoneChanged: (String) -> Unit,
     onSendCodeClick: () -> Unit
 ) {
-    Text(
-        text = stringResource(Res.string.enter_phone_number),
-        style = MaterialTheme.typography.titleLarge,
-        modifier = Modifier.testTag(LoginByPhoneTestTags.PHONE_STEP_TITLE)
-    )
-
-    OutlinedTextField(
-        value = state.phoneNumber,
-        onValueChange = onPhoneChanged,
-        label = { Text(stringResource(Res.string.phone_number)) },
-        placeholder = { Text(stringResource(Res.string.phone_number)) },
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .testTag(LoginByPhoneTestTags.PHONE_INPUT),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-        singleLine = true,
-        isError = state.actionError != null
-    )
-
-    Button(
-        onClick = onSendCodeClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag(LoginByPhoneTestTags.SEND_CODE_BUTTON),
-        enabled = state.canSendCode
+            .padding(CoreTheme.dimens.paddingLarge)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(stringResource(Res.string.send_code))
-    }
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(Res.string.enter_phone_number),
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.testTag(LoginByPhoneTestTags.PHONE_STEP_TITLE)
+            )
 
-    state.actionError?.let { error ->
-        Text(
-            text = error.toLocalizedMessage(),
-            color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.testTag(LoginByPhoneTestTags.PHONE_STEP_ERROR_TEXT)
-        )
+            Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
+
+            OutlinedTextField(
+                value = state.phoneNumber,
+                onValueChange = onPhoneChanged,
+                label = { Text(stringResource(Res.string.phone_number)) },
+                placeholder = { Text(stringResource(Res.string.phone_number)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(LoginByPhoneTestTags.PHONE_INPUT),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                singleLine = true,
+                isError = state.actionError != null
+            )
+
+            state.actionError?.let { error ->
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+                Text(
+                    text = error.toLocalizedMessage(),
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.testTag(LoginByPhoneTestTags.PHONE_STEP_ERROR_TEXT)
+                )
+            }
+        }
+
+        Button(
+            onClick = onSendCodeClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(LoginByPhoneTestTags.SEND_CODE_BUTTON),
+            enabled = state.canSendCode
+        ) {
+            Text(stringResource(Res.string.send_code))
+        }
     }
 }
 
@@ -152,76 +156,92 @@ private fun CodeInputContent(
     onResendClick: () -> Unit,
     onChangePhoneClick: () -> Unit
 ) {
-    Text(
-        text = stringResource(Res.string.enter_confirmation_code),
-        style = MaterialTheme.typography.titleLarge,
-        modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_STEP_TITLE)
-    )
-
-    Text(
-        text = stringResource(Res.string.code_sent_to, state.phoneNumber),
-        style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_SENT_INFO_TEXT)
-    )
-
-    OutlinedTextField(
-        value = state.code,
-        onValueChange = onCodeChanged,
-        label = { Text(stringResource(Res.string.confirmation_code)) },
-        placeholder = { Text(stringResource(Res.string.enter_confirmation_code)) },
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .testTag(LoginByPhoneTestTags.CODE_INPUT),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        singleLine = true,
-        isError = state.actionError != null
-    )
-
-    Button(
-        onClick = onConfirmClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag(LoginByPhoneTestTags.CONFIRM_BUTTON),
-        enabled = state.canConfirmCode
+            .padding(CoreTheme.dimens.paddingLarge)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(stringResource(Res.string.confirm))
-    }
-
-    TextButton(
-        onClick = onChangePhoneClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag(LoginByPhoneTestTags.CHANGE_PHONE_BUTTON),
-        enabled = !state.actionLoading
-    ) {
-        Text(stringResource(Res.string.change_phone_number))
-    }
-
-    if (state.resendTimerSeconds > 0) {
         Text(
-            text = stringResource(Res.string.resend_code_timer, state.resendTimerSeconds),
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.testTag(LoginByPhoneTestTags.RESEND_TIMER_TEXT)
+            text = stringResource(Res.string.enter_confirmation_code),
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_STEP_TITLE)
         )
-    } else {
-        TextButton(
-            onClick = onResendClick,
+
+        Text(
+            text = stringResource(Res.string.code_sent_to, state.phoneNumber),
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_SENT_INFO_TEXT)
+        )
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            OutlinedTextField(
+                value = state.code,
+                onValueChange = onCodeChanged,
+                label = { Text(stringResource(Res.string.confirmation_code)) },
+                placeholder = { Text(stringResource(Res.string.enter_confirmation_code)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(LoginByPhoneTestTags.CODE_INPUT),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true,
+                isError = state.actionError != null
+            )
+
+            state.actionError?.let { error ->
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+                Text(
+                    text = error.toLocalizedMessage(),
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_STEP_ERROR_TEXT)
+                )
+            }
+
+            Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
+
+            if (state.resendTimerSeconds > 0) {
+                Text(
+                    text = stringResource(Res.string.resend_code_timer, state.resendTimerSeconds),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.testTag(LoginByPhoneTestTags.RESEND_TIMER_TEXT)
+                )
+            } else {
+                TextButton(
+                    onClick = onResendClick,
+                    modifier = Modifier.testTag(LoginByPhoneTestTags.RESEND_CODE_BUTTON),
+                    enabled = state.canResendCode
+                ) {
+                    Text(stringResource(Res.string.resend_code))
+                }
+            }
+        }
+
+        Button(
+            onClick = onConfirmClick,
             modifier = Modifier
                 .fillMaxWidth()
-                .testTag(LoginByPhoneTestTags.RESEND_CODE_BUTTON),
-            enabled = state.canResendCode
+                .testTag(LoginByPhoneTestTags.CONFIRM_BUTTON),
+            enabled = state.canConfirmCode
         ) {
-            Text(stringResource(Res.string.resend_code))
+            Text(stringResource(Res.string.confirm))
         }
-    }
 
-    state.actionError?.let { error ->
-        Text(
-            text = error.toLocalizedMessage(),
-            color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_STEP_ERROR_TEXT)
-        )
+        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+
+        TextButton(
+            onClick = onChangePhoneClick,
+            modifier = Modifier.testTag(LoginByPhoneTestTags.CHANGE_PHONE_BUTTON),
+            enabled = !state.actionLoading
+        ) {
+            Text(stringResource(Res.string.change_phone_number))
+        }
     }
 }
 

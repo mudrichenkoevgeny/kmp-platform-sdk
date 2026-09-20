@@ -5,6 +5,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -70,40 +71,51 @@ fun PendingDeletionScreen(component: PendingDeletionComponent) {
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(CoreTheme.dimens.paddingLarge),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.onErrorContainer
-                    )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(CoreTheme.dimens.paddingMedium),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+                        )
                     ) {
-                        Text(
-                            text = stringResource(Res.string.account_pending_deletion_title),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.testTag(PendingDeletionTestTags.CARD_TITLE)
-                        )
-                        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                        Text(
-                            text = stringResource(Res.string.account_pending_deletion_desc),
-                            style = MaterialTheme.typography.bodyMedium,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.testTag(PendingDeletionTestTags.CARD_DESC)
-                        )
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(CoreTheme.dimens.paddingMedium),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.account_pending_deletion_title),
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.error,
+                                modifier = Modifier.testTag(PendingDeletionTestTags.CARD_TITLE)
+                            )
+                            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+                            Text(
+                                text = stringResource(Res.string.account_pending_deletion_desc),
+                                style = MaterialTheme.typography.bodyMedium,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.testTag(PendingDeletionTestTags.CARD_DESC)
+                            )
+                        }
                     }
-                }
 
-                Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
+                    ErrorText(
+                        error = state.actionError,
+                        testTag = PendingDeletionTestTags.ACTION_ERROR_TEXT
+                    )
+                }
 
                 Button(
                     onClick = component::onRestoreAccountClick,
@@ -126,11 +138,6 @@ fun PendingDeletionScreen(component: PendingDeletionComponent) {
                 ) {
                     Text(text = stringResource(Res.string.logout))
                 }
-
-                ErrorText(
-                    error = state.actionError,
-                    testTag = PendingDeletionTestTags.ACTION_ERROR_TEXT
-                )
             }
 
             if (state.actionLoading) {
