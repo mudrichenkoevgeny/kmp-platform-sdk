@@ -3,12 +3,14 @@
     <string name="error_user_access_token_expired">Срок действия токена доступа истек.</string>
     <string name="error_user_invalid_refresh_token">Токен обновления недействителен.</string>
     <string name="error_user_invalid_session">Сеанс недействителен.</string>
-    <string name="error_user_blocked">Учётная запись заблокирована.</string>
-    <string name="error_user_blocked_until">Учётная запись заблокирована до %1$s.</string>
+    <string name="error_user_banned">Учётная запись забанена.</string>
+    <string name="error_user_locked">Учётная запись заблокирована.</string>
+    <string name="error_user_locked_until">Учётная запись заблокирована до %1$s.</string>
+    <string name="error_user_self_service_unlock_disabled">Самостоятельная разблокировка учётной записи отключена.</string>
     <string name="error_user_read_only">Учётная запись доступна только для чтения.</string>
     <string name="error_user_security_hold">Учётная запись временно заблокирована в целях безопасности.</string>
     <string name="error_user_pending_deletion">Учётная запись ожидает удаления и не может быть использована.</string>
-    <string name="error_user_illegal_status">Текущий статус учётной записи не позволяет выполнить эту операцию.</string>г
+    <string name="error_user_illegal_status">Текущий статус учётной записи не позволяет выполнить эту операцию.</string>
     <string name="error_user_forbidden">Доступ к этому ресурсу запрещен.</string>
     <string name="error_user_role_not_allowed">Ваша роль не позволяет выполнять это действие.</string>
     <string name="error_user_missing_permissions">У вас нет необходимых прав для этого действия.</string>
@@ -54,6 +56,8 @@
     <string name="login_by_email">Вход по Email</string>
     <string name="login_by_totp">Вход по TOTP</string>
     <string name="login_by_recovery_code">Вход по коду восстановления</string>
+    <string name="login_by_totp_desc">На вашей учётной записи включена двухфакторная аутентификация. Введите %1$d-значный код из приложения-аутентификатора.</string>
+    <string name="login_by_recovery_code_desc">Введите один из ваших одноразовых резервных кодов восстановления. Внимание: использованный код сразу станет недействительным после входа.</string>
     <string name="totp_code">Код TOTP</string>
     <string name="recovery_code">Код восстановления</string>
     <string name="use_recovery_code">Использовать код восстановления</string>
@@ -137,6 +141,8 @@
     <string name="unlock_by_google">Разблокировать через Google</string>
     <string name="unlock_by_apple">Разблокировать через Apple</string>
     <string name="unlock_choose_method">Выберите способ разблокировки</string>
+    <string name="unlock_email_input_desc">Введите ваш Email для получения кода разблокировки учётной записи.</string>
+    <string name="unlock_phone_input_desc">Введите ваш номер телефона для получения SMS с кодом разблокировки учётной записи.</string>
     <string name="unlock_success_title">Учётная запись успешно разблокирована</string>
     <string name="unlock_success_desc">Ваш аккаунт разблокирован. Вы можете продолжить использование всех функций системы.</string>
     <string name="mfa_step_up_title">Подтверждение безопасности</string>

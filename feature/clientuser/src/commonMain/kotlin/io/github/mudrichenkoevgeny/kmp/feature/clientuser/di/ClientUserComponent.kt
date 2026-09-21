@@ -256,6 +256,7 @@ class ClientUserComponent(
     private val userWebSocketModule = ClientUserWebSocketModule(
         userStorage = storageModule.userStorage,
         userRepository = userRepository,
+        authStorage = authStorage,
         refreshTokenUseCase = refreshTokenUseCase,
         scope = componentScope
     )

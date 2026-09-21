@@ -60,13 +60,23 @@ internal class CommonNetworkModule(
         }
     }
 
+    private val webSocketHttpClient by lazy {
+        HttpClient {
+            setupCommonConfig(
+                baseUrl = baseUrl,
+                networkLogger = networkLogger,
+                deviceInfo = platformRepository.getDeviceInfo()
+            )
+        }
+    }
+
     val commonWebSocketMessageHandler: WebSocketMessageHandler by lazy {
         CommonWebSocketMessageHandler()
     }
 
     val webSocketService: WebSocketService by lazy {
         KtorWebSocketService(
-            httpClient = httpClient,
+            httpClient = webSocketHttpClient,
             baseUrl = baseUrl,
             webSocketPath = webSocketPath,
             networkLogger = networkLogger,

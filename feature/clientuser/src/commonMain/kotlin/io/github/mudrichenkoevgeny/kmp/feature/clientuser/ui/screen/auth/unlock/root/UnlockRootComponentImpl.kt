@@ -13,11 +13,15 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.unlock.
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.UnlockMethod
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.otp.UnlockOtpComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.selection.UnlockMethodSelectionComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.target.UnlockTargetInputComponentImpl
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 
 /** Default implementation of [UnlockRootComponent]. */
 class UnlockRootComponentImpl(
     componentContext: ComponentContext,
     private val clientUserComponent: ClientUserComponent,
+    private val lockoutType: AccountLockoutType? = null,
+    private val lockoutUntil: Long? = null,
     private val onFinished: () -> Unit
 ) : UnlockRootComponent, ComponentContext by componentContext {
 
@@ -40,18 +44,31 @@ class UnlockRootComponentImpl(
         is UnlockDestination.MethodSelection -> UnlockRootComponent.Child.MethodSelection(
             UnlockMethodSelectionComponentImpl(
                 componentContext = context,
+                lockoutType = lockoutType,
+                lockoutUntil = lockoutUntil,
                 getUserIdentifiersUseCase = clientUserComponent.getUserIdentifiersUseCase,
-                sendUnlockEmailConfirmationUseCase = clientUserComponent.sendUnlockEmailConfirmationUseCase,
-                sendUnlockPhoneConfirmationUseCase = clientUserComponent.sendUnlockPhoneConfirmationUseCase,
                 unlockByGoogleUseCase = clientUserComponent.unlockByGoogleUseCase,
-                onNavigateToEmailOtp = { email ->
-                    navigation.bringToFront(UnlockDestination.OtpInput(UnlockMethod.EMAIL, email))
+                onNavigateToEmailInput = {
+                    navigation.bringToFront(UnlockDestination.TargetInput(UnlockMethod.EMAIL))
                 },
-                onNavigateToPhoneOtp = { phone ->
-                    navigation.bringToFront(UnlockDestination.OtpInput(UnlockMethod.PHONE, phone))
+                onNavigateToPhoneInput = {
+                    navigation.bringToFront(UnlockDestination.TargetInput(UnlockMethod.PHONE))
                 },
                 onUnlockSuccess = { navigation.bringToFront(UnlockDestination.Success) },
                 onBack = { onFinished() }
+            )
+        )
+
+        is UnlockDestination.TargetInput -> UnlockRootComponent.Child.TargetInput(
+            UnlockTargetInputComponentImpl(
+                componentContext = context,
+                method = config.method,
+                sendUnlockEmailConfirmationUseCase = clientUserComponent.sendUnlockEmailConfirmationUseCase,
+                sendUnlockPhoneConfirmationUseCase = clientUserComponent.sendUnlockPhoneConfirmationUseCase,
+                onNavigateToOtp = { target ->
+                    navigation.bringToFront(UnlockDestination.OtpInput(config.method, target))
+                },
+                onBack = { navigation.pop() }
             )
         )
 

@@ -125,15 +125,15 @@ class UsersManagementMainComponentImpl(
     ) {
         val sortOrder = if (sortState?.isAscending == true) SortOrder.ASC else SortOrder.DESC
         val sortBy = sortState?.optionId?.let { optionId ->
-            runCatching { UserSortValues.UserSortBy.valueOf(optionId) }.getOrNull()
+            UserSortValues.UserSortBy.entries.firstOrNull { it.name == optionId || it.serialName == optionId }
         }
 
         val roles = (filterStates?.get(UserFilterValues.UserFilterValues.ROLE) as? ChoiceListingFilterState)
-            ?.selectedIds?.map { UserRole.valueOf(it) }
+            ?.selectedIds?.mapNotNull { UserRole.fromValueOrNull(it) }
         val accountStatuses = (filterStates?.get(UserFilterValues.UserFilterValues.ACCOUNT_STATUS) as? ChoiceListingFilterState)
-            ?.selectedIds?.map { UserAccountStatus.valueOf(it) }
+            ?.selectedIds?.mapNotNull { UserAccountStatus.fromValueOrNull(it) }
         val accountLockoutTypes = (filterStates?.get(UserFilterValues.UserFilterValues.ACCOUNT_LOCKOUT_TYPE) as? ChoiceListingFilterState)
-            ?.selectedIds?.map { AccountLockoutType.valueOf(it) }
+            ?.selectedIds?.mapNotNull { AccountLockoutType.fromValueOrNull(it) }
         val isTotpEnabled = (filterStates?.get(UserFilterValues.UserFilterValues.IS_TOTP_ENABLED) as? BooleanListingFilterState)
             ?.value
         val authorityLevelFrom = (filterStates?.get(UserFilterValues.UserFilterValues.AUTHORITY_LEVEL_FROM) as? NumberListingFilterState)

@@ -63,6 +63,7 @@ kotlin {
 
             // Kotlin
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.datetime)
 
             // Compose
             implementation(libs.compose.foundation)

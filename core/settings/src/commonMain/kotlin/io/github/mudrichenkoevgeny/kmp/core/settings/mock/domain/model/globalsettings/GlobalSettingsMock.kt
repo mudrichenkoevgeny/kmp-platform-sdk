@@ -10,7 +10,6 @@ fun openGlobalSettingsMock(
     privacy: String? = "https://privacy",
     terms: String? = "https://terms",
     email: String? = "a@b.c",
-    maintenanceUntilEpochMillis: Long? = null,
     minSupportedAppVersions: Map<ClientType, String> = mapOf(
         ClientType.ANDROID to "1.0.0",
         ClientType.IOS to "1.0.0",
@@ -21,7 +20,6 @@ fun openGlobalSettingsMock(
     privacyPolicyUrl = privacy,
     termsOfServiceUrl = terms,
     contactSupportEmail = email,
-    maintenanceUntilEpochMillis = maintenanceUntilEpochMillis,
     minSupportedAppVersions = minSupportedAppVersions
 )
 
@@ -30,7 +28,6 @@ fun managementGlobalSettingsMock(
     privacy: String? = "https://privacy",
     terms: String? = "https://terms",
     email: String? = "a@b.c",
-    maintenanceUntilEpochMillis: Long? = null,
     minSupportedAppVersions: Map<ClientType, String> = mapOf(
         ClientType.ANDROID to "1.0.0",
         ClientType.IOS to "1.0.0",
@@ -44,7 +41,6 @@ fun managementGlobalSettingsMock(
     privacyPolicyUrl = privacy,
     termsOfServiceUrl = terms,
     contactSupportEmail = email,
-    maintenanceUntilEpochMillis = maintenanceUntilEpochMillis,
     minSupportedAppVersions = minSupportedAppVersions,
     isTracingEnabled = isTracingEnabled,
     isMetricsEnabled = isMetricsEnabled,

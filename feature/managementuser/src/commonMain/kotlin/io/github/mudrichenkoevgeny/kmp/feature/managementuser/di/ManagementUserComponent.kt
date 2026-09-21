@@ -299,6 +299,7 @@ class ManagementUserComponent(
     private val userWebSocketModule = ManagementUserWebSocketModule(
         userStorage = storageModule.userStorage,
         userRepository = repositoryModule.selfManagementUserRepository,
+        authStorage = authStorage,
         refreshTokenUseCase = refreshTokenUseCase,
         scope = componentScope
     )

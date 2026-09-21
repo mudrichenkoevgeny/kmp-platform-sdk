@@ -31,6 +31,7 @@ class UserWebSocketMessageHandlerTest {
     private fun createHandler(scope: TestScope) = UserWebSocketMessageHandler(
         userStorage = userStorage,
         userRepository = userRepository,
+        authStorage = authStorage,
         refreshTokenUseCase = refreshTokenUseCase,
         scope = scope
     )

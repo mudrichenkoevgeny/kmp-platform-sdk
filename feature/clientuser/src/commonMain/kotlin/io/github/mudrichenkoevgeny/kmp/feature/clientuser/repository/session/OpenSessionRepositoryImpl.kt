@@ -12,6 +12,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedres
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.verifytotp.VerifyTotpPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
+import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSession
@@ -23,7 +24,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session
  */
 class OpenSessionRepositoryImpl(
     private val sessionApi: SessionApi,
-    private val userStorage: UserStorage
+    private val userStorage: UserStorage,
+    private val authStorage: AuthStorage
 ) : SessionRepository {
 
     override suspend fun getSessions(
@@ -138,9 +140,8 @@ class OpenSessionRepositoryImpl(
 
     override suspend fun logout(): AppResult<Unit> {
         val networkResult = sessionApi.logout()
-        if (networkResult is AppResult.Success) {
-            userStorage.clear()
-        }
+        userStorage.clear()
+        authStorage.clearTokens()
         return networkResult
     }
 

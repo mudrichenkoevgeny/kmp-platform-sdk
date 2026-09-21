@@ -162,9 +162,9 @@ class SessionListComponentImpl(
         }
 
         val userAuthProviders = (filterStates?.get(UserFilterValues.UserSessionFilterValues.USER_AUTH_PROVIDER) as? ChoiceListingFilterState)
-            ?.selectedIds?.map { UserAuthProvider.valueOf(it.uppercase()) }
+            ?.selectedIds?.mapNotNull { UserAuthProvider.fromValueOrNull(it) }
         val clientTypes = (filterStates?.get(UserFilterValues.UserSessionFilterValues.CLIENT_TYPE) as? ChoiceListingFilterState)
-            ?.selectedIds?.map { ClientType.valueOf(it.uppercase()) }
+            ?.selectedIds?.mapNotNull { ClientType.fromValueOrNull(it) }
         val ipAddresses = (filterStates?.get(UserFilterValues.UserSessionFilterValues.IP_ADDRESS) as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
         val deviceNames = (filterStates?.get(UserFilterValues.UserSessionFilterValues.DEVICE_NAME) as? TextListingFilterState)

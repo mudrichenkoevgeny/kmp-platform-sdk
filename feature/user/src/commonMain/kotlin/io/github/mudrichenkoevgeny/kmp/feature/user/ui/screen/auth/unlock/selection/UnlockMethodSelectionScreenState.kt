@@ -1,13 +1,14 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.selection
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 
 /** UI state for selecting an account unlock channel. */
 data class UnlockMethodSelectionScreenState(
-    val emailInput: String = "",
-    val phoneInput: String = "",
+    val lockoutType: AccountLockoutType? = null,
+    val lockoutUntil: Long? = null,
     val knownIdentifiers: List<UserIdentifier> = emptyList(),
     val actionLoading: Boolean = false,
     val actionError: AppError? = null

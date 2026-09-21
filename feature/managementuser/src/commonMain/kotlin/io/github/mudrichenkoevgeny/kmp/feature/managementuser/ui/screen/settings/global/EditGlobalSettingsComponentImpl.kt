@@ -122,7 +122,6 @@ class EditGlobalSettingsComponentImpl(
                 privacyPolicyUrl = current.privacyPolicyUrl.ifBlank { null },
                 termsOfServiceUrl = current.termsOfServiceUrl.ifBlank { null },
                 contactSupportEmail = current.contactSupportEmail.ifBlank { null },
-                maintenanceUntilEpochMillis = null,
                 minSupportedAppVersions = minVersions,
                 isTracingEnabled = current.isTracingEnabled,
                 isMetricsEnabled = current.isMetricsEnabled,

@@ -9,6 +9,8 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Instant
 
 @InternalApi
@@ -31,11 +33,14 @@ class EncryptedAuthStorageTest {
         val storage = EncryptedAuthStorage(EncryptedSettingsMock(), this)
         advanceUntilIdle()
 
-        storage.updateTokens(AccessToken(ACCESS_A), RefreshToken(REFRESH_A), expiresAt = Instant.fromEpochMilliseconds(99L))
+        val futureExpiryMs = Clock.System.now().toEpochMilliseconds() + 1.hours.inWholeMilliseconds
+        val futureExpiry = Instant.fromEpochMilliseconds(futureExpiryMs)
+
+        storage.updateTokens(AccessToken(ACCESS_A), RefreshToken(REFRESH_A), expiresAt = futureExpiry)
 
         assertEquals(AccessToken(ACCESS_A), storage.getAccessToken())
         assertEquals(RefreshToken(REFRESH_A), storage.getRefreshToken())
-        assertEquals(99L, storage.getExpiresAt())
+        assertEquals(futureExpiryMs, storage.getExpiresAt())
         assertEquals(ACCESS_A, storage.accessTokenFlow.value)
     }
 
@@ -43,7 +48,8 @@ class EncryptedAuthStorageTest {
     fun clearTokens_clearsBackingStoreAndFlow() = runTest {
         val storage = EncryptedAuthStorage(EncryptedSettingsMock(), this)
         advanceUntilIdle()
-        storage.updateTokens(AccessToken(ACCESS_A), RefreshToken(REFRESH_A), Instant.fromEpochMilliseconds(1L))
+        val futureExpiry = Instant.fromEpochMilliseconds(Clock.System.now().toEpochMilliseconds() + 1.hours.inWholeMilliseconds)
+        storage.updateTokens(AccessToken(ACCESS_A), RefreshToken(REFRESH_A), futureExpiry)
 
         storage.clearTokens()
 

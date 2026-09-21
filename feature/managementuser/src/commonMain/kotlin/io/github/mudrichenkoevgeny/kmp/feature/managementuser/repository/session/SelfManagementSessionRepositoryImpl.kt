@@ -4,6 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.session.SessionApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.session.SessionRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
@@ -25,7 +26,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session
  */
 class SelfManagementSessionRepositoryImpl(
     private val selfManagementSessionApi: SessionApi,
-    private val userStorage: UserStorage
+    private val userStorage: UserStorage,
+    private val authStorage: AuthStorage
 ) : SessionRepository {
 
     override suspend fun getSessions(
@@ -140,9 +142,8 @@ class SelfManagementSessionRepositoryImpl(
 
     override suspend fun logout(): AppResult<Unit> {
         val networkResult = selfManagementSessionApi.logout()
-        if (networkResult is AppResult.Success) {
-            userStorage.clear()
-        }
+        userStorage.clear()
+        authStorage.clearTokens()
         return networkResult
     }
 

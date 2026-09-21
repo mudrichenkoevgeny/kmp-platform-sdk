@@ -61,10 +61,10 @@ class KtorManagementUserApi(
             accountStatuses?.forEach { accountStatus ->
                 parameter(UserFilterValues.UserFilterValues.ACCOUNT_STATUS, accountStatus.serialName)
             }
-            accountStatusesBeforeDeletion?.forEach { accountStatusBeforeDeletion ->
+            accountStatusesBeforeDeletion?.forEach { accountStatusOnRestore ->
                 parameter(
-                    UserFilterValues.UserFilterValues.ACCOUNT_STATUS_BEFORE_DELETION,
-                    accountStatusBeforeDeletion.serialName
+                    UserFilterValues.UserFilterValues.ACCOUNT_STATUS_ON_RESTORE,
+                    accountStatusOnRestore.serialName
                 )
             }
             accountLockoutTypes?.forEach { accountLockoutType ->

@@ -46,6 +46,9 @@ fun HttpClientConfig<*>.setupAuthConfig(
 
                 if (expiresAt <= now) {
                     networkLogger.log("$LOGGER_AUTH_PREFIX: Access token expired or not found")
+                    if (expiresAt > 0L) {
+                        onSessionCleared?.invoke() ?: authStorage.clearTokens()
+                    }
                     return@loadTokens null
                 }
 

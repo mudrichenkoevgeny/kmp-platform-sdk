@@ -130,19 +130,19 @@ class KtorWebSocketService(
 
                     val accessToken = accessTokenProvider.accessTokenFlow.value
 
-                    val webSocketFullPath = if (accessToken != null) {
+                    val webSocketFullPath = if (!accessToken.isNullOrBlank()) {
                         "$webSocketPath?token=$accessToken"
                     } else {
                         webSocketPath
                     }
+
+                    val connectedAt = Clock.System.now().toEpochMilliseconds()
 
                     httpClient.webSocket(
                         method = HttpMethod.Get,
                         host = socketHost,
                         path = webSocketFullPath
                     ) {
-                        currentDelay = INITIAL_RECONNECT_DELAY_MS
-
                         networkLogger.log("$LOGGER_SOCKET_PREFIX: Connected to $socketHost$webSocketPath")
 
                         sendInitializeFrame()
@@ -152,6 +152,11 @@ class KtorWebSocketService(
 
                         readJob.join()
                         writeJob.cancel()
+
+                        val sessionDuration = Clock.System.now().toEpochMilliseconds() - connectedAt
+                        if (sessionDuration >= MIN_SESSION_DURATION_MS) {
+                            currentDelay = INITIAL_RECONNECT_DELAY_MS
+                        }
                     }
                 } catch (e: Exception) {
                     if (isActive && isConnectionStarted) {
@@ -241,10 +246,14 @@ class KtorWebSocketService(
 
     private fun observeTokenChanges() {
         scope.launch {
-            accessTokenProvider.accessTokenFlow.collect {
-                if (isConnectionStarted) {
+            var previousToken: String? = accessTokenProvider.accessTokenFlow.value
+            accessTokenProvider.accessTokenFlow.collect { newToken ->
+                if (isConnectionStarted && newToken != previousToken) {
+                    previousToken = newToken
                     networkLogger.log("$LOGGER_SOCKET_PREFIX: Token updated, restarting...")
                     restartConnection()
+                } else {
+                    previousToken = newToken
                 }
             }
         }
@@ -261,6 +270,7 @@ class KtorWebSocketService(
     companion object {
         private const val INITIAL_RECONNECT_DELAY_MS = 2000L
         private const val MAX_RECONNECT_DELAY_MS = 60000L
+        private const val MIN_SESSION_DURATION_MS = 5000L
 
         private const val PREFIX_HTTPS = "https://"
         private const val PREFIX_HTTP = "http://"

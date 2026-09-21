@@ -7,6 +7,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.resolveLocalized
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.naming.ClientUserErrorCodes
+import io.github.mudrichenkoevgeny.kmp.core.common.time.formatEpochMillisToDateTime
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorArgs
 import org.jetbrains.compose.resources.StringResource
@@ -37,12 +38,20 @@ object UserErrorParser : AppErrorParser {
             UserErrorCodes.INVALID_SESSION ->
                 stringResource(Res.string.error_user_invalid_session)
 
-            UserErrorCodes.USER_BLOCKED -> resolveLocalizedString(
-                args = args,
-                key = UserErrorArgs.BLOCKED_UNTIL,
-                withArgsRes = Res.string.error_user_blocked_until,
-                fallbackRes = Res.string.error_user_blocked
-            )
+            UserErrorCodes.USER_BANNED ->
+                stringResource(Res.string.error_user_banned)
+
+            UserErrorCodes.USER_LOCKED -> {
+                val formattedUntil = formatEpochMillisToDateTime(args[UserErrorArgs.TEMPORARY_LOCKOUT_UNTIL])
+                if (formattedUntil != null) {
+                    stringResource(Res.string.error_user_locked_until, formattedUntil)
+                } else {
+                    stringResource(Res.string.error_user_locked)
+                }
+            }
+
+            UserErrorCodes.SELF_SERVICE_UNLOCK_DISABLED ->
+                stringResource(Res.string.error_user_self_service_unlock_disabled)
 
             UserErrorCodes.USER_READ_ONLY ->
                 stringResource(Res.string.error_user_read_only)

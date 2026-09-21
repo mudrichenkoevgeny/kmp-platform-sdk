@@ -126,7 +126,8 @@ internal class ManagementUserRepositoryModule(
     val selfManagementSessionRepository: SessionRepository by lazy {
         SelfManagementSessionRepositoryImpl(
             selfManagementSessionApi = networkModule.sessionApi,
-            userStorage = storageModule.userStorage
+            userStorage = storageModule.userStorage,
+            authStorage = authStorage
         )
     }
     /** Administrative repository for any user sessions. */

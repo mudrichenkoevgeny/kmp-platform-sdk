@@ -3,8 +3,10 @@
     <string name="error_user_access_token_expired">The access token has expired.</string>
     <string name="error_user_invalid_refresh_token">The refresh token is invalid.</string>
     <string name="error_user_invalid_session">The session is invalid.</string>
-    <string name="error_user_blocked">This account has been blocked.</string>
-    <string name="error_user_blocked_until">This account has been blocked until %1$s.</string>
+    <string name="error_user_banned">This account has been banned.</string>
+    <string name="error_user_locked">This account has been locked.</string>
+    <string name="error_user_locked_until">This account has been locked until %1$s.</string>
+    <string name="error_user_self_service_unlock_disabled">Self-service account unlock is currently disabled.</string>
     <string name="error_user_read_only">This account is read-only.</string>
     <string name="error_user_security_hold">This account is temporarily restricted for security reasons.</string>
     <string name="error_user_pending_deletion">This account is pending deletion and cannot be used.</string>
@@ -54,6 +56,8 @@
     <string name="login_by_email">Login by Email</string>
     <string name="login_by_totp">Login by TOTP</string>
     <string name="login_by_recovery_code">Login by Recovery Code</string>
+    <string name="login_by_totp_desc">Two-factor authentication is active on your account. Enter the %1$d-digit code from your authenticator app.</string>
+    <string name="login_by_recovery_code_desc">Enter one of your single-use backup recovery codes. Note: the used recovery code will become invalid immediately upon sign-in.</string>
     <string name="totp_code">TOTP Code</string>
     <string name="recovery_code">Recovery Code</string>
     <string name="use_recovery_code">Use recovery code</string>
@@ -137,6 +141,8 @@
     <string name="unlock_by_google">Unlock via Google</string>
     <string name="unlock_by_apple">Unlock via Apple</string>
     <string name="unlock_choose_method">Choose unlock method</string>
+    <string name="unlock_email_input_desc">Enter your email address to receive an account unlock code.</string>
+    <string name="unlock_phone_input_desc">Enter your phone number to receive an account unlock SMS code.</string>
     <string name="unlock_success_title">Account Successfully Unlocked</string>
     <string name="unlock_success_desc">Your account has been unlocked. You may now continue using all services.</string>
     <string name="mfa_step_up_title">Security Confirmation</string>

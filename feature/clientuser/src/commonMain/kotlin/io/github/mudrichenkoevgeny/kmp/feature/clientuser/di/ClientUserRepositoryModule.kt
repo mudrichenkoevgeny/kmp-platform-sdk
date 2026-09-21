@@ -106,7 +106,8 @@ internal class ClientUserRepositoryModule(
     val sessionRepository: SessionRepository by lazy {
         OpenSessionRepositoryImpl(
             sessionApi = networkModule.sessionApi,
-            userStorage = storageModule.userStorage
+            userStorage = storageModule.userStorage,
+            authStorage = authStorage
         )
     }
 

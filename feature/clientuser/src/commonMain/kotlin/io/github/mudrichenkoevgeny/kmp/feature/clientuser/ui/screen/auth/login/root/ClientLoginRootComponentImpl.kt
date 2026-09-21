@@ -13,6 +13,7 @@ import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.di.ClientUserComponent
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.ClientLoginDestination
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email.RegistrationByEmailComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.unlock.root.UnlockRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.phone.LoginByPhoneComponentImpl
@@ -57,6 +58,9 @@ class ClientLoginRootComponentImpl(
                 onNavigateToLoginByPhone = { navigation.bringToFront(ClientLoginDestination.LoginByPhone) },
                 onNavigateToTotp = { mfaToken -> navigation.bringToFront(ClientLoginDestination.LoginByTotp(mfaToken)) },
                 onNavigateToPendingDeletion = { navigation.bringToFront(ClientLoginDestination.PendingDeletion) },
+                onNavigateToAccountUnlock = { lockoutType, lockoutUntil ->
+                    navigation.bringToFront(ClientLoginDestination.AccountUnlock(lockoutType, lockoutUntil))
+                },
                 onFinished = onFinished
             )
         )
@@ -69,6 +73,9 @@ class ClientLoginRootComponentImpl(
                 onNavigateToForgotPassword = { navigation.bringToFront(ClientLoginDestination.ResetEmailPassword) },
                 onNavigateToTotp = { mfaToken -> navigation.bringToFront(ClientLoginDestination.LoginByTotp(mfaToken)) },
                 onNavigateToPendingDeletion = { navigation.bringToFront(ClientLoginDestination.PendingDeletion) },
+                onNavigateToAccountUnlock = { lockoutType, lockoutUntil ->
+                    navigation.bringToFront(ClientLoginDestination.AccountUnlock(lockoutType, lockoutUntil))
+                },
                 onBack = navigation::pop,
                 onFinished = onFinished
             )
@@ -81,6 +88,9 @@ class ClientLoginRootComponentImpl(
                 loginByPhoneUseCase = clientUserComponent.loginByPhoneUseCase,
                 onNavigateToTotp = { mfaToken -> navigation.bringToFront(ClientLoginDestination.LoginByTotp(mfaToken)) },
                 onNavigateToPendingDeletion = { navigation.bringToFront(ClientLoginDestination.PendingDeletion) },
+                onNavigateToAccountUnlock = { lockoutType, lockoutUntil ->
+                    navigation.bringToFront(ClientLoginDestination.AccountUnlock(lockoutType, lockoutUntil))
+                },
                 onBack = navigation::pop,
                 onFinished = onFinished
             )
@@ -125,6 +135,15 @@ class ClientLoginRootComponentImpl(
                 logoutUseCase = clientUserComponent.logoutUseCase,
                 onRestoreSuccess = onFinished,
                 onSignOut = { navigation.pop() }
+            )
+        )
+        is ClientLoginDestination.AccountUnlock -> ClientLoginRootComponent.Child.AccountUnlock(
+            UnlockRootComponentImpl(
+                componentContext = context,
+                clientUserComponent = clientUserComponent,
+                lockoutType = config.lockoutType,
+                lockoutUntil = config.lockoutUntil,
+                onFinished = { navigation.pop() }
             )
         )
     }

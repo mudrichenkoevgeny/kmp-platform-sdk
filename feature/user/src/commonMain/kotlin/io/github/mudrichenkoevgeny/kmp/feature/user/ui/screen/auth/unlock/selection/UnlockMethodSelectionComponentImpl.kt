@@ -7,11 +7,9 @@ import com.arkivanov.decompose.value.update
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.SendUnlockEmailConfirmationUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.SendUnlockPhoneConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockByGoogleUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.GetUserIdentifiersUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,18 +17,23 @@ import kotlinx.coroutines.launch
 /** Default implementation of [UnlockMethodSelectionComponent]. */
 class UnlockMethodSelectionComponentImpl(
     componentContext: ComponentContext,
+    lockoutType: AccountLockoutType? = null,
+    lockoutUntil: Long? = null,
     private val getUserIdentifiersUseCase: GetUserIdentifiersUseCase? = null,
-    private val sendUnlockEmailConfirmationUseCase: SendUnlockEmailConfirmationUseCase,
-    private val sendUnlockPhoneConfirmationUseCase: SendUnlockPhoneConfirmationUseCase,
     private val unlockByGoogleUseCase: UnlockByGoogleUseCase? = null,
-    private val onNavigateToEmailOtp: (email: String) -> Unit,
-    private val onNavigateToPhoneOtp: (phone: String) -> Unit,
+    private val onNavigateToEmailInput: () -> Unit,
+    private val onNavigateToPhoneInput: () -> Unit,
     private val onUnlockSuccess: () -> Unit,
     private val onBack: () -> Unit,
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
 ) : UnlockMethodSelectionComponent, ComponentContext by componentContext {
 
-    private val _state = MutableValue(UnlockMethodSelectionScreenState())
+    private val _state = MutableValue(
+        UnlockMethodSelectionScreenState(
+            lockoutType = lockoutType,
+            lockoutUntil = lockoutUntil
+        )
+    )
     override val state: Value<UnlockMethodSelectionScreenState> = _state
 
     init {
@@ -44,65 +47,24 @@ class UnlockMethodSelectionComponentImpl(
                     is AppResult.Success -> {
                         val pagedResult = result.data
                         _state.update { currentState ->
-                            val defaultEmail = pagedResult.items
-                                .firstOrNull { it.userAuthProvider == UserAuthProvider.EMAIL }?.identifier.orEmpty()
-                            val defaultPhone = pagedResult.items
-                                .firstOrNull { it.userAuthProvider == UserAuthProvider.PHONE }?.identifier.orEmpty()
                             currentState.copy(
-                                knownIdentifiers = pagedResult.items,
-                                emailInput = currentState.emailInput.ifBlank { defaultEmail },
-                                phoneInput = currentState.phoneInput.ifBlank { defaultPhone }
+                                knownIdentifiers = pagedResult.items
                             )
                         }
                     }
                     is AppResult.Error -> {
-                        // Keep blank defaults if identifiers could not be loaded
                     }
                 }
             }
         }
     }
 
-    override fun onEmailInputChanged(email: String) {
-        _state.update { it.copy(emailInput = email, actionError = null) }
-    }
-
-    override fun onPhoneInputChanged(phone: String) {
-        _state.update { it.copy(phoneInput = phone, actionError = null) }
-    }
-
     override fun onSelectEmailUnlock() {
-        val email = _state.value.emailInput.trim()
-        if (email.isBlank()) return
-        _state.update { it.copy(actionLoading = true, actionError = null) }
-        coroutineScope.launch {
-            when (val result = sendUnlockEmailConfirmationUseCase.execute(email)) {
-                is AppResult.Success -> {
-                    _state.update { currentState -> currentState.copy(actionLoading = false) }
-                    onNavigateToEmailOtp(email)
-                }
-                is AppResult.Error -> {
-                    _state.update { currentState -> currentState.copy(actionLoading = false, actionError = result.error) }
-                }
-            }
-        }
+        onNavigateToEmailInput()
     }
 
     override fun onSelectPhoneUnlock() {
-        val phone = _state.value.phoneInput.trim()
-        if (phone.isBlank()) return
-        _state.update { it.copy(actionLoading = true, actionError = null) }
-        coroutineScope.launch {
-            when (val result = sendUnlockPhoneConfirmationUseCase.execute(phone)) {
-                is AppResult.Success -> {
-                    _state.update { currentState -> currentState.copy(actionLoading = false) }
-                    onNavigateToPhoneOtp(phone)
-                }
-                is AppResult.Error -> {
-                    _state.update { currentState -> currentState.copy(actionLoading = false, actionError = result.error) }
-                }
-            }
-        }
+        onNavigateToPhoneInput()
     }
 
     override fun onSelectGoogleUnlock() {

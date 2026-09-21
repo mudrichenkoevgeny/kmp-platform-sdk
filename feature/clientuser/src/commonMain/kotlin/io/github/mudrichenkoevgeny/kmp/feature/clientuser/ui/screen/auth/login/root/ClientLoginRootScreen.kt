@@ -15,6 +15,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.ui.screen.auth.login.root.ClientLoginRootComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.phone.LoginByPhoneScreen
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email.RegistrationByEmailScreen
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.unlock.root.UnlockRootScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.pendingdeletion.PendingDeletionScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.root.LoginRootContainer
@@ -36,6 +37,7 @@ fun ClientLoginRootScreen(component: ClientLoginRootComponent) {
             is ClientLoginRootComponent.Child.RegistrationByEmail -> RegistrationByEmailScreen(instance.component)
             is ClientLoginRootComponent.Child.ResetEmailPassword -> ResetEmailPasswordScreen(instance.component)
             is ClientLoginRootComponent.Child.PendingDeletion -> PendingDeletionScreen(instance.component)
+            is ClientLoginRootComponent.Child.AccountUnlock -> UnlockRootScreen(instance.component)
         }
     }
 }

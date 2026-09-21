@@ -13,9 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
@@ -25,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -39,21 +36,20 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreEmailTextField
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.time.formatEpochMillisToDateTime
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.unlock.selection.UnlockMethodSelectionComponentMock
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.jetbrains.compose.resources.stringResource
 
@@ -98,48 +94,48 @@ fun UnlockMethodSelectionScreen(component: UnlockMethodSelectionComponent) {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (state.isEmailAvailable) {
-                        CoreEmailTextField(
-                            value = state.emailInput,
-                            onValueChange = component::onEmailInputChanged,
-                            label = { CoreBodyText(stringResource(Res.string.unlock_by_email)) },
-                            placeholder = { CoreBodyText(stringResource(Res.string.unlock_by_email)) },
-                            modifier = Modifier.testTag(UnlockMethodSelectionTestTags.EMAIL_INPUT),
-                            isError = state.actionError != null,
-                            enabled = !state.actionLoading
+                    val lockoutText = when {
+                        state.lockoutType == AccountLockoutType.TEMPORARY && state.lockoutUntil != null -> {
+                            val formattedDateTime = formatEpochMillisToDateTime(state.lockoutUntil)
+                            if (formattedDateTime != null) {
+                                stringResource(Res.string.error_user_locked_until, formattedDateTime)
+                            } else {
+                                stringResource(Res.string.error_user_locked)
+                            }
+                        }
+                        state.lockoutType != null && state.lockoutType != AccountLockoutType.NONE -> {
+                            stringResource(Res.string.error_user_locked)
+                        }
+                        else -> null
+                    }
+
+                    if (lockoutText != null) {
+                        CoreErrorText(
+                            text = lockoutText,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .padding(bottom = CoreTheme.dimens.paddingLarge)
+                                .testTag(UnlockMethodSelectionTestTags.LOCKOUT_INFO_TEXT)
                         )
+                    }
 
-                        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-
+                    if (state.isEmailAvailable) {
                         CoreButton(
                             text = stringResource(Res.string.unlock_by_email),
                             onClick = component::onSelectEmailUnlock,
                             modifier = Modifier.testTag(UnlockMethodSelectionTestTags.UNLOCK_EMAIL_BUTTON),
-                            enabled = !state.actionLoading && state.emailInput.isNotBlank()
+                            enabled = !state.actionLoading
                         )
 
                         Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
                     }
 
                     if (state.isPhoneAvailable) {
-                        CoreOutlinedTextField(
-                            value = state.phoneInput,
-                            onValueChange = component::onPhoneInputChanged,
-                            label = { CoreBodyText(stringResource(Res.string.unlock_by_phone)) },
-                            placeholder = { CoreBodyText(stringResource(Res.string.unlock_by_phone)) },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                            modifier = Modifier.testTag(UnlockMethodSelectionTestTags.PHONE_INPUT),
-                            isError = state.actionError != null,
-                            enabled = !state.actionLoading
-                        )
-
-                        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-
                         CoreButton(
                             text = stringResource(Res.string.unlock_by_phone),
                             onClick = component::onSelectPhoneUnlock,
                             modifier = Modifier.testTag(UnlockMethodSelectionTestTags.UNLOCK_PHONE_BUTTON),
-                            enabled = !state.actionLoading && state.phoneInput.isNotBlank()
+                            enabled = !state.actionLoading
                         )
 
                         Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
@@ -153,7 +149,7 @@ fun UnlockMethodSelectionScreen(component: UnlockMethodSelectionComponent) {
                             enabled = !state.actionLoading
                         )
 
-                        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+                        Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
                     }
 
                     if (state.isAppleAvailable) {
@@ -200,9 +196,8 @@ private fun ErrorText(error: AppError?) {
 internal object UnlockMethodSelectionTestTags {
     const val TITLE = "UnlockMethodSelection_Title"
     const val BACK_BUTTON = "UnlockMethodSelection_BackButton"
-    const val EMAIL_INPUT = "UnlockMethodSelection_EmailInput"
+    const val LOCKOUT_INFO_TEXT = "UnlockMethodSelection_LockoutInfoText"
     const val UNLOCK_EMAIL_BUTTON = "UnlockMethodSelection_UnlockEmailButton"
-    const val PHONE_INPUT = "UnlockMethodSelection_PhoneInput"
     const val UNLOCK_PHONE_BUTTON = "UnlockMethodSelection_UnlockPhoneButton"
     const val UNLOCK_GOOGLE_BUTTON = "UnlockMethodSelection_UnlockGoogleButton"
     const val UNLOCK_APPLE_BUTTON = "UnlockMethodSelection_UnlockAppleButton"
@@ -215,20 +210,20 @@ internal class UnlockMethodSelectionPreviewProvider :
 
     private val items: List<Pair<String, UnlockMethodSelectionScreenState>> = listOf(
         "Default / Empty" to UnlockMethodSelectionScreenState(),
-        "Prefilled Email & Phone" to UnlockMethodSelectionScreenState(
-            emailInput = "user@example.com",
-            phoneInput = "+79991234567"
+        "Temporary Lockout" to UnlockMethodSelectionScreenState(
+            lockoutType = AccountLockoutType.TEMPORARY,
+            lockoutUntil = 1758452400000L
+        ),
+        "Indefinite Lockout" to UnlockMethodSelectionScreenState(
+            lockoutType = AccountLockoutType.INDEFINITE
         ),
         "Action Loading" to UnlockMethodSelectionScreenState(
-            emailInput = "user@example.com",
             actionLoading = true
         ),
         "Action Error" to UnlockMethodSelectionScreenState(
-            emailInput = "user@example.com",
             actionError = CommonError.Unknown()
         ),
         "Email Only Identifier" to UnlockMethodSelectionScreenState(
-            emailInput = "user@example.com",
             knownIdentifiers = listOf(
                 userIdentifierMock().copy(userAuthProvider = UserAuthProvider.EMAIL, identifier = "user@example.com")
             )
@@ -254,10 +249,7 @@ private fun UnlockMethodSelectionScreenPreviewContent(state: UnlockMethodSelecti
     }
 }
 
-private val defaultPreviewState = UnlockMethodSelectionScreenState(
-    emailInput = "user@example.com",
-    phoneInput = "+79991234567"
-)
+private val defaultPreviewState = UnlockMethodSelectionScreenState()
 
 @InternalApi
 @Preview(showBackground = true, group = "States")

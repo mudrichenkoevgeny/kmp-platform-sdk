@@ -10,7 +10,6 @@ fun openGlobalSettingsPayloadMock(
     privacy: String? = "https://privacy",
     terms: String? = "https://terms",
     email: String? = "a@b.c",
-    maintenanceUntilEpochMillis: Long? = null,
     minSupportedAppVersions: Map<String, String> = mapOf(
         ClientType.ANDROID.serialName to "1.0.0",
         ClientType.IOS.serialName to "1.0.0",
@@ -21,7 +20,6 @@ fun openGlobalSettingsPayloadMock(
     privacyPolicyUrl = privacy,
     termsOfServiceUrl = terms,
     contactSupportEmail = email,
-    maintenanceUntilEpochMillis = maintenanceUntilEpochMillis,
     minSupportedAppVersions = minSupportedAppVersions
 )
 
@@ -30,7 +28,6 @@ fun managementGlobalSettingsPayloadMock(
     privacy: String? = "https://privacy",
     terms: String? = "https://terms",
     email: String? = "a@b.c",
-    maintenanceUntilEpochMillis: Long? = null,
     minSupportedAppVersions: Map<String, String> = mapOf(
         ClientType.ANDROID.serialName to "1.0.0",
         ClientType.IOS.serialName to "1.0.0",
@@ -44,7 +41,6 @@ fun managementGlobalSettingsPayloadMock(
     privacyPolicyUrl = privacy,
     termsOfServiceUrl = terms,
     contactSupportEmail = email,
-    maintenanceUntilEpochMillis = maintenanceUntilEpochMillis,
     minSupportedAppVersions = minSupportedAppVersions,
     isTracingEnabled = isTracingEnabled,
     isMetricsEnabled = isMetricsEnabled,

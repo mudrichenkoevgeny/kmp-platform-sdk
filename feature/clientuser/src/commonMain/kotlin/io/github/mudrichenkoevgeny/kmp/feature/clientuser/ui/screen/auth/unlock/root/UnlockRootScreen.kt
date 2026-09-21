@@ -15,12 +15,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.ui.screen.auth.un
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.otp.UnlockOtpScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.selection.UnlockMethodSelectionScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.success.UnlockSuccessScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.target.UnlockTargetInputScreen
 
 @Composable
 fun UnlockRootScreen(component: UnlockRootComponent) {
     Children(stack = component.stack) { child ->
         when (val instance = child.instance) {
             is UnlockRootComponent.Child.MethodSelection -> UnlockMethodSelectionScreen(instance.component)
+            is UnlockRootComponent.Child.TargetInput -> UnlockTargetInputScreen(instance.component)
             is UnlockRootComponent.Child.OtpInput -> UnlockOtpScreen(instance.component)
             is UnlockRootComponent.Child.Success -> UnlockSuccessScreen(onFinished = component::onDismiss)
         }

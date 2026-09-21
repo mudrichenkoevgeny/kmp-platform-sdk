@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -51,6 +50,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.totp.LoginByTotpComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -128,6 +128,25 @@ private fun LoginByTotpContent(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val descriptionText = when (state.mode) {
+                    LoginByTotpScreenState.Mode.TOTP -> stringResource(
+                        Res.string.login_by_totp_desc,
+                        FieldValidator.TOTP_CODE_LENGTH
+                    )
+                    LoginByTotpScreenState.Mode.RECOVERY_CODE -> stringResource(
+                        Res.string.login_by_recovery_code_desc
+                    )
+                }
+
+                CoreBodyText(
+                    text = descriptionText,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .padding(bottom = CoreTheme.dimens.paddingLarge)
+                        .testTag(LoginByTotpTestTags.DESCRIPTION)
+                )
+
                 val labelRes = when (state.mode) {
                     LoginByTotpScreenState.Mode.TOTP -> Res.string.totp_code
                     LoginByTotpScreenState.Mode.RECOVERY_CODE -> Res.string.recovery_code
@@ -290,6 +309,7 @@ private fun FontScalePreview() {
 internal object LoginByTotpTestTags {
     const val BACK_BUTTON = "LoginByTotp_BackButton"
     const val TITLE = "LoginByTotp_Title"
+    const val DESCRIPTION = "LoginByTotp_Description"
     const val CODE_INPUT = "LoginByTotp_CodeInput"
     const val SUBMIT_BUTTON = "LoginByTotp_SubmitButton"
     const val TOGGLE_MODE_BUTTON = "LoginByTotp_ToggleModeButton"

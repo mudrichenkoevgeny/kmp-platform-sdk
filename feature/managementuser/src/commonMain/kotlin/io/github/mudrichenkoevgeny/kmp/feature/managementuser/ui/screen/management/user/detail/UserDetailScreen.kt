@@ -1,23 +1,25 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -47,11 +49,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.detail.UserDetailComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import org.jetbrains.compose.resources.stringResource
 
@@ -198,12 +200,9 @@ private fun Content(
             enabled = !state.isSaving && !state.isDeleting
         )
 
-        CoreOutlinedTextField(
-            value = state.lockoutTypeInput,
-            onValueChange = onLockoutTypeChanged,
-            label = { CoreBodyText(stringResource(CommonRes.string.ui_common_lockout_type)) },
-            placeholder = { CoreBodyText(stringResource(CommonRes.string.ui_common_lockout_type)) },
-            modifier = Modifier.testTag(UserDetailTestTags.LOCKOUT_TYPE_INPUT),
+        LockoutTypeDropdown(
+            selectedLockoutType = state.lockoutTypeInput,
+            onLockoutTypeSelected = onLockoutTypeChanged,
             enabled = !state.isSaving && !state.isDeleting
         )
 
@@ -246,6 +245,65 @@ private fun Content(
                 text = it.toLocalizedMessage(),
                 modifier = Modifier.testTag(UserDetailTestTags.DELETE_ERROR_TEXT)
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LockoutTypeDropdown(
+    selectedLockoutType: String,
+    onLockoutTypeSelected: (String) -> Unit,
+    enabled: Boolean,
+    modifier: Modifier = Modifier
+) {
+    var isExpanded by remember { mutableStateOf(false) }
+
+    val options = listOf(
+        AccountLockoutType.NONE to stringResource(CommonRes.string.ui_common_lockout_none),
+        AccountLockoutType.INDEFINITE to stringResource(CommonRes.string.ui_common_lockout_indefinite),
+        AccountLockoutType.TEMPORARY to stringResource(CommonRes.string.ui_common_lockout_temporary)
+    )
+
+    val currentDisplayText = options.firstOrNull { it.first.name == selectedLockoutType }?.second
+        ?: selectedLockoutType
+
+    ExposedDropdownMenuBox(
+        expanded = isExpanded && enabled,
+        onExpandedChange = {
+            if (enabled) {
+                isExpanded = it
+            }
+        },
+        modifier = modifier.fillMaxWidth()
+    ) {
+        CoreOutlinedTextField(
+            value = currentDisplayText,
+            onValueChange = {},
+            label = { CoreBodyText(stringResource(CommonRes.string.ui_common_lockout_type)) },
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
+            },
+            enabled = enabled,
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, enabled = enabled)
+                .testTag(UserDetailTestTags.LOCKOUT_TYPE_INPUT)
+        )
+
+        ExposedDropdownMenu(
+            expanded = isExpanded && enabled,
+            onDismissRequest = { isExpanded = false }
+        ) {
+            options.forEach { (type, label) ->
+                DropdownMenuItem(
+                    text = { CoreBodyText(label) },
+                    onClick = {
+                        isExpanded = false
+                        onLockoutTypeSelected(type.name)
+                    }
+                )
+            }
         }
     }
 }

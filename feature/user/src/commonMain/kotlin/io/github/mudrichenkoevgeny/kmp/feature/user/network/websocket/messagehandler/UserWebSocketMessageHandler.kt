@@ -4,6 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandler
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandlerResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.refreshtoken.RefreshTokenUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.model.websocket.SocketFrame
@@ -24,12 +25,14 @@ import kotlinx.serialization.json.decodeFromJsonElement
  *
  * @param userStorage Storage for updating the current user snapshot.
  * @param userRepository User repository for clearing local session state on deletion.
+ * @param authStorage Storage for checking stored token credentials.
  * @param refreshTokenUseCase Use case to trigger session refresh on unauthorized frames.
  * @param scope Coroutine scope for launching background update/clear tasks.
  */
 class UserWebSocketMessageHandler(
     private val userStorage: UserStorage,
     private val userRepository: UserRepository,
+    private val authStorage: AuthStorage,
     private val refreshTokenUseCase: RefreshTokenUseCase,
     private val scope: CoroutineScope
 ) : WebSocketMessageHandler {
@@ -43,7 +46,9 @@ class UserWebSocketMessageHandler(
     }
 
     private suspend fun handleUnauthorized(): WebSocketMessageHandlerResult {
-        refreshTokenUseCase()
+        if (authStorage.getRefreshToken() != null) {
+            refreshTokenUseCase()
+        }
         return WebSocketMessageHandlerResult.Handled
     }
 

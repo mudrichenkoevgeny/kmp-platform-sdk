@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.us
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.api.session.SessionApiMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.session.userSessionPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
@@ -36,7 +37,8 @@ class OpenSessionRepositoryImplTest {
             getSessionsResult = AppResult.Success(paged)
         }
         val storage = UserStorageMock()
-        val repository = OpenSessionRepositoryImpl(api, storage)
+        val authStorage = AuthStorageMock()
+        val repository = OpenSessionRepositoryImpl(api, storage, authStorage)
 
         val result = repository.getSessions()
 
@@ -51,7 +53,8 @@ class OpenSessionRepositoryImplTest {
             getSessionResult = AppResult.Success(payload)
         }
         val storage = UserStorageMock()
-        val repository = OpenSessionRepositoryImpl(api, storage)
+        val authStorage = AuthStorageMock()
+        val repository = OpenSessionRepositoryImpl(api, storage, authStorage)
 
         val result = repository.getSession(UserSessionId.generate())
 
@@ -65,7 +68,8 @@ class OpenSessionRepositoryImplTest {
             logoutResult = AppResult.Success(Unit)
         }
         val storage = UserStorageMock()
-        val repository = OpenSessionRepositoryImpl(api, storage)
+        val authStorage = AuthStorageMock()
+        val repository = OpenSessionRepositoryImpl(api, storage, authStorage)
 
         val result = repository.logout()
 
@@ -80,7 +84,8 @@ class OpenSessionRepositoryImplTest {
             deleteSessionResult = AppResult.Success(Unit)
         }
         val storage = UserStorageMock()
-        val repository = OpenSessionRepositoryImpl(api, storage)
+        val authStorage = AuthStorageMock()
+        val repository = OpenSessionRepositoryImpl(api, storage, authStorage)
 
         val result = repository.deleteSession(sessionId)
 
@@ -97,8 +102,9 @@ class OpenSessionRepositoryImplTest {
             deleteAllOtherSessionsResult = AppResult.Success(DeletedSessionsPayload(deletedIds))
         }
         val storage = UserStorageMock()
+        val authStorage = AuthStorageMock()
         storage.addUserSession(userSessionMock().copy(id = id1))
-        val repository = OpenSessionRepositoryImpl(api, storage)
+        val repository = OpenSessionRepositoryImpl(api, storage, authStorage)
 
         val result = repository.deleteAllOtherSessions()
 

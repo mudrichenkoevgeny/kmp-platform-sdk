@@ -14,7 +14,7 @@ fun userDetailsPayloadMock(
     id = id,
     role = UserRole.USER.serialName,
     accountStatus = UserAccountStatus.ACTIVE.serialName,
-    accountStatusBeforeDeletion = null,
+    accountStatusOnRestore = null,
     authorityLevel = 0,
     permissionCodes = emptySet(),
     isTotpEnabled = false,

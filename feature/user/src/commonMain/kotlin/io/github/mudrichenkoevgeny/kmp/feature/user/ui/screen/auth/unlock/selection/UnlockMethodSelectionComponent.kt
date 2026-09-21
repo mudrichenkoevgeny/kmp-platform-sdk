@@ -8,16 +8,10 @@ interface UnlockMethodSelectionComponent {
     /** Current screen state. */
     val state: Value<UnlockMethodSelectionScreenState>
 
-    /** Updates the typed email address. */
-    fun onEmailInputChanged(email: String)
-
-    /** Updates the typed phone number. */
-    fun onPhoneInputChanged(phone: String)
-
-    /** Triggers sending email unlock OTP and navigating to OTP input. */
+    /** Navigates to email input for email unlock. */
     fun onSelectEmailUnlock()
 
-    /** Triggers sending phone unlock OTP and navigating to OTP input. */
+    /** Navigates to phone input for phone unlock. */
     fun onSelectPhoneUnlock()
 
     /** Triggers unlock via Google OAuth token. */

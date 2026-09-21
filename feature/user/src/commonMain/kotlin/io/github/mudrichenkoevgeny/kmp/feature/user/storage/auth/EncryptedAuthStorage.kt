@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.time.Clock
 import kotlin.time.Instant
 
 /**
@@ -28,13 +29,26 @@ class EncryptedAuthStorage(
 
     init {
         scope.launch {
-            val accessToken = encryptedSettings.get(KEY_ACCESS_TOKEN)
-            _accessTokenFlow.value = accessToken
+            val expiresAt = encryptedSettings.get(KEY_EXPIRES_AT)?.toLongOrNull() ?: 0L
+            val now = Clock.System.now().toEpochMilliseconds()
+            if (expiresAt in 1..now) {
+                clearTokens()
+            } else {
+                val accessToken = encryptedSettings.get(KEY_ACCESS_TOKEN)
+                _accessTokenFlow.value = accessToken
+            }
         }
     }
 
-    override suspend fun getAccessToken(): AccessToken? =
-        encryptedSettings.get(KEY_ACCESS_TOKEN)?.let { AccessToken(it) }
+    override suspend fun getAccessToken(): AccessToken? {
+        val expiresAt = getExpiresAt()
+        val now = Clock.System.now().toEpochMilliseconds()
+        if (expiresAt in 1..now) {
+            clearTokens()
+            return null
+        }
+        return encryptedSettings.get(KEY_ACCESS_TOKEN)?.let { AccessToken(it) }
+    }
 
     override suspend fun getRefreshToken(): RefreshToken? =
         encryptedSettings.get(KEY_REFRESH_TOKEN)?.let { RefreshToken(it) }
@@ -57,7 +71,9 @@ class EncryptedAuthStorage(
         encryptedSettings.remove(KEY_ACCESS_TOKEN)
         encryptedSettings.remove(KEY_REFRESH_TOKEN)
         encryptedSettings.remove(KEY_EXPIRES_AT)
-        _accessTokenFlow.emit(null)
+        if (_accessTokenFlow.value != null) {
+            _accessTokenFlow.value = null
+        }
     }
 
     companion object {

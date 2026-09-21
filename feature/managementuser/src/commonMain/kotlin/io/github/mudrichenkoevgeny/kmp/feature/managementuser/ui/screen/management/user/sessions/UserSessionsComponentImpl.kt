@@ -157,11 +157,11 @@ class UserSessionsComponentImpl(
         }
 
         val userRoles = (filterStates?.get(UserFilterValues.UserSessionFilterValues.USER_ROLE) as? ChoiceListingFilterState)
-            ?.selectedIds?.map { UserRole.valueOf(it) }
+            ?.selectedIds?.mapNotNull { UserRole.fromValueOrNull(it) }
         val userAuthProviders = (filterStates?.get(UserFilterValues.UserSessionFilterValues.USER_AUTH_PROVIDER) as? ChoiceListingFilterState)
-            ?.selectedIds?.map { UserAuthProvider.valueOf(it.uppercase()) }
+            ?.selectedIds?.mapNotNull { UserAuthProvider.fromValueOrNull(it) }
         val clientTypes = (filterStates?.get(UserFilterValues.UserSessionFilterValues.CLIENT_TYPE) as? ChoiceListingFilterState)
-            ?.selectedIds?.map { ClientType.valueOf(it.uppercase()) }
+            ?.selectedIds?.mapNotNull { ClientType.fromValueOrNull(it) }
         val ipAddresses = (filterStates?.get(UserFilterValues.UserSessionFilterValues.IP_ADDRESS) as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
         val userAgents = (filterStates?.get(UserFilterValues.UserSessionFilterValues.USER_AGENT) as? TextListingFilterState)

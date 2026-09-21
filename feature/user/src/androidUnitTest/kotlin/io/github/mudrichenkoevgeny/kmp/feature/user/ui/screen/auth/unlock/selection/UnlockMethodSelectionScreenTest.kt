@@ -1,11 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.selection
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
@@ -17,7 +14,6 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 @InternalApi
@@ -26,7 +22,7 @@ import kotlin.test.assertTrue
 class UnlockMethodSelectionScreenTest {
 
     @Test
-    fun emailUnlock_bindsInputAndTriggersCallback() = runComposeUiTest {
+    fun emailUnlock_triggersCallback() = runComposeUiTest {
         var emailUnlockClicked = false
         val initialState = UnlockMethodSelectionScreenState(
             knownIdentifiers = listOf(
@@ -45,19 +41,13 @@ class UnlockMethodSelectionScreenTest {
             }
         }
 
-        onNodeWithTag(UnlockMethodSelectionTestTags.EMAIL_INPUT).assertIsDisplayed()
-        onNodeWithTag(UnlockMethodSelectionTestTags.UNLOCK_EMAIL_BUTTON).assertIsNotEnabled()
-
-        onNodeWithTag(UnlockMethodSelectionTestTags.EMAIL_INPUT).performTextReplacement("user@example.com")
-        assertEquals("user@example.com", component.state.value.emailInput)
-        onNodeWithTag(UnlockMethodSelectionTestTags.UNLOCK_EMAIL_BUTTON).assertIsEnabled()
-
+        onNodeWithTag(UnlockMethodSelectionTestTags.UNLOCK_EMAIL_BUTTON).assertIsDisplayed()
         onNodeWithTag(UnlockMethodSelectionTestTags.UNLOCK_EMAIL_BUTTON).performClick()
         assertTrue(emailUnlockClicked)
     }
 
     @Test
-    fun phoneUnlock_bindsInputAndTriggersCallback() = runComposeUiTest {
+    fun phoneUnlock_triggersCallback() = runComposeUiTest {
         var phoneUnlockClicked = false
         val initialState = UnlockMethodSelectionScreenState(
             knownIdentifiers = listOf(
@@ -76,13 +66,7 @@ class UnlockMethodSelectionScreenTest {
             }
         }
 
-        onNodeWithTag(UnlockMethodSelectionTestTags.PHONE_INPUT).assertIsDisplayed()
-        onNodeWithTag(UnlockMethodSelectionTestTags.UNLOCK_PHONE_BUTTON).assertIsNotEnabled()
-
-        onNodeWithTag(UnlockMethodSelectionTestTags.PHONE_INPUT).performTextReplacement("+1234567890")
-        assertEquals("+1234567890", component.state.value.phoneInput)
-        onNodeWithTag(UnlockMethodSelectionTestTags.UNLOCK_PHONE_BUTTON).assertIsEnabled()
-
+        onNodeWithTag(UnlockMethodSelectionTestTags.UNLOCK_PHONE_BUTTON).assertIsDisplayed()
         onNodeWithTag(UnlockMethodSelectionTestTags.UNLOCK_PHONE_BUTTON).performClick()
         assertTrue(phoneUnlockClicked)
     }

@@ -277,7 +277,7 @@ class IdentifierListComponentImpl(
         }
 
         val userAuthProviders = (filterStates?.get(UserFilterValues.UserIdentifierFilterValues.USER_AUTH_PROVIDER) as? ChoiceListingFilterState)
-            ?.selectedIds?.map { UserAuthProvider.valueOf(it.uppercase()) }
+            ?.selectedIds?.mapNotNull { UserAuthProvider.fromValueOrNull(it) }
         val identifiers = (filterStates?.get(UserFilterValues.UserIdentifierFilterValues.IDENTIFIER) as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
 

@@ -136,9 +136,9 @@ class AuditEventsComponentImpl(
         val actorIds = (filterStates?.get(AuditFilterValues.AuditEventFilterValues.ACTOR_ID) as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
         val actorTypes = (filterStates?.get(AuditFilterValues.AuditEventFilterValues.ACTOR_TYPE) as? ChoiceListingFilterState)
-            ?.selectedIds?.map { AuditActorType.valueOf(it.uppercase()) }
+            ?.selectedIds?.mapNotNull { AuditActorType.fromValueOrNull(it) }
         val actorUserRoles = (filterStates?.get(AuditFilterValues.AuditEventFilterValues.ACTOR_USER_ROLE) as? ChoiceListingFilterState)
-            ?.selectedIds?.map { UserRole.valueOf(it.uppercase()) }
+            ?.selectedIds?.mapNotNull { UserRole.fromValueOrNull(it) }
         val actions = (filterStates?.get(AuditFilterValues.AuditEventFilterValues.ACTION) as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
         val resources = (filterStates?.get(AuditFilterValues.AuditEventFilterValues.RESOURCE) as? TextListingFilterState)
@@ -146,7 +146,7 @@ class AuditEventsComponentImpl(
         val resourceIds = (filterStates?.get(AuditFilterValues.AuditEventFilterValues.RESOURCE_ID) as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
         val statuses = (filterStates?.get(AuditFilterValues.AuditEventFilterValues.STATUS) as? ChoiceListingFilterState)
-            ?.selectedIds?.map { AuditStatus.valueOf(it.uppercase()) }
+            ?.selectedIds?.mapNotNull { AuditStatus.fromValueOrNull(it) }
         val messages = (filterStates?.get(AuditFilterValues.AuditEventFilterValues.MESSAGE) as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
 
