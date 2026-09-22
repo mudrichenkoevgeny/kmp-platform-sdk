@@ -127,7 +127,6 @@ class ProfileRootComponentImpl(
                 userRepository = userRepository,
                 logoutUseCase = logoutUseCase,
                 scheduleUserDeletionUseCase = scheduleUserDeletionUseCase,
-                restoreUserUseCase = restoreUserUseCase,
                 getAuthSettingsUseCase = getAuthSettingsUseCase,
                 observeAuthSettingsUseCase = observeAuthSettingsUseCase,
                 onNavigateToLogin = onNavigateToLogin,

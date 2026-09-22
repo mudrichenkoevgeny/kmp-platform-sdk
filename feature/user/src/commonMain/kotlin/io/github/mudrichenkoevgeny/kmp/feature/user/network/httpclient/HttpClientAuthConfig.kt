@@ -1,13 +1,18 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient
 
-import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.ApiException
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.auth.IsPublicApi
+import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.model.ApiErrorResponse
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.RefreshTokenPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.SessionTokenPayload
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
+import io.ktor.client.plugins.HttpResponseValidator
+import io.ktor.client.plugins.ResponseException
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
@@ -19,8 +24,18 @@ import kotlin.time.Instant
 
 private const val LOGGER_AUTH_PREFIX = "Auth"
 
+private val SESSION_INVALIDATING_ERROR_CODES = setOf(
+    UserErrorCodes.INVALID_ACCESS_TOKEN,
+    UserErrorCodes.INVALID_REFRESH_TOKEN,
+    UserErrorCodes.INVALID_SESSION,
+    UserErrorCodes.USER_BANNED,
+    UserErrorCodes.USER_LOCKED,
+    UserErrorCodes.USER_SECURITY_HOLD
+)
+
 /**
  * Installs Ktor `Auth` with bearer token loading, refresh, and conditional header attachment.
+ * Also monitors response exceptions for session-invalidating error codes and triggers session clearance.
  *
  * [AuthStorage] supplies access and refresh tokens. Requests marked with [IsPublicApi] skip the
  * `Authorization` header. The refresh flow posts to [refreshTokenRoute], updates storage on success,
@@ -30,6 +45,7 @@ private const val LOGGER_AUTH_PREFIX = "Auth"
  * @param networkLogger Logger used for auth lifecycle messages.
  * @param authStorage Persistent token and expiry source.
  * @param refreshTokenRoute Route path for token refresh operations.
+ * @param onSessionCleared Optional callback triggered when local session must be invalidated.
  */
 fun HttpClientConfig<*>.setupAuthConfig(
     baseUrl: String,
@@ -101,6 +117,22 @@ fun HttpClientConfig<*>.setupAuthConfig(
             sendWithoutRequest { request ->
                 val isPublic = request.attributes.getOrNull(IsPublicApi) == true
                 !isPublic
+            }
+        }
+    }
+
+    HttpResponseValidator {
+        handleResponseExceptionWithRequest { exception, _ ->
+            val apiException = exception as? ApiException
+                ?: (exception as? ResponseException)?.let { responseException ->
+                    runCatching { responseException.response.body<ApiErrorResponse>() }.getOrNull()?.let { apiErrorResponse ->
+                        ApiException(apiErrorResponse)
+                    }
+                }
+            val errorCode = apiException?.apiErrorResponse?.code
+            if (errorCode != null && SESSION_INVALIDATING_ERROR_CODES.contains(errorCode)) {
+                networkLogger.log("$LOGGER_AUTH_PREFIX: Session invalidating error code received: $errorCode. Clearing session...")
+                onSessionCleared?.invoke() ?: authStorage.clearTokens()
             }
         }
     }

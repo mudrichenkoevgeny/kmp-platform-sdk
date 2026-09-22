@@ -3,7 +3,6 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainScreenState
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totprecoverycodes.TotpRecoveryCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totpsetup.TotpSetup
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -96,25 +95,23 @@ class TotpMainScreenStateTest {
 
     @Test
     fun enabled_defaultParameters_setsExpectedFlags() {
-        val recoveryCodes = TotpRecoveryCodes(codes = listOf(CODE_ONE, CODE_TWO))
-        val state = TotpMainScreenState.Enabled(recoveryCodes = recoveryCodes)
+        val state = TotpMainScreenState.Enabled()
 
-        assertEquals(recoveryCodes, state.recoveryCodes)
+        assertFalse(state.showDisableConfirmation)
         assertFalse(state.actionLoading)
         assertNull(state.actionError)
     }
 
     @Test
     fun enabled_customParameters_setsExpectedValues() {
-        val recoveryCodes = TotpRecoveryCodes(codes = listOf(CODE_ONE, CODE_TWO))
         val error = CommonError.Unknown()
         val state = TotpMainScreenState.Enabled(
-            recoveryCodes = recoveryCodes,
+            showDisableConfirmation = true,
             actionLoading = ACTION_LOADING,
             actionError = error
         )
 
-        assertEquals(recoveryCodes, state.recoveryCodes)
+        assertTrue(state.showDisableConfirmation)
         assertTrue(state.actionLoading)
         assertEquals(error, state.actionError)
     }

@@ -17,7 +17,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAut
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.ObserveAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.LogoutUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.GetUserUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.RestoreUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.OpenAuthSettings
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +32,6 @@ import kotlinx.coroutines.launch
  * @param userRepository Source of the current user profile state.
  * @param logoutUseCase Ends the current session and clears local storage.
  * @param scheduleUserDeletionUseCase Initiates account deletion for end-users.
- * @param restoreUserUseCase Restores an account scheduled for deletion.
  * @param getAuthSettingsUseCase Retrieves current remote auth settings.
  * @param observeAuthSettingsUseCase Observes current remote auth settings updates in real time.
  * @param onNavigateToLogin Invoked when the user needs to sign in.
@@ -47,15 +45,13 @@ class MainProfileComponentImpl(
     private val userRepository: UserRepository,
     private val logoutUseCase: LogoutUseCase,
     private val scheduleUserDeletionUseCase: ScheduleUserDeletionUseCase,
-    private val restoreUserUseCase: RestoreUserUseCase,
     private val getUserUseCase: GetUserUseCase? = null,
     private val getAuthSettingsUseCase: GetAuthSettingsUseCase? = null,
     private val observeAuthSettingsUseCase: ObserveAuthSettingsUseCase? = null,
     private val onNavigateToLogin: () -> Unit,
     private val onNavigateToTotp: () -> Unit,
     private val onNavigateToSessions: () -> Unit,
-    private val onNavigateToIdentifiers: () -> Unit,
-    private val onNavigateToUnlock: (() -> Unit)? = null
+    private val onNavigateToIdentifiers: () -> Unit
 ) : MainProfileComponent, ComponentContext by componentContext {
 
     private val scope = componentCoroutineScope()
@@ -87,6 +83,7 @@ class MainProfileComponentImpl(
         } else {
             MainProfileScreenState.Content(
                 user = user,
+                appType = appType,
                 isAccountDeletionAvailable = appType == AppType.CLIENT,
                 showDeleteConfirmation = showDeleteConfirm,
                 showLogoutConfirmation = showLogoutConfirm,
@@ -196,30 +193,13 @@ class MainProfileComponentImpl(
         scope.launch {
             scheduleUserDeletionUseCase()
                 .onSuccess {
+                    userRepository.clearSession()
                     actionState.value = ActionState.Idle
                 }
                 .onError { error ->
                     actionState.value = ActionState.Error(error)
                 }
         }
-    }
-
-    override fun onRestoreAccountClick() {
-        actionState.value = ActionState.Loading
-
-        scope.launch {
-            restoreUserUseCase()
-                .onSuccess {
-                    actionState.value = ActionState.Idle
-                }
-                .onError { error ->
-                    actionState.value = ActionState.Error(error)
-                }
-        }
-    }
-
-    override fun onUnlockAccountClick() {
-        onNavigateToUnlock?.invoke()
     }
 
     override fun onDismissDialog() {

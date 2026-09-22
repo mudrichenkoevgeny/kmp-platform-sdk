@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -58,7 +56,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.MainProfileComponentMock
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
+import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -113,8 +111,6 @@ fun MainProfileScreen(component: MainProfileComponent) {
                         onIdentifiersClick = component::onIdentifiersClick,
                         onDeleteAccountClick = component::onDeleteAccountClick,
                         onConfirmDeleteAccount = component::onConfirmDeleteAccount,
-                        onRestoreAccountClick = component::onRestoreAccountClick,
-                        onUnlockAccountClick = component::onUnlockAccountClick,
                         onDismissDialog = component::onDismissDialog
                     )
                     is MainProfileScreenState.Error -> {
@@ -140,13 +136,8 @@ private fun UnauthorizedContent(
             .padding(CoreTheme.dimens.paddingLarge),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CoreBodyText(
-            text = stringResource(Res.string.not_authorized),
-            modifier = Modifier.testTag(MainProfileTestTags.UNAUTHORIZED_TEXT)
-        )
-        Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
         CoreButton(
-            text = stringResource(Res.string.login),
+            text = stringResource(Res.string.sign_in),
             onClick = onLoginClick,
             modifier = Modifier.testTag(MainProfileTestTags.LOGIN_BUTTON)
         )
@@ -164,14 +155,8 @@ private fun ProfileContent(
     onIdentifiersClick: () -> Unit,
     onDeleteAccountClick: () -> Unit,
     onConfirmDeleteAccount: () -> Unit,
-    onRestoreAccountClick: () -> Unit,
-    onUnlockAccountClick: () -> Unit,
     onDismissDialog: () -> Unit
 ) {
-    val isPendingDeletion = state.user.accountStatus == UserAccountStatus.PENDING_DELETION
-    val isLocked = state.user.lockoutType != AccountLockoutType.NONE ||
-            state.user.accountStatus == UserAccountStatus.SECURITY_HOLD
-
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -179,87 +164,51 @@ private fun ProfileContent(
                 .padding(CoreTheme.dimens.paddingLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (isLocked) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = CoreTheme.dimens.paddingMedium)
-                        .testTag(MainProfileTestTags.LOCKED_CARD),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.onErrorContainer
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(CoreTheme.dimens.paddingMedium),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        CoreTitleText(
-                            text = stringResource(Res.string.account_locked_title),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                        CoreBodyText(
-                            text = stringResource(Res.string.account_locked_desc),
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
-                        CoreButton(
-                            text = stringResource(Res.string.unlock_account),
-                            onClick = onUnlockAccountClick,
-                            modifier = Modifier.testTag(MainProfileTestTags.UNLOCK_ACCOUNT_BUTTON),
-                            enabled = !state.actionLoading
-                        )
-                    }
-                }
-            }
-
-            if (isPendingDeletion) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = CoreTheme.dimens.paddingMedium)
-                        .testTag(MainProfileTestTags.PENDING_DELETION_CARD),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.onErrorContainer
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(CoreTheme.dimens.paddingMedium),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        CoreTitleText(
-                            text = stringResource(Res.string.account_pending_deletion_title),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                        CoreBodyText(
-                            text = stringResource(Res.string.account_pending_deletion_desc),
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
-                        CoreButton(
-                            text = stringResource(Res.string.restore_account),
-                            onClick = onRestoreAccountClick,
-                            modifier = Modifier.testTag(MainProfileTestTags.RESTORE_ACCOUNT_BUTTON),
-                            enabled = !state.actionLoading
-                        )
-                    }
-                }
-            }
-
             CoreBodyText(
                 text = stringResource(Res.string.user_id, state.user.id.asHexDashString()),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.testTag(MainProfileTestTags.USER_ID_TEXT)
             )
+
+            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+
+            val accountStatusText = when (state.user.accountStatus) {
+                UserAccountStatus.ACTIVE -> stringResource(Res.string.account_status_active)
+                UserAccountStatus.READ_ONLY -> stringResource(Res.string.account_status_read_only)
+                UserAccountStatus.BANNED -> stringResource(Res.string.account_status_banned)
+                UserAccountStatus.SECURITY_HOLD -> stringResource(Res.string.account_status_security_hold)
+                UserAccountStatus.PENDING_DELETION -> stringResource(Res.string.account_status_pending_deletion)
+            }
+
+            CoreBodyText(
+                text = stringResource(Res.string.account_status_prefix, accountStatusText),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.testTag(MainProfileTestTags.ACCOUNT_STATUS_TEXT)
+            )
+
+            if (state.appType == AppType.MANAGEMENT) {
+                Spacer(Modifier.height(CoreTheme.dimens.paddingExtraSmall))
+
+                CoreBodyText(
+                    text = stringResource(Res.string.authority_level_prefix, state.user.authorityLevel),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.testTag(MainProfileTestTags.AUTHORITY_LEVEL_TEXT)
+                )
+
+                Spacer(Modifier.height(CoreTheme.dimens.paddingExtraSmall))
+
+                val permissionsText = if (state.user.permissionCodes.isEmpty()) {
+                    stringResource(Res.string.permissions_none)
+                } else {
+                    state.user.permissionCodes.joinToString(", ") { it.value }
+                }
+
+                CoreBodyText(
+                    text = stringResource(Res.string.permission_codes_prefix, permissionsText),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.testTag(MainProfileTestTags.PERMISSION_CODES_TEXT)
+                )
+            }
 
             Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
@@ -290,7 +239,7 @@ private fun ProfileContent(
 
             Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
-            if (state.isAccountDeletionAvailable && !isPendingDeletion) {
+            if (state.isAccountDeletionAvailable) {
                 CoreButton(
                     text = stringResource(Res.string.delete_account),
                     onClick = onDeleteAccountClick,
@@ -379,8 +328,8 @@ private fun ErrorText(error: AppError?) {
 internal class MainProfilePreviewProvider : PreviewParameterProvider<MainProfileScreenState> {
     private val items: List<Pair<String, MainProfileScreenState>> = listOf(
         "Unauthorized" to MainProfileScreenState.Unauthorized(),
-        "Content Default" to MainProfileScreenState.Content(user = userDetailsMock(), isAccountDeletionAvailable = true),
-        "Content Locked" to MainProfileScreenState.Content(user = userDetailsMock(lockoutType = AccountLockoutType.INDEFINITE)),
+        "Content Client" to MainProfileScreenState.Content(user = userDetailsMock(), appType = AppType.CLIENT, isAccountDeletionAvailable = true),
+        "Content Management" to MainProfileScreenState.Content(user = userDetailsMock(), appType = AppType.MANAGEMENT, isAccountDeletionAvailable = false),
         "Content Pending Deletion" to MainProfileScreenState.Content(user = userDetailsMock(accountStatus = UserAccountStatus.PENDING_DELETION)),
         "Action Loading" to MainProfileScreenState.Content(user = userDetailsMock(), actionLoading = true),
         "Inline Error" to MainProfileScreenState.Content(user = userDetailsMock(), actionError = CommonError.Unknown()),
@@ -448,14 +397,11 @@ private fun FontScalePreview() {
 }
 
 internal object MainProfileTestTags {
-    const val UNAUTHORIZED_TEXT = "MainProfile_UnauthorizedText"
     const val LOGIN_BUTTON = "MainProfile_LoginButton"
 
-    const val LOCKED_CARD = "MainProfile_LockedCard"
-    const val UNLOCK_ACCOUNT_BUTTON = "MainProfile_UnlockAccountButton"
-
-    const val PENDING_DELETION_CARD = "MainProfile_PendingDeletionCard"
-    const val RESTORE_ACCOUNT_BUTTON = "MainProfile_RestoreAccountButton"
+    const val ACCOUNT_STATUS_TEXT = "MainProfile_AccountStatusText"
+    const val AUTHORITY_LEVEL_TEXT = "MainProfile_AuthorityLevelText"
+    const val PERMISSION_CODES_TEXT = "MainProfile_PermissionCodesText"
 
     const val USER_ID_TEXT = "MainProfile_UserIdText"
     const val TOTP_MAIN_BUTTON = "MainProfile_TotpMainButton"

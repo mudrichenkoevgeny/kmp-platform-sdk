@@ -15,6 +15,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.MainProfileComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -40,14 +41,13 @@ class MainProfileScreenTest {
     }
 
     @Test
-    fun unauthorized_displaysTextAndLoginButton_invokesOnLoginClick() = runComposeUiTest {
+    fun unauthorized_displaysSignInButton_invokesOnLoginClick() = runComposeUiTest {
         val component = MainProfileComponentMock(MainProfileScreenState.Unauthorized())
         setContent {
             ComponentTestHarness {
                 MainProfileScreen(component)
             }
         }
-        onNodeWithTag(MainProfileTestTags.UNAUTHORIZED_TEXT).assertIsDisplayed()
         onNodeWithTag(MainProfileTestTags.LOGIN_BUTTON).assertIsDisplayed().performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.loginCalls)
     }
@@ -69,11 +69,30 @@ class MainProfileScreenTest {
         onNodeWithTag(MainProfileTestTags.USER_ID_TEXT)
             .assertIsDisplayed()
             .assertTextContains(user.id.asHexDashString(), substring = true)
+        onNodeWithTag(MainProfileTestTags.ACCOUNT_STATUS_TEXT).assertIsDisplayed()
         onNodeWithTag(MainProfileTestTags.TOTP_MAIN_BUTTON).assertIsDisplayed()
         onNodeWithTag(MainProfileTestTags.SESSIONS_BUTTON).assertIsDisplayed()
         onNodeWithTag(MainProfileTestTags.IDENTIFIERS_BUTTON).assertIsDisplayed()
         onNodeWithTag(MainProfileTestTags.DELETE_ACCOUNT_BUTTON).assertIsDisplayed()
         onNodeWithTag(MainProfileTestTags.LOGOUT_BUTTON).assertIsDisplayed()
+    }
+
+    @Test
+    fun content_managementApp_displaysAuthorityLevelAndPermissions() = runComposeUiTest {
+        val user = userDetailsMock()
+        val component = MainProfileComponentMock(
+            MainProfileScreenState.Content(
+                user = user,
+                appType = AppType.MANAGEMENT
+            )
+        )
+        setContent {
+            ComponentTestHarness {
+                MainProfileScreen(component)
+            }
+        }
+        onNodeWithTag(MainProfileTestTags.AUTHORITY_LEVEL_TEXT).assertIsDisplayed()
+        onNodeWithTag(MainProfileTestTags.PERMISSION_CODES_TEXT).assertIsDisplayed()
     }
 
     @Test

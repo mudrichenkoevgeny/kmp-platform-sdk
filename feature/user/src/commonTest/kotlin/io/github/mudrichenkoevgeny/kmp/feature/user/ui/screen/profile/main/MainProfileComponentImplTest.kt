@@ -11,7 +11,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.UserRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.LogoutUseCaseMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.RestoreUserUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.ScheduleUserDeletionUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import kotlinx.coroutines.flow.flow
@@ -206,28 +205,6 @@ class MainProfileComponentImplTest {
             advanceTimeBy(100.milliseconds)
 
             assertEquals(ONE_CALL, scheduleUserDeletionUseCase.executeCalls)
-            val state = assertIs<MainProfileScreenState.Content>(context.component.state.value)
-            assertFalse(state.showDeleteConfirmation)
-        } finally {
-            context.destroy()
-        }
-    }
-
-    @Test
-    fun onRestoreAccountClick_executesRestoreUserUseCase() = runComponentTest {
-        val userDetails = userDetailsMock()
-        val restoreUserUseCase = RestoreUserUseCaseMock().apply {
-            resultProvider = { AppResult.Success(userDetails) }
-        }
-        val context = createMainProfileComponentTestContext(restoreUserUseCase = restoreUserUseCase)
-        try {
-            context.userRepository.emit(userDetails)
-            runCurrent()
-
-            context.component.onRestoreAccountClick()
-            advanceTimeBy(100.milliseconds)
-
-            assertEquals(ONE_CALL, restoreUserUseCase.executeCalls)
         } finally {
             context.destroy()
         }
@@ -257,8 +234,7 @@ class MainProfileComponentImplTest {
         appType: AppType = AppType.CLIENT,
         userRepository: UserRepositoryMock = UserRepositoryMock(),
         logoutUseCase: LogoutUseCaseMock = LogoutUseCaseMock(),
-        scheduleUserDeletionUseCase: ScheduleUserDeletionUseCaseMock = ScheduleUserDeletionUseCaseMock(),
-        restoreUserUseCase: RestoreUserUseCaseMock = RestoreUserUseCaseMock()
+        scheduleUserDeletionUseCase: ScheduleUserDeletionUseCaseMock = ScheduleUserDeletionUseCaseMock()
     ): MainProfileComponentTestContext {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
@@ -274,7 +250,6 @@ class MainProfileComponentImplTest {
             userRepository = userRepository,
             logoutUseCase = logoutUseCase,
             scheduleUserDeletionUseCase = scheduleUserDeletionUseCase,
-            restoreUserUseCase = restoreUserUseCase,
             onNavigateToLogin = { context.onNavigateToLoginCalls++ },
             onNavigateToTotp = { context.onNavigateToTotpCalls++ },
             onNavigateToSessions = { context.onNavigateToSessionsCalls++ },

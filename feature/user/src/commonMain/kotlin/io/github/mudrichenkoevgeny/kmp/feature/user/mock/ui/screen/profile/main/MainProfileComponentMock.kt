@@ -58,9 +58,5 @@ class MainProfileComponentMock(
 
     override fun onConfirmDeleteAccount() {}
 
-    override fun onRestoreAccountClick() {}
-
-    override fun onUnlockAccountClick() {}
-
     override fun onDismissDialog() {}
 }

@@ -36,12 +36,6 @@ interface MainProfileComponent {
     /** Executes account deletion after confirmation. */
     fun onConfirmDeleteAccount()
 
-    /** Restores a user account currently scheduled for deletion. */
-    fun onRestoreAccountClick()
-
-    /** Navigates to account unlock flow when locked. */
-    fun onUnlockAccountClick()
-
     /** Hides any active confirmation dialogs. */
     fun onDismissDialog()
 }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,7 +15,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
@@ -41,6 +41,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottom
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.scrollbar.CoreLazyColumnScrollbar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
@@ -161,27 +162,40 @@ private fun Content(
             )
         }
 
-        LazyColumn(
-            state = listState,
+        Box(
             modifier = Modifier
                 .weight(1f)
-                .testTag(AuditEventsTestTags.EVENT_LIST),
-            contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
-            verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+                .fillMaxWidth()
         ) {
-            items(state.paging.items, key = { it.id.value }) { event ->
-                AuditItem(
-                    event = event,
-                    onClick = { onEventClick(event.id) }
-                )
+            LazyColumn(
+                state = listState,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag(AuditEventsTestTags.EVENT_LIST),
+                contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
+                verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+            ) {
+                items(state.paging.items, key = { it.id.value }) { event ->
+                    AuditItem(
+                        event = event,
+                        onClick = { onEventClick(event.id) }
+                    )
+                }
+
+                item {
+                    PagingFooter(
+                        state = state.paging,
+                        onRetry = onLoadNextPage
+                    )
+                }
             }
 
-            item {
-                PagingFooter(
-                    state = state.paging,
-                    onRetry = onLoadNextPage
-                )
-            }
+            CoreLazyColumnScrollbar(
+                lazyListState = listState,
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .fillMaxHeight()
+            )
         }
     }
 }

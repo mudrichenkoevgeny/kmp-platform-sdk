@@ -17,7 +17,9 @@ import io.ktor.http.headersOf
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Instant
@@ -93,6 +95,92 @@ class HttpClientAuthConfigTest {
         }
 
         assertNull(authHeader)
+    }
+
+    @Test
+    fun `session invalidating error code triggers onSessionCleared`() = runTest {
+        var sessionClearedInvoked = false
+        val storage = AuthStorageMock()
+        val expiresAt = Instant.fromEpochMilliseconds(
+            Clock.System.now().toEpochMilliseconds() + 1.hours.inWholeMilliseconds
+        )
+
+        storage.updateTokens(
+            AccessToken(ACCESS_TOKEN_VALUE),
+            RefreshToken(REFRESH_TOKEN_VALUE),
+            expiresAt
+        )
+
+        val engine = MockEngine {
+            respond(
+                content = """{"code":"USER_LOCKED","id":"123","message":"Locked"}""",
+                status = HttpStatusCode.Forbidden,
+                headers = headersOf(HttpHeaders.ContentType, "application/json")
+            )
+        }
+
+        val client = HttpClient(engine) {
+            expectSuccess = true
+            setupAuthConfig(
+                baseUrl = API_ORIGIN,
+                networkLogger = SilentLogger,
+                authStorage = storage,
+                refreshTokenRoute = OpenRefreshTokenRoutes.REFRESH_TOKEN,
+                onSessionCleared = { sessionClearedInvoked = true }
+            )
+        }
+
+        try {
+            client.get("$API_ORIGIN$RESOURCE_PATH")
+        } catch (_: Exception) {
+        } finally {
+            client.close()
+        }
+
+        assertTrue(sessionClearedInvoked)
+    }
+
+    @Test
+    fun `non session invalidating error code does not trigger onSessionCleared`() = runTest {
+        var sessionClearedInvoked = false
+        val storage = AuthStorageMock()
+        val expiresAt = Instant.fromEpochMilliseconds(
+            Clock.System.now().toEpochMilliseconds() + 1.hours.inWholeMilliseconds
+        )
+
+        storage.updateTokens(
+            AccessToken(ACCESS_TOKEN_VALUE),
+            RefreshToken(REFRESH_TOKEN_VALUE),
+            expiresAt
+        )
+
+        val engine = MockEngine {
+            respond(
+                content = """{"code":"WRONG_PASSWORD","id":"123","message":"Wrong password"}""",
+                status = HttpStatusCode.BadRequest,
+                headers = headersOf(HttpHeaders.ContentType, "application/json")
+            )
+        }
+
+        val client = HttpClient(engine) {
+            expectSuccess = true
+            setupAuthConfig(
+                baseUrl = API_ORIGIN,
+                networkLogger = SilentLogger,
+                authStorage = storage,
+                refreshTokenRoute = OpenRefreshTokenRoutes.REFRESH_TOKEN,
+                onSessionCleared = { sessionClearedInvoked = true }
+            )
+        }
+
+        try {
+            client.get("$API_ORIGIN$RESOURCE_PATH")
+        } catch (_: Exception) {
+        } finally {
+            client.close()
+        }
+
+        assertFalse(sessionClearedInvoked)
     }
 
     private suspend fun captureAuthHeader(

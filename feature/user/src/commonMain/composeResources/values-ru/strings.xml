@@ -83,6 +83,15 @@
     <string name="delete_account">Удалить аккаунт</string>
     <string name="not_authorized">Не авторизован!</string>
     <string name="user_id">ID пользователя: %1$s</string>
+    <string name="account_status_prefix">Статус аккаунта: %1$s</string>
+    <string name="account_status_active">Активен</string>
+    <string name="account_status_read_only">Только чтение</string>
+    <string name="account_status_banned">Забанен</string>
+    <string name="account_status_security_hold">Проверка безопасности</string>
+    <string name="account_status_pending_deletion">Ожидает удаления</string>
+    <string name="authority_level_prefix">Уровень полномочий: %1$d</string>
+    <string name="permission_codes_prefix">Права доступа: %1$s</string>
+    <string name="permissions_none">Отсутствуют</string>
 
     <string name="totp_disabled_desc">Двухфакторная аутентификация (TOTP) повышает безопасность вашего аккаунта. При ее включении для входа потребуется вводить код из приложения-аутентификатора.</string>
     <string name="setup_totp">Настроить TOTP</string>

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -158,7 +159,7 @@ private fun MobileLayout(
                             Icon(
                                 painter = painterResource(dest.iconRes),
                                 contentDescription = null,
-                                modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+                                modifier = Modifier.size(CoreTheme.dimens.progressIndicatorSizeSmall)
                             )
                         },
                         label = { Text(stringResource(dest.title)) }
@@ -194,7 +195,8 @@ private fun WebLayout(
                     icon = {
                         Icon(
                             painter = painterResource(dest.iconRes),
-                            contentDescription = stringResource(dest.title)
+                            contentDescription = stringResource(dest.title),
+                            modifier = Modifier.size(CoreTheme.dimens.progressIndicatorSizeSmall)
                         )
                     },
                     label = { Text(stringResource(dest.title)) }
