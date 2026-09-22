@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
  * @param getAuthSettingsUseCase Retrieves current remote auth settings.
  * @param observeAuthSettingsUseCase Observes current remote auth settings updates in real time.
  * @param onNavigateToLogin Invoked when the user needs to sign in.
- * @param onNavigateToTotp Opens the TOTP settings screen.
+ * @param onNavigateToTotp Opens the TOTP main screen.
  * @param onNavigateToSessions Opens the active sessions list.
  * @param onNavigateToIdentifiers Opens the linked identifiers management.
  */
@@ -173,7 +173,7 @@ class MainProfileComponentImpl(
         }
     }
 
-    override fun onTotpSettingsClick() {
+    override fun onTotpMainClick() {
         onNavigateToTotp()
     }
 

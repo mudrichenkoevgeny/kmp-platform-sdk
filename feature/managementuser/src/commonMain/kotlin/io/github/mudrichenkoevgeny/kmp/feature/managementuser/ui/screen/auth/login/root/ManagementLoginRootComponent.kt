@@ -8,6 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.pending
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.root.UnlockRootComponent
 
 /**
  * Root of the nested login flow for management: stack navigation over [ManagementLoginDestination] with restricted child components.
@@ -63,5 +64,12 @@ interface ManagementLoginRootComponent {
          * @param component Child Decompose component for this step.
          */
         class PendingDeletion(val component: PendingDeletionComponent) : Child
+
+        /**
+         * Account unlock flow for locked accounts.
+         *
+         * @param component Child Decompose component for this step.
+         */
+        class AccountUnlock(val component: UnlockRootComponent) : Child
     }
 }

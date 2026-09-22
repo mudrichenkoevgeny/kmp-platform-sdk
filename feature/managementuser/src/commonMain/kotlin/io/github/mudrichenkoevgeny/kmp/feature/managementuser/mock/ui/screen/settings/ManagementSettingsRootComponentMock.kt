@@ -7,7 +7,7 @@ import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.settings.main.MainManagementSettingsComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.ManagementSettingsDestination
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.ManagementSettingsRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.root.ManagementSettingsRootComponent
 
 @InternalApi
 class ManagementSettingsRootComponentMock(

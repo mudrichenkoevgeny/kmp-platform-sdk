@@ -4,7 +4,7 @@ import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.root.ClientLoginRootComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.home.HomeScreenComponent
 import kotlinx.serialization.Serializable
 

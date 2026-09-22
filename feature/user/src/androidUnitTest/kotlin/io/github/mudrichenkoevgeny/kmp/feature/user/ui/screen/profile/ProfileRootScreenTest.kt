@@ -11,15 +11,17 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.ProfileRootComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.MainProfileComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.totp.TotpSettingsComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.totp.TotpMainComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.session.SessionListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.identifier.IdentifierListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileScreenState
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.SessionListTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.IdentifierListTestTags
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.TotpSettingsScreenState
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.TotpSettingsTestTags
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainScreenState
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainTestTags
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -51,13 +53,13 @@ class ProfileRootScreenTest {
     }
 
     @Test
-    fun displaysTotpSettingsChild_whenActiveConfigurationIsTotpSettings() = runComposeUiTest {
-        val totpComponent = TotpSettingsComponentMock(
-            initialState = TotpSettingsScreenState.Disabled()
+    fun displaysTotpMainChild_whenActiveConfigurationIsTotpMain() = runComposeUiTest {
+        val totpComponent = TotpMainComponentMock(
+            initialState = TotpMainScreenState.Disabled()
         )
         val rootComponent = ProfileRootComponentMock(
-            initialChild = ProfileRootComponent.Child.TotpSettings(totpComponent),
-            initialConfiguration = ProfileDestination.TotpSettings
+            initialChild = ProfileRootComponent.Child.TotpMain(totpComponent),
+            initialConfiguration = ProfileDestination.TotpMain
         )
 
         setContent {
@@ -66,7 +68,7 @@ class ProfileRootScreenTest {
             }
         }
 
-        onNodeWithTag(TotpSettingsTestTags.BACK_BUTTON).assertIsDisplayed()
+        onNodeWithTag(TotpMainTestTags.BACK_BUTTON).assertIsDisplayed()
     }
 
     @Test

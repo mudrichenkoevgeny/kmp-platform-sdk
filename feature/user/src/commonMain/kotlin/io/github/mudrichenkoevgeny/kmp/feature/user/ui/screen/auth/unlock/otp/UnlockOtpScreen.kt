@@ -46,7 +46,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.*
+import io.github.mudrichenkoevgeny.kmp.feature.user.confirmation_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.enter_confirmation_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.resend_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.resend_code_timer
+import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_account
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.unlock.otp.UnlockOtpComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.UnlockMethod
 import org.jetbrains.compose.resources.stringResource
@@ -94,8 +98,8 @@ fun UnlockOtpScreen(component: UnlockOtpComponent) {
                 CoreCodeTextField(
                     value = state.codeInput,
                     onValueChange = component::onCodeChanged,
-                    label = { CoreBodyText(stringResource(Res.string.totp_setup_step2)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.totp_setup_step2)) },
+                    label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
+                    placeholder = { CoreBodyText(stringResource(Res.string.enter_confirmation_code)) },
                     modifier = Modifier.testTag(UnlockOtpTestTags.CODE_INPUT),
                     isError = state.actionError != null,
                     enabled = !state.actionLoading
@@ -108,12 +112,20 @@ fun UnlockOtpScreen(component: UnlockOtpComponent) {
                     enabled = !state.actionLoading && state.codeInput.isNotBlank()
                 )
 
-                CoreTextButton(
-                    text = stringResource(Res.string.setup_totp),
-                    onClick = component::onResendCodeClick,
-                    modifier = Modifier.testTag(UnlockOtpTestTags.RESEND_BUTTON),
-                    enabled = !state.actionLoading && state.remainingDelaySeconds == 0
-                )
+                if (state.remainingDelaySeconds > 0) {
+                    CoreBodyText(
+                        text = stringResource(Res.string.resend_code_timer, state.remainingDelaySeconds),
+                        color = MaterialTheme.colorScheme.outline,
+                        modifier = Modifier.testTag(UnlockOtpTestTags.RESEND_TIMER_TEXT)
+                    )
+                } else {
+                    CoreTextButton(
+                        text = stringResource(Res.string.resend_code),
+                        onClick = component::onResendCodeClick,
+                        modifier = Modifier.testTag(UnlockOtpTestTags.RESEND_BUTTON),
+                        enabled = !state.actionLoading
+                    )
+                }
 
                 ErrorText(state.actionError)
             }
@@ -153,6 +165,7 @@ internal object UnlockOtpTestTags {
     const val CODE_INPUT = "UnlockOtp_CodeInput"
     const val UNLOCK_BUTTON = "UnlockOtp_UnlockButton"
     const val RESEND_BUTTON = "UnlockOtp_ResendButton"
+    const val RESEND_TIMER_TEXT = "UnlockOtp_ResendTimerText"
     const val ACTION_ERROR_TEXT = "UnlockOtp_ActionErrorText"
 }
 

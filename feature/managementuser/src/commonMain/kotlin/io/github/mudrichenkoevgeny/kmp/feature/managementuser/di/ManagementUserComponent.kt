@@ -11,12 +11,12 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.UsersManagementRootComponent
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.UsersManagementRootComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.ManagementSettingsRootComponent
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.ManagementSettingsRootComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.root.UsersManagementRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.root.UsersManagementRootComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.root.ManagementSettingsRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.root.ManagementSettingsRootComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponentImpl
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.action.CompositeAuditActionTypeParser
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.metadata.CommonAuditMetadataKey
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.metadata.CompositeAuditMetadataKeyParser
@@ -203,6 +203,9 @@ class ManagementUserComponent(
 
     /** Revokes all other manager sessions. */
     val deleteAllOtherSessionsUseCase get() = useCaseModule.deleteAllOtherSessionsUseCase
+
+    /** Re-authenticates session via TOTP to update its trust level. */
+    val reauthenticateSessionUseCase get() = useCaseModule.reauthenticateSessionUseCase
 
     /** Returns account identifiers for the manager. */
     val getUserIdentifiersUseCase get() = useCaseModule.getUserIdentifiersUseCase

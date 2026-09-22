@@ -119,7 +119,10 @@ class ClientAppComponent(
             baseUrl = baseUrl,
             reauthenticateRoute = OpenSessionRoutes.REAUTHENTICATE_SESSION,
             mfaChallengeHandler = mfaChallengeHandler,
-            authClientProvider = { commonComponent.httpClient }
+            authClientProvider = { commonComponent.httpClient },
+            reauthenticateAction = { mfaToken, code ->
+                clientUserComponent.reauthenticateSessionUseCase(mfaToken, code)
+            }
         )
     }
 

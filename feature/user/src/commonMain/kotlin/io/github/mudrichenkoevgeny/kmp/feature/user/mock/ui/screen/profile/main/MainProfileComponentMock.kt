@@ -17,7 +17,7 @@ class MainProfileComponentMock(
     var refreshCalls = 0
     var loginCalls = 0
     var logoutCalls = 0
-    var totpSettingsCalls = 0
+    var totpMainCalls = 0
     var sessionsCalls = 0
     var identifiersCalls = 0
     var deleteAccountCalls = 0
@@ -40,8 +40,8 @@ class MainProfileComponentMock(
 
     override fun onConfirmLogout() {}
 
-    override fun onTotpSettingsClick() {
-        totpSettingsCalls++
+    override fun onTotpMainClick() {
+        totpMainCalls++
     }
 
     override fun onSessionsClick() {

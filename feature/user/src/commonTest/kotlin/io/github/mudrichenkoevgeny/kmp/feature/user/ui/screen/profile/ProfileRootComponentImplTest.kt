@@ -28,8 +28,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.security.S
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.IdentifierListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.SessionListComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.TotpSettingsComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.recovery.TotpRecoveryCodesComponentImpl
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -65,22 +68,49 @@ class ProfileRootComponentImplTest {
     }
 
     @Test
-    fun navigateToTotp_pushesTotpSettingsAndPopsBack() = runComponentTest {
+    fun navigateToTotp_pushesTotpMainAndPopsBack() = runComponentTest {
         val context = createProfileRootComponentTestContext()
         try {
             val mainChild = assertIs<ProfileRootComponent.Child.Main>(context.component.stack.value.active.instance)
             val mainComponent = assertIs<MainProfileComponentImpl>(mainChild.component)
 
-            mainComponent.onTotpSettingsClick()
+            mainComponent.onTotpMainClick()
 
-            val totpChild = assertIs<ProfileRootComponent.Child.TotpSettings>(context.component.stack.value.active.instance)
-            assertEquals(ProfileDestination.TotpSettings, context.component.stack.value.active.configuration)
+            val totpChild = assertIs<ProfileRootComponent.Child.TotpMain>(context.component.stack.value.active.instance)
+            assertEquals(ProfileDestination.TotpMain, context.component.stack.value.active.configuration)
 
-            val totpComponent = assertIs<TotpSettingsComponentImpl>(totpChild.component)
+            val totpComponent = assertIs<TotpMainComponentImpl>(totpChild.component)
             totpComponent.onBack()
 
             assertIs<ProfileRootComponent.Child.Main>(context.component.stack.value.active.instance)
             assertEquals(ProfileDestination.Main, context.component.stack.value.active.configuration)
+        } finally {
+            context.destroy()
+        }
+    }
+
+    @Test
+    fun navigateToRecoveryCodes_pushesTotpRecoveryCodesAndPopsBack() = runComponentTest {
+        val context = createProfileRootComponentTestContext()
+        try {
+            val mainChild = assertIs<ProfileRootComponent.Child.Main>(context.component.stack.value.active.instance)
+            val mainComponent = assertIs<MainProfileComponentImpl>(mainChild.component)
+
+            mainComponent.onTotpMainClick()
+
+            val totpChild = assertIs<ProfileRootComponent.Child.TotpMain>(context.component.stack.value.active.instance)
+            val totpComponent = assertIs<TotpMainComponentImpl>(totpChild.component)
+
+            totpComponent.onRecoveryCodesClick()
+
+            val recoveryCodesChild = assertIs<ProfileRootComponent.Child.TotpRecoveryCodes>(context.component.stack.value.active.instance)
+            assertEquals(ProfileDestination.TotpRecoveryCodes, context.component.stack.value.active.configuration)
+
+            val recoveryCodesComponent = assertIs<TotpRecoveryCodesComponentImpl>(recoveryCodesChild.component)
+            recoveryCodesComponent.onBackClick()
+
+            assertIs<ProfileRootComponent.Child.TotpMain>(context.component.stack.value.active.instance)
+            assertEquals(ProfileDestination.TotpMain, context.component.stack.value.active.configuration)
         } finally {
             context.destroy()
         }

@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.Lo
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordComponent
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email.RegistrationByEmailComponent
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.unlock.root.UnlockRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.root.UnlockRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.pendingdeletion.PendingDeletionComponent
 
 /**

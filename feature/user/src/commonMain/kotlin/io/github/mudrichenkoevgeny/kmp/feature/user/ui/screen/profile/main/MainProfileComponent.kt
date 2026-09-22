@@ -21,8 +21,8 @@ interface MainProfileComponent {
     /** Executes logout after confirmation. */
     fun onConfirmLogout()
 
-    /** Navigates to TOTP settings. */
-    fun onTotpSettingsClick()
+    /** Navigates to TOTP main screen. */
+    fun onTotpMainClick()
 
     /** Navigates to the session list. */
     fun onSessionsClick()

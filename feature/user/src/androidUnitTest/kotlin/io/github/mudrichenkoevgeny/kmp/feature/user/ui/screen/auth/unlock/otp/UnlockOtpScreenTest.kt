@@ -73,7 +73,7 @@ class UnlockOtpScreenTest {
     }
 
     @Test
-    fun resendButton_disabledDuringTimer_enabledWhenZero() = runComposeUiTest {
+    fun resendButton_showsTimerWhenPositive_showsButtonWhenZero() = runComposeUiTest {
         var resendClicked = false
         val initialState = UnlockOtpScreenState(
             method = UnlockMethod.EMAIL,
@@ -92,7 +92,7 @@ class UnlockOtpScreenTest {
             }
         }
 
-        onNodeWithTag(UnlockOtpTestTags.RESEND_BUTTON).assertIsNotEnabled()
+        onNodeWithTag(UnlockOtpTestTags.RESEND_TIMER_TEXT).assertIsDisplayed()
 
         component.updateState(initialState.copy(remainingDelaySeconds = 0))
 

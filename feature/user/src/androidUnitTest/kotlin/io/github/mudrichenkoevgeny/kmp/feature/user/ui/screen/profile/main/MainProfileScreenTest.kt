@@ -69,7 +69,7 @@ class MainProfileScreenTest {
         onNodeWithTag(MainProfileTestTags.USER_ID_TEXT)
             .assertIsDisplayed()
             .assertTextContains(user.id.asHexDashString(), substring = true)
-        onNodeWithTag(MainProfileTestTags.TOTP_SETTINGS_BUTTON).assertIsDisplayed()
+        onNodeWithTag(MainProfileTestTags.TOTP_MAIN_BUTTON).assertIsDisplayed()
         onNodeWithTag(MainProfileTestTags.SESSIONS_BUTTON).assertIsDisplayed()
         onNodeWithTag(MainProfileTestTags.IDENTIFIERS_BUTTON).assertIsDisplayed()
         onNodeWithTag(MainProfileTestTags.DELETE_ACCOUNT_BUTTON).assertIsDisplayed()
@@ -90,8 +90,8 @@ class MainProfileScreenTest {
             }
         }
 
-        onNodeWithTag(MainProfileTestTags.TOTP_SETTINGS_BUTTON).performClick()
-        assertEquals(EXPECTED_SINGLE_CALLBACK, component.totpSettingsCalls)
+        onNodeWithTag(MainProfileTestTags.TOTP_MAIN_BUTTON).performClick()
+        assertEquals(EXPECTED_SINGLE_CALLBACK, component.totpMainCalls)
 
         onNodeWithTag(MainProfileTestTags.SESSIONS_BUTTON).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.sessionsCalls)

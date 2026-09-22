@@ -11,9 +11,13 @@ sealed interface ProfileDestination {
     @Serializable
     object Main : ProfileDestination
 
-    /** TOTP authentication settings. */
+    /** TOTP main screen. */
     @Serializable
-    object TotpSettings : ProfileDestination
+    object TotpMain : ProfileDestination
+
+    /** TOTP recovery codes management. */
+    @Serializable
+    object TotpRecoveryCodes : ProfileDestination
 
     /** List of active sessions. */
     @Serializable

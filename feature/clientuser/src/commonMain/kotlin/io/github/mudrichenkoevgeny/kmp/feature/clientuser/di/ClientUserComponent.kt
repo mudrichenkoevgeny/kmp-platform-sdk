@@ -10,8 +10,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.root.ClientLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.root.ClientLoginRootComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileRootComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponentImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -188,6 +188,9 @@ class ClientUserComponent(
 
     /** Revokes all other sessions. */
     val deleteAllOtherSessionsUseCase get() = useCaseModule.deleteAllOtherSessionsUseCase
+
+    /** Re-authenticates session via TOTP to update its trust level. */
+    val reauthenticateSessionUseCase get() = useCaseModule.reauthenticateSessionUseCase
 
     /** Returns account identifiers. */
     val getUserIdentifiersUseCase get() = useCaseModule.getUserIdentifiersUseCase

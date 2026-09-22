@@ -18,6 +18,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.pending
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.root.UnlockRootComponentImpl
 
 class ManagementLoginRootComponentImpl(
     componentContext: ComponentContext,
@@ -55,6 +56,9 @@ class ManagementLoginRootComponentImpl(
                 onNavigateToLoginByPhone = { },
                 onNavigateToTotp = { mfaToken -> navigation.bringToFront(ManagementLoginDestination.LoginByTotp(mfaToken)) },
                 onNavigateToPendingDeletion = { navigation.bringToFront(ManagementLoginDestination.PendingDeletion) },
+                onNavigateToAccountUnlock = { lockoutType, lockoutUntil ->
+                    navigation.bringToFront(ManagementLoginDestination.AccountUnlock(lockoutType, lockoutUntil))
+                },
                 onFinished = onFinished
             )
         )
@@ -67,6 +71,9 @@ class ManagementLoginRootComponentImpl(
                 onNavigateToForgotPassword = { navigation.bringToFront(ManagementLoginDestination.ResetEmailPassword) },
                 onNavigateToTotp = { mfaToken -> navigation.bringToFront(ManagementLoginDestination.LoginByTotp(mfaToken)) },
                 onNavigateToPendingDeletion = { navigation.bringToFront(ManagementLoginDestination.PendingDeletion) },
+                onNavigateToAccountUnlock = { lockoutType, lockoutUntil ->
+                    navigation.bringToFront(ManagementLoginDestination.AccountUnlock(lockoutType, lockoutUntil))
+                },
                 onBack = navigation::pop,
                 onFinished = onFinished
             )
@@ -100,6 +107,20 @@ class ManagementLoginRootComponentImpl(
                 logoutUseCase = managementUserComponent.logoutUseCase,
                 onRestoreSuccess = onFinished,
                 onSignOut = { navigation.pop() }
+            )
+        )
+        is ManagementLoginDestination.AccountUnlock -> ManagementLoginRootComponent.Child.AccountUnlock(
+            UnlockRootComponentImpl(
+                componentContext = context,
+                lockoutType = config.lockoutType,
+                lockoutUntil = config.lockoutUntil,
+                getUserIdentifiersUseCase = managementUserComponent.getUserIdentifiersUseCase,
+                unlockByGoogleUseCase = null,
+                sendUnlockEmailConfirmationUseCase = managementUserComponent.sendUnlockEmailConfirmationUseCase,
+                sendUnlockPhoneConfirmationUseCase = managementUserComponent.sendUnlockPhoneConfirmationUseCase,
+                unlockByEmailUseCase = managementUserComponent.unlockByEmailUseCase,
+                unlockByPhoneUseCase = managementUserComponent.unlockByPhoneUseCase,
+                onFinished = { navigation.pop() }
             )
         )
     }

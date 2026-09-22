@@ -106,10 +106,10 @@ class MainProfileComponentImplTest {
     }
 
     @Test
-    fun onTotpSettingsClick_invokesNavigateToTotp() = runComponentTest {
+    fun onTotpMainClick_invokesNavigateToTotp() = runComponentTest {
         val context = createMainProfileComponentTestContext()
         try {
-            context.component.onTotpSettingsClick()
+            context.component.onTotpMainClick()
             assertEquals(ONE_CALL, context.onNavigateToTotpCalls)
         } finally {
             context.destroy()

@@ -19,6 +19,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.root.Lo
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.root.UnlockRootScreen
 
 @Composable
 fun ManagementLoginRootScreen(component: ManagementLoginRootComponent) {
@@ -32,6 +33,7 @@ fun ManagementLoginRootScreen(component: ManagementLoginRootComponent) {
             is ManagementLoginRootComponent.Child.ResetEmailPassword -> ResetEmailPasswordScreen(instance.component)
             is ManagementLoginRootComponent.Child.LoginByTotp -> LoginByTotpScreen(instance.component)
             is ManagementLoginRootComponent.Child.PendingDeletion -> PendingDeletionScreen(instance.component)
+            is ManagementLoginRootComponent.Child.AccountUnlock -> UnlockRootScreen(instance.component)
         }
     }
 }

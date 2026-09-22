@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login
 
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import kotlinx.serialization.Serializable
 
 /**
@@ -23,4 +24,10 @@ sealed interface ManagementLoginDestination {
 
     /** Intercepts logins for accounts scheduled for deletion. */
     @Serializable object PendingDeletion : ManagementLoginDestination
+
+    /** Intercepts logins for locked accounts. */
+    @Serializable data class AccountUnlock(
+        val lockoutType: AccountLockoutType? = null,
+        val lockoutUntil: Long? = null
+    ) : ManagementLoginDestination
 }

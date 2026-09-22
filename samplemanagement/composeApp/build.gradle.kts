@@ -91,6 +91,11 @@ kotlin {
             implementation(project(":core:common"))
         }
 
+        androidMain.dependencies {
+            implementation(libs.compose.ui)
+            implementation(libs.compose.runtime)
+        }
+
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)

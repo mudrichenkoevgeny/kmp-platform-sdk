@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +42,7 @@ import org.jetbrains.compose.resources.stringResource
  * @param onConfirm Invoked when the user confirms with their code.
  * @param onCancel Invoked when the user dismisses the challenge.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MfaChallengeDialog(
     request: MfaChallengeRequest,

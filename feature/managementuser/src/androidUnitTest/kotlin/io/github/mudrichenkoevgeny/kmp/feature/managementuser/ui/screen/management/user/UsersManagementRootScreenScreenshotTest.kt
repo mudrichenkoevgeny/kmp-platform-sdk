@@ -9,6 +9,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.captureAppScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.UsersManagementRootComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.root.UsersManagementRootScreen
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config

@@ -13,7 +13,6 @@ import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.di.ClientUserComponent
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.ClientLoginDestination
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email.RegistrationByEmailComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.unlock.root.UnlockRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.phone.LoginByPhoneComponentImpl
@@ -21,6 +20,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.pending
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.root.UnlockRootComponentImpl
 
 class ClientLoginRootComponentImpl(
     componentContext: ComponentContext,
@@ -140,9 +140,14 @@ class ClientLoginRootComponentImpl(
         is ClientLoginDestination.AccountUnlock -> ClientLoginRootComponent.Child.AccountUnlock(
             UnlockRootComponentImpl(
                 componentContext = context,
-                clientUserComponent = clientUserComponent,
                 lockoutType = config.lockoutType,
                 lockoutUntil = config.lockoutUntil,
+                getUserIdentifiersUseCase = clientUserComponent.getUserIdentifiersUseCase,
+                unlockByGoogleUseCase = clientUserComponent.unlockByGoogleUseCase,
+                sendUnlockEmailConfirmationUseCase = clientUserComponent.sendUnlockEmailConfirmationUseCase,
+                sendUnlockPhoneConfirmationUseCase = clientUserComponent.sendUnlockPhoneConfirmationUseCase,
+                unlockByEmailUseCase = clientUserComponent.unlockByEmailUseCase,
+                unlockByPhoneUseCase = clientUserComponent.unlockByPhoneUseCase,
                 onFinished = { navigation.pop() }
             )
         )

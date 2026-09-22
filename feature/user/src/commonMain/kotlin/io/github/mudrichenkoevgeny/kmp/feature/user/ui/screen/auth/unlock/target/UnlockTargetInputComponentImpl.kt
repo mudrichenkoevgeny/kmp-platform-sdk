@@ -19,7 +19,7 @@ class UnlockTargetInputComponentImpl(
     prefilledInput: String = "",
     private val sendUnlockEmailConfirmationUseCase: SendUnlockEmailConfirmationUseCase,
     private val sendUnlockPhoneConfirmationUseCase: SendUnlockPhoneConfirmationUseCase,
-    private val onNavigateToOtp: (target: String) -> Unit,
+    private val onNavigateToOtp: (target: String, initialDelaySeconds: Int) -> Unit,
     private val onBack: () -> Unit,
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
 ) : UnlockTargetInputComponent, ComponentContext by componentContext {
@@ -52,7 +52,7 @@ class UnlockTargetInputComponentImpl(
             when (result) {
                 is AppResult.Success -> {
                     _state.update { it.copy(actionLoading = false) }
-                    onNavigateToOtp(target)
+                    onNavigateToOtp(target, result.data.retryAfterSeconds)
                 }
                 is AppResult.Error -> {
                     _state.update { it.copy(actionLoading = false, actionError = result.error) }

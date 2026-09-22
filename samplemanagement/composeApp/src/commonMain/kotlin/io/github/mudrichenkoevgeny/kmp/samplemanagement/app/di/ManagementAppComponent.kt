@@ -119,7 +119,10 @@ class ManagementAppComponent(
             baseUrl = baseUrl,
             reauthenticateRoute = SelfManagementSessionRoutes.REAUTHENTICATE_SESSION,
             mfaChallengeHandler = mfaChallengeHandler,
-            authClientProvider = { commonComponent.httpClient }
+            authClientProvider = { commonComponent.httpClient },
+            reauthenticateAction = { mfaToken, code ->
+                managementUserComponent.reauthenticateSessionUseCase(mfaToken, code)
+            }
         )
     }
 

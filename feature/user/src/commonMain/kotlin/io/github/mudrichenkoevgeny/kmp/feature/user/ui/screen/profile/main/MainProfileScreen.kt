@@ -68,55 +68,61 @@ import org.jetbrains.compose.resources.stringResource
 fun MainProfileScreen(component: MainProfileComponent) {
     val state by component.state.subscribeAsState()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { },
-                actions = {
-                    IconButton(
-                        onClick = component::onRefresh,
-                        modifier = Modifier.testTag(MainProfileTestTags.REFRESH_BUTTON)
-                    ) {
-                        Icon(
-                            painter = painterResource(CommonRes.drawable.ic_refresh),
-                            contentDescription = stringResource(CommonRes.string.retry),
-                            modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { },
+                    actions = {
+                        IconButton(
+                            onClick = component::onRefresh,
+                            modifier = Modifier.testTag(MainProfileTestTags.REFRESH_BUTTON)
+                        ) {
+                            Icon(
+                                painter = painterResource(CommonRes.drawable.ic_refresh),
+                                contentDescription = stringResource(CommonRes.string.retry),
+                                modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+                            )
+                        }
+                    }
+                )
+            },
+            containerColor = MaterialTheme.colorScheme.background
+        ) { padding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+                contentAlignment = Alignment.Center
+            ) {
+                when (val currentState = state) {
+                    is MainProfileScreenState.Loading -> FullscreenLoading()
+                    is MainProfileScreenState.Unauthorized -> UnauthorizedContent(
+                        state = currentState,
+                        onLoginClick = component::onLoginClick
+                    )
+                    is MainProfileScreenState.Content -> ProfileContent(
+                        state = currentState,
+                        onLogoutClick = component::onLogoutClick,
+                        onConfirmLogout = component::onConfirmLogout,
+                        onTotpMainClick = component::onTotpMainClick,
+                        onSessionsClick = component::onSessionsClick,
+                        onIdentifiersClick = component::onIdentifiersClick,
+                        onDeleteAccountClick = component::onDeleteAccountClick,
+                        onConfirmDeleteAccount = component::onConfirmDeleteAccount,
+                        onRestoreAccountClick = component::onRestoreAccountClick,
+                        onUnlockAccountClick = component::onUnlockAccountClick,
+                        onDismissDialog = component::onDismissDialog
+                    )
+                    is MainProfileScreenState.Error -> {
+                        CoreErrorText(
+                            text = currentState.error.toLocalizedMessage(),
+                            modifier = Modifier.testTag(MainProfileTestTags.GLOBAL_ERROR_TEXT)
                         )
                     }
-                }
-            )
-        }
-    ) { padding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-            contentAlignment = Alignment.Center
-        ) {
-            when (val currentState = state) {
-                is MainProfileScreenState.Loading -> FullscreenLoading()
-                is MainProfileScreenState.Unauthorized -> UnauthorizedContent(
-                    state = currentState,
-                    onLoginClick = component::onLoginClick
-                )
-                is MainProfileScreenState.Content -> ProfileContent(
-                    state = currentState,
-                    onLogoutClick = component::onLogoutClick,
-                    onConfirmLogout = component::onConfirmLogout,
-                    onTotpSettingsClick = component::onTotpSettingsClick,
-                    onSessionsClick = component::onSessionsClick,
-                    onIdentifiersClick = component::onIdentifiersClick,
-                    onDeleteAccountClick = component::onDeleteAccountClick,
-                    onConfirmDeleteAccount = component::onConfirmDeleteAccount,
-                    onRestoreAccountClick = component::onRestoreAccountClick,
-                    onUnlockAccountClick = component::onUnlockAccountClick,
-                    onDismissDialog = component::onDismissDialog
-                )
-                is MainProfileScreenState.Error -> {
-                    CoreErrorText(
-                        text = currentState.error.toLocalizedMessage(),
-                        modifier = Modifier.testTag(MainProfileTestTags.GLOBAL_ERROR_TEXT)
-                    )
                 }
             }
         }
@@ -153,7 +159,7 @@ private fun ProfileContent(
     state: MainProfileScreenState.Content,
     onLogoutClick: () -> Unit,
     onConfirmLogout: () -> Unit,
-    onTotpSettingsClick: () -> Unit,
+    onTotpMainClick: () -> Unit,
     onSessionsClick: () -> Unit,
     onIdentifiersClick: () -> Unit,
     onDeleteAccountClick: () -> Unit,
@@ -258,9 +264,9 @@ private fun ProfileContent(
             Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             CoreButton(
-                text = stringResource(Res.string.totp_settings),
-                onClick = onTotpSettingsClick,
-                modifier = Modifier.testTag(MainProfileTestTags.TOTP_SETTINGS_BUTTON),
+                text = stringResource(Res.string.totp_main),
+                onClick = onTotpMainClick,
+                modifier = Modifier.testTag(MainProfileTestTags.TOTP_MAIN_BUTTON),
                 enabled = !state.actionLoading
             )
 
@@ -452,7 +458,7 @@ internal object MainProfileTestTags {
     const val RESTORE_ACCOUNT_BUTTON = "MainProfile_RestoreAccountButton"
 
     const val USER_ID_TEXT = "MainProfile_UserIdText"
-    const val TOTP_SETTINGS_BUTTON = "MainProfile_TotpSettingsButton"
+    const val TOTP_MAIN_BUTTON = "MainProfile_TotpMainButton"
     const val SESSIONS_BUTTON = "MainProfile_SessionsButton"
     const val IDENTIFIERS_BUTTON = "MainProfile_IdentifiersButton"
     const val DELETE_ACCOUNT_BUTTON = "MainProfile_DeleteAccountButton"

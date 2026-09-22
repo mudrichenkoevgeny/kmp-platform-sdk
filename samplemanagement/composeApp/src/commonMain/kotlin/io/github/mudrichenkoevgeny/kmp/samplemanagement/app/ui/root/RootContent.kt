@@ -36,6 +36,7 @@ fun RootContent(managementAppComponent: ManagementAppComponent) {
             LocalManagementAppComponent provides managementAppComponent
         ) {
             CoreTheme {
+                SetupBrowserHistory(mainComponent)
                 MainScreen(mainComponent)
             }
         }

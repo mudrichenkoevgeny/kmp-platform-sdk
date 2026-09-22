@@ -36,6 +36,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.SetupT
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteAllOtherSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.ReauthenticateSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.LogoutUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.RestoreUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
@@ -278,6 +279,13 @@ internal class ManagementUserUseCaseModule(
     /** Revokes all other sessions. */
     val deleteAllOtherSessionsUseCase by lazy {
         DeleteAllOtherSessionsUseCase(
+            sessionRepository = managementUserRepositoryModule.selfManagementSessionRepository
+        )
+    }
+
+    /** Re-authenticates session via TOTP to update its trust level. */
+    val reauthenticateSessionUseCase by lazy {
+        ReauthenticateSessionUseCase(
             sessionRepository = managementUserRepositoryModule.selfManagementSessionRepository
         )
     }

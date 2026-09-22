@@ -181,7 +181,7 @@ class UnlockTargetInputComponentImplTest {
             prefilledInput = prefilledInput,
             sendUnlockEmailConfirmationUseCase = SendUnlockEmailConfirmationUseCase(unlockRepositoryMock),
             sendUnlockPhoneConfirmationUseCase = SendUnlockPhoneConfirmationUseCase(unlockRepositoryMock),
-            onNavigateToOtp = { target -> context.lastNavigateOtpTarget = target },
+            onNavigateToOtp = { target, _ -> context.lastNavigateOtpTarget = target },
             onBack = { context.onBackCalls++ }
         )
 
