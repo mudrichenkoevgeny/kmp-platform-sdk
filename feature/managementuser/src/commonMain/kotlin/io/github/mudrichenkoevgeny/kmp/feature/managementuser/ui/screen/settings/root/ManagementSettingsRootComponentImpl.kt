@@ -37,6 +37,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.Delet
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUsersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailScreenState
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.notifySessionRevoked
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import com.arkivanov.decompose.DelicateDecomposeApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.ManagementSettingsDestination
 
@@ -61,6 +66,7 @@ class ManagementSettingsRootComponentImpl(
     private val updateUserUseCase: UpdateUserUseCase,
     private val deleteUserUseCase: DeleteUserUseCase,
     private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
+    private val managementGetSessionUseCase: ManagementGetSessionUseCase? = null,
     private val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase,
     private val managementDisableTotpUseCase: ManagementDisableTotpUseCase,
     private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase,
@@ -137,6 +143,7 @@ class ManagementSettingsRootComponentImpl(
                 updateUserUseCase = updateUserUseCase,
                 deleteUserUseCase = deleteUserUseCase,
                 managementGetSessionsUseCase = managementGetSessionsUseCase,
+                managementGetSessionUseCase = managementGetSessionUseCase,
                 managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
                 managementDisableTotpUseCase = managementDisableTotpUseCase,
                 managementDeleteSessionUseCase = managementDeleteSessionUseCase,
@@ -159,6 +166,28 @@ class ManagementSettingsRootComponentImpl(
                 componentContext = context,
                 managementGetSessionsUseCase = managementGetSessionsUseCase,
                 managementDeleteSessionUseCase = managementDeleteSessionUseCase,
+                onNavigateToSessionDetail = { session ->
+                    navigation.bringToFront(ManagementSettingsDestination.SessionDetail(session.id.asHexDashString()))
+                },
+                onBack = navigation::pop
+            )
+        )
+        is ManagementSettingsDestination.SessionDetail -> ManagementSettingsRootComponent.Child.SessionDetail(
+            SessionDetailComponentImpl(
+                componentContext = context,
+                sessionId = config.sessionId,
+                fetchSession = managementGetSessionUseCase?.let { useCase ->
+                    { targetId -> useCase(targetId.asHexDashString()) }
+                },
+                revokeSession = { targetId ->
+                    val currentChild = stack.value.items.lastOrNull()?.instance
+                    val session = (currentChild as? ManagementSettingsRootComponent.Child.SessionDetail)
+                        ?.component?.state?.value
+                        ?.let { (it as? SessionDetailScreenState.Content)?.session }
+                    val targetUserId = session?.userId ?: UserId.generate()
+                    managementDeleteSessionUseCase(targetUserId, targetId.asHexDashString())
+                },
+                onSessionRevoked = { stack.value.notifySessionRevoked(it) },
                 onBack = navigation::pop
             )
         )

@@ -18,4 +18,14 @@ class WasmDeviceInfoProviderTest {
         assertEquals("9.8.7", info.appVersion)
         assertEquals(WasmDeviceInfo.OS_VERSION, info.operationSystemVersion)
     }
+
+    @Test
+    fun `getDeviceInfo persists deviceId across calls`() {
+        val provider = WasmDeviceInfoProvider(appVersion = "1.0.0")
+
+        val firstInfo = provider.getDeviceInfo()
+        val secondInfo = provider.getDeviceInfo()
+
+        assertEquals(firstInfo.deviceId, secondInfo.deviceId)
+    }
 }

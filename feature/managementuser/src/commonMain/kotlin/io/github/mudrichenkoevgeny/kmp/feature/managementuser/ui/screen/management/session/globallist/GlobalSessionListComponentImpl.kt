@@ -25,6 +25,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.l
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.launch
 
@@ -32,6 +33,7 @@ class GlobalSessionListComponentImpl(
     componentContext: ComponentContext,
     private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
     private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase,
+    private val onNavigateToSessionDetail: ((UserSession) -> Unit)? = null,
     private val onBack: () -> Unit
 ) : GlobalSessionListComponent, ComponentContext by componentContext {
 
@@ -45,6 +47,18 @@ class GlobalSessionListComponentImpl(
 
     override fun onRefresh() {
         loadSessions()
+    }
+
+    override fun onSessionClick(session: UserSession) {
+        onNavigateToSessionDetail?.invoke(session)
+    }
+
+    override fun onSessionRevoked(sessionId: UserSessionId) {
+        val current = _state.value as? GlobalSessionListScreenState.Content ?: return
+        val newItems = current.paging.items.filterNot { it.id == sessionId }
+        _state.value = current.copy(
+            paging = current.paging.copy(items = newItems)
+        )
     }
 
     override fun onBackClick() {

@@ -19,6 +19,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.SelfIdentifierListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileScreenState
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SelfSessionListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.recovery.TotpRecoveryCodesScreen
@@ -34,6 +35,7 @@ fun ProfileRootScreen(component: ProfileRootComponent) {
             is ProfileRootComponent.Child.TotpMain -> TotpMainScreen(instance.component)
             is ProfileRootComponent.Child.TotpRecoveryCodes -> TotpRecoveryCodesScreen(instance.component)
             is ProfileRootComponent.Child.Sessions -> SelfSessionListScreen(instance.component)
+            is ProfileRootComponent.Child.SessionDetail -> SessionDetailScreen(instance.component)
             is ProfileRootComponent.Child.Identifiers -> SelfIdentifierListScreen(instance.component)
         }
     }

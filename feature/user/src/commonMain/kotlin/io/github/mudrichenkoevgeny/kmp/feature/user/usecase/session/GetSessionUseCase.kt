@@ -10,14 +10,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
  *
  * @param sessionRepository Remote session management API.
  */
-class GetSessionUseCase(
+open class GetSessionUseCase(
     private val sessionRepository: SessionRepository
 ) {
     /**
      * @param userSessionId Unique session identifier.
      * @return Detailed session model or a mapped failure.
      */
-    suspend operator fun invoke(userSessionId: UserSessionId): AppResult<UserSession> {
+    open suspend operator fun invoke(userSessionId: UserSessionId): AppResult<UserSession> {
         return sessionRepository.getSession(userSessionId)
     }
 }

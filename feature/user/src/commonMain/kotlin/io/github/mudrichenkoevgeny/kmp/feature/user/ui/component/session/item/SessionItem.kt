@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.session.item
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -55,13 +56,16 @@ import org.jetbrains.compose.resources.stringResource
  * @param session The [UserSession] data to display.
  * @param onRevokeClick Callback invoked when the revoke button is clicked.
  * @param enabled Whether the revoke action and UI interactions are permitted.
+ * @param isCurrentSession Indicates if this session is the current device session.
+ * @param onSessionClick Optional callback invoked when the item card is tapped.
  */
 @Composable
 fun SessionItem(
     session: UserSession,
     onRevokeClick: () -> Unit,
     enabled: Boolean,
-    isCurrentSession: Boolean = false
+    isCurrentSession: Boolean = false,
+    onSessionClick: (() -> Unit)? = null
 ) {
     val cardColors = if (isCurrentSession) {
         CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
@@ -72,6 +76,13 @@ fun SessionItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .then(
+                if (onSessionClick != null) {
+                    Modifier.clickable { onSessionClick() }
+                } else {
+                    Modifier
+                }
+            )
             .testTag(SessionItemTestTags.ITEM_PREFIX + session.id.value),
         elevation = CardDefaults.cardElevation(defaultElevation = CoreTheme.dimens.elevationHeader),
         colors = cardColors

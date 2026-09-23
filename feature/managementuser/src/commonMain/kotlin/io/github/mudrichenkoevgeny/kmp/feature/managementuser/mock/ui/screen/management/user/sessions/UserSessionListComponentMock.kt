@@ -5,6 +5,8 @@ import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListScreenState
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 
 @InternalApi
 class UserSessionListComponentMock(
@@ -15,6 +17,8 @@ class UserSessionListComponentMock(
     override val state: Value<UserSessionListScreenState> = _state
 
     var refreshCalls = 0
+    var sessionClickCalls: MutableList<UserSession> = mutableListOf()
+    var sessionRevokedCalls: MutableList<UserSessionId> = mutableListOf()
     var loadNextPageCalls = 0
     var backCalls = 0
     var toggleFilterPanelCalls = 0
@@ -35,6 +39,14 @@ class UserSessionListComponentMock(
 
     override fun onBackClick() {
         backCalls++
+    }
+
+    override fun onSessionClick(session: UserSession) {
+        sessionClickCalls.add(session)
+    }
+
+    override fun onSessionRevoked(sessionId: UserSessionId) {
+        sessionRevokedCalls.add(sessionId)
     }
 
     override fun onDeleteSessionClick(sessionId: String) {

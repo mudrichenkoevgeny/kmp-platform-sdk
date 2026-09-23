@@ -181,7 +181,8 @@ private fun Content(
                     SessionItem(
                         session = session,
                         onRevokeClick = { component.onDeleteSessionClick(session.id.asHexDashString()) },
-                        enabled = !state.actionLoading
+                        enabled = !state.actionLoading,
+                        onSessionClick = { component.onSessionClick(session) }
                     )
                 }
 

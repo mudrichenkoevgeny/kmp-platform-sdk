@@ -8,6 +8,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist.UserIdentifierListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.main.UsersManagementMainComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SessionListOwner
 
 interface UsersManagementRootComponent {
     val stack: Value<ChildStack<UsersManagementDestination, Child>>
@@ -16,7 +18,8 @@ interface UsersManagementRootComponent {
         class Main(val component: UsersManagementMainComponent) : Child
         class Detail(val component: UserDetailComponent) : Child
         class Create(val component: CreateUserComponent) : Child
-        class UserSessionList(val component: UserSessionListComponent) : Child
+        class UserSessionList(val component: UserSessionListComponent) : Child, SessionListOwner by component
+        class SessionDetail(val component: SessionDetailComponent) : Child
         class Identifiers(val component: UserIdentifierListComponent) : Child
     }
 

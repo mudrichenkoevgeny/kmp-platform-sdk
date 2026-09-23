@@ -42,6 +42,7 @@ actual fun SetupBrowserHistory(mainComponent: MainScreenComponent) {
                 is ProfileDestination.TotpMain -> PATH_TOTP
                 is ProfileDestination.TotpRecoveryCodes -> PATH_TOTP_RECOVERY_CODES
                 is ProfileDestination.Sessions -> PATH_SESSIONS
+                is ProfileDestination.SessionDetail -> PATH_SESSIONS
                 is ProfileDestination.Identifiers -> PATH_IDENTIFIERS
             }
         }
@@ -55,6 +56,7 @@ actual fun SetupBrowserHistory(mainComponent: MainScreenComponent) {
                 is ManagementSettingsDestination.UsersManagement -> PATH_USERS
                 is ManagementSettingsDestination.AuditLogs -> PATH_AUDIT
                 is ManagementSettingsDestination.GlobalSessionList -> PATH_SESSIONS
+                is ManagementSettingsDestination.SessionDetail -> PATH_SESSIONS
             }
         }
     }
@@ -67,6 +69,7 @@ actual fun SetupBrowserHistory(mainComponent: MainScreenComponent) {
                         is ProfileRootComponent.Child.TotpRecoveryCodes -> profileChild.component.onBackClick()
                         is ProfileRootComponent.Child.TotpMain -> profileChild.component.onBackClick()
                         is ProfileRootComponent.Child.Sessions -> profileChild.component.onBackClick()
+                        is ProfileRootComponent.Child.SessionDetail -> profileChild.component.onBackClick()
                         is ProfileRootComponent.Child.Identifiers -> profileChild.component.onBackClick()
                         is ProfileRootComponent.Child.Main -> { }
                     }
@@ -79,6 +82,7 @@ actual fun SetupBrowserHistory(mainComponent: MainScreenComponent) {
                         is ManagementSettingsRootComponent.Child.UsersManagement -> settingsChild.component.onBackClick()
                         is ManagementSettingsRootComponent.Child.AuditLogs -> settingsChild.component.onBackClick()
                         is ManagementSettingsRootComponent.Child.Sessions -> settingsChild.component.onBackClick()
+                        is ManagementSettingsRootComponent.Child.SessionDetail -> settingsChild.component.onBackClick()
                         is ManagementSettingsRootComponent.Child.Main -> { }
                     }
                 }

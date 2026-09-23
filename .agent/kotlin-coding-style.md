@@ -47,7 +47,13 @@ This document defines the mandatory Kotlin syntax and formatting standards for t
 - **Simple Mappers:** Use expression-body functions (`fun toDto() = ...`) for simple transformations and mappers.
 - **Complex Logic:** Use block-body functions (`fun process() { ... }`) for anything involving multiple steps, branching, or lifecycle-sensitive operations to ensure readability.
 
-## 5. Sealed Types and Enums
+## 5. Domain Value Classes and ID Parsing
+- **Idiomatic String Conversion:** Value classes representing domain identifiers (e.g., `UserId`, `UserSessionId`, `UserIdentifierId`, `ErrorId`, `ClientDeviceId`) from shared foundation libraries provide explicit extension functions:
+  - **String to ID:** Always use `string.toXxxIdOrThrow()` or `string.toXxxIdOrNull()` (e.g., `userIdValue.toUserIdOrThrow()`, `sessionIdValue.toUserSessionIdOrThrow()`).
+  - **ID to String:** Always use `id.asHexDashString()`.
+- **Forbidden Pattern:** Do not directly instantiate value classes using `XxxId(Uuid.parse(string))` when converting strings. Always prefer the generated extension functions.
+
+## 6. Sealed Types and Enums
 - **Exhaustiveness:** When using `when` on `sealed class` or `enum`, do not provide an `else` branch. Handle all cases explicitly to ensure the compiler catches new variants.
 - **State Naming:** Use clear, state-describing names for sealed UI states (e.g., `Authorized`, `MfaRequired`).
 

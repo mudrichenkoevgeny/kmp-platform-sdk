@@ -16,7 +16,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileDestination
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.SelfIdentifierListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SelfSessionListComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.notifySessionRevoked
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.recovery.TotpRecoveryCodesComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAuthSettingsUseCase
@@ -30,6 +32,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.SendAddEm
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.SendAddPhoneIdentifierConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteAllOtherSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteSessionUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.LogoutUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.RestoreUserUseCase
@@ -83,6 +86,7 @@ class ProfileRootComponentImpl(
     private val getRecoveryCodesUseCase: GetRecoveryCodesUseCase,
     private val regenerateRecoveryCodesUseCase: RegenerateRecoveryCodesUseCase,
     private val getSessionsUseCase: GetSessionsUseCase,
+    private val getSessionUseCase: GetSessionUseCase? = null,
     private val deleteSessionUseCase: DeleteSessionUseCase,
     private val deleteAllOtherSessionsUseCase: DeleteAllOtherSessionsUseCase,
     private val getUserIdentifiersUseCase: GetUserIdentifiersUseCase,
@@ -162,8 +166,22 @@ class ProfileRootComponentImpl(
                 getSessionsUseCase = getSessionsUseCase,
                 deleteSessionUseCase = deleteSessionUseCase,
                 deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase,
+                onNavigateToSessionDetail = { session ->
+                    navigation.bringToFront(ProfileDestination.SessionDetail(session.id.asHexDashString()))
+                },
                 onBack = navigation::pop,
                 authStorage = authStorage
+            )
+        )
+        is ProfileDestination.SessionDetail -> ProfileRootComponent.Child.SessionDetail(
+            SessionDetailComponentImpl(
+                componentContext = context,
+                sessionId = config.sessionId,
+                getSessionUseCase = getSessionUseCase,
+                deleteSessionUseCase = deleteSessionUseCase,
+                authStorage = authStorage,
+                onSessionRevoked = { stack.value.notifySessionRevoked(it) },
+                onBack = navigation::pop
             )
         )
         is ProfileDestination.Identifiers -> ProfileRootComponent.Child.Identifiers(

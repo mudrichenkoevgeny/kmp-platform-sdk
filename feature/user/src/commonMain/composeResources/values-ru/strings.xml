@@ -75,6 +75,19 @@
     <string name="session_expires_at">И истекает: %1$s</string>
     <string name="session_last_accessed">Последний доступ: %1$s</string>
     <string name="session_ip_address">IP: %1$s</string>
+    <string name="session_detail_title_session">Сессия</string>
+    <string name="session_detail_title_current_session">Текущая сессия</string>
+    <string name="session_detail_auth_provider">Провайдер авторизации</string>
+    <string name="session_detail_device_info">Информация об устройстве</string>
+    <string name="session_detail_device_name">Имя устройства</string>
+    <string name="session_detail_client_type">Тип клиента</string>
+    <string name="session_detail_language">Язык</string>
+    <string name="session_detail_app_version">Версия приложения</string>
+    <string name="session_detail_os_version">Версия ОС</string>
+    <string name="session_detail_ip_address_label">IP-адрес</string>
+    <string name="session_detail_last_accessed_label">Последний доступ</string>
+    <string name="session_detail_created_at_label">Дата создания</string>
+    <string name="not_available">Н/Д</string>
 
     <string name="identifier_delete">Удалить</string>
     <string name="identifier_add_email">Добавить Email</string>

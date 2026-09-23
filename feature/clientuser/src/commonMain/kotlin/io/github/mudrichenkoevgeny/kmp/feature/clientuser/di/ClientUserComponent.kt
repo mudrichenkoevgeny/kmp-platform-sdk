@@ -183,6 +183,9 @@ class ClientUserComponent(
     /** Returns active sessions. */
     val getSessionsUseCase get() = useCaseModule.getSessionsUseCase
 
+    /** Returns specific session details. */
+    val getSessionUseCase get() = useCaseModule.getSessionUseCase
+
     /** Revokes specific session. */
     val deleteSessionUseCase get() = useCaseModule.deleteSessionUseCase
 
@@ -244,6 +247,7 @@ class ClientUserComponent(
         getRecoveryCodesUseCase = getRecoveryCodesUseCase,
         regenerateRecoveryCodesUseCase = regenerateRecoveryCodesUseCase,
         getSessionsUseCase = getSessionsUseCase,
+        getSessionUseCase = getSessionUseCase,
         deleteSessionUseCase = deleteSessionUseCase,
         deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase,
         getUserIdentifiersUseCase = getUserIdentifiersUseCase,

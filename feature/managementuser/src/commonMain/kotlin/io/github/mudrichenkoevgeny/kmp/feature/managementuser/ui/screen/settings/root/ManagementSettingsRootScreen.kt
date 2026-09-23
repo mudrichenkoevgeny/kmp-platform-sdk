@@ -21,6 +21,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.global.EditGlobalSettingsScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.main.MainManagementSettingsScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.security.EditSecuritySettingsScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailScreen
 
 /**
  * Root Composable for management settings stack.
@@ -41,6 +42,7 @@ fun ManagementSettingsRootScreen(component: ManagementSettingsRootComponent) {
             is ManagementSettingsRootComponent.Child.UsersManagement -> UsersManagementRootScreen(instance.component)
             is ManagementSettingsRootComponent.Child.AuditLogs -> AuditApiRootScreen(instance.component)
             is ManagementSettingsRootComponent.Child.Sessions -> GlobalSessionListScreen(instance.component)
+            is ManagementSettingsRootComponent.Child.SessionDetail -> SessionDetailScreen(instance.component)
         }
     }
 }

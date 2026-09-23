@@ -11,6 +11,7 @@ This document is the entry point for architectural and coding standards. These r
 - **No Trailing Commas:** Do not use trailing commas at the end of argument, parameter, or entry lists.
 - **Mandatory UI Testing & Previews:** Every created UI screen (`*Screen.kt`) or component must be accompanied by its corresponding Unit/UI Test (`*Test.kt`), Screenshot Test (`*ScreenshotTest.kt` with Roborazzi), and Compose Previews using dedicated preview annotations (`@ComponentSizePreviews`, `@ScreenSizePreviews`, `@ThemePreviews`, `@FontScalePreviews`).
 - **Mandatory UI Localization:** Production UI code must strictly use localized string resources (`Res.string.*` via `stringResource(...)`). Hardcoded string literals are strictly forbidden in production UI code (permitted only in tests and previews).
+- **Domain ID Conversions:** Always use `string.toXxxIdOrThrow()` / `string.toXxxIdOrNull()` for converting strings to domain value class IDs (e.g. `UserId`, `UserSessionId`), and `.asHexDashString()` for converting IDs to string. Do not construct `XxxId(Uuid.parse(string))` directly.
 - **Manual Test Execution:** AI agents must not run tests or suggest running them. Execution is always triggered explicitly by the developer.
 - **No Redundant Builds:** Do not run Gradle build tasks or attempt compilation after modifying documentation (KDoc), comments, or other non-executable changes that cannot possibly break the build.
 

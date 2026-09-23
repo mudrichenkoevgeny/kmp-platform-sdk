@@ -198,6 +198,9 @@ class ManagementUserComponent(
     /** Returns active sessions for the manager. */
     val getSessionsUseCase get() = useCaseModule.getSessionsUseCase
 
+    /** Returns specific session details for the manager. */
+    val getSessionUseCase get() = useCaseModule.getSessionUseCase
+
     /** Revokes specific manager session. */
     val deleteSessionUseCase get() = useCaseModule.deleteSessionUseCase
 
@@ -246,6 +249,9 @@ class ManagementUserComponent(
     /** Retrieves user sessions administratively. */
     val managementGetSessionsUseCase get() = useCaseModule.managementGetSessionsUseCase
 
+    /** Retrieves specific user session details administratively. */
+    val managementGetSessionUseCase get() = useCaseModule.managementGetSessionUseCase
+
     /** Retrieves user identifiers administratively. */
     val managementGetIdentifiersUseCase get() = useCaseModule.managementGetIdentifiersUseCase
 
@@ -287,6 +293,7 @@ class ManagementUserComponent(
         getRecoveryCodesUseCase = getRecoveryCodesUseCase,
         regenerateRecoveryCodesUseCase = regenerateRecoveryCodesUseCase,
         getSessionsUseCase = getSessionsUseCase,
+        getSessionUseCase = getSessionUseCase,
         deleteSessionUseCase = deleteSessionUseCase,
         deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase,
         getUserIdentifiersUseCase = getUserIdentifiersUseCase,
@@ -379,6 +386,7 @@ class ManagementUserComponent(
         updateUserUseCase = updateUserUseCase,
         deleteUserUseCase = deleteUserUseCase,
         managementGetSessionsUseCase = managementGetSessionsUseCase,
+        managementGetSessionUseCase = managementGetSessionUseCase,
         managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
         managementDisableTotpUseCase = managementDisableTotpUseCase,
         managementDeleteSessionUseCase = managementDeleteSessionUseCase,
@@ -414,6 +422,7 @@ class ManagementUserComponent(
             updateUserUseCase = updateUserUseCase,
             deleteUserUseCase = deleteUserUseCase,
             managementGetSessionsUseCase = managementGetSessionsUseCase,
+            managementGetSessionUseCase = managementGetSessionUseCase,
             managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
             managementDisableTotpUseCase = managementDisableTotpUseCase,
             managementDeleteSessionUseCase = managementDeleteSessionUseCase,

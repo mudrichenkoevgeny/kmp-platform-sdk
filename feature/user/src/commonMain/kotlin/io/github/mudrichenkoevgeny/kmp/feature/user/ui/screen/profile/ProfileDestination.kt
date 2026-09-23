@@ -1,5 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile
 
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.toUserSessionIdOrThrow
 import kotlinx.serialization.Serializable
 
 /**
@@ -22,6 +24,14 @@ sealed interface ProfileDestination {
     /** List of active sessions. */
     @Serializable
     object Sessions : ProfileDestination
+
+    /** Active session detail screen. */
+    @Serializable
+    data class SessionDetail(
+        val sessionIdValue: String
+    ) : ProfileDestination {
+        val sessionId: UserSessionId get() = sessionIdValue.toUserSessionIdOrThrow()
+    }
 
     /** List of user identifiers (emails, phones). */
     @Serializable

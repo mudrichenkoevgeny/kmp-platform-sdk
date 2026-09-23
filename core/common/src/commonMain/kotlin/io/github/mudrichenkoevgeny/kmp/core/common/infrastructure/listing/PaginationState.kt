@@ -97,6 +97,13 @@ fun <T> PaginationState<T>.appendResult(result: PagedResult<T>): PaginationState
 )
 
 /**
+ * Removes items matching [predicate] from [PaginationState.items].
+ */
+fun <T> PaginationState<T>.removeItem(predicate: (T) -> Boolean): PaginationState<T> = copy(
+    items = items.filterNot(predicate)
+)
+
+/**
  * Transitions state to error.
  */
 fun <T> PaginationState<T>.toError(error: AppError, isInitial: Boolean): PaginationState<T> = copy(

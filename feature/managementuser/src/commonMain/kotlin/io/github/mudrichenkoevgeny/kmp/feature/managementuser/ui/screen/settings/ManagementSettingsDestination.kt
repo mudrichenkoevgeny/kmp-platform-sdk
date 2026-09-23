@@ -1,5 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings
 
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.toUserSessionIdOrThrow
 import kotlinx.serialization.Serializable
 
 /**
@@ -34,4 +36,12 @@ sealed class ManagementSettingsDestination {
     /** Screen for viewing all platform sessions. */
     @Serializable
     object GlobalSessionList : ManagementSettingsDestination()
+
+    /** Screen for viewing session details. */
+    @Serializable
+    data class SessionDetail(
+        val sessionIdValue: String
+    ) : ManagementSettingsDestination() {
+        val sessionId: UserSessionId get() = sessionIdValue.toUserSessionIdOrThrow()
+    }
 }

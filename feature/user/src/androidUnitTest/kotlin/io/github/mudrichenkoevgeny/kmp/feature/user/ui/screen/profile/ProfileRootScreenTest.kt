@@ -13,12 +13,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.Profi
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.identifier.SelfIdentifierListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.MainProfileComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.session.SelfSessionListComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.session.detail.SessionDetailComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.totp.TotpMainComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.IdentifierListTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileScreenState
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SelfSessionListTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainScreenState
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainTestTags
@@ -89,6 +91,26 @@ class ProfileRootScreenTest {
         onNodeWithTag(SelfSessionListTestTags.BACK_BUTTON).assertIsDisplayed().performClick()
 
         assertEquals(EXPECTED_SINGLE_CALLBACK, sessionComponent.backCalls)
+    }
+
+    @Test
+    fun displaysSessionDetailChild_whenActiveConfigurationIsSessionDetail() = runComposeUiTest {
+        val sessionDetailComponent = SessionDetailComponentMock()
+        val rootComponent = ProfileRootComponentMock(
+            initialChild = ProfileRootComponent.Child.SessionDetail(sessionDetailComponent),
+            initialConfiguration = ProfileDestination.SessionDetail("00000000-0000-0000-0000-000000000000")
+        )
+
+        setContent {
+            ComponentTestHarness {
+                ProfileRootScreen(rootComponent)
+            }
+        }
+
+        onNodeWithTag(SessionDetailTestTags.TITLE).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.BACK_BUTTON).assertIsDisplayed().performClick()
+
+        assertEquals(EXPECTED_SINGLE_CALLBACK, sessionDetailComponent.backCalls)
     }
 
     @Test

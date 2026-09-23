@@ -19,6 +19,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist.UserIdentifierListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.main.UsersManagementMainScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailScreen
 
 @Composable
 fun UsersManagementRootScreen(component: UsersManagementRootComponent) {
@@ -31,6 +32,7 @@ fun UsersManagementRootScreen(component: UsersManagementRootComponent) {
             is UsersManagementRootComponent.Child.Detail -> UserDetailScreen(instance.component)
             is UsersManagementRootComponent.Child.Create -> CreateUserScreen(instance.component)
             is UsersManagementRootComponent.Child.UserSessionList -> UserSessionListScreen(instance.component)
+            is UsersManagementRootComponent.Child.SessionDetail -> SessionDetailScreen(instance.component)
             is UsersManagementRootComponent.Child.Identifiers -> UserIdentifierListScreen(instance.component)
         }
     }

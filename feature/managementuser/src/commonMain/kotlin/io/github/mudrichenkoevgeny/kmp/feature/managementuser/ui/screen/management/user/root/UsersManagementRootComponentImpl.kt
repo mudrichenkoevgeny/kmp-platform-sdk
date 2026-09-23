@@ -18,7 +18,10 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteAllUserSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.notifySessionRevoked
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.CreateUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.DeleteUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
@@ -36,6 +39,7 @@ class UsersManagementRootComponentImpl(
     private val updateUserUseCase: UpdateUserUseCase,
     private val deleteUserUseCase: DeleteUserUseCase,
     private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
+    private val managementGetSessionUseCase: ManagementGetSessionUseCase? = null,
     private val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase,
     private val managementDisableTotpUseCase: ManagementDisableTotpUseCase,
     private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase,
@@ -104,6 +108,28 @@ class UsersManagementRootComponentImpl(
                 managementGetSessionsUseCase = managementGetSessionsUseCase,
                 managementDeleteSessionUseCase = managementDeleteSessionUseCase,
                 managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase,
+                onNavigateToSessionDetail = { session ->
+                    navigation.bringToFront(
+                        UsersManagementDestination.SessionDetail(
+                            userIdValue = config.userId.asHexDashString(),
+                            sessionIdValue = session.id.asHexDashString()
+                        )
+                    )
+                },
+                onBack = navigation::pop
+            )
+        )
+        is UsersManagementDestination.SessionDetail -> UsersManagementRootComponent.Child.SessionDetail(
+            SessionDetailComponentImpl(
+                componentContext = context,
+                sessionId = config.sessionId,
+                fetchSession = managementGetSessionUseCase?.let { useCase ->
+                    { targetId -> useCase(targetId.asHexDashString()) }
+                },
+                revokeSession = { targetId ->
+                    managementDeleteSessionUseCase(config.userId, targetId.asHexDashString())
+                },
+                onSessionRevoked = { stack.value.notifySessionRevoked(it) },
                 onBack = navigation::pop
             )
         )

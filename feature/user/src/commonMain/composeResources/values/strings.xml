@@ -75,6 +75,19 @@
     <string name="session_expires_at">Expires at: %1$s</string>
     <string name="session_last_accessed">Last accessed: %1$s</string>
     <string name="session_ip_address">IP: %1$s</string>
+    <string name="session_detail_title_session">Session</string>
+    <string name="session_detail_title_current_session">Current Session</string>
+    <string name="session_detail_auth_provider">Auth Provider</string>
+    <string name="session_detail_device_info">Device Information</string>
+    <string name="session_detail_device_name">Device Name</string>
+    <string name="session_detail_client_type">Client Type</string>
+    <string name="session_detail_language">Language</string>
+    <string name="session_detail_app_version">App Version</string>
+    <string name="session_detail_os_version">OS Version</string>
+    <string name="session_detail_ip_address_label">IP Address</string>
+    <string name="session_detail_last_accessed_label">Last Accessed</string>
+    <string name="session_detail_created_at_label">Created At</string>
+    <string name="not_available">N/A</string>
 
     <string name="identifier_delete">Delete</string>
     <string name="identifier_add_email">Add Email</string>

@@ -34,6 +34,7 @@ actual fun SetupBrowserHistory(mainComponent: MainScreenComponent) {
                 is ProfileDestination.TotpMain -> PATH_TOTP
                 is ProfileDestination.TotpRecoveryCodes -> PATH_TOTP_RECOVERY_CODES
                 is ProfileDestination.Sessions -> PATH_SESSIONS
+                is ProfileDestination.SessionDetail -> PATH_SESSIONS
                 is ProfileDestination.Identifiers -> PATH_IDENTIFIERS
             }
         }
@@ -47,6 +48,7 @@ actual fun SetupBrowserHistory(mainComponent: MainScreenComponent) {
                     is ProfileRootComponent.Child.TotpRecoveryCodes -> profileChild.component.onBackClick()
                     is ProfileRootComponent.Child.TotpMain -> profileChild.component.onBackClick()
                     is ProfileRootComponent.Child.Sessions -> profileChild.component.onBackClick()
+                    is ProfileRootComponent.Child.SessionDetail -> profileChild.component.onBackClick()
                     is ProfileRootComponent.Child.Identifiers -> profileChild.component.onBackClick()
                     is ProfileRootComponent.Child.Main -> { }
                 }

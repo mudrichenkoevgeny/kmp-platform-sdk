@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
  * @param getSessionsUseCase Fetches the current list of active sessions.
  * @param deleteSessionUseCase Terminates a specific remote session.
  * @param deleteAllOtherSessionsUseCase Terminates all sessions except the current one.
+ * @param onNavigateToSessionDetail Optional callback to navigate to session detail screen.
  * @param onBack Pops this screen from the navigation stack.
  * @param authStorage Token storage used to resolve the current active session ID.
  */
@@ -37,6 +38,7 @@ class SelfSessionListComponentImpl(
     private val getSessionsUseCase: GetSessionsUseCase,
     private val deleteSessionUseCase: DeleteSessionUseCase,
     private val deleteAllOtherSessionsUseCase: DeleteAllOtherSessionsUseCase,
+    private val onNavigateToSessionDetail: ((UserSession) -> Unit)? = null,
     private val onBack: () -> Unit,
     private val authStorage: AuthStorage? = null
 ) : SelfSessionListComponent, ComponentContext by componentContext {
@@ -51,6 +53,18 @@ class SelfSessionListComponentImpl(
 
     override fun onRefresh() {
         loadSessions()
+    }
+
+    override fun onSessionClick(session: UserSession) {
+        onNavigateToSessionDetail?.invoke(session)
+    }
+
+    override fun onSessionRevoked(sessionId: UserSessionId) {
+        val current = _state.value as? SelfSessionListScreenState.Content ?: return
+        val newItems = current.paging.items.filterNot { it.id == sessionId }
+        _state.value = current.copy(
+            paging = current.paging.copy(items = newItems)
+        )
     }
 
     override fun onRevokeSessionClick(sessionId: UserSessionId) {

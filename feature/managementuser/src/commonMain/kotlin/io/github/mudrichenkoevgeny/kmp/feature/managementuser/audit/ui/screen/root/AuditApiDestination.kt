@@ -1,8 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.root
 
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventId
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.toAuditEventIdOrThrow
 import kotlinx.serialization.Serializable
-import kotlin.uuid.Uuid
 
 @Serializable
 sealed class AuditApiDestination {
@@ -11,6 +11,6 @@ sealed class AuditApiDestination {
 
     @Serializable
     data class Detail(val eventIdValue: String) : AuditApiDestination() {
-        val eventId: AuditEventId get() = AuditEventId(Uuid.parse(eventIdValue))
+        val eventId: AuditEventId get() = eventIdValue.toAuditEventIdOrThrow()
     }
 }

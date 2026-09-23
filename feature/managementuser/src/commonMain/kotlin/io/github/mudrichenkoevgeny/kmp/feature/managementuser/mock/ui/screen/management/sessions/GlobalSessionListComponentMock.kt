@@ -6,6 +6,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.globallist.GlobalSessionListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.globallist.GlobalSessionListScreenState
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 
 class GlobalSessionListComponentMock(
@@ -15,6 +17,8 @@ class GlobalSessionListComponentMock(
     override val state: Value<GlobalSessionListScreenState> = _state
 
     var refreshCalls: Int = 0
+    var sessionClickCalls: MutableList<UserSession> = mutableListOf()
+    var sessionRevokedCalls: MutableList<UserSessionId> = mutableListOf()
     var loadNextPageCalls: Int = 0
     var backCalls: Int = 0
     var toggleFilterPanelCalls: Int = 0
@@ -38,5 +42,11 @@ class GlobalSessionListComponentMock(
     override fun onSortChanged(sortState: ListingSortState) {}
     override fun onFilterChanged(filterId: String, filterState: ListingFilterState?) {}
     override fun onApplyFilters() {}
+    override fun onSessionClick(session: UserSession) {
+        sessionClickCalls.add(session)
+    }
+    override fun onSessionRevoked(sessionId: UserSessionId) {
+        sessionRevokedCalls.add(sessionId)
+    }
     override fun onDeleteSessionClick(userId: UserId, sessionId: String) {}
 }

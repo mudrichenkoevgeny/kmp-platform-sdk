@@ -167,7 +167,8 @@ private fun Content(
                         session = session,
                         onRevokeClick = { onRevokeSession(session.id) },
                         enabled = !state.actionLoading,
-                        isCurrentSession = state.currentSessionId == session.id
+                        isCurrentSession = state.currentSessionId == session.id,
+                        onSessionClick = { component.onSessionClick(session) }
                     )
                 }
 

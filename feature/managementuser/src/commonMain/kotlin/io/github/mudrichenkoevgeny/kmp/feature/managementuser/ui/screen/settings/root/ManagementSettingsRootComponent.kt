@@ -10,6 +10,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.global.EditGlobalSettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.main.MainManagementSettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.security.EditSecuritySettingsComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SessionListOwner
 
 /**
  * Root Decompose component for management settings flows.
@@ -39,6 +41,9 @@ interface ManagementSettingsRootComponent {
         class AuditLogs(val component: AuditApiRootComponent) : Child
 
         /** All platform sessions screen. */
-        class Sessions(val component: GlobalSessionListComponent) : Child
+        class Sessions(val component: GlobalSessionListComponent) : Child, SessionListOwner by component
+
+        /** Session detail screen. */
+        class SessionDetail(val component: SessionDetailComponent) : Child
     }
 }

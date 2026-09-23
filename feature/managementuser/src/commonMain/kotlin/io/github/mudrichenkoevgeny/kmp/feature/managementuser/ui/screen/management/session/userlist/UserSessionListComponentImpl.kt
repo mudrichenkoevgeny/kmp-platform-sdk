@@ -17,6 +17,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.Ma
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.launch
 
@@ -26,6 +27,7 @@ class UserSessionListComponentImpl(
     private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
     private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase,
     private val managementDeleteAllUserSessionsUseCase: ManagementDeleteAllUserSessionsUseCase,
+    private val onNavigateToSessionDetail: ((UserSession) -> Unit)? = null,
     private val onBack: () -> Unit
 ) : UserSessionListComponent, ComponentContext by componentContext {
 
@@ -39,6 +41,18 @@ class UserSessionListComponentImpl(
 
     override fun onRefresh() {
         loadSessions()
+    }
+
+    override fun onSessionClick(session: UserSession) {
+        onNavigateToSessionDetail?.invoke(session)
+    }
+
+    override fun onSessionRevoked(sessionId: UserSessionId) {
+        val current = _state.value as? UserSessionListScreenState.Content ?: return
+        val newItems = current.paging.items.filterNot { it.id == sessionId }
+        _state.value = current.copy(
+            paging = current.paging.copy(items = newItems)
+        )
     }
 
     override fun onBackClick() {
