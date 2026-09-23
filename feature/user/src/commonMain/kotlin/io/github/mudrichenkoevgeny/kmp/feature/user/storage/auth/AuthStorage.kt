@@ -3,8 +3,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth
 import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
 import kotlinx.coroutines.flow.StateFlow
-import kotlin.time.Instant
 
 /**
  * Persists session tokens for the user feature. Implementations are supplied by the host
@@ -23,18 +23,18 @@ interface AuthStorage : AccessTokenProvider {
     /** @return Access token expiry instant as epoch milliseconds. */
     suspend fun getExpiresAt(): Long
 
+    /** @return The current active session ID, or null if absent. */
+    suspend fun getSessionId(): String?
+
+    /** @return The identifier ID used to authorize this session, or null if absent. */
+    suspend fun getIdentifierId(): String?
+
     /**
      * Persists a new session after login or refresh.
      *
-     * @param accessToken New bearer access token.
-     * @param refreshToken New refresh token.
-     * @param expiresAt Access token expiry as epoch milliseconds.
+     * @param sessionToken New session token containing access/refresh tokens and session IDs.
      */
-    suspend fun updateTokens(
-        accessToken: AccessToken,
-        refreshToken: RefreshToken,
-        expiresAt: Instant
-    )
+    suspend fun updateTokens(sessionToken: SessionToken)
 
     /** Removes tokens from storage (logout / invalid session). */
     suspend fun clearTokens()

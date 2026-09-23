@@ -28,11 +28,7 @@ open class LoginByPhoneUseCase(
     open suspend fun execute(phoneNumber: String, confirmationCode: String): AppResult<AuthData> {
         return loginRepository.loginByPhone(phoneNumber, confirmationCode)
             .onSuccess { authData ->
-                authStorage.updateTokens(
-                    accessToken = authData.sessionToken.accessToken,
-                    refreshToken = authData.sessionToken.refreshToken,
-                    expiresAt = authData.sessionToken.expiresAt
-                )
+                authStorage.updateTokens(authData.sessionToken)
                 userStorage.updateCurrentUser(authData.userDetails)
             }
     }

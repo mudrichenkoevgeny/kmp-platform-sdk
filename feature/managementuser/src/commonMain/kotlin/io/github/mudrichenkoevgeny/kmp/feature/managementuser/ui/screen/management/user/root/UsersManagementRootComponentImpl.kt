@@ -9,9 +9,9 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create.CreateUserComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.identifiers.UserIdentifiersComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist.UserIdentifierListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.main.UsersManagementMainComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.sessions.UserSessionsComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.UsersManagementDestination
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierPasswordUseCase
@@ -69,7 +69,7 @@ class UsersManagementRootComponentImpl(
                 componentContext = context,
                 getUsersUseCase = getUsersUseCase,
                 onNavigateToUserDetail = { userId -> navigation.bringToFront(
-                    UsersManagementDestination.Detail(userId.value.toString())) },
+                    UsersManagementDestination.Detail(userId.asHexDashString())) },
                 onNavigateToCreateUser = { navigation.bringToFront(UsersManagementDestination.Create) },
                 onBack = onBack
             )
@@ -83,9 +83,9 @@ class UsersManagementRootComponentImpl(
                 deleteUserUseCase = deleteUserUseCase,
                 managementDisableTotpUseCase = managementDisableTotpUseCase,
                 onNavigateToSessions = { userId -> navigation.bringToFront(
-                    UsersManagementDestination.Sessions(userId.value.toString())) },
+                    UsersManagementDestination.UserSessionList(userId.asHexDashString())) },
                 onNavigateToIdentifiers = { userId -> navigation.bringToFront(
-                    UsersManagementDestination.Identifiers(userId.value.toString())) },
+                    UsersManagementDestination.Identifiers(userId.asHexDashString())) },
                 onBack = navigation::pop
             )
         )
@@ -97,8 +97,8 @@ class UsersManagementRootComponentImpl(
                 onBack = navigation::pop
             )
         )
-        is UsersManagementDestination.Sessions -> UsersManagementRootComponent.Child.Sessions(
-            UserSessionsComponentImpl(
+        is UsersManagementDestination.UserSessionList -> UsersManagementRootComponent.Child.UserSessionList(
+            UserSessionListComponentImpl(
                 componentContext = context,
                 userId = config.userId,
                 managementGetSessionsUseCase = managementGetSessionsUseCase,
@@ -108,7 +108,7 @@ class UsersManagementRootComponentImpl(
             )
         )
         is UsersManagementDestination.Identifiers -> UsersManagementRootComponent.Child.Identifiers(
-            UserIdentifiersComponentImpl(
+            UserIdentifierListComponentImpl(
                 componentContext = context,
                 userId = config.userId,
                 managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,

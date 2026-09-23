@@ -11,7 +11,8 @@ class MainManagementSettingsComponentImpl(
     private val onNavigateToEditGlobalSettings: () -> Unit,
     private val onNavigateToEditSecuritySettings: () -> Unit,
     private val onNavigateToUsersManagement: () -> Unit,
-    private val onNavigateToAuditLogs: () -> Unit
+    private val onNavigateToAuditLogs: () -> Unit,
+    private val onNavigateToGlobalSessionList: () -> Unit
 ) : MainManagementSettingsComponent, ComponentContext by componentContext {
 
     override fun onEditAuthSettingsClick() {
@@ -32,5 +33,9 @@ class MainManagementSettingsComponentImpl(
 
     override fun onAuditLogsClick() {
         onNavigateToAuditLogs()
+    }
+
+    override fun onGlobalSessionListClick() {
+        onNavigateToGlobalSessionList()
     }
 }

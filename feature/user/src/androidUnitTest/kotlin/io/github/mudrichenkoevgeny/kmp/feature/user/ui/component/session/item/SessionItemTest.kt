@@ -27,7 +27,10 @@ class SessionItemTest {
     @Test
     fun rendersSessionDataAndTriggersRevoke() = runComposeUiTest {
         var revokeClicks = 0
-        val session = userSessionMock()
+        val baseSession = userSessionMock()
+        val session = baseSession.copy(
+            deviceInfo = baseSession.deviceInfo.copy(deviceName = "Mock Device")
+        )
 
         setContent {
             CoreTheme {
@@ -43,7 +46,7 @@ class SessionItemTest {
             }
         }
 
-        onNodeWithText("MockUserAgent/1.0").assertIsDisplayed()
+        onNodeWithText("Mock Device").assertIsDisplayed()
         onNodeWithText("127.0.0.1", substring = true).assertIsDisplayed()
 
         onNodeWithText("Revoke").performClick()

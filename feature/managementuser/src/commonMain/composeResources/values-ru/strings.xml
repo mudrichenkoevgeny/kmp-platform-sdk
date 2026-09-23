@@ -66,6 +66,7 @@
     <string name="password">Пароль</string>
     <string name="authority_level">Уровень привилегий</string>
     <string name="user_sessions">Сессии пользователя</string>
+    <string name="sessions">Сессии</string>
     <string name="user_identifiers">Идентификаторы пользователя</string>
     <string name="disable_totp">Отключить TOTP</string>
     <string name="disabling_totp">Отключение TOTP...</string>

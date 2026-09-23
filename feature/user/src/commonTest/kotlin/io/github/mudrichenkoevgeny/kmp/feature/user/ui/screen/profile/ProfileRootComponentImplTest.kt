@@ -7,6 +7,7 @@ import com.arkivanov.essenty.lifecycle.resume
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.UserRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.AddUserIdentifierEmailUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.AddUserIdentifierPhoneUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.DeleteUserIdentifierUseCaseMock
@@ -26,11 +27,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.security.G
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.security.RegenerateRecoveryCodesUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.security.SetupTotpUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.IdentifierListComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.SelfIdentifierListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.SessionListComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SelfSessionListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.recovery.TotpRecoveryCodesComponentImpl
 import kotlin.test.Test
@@ -128,7 +129,7 @@ class ProfileRootComponentImplTest {
             val sessionsChild = assertIs<ProfileRootComponent.Child.Sessions>(context.component.stack.value.active.instance)
             assertEquals(ProfileDestination.Sessions, context.component.stack.value.active.configuration)
 
-            val sessionsComponent = assertIs<SessionListComponent>(sessionsChild.component)
+            val sessionsComponent = assertIs<SelfSessionListComponent>(sessionsChild.component)
             sessionsComponent.onBackClick()
 
             assertIs<ProfileRootComponent.Child.Main>(context.component.stack.value.active.instance)
@@ -150,7 +151,7 @@ class ProfileRootComponentImplTest {
             val identifiersChild = assertIs<ProfileRootComponent.Child.Identifiers>(context.component.stack.value.active.instance)
             assertEquals(ProfileDestination.Identifiers, context.component.stack.value.active.configuration)
 
-            val identifiersComponent = assertIs<IdentifierListComponent>(identifiersChild.component)
+            val identifiersComponent = assertIs<SelfIdentifierListComponent>(identifiersChild.component)
             identifiersComponent.onBackClick()
 
             assertIs<ProfileRootComponent.Child.Main>(context.component.stack.value.active.instance)
@@ -180,7 +181,8 @@ class ProfileRootComponentImplTest {
         addUserIdentifierEmailUseCase: AddUserIdentifierEmailUseCaseMock = AddUserIdentifierEmailUseCaseMock(),
         sendAddPhoneIdentifierConfirmationUseCase: SendAddPhoneIdentifierConfirmationUseCaseMock = SendAddPhoneIdentifierConfirmationUseCaseMock(),
         addUserIdentifierPhoneUseCase: AddUserIdentifierPhoneUseCaseMock = AddUserIdentifierPhoneUseCaseMock(),
-        emailChangePasswordUseCase: EmailChangePasswordUseCaseMock = EmailChangePasswordUseCaseMock()
+        emailChangePasswordUseCase: EmailChangePasswordUseCaseMock = EmailChangePasswordUseCaseMock(),
+        authStorage: AuthStorageMock = AuthStorageMock()
     ): ProfileRootComponentTestContext {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
@@ -209,7 +211,8 @@ class ProfileRootComponentImplTest {
             sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase,
             addUserIdentifierPhoneUseCase = addUserIdentifierPhoneUseCase,
             emailChangePasswordUseCase = emailChangePasswordUseCase,
-            onNavigateToLogin = { context.onNavigateToLoginCalls++ }
+            onNavigateToLogin = { context.onNavigateToLoginCalls++ },
+            authStorage = authStorage
         )
 
         return context

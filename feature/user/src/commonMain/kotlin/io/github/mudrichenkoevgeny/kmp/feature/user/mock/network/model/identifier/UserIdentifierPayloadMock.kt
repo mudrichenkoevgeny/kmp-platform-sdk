@@ -12,6 +12,7 @@ fun userIdentifierPayloadMock(
     userId = "123e4567-e89b-12d3-a456-426614174000",
     userAuthProvider = UserAuthProvider.EMAIL.serialName,
     identifier = identifier,
+    displayName = identifier,
     externalProviderEmail = null,
     isSensitiveValuesMasked = false,
     createdAt = 0L,

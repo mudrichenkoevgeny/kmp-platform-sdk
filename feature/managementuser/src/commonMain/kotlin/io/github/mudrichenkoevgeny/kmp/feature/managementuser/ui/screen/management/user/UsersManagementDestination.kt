@@ -18,7 +18,7 @@ sealed class UsersManagementDestination {
     object Create : UsersManagementDestination()
 
     @Serializable
-    data class Sessions(val userIdValue: String) : UsersManagementDestination() {
+    data class UserSessionList(val userIdValue: String) : UsersManagementDestination() {
         val userId: UserId get() = UserId(Uuid.parse(userIdValue))
     }
 

@@ -11,6 +11,7 @@ fun userIdentifierMock() = UserIdentifier(
     userId = UserId.generate(),
     userAuthProvider = UserAuthProvider.EMAIL,
     identifier = "user@example.com",
+    displayName = "user@example.com",
     externalProviderEmail = null,
     isSensitiveValuesMasked = false,
     createdAt = Clock.System.now(),

@@ -54,6 +54,7 @@ actual fun SetupBrowserHistory(mainComponent: MainScreenComponent) {
                 is ManagementSettingsDestination.EditSecuritySettings -> PATH_SETTINGS_SECURITY
                 is ManagementSettingsDestination.UsersManagement -> PATH_USERS
                 is ManagementSettingsDestination.AuditLogs -> PATH_AUDIT
+                is ManagementSettingsDestination.GlobalSessionList -> PATH_SESSIONS
             }
         }
     }
@@ -77,6 +78,7 @@ actual fun SetupBrowserHistory(mainComponent: MainScreenComponent) {
                         is ManagementSettingsRootComponent.Child.EditSecuritySettings -> settingsChild.component.onBackClick()
                         is ManagementSettingsRootComponent.Child.UsersManagement -> settingsChild.component.onBackClick()
                         is ManagementSettingsRootComponent.Child.AuditLogs -> settingsChild.component.onBackClick()
+                        is ManagementSettingsRootComponent.Child.Sessions -> settingsChild.component.onBackClick()
                         is ManagementSettingsRootComponent.Child.Main -> { }
                     }
                 }

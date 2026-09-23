@@ -2,8 +2,11 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.storage.EncryptedSettingsMock
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -36,10 +39,19 @@ class EncryptedAuthStorageTest {
         val futureExpiryMs = Clock.System.now().toEpochMilliseconds() + 1.hours.inWholeMilliseconds
         val futureExpiry = Instant.fromEpochMilliseconds(futureExpiryMs)
 
-        storage.updateTokens(AccessToken(ACCESS_A), RefreshToken(REFRESH_A), expiresAt = futureExpiry)
+        val token = SessionToken(
+            accessToken = AccessToken(ACCESS_A),
+            refreshToken = RefreshToken(REFRESH_A),
+            expiresAt = futureExpiry,
+            sessionId = UserSessionId.generate(),
+            identifierId = UserIdentifierId.generate()
+        )
+        storage.updateTokens(token)
 
         assertEquals(AccessToken(ACCESS_A), storage.getAccessToken())
         assertEquals(RefreshToken(REFRESH_A), storage.getRefreshToken())
+        assertEquals(token.sessionId.asHexDashString(), storage.getSessionId())
+        assertEquals(token.identifierId.asHexDashString(), storage.getIdentifierId())
         assertEquals(futureExpiryMs, storage.getExpiresAt())
         assertEquals(ACCESS_A, storage.accessTokenFlow.value)
     }
@@ -49,7 +61,14 @@ class EncryptedAuthStorageTest {
         val storage = EncryptedAuthStorage(EncryptedSettingsMock(), this)
         advanceUntilIdle()
         val futureExpiry = Instant.fromEpochMilliseconds(Clock.System.now().toEpochMilliseconds() + 1.hours.inWholeMilliseconds)
-        storage.updateTokens(AccessToken(ACCESS_A), RefreshToken(REFRESH_A), futureExpiry)
+        val token = SessionToken(
+            accessToken = AccessToken(ACCESS_A),
+            refreshToken = RefreshToken(REFRESH_A),
+            expiresAt = futureExpiry,
+            sessionId = UserSessionId.generate(),
+            identifierId = UserIdentifierId.generate()
+        )
+        storage.updateTokens(token)
 
         storage.clearTokens()
 

@@ -3,18 +3,26 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.auth.markAsPublic
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.model.ApiErrorResponse
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.auth.refreshtoken.OpenRefreshTokenRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.request.get
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -23,12 +31,6 @@ import kotlin.test.assertTrue
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Instant
-
-private const val API_ORIGIN = "https://api.example.com"
-private const val RESOURCE_PATH = "/resource"
-
-private const val ACCESS_TOKEN_VALUE = "access-token"
-private const val REFRESH_TOKEN_VALUE = "refresh-token"
 
 private object SilentLogger : Logger {
     override fun log(message: String) {}
@@ -44,11 +46,14 @@ class HttpClientAuthConfigTest {
             Clock.System.now().toEpochMilliseconds() + 1.hours.inWholeMilliseconds
         )
 
-        storage.updateTokens(
-            AccessToken(ACCESS_TOKEN_VALUE),
-            RefreshToken(REFRESH_TOKEN_VALUE),
-            expiresAt
+        val token = SessionToken(
+            accessToken = AccessToken(ACCESS_TOKEN_VALUE),
+            refreshToken = RefreshToken(REFRESH_TOKEN_VALUE),
+            expiresAt = expiresAt,
+            sessionId = UserSessionId.generate(),
+            identifierId = UserIdentifierId.generate()
         )
+        storage.updateTokens(token)
 
         val authHeader = captureAuthHeader(storage) { http ->
             http.get("$API_ORIGIN$RESOURCE_PATH")
@@ -64,11 +69,14 @@ class HttpClientAuthConfigTest {
             Clock.System.now().toEpochMilliseconds() + 1.hours.inWholeMilliseconds
         )
 
-        storage.updateTokens(
-            AccessToken(ACCESS_TOKEN_VALUE),
-            RefreshToken(REFRESH_TOKEN_VALUE),
-            expiresAt
+        val token = SessionToken(
+            accessToken = AccessToken(ACCESS_TOKEN_VALUE),
+            refreshToken = RefreshToken(REFRESH_TOKEN_VALUE),
+            expiresAt = expiresAt,
+            sessionId = UserSessionId.generate(),
+            identifierId = UserIdentifierId.generate()
         )
+        storage.updateTokens(token)
 
         val authHeader = captureAuthHeader(storage) { http ->
             http.get("$API_ORIGIN$RESOURCE_PATH") {
@@ -84,11 +92,14 @@ class HttpClientAuthConfigTest {
         val storage = AuthStorageMock()
         val expiredAt = Instant.fromEpochMilliseconds(0)
 
-        storage.updateTokens(
-            AccessToken(ACCESS_TOKEN_VALUE),
-            RefreshToken(REFRESH_TOKEN_VALUE),
-            expiresAt = expiredAt
+        val expiredToken = SessionToken(
+            accessToken = AccessToken(ACCESS_TOKEN_VALUE),
+            refreshToken = RefreshToken(REFRESH_TOKEN_VALUE),
+            expiresAt = expiredAt,
+            sessionId = UserSessionId.generate(),
+            identifierId = UserIdentifierId.generate()
         )
+        storage.updateTokens(expiredToken)
 
         val authHeader = captureAuthHeader(storage) { http ->
             http.get("$API_ORIGIN$RESOURCE_PATH")
@@ -105,15 +116,28 @@ class HttpClientAuthConfigTest {
             Clock.System.now().toEpochMilliseconds() + 1.hours.inWholeMilliseconds
         )
 
-        storage.updateTokens(
-            AccessToken(ACCESS_TOKEN_VALUE),
-            RefreshToken(REFRESH_TOKEN_VALUE),
-            expiresAt
+        val token = SessionToken(
+            accessToken = AccessToken(ACCESS_TOKEN_VALUE),
+            refreshToken = RefreshToken(REFRESH_TOKEN_VALUE),
+            expiresAt = expiresAt,
+            sessionId = UserSessionId.generate(),
+            identifierId = UserIdentifierId.generate()
+        )
+        storage.updateTokens(token)
+
+        val errorResponseJson = Json.encodeToString(
+            ApiErrorResponse.serializer(),
+            ApiErrorResponse(
+                id = "123",
+                code = UserErrorCodes.USER_LOCKED,
+                message = "Locked",
+                args = emptyMap()
+            )
         )
 
         val engine = MockEngine {
             respond(
-                content = """{"code":"USER_LOCKED","id":"123","message":"Locked"}""",
+                content = errorResponseJson,
                 status = HttpStatusCode.Forbidden,
                 headers = headersOf(HttpHeaders.ContentType, "application/json")
             )
@@ -121,6 +145,9 @@ class HttpClientAuthConfigTest {
 
         val client = HttpClient(engine) {
             expectSuccess = true
+            install(ContentNegotiation) {
+                json(Json { ignoreUnknownKeys = true })
+            }
             setupAuthConfig(
                 baseUrl = API_ORIGIN,
                 networkLogger = SilentLogger,
@@ -148,15 +175,28 @@ class HttpClientAuthConfigTest {
             Clock.System.now().toEpochMilliseconds() + 1.hours.inWholeMilliseconds
         )
 
-        storage.updateTokens(
-            AccessToken(ACCESS_TOKEN_VALUE),
-            RefreshToken(REFRESH_TOKEN_VALUE),
-            expiresAt
+        val token = SessionToken(
+            accessToken = AccessToken(ACCESS_TOKEN_VALUE),
+            refreshToken = RefreshToken(REFRESH_TOKEN_VALUE),
+            expiresAt = expiresAt,
+            sessionId = UserSessionId.generate(),
+            identifierId = UserIdentifierId.generate()
+        )
+        storage.updateTokens(token)
+
+        val errorResponseJson = Json.encodeToString(
+            ApiErrorResponse.serializer(),
+            ApiErrorResponse(
+                id = "123",
+                code = "NON_INVALIDATING_ERROR",
+                message = "Non invalidating error",
+                args = emptyMap()
+            )
         )
 
         val engine = MockEngine {
             respond(
-                content = """{"code":"WRONG_PASSWORD","id":"123","message":"Wrong password"}""",
+                content = errorResponseJson,
                 status = HttpStatusCode.BadRequest,
                 headers = headersOf(HttpHeaders.ContentType, "application/json")
             )
@@ -164,6 +204,9 @@ class HttpClientAuthConfigTest {
 
         val client = HttpClient(engine) {
             expectSuccess = true
+            install(ContentNegotiation) {
+                json(Json { ignoreUnknownKeys = true })
+            }
             setupAuthConfig(
                 baseUrl = API_ORIGIN,
                 networkLogger = SilentLogger,
@@ -210,5 +253,12 @@ class HttpClientAuthConfigTest {
             client.close()
         }
         return captured
+    }
+
+    private companion object {
+        const val API_ORIGIN = "https://api.example.com"
+        const val RESOURCE_PATH = "/protected"
+        const val ACCESS_TOKEN_VALUE = "access-123"
+        const val REFRESH_TOKEN_VALUE = "refresh-123"
     }
 }

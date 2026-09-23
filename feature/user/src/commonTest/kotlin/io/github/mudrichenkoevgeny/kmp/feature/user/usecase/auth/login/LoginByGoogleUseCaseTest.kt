@@ -12,6 +12,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -24,7 +26,9 @@ class LoginByGoogleUseCaseTest {
     private val sessionToken = SessionToken(
         accessToken = AccessToken("access"),
         refreshToken = RefreshToken("refresh"),
-        expiresAt = Instant.fromEpochMilliseconds(1000)
+        expiresAt = Instant.fromEpochMilliseconds(1000),
+        sessionId = UserSessionId.generate(),
+        identifierId = UserIdentifierId.generate()
     )
 
     private val authDataMock = AuthData(

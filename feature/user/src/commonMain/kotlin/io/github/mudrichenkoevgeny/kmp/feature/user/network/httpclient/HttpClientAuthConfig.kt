@@ -4,8 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.ApiException
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.auth.IsPublicApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.model.ApiErrorResponse
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.token.toSessionToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.RefreshTokenPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.SessionTokenPayload
@@ -95,11 +94,7 @@ fun HttpClientConfig<*>.setupAuthConfig(
                             setBody(RefreshTokenPayload(refreshToken.value))
                         }.body<SessionTokenPayload>()
 
-                    authStorage.updateTokens(
-                        accessToken = AccessToken(tokenResponse.accessToken),
-                        refreshToken = RefreshToken(tokenResponse.refreshToken),
-                        expiresAt = Instant.fromEpochMilliseconds(tokenResponse.expiresAt)
-                    )
+                    authStorage.updateTokens(tokenResponse.toSessionToken())
 
                     networkLogger.log("$LOGGER_AUTH_PREFIX: Tokens successfully refreshed")
 

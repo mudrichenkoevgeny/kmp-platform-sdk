@@ -29,11 +29,7 @@ open class LoginByTotpUseCase(
     open suspend fun execute(mfaToken: String, code: String): AppResult<AuthData> {
         return loginRepository.loginByTotp(mfaToken, code)
             .onSuccess { authData ->
-                authStorage.updateTokens(
-                    accessToken = authData.sessionToken.accessToken,
-                    refreshToken = authData.sessionToken.refreshToken,
-                    expiresAt = authData.sessionToken.expiresAt
-                )
+                authStorage.updateTokens(authData.sessionToken)
                 userStorage.updateCurrentUser(authData.userDetails)
             }
     }

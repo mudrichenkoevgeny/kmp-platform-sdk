@@ -7,6 +7,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -61,7 +63,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, InternalApi::class)
 @Composable
 fun MainProfileScreen(component: MainProfileComponent) {
     val state by component.state.subscribeAsState()
@@ -161,7 +163,8 @@ private fun ProfileContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(CoreTheme.dimens.paddingLarge),
+                .padding(CoreTheme.dimens.paddingLarge)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CoreBodyText(
@@ -396,7 +399,7 @@ private fun FontScalePreview() {
     }
 }
 
-internal object MainProfileTestTags {
+object MainProfileTestTags {
     const val LOGIN_BUTTON = "MainProfile_LoginButton"
 
     const val ACCOUNT_STATUS_TEXT = "MainProfile_AccountStatusText"

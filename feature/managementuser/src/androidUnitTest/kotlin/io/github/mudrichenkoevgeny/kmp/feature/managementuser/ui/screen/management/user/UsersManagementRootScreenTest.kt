@@ -11,20 +11,20 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.UsersManagementRootComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.create.CreateUserComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.detail.UserDetailComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.identifiers.UserIdentifiersComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.identifiers.UserIdentifierListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.main.UsersManagementMainComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.sessions.UserSessionsComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.sessions.UserSessionListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create.CreateUserTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailScreenState
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailTestTags
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.identifiers.UserIdentifiersScreenState
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.identifiers.UserIdentifiersTestTags
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist.UserIdentifierListScreenState
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist.UserIdentifierListTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.main.UsersManagementMainScreenState
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.main.UsersManagementMainTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.root.UsersManagementRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.root.UsersManagementRootScreen
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.sessions.UserSessionsScreenState
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.sessions.UserSessionsTestTags
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListScreenState
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import org.junit.runner.RunWith
@@ -96,12 +96,12 @@ class UsersManagementRootScreenTest {
     @Test
     fun displaysSessionsChild_whenActiveConfigurationIsSessions() = runComposeUiTest {
         val userId = UserId.generate()
-        val sessionsComponent = UserSessionsComponentMock(
-            initialState = UserSessionsScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)),
+        val sessionsComponent = UserSessionListComponentMock(
+            initialState = UserSessionListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)),
         )
         val rootComponent = UsersManagementRootComponentMock(
-            initialChild = UsersManagementRootComponent.Child.Sessions(sessionsComponent),
-            initialConfiguration = UsersManagementDestination.Sessions(userId.value.toString()),
+            initialChild = UsersManagementRootComponent.Child.UserSessionList(sessionsComponent),
+            initialConfiguration = UsersManagementDestination.UserSessionList(userId.value.toString()),
         )
 
         setContent {
@@ -110,14 +110,14 @@ class UsersManagementRootScreenTest {
             }
         }
 
-        onNodeWithTag(UserSessionsTestTags.TITLE).assertIsDisplayed()
+        onNodeWithTag(UserSessionListTestTags.TITLE).assertIsDisplayed()
     }
 
     @Test
     fun displaysIdentifiersChild_whenActiveConfigurationIsIdentifiers() = runComposeUiTest {
         val userId = UserId.generate()
-        val identifiersComponent = UserIdentifiersComponentMock(
-            initialState = UserIdentifiersScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)),
+        val identifiersComponent = UserIdentifierListComponentMock(
+            initialState = UserIdentifierListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)),
         )
         val rootComponent = UsersManagementRootComponentMock(
             initialChild = UsersManagementRootComponent.Child.Identifiers(identifiersComponent),
@@ -130,6 +130,6 @@ class UsersManagementRootScreenTest {
             }
         }
 
-        onNodeWithTag(UserIdentifiersTestTags.TITLE).assertIsDisplayed()
+        onNodeWithTag(UserIdentifierListTestTags.TITLE).assertIsDisplayed()
     }
 }

@@ -2,15 +2,19 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.session.item
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,19 +26,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.dp
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.time.formatEpochMillisToDateTime
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
+import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_apple
+import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_email
+import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_google
+import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_phone
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_expires_at
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_ip_address
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_last_accessed
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_revoke
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.SessionListTestTags
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -50,46 +60,82 @@ import org.jetbrains.compose.resources.stringResource
 fun SessionItem(
     session: UserSession,
     onRevokeClick: () -> Unit,
-    enabled: Boolean
+    enabled: Boolean,
+    isCurrentSession: Boolean = false
 ) {
+    val cardColors = if (isCurrentSession) {
+        CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+    } else {
+        CardDefaults.cardColors()
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .testTag(SessionListTestTags.SESSION_ITEM_PREFIX + session.id.value),
-        elevation = CardDefaults.cardElevation(defaultElevation = CoreTheme.dimens.elevationHeader)
+            .testTag(SessionItemTestTags.ITEM_PREFIX + session.id.value),
+        elevation = CardDefaults.cardElevation(defaultElevation = CoreTheme.dimens.elevationHeader),
+        colors = cardColors
     ) {
         Column(modifier = Modifier.padding(CoreTheme.dimens.paddingMedium)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                val iconRes = when (session.identifierAuthProvider) {
+                    UserAuthProvider.EMAIL -> Res.drawable.auth_logo_email
+                    UserAuthProvider.PHONE -> Res.drawable.auth_logo_phone
+                    UserAuthProvider.GOOGLE -> Res.drawable.auth_logo_google
+                    UserAuthProvider.APPLE -> Res.drawable.auth_logo_apple
+                }
+                Icon(
+                    painter = painterResource(iconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(Modifier.width(CoreTheme.dimens.paddingSmall))
+                Text(
+                    text = session.identifierDisplayName,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
             Text(
-                text = session.userAgent ?: "Unknown device",
+                text = session.deviceInfo.deviceName ?: session.userAgent ?: "Unknown device",
                 style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.SemiBold
             )
+            session.deviceInfo.clientType?.name?.let { clientTypeName ->
+                Spacer(Modifier.height(CoreTheme.dimens.paddingExtraSmall))
+                Text(
+                    text = clientTypeName,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
             Text(
                 text = stringResource(Res.string.session_ip_address, session.ipAddress ?: "Unknown"),
                 style = MaterialTheme.typography.bodySmall
             )
+            val formattedDate = formatEpochMillisToDateTime(session.lastAccessedAt.toEpochMilliseconds()) ?: session.lastAccessedAt.toString()
             Text(
-                text = stringResource(Res.string.session_last_accessed, session.lastAccessedAt.toString()),
+                text = stringResource(Res.string.session_last_accessed, formattedDate),
                 style = MaterialTheme.typography.bodySmall
             )
-            Text(
-                text = stringResource(Res.string.session_expires_at, session.expiresAt.toString()),
-                style = MaterialTheme.typography.bodySmall
-            )
-            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-            HorizontalDivider()
-            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-            Button(
-                onClick = onRevokeClick,
-                modifier = Modifier.align(Alignment.End),
-                enabled = enabled,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer
-                )
-            ) {
-                Text(stringResource(Res.string.session_revoke))
+
+            if (!isCurrentSession) {
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+                HorizontalDivider()
+                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+                Button(
+                    onClick = onRevokeClick,
+                    modifier = Modifier.align(Alignment.End),
+                    enabled = enabled,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                ) {
+                    Text(stringResource(Res.string.session_revoke))
+                }
             }
         }
     }
@@ -97,30 +143,38 @@ fun SessionItem(
 
 private data class SessionItemPreviewState(
     val session: UserSession,
-    val enabled: Boolean
+    val enabled: Boolean,
+    val isCurrentSession: Boolean = false
 )
 
 @InternalApi
 private class SessionItemPreviewProvider : PreviewParameterProvider<SessionItemPreviewState> {
-    private val items = listOf(
-        SessionItemPreviewState(
+    private val items: List<Pair<String, SessionItemPreviewState>> = listOf(
+        "Default" to SessionItemPreviewState(
             session = userSessionMock(),
             enabled = true
         ),
-        SessionItemPreviewState(
+        "Unknown Device and IP" to SessionItemPreviewState(
             session = userSessionMock().copy(
                 userAgent = null,
                 ipAddress = null
             ),
             enabled = true
         ),
-        SessionItemPreviewState(
+        "Disabled Action" to SessionItemPreviewState(
             session = userSessionMock(),
             enabled = false
+        ),
+        "Current Session" to SessionItemPreviewState(
+            session = userSessionMock(),
+            enabled = true,
+            isCurrentSession = true
         )
     )
 
-    override val values: Sequence<SessionItemPreviewState> = items.asSequence()
+    override val values: Sequence<SessionItemPreviewState> = items.asSequence().map { it.second }
+
+    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
 }
 
 @InternalApi
@@ -132,7 +186,8 @@ private fun SessionItemPreviewContent(state: SessionItemPreviewState) {
                 SessionItem(
                     session = state.session,
                     onRevokeClick = {},
-                    enabled = state.enabled
+                    enabled = state.enabled,
+                    isCurrentSession = state.isCurrentSession
                 )
             }
         }
@@ -173,4 +228,8 @@ private fun SessionItemThemePreview() {
 @Composable
 private fun SessionItemFontScalePreview() {
     SessionItemPreviewContent(state = defaultSessionItemPreviewState)
+}
+
+object SessionItemTestTags {
+    const val ITEM_PREFIX = "SessionItem_"
 }

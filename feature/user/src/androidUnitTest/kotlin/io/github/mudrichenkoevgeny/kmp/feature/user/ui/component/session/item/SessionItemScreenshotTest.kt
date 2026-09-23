@@ -32,7 +32,8 @@ import kotlin.test.Test
 class SessionItemScreenshotTest(
     private val stateName: String,
     private val session: UserSession,
-    private val enabled: Boolean
+    private val enabled: Boolean,
+    private val isCurrentSession: Boolean
 ) {
 
     @Test
@@ -44,7 +45,8 @@ class SessionItemScreenshotTest(
                         SessionItem(
                             session = session,
                             onRevokeClick = {},
-                            enabled = enabled
+                            enabled = enabled,
+                            isCurrentSession = isCurrentSession
                         )
                     }
                 }
@@ -68,9 +70,10 @@ class SessionItemScreenshotTest(
                 ipAddress = null
             )
             return listOf(
-                arrayOf("Standard_Session", standardSession, true),
-                arrayOf("Unknown_Device", unknownDeviceSession, true),
-                arrayOf("Disabled", standardSession, false)
+                arrayOf("Default", standardSession, true, false),
+                arrayOf("Unknown_Device_and_IP", unknownDeviceSession, true, false),
+                arrayOf("Disabled_Action", standardSession, false, false),
+                arrayOf("Current_Session", standardSession, true, true)
             )
         }
     }

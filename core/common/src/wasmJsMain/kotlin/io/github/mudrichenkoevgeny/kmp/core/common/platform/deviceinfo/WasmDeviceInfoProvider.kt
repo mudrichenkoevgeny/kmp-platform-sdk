@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo
 
+import io.github.mudrichenkoevgeny.kmp.core.common.platform.parser.UserAgentParser
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceId
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceInfo
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
@@ -15,14 +16,15 @@ class WasmDeviceInfoProvider(
     private val appVersion: String
 ) : DeviceInfoProvider {
     /**
-     * @return [ClientDeviceInfo] with [ClientType.WEB], a new [ClientDeviceId], `navigator.userAgent` as device name,
-     * `navigator.language`, the provided `appVersion`, and [WasmDeviceInfo.OS_VERSION].
+     * @return [ClientDeviceInfo] with [ClientType.WEB], a new [ClientDeviceId], a human-readable device name parsed from
+     * `navigator.userAgent` via [UserAgentParser.getDeviceName], `navigator.language`, the provided [appVersion], and
+     * [WasmDeviceInfo.OS_VERSION].
      */
     override fun getDeviceInfo(): ClientDeviceInfo {
         val navigator = window.navigator
         return ClientDeviceInfo(
             deviceId = ClientDeviceId.generate(),
-            deviceName = navigator.userAgent,
+            deviceName = UserAgentParser.getDeviceName(navigator.userAgent),
             clientType = ClientType.WEB,
             language = navigator.language,
             appVersion = appVersion,

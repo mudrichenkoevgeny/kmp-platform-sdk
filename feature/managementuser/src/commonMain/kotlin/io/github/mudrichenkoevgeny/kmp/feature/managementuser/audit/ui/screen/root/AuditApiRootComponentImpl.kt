@@ -52,7 +52,7 @@ class AuditApiRootComponentImpl(
             AuditEventsComponentImpl(
                 componentContext = context,
                 getAuditEventsUseCase = getAuditEventsUseCase,
-                onNavigateToEventDetail = { eventId -> navigation.bringToFront(AuditApiDestination.Detail(eventId.value.toString())) },
+                onNavigateToEventDetail = { eventId -> navigation.bringToFront(AuditApiDestination.Detail(eventId.asHexDashString())) },
                 onBack = onBack
             )
         )

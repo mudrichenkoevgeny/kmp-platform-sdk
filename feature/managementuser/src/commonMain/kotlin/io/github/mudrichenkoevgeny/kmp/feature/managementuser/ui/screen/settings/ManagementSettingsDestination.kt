@@ -30,4 +30,8 @@ sealed class ManagementSettingsDestination {
     /** Screen for viewing audit logs. */
     @Serializable
     object AuditLogs : ManagementSettingsDestination()
+
+    /** Screen for viewing all platform sessions. */
+    @Serializable
+    object GlobalSessionList : ManagementSettingsDestination()
 }

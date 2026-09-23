@@ -8,6 +8,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.refresh
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.token.toSessionToken
 import kotlinx.coroutines.test.runTest
@@ -35,11 +37,14 @@ class RefreshTokenUseCaseTest {
     @Test
     fun execute_updatesStorage_whenRefreshSucceeds() = runTest {
         val authStorage = AuthStorageMock()
-        authStorage.updateTokens(
-            AccessToken(OLD_ACCESS_TOKEN),
-            RefreshToken(STORED_REFRESH_TOKEN),
-            expiresAt = Instant.fromEpochMilliseconds(EXPIRES_AT_BEFORE_REFRESH)
+        val oldToken = SessionToken(
+            accessToken = AccessToken(OLD_ACCESS_TOKEN),
+            refreshToken = RefreshToken(STORED_REFRESH_TOKEN),
+            expiresAt = Instant.fromEpochMilliseconds(EXPIRES_AT_BEFORE_REFRESH),
+            sessionId = UserSessionId.generate(),
+            identifierId = UserIdentifierId.generate()
         )
+        authStorage.updateTokens(oldToken)
         val wire = sessionTokenPayloadMock(
             accessToken = NEW_ACCESS_TOKEN,
             refreshToken = NEW_REFRESH_TOKEN,

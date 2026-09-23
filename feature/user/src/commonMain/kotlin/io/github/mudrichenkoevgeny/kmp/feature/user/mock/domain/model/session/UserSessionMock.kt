@@ -15,6 +15,7 @@ fun userSessionMock() = UserSession(
     userId = UserId.generate(),
     userRole = UserRole.USER,
     identifier = "user@example.com",
+    identifierDisplayName = "user@example.com",
     identifierId = UserIdentifierId.generate(),
     identifierAuthProvider = UserAuthProvider.EMAIL,
     deviceInfo = clientDeviceInfoMock(),

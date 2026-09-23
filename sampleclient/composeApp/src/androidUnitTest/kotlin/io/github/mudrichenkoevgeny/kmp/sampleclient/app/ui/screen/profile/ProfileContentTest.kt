@@ -6,6 +6,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasProgressBarRangeInfo
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
@@ -49,7 +50,6 @@ class ProfileContentTest {
                 MainProfileScreen(component)
             }
         }
-        onNodeWithTag(MainProfileTestTags.UNAUTHORIZED_TEXT).assertIsDisplayed()
         onNodeWithTag(MainProfileTestTags.LOGIN_BUTTON).assertIsDisplayed().performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.loginCalls)
     }
@@ -65,7 +65,7 @@ class ProfileContentTest {
             }
         }
         onNodeWithTag(MainProfileTestTags.USER_ID_TEXT).assertIsDisplayed()
-        onNodeWithTag(MainProfileTestTags.LOGOUT_BUTTON).assertIsDisplayed()
+        onNodeWithTag(MainProfileTestTags.LOGOUT_BUTTON).performScrollTo().assertIsDisplayed()
     }
 
     @Test

@@ -29,11 +29,7 @@ class RefreshTokenUseCase(
 
         return refreshTokenRepository.refreshToken(currentRefreshToken)
             .onSuccess { sessionToken ->
-                authStorage.updateTokens(
-                    accessToken = sessionToken.accessToken,
-                    refreshToken = sessionToken.refreshToken,
-                    expiresAt = sessionToken.expiresAt
-                )
+                authStorage.updateTokens(sessionToken)
             }
     }
 }

@@ -10,6 +10,7 @@ import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.root.AuditApiRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.usecase.GetAuditEventUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.usecase.GetAuditEventsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.globallist.GlobalSessionListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.root.UsersManagementRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.auth.EditAuthSettingsComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.global.EditGlobalSettingsComponentImpl
@@ -96,7 +97,8 @@ class ManagementSettingsRootComponentImpl(
                     ManagementSettingsDestination.EditSecuritySettings) },
                 onNavigateToUsersManagement = { navigation.bringToFront(
                     ManagementSettingsDestination.UsersManagement) },
-                onNavigateToAuditLogs = { navigation.bringToFront(ManagementSettingsDestination.AuditLogs) }
+                onNavigateToAuditLogs = { navigation.bringToFront(ManagementSettingsDestination.AuditLogs) },
+                onNavigateToGlobalSessionList = { navigation.bringToFront(ManagementSettingsDestination.GlobalSessionList) }
             )
         )
         is ManagementSettingsDestination.EditAuthSettings -> ManagementSettingsRootComponent.Child.EditAuthSettings(
@@ -149,6 +151,14 @@ class ManagementSettingsRootComponentImpl(
                 componentContext = context,
                 getAuditEventsUseCase = getAuditEventsUseCase,
                 getAuditEventUseCase = getAuditEventUseCase,
+                onBack = navigation::pop
+            )
+        )
+        is ManagementSettingsDestination.GlobalSessionList -> ManagementSettingsRootComponent.Child.Sessions(
+            GlobalSessionListComponentImpl(
+                componentContext = context,
+                managementGetSessionsUseCase = managementGetSessionsUseCase,
+                managementDeleteSessionUseCase = managementDeleteSessionUseCase,
                 onBack = navigation::pop
             )
         )

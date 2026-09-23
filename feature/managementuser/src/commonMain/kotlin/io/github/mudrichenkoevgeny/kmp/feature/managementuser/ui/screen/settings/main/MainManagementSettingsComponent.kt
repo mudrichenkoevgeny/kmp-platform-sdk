@@ -18,4 +18,7 @@ interface MainManagementSettingsComponent {
 
     /** Navigates to audit logs screen. */
     fun onAuditLogsClick()
+
+    /** Navigates to all platform sessions screen. */
+    fun onGlobalSessionListClick()
 }

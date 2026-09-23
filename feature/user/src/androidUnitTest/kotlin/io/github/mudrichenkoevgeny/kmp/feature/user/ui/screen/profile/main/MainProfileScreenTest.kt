@@ -7,6 +7,7 @@ import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasProgressBarRangeInfo
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
@@ -70,11 +71,11 @@ class MainProfileScreenTest {
             .assertIsDisplayed()
             .assertTextContains(user.id.asHexDashString(), substring = true)
         onNodeWithTag(MainProfileTestTags.ACCOUNT_STATUS_TEXT).assertIsDisplayed()
-        onNodeWithTag(MainProfileTestTags.TOTP_MAIN_BUTTON).assertIsDisplayed()
-        onNodeWithTag(MainProfileTestTags.SESSIONS_BUTTON).assertIsDisplayed()
-        onNodeWithTag(MainProfileTestTags.IDENTIFIERS_BUTTON).assertIsDisplayed()
-        onNodeWithTag(MainProfileTestTags.DELETE_ACCOUNT_BUTTON).assertIsDisplayed()
-        onNodeWithTag(MainProfileTestTags.LOGOUT_BUTTON).assertIsDisplayed()
+        onNodeWithTag(MainProfileTestTags.TOTP_MAIN_BUTTON).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(MainProfileTestTags.SESSIONS_BUTTON).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(MainProfileTestTags.IDENTIFIERS_BUTTON).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(MainProfileTestTags.DELETE_ACCOUNT_BUTTON).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(MainProfileTestTags.LOGOUT_BUTTON).performScrollTo().assertIsDisplayed()
     }
 
     @Test
@@ -109,19 +110,19 @@ class MainProfileScreenTest {
             }
         }
 
-        onNodeWithTag(MainProfileTestTags.TOTP_MAIN_BUTTON).performClick()
+        onNodeWithTag(MainProfileTestTags.TOTP_MAIN_BUTTON).performScrollTo().performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.totpMainCalls)
 
-        onNodeWithTag(MainProfileTestTags.SESSIONS_BUTTON).performClick()
+        onNodeWithTag(MainProfileTestTags.SESSIONS_BUTTON).performScrollTo().performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.sessionsCalls)
 
-        onNodeWithTag(MainProfileTestTags.IDENTIFIERS_BUTTON).performClick()
+        onNodeWithTag(MainProfileTestTags.IDENTIFIERS_BUTTON).performScrollTo().performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.identifiersCalls)
 
-        onNodeWithTag(MainProfileTestTags.DELETE_ACCOUNT_BUTTON).performClick()
+        onNodeWithTag(MainProfileTestTags.DELETE_ACCOUNT_BUTTON).performScrollTo().performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.deleteAccountCalls)
 
-        onNodeWithTag(MainProfileTestTags.LOGOUT_BUTTON).performClick()
+        onNodeWithTag(MainProfileTestTags.LOGOUT_BUTTON).performScrollTo().performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.logoutCalls)
     }
 
@@ -138,7 +139,7 @@ class MainProfileScreenTest {
                 MainProfileScreen(component)
             }
         }
-        onNodeWithTag(MainProfileTestTags.ACTION_ERROR_TEXT).assertIsDisplayed()
+        onNodeWithTag(MainProfileTestTags.ACTION_ERROR_TEXT).performScrollTo().assertIsDisplayed()
     }
 
     @Test

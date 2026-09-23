@@ -15,6 +15,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.root.AuditApiRootScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.settings.ManagementSettingsRootComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.globallist.GlobalSessionListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.root.UsersManagementRootScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.auth.EditAuthSettingsScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.global.EditGlobalSettingsScreen
@@ -39,6 +40,7 @@ fun ManagementSettingsRootScreen(component: ManagementSettingsRootComponent) {
             is ManagementSettingsRootComponent.Child.EditSecuritySettings -> EditSecuritySettingsScreen(instance.component)
             is ManagementSettingsRootComponent.Child.UsersManagement -> UsersManagementRootScreen(instance.component)
             is ManagementSettingsRootComponent.Child.AuditLogs -> AuditApiRootScreen(instance.component)
+            is ManagementSettingsRootComponent.Child.Sessions -> GlobalSessionListScreen(instance.component)
         }
     }
 }

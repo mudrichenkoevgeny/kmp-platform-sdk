@@ -44,7 +44,7 @@ class AuditEventDetailComponentImpl(
     private fun loadEvent() {
         _state.value = AuditEventDetailScreenState.Loading
         scope.launch {
-            getAuditEventUseCase(eventId.value.toString())
+            getAuditEventUseCase(eventId.asHexDashString())
                 .onSuccess { event ->
                     _state.value = AuditEventDetailScreenState.Content(event = event)
                 }

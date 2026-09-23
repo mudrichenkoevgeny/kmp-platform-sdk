@@ -155,7 +155,9 @@ class TotpMainComponentImplTest {
     @Test
     fun onConfirmSetupClick_success_movesToEnabledAndNavigatesToRecoveryCodes() = runComponentTest {
         val user = userDetailsMock(isTotpEnabled = false)
-        val userRepository = UserRepositoryMock()
+        val userRepository = UserRepositoryMock().apply {
+            resultProvider = { AppResult.Success(user.copy(isTotpEnabled = true)) }
+        }
         val totpSetup = TotpSetup(secretKey = SECRET_KEY, otpAuthUrl = OTP_AUTH_URL, mfaToken = MFA_TOKEN)
         val recoveryCodes = TotpRecoveryCodes(codes = listOf(CODE_ONE, CODE_TWO))
         val setupTotpUseCase = SetupTotpUseCaseMock().apply {

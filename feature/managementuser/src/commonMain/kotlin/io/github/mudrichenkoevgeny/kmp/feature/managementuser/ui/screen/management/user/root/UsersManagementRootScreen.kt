@@ -16,9 +16,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.UsersManagementRootComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create.CreateUserScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailScreen
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.identifiers.UserIdentifiersScreen
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist.UserIdentifierListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.main.UsersManagementMainScreen
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.sessions.UserSessionsScreen
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListScreen
 
 @Composable
 fun UsersManagementRootScreen(component: UsersManagementRootComponent) {
@@ -30,8 +30,8 @@ fun UsersManagementRootScreen(component: UsersManagementRootComponent) {
             is UsersManagementRootComponent.Child.Main -> UsersManagementMainScreen(instance.component)
             is UsersManagementRootComponent.Child.Detail -> UserDetailScreen(instance.component)
             is UsersManagementRootComponent.Child.Create -> CreateUserScreen(instance.component)
-            is UsersManagementRootComponent.Child.Sessions -> UserSessionsScreen(instance.component)
-            is UsersManagementRootComponent.Child.Identifiers -> UserIdentifiersScreen(instance.component)
+            is UsersManagementRootComponent.Child.UserSessionList -> UserSessionListScreen(instance.component)
+            is UsersManagementRootComponent.Child.Identifiers -> UserIdentifierListScreen(instance.component)
         }
     }
 }

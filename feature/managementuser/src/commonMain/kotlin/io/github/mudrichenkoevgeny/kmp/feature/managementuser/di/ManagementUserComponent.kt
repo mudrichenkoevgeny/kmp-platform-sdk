@@ -296,7 +296,8 @@ class ManagementUserComponent(
         sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase,
         addUserIdentifierPhoneUseCase = addUserIdentifierPhoneUseCase,
         emailChangePasswordUseCase = emailChangePasswordUseCase,
-        onNavigateToLogin = onNavigateToLogin
+        onNavigateToLogin = onNavigateToLogin,
+        authStorage = authStorage
     )
 
     private val userWebSocketModule = ManagementUserWebSocketModule(

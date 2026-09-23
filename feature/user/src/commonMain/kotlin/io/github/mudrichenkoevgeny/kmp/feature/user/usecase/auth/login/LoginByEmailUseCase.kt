@@ -29,11 +29,7 @@ open class LoginByEmailUseCase(
     open suspend fun execute(email: String, password: String): AppResult<AuthData> {
         return loginRepository.loginByEmail(email, password)
             .onSuccess { authData ->
-                authStorage.updateTokens(
-                    accessToken = authData.sessionToken.accessToken,
-                    refreshToken = authData.sessionToken.refreshToken,
-                    expiresAt = authData.sessionToken.expiresAt
-                )
+                authStorage.updateTokens(authData.sessionToken)
                 userStorage.updateCurrentUser(authData.userDetails)
             }
     }

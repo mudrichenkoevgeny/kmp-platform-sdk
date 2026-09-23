@@ -16,10 +16,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.ProfileRootComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.MainProfileComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.IdentifierListScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.SelfIdentifierListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileScreenState
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.SessionListScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SelfSessionListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.recovery.TotpRecoveryCodesScreen
 
@@ -33,8 +33,8 @@ fun ProfileRootScreen(component: ProfileRootComponent) {
             is ProfileRootComponent.Child.Main -> MainProfileScreen(instance.component)
             is ProfileRootComponent.Child.TotpMain -> TotpMainScreen(instance.component)
             is ProfileRootComponent.Child.TotpRecoveryCodes -> TotpRecoveryCodesScreen(instance.component)
-            is ProfileRootComponent.Child.Sessions -> SessionListScreen(instance.component)
-            is ProfileRootComponent.Child.Identifiers -> IdentifierListScreen(instance.component)
+            is ProfileRootComponent.Child.Sessions -> SelfSessionListScreen(instance.component)
+            is ProfileRootComponent.Child.Identifiers -> SelfIdentifierListScreen(instance.component)
         }
     }
 }

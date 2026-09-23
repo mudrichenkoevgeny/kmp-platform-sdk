@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.window.DialogProperties
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
@@ -53,6 +54,7 @@ fun MfaChallengeDialog(
 
     AlertDialog(
         onDismissRequest = onCancel,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
         title = {
             CoreTitleText(
                 text = stringResource(Res.string.mfa_step_up_title),

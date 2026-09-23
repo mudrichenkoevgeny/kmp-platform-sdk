@@ -64,6 +64,12 @@ fun MainManagementSettingsScreen(component: MainManagementSettingsComponent) {
             )
 
             CoreButton(
+                text = stringResource(Res.string.sessions),
+                onClick = component::onGlobalSessionListClick,
+                modifier = Modifier.testTag(MainManagementSettingsTestTags.SESSIONS_BUTTON)
+            )
+
+            CoreButton(
                 text = stringResource(Res.string.audit_logs),
                 onClick = component::onAuditLogsClick,
                 modifier = Modifier.testTag(MainManagementSettingsTestTags.AUDIT_LOGS_BUTTON)
@@ -143,4 +149,5 @@ object MainManagementSettingsTestTags {
     const val EDIT_AUTH_SETTINGS_BUTTON = "MainManagementSettings_EditAuthSettingsButton"
     const val EDIT_GLOBAL_SETTINGS_BUTTON = "MainManagementSettings_EditGlobalSettingsButton"
     const val EDIT_SECURITY_SETTINGS_BUTTON = "MainManagementSettings_EditSecuritySettingsButton"
+    const val SESSIONS_BUTTON = "MainManagementSettings_SessionsButton"
 }

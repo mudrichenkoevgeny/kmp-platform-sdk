@@ -10,16 +10,16 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.ProfileRootComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.identifier.SelfIdentifierListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.MainProfileComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.session.SelfSessionListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.totp.TotpMainComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.session.SessionListComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.identifier.IdentifierListComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.IdentifierListTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileScreenState
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileTestTags
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.SessionListTestTags
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.IdentifierListTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SelfSessionListTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainScreenState
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainTestTags
 import org.junit.runner.RunWith
@@ -73,7 +73,7 @@ class ProfileRootScreenTest {
 
     @Test
     fun displaysSessionsChild_whenActiveConfigurationIsSessions() = runComposeUiTest {
-        val sessionComponent = SessionListComponentMock()
+        val sessionComponent = SelfSessionListComponentMock()
         val rootComponent = ProfileRootComponentMock(
             initialChild = ProfileRootComponent.Child.Sessions(sessionComponent),
             initialConfiguration = ProfileDestination.Sessions
@@ -85,15 +85,15 @@ class ProfileRootScreenTest {
             }
         }
 
-        onNodeWithTag(SessionListTestTags.TITLE).assertIsDisplayed()
-        onNodeWithTag(SessionListTestTags.BACK_BUTTON).assertIsDisplayed().performClick()
+        onNodeWithTag(SelfSessionListTestTags.TITLE).assertIsDisplayed()
+        onNodeWithTag(SelfSessionListTestTags.BACK_BUTTON).assertIsDisplayed().performClick()
 
         assertEquals(EXPECTED_SINGLE_CALLBACK, sessionComponent.backCalls)
     }
 
     @Test
     fun displaysIdentifiersChild_whenActiveConfigurationIsIdentifiers() = runComposeUiTest {
-        val identifierComponent = IdentifierListComponentMock()
+        val identifierComponent = SelfIdentifierListComponentMock()
         val rootComponent = ProfileRootComponentMock(
             initialChild = ProfileRootComponent.Child.Identifiers(identifierComponent),
             initialConfiguration = ProfileDestination.Identifiers

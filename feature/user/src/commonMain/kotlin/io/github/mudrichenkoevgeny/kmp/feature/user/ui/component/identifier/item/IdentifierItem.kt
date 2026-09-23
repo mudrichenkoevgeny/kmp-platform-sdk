@@ -31,7 +31,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.change_password
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_delete
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.IdentifierListTestTags
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.IdentifierListTestTags
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import org.jetbrains.compose.resources.painterResource
@@ -64,7 +64,7 @@ fun IdentifierItem(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = identifier.identifier,
+                    text = identifier.displayName,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold
                 )

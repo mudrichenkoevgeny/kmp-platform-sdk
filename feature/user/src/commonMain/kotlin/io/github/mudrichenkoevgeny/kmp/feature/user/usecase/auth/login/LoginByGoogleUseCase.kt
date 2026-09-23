@@ -35,11 +35,7 @@ class LoginByGoogleUseCase(
                 loginRepository.loginByExternalAuthProvider(UserAuthProvider.GOOGLE, externalProviderToken)
             }
             .onSuccess { authData ->
-                authStorage.updateTokens(
-                    accessToken = authData.sessionToken.accessToken,
-                    refreshToken = authData.sessionToken.refreshToken,
-                    expiresAt = authData.sessionToken.expiresAt
-                )
+                authStorage.updateTokens(authData.sessionToken)
                 userStorage.updateCurrentUser(authData.userDetails)
             }
     }

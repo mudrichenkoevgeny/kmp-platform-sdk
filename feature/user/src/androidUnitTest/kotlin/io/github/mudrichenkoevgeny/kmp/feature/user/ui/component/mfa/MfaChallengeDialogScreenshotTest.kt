@@ -1,8 +1,9 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.mfa
 
 import android.app.Application
-import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.window.DialogProperties
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogPreviewContainer
@@ -31,7 +32,8 @@ class MfaChallengeDialogScreenshotTest(
 
     @Test
     fun capture() = runComposeUiTest {
-        val request = MfaChallengeRequest("test_token", CompletableDeferred())
+        val completion = CompletableDeferred<String?>()
+        val request = MfaChallengeRequest("test_token", completion)
 
         setContent {
             ComponentTestHarness {
@@ -45,10 +47,15 @@ class MfaChallengeDialogScreenshotTest(
             }
         }
 
-        onRoot().captureAppScreen(
+        mainClock.autoAdvance = false
+        mainClock.advanceTimeBy(300)
+
+        onNode(isDialog()).captureAppScreen(
             testInstance = this@MfaChallengeDialogScreenshotTest,
             stateName = stateName
         )
+
+        completion.cancel()
     }
 
     companion object {
