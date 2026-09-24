@@ -1,6 +1,5 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp
 
-import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

@@ -7,13 +7,13 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,15 +33,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
-import io.github.mudrichenkoevgeny.kmp.core.common.ic_refresh
-import io.github.mudrichenkoevgeny.kmp.core.common.retry
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
+import io.github.mudrichenkoevgeny.kmp.core.common.ic_refresh
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.retry
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
@@ -55,13 +54,34 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.*
+import io.github.mudrichenkoevgeny.kmp.feature.user.account_status_active
+import io.github.mudrichenkoevgeny.kmp.feature.user.account_status_banned
+import io.github.mudrichenkoevgeny.kmp.feature.user.account_status_pending_deletion
+import io.github.mudrichenkoevgeny.kmp.feature.user.account_status_prefix
+import io.github.mudrichenkoevgeny.kmp.feature.user.account_status_read_only
+import io.github.mudrichenkoevgeny.kmp.feature.user.account_status_security_hold
+import io.github.mudrichenkoevgeny.kmp.feature.user.authority_level_prefix
+import io.github.mudrichenkoevgeny.kmp.feature.user.delete_account
+import io.github.mudrichenkoevgeny.kmp.feature.user.delete_account_confirm_msg
+import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_cancel
+import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm
+import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm_title
+import io.github.mudrichenkoevgeny.kmp.feature.user.identifiers
+import io.github.mudrichenkoevgeny.kmp.feature.user.logout
+import io.github.mudrichenkoevgeny.kmp.feature.user.logout_confirm_msg
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.MainProfileComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
+import io.github.mudrichenkoevgeny.kmp.feature.user.permission_codes_prefix
+import io.github.mudrichenkoevgeny.kmp.feature.user.permissions_none
+import io.github.mudrichenkoevgeny.kmp.feature.user.sessions
+import io.github.mudrichenkoevgeny.kmp.feature.user.sign_in
+import io.github.mudrichenkoevgeny.kmp.feature.user.totp_main
+import io.github.mudrichenkoevgeny.kmp.feature.user.user_id
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
 @OptIn(ExperimentalMaterial3Api::class, InternalApi::class)
 @Composable

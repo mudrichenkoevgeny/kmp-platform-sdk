@@ -3,7 +3,6 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.mfa
 import android.app.Application
 import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.runComposeUiTest
-import androidx.compose.ui.window.DialogProperties
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogPreviewContainer

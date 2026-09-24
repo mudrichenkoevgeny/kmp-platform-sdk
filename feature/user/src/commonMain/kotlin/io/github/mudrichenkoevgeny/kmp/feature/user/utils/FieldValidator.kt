@@ -1,5 +1,9 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.utils
 
+import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator.MIN_PHONE_LENGTH
+import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator.isPhoneNumberValid
+
+
 /**
  * Lightweight client-side validation helpers for auth form fields (phone, email).
  *

@@ -8,7 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 
 @InternalApi
 class UserDetailComponentMock(
-    initialState: UserDetailScreenState = UserDetailScreenState.Loading,
+    initialState: UserDetailScreenState = UserDetailScreenState.Loading
 ) : UserDetailComponent {
 
     private val _state = MutableValue(initialState)
@@ -16,6 +16,8 @@ class UserDetailComponentMock(
 
     var updateCalls = 0
     var deleteCalls = 0
+    var confirmDeleteCalls = 0
+    var dismissDeleteDialogCalls = 0
     var disableTotpCalls = 0
     var sessionsCalls = 0
     var identifiersCalls = 0
@@ -52,6 +54,14 @@ class UserDetailComponentMock(
 
     override fun onDeleteClick() {
         deleteCalls++
+    }
+
+    override fun onConfirmDeleteClick() {
+        confirmDeleteCalls++
+    }
+
+    override fun onDismissDeleteDialog() {
+        dismissDeleteDialogCalls++
     }
 
     override fun onDisableTotpClick() {

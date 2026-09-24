@@ -29,7 +29,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.recov
 fun ProfileRootScreen(component: ProfileRootComponent) {
     Children(
         stack = component.stack,
-        animation = stackAnimation(fade()),
+        animation = stackAnimation(fade())
     ) { child ->
         when (val instance = child.instance) {
             is ProfileRootComponent.Child.Main -> MainProfileScreen(instance.component)

@@ -9,8 +9,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pag
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.identifier.ManagementIdentifierRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist.UserIdentifierListComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist.UserIdentifierListScreenState
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
@@ -66,7 +64,7 @@ class UserIdentifierListComponentImplTest {
     private fun createTestContext(
         userId: UserId = UserId.generate(),
         identifiers: List<UserIdentifier>? = null,
-        repository: ManagementIdentifierRepositoryMock = ManagementIdentifierRepositoryMock(),
+        repository: ManagementIdentifierRepositoryMock = ManagementIdentifierRepositoryMock()
     ): TestContext {
         if (identifiers != null) {
             repository.getIdentifiersResultProvider = { AppResult.Success(
@@ -86,7 +84,7 @@ class UserIdentifierListComponentImplTest {
             componentContext = DefaultComponentContext(lifecycle),
             userId = userId,
             managementGetIdentifiersUseCase = useCase,
-            onBack = { context.onBackCalls++ },
+            onBack = { context.onBackCalls++ }
         )
 
         return context

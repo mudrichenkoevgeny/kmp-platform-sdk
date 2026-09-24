@@ -89,7 +89,7 @@ class ManagementMainScreenComponentImpl(
             }
             is MainScreenComponent.Config.Settings -> {
                 MainScreenComponent.Child.SettingsChild(
-                    managementAppComponent.managementUserComponent.createManagementSettingsComponent(
+                    managementAppComponent.managementUserComponent.createManagementComponent(
                         componentContext = context
                     )
                 )

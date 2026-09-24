@@ -2,9 +2,9 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
+import io.github.mudrichenkoevgeny.kmp.core.common.testsupport.MutableEpochTestClock
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.ConfirmationType
-import io.github.mudrichenkoevgeny.kmp.core.common.testsupport.MutableEpochTestClock
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test

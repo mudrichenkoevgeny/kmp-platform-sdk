@@ -1,12 +1,13 @@
 package io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main
 
-import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
-import io.github.mudrichenkoevgeny.kmp.core.common.*
+import io.github.mudrichenkoevgeny.kmp.core.common.ic_home
+import io.github.mudrichenkoevgeny.kmp.core.common.ic_profile
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.Res
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.nav_home
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.nav_profile
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
 /**
  * UI-facing tab model: ties [MainScreenComponent.Config] to localized titles and toolbar icons.

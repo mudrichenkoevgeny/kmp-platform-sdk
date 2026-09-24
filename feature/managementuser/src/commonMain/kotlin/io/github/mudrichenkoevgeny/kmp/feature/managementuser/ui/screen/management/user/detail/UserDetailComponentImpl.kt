@@ -10,6 +10,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.Delet
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
 import kotlinx.coroutines.launch
@@ -36,7 +37,14 @@ class UserDetailComponentImpl(
 
     override fun onAuthorityLevelChanged(value: String) {
         val current = _state.value as? UserDetailScreenState.Content ?: return
-        _state.value = current.copy(authorityLevelInput = value, saveError = null)
+        if (value.isEmpty()) {
+            _state.value = current.copy(authorityLevelInput = value, saveError = null)
+            return
+        }
+        val level = value.toIntOrNull()
+        if (level != null && level in MIN_AUTHORITY_LEVEL..MAX_AUTHORITY_LEVEL) {
+            _state.value = current.copy(authorityLevelInput = value, saveError = null)
+        }
     }
 
     override fun onAccountStatusChanged(value: String) {
@@ -56,9 +64,9 @@ class UserDetailComponentImpl(
 
     override fun onUpdateClick() {
         val current = _state.value as? UserDetailScreenState.Content ?: return
-        val authLevel = current.authorityLevelInput.toIntOrNull() ?: current.user.authorityLevel
+        val authLevel = current.authorityLevelInput.toIntOrNull() ?: 0
         val status = current.accountStatusInput.takeIf { it.isNotBlank() } ?: current.user.accountStatus.name
-        val lockoutType = current.lockoutTypeInput.takeIf { it.isNotBlank() } ?: current.user.lockoutType.serialName
+        val lockoutType = AccountLockoutType.fromValueOrNull(current.lockoutTypeInput)?.serialName ?: current.user.lockoutType.serialName
         val temporaryLockoutUntil = current.temporaryLockoutUntilInput.toLongOrNull() ?: current.user.temporaryLockoutUntil?.toEpochMilliseconds()
 
         _state.value = current.copy(isSaving = true, saveError = null)
@@ -83,7 +91,12 @@ class UserDetailComponentImpl(
 
     override fun onDeleteClick() {
         val current = _state.value as? UserDetailScreenState.Content ?: return
-        _state.value = current.copy(isDeleting = true, deleteError = null)
+        _state.value = current.copy(isDeleteConfirmationVisible = true, deleteError = null)
+    }
+
+    override fun onConfirmDeleteClick() {
+        val current = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = current.copy(isDeleteConfirmationVisible = false, isDeleting = true, deleteError = null)
 
         scope.launch {
             deleteUserUseCase(userId)
@@ -94,6 +107,11 @@ class UserDetailComponentImpl(
                     _state.value = current.copy(isDeleting = false, deleteError = error)
                 }
         }
+    }
+
+    override fun onDismissDeleteDialog() {
+        val current = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = current.copy(isDeleteConfirmationVisible = false)
     }
 
     override fun onDisableTotpClick() {
@@ -136,7 +154,7 @@ class UserDetailComponentImpl(
                         user = user,
                         authorityLevelInput = user.authorityLevel.toString(),
                         accountStatusInput = user.accountStatus.name,
-                        lockoutTypeInput = user.lockoutType.serialName,
+                        lockoutTypeInput = user.lockoutType.name,
                         temporaryLockoutUntilInput = user.temporaryLockoutUntil?.toEpochMilliseconds()?.toString() ?: ""
                     )
                 }
@@ -144,5 +162,10 @@ class UserDetailComponentImpl(
                     _state.value = UserDetailScreenState.Error(error)
                 }
         }
+    }
+
+    companion object {
+        private const val MIN_AUTHORITY_LEVEL = 0
+        private const val MAX_AUTHORITY_LEVEL = 100
     }
 }

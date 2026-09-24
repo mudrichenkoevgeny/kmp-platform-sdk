@@ -5,14 +5,13 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.ManagementSettingsDestination
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.root.ManagementSettingsRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.ManagementDestination
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.root.ManagementRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileDestination
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main.MainScreenComponent
 import kotlinx.browser.window
 import org.w3c.dom.events.Event
-import kotlin.js.ExperimentalWasmJsInterop
 
 private const val PATH_HOME = "/home"
 private const val PATH_PROFILE = "/profile"
@@ -50,16 +49,21 @@ actual fun SetupBrowserHistory(mainComponent: MainScreenComponent) {
         is MainScreenComponent.Child.SettingsChild -> {
             val settingsStackState by activeChild.component.stack.subscribeAsState()
             when (settingsStackState.active.configuration) {
-                is ManagementSettingsDestination.Main -> PATH_SETTINGS
-                is ManagementSettingsDestination.EditAuthSettings -> PATH_SETTINGS_AUTH
-                is ManagementSettingsDestination.EditGlobalSettings -> PATH_SETTINGS_GLOBAL
-                is ManagementSettingsDestination.EditSecuritySettings -> PATH_SETTINGS_SECURITY
-                is ManagementSettingsDestination.UsersManagement -> PATH_USERS
-                is ManagementSettingsDestination.AuditLogs -> PATH_AUDIT
-                is ManagementSettingsDestination.GlobalSessionList -> PATH_SESSIONS
-                is ManagementSettingsDestination.SessionDetail -> PATH_SESSIONS
-                is ManagementSettingsDestination.GlobalIdentifierList -> PATH_IDENTIFIERS
-                is ManagementSettingsDestination.IdentifierDetail -> PATH_IDENTIFIERS
+                is ManagementDestination.Main -> PATH_SETTINGS
+                is ManagementDestination.EditAuthSettings -> PATH_SETTINGS_AUTH
+                is ManagementDestination.EditGlobalSettings -> PATH_SETTINGS_GLOBAL
+                is ManagementDestination.EditSecuritySettings -> PATH_SETTINGS_SECURITY
+                is ManagementDestination.GlobalUserList -> PATH_USERS
+                is ManagementDestination.CreateUser -> PATH_USERS
+                is ManagementDestination.UserDetail -> PATH_USERS
+                is ManagementDestination.UserSessionList -> PATH_SESSIONS
+                is ManagementDestination.UserIdentifierList -> PATH_IDENTIFIERS
+                is ManagementDestination.AuditEventList -> PATH_AUDIT
+                is ManagementDestination.AuditEventDetail -> PATH_AUDIT
+                is ManagementDestination.GlobalSessionList -> PATH_SESSIONS
+                is ManagementDestination.SessionDetail -> PATH_SESSIONS
+                is ManagementDestination.GlobalIdentifierList -> PATH_IDENTIFIERS
+                is ManagementDestination.IdentifierDetail -> PATH_IDENTIFIERS
             }
         }
     }
@@ -80,16 +84,21 @@ actual fun SetupBrowserHistory(mainComponent: MainScreenComponent) {
                 }
                 is MainScreenComponent.Child.SettingsChild -> {
                     when (val settingsChild = currentChild.component.stack.value.active.instance) {
-                        is ManagementSettingsRootComponent.Child.EditAuthSettings -> settingsChild.component.onBackClick()
-                        is ManagementSettingsRootComponent.Child.EditGlobalSettings -> settingsChild.component.onBackClick()
-                        is ManagementSettingsRootComponent.Child.EditSecuritySettings -> settingsChild.component.onBackClick()
-                        is ManagementSettingsRootComponent.Child.UsersManagement -> settingsChild.component.onBackClick()
-                        is ManagementSettingsRootComponent.Child.AuditLogs -> settingsChild.component.onBackClick()
-                        is ManagementSettingsRootComponent.Child.Sessions -> settingsChild.component.onBackClick()
-                        is ManagementSettingsRootComponent.Child.SessionDetail -> settingsChild.component.onBackClick()
-                        is ManagementSettingsRootComponent.Child.GlobalIdentifiers -> settingsChild.component.onBackClick()
-                        is ManagementSettingsRootComponent.Child.IdentifierDetail -> settingsChild.component.onBackClick()
-                        is ManagementSettingsRootComponent.Child.Main -> { }
+                        is ManagementRootComponent.Child.EditAuthSettings -> settingsChild.component.onBackClick()
+                        is ManagementRootComponent.Child.EditGlobalSettings -> settingsChild.component.onBackClick()
+                        is ManagementRootComponent.Child.EditSecuritySettings -> settingsChild.component.onBackClick()
+                        is ManagementRootComponent.Child.GlobalUserList -> settingsChild.component.onBackClick()
+                        is ManagementRootComponent.Child.CreateUser -> settingsChild.component.onBackClick()
+                        is ManagementRootComponent.Child.UserDetail -> settingsChild.component.onBackClick()
+                        is ManagementRootComponent.Child.UserSessionList -> settingsChild.component.onBackClick()
+                        is ManagementRootComponent.Child.UserIdentifierList -> settingsChild.component.onBackClick()
+                        is ManagementRootComponent.Child.AuditEventList -> settingsChild.component.onBackClick()
+                        is ManagementRootComponent.Child.AuditEventDetail -> settingsChild.component.onBackClick()
+                        is ManagementRootComponent.Child.GlobalSessionList -> settingsChild.component.onBackClick()
+                        is ManagementRootComponent.Child.SessionDetail -> settingsChild.component.onBackClick()
+                        is ManagementRootComponent.Child.GlobalIdentifierList -> settingsChild.component.onBackClick()
+                        is ManagementRootComponent.Child.IdentifierDetail -> settingsChild.component.onBackClick()
+                        is ManagementRootComponent.Child.Main -> { }
                     }
                 }
                 is MainScreenComponent.Child.HomeChild -> { }

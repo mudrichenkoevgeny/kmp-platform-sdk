@@ -8,5 +8,5 @@ import com.arkivanov.decompose.ComponentContext
  * @param componentContext Lifecycle context for the home child.
  */
 class HomeScreenComponentImpl(
-    componentContext: ComponentContext,
+    componentContext: ComponentContext
 ) : HomeScreenComponent, ComponentContext by componentContext

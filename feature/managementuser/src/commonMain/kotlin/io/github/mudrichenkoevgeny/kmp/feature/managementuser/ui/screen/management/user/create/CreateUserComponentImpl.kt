@@ -14,7 +14,7 @@ class CreateUserComponentImpl(
     componentContext: ComponentContext,
     private val createUserUseCase: CreateUserUseCase,
     private val onSuccess: () -> Unit,
-    private val onBack: () -> Unit,
+    private val onBack: () -> Unit
 ) : CreateUserComponent, ComponentContext by componentContext {
 
     private val scope = componentCoroutineScope()
@@ -54,7 +54,7 @@ class CreateUserComponentImpl(
                     role = current.role,
                     status = current.status,
                     authorityLevel = authLevel,
-                    permissionCodes = emptySet(),
+                    permissionCodes = emptySet()
                 )
             ).onSuccess {
                 onSuccess()

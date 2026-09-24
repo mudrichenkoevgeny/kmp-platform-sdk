@@ -106,7 +106,7 @@ class CreateUserComponentImplTest {
     }
 
     private fun createTestContext(
-        repository: ManagementUserRepositoryMock = ManagementUserRepositoryMock(),
+        repository: ManagementUserRepositoryMock = ManagementUserRepositoryMock()
     ): TestContext {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
@@ -118,7 +118,7 @@ class CreateUserComponentImplTest {
             componentContext = DefaultComponentContext(lifecycle),
             createUserUseCase = useCase,
             onSuccess = { context.onSuccessCalls++ },
-            onBack = { context.onBackCalls++ },
+            onBack = { context.onBackCalls++ }
         )
 
         return context

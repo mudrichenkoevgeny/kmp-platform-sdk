@@ -3,8 +3,8 @@ package io.github.mudrichenkoevgeny.kmp.samplemanagement.android
 import android.app.Application
 import io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo.AndroidDeviceInfoProvider
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.AndroidUserAuthServices
-import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di.ManagementAppComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.BuildConfig
+import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di.ManagementAppComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

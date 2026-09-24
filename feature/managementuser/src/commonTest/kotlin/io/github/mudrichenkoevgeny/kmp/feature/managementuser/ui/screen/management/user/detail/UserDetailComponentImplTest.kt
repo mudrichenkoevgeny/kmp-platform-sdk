@@ -18,7 +18,9 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
+import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.milliseconds
 
 @InternalApi
@@ -32,16 +34,34 @@ class UserDetailComponentImplTest {
         advanceTimeBy(100.milliseconds)
         val state = assertIs<UserDetailScreenState.Content>(context.component.state.value)
         assertEquals(user, state.user)
+        assertFalse(state.hasChanges)
     }
 
     @Test
-    fun onAuthorityLevelChanged_updatesInputAndClearsSaveError() = runComponentTest {
+    fun onAuthorityLevelChanged_updatesInputWhenInValidRange() = runComponentTest {
         val context = createTestContext()
         advanceTimeBy(100.milliseconds)
 
-        context.component.onAuthorityLevelChanged("5")
+        context.component.onAuthorityLevelChanged("50")
+        var state = assertIs<UserDetailScreenState.Content>(context.component.state.value)
+        assertEquals("50", state.authorityLevelInput)
+        assertTrue(state.hasChanges)
+
+        context.component.onAuthorityLevelChanged("150")
+        state = assertIs<UserDetailScreenState.Content>(context.component.state.value)
+        assertEquals("50", state.authorityLevelInput)
+    }
+
+    @Test
+    fun onAuthorityLevelChanged_cleared_treatsAsZero() = runComponentTest {
+        val user = userDetailsMock(authorityLevel = 0)
+        val context = createTestContext(user = user)
+        advanceTimeBy(100.milliseconds)
+
+        context.component.onAuthorityLevelChanged("")
         val state = assertIs<UserDetailScreenState.Content>(context.component.state.value)
-        assertEquals("5", state.authorityLevelInput)
+        assertEquals("", state.authorityLevelInput)
+        assertFalse(state.hasChanges)
     }
 
     @Test
@@ -49,9 +69,10 @@ class UserDetailComponentImplTest {
         val context = createTestContext()
         advanceTimeBy(100.milliseconds)
 
-        context.component.onAccountStatusChanged("BLOCKED")
+        context.component.onAccountStatusChanged("BANNED")
         val state = assertIs<UserDetailScreenState.Content>(context.component.state.value)
-        assertEquals("BLOCKED", state.accountStatusInput)
+        assertEquals("BANNED", state.accountStatusInput)
+        assertTrue(state.hasChanges)
     }
 
     @Test
@@ -83,19 +104,30 @@ class UserDetailComponentImplTest {
     }
 
     @Test
-    fun onDeleteClick_invokesUseCaseAndOnBack_whenSucceeds() = runComponentTest {
+    fun onDeleteClick_showsConfirmationDialog() = runComponentTest {
+        val context = createTestContext()
+        advanceTimeBy(100.milliseconds)
+
+        context.component.onDeleteClick()
+        val state = assertIs<UserDetailScreenState.Content>(context.component.state.value)
+        assertTrue(state.isDeleteConfirmationVisible)
+    }
+
+    @Test
+    fun onConfirmDeleteClick_invokesUseCaseAndOnBack_whenSucceeds() = runComponentTest {
         val repository = ManagementUserRepositoryMock()
         val context = createTestContext(repository = repository)
         advanceTimeBy(100.milliseconds)
 
         context.component.onDeleteClick()
+        context.component.onConfirmDeleteClick()
 
         advanceTimeBy(100.milliseconds)
         assertEquals(1, context.onBackCalls)
     }
 
     @Test
-    fun onDeleteClick_emitsDeleteError_whenFails() = runComponentTest {
+    fun onConfirmDeleteClick_emitsDeleteError_whenFails() = runComponentTest {
         val repository = ManagementUserRepositoryMock()
         val error = CommonError.Unknown()
         repository.deleteUserResultProvider = { _ -> AppResult.Error(error) }
@@ -103,10 +135,25 @@ class UserDetailComponentImplTest {
         advanceTimeBy(100.milliseconds)
 
         context.component.onDeleteClick()
+        context.component.onConfirmDeleteClick()
 
         advanceTimeBy(100.milliseconds)
         val state = assertIs<UserDetailScreenState.Content>(context.component.state.value)
         assertEquals(error, state.deleteError)
+    }
+
+    @Test
+    fun onDismissDeleteDialog_hidesDialog() = runComponentTest {
+        val context = createTestContext()
+        advanceTimeBy(100.milliseconds)
+
+        context.component.onDeleteClick()
+        var state = assertIs<UserDetailScreenState.Content>(context.component.state.value)
+        assertTrue(state.isDeleteConfirmationVisible)
+
+        context.component.onDismissDeleteDialog()
+        state = assertIs<UserDetailScreenState.Content>(context.component.state.value)
+        assertFalse(state.isDeleteConfirmationVisible)
     }
 
     @Test
@@ -132,7 +179,7 @@ class UserDetailComponentImplTest {
 
     private fun createTestContext(
         user: UserDetails = userDetailsMock(),
-        repository: ManagementUserRepositoryMock = ManagementUserRepositoryMock(),
+        repository: ManagementUserRepositoryMock = ManagementUserRepositoryMock()
     ): TestContext {
         repository.getUserResultProvider = { AppResult.Success(user) }
 
@@ -154,7 +201,7 @@ class UserDetailComponentImplTest {
             managementDisableTotpUseCase = disableTotpUseCase,
             onNavigateToSessions = { context.onNavigateToSessionsCalls++ },
             onNavigateToIdentifiers = { context.onNavigateToIdentifiersCalls++ },
-            onBack = { context.onBackCalls++ },
+            onBack = { context.onBackCalls++ }
         )
 
         return context

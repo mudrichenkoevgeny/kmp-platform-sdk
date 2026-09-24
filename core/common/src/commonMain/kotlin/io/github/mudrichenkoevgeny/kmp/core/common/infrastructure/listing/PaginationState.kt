@@ -20,7 +20,7 @@ data class PaginationState<T>(
     val isNextPageLoading: Boolean = false,
     val error: AppError? = null,
     val pageNumber: Int = 0,
-    val totalPages: Long = 0,
+    val totalPages: Long = 0
 ) {
     /**
      * One-based index of the next page to fetch.
@@ -72,7 +72,7 @@ fun <T> PaginationState<T>.toInitialLoading(): PaginationState<T> = copy(
     isNextPageLoading = false,
     error = null,
     pageNumber = 0,
-    totalPages = 0,
+    totalPages = 0
 )
 
 /**
@@ -81,7 +81,7 @@ fun <T> PaginationState<T>.toInitialLoading(): PaginationState<T> = copy(
 fun <T> PaginationState<T>.toNextPageLoading(): PaginationState<T> = copy(
     isInitialLoading = false,
     isNextPageLoading = true,
-    error = null,
+    error = null
 )
 
 /**
@@ -93,7 +93,7 @@ fun <T> PaginationState<T>.appendResult(result: PagedResult<T>): PaginationState
     isNextPageLoading = false,
     error = null,
     pageNumber = result.pageNumber,
-    totalPages = result.totalPages,
+    totalPages = result.totalPages
 )
 
 /**
@@ -114,7 +114,7 @@ fun <T> PaginationState<T>.toError(error: AppError, isInitial: Boolean): Paginat
         emptyList()
     } else {
         items
-    },
+    }
 )
 
 /**
@@ -123,5 +123,5 @@ fun <T> PaginationState<T>.toError(error: AppError, isInitial: Boolean): Paginat
  */
 fun <T> PaginationState<T>.toError(error: AppError, pageNumber: Int): PaginationState<T> = toError(
     error = error,
-    isInitial = pageNumber == ListingConstants.INITIAL_PAGE_NUMBER,
+    isInitial = pageNumber == ListingConstants.INITIAL_PAGE_NUMBER
 )

@@ -6,8 +6,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo.WasmDevic
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.WasmUserAuthServices
 import io.github.mudrichenkoevgeny.kmp.sampleclient.BuildConfig
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.ClientAppComponent
-import kotlinx.browser.document
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.root.RootContent
+import kotlinx.browser.document
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 

@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -52,8 +51,18 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.*
+import io.github.mudrichenkoevgeny.kmp.feature.user.change_email
+import io.github.mudrichenkoevgeny.kmp.feature.user.code_sent_to
+import io.github.mudrichenkoevgeny.kmp.feature.user.confirm
+import io.github.mudrichenkoevgeny.kmp.feature.user.confirmation_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.email
+import io.github.mudrichenkoevgeny.kmp.feature.user.enter_confirmation_code
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.resetpassword.ResetEmailPasswordComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.new_password
+import io.github.mudrichenkoevgeny.kmp.feature.user.resend_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.resend_code_timer
+import io.github.mudrichenkoevgeny.kmp.feature.user.reset_password
+import io.github.mudrichenkoevgeny.kmp.feature.user.send_code
 import org.jetbrains.compose.resources.stringResource
 
 /**

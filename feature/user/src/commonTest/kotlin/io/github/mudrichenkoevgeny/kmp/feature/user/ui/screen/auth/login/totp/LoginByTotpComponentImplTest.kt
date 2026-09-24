@@ -13,7 +13,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.login.Logi
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.login.LoginByTotpUseCaseMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
 import kotlinx.coroutines.test.advanceUntilIdle
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertIs
+import kotlin.test.assertNull
 
 @InternalApi
 class LoginByTotpComponentImplTest {

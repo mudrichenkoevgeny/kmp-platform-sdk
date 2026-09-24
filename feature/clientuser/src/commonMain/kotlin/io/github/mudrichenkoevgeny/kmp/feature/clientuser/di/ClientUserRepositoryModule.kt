@@ -6,8 +6,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.login.
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.refreshtoken.OpenRefreshTokenRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.registration.OpenRegistrationRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.resetpassword.OpenResetPasswordRepositoryImpl
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.unlock.OpenUnlockRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.settings.OpenAuthSettingsRepositoryImpl
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.unlock.OpenUnlockRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.identifier.OpenIdentifierRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.session.OpenSessionRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.user.OpenUserRepositoryImpl
@@ -17,8 +17,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginR
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.refreshtoken.RefreshTokenRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.registration.RegistrationRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpassword.ResetPasswordRepository
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.unlock.UnlockRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.unlock.UnlockRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository

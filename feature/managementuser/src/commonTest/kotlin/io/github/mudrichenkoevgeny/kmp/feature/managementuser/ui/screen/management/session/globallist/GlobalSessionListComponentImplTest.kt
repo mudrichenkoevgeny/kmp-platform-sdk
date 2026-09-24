@@ -145,7 +145,7 @@ class GlobalSessionListComponentImplTest {
 
     private fun createTestContext(
         sessions: List<UserSession>? = null,
-        repository: ManagementSessionRepositoryMock = ManagementSessionRepositoryMock(),
+        repository: ManagementSessionRepositoryMock = ManagementSessionRepositoryMock()
     ): TestContext {
         if (sessions != null) {
             repository.getSessionsResultProvider = { AppResult.Success(pagedResultMock(sessions)) }
@@ -162,7 +162,7 @@ class GlobalSessionListComponentImplTest {
             componentContext = DefaultComponentContext(lifecycle),
             managementGetSessionsUseCase = useCase,
             managementDeleteSessionUseCase = deleteSessionUseCase,
-            onBack = { context.onBackCalls++ },
+            onBack = { context.onBackCalls++ }
         )
 
         return context

@@ -38,7 +38,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
-import io.github.mudrichenkoevgeny.kmp.core.common.time.formatEpochMillisToDateTime
+import io.github.mudrichenkoevgeny.kmp.core.common.time.formatInstantToDateTime
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.container.CoreScrollableScreenContent
@@ -219,14 +219,14 @@ private fun Content(
                     modifier = Modifier.testTag(SessionDetailTestTags.IP_ADDRESS)
                 )
 
-                val lastAccessedFormatted = formatEpochMillisToDateTime(session.lastAccessedAt.toEpochMilliseconds())
+                val lastAccessedFormatted = formatInstantToDateTime(session.lastAccessedAt)
                     ?: session.lastAccessedAt.toString()
                 CoreBodyText(
                     text = "${stringResource(Res.string.session_detail_last_accessed_label)}: $lastAccessedFormatted",
                     modifier = Modifier.testTag(SessionDetailTestTags.LAST_ACCESSED_AT)
                 )
 
-                val createdAtFormatted = formatEpochMillisToDateTime(session.createdAt.toEpochMilliseconds())
+                val createdAtFormatted = formatInstantToDateTime(session.createdAt)
                     ?: session.createdAt.toString()
                 CoreBodyText(
                     text = "${stringResource(Res.string.session_detail_created_at_label)}: $createdAtFormatted",

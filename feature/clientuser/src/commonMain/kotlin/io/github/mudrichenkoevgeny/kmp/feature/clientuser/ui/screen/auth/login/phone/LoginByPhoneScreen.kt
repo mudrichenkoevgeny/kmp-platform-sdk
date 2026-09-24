@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
@@ -48,7 +47,17 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.ui.screen.auth.login.phone.LoginByPhoneComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.*
+import io.github.mudrichenkoevgeny.kmp.feature.user.change_phone_number
+import io.github.mudrichenkoevgeny.kmp.feature.user.code_sent_to
+import io.github.mudrichenkoevgeny.kmp.feature.user.confirm
+import io.github.mudrichenkoevgeny.kmp.feature.user.confirmation_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.enter_confirmation_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.enter_phone_number
+import io.github.mudrichenkoevgeny.kmp.feature.user.phone_number
+import io.github.mudrichenkoevgeny.kmp.feature.user.resend_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.resend_code_timer
+import io.github.mudrichenkoevgeny.kmp.feature.user.send_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.sign_in_with_phone
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)

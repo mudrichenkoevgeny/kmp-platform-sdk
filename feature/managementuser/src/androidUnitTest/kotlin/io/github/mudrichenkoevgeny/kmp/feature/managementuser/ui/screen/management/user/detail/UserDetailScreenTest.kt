@@ -46,8 +46,8 @@ class UserDetailScreenTest {
             UserDetailScreenState.Content(
                 user = user,
                 authorityLevelInput = "0",
-                accountStatusInput = "ACTIVE",
-            ),
+                accountStatusInput = "ACTIVE"
+            )
         )
         setContent {
             ComponentTestHarness {
@@ -70,9 +70,9 @@ class UserDetailScreenTest {
         val component = UserDetailComponentMock(
             UserDetailScreenState.Content(
                 user = user,
-                authorityLevelInput = "0",
-                accountStatusInput = "ACTIVE",
-            ),
+                authorityLevelInput = "1",
+                accountStatusInput = "ACTIVE"
+            )
         )
         setContent {
             ComponentTestHarness {
@@ -90,8 +90,8 @@ class UserDetailScreenTest {
             UserDetailScreenState.Content(
                 user = user,
                 authorityLevelInput = "0",
-                accountStatusInput = "ACTIVE",
-            ),
+                accountStatusInput = "ACTIVE"
+            )
         )
         setContent {
             ComponentTestHarness {
@@ -109,8 +109,8 @@ class UserDetailScreenTest {
             UserDetailScreenState.Content(
                 user = user,
                 authorityLevelInput = "0",
-                accountStatusInput = "ACTIVE",
-            ),
+                accountStatusInput = "ACTIVE"
+            )
         )
         setContent {
             ComponentTestHarness {
@@ -128,8 +128,8 @@ class UserDetailScreenTest {
             UserDetailScreenState.Content(
                 user = user,
                 authorityLevelInput = "0",
-                accountStatusInput = "ACTIVE",
-            ),
+                accountStatusInput = "ACTIVE"
+            )
         )
         setContent {
             ComponentTestHarness {

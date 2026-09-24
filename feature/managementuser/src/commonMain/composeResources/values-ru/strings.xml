@@ -16,10 +16,15 @@
     <string name="audit_event_id">ID события</string>
     <string name="audit_event_action">Действие</string>
     <string name="audit_event_resource">Ресурс</string>
+    <string name="audit_event_resource_id">ID ресурса</string>
+    <string name="audit_event_resource_sensitivity">Чувствительность ресурса</string>
     <string name="audit_event_status">Статус</string>
     <string name="audit_event_actor">Субъект</string>
+    <string name="audit_event_actor_type">Тип субъекта</string>
+    <string name="audit_event_actor_role">Роль субъекта</string>
     <string name="audit_event_message">Сообщение</string>
     <string name="audit_event_timestamp">Время</string>
+    <string name="audit_event_metadata">Метаданные</string>
 
     <!-- Edit Auth Settings Screen -->
     <string name="edit_auth_settings_title">Редактировать настройки авторизации</string>
@@ -59,6 +64,7 @@
     <string name="user_details_title">Информация о пользователе</string>
     <string name="update_user">Обновить пользователя</string>
     <string name="delete_user">Удалить пользователя</string>
+    <string name="delete_user_confirmation_desc">Вы уверены, что хотите удалить этого пользователя?</string>
     <string name="user_id">ID пользователя</string>
     <string name="user_role">Роль</string>
     <string name="user_account_status">Статус</string>

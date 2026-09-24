@@ -42,12 +42,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.alexzhirkevich.qrose.rememberQrCodePainter
-import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
-import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
+import io.github.mudrichenkoevgeny.kmp.core.common.ic_copy
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
@@ -65,11 +64,29 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.*
+import io.github.mudrichenkoevgeny.kmp.feature.user.confirm
+import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_cancel
+import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm
+import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm_title
+import io.github.mudrichenkoevgeny.kmp.feature.user.disable_totp
+import io.github.mudrichenkoevgeny.kmp.feature.user.disable_totp_confirm_msg
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.totp.TotpMainComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.recovery_codes_title
+import io.github.mudrichenkoevgeny.kmp.feature.user.setup_totp
+import io.github.mudrichenkoevgeny.kmp.feature.user.totp_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.totp_disabled_desc
+import io.github.mudrichenkoevgeny.kmp.feature.user.totp_enabled_desc
+import io.github.mudrichenkoevgeny.kmp.feature.user.totp_enabled_title
+import io.github.mudrichenkoevgeny.kmp.feature.user.totp_main
+import io.github.mudrichenkoevgeny.kmp.feature.user.totp_manual_key
+import io.github.mudrichenkoevgeny.kmp.feature.user.totp_setup_step1
+import io.github.mudrichenkoevgeny.kmp.feature.user.totp_setup_step1_desc
+import io.github.mudrichenkoevgeny.kmp.feature.user.totp_setup_step2
+import io.github.mudrichenkoevgeny.kmp.feature.user.totp_setup_step2_desc
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totpsetup.TotpSetup
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

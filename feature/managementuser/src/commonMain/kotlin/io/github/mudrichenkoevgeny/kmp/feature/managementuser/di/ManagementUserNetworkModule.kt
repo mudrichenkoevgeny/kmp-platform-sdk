@@ -3,9 +3,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.di
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.auth.login.KtorSelfManagementLoginApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.auth.refreshtoken.KtorSelfManagementRefreshTokenApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.auth.resetpassword.KtorSelfManagementResetPasswordApi
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.auth.unlock.KtorSelfManagementUnlockApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.auth.settings.KtorManagementAuthSettingsApi
-import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration.KtorOpenUserConfigurationApi
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.auth.unlock.KtorSelfManagementUnlockApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.configuration.KtorManagementUserConfigurationApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.globalsettings.KtorManagementGlobalSettingsApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.identifier.KtorManagementIdentifierApi
@@ -17,8 +16,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user.K
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user.KtorSelfManagementUserApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user.security.KtorManagementUserSecurityApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user.security.KtorUserSelfManagementUserSecurityApi
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration.KtorOpenUserConfigurationApi
 import io.ktor.client.HttpClient
-import kotlin.getValue
 
 /**
  * Lazily constructs Ktor API clients from a shared [HttpClient].

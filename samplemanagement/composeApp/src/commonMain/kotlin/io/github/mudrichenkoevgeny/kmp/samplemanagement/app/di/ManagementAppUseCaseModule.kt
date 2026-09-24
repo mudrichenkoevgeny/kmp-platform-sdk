@@ -1,8 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di
 
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings.RefreshManagementAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.RefreshManagementGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.RefreshManagementSecuritySettingsUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings.RefreshManagementAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.usecase.SyncManagementDataUseCase
 
 /**

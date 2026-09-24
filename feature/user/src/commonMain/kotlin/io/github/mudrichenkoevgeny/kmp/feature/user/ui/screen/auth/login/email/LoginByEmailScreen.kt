@@ -46,8 +46,13 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.*
+import io.github.mudrichenkoevgeny.kmp.feature.user.email
+import io.github.mudrichenkoevgeny.kmp.feature.user.forgot_password
+import io.github.mudrichenkoevgeny.kmp.feature.user.login
+import io.github.mudrichenkoevgeny.kmp.feature.user.login_by_email
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.email.LoginByEmailComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.no_account_register
+import io.github.mudrichenkoevgeny.kmp.feature.user.password
 import org.jetbrains.compose.resources.stringResource
 
 /**

@@ -4,30 +4,28 @@ import com.arkivanov.decompose.ComponentContext
 import io.github.mudrichenkoevgeny.kmp.core.common.di.CommonComponent
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.di.AuditApiComponent
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.di.audit.AuditApiComponent
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.root.ManagementRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.root.ManagementRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserStorageModule
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.root.UsersManagementRootComponent
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.root.UsersManagementRootComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.root.ManagementSettingsRootComponent
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.root.ManagementSettingsRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponentImpl
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.action.CompositeAuditActionTypeParser
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.metadata.CommonAuditMetadataKey
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.metadata.CompositeAuditMetadataKeyParser
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.resource.CompositeAuditResourceTypeParser
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.action.UserAuditActionType
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.metadata.UserAuditMetadataKey
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.audit.action.SecurityAuditActionType
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.audit.resource.SecurityAuditResourceType
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.audit.action.SettingsAuditActionType
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.audit.resource.SettingsAuditResourceType
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.action.UserAuditActionType
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.metadata.UserAuditMetadataKey
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -379,44 +377,15 @@ class ManagementUserComponent(
     val resetRemoteSecuritySettingsUseCase get() = useCaseModule.resetRemoteSecuritySettingsUseCase
 
     /**
-     * Creates the root Decompose component for users management flow.
-     *
-     * @param componentContext Decompose context.
-     * @param onBack Navigation back callback.
-     * @return A new instance of [UsersManagementRootComponent].
-     */
-    fun createUsersManagementComponent(
-        componentContext: ComponentContext,
-        onBack: () -> Unit
-    ): UsersManagementRootComponent = UsersManagementRootComponentImpl(
-        componentContext = componentContext,
-        getUsersUseCase = getUsersUseCase,
-        getUserUseCase = getUserUseCase,
-        createUserUseCase = createUserUseCase,
-        updateUserUseCase = updateUserUseCase,
-        deleteUserUseCase = deleteUserUseCase,
-        managementGetSessionsUseCase = managementGetSessionsUseCase,
-        managementGetSessionUseCase = managementGetSessionUseCase,
-        managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
-        managementGetIdentifierUseCase = managementGetIdentifierUseCase,
-        managementDisableTotpUseCase = managementDisableTotpUseCase,
-        managementDeleteSessionUseCase = managementDeleteSessionUseCase,
-        managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase,
-        managementDeleteIdentifierUseCase = useCaseModule.managementDeleteIdentifierUseCase,
-        managementDeleteIdentifierPasswordUseCase = useCaseModule.managementDeleteIdentifierPasswordUseCase,
-        onBack = onBack
-    )
-
-    /**
-     * Creates the root Decompose component for management settings flow (Auth, Global, Security, and Users settings).
+     * Creates the root Decompose component for management flow.
      *
      * @param componentContext Decompose context for the component.
-     * @return A new instance of [ManagementSettingsRootComponent].
+     * @return A new instance of [ManagementRootComponent].
      */
-    fun createManagementSettingsComponent(
+    fun createManagementComponent(
         componentContext: ComponentContext
-    ): ManagementSettingsRootComponent =
-        ManagementSettingsRootComponentImpl(
+    ): ManagementRootComponent =
+        ManagementRootComponentImpl(
             componentContext = componentContext,
             getManagementAuthSettingsUseCase = getManagementAuthSettingsUseCase,
             saveRemoteAuthSettingsUseCase = saveRemoteAuthSettingsUseCase,

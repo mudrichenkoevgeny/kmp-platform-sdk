@@ -4,8 +4,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.ApiException
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.auth.IsPublicApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.model.ApiErrorResponse
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.token.toSessionToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.token.toSessionToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.RefreshTokenPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.SessionTokenPayload
 import io.ktor.client.HttpClientConfig
@@ -19,7 +19,6 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import kotlin.time.Clock
-import kotlin.time.Instant
 
 private const val LOGGER_AUTH_PREFIX = "Auth"
 

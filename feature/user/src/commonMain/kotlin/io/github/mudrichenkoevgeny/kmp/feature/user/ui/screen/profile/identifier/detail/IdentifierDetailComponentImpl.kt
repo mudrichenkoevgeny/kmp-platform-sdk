@@ -179,7 +179,7 @@ class IdentifierDetailComponentImpl(
                     identifier = identifier,
                     isCurrentIdentifier = resolvedIsCurrent,
                     canChangePassword = changePassword != null && identifier.userAuthProvider == UserAuthProvider.EMAIL,
-                    canDeletePassword = deletePassword != null
+                    canDeletePassword = deletePassword != null && identifier.userAuthProvider == UserAuthProvider.EMAIL
                 )
             } else if (targetId != null && fetchIdentifier != null) {
                 _state.value = IdentifierDetailScreenState.Loading
@@ -189,7 +189,7 @@ class IdentifierDetailComponentImpl(
                             identifier = loaded,
                             isCurrentIdentifier = resolvedIsCurrent,
                             canChangePassword = changePassword != null && loaded.userAuthProvider == UserAuthProvider.EMAIL,
-                            canDeletePassword = deletePassword != null
+                            canDeletePassword = deletePassword != null && loaded.userAuthProvider == UserAuthProvider.EMAIL
                         )
                     }
                     .onError { error ->

@@ -1,6 +1,5 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.di
 
-import co.touchlab.kermit.Logger as KermitLogger
 import io.github.mudrichenkoevgeny.kmp.core.common.network.httpclient.HttpClientConfigPlugin
 import io.github.mudrichenkoevgeny.kmp.core.common.network.httpclient.setupCommonConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenProvider
@@ -12,6 +11,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.repository.platform.PlatformR
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.logging.Logger
 import kotlinx.coroutines.CoroutineScope
+import co.touchlab.kermit.Logger as KermitLogger
 
 private const val HTTP_CLIENT_LOG_TAG = "HttpClient"
 

@@ -2,11 +2,31 @@ package io.github.mudrichenkoevgeny.kmp.core.common.error.parser
 
 import androidx.compose.runtime.Composable
 import io.github.mudrichenkoevgeny.kmp.core.common.Res
-import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.naming.ClientCommonErrorCodes
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.CommonErrorCodes
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_blank_field
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_blank_field_args
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_empty_field
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_empty_field_args
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_internal
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_invalid_field
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_invalid_field_args
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_invalid_parameter
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_invalid_parameter_args
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_missing_field
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_missing_field_args
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_missing_parameter
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_missing_parameter_args
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_network
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_no_internet
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_not_found
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_not_found_args
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_service_unavailable
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_too_many_requests
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_too_many_requests_args
+import io.github.mudrichenkoevgeny.kmp.core.common.error_common_unknown
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.CommonErrorArgs
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.CommonErrorCodes
 import org.jetbrains.compose.resources.stringResource
 
 /**

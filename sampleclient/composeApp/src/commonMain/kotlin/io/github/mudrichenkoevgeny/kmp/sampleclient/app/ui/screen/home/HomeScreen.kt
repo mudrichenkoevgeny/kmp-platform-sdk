@@ -8,7 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.Res
-import io.github.mudrichenkoevgeny.kmp.sampleclient.app.*
+import io.github.mudrichenkoevgeny.kmp.sampleclient.app.home_screen_title
 import org.jetbrains.compose.resources.stringResource
 
 /**

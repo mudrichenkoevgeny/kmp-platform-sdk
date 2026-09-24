@@ -46,8 +46,8 @@ class GlobalIdentifierListScreenTest {
             GlobalIdentifierListScreenState.Content(
                 paging = PaginationState(
                     items = listOf(identifier),
-                    isInitialLoading = false,
-                ),
+                    isInitialLoading = false
+                )
             )
         )
         setContent {

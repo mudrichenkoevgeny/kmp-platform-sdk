@@ -1,5 +1,9 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.platform.parser
 
+import io.github.mudrichenkoevgeny.kmp.core.common.platform.parser.UserAgentParser.BROWSER_NAME_UNKNOWN
+import io.github.mudrichenkoevgeny.kmp.core.common.platform.parser.UserAgentParser.OS_NAME_UNKNOWN
+
+
 /**
  * Utility object for parsing browser and operating system details from a user-agent header string.
  */

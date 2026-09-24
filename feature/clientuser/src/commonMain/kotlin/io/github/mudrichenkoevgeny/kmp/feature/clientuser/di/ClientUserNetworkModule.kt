@@ -1,18 +1,17 @@
 package io.github.mudrichenkoevgeny.kmp.feature.clientuser.di
 
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.login.KtorOpenLoginApi
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.resetpassword.KtorResetPasswordApi
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.unlock.KtorOpenUnlockApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.refreshtoken.KtorOpenRefreshTokenApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.registration.KtorRegistrationApi
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.resetpassword.KtorResetPasswordApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.settings.KtorOpenAuthSettingsApi
-import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration.KtorOpenUserConfigurationApi
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.unlock.KtorOpenUnlockApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.identifier.KtorOpenIdentifiersApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.session.KtorOpenSessionApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.user.KtorOpenUserApi
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.user.security.KtorOpenUserUserSecurityApi
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration.KtorOpenUserConfigurationApi
 import io.ktor.client.HttpClient
-import kotlin.getValue
 
 /**
  * Lazily constructs Ktor API clients from a shared [HttpClient].

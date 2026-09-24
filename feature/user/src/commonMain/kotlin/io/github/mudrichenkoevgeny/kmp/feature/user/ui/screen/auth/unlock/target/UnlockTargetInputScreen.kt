@@ -49,9 +49,15 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.*
+import io.github.mudrichenkoevgeny.kmp.feature.user.enter_phone_number
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.unlock.target.UnlockTargetInputComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.UnlockMethod
+import io.github.mudrichenkoevgeny.kmp.feature.user.phone_number
+import io.github.mudrichenkoevgeny.kmp.feature.user.send_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_by_email
+import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_by_phone
+import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_email_input_desc
+import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_phone_input_desc
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)

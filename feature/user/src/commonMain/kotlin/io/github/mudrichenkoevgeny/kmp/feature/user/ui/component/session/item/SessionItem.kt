@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.time.formatEpochMillisToDateTime
+import io.github.mudrichenkoevgeny.kmp.core.common.time.formatInstantToDateTime
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
@@ -126,7 +126,7 @@ fun SessionItem(
                 text = stringResource(Res.string.session_ip_address, session.ipAddress ?: "Unknown"),
                 style = MaterialTheme.typography.bodySmall
             )
-            val formattedDate = formatEpochMillisToDateTime(session.lastAccessedAt.toEpochMilliseconds()) ?: session.lastAccessedAt.toString()
+            val formattedDate = formatInstantToDateTime(session.lastAccessedAt) ?: session.lastAccessedAt.toString()
             Text(
                 text = stringResource(Res.string.session_last_accessed, formattedDate),
                 style = MaterialTheme.typography.bodySmall

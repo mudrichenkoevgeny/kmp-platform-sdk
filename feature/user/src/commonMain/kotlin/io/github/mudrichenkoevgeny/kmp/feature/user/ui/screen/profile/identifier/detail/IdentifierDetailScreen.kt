@@ -14,10 +14,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -28,22 +25,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
-import io.github.mudrichenkoevgeny.kmp.core.common.time.formatEpochMillisToDateTime
+import io.github.mudrichenkoevgeny.kmp.core.common.time.formatInstantToDateTime
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.container.CoreScrollableScreenContent
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error.FullscreenError
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CorePasswordTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
@@ -72,9 +70,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_title_curr
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_updated_at
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_value
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CorePasswordTextField
-import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.identifier.detail.IdentifierDetailComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.new_password
 import io.github.mudrichenkoevgeny.kmp.feature.user.not_available
@@ -191,7 +186,7 @@ private fun Content(
                     value = identifier.externalProviderEmail ?: stringResource(Res.string.not_available)
                 )
 
-                val createdAtFormatted = formatEpochMillisToDateTime(identifier.createdAt.toEpochMilliseconds())
+                val createdAtFormatted = formatInstantToDateTime(identifier.createdAt)
                     ?: identifier.createdAt.toString()
                 DetailRow(
                     label = stringResource(Res.string.identifier_detail_created_at),
@@ -199,7 +194,7 @@ private fun Content(
                 )
 
                 val updatedAtFormatted = identifier.updatedAt?.let { updatedAt ->
-                    formatEpochMillisToDateTime(updatedAt.toEpochMilliseconds()) ?: updatedAt.toString()
+                    formatInstantToDateTime(updatedAt) ?: updatedAt.toString()
                 } ?: stringResource(Res.string.not_available)
                 DetailRow(
                     label = stringResource(Res.string.identifier_detail_updated_at),

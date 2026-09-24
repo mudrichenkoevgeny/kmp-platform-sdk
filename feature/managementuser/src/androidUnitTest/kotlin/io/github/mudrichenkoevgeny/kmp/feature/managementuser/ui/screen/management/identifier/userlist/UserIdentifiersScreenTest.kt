@@ -46,8 +46,8 @@ class UserIdentifiersScreenTest {
             UserIdentifierListScreenState.Content(
                 paging = PaginationState(
                     items = listOf(identifier),
-                    isInitialLoading = false,
-                ),
+                    isInitialLoading = false
+                )
             )
         )
         setContent {

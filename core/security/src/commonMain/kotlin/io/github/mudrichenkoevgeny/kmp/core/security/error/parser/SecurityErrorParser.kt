@@ -5,11 +5,32 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.AppErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.resolveLocalizedString
 import io.github.mudrichenkoevgeny.kmp.core.security.Res
-import io.github.mudrichenkoevgeny.kmp.core.security.*
 import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.ClientSecurityErrorCodes
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_invalid_mfa_token
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_invalid_totp_code
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_ip_not_allowed
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_mfa_confirmation_required
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_mfa_confirmation_required_args
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_mfa_token_expired
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_otp_retry_too_soon
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_otp_retry_too_soon_args
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_password_no_digit
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_password_no_letter
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_password_no_lowercase
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_password_no_special_char
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_password_no_uppercase
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_password_policy_unavailable
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_password_too_common
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_password_too_short
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_password_too_short_args
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_password_too_weak
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_password_too_weak_args
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_recovery_code_used
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_totp_already_enabled
+import io.github.mudrichenkoevgeny.kmp.core.security.error_security_totp_not_enabled
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.CommonErrorArgs
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorArgs
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorCodes
 import org.jetbrains.compose.resources.stringResource
 
 /**

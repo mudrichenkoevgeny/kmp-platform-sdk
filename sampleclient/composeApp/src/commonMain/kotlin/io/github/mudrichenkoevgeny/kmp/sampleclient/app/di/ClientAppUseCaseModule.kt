@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.sampleclient.app.di
 
-import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.RefreshOpenGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.core.security.usecase.RefreshOpenSecuritySettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.RefreshOpenGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.usecase.auth.settings.RefreshOpenAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.usecase.SyncDataUseCase
 

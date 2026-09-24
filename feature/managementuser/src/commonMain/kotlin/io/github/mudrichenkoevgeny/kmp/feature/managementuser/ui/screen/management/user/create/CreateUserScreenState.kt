@@ -9,5 +9,5 @@ data class CreateUserScreenState(
     val status: String = "ACTIVE",
     val authorityLevel: String = "0",
     val isLoading: Boolean = false,
-    val error: AppError? = null,
+    val error: AppError? = null
 )

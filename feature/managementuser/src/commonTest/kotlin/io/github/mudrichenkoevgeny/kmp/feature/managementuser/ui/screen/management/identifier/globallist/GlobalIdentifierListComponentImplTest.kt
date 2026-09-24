@@ -128,7 +128,7 @@ class GlobalIdentifierListComponentImplTest {
 
     private fun createTestContext(
         identifiers: List<UserIdentifier>? = null,
-        repository: ManagementIdentifierRepositoryMock = ManagementIdentifierRepositoryMock(),
+        repository: ManagementIdentifierRepositoryMock = ManagementIdentifierRepositoryMock()
     ): TestContext {
         if (identifiers != null) {
             repository.getIdentifiersResultProvider = { AppResult.Success(pagedResultMock(identifiers)) }
@@ -143,7 +143,7 @@ class GlobalIdentifierListComponentImplTest {
         context.component = GlobalIdentifierListComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
             managementGetIdentifiersUseCase = useCase,
-            onBack = { context.onBackCalls++ },
+            onBack = { context.onBackCalls++ }
         )
 
         return context

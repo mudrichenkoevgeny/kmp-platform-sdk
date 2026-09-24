@@ -17,6 +17,22 @@ sealed interface UserDetailScreenState {
         val isDeleting: Boolean = false,
         val deleteError: AppError? = null,
         val isDisablingTotp: Boolean = false,
-        val disableTotpError: AppError? = null
-    ) : UserDetailScreenState
+        val disableTotpError: AppError? = null,
+        val isDeleteConfirmationVisible: Boolean = false
+    ) : UserDetailScreenState {
+        val hasChanges: Boolean
+            get() {
+                val initialAuthLevel = user.authorityLevel.toString()
+                val currentAuthLevel = authorityLevelInput.ifBlank { "0" }
+                val initialAccountStatus = user.accountStatus.name
+                val initialLockoutType = user.lockoutType.name
+                val initialTempLockout = user.temporaryLockoutUntil?.toEpochMilliseconds()?.toString() ?: ""
+
+                return currentAuthLevel != initialAuthLevel ||
+                    !accountStatusInput.equals(initialAccountStatus, ignoreCase = true) ||
+                    (!lockoutTypeInput.equals(initialLockoutType, ignoreCase = true) &&
+                        !lockoutTypeInput.equals(user.lockoutType.serialName, ignoreCase = true)) ||
+                    temporaryLockoutUntilInput != initialTempLockout
+            }
+    }
 }

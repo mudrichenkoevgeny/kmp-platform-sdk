@@ -8,7 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 
 @InternalApi
 class CreateUserComponentMock(
-    initialState: CreateUserScreenState = CreateUserScreenState(),
+    initialState: CreateUserScreenState = CreateUserScreenState()
 ) : CreateUserComponent {
 
     private val _state = MutableValue(initialState)

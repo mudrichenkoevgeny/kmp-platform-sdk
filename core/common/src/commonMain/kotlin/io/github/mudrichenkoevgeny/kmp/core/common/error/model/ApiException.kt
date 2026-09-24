@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.error.model
 
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.model.ApiErrorResponse
 import io.github.mudrichenkoevgeny.kmp.core.common.error.mapper.toServerError
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.model.ApiErrorResponse
 
 /**
  * Exception thrown by networking layer when the server returns a structured [ApiErrorResponse].

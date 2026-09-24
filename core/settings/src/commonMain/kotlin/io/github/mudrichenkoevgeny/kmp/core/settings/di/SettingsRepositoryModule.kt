@@ -1,10 +1,10 @@
 package io.github.mudrichenkoevgeny.kmp.core.settings.di
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
-import io.github.mudrichenkoevgeny.kmp.core.settings.storage.globalsettings.OpenGlobalSettingsStorage
 import io.github.mudrichenkoevgeny.kmp.core.settings.network.globalsettings.OpenGlobalSettingsApi
 import io.github.mudrichenkoevgeny.kmp.core.settings.repository.OpenGlobalSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.core.settings.repository.OpenGlobalSettingsRepositoryImpl
+import io.github.mudrichenkoevgeny.kmp.core.settings.storage.globalsettings.OpenGlobalSettingsStorage
 import kotlinx.coroutines.CoroutineScope
 
 /**

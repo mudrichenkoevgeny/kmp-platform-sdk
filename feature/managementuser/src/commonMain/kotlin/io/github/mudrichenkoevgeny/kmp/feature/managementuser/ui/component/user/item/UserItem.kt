@@ -14,7 +14,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
@@ -24,7 +23,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.main.UsersManagementMainTestTags
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.GlobalUserListTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_account_status
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_id
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_role
@@ -42,7 +41,7 @@ fun UserItem(
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .testTag(UsersManagementMainTestTags.USER_ITEM_PREFIX + user.id.value),
+            .testTag(GlobalUserListTestTags.USER_ITEM_PREFIX + user.id.value),
         elevation = CardDefaults.cardElevation(defaultElevation = CoreTheme.dimens.elevationHeader)
     ) {
         Column(modifier = Modifier.padding(CoreTheme.dimens.paddingMedium)) {

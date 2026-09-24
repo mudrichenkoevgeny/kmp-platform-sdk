@@ -66,12 +66,12 @@ fun LegalFooter(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = CoreTheme.dimens.paddingMedium),
-        horizontalArrangement = Arrangement.Center,
+        horizontalArrangement = Arrangement.Center
     ) {
         Text(
             text = "$prefixText ",
             style = bodySmall,
-            color = mutedColor,
+            color = mutedColor
         )
         when {
             isPrivacyPolicyVisible && isTermsOfServiceVisible -> {
@@ -83,7 +83,7 @@ fun LegalFooter(
                 Text(
                     text = andText,
                     style = bodySmall,
-                    color = mutedColor,
+                    color = mutedColor
                 )
                 Text(
                     text = termsText,

@@ -16,10 +16,15 @@
     <string name="audit_event_id">Event ID</string>
     <string name="audit_event_action">Action</string>
     <string name="audit_event_resource">Resource</string>
+    <string name="audit_event_resource_id">Resource ID</string>
+    <string name="audit_event_resource_sensitivity">Resource Sensitivity</string>
     <string name="audit_event_status">Status</string>
     <string name="audit_event_actor">Actor</string>
+    <string name="audit_event_actor_type">Actor Type</string>
+    <string name="audit_event_actor_role">Actor Role</string>
     <string name="audit_event_message">Message</string>
     <string name="audit_event_timestamp">Timestamp</string>
+    <string name="audit_event_metadata">Metadata</string>
 
     <!-- Edit Auth Settings Screen -->
     <string name="edit_auth_settings_title">Edit Auth Settings</string>
@@ -59,6 +64,7 @@
     <string name="user_details_title">User Details</string>
     <string name="update_user">Update User</string>
     <string name="delete_user">Delete User</string>
+    <string name="delete_user_confirmation_desc">Are you sure you want to delete this user?</string>
     <string name="user_id">User ID</string>
     <string name="user_role">Role</string>
     <string name="user_account_status">Status</string>

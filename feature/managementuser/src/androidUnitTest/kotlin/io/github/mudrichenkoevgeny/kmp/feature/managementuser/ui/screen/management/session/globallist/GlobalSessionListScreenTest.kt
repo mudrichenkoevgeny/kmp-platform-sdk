@@ -46,8 +46,8 @@ class GlobalSessionListScreenTest {
             GlobalSessionListScreenState.Content(
                 paging = PaginationState(
                     items = listOf(session),
-                    isInitialLoading = false,
-                ),
+                    isInitialLoading = false
+                )
             )
         )
         setContent {

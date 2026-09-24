@@ -80,7 +80,7 @@ class CreateUserScreenTest {
     @Test
     fun error_displaysErrorText() = runComposeUiTest {
         val component = CreateUserComponentMock(
-            initialState = CreateUserScreenState(error = CommonError.Unknown()),
+            initialState = CreateUserScreenState(error = CommonError.Unknown())
         )
         setContent {
             ComponentTestHarness {

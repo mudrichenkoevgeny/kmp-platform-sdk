@@ -66,7 +66,7 @@ class UserSessionListComponentImplTest {
     private fun createTestContext(
         userId: UserId = UserId.generate(),
         sessions: List<UserSession>? = null,
-        repository: ManagementSessionRepositoryMock = ManagementSessionRepositoryMock(),
+        repository: ManagementSessionRepositoryMock = ManagementSessionRepositoryMock()
     ): TestContext {
         if (sessions != null) {
             repository.getSessionsResultProvider = { AppResult.Success(pagedResultMock(sessions)) }
@@ -86,7 +86,7 @@ class UserSessionListComponentImplTest {
             managementGetSessionsUseCase = useCase,
             managementDeleteSessionUseCase = deleteSessionUseCase,
             managementDeleteAllUserSessionsUseCase = deleteAllSessionsUseCase,
-            onBack = { context.onBackCalls++ },
+            onBack = { context.onBackCalls++ }
         )
 
         return context

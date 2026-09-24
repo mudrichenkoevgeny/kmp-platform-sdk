@@ -3,13 +3,12 @@ package io.github.mudrichenkoevgeny.kmp.sampleclient.android
 import android.app.Application
 import io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo.AndroidDeviceInfoProvider
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.AndroidUserAuthServices
-import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.ClientAppComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.BuildConfig
+import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.ClientAppComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlin.getValue
 
 /**
  * Sample `Application`: owns a process-wide [ClientAppComponent], initializes SDK wiring on startup, and opens the WebSocket.

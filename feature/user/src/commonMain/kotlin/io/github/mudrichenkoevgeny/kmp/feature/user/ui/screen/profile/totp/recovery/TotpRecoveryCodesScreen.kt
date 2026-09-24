@@ -55,8 +55,15 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.*
+import io.github.mudrichenkoevgeny.kmp.feature.user.copy_all
+import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_cancel
+import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm
+import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm_title
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.totp.recovery.TotpRecoveryCodesComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.recovery_codes_desc
+import io.github.mudrichenkoevgeny.kmp.feature.user.recovery_codes_title
+import io.github.mudrichenkoevgeny.kmp.feature.user.regenerate_codes_confirm_msg
+import io.github.mudrichenkoevgeny.kmp.feature.user.regenerate_recovery_codes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totprecoverycodes.TotpRecoveryCodes
 import org.jetbrains.compose.resources.stringResource
 

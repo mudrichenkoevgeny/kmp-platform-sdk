@@ -17,8 +17,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.mfa.Defau
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.mfa.MfaStepUpHttpClientConfigPlugin
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.EncryptedAuthStorage
-import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.MainScreenComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.ClientMainScreenComponentImpl
+import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.MainScreenComponent
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceInfo
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.contract.WebSocketContract
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.auth.refreshtoken.OpenRefreshTokenRoutes

@@ -10,7 +10,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.Profi
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.MainScreenComponent
 import kotlinx.browser.window
 import org.w3c.dom.events.Event
-import kotlin.js.ExperimentalWasmJsInterop
 
 private const val PATH_HOME = "/home"
 private const val PATH_PROFILE = "/profile"

@@ -33,7 +33,7 @@ class ManagementUserRepositoryImplTest {
             role = "ADMIN",
             status = "ACTIVE",
             authorityLevel = 10,
-            permissionCodes = setOf("READ", "WRITE"),
+            permissionCodes = setOf("READ", "WRITE")
         )
 
         val result = repository.createUser(request)
@@ -50,7 +50,7 @@ class ManagementUserRepositoryImplTest {
             totalCount = 1L,
             pageNumber = 1,
             pageSize = 20,
-            totalPages = 1L,
+            totalPages = 1L
         )
         api.getUsersResult = AppResult.Success(pagedPayload)
 

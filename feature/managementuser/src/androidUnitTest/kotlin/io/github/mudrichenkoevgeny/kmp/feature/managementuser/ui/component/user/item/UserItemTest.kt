@@ -12,7 +12,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.main.UsersManagementMainTestTags
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.GlobalUserListTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -47,7 +47,7 @@ class UserItemTest {
         onNodeWithText(user.role.name, substring = true).assertIsDisplayed()
         onNodeWithText(user.accountStatus.name, substring = true).assertIsDisplayed()
 
-        onNodeWithTag(UsersManagementMainTestTags.USER_ITEM_PREFIX + user.id.value).performClick()
+        onNodeWithTag(GlobalUserListTestTags.USER_ITEM_PREFIX + user.id.value).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, clicks)
     }
 

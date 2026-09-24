@@ -48,8 +48,16 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.*
+import io.github.mudrichenkoevgeny.kmp.feature.user.login
+import io.github.mudrichenkoevgeny.kmp.feature.user.login_by_recovery_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.login_by_recovery_code_desc
+import io.github.mudrichenkoevgeny.kmp.feature.user.login_by_totp
+import io.github.mudrichenkoevgeny.kmp.feature.user.login_by_totp_desc
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.totp.LoginByTotpComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.recovery_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.totp_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.use_recovery_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.use_totp
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 import org.jetbrains.compose.resources.stringResource
 

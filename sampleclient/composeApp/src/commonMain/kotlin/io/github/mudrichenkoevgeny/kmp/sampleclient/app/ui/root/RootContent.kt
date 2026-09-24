@@ -8,11 +8,11 @@ import androidx.compose.runtime.remember
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalCommonComponent
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.rememberComponentContext
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.ClientAppComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.LocalClientAppComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.MainScreen
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.splash.SplashScreen
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
  * Top-level sample UI: shows [SplashScreen] until [ClientAppComponent.isInitialized], then provides
