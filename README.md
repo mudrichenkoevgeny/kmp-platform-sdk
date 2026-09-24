@@ -12,7 +12,7 @@ Add the BOM and the required modules to your `commonMain` dependencies:
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(platform("io.github.mudrichenkoevgeny:kmp-platform-sdk-bom:0.0.2"))
+            implementation(platform("io.github.mudrichenkoevgeny:kmp-platform-sdk-bom:0.0.3"))
             implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-core-common")
             implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-core-settings")
             implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-core-security")
