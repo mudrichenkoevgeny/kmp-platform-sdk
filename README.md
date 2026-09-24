@@ -24,7 +24,7 @@ Add the BOM and the required modules to your `commonMain` dependencies:
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(platform("io.github.mudrichenkoevgeny:kmp-platform-sdk-bom:0.0.1"))
+            implementation(platform("io.github.mudrichenkoevgeny:kmp-platform-sdk-bom:0.0.2"))
             implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-core-common")
             implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-feature-clientuser")
             // Add other core or feature modules as needed
