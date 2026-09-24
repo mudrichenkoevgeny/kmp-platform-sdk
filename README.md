@@ -4,18 +4,6 @@ A modular **Kotlin Multiplatform (KMP)** client SDK for Android and Web (Wasm). 
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.mudrichenkoevgeny/kmp-platform-sdk-bom)](https://central.sonatype.com/artifact/io.github.mudrichenkoevgeny/kmp-platform-sdk-bom)
 
-## Modules
-
-| Module | Purpose |
-| :--- | :--- |
-| **core/common** | **Foundation:** Ktor bootstrap, WebSocket lifecycle, `EncryptedSettings` abstraction, platform metadata, and error parsing. |
-| **core/settings** | **Global Settings:** Logic for application configuration, Ktor network client, encrypted caching, and reactive state management. |
-| **core/security** | **Security Domain:** Password policy validation, MFA state management, Ktor network client, and localized security errors. |
-| **feature/user** | **Base Identity:** Foundational models, use cases, and storage for user identity and authentication. |
-| **feature/clientuser** | **Client Identity:** Identity solution for standard user applications, including UI and social login. |
-| **feature/managementuser** | **Management Identity:** Administrative identity solution for internal staff, resource oversight, and audit logs. |
-| **bom** | **Bill of Materials:** Gradle platform to ensure version alignment across all SDK modules. |
-
 ## Installation
 
 Add the BOM and the required modules to your `commonMain` dependencies:
@@ -26,12 +14,34 @@ kotlin {
         commonMain.dependencies {
             implementation(platform("io.github.mudrichenkoevgeny:kmp-platform-sdk-bom:0.0.2"))
             implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-core-common")
+            implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-core-settings")
+            implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-core-security")
             implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-feature-clientuser")
-            // Add other core or feature modules as needed
+            // Add other kmp-platform-sdk modules as required
         }
     }
 }
 ```
+
+With a Version Catalog (`gradle/libs.versions.toml`), declare the BOM and module aliases, then use `implementation(platform(libs.kmp.platform.sdk.bom))` and `implementation(libs.kmp.platform.sdk.core.common)`.
+
+## Modules
+
+Published artifacts (versions aligned via the BOM):
+
+- **core-common** — Foundation for all modules: Ktor HTTP client bootstrap, WebSocket lifecycle management, `EncryptedSettings` abstraction, platform metadata, error modeling, Chain of Responsibility error parser, and listing/pagination infrastructure ([module README](core/common/README.md)).
+- **core-settings** — Global application settings management, REST API client, encrypted caching, and reactive WebSocket updates ([module README](core/settings/README.md)).
+- **core-security** — Password policy validation, MFA state management, Ktor API client, encrypted storage, and localized security error parsing ([module README](core/security/README.md)).
+- **feature-user** — Foundational identity & auth domain logic: core models, use cases, token storage (`AuthStorage`), session auto-refresh, TOTP 2FA, session management, identifier linking, and account deletion ([module README](feature/user/README.md)).
+- **feature-clientuser** — Identity solution for consumer applications: multi-method auth (Email, Phone OTP, Google Sign-In), Compose Multiplatform UI, social login buttons, and Decompose navigation flows ([module README](feature/clientuser/README.md)).
+- **feature-managementuser** — Administrative identity solution for internal staff, resource oversight, administrative user management, and audit inspection ([module README](feature/managementuser/README.md)).
+- **bom** — Dependency constraints for version alignment across all modules above.
+
+## Documentation & Architecture
+
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** — High-level architecture, module dependency graph, domain models (`AppType`, `UserRole`, `UserAccountStatus` state machine, `UserSession`), and detailed sequence diagrams for runtime flows (SDK bootstrap, token refresh, error parsing, WebSockets, TOTP/security, account management).
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** — Build environment configurations, dependency analysis, Roborazzi screenshot testing, and Maven Central publishing guidelines.
+- **[AGENTS.MD](AGENTS.MD)** — Project standards, module boundaries, coding style, and architectural rules for contributors and AI coding assistants.
 
 ## Integration Steps
 
@@ -131,4 +141,8 @@ fun App(clientAppComponent: ClientAppComponent) {
 }
 ```
 
-For a complete wiring example, refer to the [sampleclient](sampleclient) or [samplemanagement](samplemanagement) applications.
+For full wiring examples, refer to the **[sampleclient](sampleclient)** and **[samplemanagement](samplemanagement)** reference applications.
+
+## License
+
+This project is licensed under the Apache License 2.0 — see the [LICENSE](LICENSE) file for details.
