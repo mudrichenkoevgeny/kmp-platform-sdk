@@ -1,5 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings
 
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.toUserIdentifierIdOrThrow
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.toUserSessionIdOrThrow
 import kotlinx.serialization.Serializable
@@ -43,5 +45,17 @@ sealed class ManagementSettingsDestination {
         val sessionIdValue: String
     ) : ManagementSettingsDestination() {
         val sessionId: UserSessionId get() = sessionIdValue.toUserSessionIdOrThrow()
+    }
+
+    /** Screen for viewing all platform identifiers. */
+    @Serializable
+    object GlobalIdentifierList : ManagementSettingsDestination()
+
+    /** Screen for viewing identifier details. */
+    @Serializable
+    data class IdentifierDetail(
+        val identifierIdValue: String
+    ) : ManagementSettingsDestination() {
+        val identifierId: UserIdentifierId get() = identifierIdValue.toUserIdentifierIdOrThrow()
     }
 }

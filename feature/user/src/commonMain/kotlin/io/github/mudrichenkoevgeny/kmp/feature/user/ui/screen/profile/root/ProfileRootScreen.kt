@@ -16,6 +16,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.ProfileRootComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.MainProfileComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.SelfIdentifierListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileScreenState
@@ -37,6 +38,7 @@ fun ProfileRootScreen(component: ProfileRootComponent) {
             is ProfileRootComponent.Child.Sessions -> SelfSessionListScreen(instance.component)
             is ProfileRootComponent.Child.SessionDetail -> SessionDetailScreen(instance.component)
             is ProfileRootComponent.Child.Identifiers -> SelfIdentifierListScreen(instance.component)
+            is ProfileRootComponent.Child.IdentifierDetail -> IdentifierDetailScreen(instance.component)
         }
     }
 }

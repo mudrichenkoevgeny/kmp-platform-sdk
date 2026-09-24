@@ -11,6 +11,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.toUserSessionIdOrNull
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
  * @param isCurrentSession Indicates whether this session belongs to the current device.
  * @param authStorage Storage used to resolve active session ID if [isCurrentSession] is omitted.
  * @param onSessionRevoked Callback invoked when the session is successfully revoked.
+ * @param onNavigateToIdentifierDetail Callback to navigate to identifier detail screen.
  * @param onBack Callback to pop this screen from the navigation stack.
  */
 class SessionDetailComponentImpl(
@@ -40,6 +42,7 @@ class SessionDetailComponentImpl(
     private val isCurrentSession: Boolean? = null,
     private val authStorage: AuthStorage? = null,
     private val onSessionRevoked: ((UserSessionId) -> Unit)? = null,
+    private val onNavigateToIdentifierDetail: ((UserIdentifierId) -> Unit)? = null,
     private val onBack: () -> Unit
 ) : SessionDetailComponent, ComponentContext by componentContext {
 
@@ -55,6 +58,7 @@ class SessionDetailComponentImpl(
         isCurrentSession: Boolean? = null,
         authStorage: AuthStorage? = null,
         onSessionRevoked: ((UserSessionId) -> Unit)? = null,
+        onNavigateToIdentifierDetail: ((UserIdentifierId) -> Unit)? = null,
         onBack: () -> Unit
     ) : this(
         componentContext = componentContext,
@@ -65,6 +69,7 @@ class SessionDetailComponentImpl(
         isCurrentSession = isCurrentSession,
         authStorage = authStorage,
         onSessionRevoked = onSessionRevoked,
+        onNavigateToIdentifierDetail = onNavigateToIdentifierDetail,
         onBack = onBack
     )
 
@@ -100,6 +105,11 @@ class SessionDetailComponentImpl(
 
     override fun onBackClick() {
         onBack()
+    }
+
+    override fun onIdentifierClick() {
+        val current = _state.value as? SessionDetailScreenState.Content ?: return
+        onNavigateToIdentifierDetail?.invoke(current.session.identifierId)
     }
 
     private fun initializeSession() {

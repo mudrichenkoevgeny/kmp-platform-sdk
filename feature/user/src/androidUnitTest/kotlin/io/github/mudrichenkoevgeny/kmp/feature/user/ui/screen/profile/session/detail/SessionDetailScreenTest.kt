@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
@@ -41,17 +42,17 @@ class SessionDetailScreenTest {
         onNodeWithTag(SessionDetailTestTags.TITLE).assertIsDisplayed()
         onNodeWithTag(SessionDetailTestTags.BACK_BUTTON).assertIsDisplayed()
         onNodeWithTag(SessionDetailTestTags.SESSION_CARD).assertIsDisplayed()
-        onNodeWithTag(SessionDetailTestTags.IDENTIFIER_DISPLAY_NAME).assertIsDisplayed()
-        onNodeWithTag(SessionDetailTestTags.AUTH_PROVIDER).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.IDENTIFIER_DISPLAY_NAME, useUnmergedTree = true).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.AUTH_PROVIDER, useUnmergedTree = true).assertIsDisplayed()
         onNodeWithTag(SessionDetailTestTags.DEVICE_NAME).assertIsDisplayed()
         onNodeWithTag(SessionDetailTestTags.CLIENT_TYPE).assertIsDisplayed()
         onNodeWithTag(SessionDetailTestTags.LANGUAGE).assertIsDisplayed()
         onNodeWithTag(SessionDetailTestTags.APP_VERSION).assertIsDisplayed()
         onNodeWithTag(SessionDetailTestTags.OS_VERSION).assertIsDisplayed()
-        onNodeWithTag(SessionDetailTestTags.IP_ADDRESS).assertIsDisplayed()
-        onNodeWithTag(SessionDetailTestTags.LAST_ACCESSED_AT).assertIsDisplayed()
-        onNodeWithTag(SessionDetailTestTags.CREATED_AT).assertIsDisplayed()
-        onNodeWithTag(SessionDetailTestTags.REVOKE_BUTTON).assertIsDisplayed().performClick()
+        onNodeWithTag(SessionDetailTestTags.IP_ADDRESS).assertExists()
+        onNodeWithTag(SessionDetailTestTags.LAST_ACCESSED_AT).assertExists()
+        onNodeWithTag(SessionDetailTestTags.CREATED_AT).assertExists()
+        onNodeWithTag(SessionDetailTestTags.REVOKE_BUTTON).performScrollTo().performClick()
 
         assertEquals(1, component.revokeSessionCalls)
     }

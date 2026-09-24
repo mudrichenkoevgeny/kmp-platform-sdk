@@ -12,6 +12,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.identifier.SelfIdentifierListComponentMock
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.AvailableAuthProviders
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -42,7 +44,7 @@ class SelfIdentifierListScreenTest {
         onNodeWithTag(IdentifierListTestTags.BACK_BUTTON).assertIsDisplayed()
         onNodeWithTag(IdentifierListTestTags.REFRESH_BUTTON).assertIsDisplayed()
         onNodeWithTag(IdentifierListTestTags.IDENTIFIER_LIST).assertIsDisplayed()
-        
+
         onNodeWithTag(IdentifierListTestTags.IDENTIFIER_ITEM_PREFIX + identifier.id.value).assertIsDisplayed()
     }
 
@@ -85,5 +87,58 @@ class SelfIdentifierListScreenTest {
         }
         onNodeWithTag(IdentifierListTestTags.REFRESH_BUTTON).performClick()
         assertEquals(1, component.refreshCalls)
+    }
+
+    @Test
+    fun addIdentifierDialog_isDisplayedWhenStateIsOpen() = runComposeUiTest {
+        val component = SelfIdentifierListComponentMock(
+            initialState = SelfIdentifierListScreenState.Content(
+                paging = PaginationState(),
+                addIdentifierDialogState = AddIdentifierDialogState.ProviderSelection,
+                isAddIdentifierSupported = true,
+                availableAuthProviders = AvailableAuthProviders(
+                    primary = listOf(UserAuthProvider.EMAIL),
+                    secondary = emptyList()
+                )
+            )
+        )
+        setContent {
+            ComponentTestHarness {
+                SelfIdentifierListScreen(component)
+            }
+        }
+        onNodeWithTag(IdentifierListTestTags.ADD_IDENTIFIER_DIALOG_TITLE).assertIsDisplayed()
+    }
+
+    @Test
+    fun addIdentifierButton_displayed_whenSupported() = runComposeUiTest {
+        val supportedComponent = SelfIdentifierListComponentMock(
+            initialState = SelfIdentifierListScreenState.Content(
+                paging = PaginationState(),
+                isAddIdentifierSupported = true
+            )
+        )
+        setContent {
+            ComponentTestHarness {
+                SelfIdentifierListScreen(supportedComponent)
+            }
+        }
+        onNodeWithTag(IdentifierListTestTags.ADD_IDENTIFIER_BUTTON).assertIsDisplayed()
+    }
+
+    @Test
+    fun addIdentifierButton_hidden_whenNotSupported() = runComposeUiTest {
+        val unsupportedComponent = SelfIdentifierListComponentMock(
+            initialState = SelfIdentifierListScreenState.Content(
+                paging = PaginationState(),
+                isAddIdentifierSupported = false
+            )
+        )
+        setContent {
+            ComponentTestHarness {
+                SelfIdentifierListScreen(unsupportedComponent)
+            }
+        }
+        onNodeWithTag(IdentifierListTestTags.ADD_IDENTIFIER_BUTTON).assertDoesNotExist()
     }
 }

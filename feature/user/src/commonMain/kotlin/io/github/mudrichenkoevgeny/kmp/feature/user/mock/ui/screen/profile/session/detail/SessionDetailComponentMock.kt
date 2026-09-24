@@ -33,4 +33,6 @@ class SessionDetailComponentMock(
     override fun onBackClick() {
         backCalls++
     }
+
+    override fun onIdentifierClick() {}
 }

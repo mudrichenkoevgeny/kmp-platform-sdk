@@ -92,6 +92,8 @@
     <string name="identifier_delete">Удалить</string>
     <string name="identifier_add_email">Добавить Email</string>
     <string name="identifier_add_phone">Добавить телефон</string>
+    <string name="identifier_add_google">Добавить Google</string>
+    <string name="identifier_add_apple">Добавить Apple</string>
     <string name="identifier_primary">Основной</string>
     <string name="delete_account">Удалить аккаунт</string>
     <string name="not_authorized">Не авторизован!</string>
@@ -170,4 +172,15 @@
     <string name="unlock_success_desc">Ваш аккаунт разблокирован. Вы можете продолжить использование всех функций системы.</string>
     <string name="mfa_step_up_title">Подтверждение безопасности</string>
     <string name="mfa_step_up_desc">Эта операция требует дополнительного подтверждения. Введите 6-значный код из приложения-аутентификатора.</string>
+
+    <string name="identifier_detail_title">Идентификатор</string>
+    <string name="identifier_detail_title_current">Текущий идентификатор</string>
+    <string name="identifier_detail_id">ID идентификатора</string>
+    <string name="identifier_detail_value">Значение идентификатора</string>
+    <string name="identifier_detail_auth_provider">Провайдер аутентификации</string>
+    <string name="identifier_detail_created_at">Дата создания</string>
+    <string name="identifier_detail_updated_at">Дата обновления</string>
+    <string name="identifier_delete_button">Удалить идентификатор</string>
+    <string name="identifier_delete_password_button">Удалить пароль</string>
+    <string name="add_identifier">Добавить идентификатор</string>
 </resources>

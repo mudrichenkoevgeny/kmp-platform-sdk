@@ -213,6 +213,9 @@ class ManagementUserComponent(
     /** Returns account identifiers for the manager. */
     val getUserIdentifiersUseCase get() = useCaseModule.getUserIdentifiersUseCase
 
+    /** Returns identifier details for the manager. */
+    val getUserIdentifierUseCase get() = useCaseModule.getUserIdentifierUseCase
+
     /** Removes a manager identifier. */
     val deleteUserIdentifierUseCase get() = useCaseModule.deleteUserIdentifierUseCase
 
@@ -255,6 +258,9 @@ class ManagementUserComponent(
     /** Retrieves user identifiers administratively. */
     val managementGetIdentifiersUseCase get() = useCaseModule.managementGetIdentifiersUseCase
 
+    /** Retrieves specific user identifier details administratively. */
+    val managementGetIdentifierUseCase get() = useCaseModule.managementGetIdentifierUseCase
+
     /** Disables TOTP for a specific user administratively. */
     val managementDisableTotpUseCase get() = useCaseModule.managementDisableTotpUseCase
 
@@ -287,6 +293,7 @@ class ManagementUserComponent(
         logoutUseCase = logoutUseCase,
         scheduleUserDeletionUseCase = scheduleUserDeletionUseCase,
         restoreUserUseCase = restoreUserUseCase,
+        getAvailableUserAuthProvidersUseCase = getAvailableUserAuthProvidersUseCase,
         setupTotpUseCase = setupTotpUseCase,
         enableTotpUseCase = enableTotpUseCase,
         disableTotpUseCase = disableTotpUseCase,
@@ -297,11 +304,14 @@ class ManagementUserComponent(
         deleteSessionUseCase = deleteSessionUseCase,
         deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase,
         getUserIdentifiersUseCase = getUserIdentifiersUseCase,
+        getUserIdentifierUseCase = getUserIdentifierUseCase,
         deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
+        identifierRepository = repositoryModule.selfManagementIdentifierRepository,
         sendAddEmailIdentifierConfirmationUseCase = sendAddEmailIdentifierConfirmationUseCase,
         addUserIdentifierEmailUseCase = addUserIdentifierEmailUseCase,
         sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase,
         addUserIdentifierPhoneUseCase = addUserIdentifierPhoneUseCase,
+        addUserIdentifierGoogleUseCase = useCaseModule.addUserIdentifierGoogleUseCase,
         emailChangePasswordUseCase = emailChangePasswordUseCase,
         onNavigateToLogin = onNavigateToLogin,
         authStorage = authStorage
@@ -388,6 +398,7 @@ class ManagementUserComponent(
         managementGetSessionsUseCase = managementGetSessionsUseCase,
         managementGetSessionUseCase = managementGetSessionUseCase,
         managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+        managementGetIdentifierUseCase = managementGetIdentifierUseCase,
         managementDisableTotpUseCase = managementDisableTotpUseCase,
         managementDeleteSessionUseCase = managementDeleteSessionUseCase,
         managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase,
@@ -424,6 +435,7 @@ class ManagementUserComponent(
             managementGetSessionsUseCase = managementGetSessionsUseCase,
             managementGetSessionUseCase = managementGetSessionUseCase,
             managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+            managementGetIdentifierUseCase = managementGetIdentifierUseCase,
             managementDisableTotpUseCase = managementDisableTotpUseCase,
             managementDeleteSessionUseCase = managementDeleteSessionUseCase,
             managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase,

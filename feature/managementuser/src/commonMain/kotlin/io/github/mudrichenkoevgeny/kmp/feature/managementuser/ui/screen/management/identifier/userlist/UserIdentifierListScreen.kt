@@ -1,6 +1,5 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +28,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
-import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
@@ -39,7 +37,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorPar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.scrollbar.CoreLazyColumnScrollbar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
@@ -49,12 +46,13 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.kmp.core.common.ic_refresh
+import io.github.mudrichenkoevgeny.kmp.feature.user.add_identifier
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.identifiers.UserIdentifierListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_identifiers
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.identifier.item.IdentifierItem
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -79,16 +77,6 @@ fun UserIdentifierListScreen(component: UserIdentifierListComponent) {
                     )
                 },
                 actions = {
-                    IconButton(
-                        onClick = component::onToggleFilterPanel,
-                        modifier = Modifier.testTag(UserIdentifierListTestTags.FILTER_BUTTON)
-                    ) {
-                        Icon(
-                            painter = painterResource(CommonRes.drawable.ic_filter),
-                            contentDescription = null,
-                            modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
-                        )
-                    }
                     IconButton(
                         onClick = component::onRefresh,
                         modifier = Modifier.testTag(UserIdentifierListTestTags.REFRESH_BUTTON)
@@ -154,20 +142,6 @@ private fun Content(
                 .widthIn(max = CoreTheme.dimens.maxContentWidth)
                 .fillMaxSize()
         ) {
-            AnimatedVisibility(visible = state.isFilterPanelExpanded) {
-                ListingOptionsPanel(
-                    config = getUserIdentifierListingOptionsConfig(),
-                    sortState = state.sortState,
-                    filterStates = state.filterStates,
-                    onSortChanged = component::onSortChanged,
-                    onFilterChanged = component::onFilterChanged,
-                    onApplyClick = component::onApplyFilters,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(CoreTheme.dimens.paddingMedium)
-                )
-            }
-
             state.actionError?.let {
                 CoreErrorText(
                     text = it.toLocalizedMessage(),
@@ -189,11 +163,8 @@ private fun Content(
                 items(state.paging.items, key = { it.id.value }) { identifier ->
                     IdentifierItem(
                         identifier = identifier,
-                        onDeleteClick = { component.onDeleteIdentifierClick(identifier.id.asHexDashString()) },
-                        onChangePasswordClick = if (identifier.userAuthProvider == UserAuthProvider.EMAIL) {
-                            { component.onDeleteIdentifierPasswordClick(identifier.id.asHexDashString()) }
-                        } else null,
-                        enabled = !state.actionLoading
+                        onClick = { component.onIdentifierClick(identifier.id.asHexDashString()) },
+                        isCurrentIdentifier = false
                     )
                 }
 
@@ -218,7 +189,6 @@ private fun Content(
 object UserIdentifierListTestTags {
     const val TITLE = "UserIdentifiers_Title"
     const val BACK_BUTTON = "UserIdentifiers_BackButton"
-    const val FILTER_BUTTON = "UserIdentifiers_FilterButton"
     const val REFRESH_BUTTON = "UserIdentifiers_RefreshButton"
     const val GLOBAL_ERROR_TEXT = "UserIdentifiers_GlobalErrorText"
     const val ACTION_ERROR_TEXT = "UserIdentifiers_ActionErrorText"

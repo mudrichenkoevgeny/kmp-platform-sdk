@@ -1,68 +1,58 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list
 
 import com.arkivanov.decompose.value.Value
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterState
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 
 /**
- * Manages the identifiers lifecycle: listing, adding email/phone, and deleting identifiers.
+ * Manages the self user identifiers lifecycle: listing and navigation to identifier details or add flow.
  */
-interface SelfIdentifierListComponent {
+interface SelfIdentifierListComponent : IdentifierListOwner {
     /** Reactive UI state. */
     val state: Value<SelfIdentifierListScreenState>
 
     /** Refreshes the identifier list. */
     fun onRefresh()
 
-    /** Deletes an identifier. */
-    fun onDeleteIdentifierClick(identifierId: UserIdentifierId)
+    /** Navigates to identifier detail screen. */
+    fun onIdentifierClick(identifierId: UserIdentifierId)
 
-    /** Starts the add email process. */
-    fun onAddEmailClick(email: String)
+    /** Opens the add identifier dialog. */
+    fun onAddIdentifierClick()
 
-    /** Updates the confirmation code for email addition. */
-    fun onEmailCodeChanged(code: String)
+    /** Selects an auth provider from the dialog. */
+    fun onAddIdentifierSelectProvider(authProvider: UserAuthProvider)
 
-    /** Finalizes adding email with code. */
-    fun onConfirmAddEmailClick(password: String)
+    /** Updates email input in dialog. */
+    fun onAddIdentifierEmailChanged(email: String)
 
-    /** Starts the add phone process. */
-    fun onAddPhoneClick(phoneNumber: String)
+    /** Updates password input in dialog. */
+    fun onAddIdentifierPasswordChanged(password: String)
 
-    /** Updates the confirmation code for phone addition. */
-    fun onPhoneCodeChanged(code: String)
+    /** Toggles password visibility in dialog. */
+    fun onAddIdentifierTogglePasswordVisibility()
 
-    /** Finalizes adding phone with code. */
-    fun onConfirmAddPhoneClick()
+    /** Updates phone number input in dialog. */
+    fun onAddIdentifierPhoneChanged(phone: String)
 
-    /** Cancels any add flow. */
-    fun onCancelAddClick()
+    /** Updates confirmation code input in dialog. */
+    fun onAddIdentifierCodeChanged(code: String)
 
-    /** Opens the change password dialog for the specified email identifier. */
-    fun onChangePasswordClick(email: String)
+    /** Sends confirmation code for the active dialog flow. */
+    fun onAddIdentifierSendCode()
 
-    /** Submits password change request. */
-    fun onConfirmChangePasswordClick(oldPassword: String, newPassword: String)
+    /** Submits adding the identifier with confirmed code/password. */
+    fun onAddIdentifierSubmit()
 
-    /** Dismisses the change password dialog. */
-    fun onDismissChangePasswordDialog()
+    /** Goes back to provider selection or closes dialog. */
+    fun onAddIdentifierDialogBack()
+
+    /** Closes the add identifier dialog. */
+    fun onAddIdentifierDialogDismiss()
 
     /** Requests the next page of identifiers if available. */
     fun onLoadNextPage()
 
     /** Navigates back. */
     fun onBackClick()
-
-    /** Toggles the filter/sort panel visibility. */
-    fun onToggleFilterPanel()
-
-    /** Updates current sort state and reloads identifiers. */
-    fun onSortChanged(sortState: ListingSortState)
-
-    /** Updates current filter state and reloads identifiers. */
-    fun onFilterChanged(filterId: String, filterState: ListingFilterState?)
-
-    /** Applies current filters and reloads events. */
-    fun onApplyFilters()
 }

@@ -92,6 +92,8 @@
     <string name="identifier_delete">Delete</string>
     <string name="identifier_add_email">Add Email</string>
     <string name="identifier_add_phone">Add Phone</string>
+    <string name="identifier_add_google">Add Google</string>
+    <string name="identifier_add_apple">Add Apple</string>
     <string name="identifier_primary">Primary</string>
     <string name="delete_account">Delete Account</string>
     <string name="not_authorized">Not authorized!</string>
@@ -170,4 +172,15 @@
     <string name="unlock_success_desc">Your account has been unlocked. You may now continue using all services.</string>
     <string name="mfa_step_up_title">Security Confirmation</string>
     <string name="mfa_step_up_desc">This operation requires additional verification. Enter the 6-digit code from your authenticator app.</string>
+
+    <string name="identifier_detail_title">Identifier</string>
+    <string name="identifier_detail_title_current">Current Identifier</string>
+    <string name="identifier_detail_id">Identifier ID</string>
+    <string name="identifier_detail_value">Identifier Value</string>
+    <string name="identifier_detail_auth_provider">Auth Provider</string>
+    <string name="identifier_detail_created_at">Created At</string>
+    <string name="identifier_detail_updated_at">Updated At</string>
+    <string name="identifier_delete_button">Delete Identifier</string>
+    <string name="identifier_delete_password_button">Delete Password</string>
+    <string name="add_identifier">Add Identifier</string>
 </resources>

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,13 +35,15 @@ import org.jetbrains.compose.resources.stringResource
  * @param onClick invoked when the user taps the button.
  * @param modifier optional modifier for the button.
  * @param enabled controls the enabled state of the button.
+ * @param mode button text mode (defaults to [AuthProviderButtonMode.SIGN_IN]).
  */
 @Composable
 fun AuthProviderButton(
     authProvider: UserAuthProvider,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    mode: AuthProviderButtonMode = AuthProviderButtonMode.SIGN_IN
 ) {
     CoreButton(
         onClick = onClick,
@@ -71,11 +72,19 @@ fun AuthProviderButton(
 
         Spacer(modifier = Modifier.width(CoreTheme.dimens.paddingSmall))
 
-        val authProviderText = when (authProvider) {
-            UserAuthProvider.EMAIL -> stringResource(Res.string.sign_in_with_email)
-            UserAuthProvider.PHONE -> stringResource(Res.string.sign_in_with_phone)
-            UserAuthProvider.GOOGLE -> stringResource(Res.string.sign_in_with_google)
-            UserAuthProvider.APPLE -> stringResource(Res.string.sign_in_with_apple)
+        val authProviderText = when (mode) {
+            AuthProviderButtonMode.SIGN_IN -> when (authProvider) {
+                UserAuthProvider.EMAIL -> stringResource(Res.string.sign_in_with_email)
+                UserAuthProvider.PHONE -> stringResource(Res.string.sign_in_with_phone)
+                UserAuthProvider.GOOGLE -> stringResource(Res.string.sign_in_with_google)
+                UserAuthProvider.APPLE -> stringResource(Res.string.sign_in_with_apple)
+            }
+            AuthProviderButtonMode.ADD -> when (authProvider) {
+                UserAuthProvider.EMAIL -> stringResource(Res.string.identifier_add_email)
+                UserAuthProvider.PHONE -> stringResource(Res.string.identifier_add_phone)
+                UserAuthProvider.GOOGLE -> stringResource(Res.string.identifier_add_google)
+                UserAuthProvider.APPLE -> stringResource(Res.string.identifier_add_apple)
+            }
         }
 
         Text(
@@ -126,13 +135,13 @@ private fun AuthProviderButtonComponentSizePreview() {
 @InternalApi
 @ThemePreviews
 @Composable
-private fun AuthProviderButtonThemePreview() {
+private fun ThemePreview() {
     AuthProviderButtonPreviewContent(provider = defaultAuthProviderButtonPreviewState)
 }
 
 @InternalApi
 @FontScalePreviews
 @Composable
-private fun AuthProviderButtonFontScalePreview() {
+private fun FontScalePreview() {
     AuthProviderButtonPreviewContent(provider = defaultAuthProviderButtonPreviewState)
 }

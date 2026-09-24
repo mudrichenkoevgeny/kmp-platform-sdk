@@ -17,4 +17,7 @@ interface SessionDetailComponent {
 
     /** Navigates back. */
     fun onBackClick()
+
+    /** Navigates to identifier detail screen. */
+    fun onIdentifierClick()
 }

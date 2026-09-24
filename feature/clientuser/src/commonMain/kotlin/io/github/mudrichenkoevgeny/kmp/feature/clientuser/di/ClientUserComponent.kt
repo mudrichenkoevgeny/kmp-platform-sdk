@@ -198,6 +198,9 @@ class ClientUserComponent(
     /** Returns account identifiers. */
     val getUserIdentifiersUseCase get() = useCaseModule.getUserIdentifiersUseCase
 
+    /** Returns identifier details. */
+    val getUserIdentifierUseCase get() = useCaseModule.getUserIdentifierUseCase
+
     /** Removes an identifier. */
     val deleteUserIdentifierUseCase get() = useCaseModule.deleteUserIdentifierUseCase
 
@@ -241,6 +244,7 @@ class ClientUserComponent(
         restoreUserUseCase = restoreUserUseCase,
         getAuthSettingsUseCase = getAuthSettingsUseCase,
         observeAuthSettingsUseCase = observeAuthSettingsUseCase,
+        getAvailableUserAuthProvidersUseCase = getAvailableUserAuthProvidersUseCase,
         setupTotpUseCase = setupTotpUseCase,
         enableTotpUseCase = enableTotpUseCase,
         disableTotpUseCase = disableTotpUseCase,
@@ -251,11 +255,14 @@ class ClientUserComponent(
         deleteSessionUseCase = deleteSessionUseCase,
         deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase,
         getUserIdentifiersUseCase = getUserIdentifiersUseCase,
+        getUserIdentifierUseCase = getUserIdentifierUseCase,
         deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
+        identifierRepository = clientUserRepositoryModule.identifierRepository,
         sendAddEmailIdentifierConfirmationUseCase = sendAddEmailIdentifierConfirmationUseCase,
         addUserIdentifierEmailUseCase = addUserIdentifierEmailUseCase,
         sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase,
         addUserIdentifierPhoneUseCase = addUserIdentifierPhoneUseCase,
+        addUserIdentifierGoogleUseCase = useCaseModule.addUserIdentifierGoogleUseCase,
         emailChangePasswordUseCase = emailChangePasswordUseCase,
         onNavigateToLogin = onNavigateToLogin,
         authStorage = authStorage

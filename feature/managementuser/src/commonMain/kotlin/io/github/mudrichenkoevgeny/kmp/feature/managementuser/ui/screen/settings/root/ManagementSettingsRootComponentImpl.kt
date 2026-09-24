@@ -1,6 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.root
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
@@ -10,8 +11,10 @@ import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.root.AuditApiRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.usecase.GetAuditEventUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.usecase.GetAuditEventsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.globallist.GlobalIdentifierListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.globallist.GlobalSessionListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.root.UsersManagementRootComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.ManagementSettingsDestination
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.auth.EditAuthSettingsComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.global.EditGlobalSettingsComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.main.MainManagementSettingsComponentImpl
@@ -22,28 +25,29 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.setti
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.GetManagementGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.ResetRemoteGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.SaveRemoteGlobalSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierPasswordUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifierUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.GetManagementSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.ResetRemoteSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.SaveRemoteSecuritySettingsUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierPasswordUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteAllUserSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.CreateUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.DeleteUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUsersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.notifyIdentifierDeleted
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailScreenState
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.notifySessionRevoked
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import com.arkivanov.decompose.DelicateDecomposeApi
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.ManagementSettingsDestination
 
 /**
  * Default implementation of [ManagementSettingsRootComponent].
@@ -68,6 +72,7 @@ class ManagementSettingsRootComponentImpl(
     private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
     private val managementGetSessionUseCase: ManagementGetSessionUseCase? = null,
     private val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase,
+    private val managementGetIdentifierUseCase: ManagementGetIdentifierUseCase? = null,
     private val managementDisableTotpUseCase: ManagementDisableTotpUseCase,
     private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase,
     private val managementDeleteAllUserSessionsUseCase: ManagementDeleteAllUserSessionsUseCase,
@@ -145,6 +150,7 @@ class ManagementSettingsRootComponentImpl(
                 managementGetSessionsUseCase = managementGetSessionsUseCase,
                 managementGetSessionUseCase = managementGetSessionUseCase,
                 managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+                managementGetIdentifierUseCase = managementGetIdentifierUseCase,
                 managementDisableTotpUseCase = managementDisableTotpUseCase,
                 managementDeleteSessionUseCase = managementDeleteSessionUseCase,
                 managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase,
@@ -188,6 +194,36 @@ class ManagementSettingsRootComponentImpl(
                     managementDeleteSessionUseCase(targetUserId, targetId.asHexDashString())
                 },
                 onSessionRevoked = { stack.value.notifySessionRevoked(it) },
+                onNavigateToIdentifierDetail = { identifierId ->
+                    navigation.bringToFront(ManagementSettingsDestination.IdentifierDetail(identifierId.asHexDashString()))
+                },
+                onBack = navigation::pop
+            )
+        )
+        is ManagementSettingsDestination.GlobalIdentifierList -> ManagementSettingsRootComponent.Child.GlobalIdentifiers(
+            GlobalIdentifierListComponentImpl(
+                componentContext = context,
+                managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+                onIdentifierSelect = { identifierId ->
+                    navigation.bringToFront(ManagementSettingsDestination.IdentifierDetail(identifierId))
+                },
+                onBack = navigation::pop
+            )
+        )
+        is ManagementSettingsDestination.IdentifierDetail -> ManagementSettingsRootComponent.Child.IdentifierDetail(
+            IdentifierDetailComponentImpl(
+                componentContext = context,
+                identifierId = config.identifierId,
+                fetchIdentifier = managementGetIdentifierUseCase?.let { useCase ->
+                    { targetId -> useCase(targetId.asHexDashString()) }
+                },
+                deleteIdentifier = { targetId ->
+                    managementDeleteIdentifierUseCase(UserId.generate(), targetId.asHexDashString())
+                },
+                deletePassword = { targetId ->
+                    managementDeleteIdentifierPasswordUseCase(UserId.generate(), targetId.asHexDashString())
+                },
+                onIdentifierDeleted = { stack.value.notifyIdentifierDeleted(it) },
                 onBack = navigation::pop
             )
         )

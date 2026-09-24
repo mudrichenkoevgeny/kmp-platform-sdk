@@ -8,16 +8,15 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.auth.settings.openAuthSettingsMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.AddUserIdentifierEmailUseCaseMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.AddUserIdentifierPhoneUseCaseMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.DeleteUserIdentifierUseCaseMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.EmailChangePasswordUseCaseMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.settings.OpenAuthSettingsRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.GetUserIdentifiersUseCaseMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.SendAddEmailIdentifierConfirmationUseCaseMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.SendAddPhoneIdentifierConfirmationUseCaseMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -43,7 +42,7 @@ class SelfIdentifierListComponentImplTest {
                 )
             }
         }
-        val context = createIdentifierListComponentTestContext(getUserIdentifiersUseCase = getUserIdentifiersUseCase)
+        val context = createTestContext(getUserIdentifiersUseCase = getUserIdentifiersUseCase)
         try {
             advanceTimeBy(100.milliseconds)
             val state = assertIs<SelfIdentifierListScreenState.Content>(context.component.state.value)
@@ -54,15 +53,58 @@ class SelfIdentifierListComponentImplTest {
     }
 
     @Test
-    fun onDeleteIdentifierClick_success_reloadsIdentifiers() = runComponentTest {
-        val identifiers = listOf(userIdentifierMock())
-        val identifierId = identifiers.first().id
+    fun onIdentifierClick_invokesCallback() = runComponentTest {
+        var selectedId: UserIdentifierId? = null
+        val context = createTestContext(
+            onIdentifierSelect = { selectedId = it }
+        )
+        try {
+            advanceTimeBy(100.milliseconds)
+            val id = UserIdentifierId.generate()
+            context.component.onIdentifierClick(id)
+            assertEquals(id, selectedId)
+        } finally {
+            context.destroy()
+        }
+    }
+
+    @Test
+    fun onAddIdentifierClick_opensProviderSelectionDialog() = runComponentTest {
+        val settingsRepo = OpenAuthSettingsRepositoryMock().apply {
+            emit(openAuthSettingsMock())
+        }
+        val getAvailableUserAuthProvidersUseCase = GetAvailableUserAuthProvidersUseCase(
+            appType = AppType.CLIENT,
+            openAuthSettingsRepository = settingsRepo
+        )
+        val context = createTestContext(
+            getAvailableUserAuthProvidersUseCase = getAvailableUserAuthProvidersUseCase
+        )
+        try {
+            advanceTimeBy(100.milliseconds)
+            context.component.onAddIdentifierClick()
+            advanceTimeBy(100.milliseconds)
+            val state = assertIs<SelfIdentifierListScreenState.Content>(context.component.state.value)
+            assertEquals(AddIdentifierDialogState.ProviderSelection, state.addIdentifierDialogState)
+
+            context.component.onAddIdentifierSelectProvider(UserAuthProvider.EMAIL)
+            val updatedState = assertIs<SelfIdentifierListScreenState.Content>(context.component.state.value)
+            assertIs<AddIdentifierDialogState.EmailFlow>(updatedState.addIdentifierDialogState)
+        } finally {
+            context.destroy()
+        }
+    }
+
+    @Test
+    fun onIdentifierDeleted_removesItemFromPaging() = runComponentTest {
+        val item1 = userIdentifierMock()
+        val item2 = userIdentifierMock()
         val getUserIdentifiersUseCase = GetUserIdentifiersUseCaseMock().apply {
             resultProvider = { _, _ ->
                 AppResult.Success(
                     PagedResult(
-                        items = identifiers,
-                        totalCount = identifiers.size.toLong(),
+                        items = listOf(item1, item2),
+                        totalCount = 2,
                         pageNumber = 1,
                         pageSize = 10,
                         totalPages = 1
@@ -70,91 +112,12 @@ class SelfIdentifierListComponentImplTest {
                 )
             }
         }
-        val deleteUserIdentifierUseCase = DeleteUserIdentifierUseCaseMock()
-        val context = createIdentifierListComponentTestContext(
-            getUserIdentifiersUseCase = getUserIdentifiersUseCase,
-            deleteUserIdentifierUseCase = deleteUserIdentifierUseCase
-        )
+        val context = createTestContext(getUserIdentifiersUseCase = getUserIdentifiersUseCase)
         try {
             advanceTimeBy(100.milliseconds)
-            val initialLoadCalls = getUserIdentifiersUseCase.executeCalls
-
-            context.component.onDeleteIdentifierClick(identifierId)
-            advanceTimeBy(100.milliseconds)
-
-            assertEquals(1, deleteUserIdentifierUseCase.executeCalls)
-            assertEquals(initialLoadCalls + 1, getUserIdentifiersUseCase.executeCalls)
-        } finally {
-            context.destroy()
-        }
-    }
-
-    @Test
-    fun onAddEmailClick_success_movesToEnteringCode() = runComponentTest {
-        val email = "test@example.com"
-        val sendAddEmailIdentifierConfirmationUseCase = SendAddEmailIdentifierConfirmationUseCaseMock().apply {
-            resultProvider = { AppResult.Success(OtpConfirmation(60, 6, 300)) }
-        }
-        val context = createIdentifierListComponentTestContext(
-            sendAddEmailIdentifierConfirmationUseCase = sendAddEmailIdentifierConfirmationUseCase
-        )
-        try {
-            advanceTimeBy(100.milliseconds)
-            context.component.onAddEmailClick(email)
-            advanceTimeBy(100.milliseconds)
-
+            context.component.onIdentifierDeleted(item1.id)
             val state = assertIs<SelfIdentifierListScreenState.Content>(context.component.state.value)
-            val addState = assertIs<SelfIdentifierListScreenState.AddIdentifierState.EnteringCode>(state.addEmailState)
-            assertEquals(email, addState.value)
-            assertEquals(1, sendAddEmailIdentifierConfirmationUseCase.executeCalls)
-        } finally {
-            context.destroy()
-        }
-    }
-
-    @Test
-    fun onConfirmAddEmailClick_success_reloadsIdentifiers() = runComponentTest {
-        val email = "test@example.com"
-        val code = "123456"
-        val password = "password"
-        val sendAddEmailIdentifierConfirmationUseCase = SendAddEmailIdentifierConfirmationUseCaseMock()
-        val addUserIdentifierEmailUseCase = AddUserIdentifierEmailUseCaseMock()
-        val context = createIdentifierListComponentTestContext(
-            sendAddEmailIdentifierConfirmationUseCase = sendAddEmailIdentifierConfirmationUseCase,
-            addUserIdentifierEmailUseCase = addUserIdentifierEmailUseCase
-        )
-        try {
-            advanceTimeBy(100.milliseconds)
-            context.component.onAddEmailClick(email)
-            advanceTimeBy(100.milliseconds)
-            context.component.onEmailCodeChanged(code)
-            context.component.onConfirmAddEmailClick(password)
-            advanceTimeBy(100.milliseconds)
-
-            assertEquals(1, addUserIdentifierEmailUseCase.executeCalls)
-        } finally {
-            context.destroy()
-        }
-    }
-
-    @Test
-    fun onAddPhoneClick_success_movesToEnteringCode() = runComponentTest {
-        val phone = "+1234567890"
-        val sendAddPhoneIdentifierConfirmationUseCase = SendAddPhoneIdentifierConfirmationUseCaseMock().apply {
-            resultProvider = { AppResult.Success(OtpConfirmation(60, 6, 300)) }
-        }
-        val context = createIdentifierListComponentTestContext(
-            sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase
-        )
-        try {
-            advanceTimeBy(100.milliseconds)
-            context.component.onAddPhoneClick(phone)
-            advanceTimeBy(100.milliseconds)
-
-            val state = assertIs<SelfIdentifierListScreenState.Content>(context.component.state.value)
-            val addState = assertIs<SelfIdentifierListScreenState.AddIdentifierState.EnteringCode>(state.addPhoneState)
-            assertEquals(phone, addState.value)
-            assertEquals(1, sendAddPhoneIdentifierConfirmationUseCase.executeCalls)
+            assertEquals(listOf(item2), state.paging.items)
         } finally {
             context.destroy()
         }
@@ -178,7 +141,7 @@ class SelfIdentifierListComponentImplTest {
                 )
             }
         }
-        val context = createIdentifierListComponentTestContext(getUserIdentifiersUseCase = getUserIdentifiersUseCase)
+        val context = createTestContext(getUserIdentifiersUseCase = getUserIdentifiersUseCase)
         try {
             advanceTimeBy(100.milliseconds)
             val state1 = assertIs<SelfIdentifierListScreenState.Content>(context.component.state.value)
@@ -196,35 +159,8 @@ class SelfIdentifierListComponentImplTest {
     }
 
     @Test
-    fun onChangePasswordClick_showsDialog_andConfirmExecutesUseCase() = runComponentTest {
-        val email = "test@example.com"
-        val oldPass = "old123"
-        val newPass = "new123"
-        val emailChangePasswordUseCase = EmailChangePasswordUseCaseMock()
-        val context = createIdentifierListComponentTestContext(
-            emailChangePasswordUseCase = emailChangePasswordUseCase
-        )
-        try {
-            advanceTimeBy(100.milliseconds)
-            context.component.onChangePasswordClick(email)
-
-            val state1 = assertIs<SelfIdentifierListScreenState.Content>(context.component.state.value)
-            assertEquals(email, state1.changePasswordEmail)
-
-            context.component.onConfirmChangePasswordClick(oldPass, newPass)
-            advanceTimeBy(100.milliseconds)
-
-            assertEquals(1, emailChangePasswordUseCase.executeCalls)
-            val state2 = assertIs<SelfIdentifierListScreenState.Content>(context.component.state.value)
-            assertEquals(null, state2.changePasswordEmail)
-        } finally {
-            context.destroy()
-        }
-    }
-
-    @Test
     fun onBackClick_invokesOnBack() = runComponentTest {
-        val context = createIdentifierListComponentTestContext()
+        val context = createTestContext()
         try {
             context.component.onBackClick()
             assertEquals(1, context.onBackCalls)
@@ -233,36 +169,31 @@ class SelfIdentifierListComponentImplTest {
         }
     }
 
-    private fun createIdentifierListComponentTestContext(
+    private fun createTestContext(
         getUserIdentifiersUseCase: GetUserIdentifiersUseCaseMock = GetUserIdentifiersUseCaseMock(),
-        deleteUserIdentifierUseCase: DeleteUserIdentifierUseCaseMock = DeleteUserIdentifierUseCaseMock(),
-        sendAddEmailIdentifierConfirmationUseCase: SendAddEmailIdentifierConfirmationUseCaseMock = SendAddEmailIdentifierConfirmationUseCaseMock(),
-        addUserIdentifierEmailUseCase: AddUserIdentifierEmailUseCaseMock = AddUserIdentifierEmailUseCaseMock(),
-        sendAddPhoneIdentifierConfirmationUseCase: SendAddPhoneIdentifierConfirmationUseCaseMock = SendAddPhoneIdentifierConfirmationUseCaseMock(),
-        addUserIdentifierPhoneUseCase: AddUserIdentifierPhoneUseCaseMock = AddUserIdentifierPhoneUseCaseMock(),
-        emailChangePasswordUseCase: EmailChangePasswordUseCaseMock = EmailChangePasswordUseCaseMock()
-    ): IdentifierListComponentTestContext {
+        getAvailableUserAuthProvidersUseCase: GetAvailableUserAuthProvidersUseCase = GetAvailableUserAuthProvidersUseCase(
+            appType = AppType.CLIENT,
+            openAuthSettingsRepository = OpenAuthSettingsRepositoryMock().apply { emit(openAuthSettingsMock()) }
+        ),
+        onIdentifierSelect: (UserIdentifierId) -> Unit = {}
+    ): TestContext {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
 
-        val context = IdentifierListComponentTestContext(lifecycle)
+        val context = TestContext(lifecycle)
 
         context.component = SelfIdentifierListComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
             getUserIdentifiersUseCase = getUserIdentifiersUseCase,
-            deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
-            sendAddEmailIdentifierConfirmationUseCase = sendAddEmailIdentifierConfirmationUseCase,
-            addUserIdentifierEmailUseCase = addUserIdentifierEmailUseCase,
-            sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase,
-            addUserIdentifierPhoneUseCase = addUserIdentifierPhoneUseCase,
-            emailChangePasswordUseCase = emailChangePasswordUseCase,
+            getAvailableUserAuthProvidersUseCase = getAvailableUserAuthProvidersUseCase,
+            onIdentifierSelect = onIdentifierSelect,
             onBack = { context.onBackCalls++ }
         )
 
         return context
     }
 
-    private class IdentifierListComponentTestContext(
+    private class TestContext(
         val lifecycle: LifecycleRegistry
     ) {
         lateinit var component: SelfIdentifierListComponentImpl

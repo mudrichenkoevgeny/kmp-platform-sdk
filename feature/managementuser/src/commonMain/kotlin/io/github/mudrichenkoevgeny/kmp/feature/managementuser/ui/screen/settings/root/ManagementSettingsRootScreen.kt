@@ -15,12 +15,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit.ui.screen.root.AuditApiRootScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.settings.ManagementSettingsRootComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.globallist.GlobalIdentifierListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.globallist.GlobalSessionListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.root.UsersManagementRootScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.auth.EditAuthSettingsScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.global.EditGlobalSettingsScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.main.MainManagementSettingsScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.settings.security.EditSecuritySettingsScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailScreen
 
 /**
@@ -43,6 +45,8 @@ fun ManagementSettingsRootScreen(component: ManagementSettingsRootComponent) {
             is ManagementSettingsRootComponent.Child.AuditLogs -> AuditApiRootScreen(instance.component)
             is ManagementSettingsRootComponent.Child.Sessions -> GlobalSessionListScreen(instance.component)
             is ManagementSettingsRootComponent.Child.SessionDetail -> SessionDetailScreen(instance.component)
+            is ManagementSettingsRootComponent.Child.GlobalIdentifiers -> GlobalIdentifierListScreen(instance.component)
+            is ManagementSettingsRootComponent.Child.IdentifierDetail -> IdentifierDetailScreen(instance.component)
         }
     }
 }

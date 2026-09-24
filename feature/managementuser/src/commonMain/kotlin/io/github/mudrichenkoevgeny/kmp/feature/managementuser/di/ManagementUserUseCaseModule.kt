@@ -21,10 +21,13 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockBy
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockByExternalAuthProviderUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockByPhoneUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.auth.google.DisabledGoogleAuthService
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierEmailUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierGoogleUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierPhoneUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.DeleteUserIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.EmailChangePasswordUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.GetUserIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.GetUserIdentifiersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.SendAddEmailIdentifierConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.SendAddPhoneIdentifierConfirmationUseCase
@@ -62,11 +65,13 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.Delet
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierPasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteAllUserSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 
 /**
  * Internal dependency wiring for management use cases.
@@ -193,7 +198,7 @@ internal class ManagementUserUseCaseModule(
     /** Returns auth providers allowed for management context. */
     val getAvailableUserAuthProvidersUseCase by lazy {
         GetAvailableUserAuthProvidersUseCase(
-            appType = io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType.MANAGEMENT,
+            appType = AppType.MANAGEMENT,
             openAuthSettingsRepository = null
         )
     }
@@ -306,6 +311,13 @@ internal class ManagementUserUseCaseModule(
         )
     }
 
+    /** Returns identifier details. */
+    val getUserIdentifierUseCase by lazy {
+        GetUserIdentifierUseCase(
+            identifierRepository = managementUserRepositoryModule.selfManagementIdentifierRepository
+        )
+    }
+
     /** Removes identifier. */
     val deleteUserIdentifierUseCase by lazy {
         DeleteUserIdentifierUseCase(
@@ -337,6 +349,14 @@ internal class ManagementUserUseCaseModule(
     /** Links new phone. */
     val addUserIdentifierPhoneUseCase by lazy {
         AddUserIdentifierPhoneUseCase(
+            identifierRepository = managementUserRepositoryModule.selfManagementIdentifierRepository
+        )
+    }
+
+    /** Associates a new Google identifier with the current account. */
+    val addUserIdentifierGoogleUseCase by lazy {
+        AddUserIdentifierGoogleUseCase(
+            authService = authServices.googleAuth ?: DisabledGoogleAuthService(),
             identifierRepository = managementUserRepositoryModule.selfManagementIdentifierRepository
         )
     }
@@ -457,6 +477,13 @@ internal class ManagementUserUseCaseModule(
     val managementGetSessionUseCase by lazy {
         ManagementGetSessionUseCase(
             managementSessionRepository = managementUserRepositoryModule.managementSessionRepository
+        )
+    }
+
+    /** Retrieves user identifier administratively. */
+    val managementGetIdentifierUseCase by lazy {
+        ManagementGetIdentifierUseCase(
+            managementIdentifierRepository = managementUserRepositoryModule.managementIdentifierRepository
         )
     }
 

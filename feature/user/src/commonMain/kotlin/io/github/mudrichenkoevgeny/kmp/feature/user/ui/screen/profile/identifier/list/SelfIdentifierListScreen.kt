@@ -1,15 +1,9 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,24 +15,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,11 +33,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
-import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
-import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
+import io.github.mudrichenkoevgeny.kmp.core.common.ic_refresh
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
@@ -62,13 +48,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreEmailT
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CorePasswordTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.scrollbar.CoreLazyColumnScrollbar
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.scrollbar.CoreLazyColumnScrollbar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreSmallText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
@@ -79,7 +66,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.*
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.identifier.SelfIdentifierListComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth.AuthProviderButton
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth.AuthProviderButtonMode
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth.AuthProviderGrid
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.identifier.item.IdentifierItem
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.AvailableAuthProviders
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import org.jetbrains.compose.resources.painterResource
@@ -107,16 +98,6 @@ fun SelfIdentifierListScreen(component: SelfIdentifierListComponent) {
                 },
                 actions = {
                     IconButton(
-                        onClick = component::onToggleFilterPanel,
-                        modifier = Modifier.testTag(IdentifierListTestTags.FILTER_BUTTON)
-                    ) {
-                        Icon(
-                            painter = painterResource(CommonRes.drawable.ic_filter),
-                            contentDescription = null,
-                            modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
-                        )
-                    }
-                    IconButton(
                         onClick = component::onRefresh,
                         modifier = Modifier.testTag(IdentifierListTestTags.REFRESH_BUTTON)
                     ) {
@@ -128,12 +109,30 @@ fun SelfIdentifierListScreen(component: SelfIdentifierListComponent) {
                     }
                 }
             )
+        },
+        bottomBar = {
+            val currentState = state as? SelfIdentifierListScreenState.Content
+            if (currentState?.isAddIdentifierSupported == true) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(CoreTheme.dimens.paddingMedium)
+                ) {
+                    CoreButton(
+                        text = stringResource(Res.string.add_identifier),
+                        onClick = component::onAddIdentifierClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag(IdentifierListTestTags.ADD_IDENTIFIER_BUTTON)
+                    )
+                }
+            }
         }
     ) { padding ->
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
+                .padding(padding)
+                .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             when (val currentState = state) {
@@ -144,19 +143,16 @@ fun SelfIdentifierListScreen(component: SelfIdentifierListComponent) {
                     } else {
                         Content(
                             state = currentState,
-                            component = component,
-                            onDeleteIdentifier = component::onDeleteIdentifierClick,
-                            onChangePasswordClick = component::onChangePasswordClick,
-                            onConfirmChangePassword = component::onConfirmChangePasswordClick,
-                            onDismissChangePassword = component::onDismissChangePasswordDialog,
-                            onAddEmail = component::onAddEmailClick,
-                            onEmailCodeChanged = component::onEmailCodeChanged,
-                            onConfirmEmail = component::onConfirmAddEmailClick,
-                            onAddPhone = component::onAddPhoneClick,
-                            onPhoneCodeChanged = component::onPhoneCodeChanged,
-                            onConfirmPhone = component::onConfirmAddPhoneClick,
-                            onCancelAdd = component::onCancelAddClick,
+                            onIdentifierClick = component::onIdentifierClick,
                             onLoadNextPage = component::onLoadNextPage
+                        )
+                    }
+
+                    if (currentState.addIdentifierDialogState != null) {
+                        AddIdentifierDialog(
+                            contentState = currentState,
+                            dialogState = currentState.addIdentifierDialogState,
+                            component = component
                         )
                     }
                 }
@@ -172,20 +168,196 @@ fun SelfIdentifierListScreen(component: SelfIdentifierListComponent) {
 }
 
 @Composable
+private fun AddIdentifierDialog(
+    contentState: SelfIdentifierListScreenState.Content,
+    dialogState: AddIdentifierDialogState,
+    component: SelfIdentifierListComponent
+) {
+    AlertDialog(
+        onDismissRequest = component::onAddIdentifierDialogDismiss,
+        title = {
+            CoreTitleText(
+                text = stringResource(Res.string.add_identifier),
+                modifier = Modifier.testTag(IdentifierListTestTags.ADD_IDENTIFIER_DIALOG_TITLE)
+            )
+        },
+        text = {
+            Box {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    when (dialogState) {
+                        is AddIdentifierDialogState.ProviderSelection -> {
+                            val availableProviders = contentState.availableAuthProviders
+                            if (availableProviders != null) {
+                                availableProviders.primary.forEach { provider ->
+                                    AuthProviderButton(
+                                        authProvider = provider,
+                                        onClick = { component.onAddIdentifierSelectProvider(provider) },
+                                        mode = AuthProviderButtonMode.ADD,
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                }
+
+                                if (availableProviders.secondary.isNotEmpty()) {
+                                    AuthProviderGrid(
+                                        authProviders = availableProviders.secondary,
+                                        onProviderClick = component::onAddIdentifierSelectProvider,
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                }
+                            }
+                        }
+                        is AddIdentifierDialogState.EmailFlow -> {
+                            if (!dialogState.isConfirmationSent) {
+                                CoreEmailTextField(
+                                    value = dialogState.email,
+                                    onValueChange = component::onAddIdentifierEmailChanged,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+
+                                CoreButton(
+                                    text = stringResource(Res.string.send_code),
+                                    onClick = component::onAddIdentifierSendCode,
+                                    enabled = dialogState.canSendCode,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            } else {
+                                CoreBodyText(stringResource(Res.string.code_sent_to, dialogState.email))
+
+                                CoreCodeTextField(
+                                    value = dialogState.code,
+                                    onValueChange = component::onAddIdentifierCodeChanged,
+                                    label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
+                                    placeholder = { CoreBodyText(stringResource(Res.string.enter_confirmation_code)) },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+
+                                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+
+                                CorePasswordTextField(
+                                    value = dialogState.password,
+                                    onValueChange = component::onAddIdentifierPasswordChanged,
+                                    isPasswordVisible = dialogState.isPasswordVisible,
+                                    onTogglePasswordVisibility = component::onAddIdentifierTogglePasswordVisibility,
+                                    label = { CoreBodyText(stringResource(Res.string.password)) },
+                                    placeholder = { CoreBodyText(stringResource(Res.string.password)) },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+
+                                if (dialogState.resendTimerSeconds > 0) {
+                                    CoreSmallText(stringResource(Res.string.resend_code_timer, dialogState.resendTimerSeconds))
+                                } else {
+                                    CoreTextButton(
+                                        text = stringResource(Res.string.resend_code),
+                                        onClick = component::onAddIdentifierSendCode,
+                                        enabled = dialogState.canResendCode
+                                    )
+                                }
+
+                                CoreButton(
+                                    text = stringResource(Res.string.add_identifier),
+                                    onClick = component::onAddIdentifierSubmit,
+                                    enabled = dialogState.canSubmit,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+
+                                CoreTextButton(
+                                    text = stringResource(Res.string.change_email),
+                                    onClick = component::onAddIdentifierDialogBack
+                                )
+                            }
+                        }
+                        is AddIdentifierDialogState.PhoneFlow -> {
+                            if (!dialogState.isConfirmationSent) {
+                                CoreOutlinedTextField(
+                                    value = dialogState.phoneNumber,
+                                    onValueChange = component::onAddIdentifierPhoneChanged,
+                                    label = { CoreBodyText(stringResource(Res.string.phone_number)) },
+                                    placeholder = { CoreBodyText(stringResource(Res.string.phone_number)) },
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                                    singleLine = true,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+
+                                CoreButton(
+                                    text = stringResource(Res.string.send_code),
+                                    onClick = component::onAddIdentifierSendCode,
+                                    enabled = dialogState.canSendCode,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            } else {
+                                CoreBodyText(stringResource(Res.string.code_sent_to, dialogState.phoneNumber))
+
+                                CoreCodeTextField(
+                                    value = dialogState.code,
+                                    onValueChange = component::onAddIdentifierCodeChanged,
+                                    label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
+                                    placeholder = { CoreBodyText(stringResource(Res.string.enter_confirmation_code)) },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+
+                                if (dialogState.resendTimerSeconds > 0) {
+                                    CoreSmallText(stringResource(Res.string.resend_code_timer, dialogState.resendTimerSeconds))
+                                } else {
+                                    CoreTextButton(
+                                        text = stringResource(Res.string.resend_code),
+                                        onClick = component::onAddIdentifierSendCode,
+                                        enabled = dialogState.canResendCode
+                                    )
+                                }
+
+                                CoreButton(
+                                    text = stringResource(Res.string.add_identifier),
+                                    onClick = component::onAddIdentifierSubmit,
+                                    enabled = dialogState.canSubmit,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+
+                                CoreTextButton(
+                                    text = stringResource(Res.string.change_phone_number),
+                                    onClick = component::onAddIdentifierDialogBack
+                                )
+                            }
+                        }
+                    }
+
+                    contentState.actionError?.let { error ->
+                        CoreErrorText(
+                            text = error.toLocalizedMessage(),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+
+                if (contentState.actionLoading) {
+                    FullscreenOverlayLoading()
+                }
+            }
+        },
+        confirmButton = {
+            if (dialogState != AddIdentifierDialogState.ProviderSelection) {
+                CoreTextButton(
+                    text = stringResource(Res.string.cancel),
+                    onClick = component::onAddIdentifierDialogDismiss
+                )
+            } else {
+                CoreTextButton(
+                    text = stringResource(Res.string.cancel),
+                    onClick = component::onAddIdentifierDialogDismiss
+                )
+            }
+        }
+    )
+}
+
+@Composable
 private fun Content(
     state: SelfIdentifierListScreenState.Content,
-    component: SelfIdentifierListComponent,
-    onDeleteIdentifier: (UserIdentifierId) -> Unit,
-    onChangePasswordClick: (String) -> Unit,
-    onConfirmChangePassword: (oldPassword: String, newPassword: String) -> Unit,
-    onDismissChangePassword: () -> Unit,
-    onAddEmail: (String) -> Unit,
-    onEmailCodeChanged: (String) -> Unit,
-    onConfirmEmail: (String) -> Unit,
-    onAddPhone: (String) -> Unit,
-    onPhoneCodeChanged: (String) -> Unit,
-    onConfirmPhone: () -> Unit,
-    onCancelAdd: () -> Unit,
+    onIdentifierClick: (UserIdentifierId) -> Unit,
     onLoadNextPage: () -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -194,25 +366,7 @@ private fun Content(
         onLoadNextPage()
     }
 
-    var emailInput by remember { mutableStateOf("") }
-    var passwordInput by remember { mutableStateOf("") }
-    var phoneInput by remember { mutableStateOf("") }
-
     Column(modifier = Modifier.fillMaxSize()) {
-        AnimatedVisibility(visible = state.isFilterPanelExpanded) {
-            ListingOptionsPanel(
-                config = getIdentifierListListingConfig(),
-                sortState = state.sortState,
-                filterStates = state.filterStates,
-                onSortChanged = component::onSortChanged,
-                onFilterChanged = component::onFilterChanged,
-                onApplyClick = component::onApplyFilters,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(CoreTheme.dimens.paddingMedium)
-            )
-        }
-
         Box(modifier = Modifier.weight(1f)) {
             LazyColumn(
                 state = listState,
@@ -225,13 +379,8 @@ private fun Content(
                 items(state.paging.items, key = { it.id.value }) { identifier ->
                     IdentifierItem(
                         identifier = identifier,
-                        onDeleteClick = { onDeleteIdentifier(identifier.id) },
-                        onChangePasswordClick = if (identifier.userAuthProvider == UserAuthProvider.EMAIL) {
-                            { onChangePasswordClick(identifier.identifier) }
-                        } else null,
-                        enabled = !state.actionLoading &&
-                            state.addEmailState is SelfIdentifierListScreenState.AddIdentifierState.Idle &&
-                            state.addPhoneState is SelfIdentifierListScreenState.AddIdentifierState.Idle
+                        onClick = { onIdentifierClick(identifier.id) },
+                        isCurrentIdentifier = (identifier.id == state.currentIdentifierId)
                     )
                 }
 
@@ -239,51 +388,6 @@ private fun Content(
                     PagingFooter(
                         state = state.paging,
                         onRetry = onLoadNextPage
-                    )
-                }
-
-                item {
-                    Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
-                    HorizontalDivider()
-                    Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
-                }
-
-                item {
-                    AddEmailSection(
-                        state = state.addEmailState,
-                        emailInput = emailInput,
-                        onEmailInputChange = { emailInput = it },
-                        passwordInput = passwordInput,
-                        onPasswordInputChange = { passwordInput = it },
-                        onAddClick = { onAddEmail(emailInput) },
-                        onCodeChanged = onEmailCodeChanged,
-                        onConfirmClick = { onConfirmEmail(passwordInput) },
-                        onCancelClick = onCancelAdd,
-                        enabled = !state.actionLoading && state.addPhoneState is SelfIdentifierListScreenState.AddIdentifierState.Idle
-                    )
-                }
-
-                item {
-                    Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
-                }
-
-                item {
-                    AddPhoneSection(
-                        state = state.addPhoneState,
-                        phoneInput = phoneInput,
-                        onPhoneInputChange = { phoneInput = it },
-                        onAddClick = { onAddPhone(phoneInput) },
-                        onCodeChanged = onPhoneCodeChanged,
-                        onConfirmClick = onConfirmPhone,
-                        onCancelClick = onCancelAdd,
-                        enabled = !state.actionLoading && state.addEmailState is SelfIdentifierListScreenState.AddIdentifierState.Idle
-                    )
-                }
-
-                item {
-                    ErrorText(
-                        error = state.actionError,
-                        testTag = IdentifierListTestTags.ACTION_ERROR_TEXT
                     )
                 }
             }
@@ -296,253 +400,14 @@ private fun Content(
             )
         }
 
-        if (state.changePasswordEmail != null) {
-            ChangePasswordDialog(
-                email = state.changePasswordEmail,
-                onConfirm = onConfirmChangePassword,
-                onDismiss = onDismissChangePassword,
-                enabled = !state.actionLoading
-            )
-        }
-    }
-}
-
-@Composable
-private fun ChangePasswordDialog(
-    email: String,
-    onConfirm: (oldPassword: String, newPassword: String) -> Unit,
-    onDismiss: () -> Unit,
-    enabled: Boolean
-) {
-    var oldPassword by remember { mutableStateOf("") }
-    var newPassword by remember { mutableStateOf("") }
-    var isOldPasswordVisible by remember { mutableStateOf(false) }
-    var isNewPasswordVisible by remember { mutableStateOf(false) }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
-        title = { CoreTitleText(text = stringResource(Res.string.change_password)) },
-        text = {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                CoreBodyText(
-                    text = stringResource(Res.string.email_prefix, email)
-                )
-                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                CorePasswordTextField(
-                    value = oldPassword,
-                    onValueChange = { oldPassword = it },
-                    isPasswordVisible = isOldPasswordVisible,
-                    onTogglePasswordVisibility = { isOldPasswordVisible = !isOldPasswordVisible },
-                    label = { CoreBodyText(stringResource(Res.string.old_password)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.old_password)) },
-                    enabled = enabled,
-                    modifier = Modifier.testTag(IdentifierListTestTags.CHANGE_PASSWORD_OLD_INPUT)
-                )
-                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                CorePasswordTextField(
-                    value = newPassword,
-                    onValueChange = { newPassword = it },
-                    isPasswordVisible = isNewPasswordVisible,
-                    onTogglePasswordVisibility = { isNewPasswordVisible = !isNewPasswordVisible },
-                    label = { CoreBodyText(stringResource(Res.string.new_password)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.new_password)) },
-                    enabled = enabled,
-                    modifier = Modifier.testTag(IdentifierListTestTags.CHANGE_PASSWORD_NEW_INPUT)
-                )
-            }
-        },
-        confirmButton = {
-            CoreButton(
-                text = stringResource(Res.string.confirm),
-                onClick = { onConfirm(oldPassword, newPassword) },
-                enabled = enabled && oldPassword.isNotBlank() && newPassword.isNotBlank(),
-                modifier = Modifier.testTag(IdentifierListTestTags.CONFIRM_CHANGE_PASSWORD_BUTTON)
-            )
-        },
-        dismissButton = {
-            CoreTextButton(
-                text = stringResource(Res.string.dialog_cancel),
-                onClick = onDismiss,
-                enabled = enabled
-            )
-        }
-    )
-}
-
-@Composable
-private fun AddEmailSection(
-    state: SelfIdentifierListScreenState.AddIdentifierState,
-    emailInput: String,
-    onEmailInputChange: (String) -> Unit,
-    passwordInput: String,
-    onPasswordInputChange: (String) -> Unit,
-    onAddClick: () -> Unit,
-    onCodeChanged: (String) -> Unit,
-    onConfirmClick: () -> Unit,
-    onCancelClick: () -> Unit,
-    enabled: Boolean
-) {
-    var isPasswordVisible by remember { mutableStateOf(false) }
-
-    Column(modifier = Modifier.fillMaxWidth()) {
-        CoreTitleText(
-            text = stringResource(Res.string.identifier_add_email),
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-        )
-        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-
-        when (state) {
-            is SelfIdentifierListScreenState.AddIdentifierState.Idle -> {
-                CoreEmailTextField(
-                    value = emailInput,
-                    onValueChange = onEmailInputChange,
-                    label = { CoreBodyText(stringResource(Res.string.email)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.email)) },
-                    enabled = enabled,
-                    modifier = Modifier.testTag(IdentifierListTestTags.ADD_EMAIL_INPUT)
-                )
-                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                CoreButton(
-                    text = stringResource(Res.string.identifier_add_email),
-                    onClick = onAddClick,
-                    enabled = enabled && emailInput.isNotBlank(),
-                    modifier = Modifier.testTag(IdentifierListTestTags.ADD_EMAIL_BUTTON)
-                )
-            }
-            is SelfIdentifierListScreenState.AddIdentifierState.EnteringCode -> {
-                CoreBodyText(text = stringResource(Res.string.email_prefix, state.value))
-                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                CorePasswordTextField(
-                    value = passwordInput,
-                    onValueChange = onPasswordInputChange,
-                    isPasswordVisible = isPasswordVisible,
-                    onTogglePasswordVisibility = { isPasswordVisible = !isPasswordVisible },
-                    label = { CoreBodyText(stringResource(Res.string.password)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.password)) },
-                    enabled = enabled,
-                    modifier = Modifier.testTag(IdentifierListTestTags.ADD_EMAIL_PASSWORD_INPUT)
-                )
-                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                CoreCodeTextField(
-                    value = state.code,
-                    onValueChange = onCodeChanged,
-                    label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
-                    enabled = enabled,
-                    modifier = Modifier.testTag(IdentifierListTestTags.ADD_EMAIL_CODE_INPUT)
-                )
-                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
-                ) {
-                    CoreTextButton(
-                        text = stringResource(Res.string.cancel),
-                        onClick = onCancelClick,
-                        modifier = Modifier.weight(1f)
-                    )
-                    CoreButton(
-                        text = stringResource(Res.string.confirm),
-                        onClick = onConfirmClick,
-                        enabled = enabled && state.code.length == 6 && passwordInput.isNotBlank(),
-                        modifier = Modifier
-                            .weight(1f)
-                            .testTag(IdentifierListTestTags.CONFIRM_ADD_EMAIL_BUTTON)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun AddPhoneSection(
-    state: SelfIdentifierListScreenState.AddIdentifierState,
-    phoneInput: String,
-    onPhoneInputChange: (String) -> Unit,
-    onAddClick: () -> Unit,
-    onCodeChanged: (String) -> Unit,
-    onConfirmClick: () -> Unit,
-    onCancelClick: () -> Unit,
-    enabled: Boolean
-) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        CoreTitleText(
-            text = stringResource(Res.string.identifier_add_phone),
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-        )
-        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-
-        when (state) {
-            is SelfIdentifierListScreenState.AddIdentifierState.Idle -> {
-                CoreOutlinedTextField(
-                    value = phoneInput,
-                    onValueChange = onPhoneInputChange,
-                    label = { CoreBodyText(stringResource(Res.string.phone_number)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.phone_number)) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                    enabled = enabled,
-                    modifier = Modifier.testTag(IdentifierListTestTags.ADD_PHONE_INPUT)
-                )
-                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                CoreButton(
-                    text = stringResource(Res.string.identifier_add_phone),
-                    onClick = onAddClick,
-                    enabled = enabled && phoneInput.isNotBlank(),
-                    modifier = Modifier.testTag(IdentifierListTestTags.ADD_PHONE_BUTTON)
-                )
-            }
-            is SelfIdentifierListScreenState.AddIdentifierState.EnteringCode -> {
-                CoreBodyText(text = stringResource(Res.string.phone_prefix, state.value))
-                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                CoreCodeTextField(
-                    value = state.code,
-                    onValueChange = onCodeChanged,
-                    label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
-                    enabled = enabled,
-                    modifier = Modifier.testTag(IdentifierListTestTags.ADD_PHONE_CODE_INPUT)
-                )
-                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
-                ) {
-                    CoreTextButton(
-                        text = stringResource(Res.string.cancel),
-                        onClick = onCancelClick,
-                        modifier = Modifier.weight(1f)
-                    )
-                    CoreButton(
-                        text = stringResource(Res.string.confirm),
-                        onClick = onConfirmClick,
-                        enabled = enabled && state.code.length == 6,
-                        modifier = Modifier
-                            .weight(1f)
-                            .testTag(IdentifierListTestTags.CONFIRM_ADD_PHONE_BUTTON)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ErrorText(error: AppError?, testTag: String) {
-    AnimatedVisibility(
-        visible = error != null,
-        enter = fadeIn() + expandVertically(),
-        exit = fadeOut() + shrinkVertically()
-    ) {
-        error?.let {
+        if (state.actionError != null) {
             CoreErrorText(
-                text = it.toLocalizedMessage(),
+                text = state.actionError.toLocalizedMessage(),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(CoreTheme.dimens.paddingMedium)
                     .fillMaxWidth()
-                    .testTag(testTag)
+                    .padding(CoreTheme.dimens.paddingMedium)
+                    .testTag(IdentifierListTestTags.ACTION_ERROR_TEXT)
             )
         }
     }
@@ -554,22 +419,12 @@ internal class SelfIdentifierListPreviewProvider : PreviewParameterProvider<Self
         "Content List" to SelfIdentifierListScreenState.Content(
             paging = PaginationState(
                 items = listOf(userIdentifierMock())
-            )
-        ),
-        "Add Email Entering Code" to SelfIdentifierListScreenState.Content(
-            paging = PaginationState(items = listOf(userIdentifierMock())),
-            addEmailState = SelfIdentifierListScreenState.AddIdentifierState.EnteringCode("user@example.com", "123456")
-        ),
-        "Add Phone Entering Code" to SelfIdentifierListScreenState.Content(
-            paging = PaginationState(items = listOf(userIdentifierMock())),
-            addPhoneState = SelfIdentifierListScreenState.AddIdentifierState.EnteringCode("+1234567890", "123456")
-        ),
-        "Change Password Active" to SelfIdentifierListScreenState.Content(
-            paging = PaginationState(items = listOf(userIdentifierMock())),
-            changePasswordEmail = "user@example.com"
+            ),
+            isAddIdentifierSupported = true
         ),
         "Action Loading" to SelfIdentifierListScreenState.Content(
             paging = PaginationState(items = listOf(userIdentifierMock())),
+            isAddIdentifierSupported = true,
             actionLoading = true
         ),
         "Global Error" to SelfIdentifierListScreenState.Error(error = CommonError.Unknown()),
@@ -593,7 +448,8 @@ private fun SelfIdentifierListScreenPreviewContent(state: SelfIdentifierListScre
 
 @InternalApi
 private val defaultSelfIdentifierListPreviewState = SelfIdentifierListScreenState.Content(
-    paging = PaginationState(items = listOf(userIdentifierMock()))
+    paging = PaginationState(items = listOf(userIdentifierMock())),
+    isAddIdentifierSupported = true
 )
 
 @InternalApi
@@ -637,24 +493,11 @@ private fun FontScalePreviewSelf() {
 object IdentifierListTestTags {
     const val TITLE = "IdentifierList_Title"
     const val BACK_BUTTON = "IdentifierList_BackButton"
-    const val FILTER_BUTTON = "IdentifierList_FilterButton"
     const val REFRESH_BUTTON = "IdentifierList_RefreshButton"
     const val GLOBAL_ERROR_TEXT = "IdentifierList_GlobalErrorText"
     const val IDENTIFIER_LIST = "IdentifierList_List"
     const val IDENTIFIER_ITEM_PREFIX = "IdentifierList_Item_"
-    const val DELETE_BUTTON_PREFIX = "IdentifierList_DeleteButton_"
-    const val CHANGE_PASSWORD_BUTTON_PREFIX = "IdentifierList_ChangePasswordButton_"
-    const val CHANGE_PASSWORD_OLD_INPUT = "IdentifierList_ChangePasswordOldInput"
-    const val CHANGE_PASSWORD_NEW_INPUT = "IdentifierList_ChangePasswordNewInput"
-    const val CONFIRM_CHANGE_PASSWORD_BUTTON = "IdentifierList_ConfirmChangePasswordButton"
-    const val ADD_EMAIL_INPUT = "IdentifierList_AddEmailInput"
-    const val ADD_EMAIL_BUTTON = "IdentifierList_AddEmailButton"
-    const val ADD_EMAIL_PASSWORD_INPUT = "IdentifierList_AddEmailPasswordInput"
-    const val ADD_EMAIL_CODE_INPUT = "IdentifierList_AddEmailCodeInput"
-    const val CONFIRM_ADD_EMAIL_BUTTON = "IdentifierList_ConfirmAddEmailButton"
-    const val ADD_PHONE_INPUT = "IdentifierList_AddPhoneInput"
-    const val ADD_PHONE_BUTTON = "IdentifierList_AddPhoneButton"
-    const val ADD_PHONE_CODE_INPUT = "IdentifierList_AddPhoneCodeInput"
-    const val CONFIRM_ADD_PHONE_BUTTON = "IdentifierList_ConfirmAddPhoneButton"
+    const val ADD_IDENTIFIER_BUTTON = "IdentifierList_AddIdentifierButton"
+    const val ADD_IDENTIFIER_DIALOG_TITLE = "IdentifierList_AddIdentifierDialogTitle"
     const val ACTION_ERROR_TEXT = "IdentifierList_ActionErrorText"
 }

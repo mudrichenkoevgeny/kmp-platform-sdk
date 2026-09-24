@@ -7,32 +7,31 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCorou
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.appendResult
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ChoiceListingFilterState
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterState
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.TextListingFilterState
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toInitialLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toNextPageLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierPasswordUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.launch
 
+/**
+ * Default [UserIdentifierListComponent] implementation: manages identifiers list for a specific user.
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param userId Target user ID whose identifiers are to be listed.
+ * @param managementGetIdentifiersUseCase Use case to fetch paginated list of identifiers.
+ * @param onIdentifierSelect Callback invoked when an identifier is tapped.
+ * @param onBack Pops this screen from the navigation stack.
+ */
 class UserIdentifierListComponentImpl(
     componentContext: ComponentContext,
     private val userId: UserId,
     private val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase,
-    private val managementDeleteIdentifierUseCase: ManagementDeleteIdentifierUseCase,
-    private val managementDeleteIdentifierPasswordUseCase: ManagementDeleteIdentifierPasswordUseCase,
+    private val onIdentifierSelect: ((String) -> Unit)? = null,
     private val onBack: () -> Unit
 ) : UserIdentifierListComponent, ComponentContext by componentContext {
 
@@ -48,78 +47,29 @@ class UserIdentifierListComponentImpl(
         loadIdentifiers()
     }
 
+    override fun onIdentifierClick(identifierId: String) {
+        onIdentifierSelect?.invoke(identifierId)
+    }
+
+    override fun onIdentifierDeleted(identifierId: UserIdentifierId) {
+        val currentContent = _state.value as? UserIdentifierListScreenState.Content ?: return
+        val updatedItems = currentContent.paging.items.filterNot { it.id == identifierId }
+        _state.value = currentContent.copy(
+            paging = currentContent.paging.copy(items = updatedItems)
+        )
+    }
+
     override fun onLoadNextPage() {
         val currentContent = _state.value as? UserIdentifierListScreenState.Content ?: return
         val paging = currentContent.paging
         if (!paging.canLoadMore) return
 
         _state.value = currentContent.copy(paging = paging.toNextPageLoading())
-        fetchPage(
-            pageNumber = paging.nextPageNumber,
-            sortState = currentContent.sortState,
-            filterStates = currentContent.filterStates
-        )
+        fetchPage(pageNumber = paging.nextPageNumber)
     }
 
     override fun onBackClick() {
         onBack()
-    }
-
-    override fun onToggleFilterPanel() {
-        val currentContent = _state.value as? UserIdentifierListScreenState.Content ?: return
-        _state.value = currentContent.copy(isFilterPanelExpanded = !currentContent.isFilterPanelExpanded)
-    }
-
-    override fun onSortChanged(sortState: ListingSortState) {
-        val currentContent = _state.value as? UserIdentifierListScreenState.Content ?: return
-        _state.value = currentContent.copy(sortState = sortState)
-    }
-
-    override fun onFilterChanged(filterId: String, filterState: ListingFilterState?) {
-        val currentContent = _state.value as? UserIdentifierListScreenState.Content ?: return
-        val newFilterStates = currentContent.filterStates.toMutableMap()
-        if (filterState == null) {
-            newFilterStates.remove(filterId)
-        } else {
-            newFilterStates[filterId] = filterState
-        }
-        _state.value = currentContent.copy(filterStates = newFilterStates)
-    }
-
-    override fun onApplyFilters() {
-        val currentContent = _state.value as? UserIdentifierListScreenState.Content ?: return
-        _state.value = currentContent.copy(isFilterPanelExpanded = false)
-        loadIdentifiers()
-    }
-
-    override fun onDeleteIdentifierClick(identifierId: String) {
-        val currentContent = _state.value as? UserIdentifierListScreenState.Content ?: return
-        _state.value = currentContent.copy(actionLoading = true, actionError = null)
-
-        scope.launch {
-            managementDeleteIdentifierUseCase(userId = userId, identifierId = identifierId)
-                .onSuccess {
-                    loadIdentifiers()
-                }
-                .onError { error ->
-                    _state.value = currentContent.copy(actionLoading = false, actionError = error)
-                }
-        }
-    }
-
-    override fun onDeleteIdentifierPasswordClick(identifierId: String) {
-        val currentContent = _state.value as? UserIdentifierListScreenState.Content ?: return
-        _state.value = currentContent.copy(actionLoading = true, actionError = null)
-
-        scope.launch {
-            managementDeleteIdentifierPasswordUseCase(userId = userId, identifierId = identifierId)
-                .onSuccess {
-                    loadIdentifiers()
-                }
-                .onError { error ->
-                    _state.value = currentContent.copy(actionLoading = false, actionError = error)
-                }
-        }
     }
 
     private fun loadIdentifiers() {
@@ -133,39 +83,15 @@ class UserIdentifierListComponentImpl(
             _state.value = UserIdentifierListScreenState.Loading
         }
 
-        fetchPage(
-            pageNumber = ListingConstants.INITIAL_PAGE_NUMBER,
-            sortState = currentContent?.sortState,
-            filterStates = currentContent?.filterStates
-        )
+        fetchPage(pageNumber = ListingConstants.INITIAL_PAGE_NUMBER)
     }
 
-    private fun fetchPage(
-        pageNumber: Int,
-        sortState: ListingSortState?,
-        filterStates: Map<String, ListingFilterState>?
-    ) {
-        val sortOrder = if (sortState?.isAscending == true) SortOrder.ASC else SortOrder.DESC
-        val sortBy = if (sortState?.optionId == "created_at") {
-            UserSortValues.UserIdentifierSortBy.CREATED_AT
-        } else {
-            null
-        }
-
-        val userAuthProviders = (filterStates?.get(UserFilterValues.UserIdentifierFilterValues.USER_AUTH_PROVIDER) as? ChoiceListingFilterState)
-            ?.selectedIds?.mapNotNull { UserAuthProvider.fromValueOrNull(it) }
-        val identifiers = (filterStates?.get(UserFilterValues.UserIdentifierFilterValues.IDENTIFIER) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
-
+    private fun fetchPage(pageNumber: Int) {
         scope.launch {
             managementGetIdentifiersUseCase(
                 pageNumber = pageNumber,
                 pageSize = ListingConstants.DEFAULT_PAGE_SIZE,
-                userIds = listOf(userId.asHexDashString()),
-                sortBy = sortBy,
-                sortOrder = sortOrder,
-                userAuthProviders = userAuthProviders,
-                identifiers = identifiers
+                userIds = listOf(userId.asHexDashString())
             ).onSuccess { pagedResult ->
                 val currentContent = _state.value as? UserIdentifierListScreenState.Content
                 val newPaging = (currentContent?.paging ?: PaginationState<UserIdentifier>()).appendResult(pagedResult)

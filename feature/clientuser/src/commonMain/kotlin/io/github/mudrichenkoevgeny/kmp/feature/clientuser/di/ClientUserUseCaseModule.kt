@@ -30,7 +30,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAut
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.ObserveAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierEmailUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierExternalAuthProviderUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierGoogleUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierPhoneUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.DeleteUserIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.EmailChangePasswordUseCase
@@ -379,9 +379,10 @@ internal class ClientUserUseCaseModule(
         )
     }
 
-    /** Links external provider. */
-    val addUserIdentifierExternalAuthProviderUseCase by lazy {
-        AddUserIdentifierExternalAuthProviderUseCase(
+    /** Associates a new Google identifier with the current account. */
+    val addUserIdentifierGoogleUseCase by lazy {
+        AddUserIdentifierGoogleUseCase(
+            authService = authServices.googleAuth ?: DisabledGoogleAuthService(),
             identifierRepository = clientUserRepositoryModule.identifierRepository
         )
     }

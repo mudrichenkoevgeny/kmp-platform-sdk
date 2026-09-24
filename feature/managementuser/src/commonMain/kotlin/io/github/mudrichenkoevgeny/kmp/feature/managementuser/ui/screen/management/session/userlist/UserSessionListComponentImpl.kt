@@ -21,6 +21,17 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.launch
 
+/**
+ * Default [UserSessionListComponent] implementation: manages sessions list for a specific user.
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param userId Target user ID whose sessions are to be managed (null for current user conceptually, though here it's expected).
+ * @param managementGetSessionsUseCase Use case to fetch paginated list of sessions for the user.
+ * @param managementDeleteSessionUseCase Use case to administratively delete a specific session.
+ * @param managementDeleteAllUserSessionsUseCase Use case to administratively delete all sessions for the user.
+ * @param onNavigateToSessionDetail Callback invoked when a session is tapped.
+ * @param onBack Pops this screen from the navigation stack.
+ */
 class UserSessionListComponentImpl(
     componentContext: ComponentContext,
     private val userId: UserId? = null,

@@ -29,6 +29,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.launch
 
+/**
+ * Default [GlobalSessionListComponent] implementation: manages all sessions globally.
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param managementGetSessionsUseCase Use case to fetch paginated list of global sessions.
+ * @param managementDeleteSessionUseCase Use case to administratively delete a user session.
+ * @param onNavigateToSessionDetail Callback invoked when a session is tapped.
+ * @param onBack Pops this screen from the navigation stack.
+ */
 class GlobalSessionListComponentImpl(
     componentContext: ComponentContext,
     private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,

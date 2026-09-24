@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -39,8 +38,9 @@ fun AuthProviderItem(
 ) {
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(CoreTheme.dimens.roundedCornerShape),
-        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        shape = CoreTheme.shapes.small,
+        color = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary,
         modifier = Modifier.size(CoreTheme.dimens.iconButtonSize)
     ) {
         Box(
@@ -57,7 +57,7 @@ fun AuthProviderItem(
             val tint = if (authProvider == UserAuthProvider.GOOGLE) {
                 Color.Unspecified
             } else {
-                MaterialTheme.colorScheme.onSurface
+                MaterialTheme.colorScheme.onPrimary
             }
 
             val iconModifier = if (authProvider == UserAuthProvider.APPLE) {
@@ -116,5 +116,12 @@ private fun AuthProviderItemComponentSizePreview() {
 @ThemePreviews
 @Composable
 private fun AuthProviderItemThemePreview() {
+    AuthProviderItemPreviewContent(provider = defaultAuthProviderItemPreviewState)
+}
+
+@InternalApi
+@FontScalePreviews
+@Composable
+private fun AuthProviderItemFontScalePreview() {
     AuthProviderItemPreviewContent(provider = defaultAuthProviderItemPreviewState)
 }

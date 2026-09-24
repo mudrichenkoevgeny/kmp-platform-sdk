@@ -3,6 +3,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileDestination
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.IdentifierListOwner
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.SelfIdentifierListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailComponent
@@ -36,6 +38,8 @@ interface ProfileRootComponent {
         /** Active session detail screen. */
         class SessionDetail(val component: SessionDetailComponent) : Child
         /** Account identifiers management. */
-        class Identifiers(val component: SelfIdentifierListComponent) : Child
+        class Identifiers(val component: SelfIdentifierListComponent) : Child, IdentifierListOwner by component
+        /** Identifier detail screen. */
+        class IdentifierDetail(val component: IdentifierDetailComponent) : Child
     }
 }

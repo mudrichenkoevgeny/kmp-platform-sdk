@@ -10,14 +10,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
  *
  * @param identifierRepository Remote identifier management API.
  */
-class GetUserIdentifierUseCase(
+open class GetUserIdentifierUseCase(
     private val identifierRepository: IdentifierRepository
 ) {
     /**
      * @param userIdentifierId Unique identifier payload id.
      * @return Detailed identifier info or a mapped failure.
      */
-    suspend operator fun invoke(userIdentifierId: UserIdentifierId): AppResult<UserIdentifier> {
+    open suspend operator fun invoke(userIdentifierId: UserIdentifierId): AppResult<UserIdentifier> {
         return identifierRepository.getUserIdentifier(userIdentifierId)
     }
 }

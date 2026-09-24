@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -28,9 +27,8 @@ import kotlin.test.assertEquals
 class IdentifierItemTest {
 
     @Test
-    fun rendersIdentifierDataAndTriggersCallbacks() = runComposeUiTest {
-        var deleteClicks = 0
-        var changePasswordClicks = 0
+    fun rendersIdentifierDataAndTriggersClick() = runComposeUiTest {
+        var clicks = 0
         val identifier = userIdentifierMock()
 
         setContent {
@@ -39,9 +37,8 @@ class IdentifierItemTest {
                     Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
                         IdentifierItem(
                             identifier = identifier,
-                            onDeleteClick = { deleteClicks++ },
-                            onChangePasswordClick = { changePasswordClicks++ },
-                            enabled = true
+                            onClick = { clicks++ },
+                            isCurrentIdentifier = false
                         )
                     }
                 }
@@ -51,15 +48,12 @@ class IdentifierItemTest {
         onNodeWithText("user@example.com").assertIsDisplayed()
         onNodeWithText("EMAIL").assertIsDisplayed()
 
-        onNodeWithTag(IdentifierListTestTags.CHANGE_PASSWORD_BUTTON_PREFIX + identifier.id.value).performClick()
-        assertEquals(EXPECTED_SINGLE_CALLBACK, changePasswordClicks)
-
-        onNodeWithTag(IdentifierListTestTags.DELETE_BUTTON_PREFIX + identifier.id.value).performClick()
-        assertEquals(EXPECTED_SINGLE_CALLBACK, deleteClicks)
+        onNodeWithTag(IdentifierListTestTags.IDENTIFIER_ITEM_PREFIX + identifier.id.value).performClick()
+        assertEquals(EXPECTED_SINGLE_CALLBACK, clicks)
     }
 
     @Test
-    fun phoneIdentifier_withoutChangePassword_rendersNoChangePasswordButton() = runComposeUiTest {
+    fun phoneIdentifier_rendersCorrectData() = runComposeUiTest {
         val identifier = userIdentifierMock().copy(
             userAuthProvider = UserAuthProvider.PHONE,
             identifier = "+1234567890",
@@ -72,9 +66,8 @@ class IdentifierItemTest {
                     Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
                         IdentifierItem(
                             identifier = identifier,
-                            onDeleteClick = {},
-                            onChangePasswordClick = null,
-                            enabled = true
+                            onClick = {},
+                            isCurrentIdentifier = false
                         )
                     }
                 }
@@ -83,33 +76,10 @@ class IdentifierItemTest {
 
         onNodeWithText("+1234567890").assertIsDisplayed()
         onNodeWithText("PHONE").assertIsDisplayed()
-        onNodeWithTag(IdentifierListTestTags.CHANGE_PASSWORD_BUTTON_PREFIX + identifier.id.value).assertDoesNotExist()
-    }
-
-    @Test
-    fun disabled_buttonsAreNotEnabled() = runComposeUiTest {
-        val identifier = userIdentifierMock()
-
-        setContent {
-            CoreTheme {
-                Surface {
-                    Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
-                        IdentifierItem(
-                            identifier = identifier,
-                            onDeleteClick = {},
-                            onChangePasswordClick = {},
-                            enabled = false
-                        )
-                    }
-                }
-            }
-        }
-
-        onNodeWithTag(IdentifierListTestTags.DELETE_BUTTON_PREFIX + identifier.id.value).assertIsNotEnabled()
-        onNodeWithTag(IdentifierListTestTags.CHANGE_PASSWORD_BUTTON_PREFIX + identifier.id.value).assertIsNotEnabled()
     }
 
     private companion object {
         const val EXPECTED_SINGLE_CALLBACK = 1
     }
 }
+

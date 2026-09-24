@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.identifier.item
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,43 +19,44 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
-import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.change_password
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_delete
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.IdentifierListTestTags
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * A list item representing a single user identifier (e.g., email or phone number).
  *
  * @param identifier The [UserIdentifier] data to display.
- * @param onDeleteClick Callback invoked when the delete icon is clicked.
- * @param onChangePasswordClick Optional callback invoked when the change password icon is clicked.
- * @param enabled Whether the delete action and UI interactions are permitted.
+ * @param onClick Callback invoked when the item card is tapped.
+ * @param isCurrentIdentifier Indicates if this identifier is the active session's identifier.
+ * @param modifier Optional [Modifier] for layout adjustments.
  */
 @Composable
 fun IdentifierItem(
     identifier: UserIdentifier,
-    onDeleteClick: () -> Unit,
-    onChangePasswordClick: (() -> Unit)? = null,
-    enabled: Boolean
+    onClick: () -> Unit,
+    isCurrentIdentifier: Boolean = false,
+    modifier: Modifier = Modifier
 ) {
+    val cardColors = if (isCurrentIdentifier) {
+        CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+    } else {
+        CardDefaults.cardColors()
+    }
+
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
             .testTag(IdentifierListTestTags.IDENTIFIER_ITEM_PREFIX + identifier.id.value),
-        elevation = CardDefaults.cardElevation(defaultElevation = CoreTheme.dimens.elevationHeader)
+        elevation = CardDefaults.cardElevation(defaultElevation = CoreTheme.dimens.elevationHeader),
+        colors = cardColors
     ) {
         Row(
             modifier = Modifier.padding(CoreTheme.dimens.paddingMedium),
@@ -73,40 +73,13 @@ fun IdentifierItem(
                     style = MaterialTheme.typography.bodySmall
                 )
             }
-            if (onChangePasswordClick != null) {
-                IconButton(
-                    onClick = onChangePasswordClick,
-                    enabled = enabled,
-                    modifier = Modifier.testTag(IdentifierListTestTags.CHANGE_PASSWORD_BUTTON_PREFIX + identifier.id.value)
-                ) {
-                    Icon(
-                        painter = painterResource(CommonRes.drawable.ic_password_reset),
-                        contentDescription = stringResource(Res.string.change_password),
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
-                    )
-                }
-            }
-            IconButton(
-                onClick = onDeleteClick,
-                enabled = enabled,
-                modifier = Modifier.testTag(IdentifierListTestTags.DELETE_BUTTON_PREFIX + identifier.id.value)
-            ) {
-                Icon(
-                    painter = painterResource(CommonRes.drawable.ic_delete),
-                    contentDescription = stringResource(Res.string.identifier_delete),
-                    tint = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
-                )
-            }
         }
     }
 }
 
 private data class IdentifierItemPreviewState(
     val identifier: UserIdentifier,
-    val hasChangePassword: Boolean,
-    val enabled: Boolean
+    val isCurrentIdentifier: Boolean
 )
 
 @InternalApi
@@ -114,21 +87,14 @@ private class IdentifierItemPreviewProvider : PreviewParameterProvider<Identifie
     private val items = listOf(
         IdentifierItemPreviewState(
             identifier = userIdentifierMock(),
-            hasChangePassword = true,
-            enabled = true
+            isCurrentIdentifier = true
         ),
         IdentifierItemPreviewState(
             identifier = userIdentifierMock().copy(
                 userAuthProvider = UserAuthProvider.PHONE,
                 identifier = "+1234567890"
             ),
-            hasChangePassword = false,
-            enabled = true
-        ),
-        IdentifierItemPreviewState(
-            identifier = userIdentifierMock(),
-            hasChangePassword = true,
-            enabled = false
+            isCurrentIdentifier = false
         )
     )
 
@@ -143,9 +109,8 @@ private fun IdentifierItemPreviewContent(state: IdentifierItemPreviewState) {
             Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
                 IdentifierItem(
                     identifier = state.identifier,
-                    onDeleteClick = {},
-                    onChangePasswordClick = if (state.hasChangePassword) { {} } else null,
-                    enabled = state.enabled
+                    onClick = {},
+                    isCurrentIdentifier = state.isCurrentIdentifier
                 )
             }
         }
@@ -155,8 +120,7 @@ private fun IdentifierItemPreviewContent(state: IdentifierItemPreviewState) {
 @InternalApi
 private val defaultIdentifierItemPreviewState = IdentifierItemPreviewState(
     identifier = userIdentifierMock(),
-    hasChangePassword = true,
-    enabled = true
+    isCurrentIdentifier = false
 )
 
 @InternalApi
@@ -188,3 +152,4 @@ private fun IdentifierItemThemePreview() {
 private fun IdentifierItemFontScalePreview() {
     IdentifierItemPreviewContent(state = defaultIdentifierItemPreviewState)
 }
+

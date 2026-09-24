@@ -1,19 +1,24 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist
 
 import com.arkivanov.decompose.value.Value
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterState
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.IdentifierListOwner
 
-interface UserIdentifierListComponent {
+/**
+ * Manages a specific user's identifiers: listing and navigation to detail screen.
+ */
+interface UserIdentifierListComponent : IdentifierListOwner {
+    /** Reactive UI state. */
     val state: Value<UserIdentifierListScreenState>
 
+    /** Refreshes the identifier list. */
     fun onRefresh()
+    
+    /** Navigates to identifier detail screen. */
+    fun onIdentifierClick(identifierId: String)
+    
+    /** Requests the next page of identifiers if available. */
     fun onLoadNextPage()
+    
+    /** Navigates back. */
     fun onBackClick()
-    fun onToggleFilterPanel()
-    fun onSortChanged(sortState: ListingSortState)
-    fun onFilterChanged(filterId: String, filterState: ListingFilterState?)
-    fun onApplyFilters()
-    fun onDeleteIdentifierClick(identifierId: String)
-    fun onDeleteIdentifierPasswordClick(identifierId: String)
 }

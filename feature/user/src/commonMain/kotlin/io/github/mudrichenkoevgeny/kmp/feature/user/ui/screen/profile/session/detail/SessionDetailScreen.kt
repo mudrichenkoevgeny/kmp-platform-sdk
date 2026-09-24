@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -122,6 +123,7 @@ fun SessionDetailScreen(component: SessionDetailComponent) {
                 is SessionDetailScreenState.Content -> {
                     Content(
                         state = currentState,
+                        onIdentifierClick = component::onIdentifierClick,
                         onRevokeClick = component::onRevokeSessionClick
                     )
                 }
@@ -133,6 +135,7 @@ fun SessionDetailScreen(component: SessionDetailComponent) {
 @Composable
 private fun Content(
     state: SessionDetailScreenState.Content,
+    onIdentifierClick: () -> Unit,
     onRevokeClick: () -> Unit
 ) {
     val session = state.session
@@ -149,7 +152,12 @@ private fun Content(
                 modifier = Modifier.padding(CoreTheme.dimens.paddingMedium),
                 verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onIdentifierClick() },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     val iconRes = when (session.identifierAuthProvider) {
                         UserAuthProvider.EMAIL -> Res.drawable.auth_logo_email
                         UserAuthProvider.PHONE -> Res.drawable.auth_logo_phone
@@ -162,7 +170,7 @@ private fun Content(
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(Modifier.width(CoreTheme.dimens.paddingSmall))
-                    Column {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = session.identifierDisplayName,
                             style = MaterialTheme.typography.titleMedium,

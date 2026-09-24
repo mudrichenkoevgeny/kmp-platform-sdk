@@ -11,10 +11,13 @@ import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import kotlinx.coroutines.launch
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileDestination
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.SelfIdentifierListComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.notifyIdentifierDeleted
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SelfSessionListComponentImpl
@@ -22,11 +25,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.li
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.recovery.TotpRecoveryCodesComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAuthSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.ObserveAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierEmailUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierGoogleUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierPhoneUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.DeleteUserIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.EmailChangePasswordUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.GetUserIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.GetUserIdentifiersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.SendAddEmailIdentifierConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.SendAddPhoneIdentifierConfirmationUseCase
@@ -35,6 +41,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteSessio
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.LogoutUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.GetUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.RestoreUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.DisableTotpUseCase
@@ -77,7 +84,8 @@ class ProfileRootComponentImpl(
     private val userRepository: UserRepository,
     private val logoutUseCase: LogoutUseCase,
     private val scheduleUserDeletionUseCase: ScheduleUserDeletionUseCase,
-    private val restoreUserUseCase: RestoreUserUseCase,
+    private val restoreUserUseCase: RestoreUserUseCase? = null,
+    private val getUserUseCase: GetUserUseCase? = null,
     private val getAuthSettingsUseCase: GetAuthSettingsUseCase? = null,
     private val observeAuthSettingsUseCase: ObserveAuthSettingsUseCase? = null,
     private val setupTotpUseCase: SetupTotpUseCase,
@@ -87,16 +95,20 @@ class ProfileRootComponentImpl(
     private val regenerateRecoveryCodesUseCase: RegenerateRecoveryCodesUseCase,
     private val getSessionsUseCase: GetSessionsUseCase,
     private val getSessionUseCase: GetSessionUseCase? = null,
+    private val getAvailableUserAuthProvidersUseCase: GetAvailableUserAuthProvidersUseCase? = null,
     private val deleteSessionUseCase: DeleteSessionUseCase,
     private val deleteAllOtherSessionsUseCase: DeleteAllOtherSessionsUseCase,
     private val getUserIdentifiersUseCase: GetUserIdentifiersUseCase,
-    private val deleteUserIdentifierUseCase: DeleteUserIdentifierUseCase,
-    private val sendAddEmailIdentifierConfirmationUseCase: SendAddEmailIdentifierConfirmationUseCase,
-    private val addUserIdentifierEmailUseCase: AddUserIdentifierEmailUseCase,
+    private val getUserIdentifierUseCase: GetUserIdentifierUseCase? = null,
+    private val deleteUserIdentifierUseCase: DeleteUserIdentifierUseCase? = null,
+    private val identifierRepository: IdentifierRepository? = null,
+    private val sendAddEmailIdentifierConfirmationUseCase: SendAddEmailIdentifierConfirmationUseCase? = null,
+    private val addUserIdentifierEmailUseCase: AddUserIdentifierEmailUseCase? = null,
     private val authStorage: AuthStorage? = null,
-    private val sendAddPhoneIdentifierConfirmationUseCase: SendAddPhoneIdentifierConfirmationUseCase,
-    private val addUserIdentifierPhoneUseCase: AddUserIdentifierPhoneUseCase,
-    private val emailChangePasswordUseCase: EmailChangePasswordUseCase,
+    private val sendAddPhoneIdentifierConfirmationUseCase: SendAddPhoneIdentifierConfirmationUseCase? = null,
+    private val addUserIdentifierPhoneUseCase: AddUserIdentifierPhoneUseCase? = null,
+    private val addUserIdentifierGoogleUseCase: AddUserIdentifierGoogleUseCase? = null,
+    private val emailChangePasswordUseCase: EmailChangePasswordUseCase? = null,
     private val onNavigateToLogin: () -> Unit
 ) : ProfileRootComponent, ComponentContext by componentContext {
 
@@ -126,13 +138,14 @@ class ProfileRootComponentImpl(
         config: ProfileDestination,
         context: ComponentContext
     ): ProfileRootComponent.Child = when (config) {
-        is ProfileDestination.Main -> ProfileRootComponent.Child.Main(
+        ProfileDestination.Main -> ProfileRootComponent.Child.Main(
             MainProfileComponentImpl(
                 componentContext = context,
                 appType = appType,
                 userRepository = userRepository,
                 logoutUseCase = logoutUseCase,
                 scheduleUserDeletionUseCase = scheduleUserDeletionUseCase,
+                getUserUseCase = getUserUseCase,
                 getAuthSettingsUseCase = getAuthSettingsUseCase,
                 observeAuthSettingsUseCase = observeAuthSettingsUseCase,
                 onNavigateToLogin = onNavigateToLogin,
@@ -141,7 +154,7 @@ class ProfileRootComponentImpl(
                 onNavigateToIdentifiers = { navigation.bringToFront(ProfileDestination.Identifiers) }
             )
         )
-        is ProfileDestination.TotpMain -> ProfileRootComponent.Child.TotpMain(
+        ProfileDestination.TotpMain -> ProfileRootComponent.Child.TotpMain(
             TotpMainComponentImpl(
                 componentContext = context,
                 userRepository = userRepository,
@@ -152,7 +165,7 @@ class ProfileRootComponentImpl(
                 onBack = navigation::pop
             )
         )
-        is ProfileDestination.TotpRecoveryCodes -> ProfileRootComponent.Child.TotpRecoveryCodes(
+        ProfileDestination.TotpRecoveryCodes -> ProfileRootComponent.Child.TotpRecoveryCodes(
             TotpRecoveryCodesComponentImpl(
                 componentContext = context,
                 getRecoveryCodesUseCase = getRecoveryCodesUseCase,
@@ -160,7 +173,7 @@ class ProfileRootComponentImpl(
                 onBack = navigation::pop
             )
         )
-        is ProfileDestination.Sessions -> ProfileRootComponent.Child.Sessions(
+        ProfileDestination.Sessions -> ProfileRootComponent.Child.Sessions(
             SelfSessionListComponentImpl(
                 componentContext = context,
                 getSessionsUseCase = getSessionsUseCase,
@@ -181,19 +194,40 @@ class ProfileRootComponentImpl(
                 deleteSessionUseCase = deleteSessionUseCase,
                 authStorage = authStorage,
                 onSessionRevoked = { stack.value.notifySessionRevoked(it) },
+                onNavigateToIdentifierDetail = { identifierId ->
+                    navigation.bringToFront(ProfileDestination.IdentifierDetail(identifierId.asHexDashString()))
+                },
                 onBack = navigation::pop
             )
         )
-        is ProfileDestination.Identifiers -> ProfileRootComponent.Child.Identifiers(
+        ProfileDestination.Identifiers -> ProfileRootComponent.Child.Identifiers(
             SelfIdentifierListComponentImpl(
                 componentContext = context,
+                appType = appType,
                 getUserIdentifiersUseCase = getUserIdentifiersUseCase,
-                deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
+                getAvailableUserAuthProvidersUseCase = getAvailableUserAuthProvidersUseCase,
                 sendAddEmailIdentifierConfirmationUseCase = sendAddEmailIdentifierConfirmationUseCase,
                 addUserIdentifierEmailUseCase = addUserIdentifierEmailUseCase,
                 sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase,
                 addUserIdentifierPhoneUseCase = addUserIdentifierPhoneUseCase,
+                addUserIdentifierGoogleUseCase = addUserIdentifierGoogleUseCase,
+                identifierRepository = identifierRepository,
+                authStorage = authStorage,
+                onIdentifierSelect = { identifierId ->
+                    navigation.bringToFront(ProfileDestination.IdentifierDetail(identifierId.asHexDashString()))
+                },
+                onBack = navigation::pop
+            )
+        )
+        is ProfileDestination.IdentifierDetail -> ProfileRootComponent.Child.IdentifierDetail(
+            IdentifierDetailComponentImpl(
+                componentContext = context,
+                identifierId = config.identifierId,
+                getUserIdentifierUseCase = getUserIdentifierUseCase,
+                deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
                 emailChangePasswordUseCase = emailChangePasswordUseCase,
+                authStorage = authStorage,
+                onIdentifierDeleted = { stack.value.notifyIdentifierDeleted(it) },
                 onBack = navigation::pop
             )
         )

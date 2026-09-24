@@ -36,6 +36,7 @@ actual fun SetupBrowserHistory(mainComponent: MainScreenComponent) {
                 is ProfileDestination.Sessions -> PATH_SESSIONS
                 is ProfileDestination.SessionDetail -> PATH_SESSIONS
                 is ProfileDestination.Identifiers -> PATH_IDENTIFIERS
+                is ProfileDestination.IdentifierDetail -> PATH_IDENTIFIERS
             }
         }
     }
@@ -50,6 +51,7 @@ actual fun SetupBrowserHistory(mainComponent: MainScreenComponent) {
                     is ProfileRootComponent.Child.Sessions -> profileChild.component.onBackClick()
                     is ProfileRootComponent.Child.SessionDetail -> profileChild.component.onBackClick()
                     is ProfileRootComponent.Child.Identifiers -> profileChild.component.onBackClick()
+                    is ProfileRootComponent.Child.IdentifierDetail -> profileChild.component.onBackClick()
                     is ProfileRootComponent.Child.Main -> { }
                 }
             }

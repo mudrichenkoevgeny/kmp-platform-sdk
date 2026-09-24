@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist
+package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.globallist
 
 import androidx.compose.runtime.Composable
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
@@ -14,7 +14,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.l
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun getUserIdentifierListingOptionsConfig(): ListingOptionsConfig = ListingOptionsConfig(
+fun getGlobalIdentifierListingOptionsConfig(): ListingOptionsConfig = ListingOptionsConfig(
     sortOptions = listOf(
         ListingSortDefinition(
             id = "created_at",

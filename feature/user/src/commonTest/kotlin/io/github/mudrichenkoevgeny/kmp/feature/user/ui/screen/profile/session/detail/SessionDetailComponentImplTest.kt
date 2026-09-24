@@ -31,6 +31,7 @@ class SessionDetailComponentImplTest {
             isCurrentSession = true
         )
         try {
+            advanceTimeBy(100.milliseconds)
             val state = assertIs<SessionDetailScreenState.Content>(context.component.state.value)
             assertEquals(mockSession, state.session)
             assertTrue(state.isCurrentSession)
@@ -90,6 +91,7 @@ class SessionDetailComponentImplTest {
             onBack = { backCalled = true }
         )
         try {
+            advanceTimeBy(100.milliseconds)
             context.component.onRevokeSessionClick()
             advanceTimeBy(100.milliseconds)
             assertTrue(backCalled)
@@ -108,6 +110,7 @@ class SessionDetailComponentImplTest {
             deleteSessionUseCase = deleteSessionUseCase
         )
         try {
+            advanceTimeBy(100.milliseconds)
             context.component.onRevokeSessionClick()
             advanceTimeBy(100.milliseconds)
             val state = assertIs<SessionDetailScreenState.Content>(context.component.state.value)
@@ -125,6 +128,7 @@ class SessionDetailComponentImplTest {
             onBack = { backCalled = true }
         )
         try {
+            advanceTimeBy(100.milliseconds)
             context.component.onBackClick()
             assertTrue(backCalled)
         } finally {

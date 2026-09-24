@@ -33,8 +33,7 @@ import kotlin.test.Test
 class IdentifierItemScreenshotTest(
     private val stateName: String,
     private val identifier: UserIdentifier,
-    private val hasChangePassword: Boolean,
-    private val enabled: Boolean
+    private val isCurrentIdentifier: Boolean
 ) {
 
     @Test
@@ -45,9 +44,8 @@ class IdentifierItemScreenshotTest(
                     Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
                         IdentifierItem(
                             identifier = identifier,
-                            onDeleteClick = {},
-                            onChangePasswordClick = if (hasChangePassword) { {} } else null,
-                            enabled = enabled
+                            onClick = {},
+                            isCurrentIdentifier = isCurrentIdentifier
                         )
                     }
                 }
@@ -71,10 +69,10 @@ class IdentifierItemScreenshotTest(
                 identifier = "+1234567890"
             )
             return listOf(
-                arrayOf("Email_With_Change_Password", emailIdentifier, true, true),
-                arrayOf("Phone_Without_Change_Password", phoneIdentifier, false, true),
-                arrayOf("Disabled", emailIdentifier, true, false)
+                arrayOf("Email_Current", emailIdentifier, true),
+                arrayOf("Phone_Not_Current", phoneIdentifier, false)
             )
         }
     }
 }
+
