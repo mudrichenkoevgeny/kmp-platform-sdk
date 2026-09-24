@@ -43,5 +43,8 @@ data class BooleanListingFilterDefinition(
 data class NumberListingFilterDefinition(
     override val id: String,
     override val title: String,
-    val placeholder: String
+    val placeholder: String,
+    val minValue: Long? = null,
+    val maxValue: Long? = null,
+    val defaultValueOnFocusLost: Long? = null
 ) : ListingFilterDefinition

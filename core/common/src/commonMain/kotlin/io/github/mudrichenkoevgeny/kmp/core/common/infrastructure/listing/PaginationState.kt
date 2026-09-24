@@ -13,6 +13,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
  * @property error Error from the last attempt (initial or next page).
  * @property pageNumber One-based index of the last successfully loaded page.
  * @property totalPages Total number of pages available on the server.
+ * @property totalCount Total number of items matching filters on the server.
  */
 data class PaginationState<T>(
     val items: List<T> = emptyList(),
@@ -20,7 +21,8 @@ data class PaginationState<T>(
     val isNextPageLoading: Boolean = false,
     val error: AppError? = null,
     val pageNumber: Int = 0,
-    val totalPages: Long = 0
+    val totalPages: Long = 0,
+    val totalCount: Long = 0
 ) {
     /**
      * One-based index of the next page to fetch.
@@ -72,7 +74,8 @@ fun <T> PaginationState<T>.toInitialLoading(): PaginationState<T> = copy(
     isNextPageLoading = false,
     error = null,
     pageNumber = 0,
-    totalPages = 0
+    totalPages = 0,
+    totalCount = 0
 )
 
 /**
@@ -93,7 +96,8 @@ fun <T> PaginationState<T>.appendResult(result: PagedResult<T>): PaginationState
     isNextPageLoading = false,
     error = null,
     pageNumber = result.pageNumber,
-    totalPages = result.totalPages
+    totalPages = result.totalPages,
+    totalCount = result.totalCount
 )
 
 /**

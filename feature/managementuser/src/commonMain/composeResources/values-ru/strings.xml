@@ -74,6 +74,7 @@
     <string name="user_sessions">Сессии пользователя</string>
     <string name="sessions">Сессии</string>
     <string name="user_identifiers">Идентификаторы пользователя</string>
+    <string name="identifiers">Идентификаторы</string>
     <string name="disable_totp">Отключить TOTP</string>
     <string name="disabling_totp">Отключение TOTP...</string>
     <string name="revoke_all_sessions">Отозвать все сессии</string>
@@ -87,7 +88,7 @@
     <string name="contact_support_email">Email службы поддержки</string>
     <string name="telemetry_and_logging">Телеметрия и логирование</string>
     <string name="is_tracing_enabled">Включить трассировку запросов</string>
-    <string name="is_metrics_enabled">Inключить сбор метрик</string>
+    <string name="is_metrics_enabled">Включить сбор метрик</string>
     <string name="is_verbose_logging_enabled">Включить подробный логинг</string>
     <string name="min_supported_app_versions">Минимальные поддерживаемые версии приложений</string>
     <string name="min_version_android">Мин. версия Android</string>

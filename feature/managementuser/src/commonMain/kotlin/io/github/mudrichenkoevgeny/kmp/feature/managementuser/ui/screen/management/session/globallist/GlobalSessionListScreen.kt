@@ -37,6 +37,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingEmptyState
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingHeaderBar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
@@ -49,15 +51,20 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.sessions.GlobalSessionListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.sessions
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.sessions
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.session.item.SessionItem
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res as UserRes
 
+/**
+ * Screen displaying the list of all active sessions across the platform.
+ *
+ * @param component Decompose controller driving state and callbacks.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GlobalSessionListScreen(component: GlobalSessionListComponent) {
@@ -68,7 +75,7 @@ fun GlobalSessionListScreen(component: GlobalSessionListComponent) {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(UserRes.string.sessions),
+                        text = stringResource(Res.string.sessions),
                         modifier = Modifier.testTag(GlobalSessionListTestTags.TITLE)
                     )
                 },
@@ -178,28 +185,39 @@ private fun Content(
                 )
             }
 
-            LazyColumn(
-                state = listState,
-                modifier = Modifier
-                    .weight(1f)
-                    .testTag(GlobalSessionListTestTags.SESSION_LIST),
-                contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
-                verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
-            ) {
-                items(state.paging.items, key = { it.id.value }) { session ->
-                    SessionItem(
-                        session = session,
-                        onRevokeClick = { component.onDeleteSessionClick(session.userId, session.id.asHexDashString()) },
-                        enabled = !state.actionLoading,
-                        onSessionClick = { component.onSessionClick(session) }
-                    )
-                }
+            if (state.paging.isEmpty && !state.paging.isInitialLoading && state.paging.error == null) {
+                ListingEmptyState(
+                    modifier = Modifier.weight(1f)
+                )
+            } else {
+                ListingHeaderBar(
+                    state = state.paging,
+                    lazyListState = listState
+                )
 
-                item {
-                    PagingFooter(
-                        state = state.paging,
-                        onRetry = onLoadNextPage
-                    )
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier
+                        .weight(1f)
+                        .testTag(GlobalSessionListTestTags.SESSION_LIST),
+                    contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
+                    verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+                ) {
+                    items(state.paging.items, key = { it.id.value }) { session ->
+                        SessionItem(
+                            session = session,
+                            onRevokeClick = { component.onDeleteSessionClick(session.userId, session.id.asHexDashString()) },
+                            enabled = !state.actionLoading,
+                            onSessionClick = { component.onSessionClick(session) }
+                        )
+                    }
+
+                    item {
+                        PagingFooter(
+                            state = state.paging,
+                            onRetry = onLoadNextPage
+                        )
+                    }
                 }
             }
         }
@@ -241,14 +259,14 @@ private fun GlobalSessionListScreenPreviewContent(state: GlobalSessionListScreen
 }
 
 @InternalApi
-private val defaultSessionListPreviewState = GlobalSessionListScreenState.Content(
+private val defaultGlobalSessionListPreviewState = GlobalSessionListScreenState.Content(
     paging = PaginationState(items = listOf(userSessionMock(), userSessionMock()))
 )
 
 @InternalApi
 @Preview(showBackground = true, group = "States")
 @Composable
-private fun StatesPreviewGlobal(
+private fun StatesPreview(
     @PreviewParameter(GlobalSessionListPreviewProvider::class) state: GlobalSessionListScreenState
 ) {
     ScreenPreviewContainer {
@@ -259,27 +277,27 @@ private fun StatesPreviewGlobal(
 @InternalApi
 @ScreenSizePreviews
 @Composable
-private fun ScreenSizePreviewGlobal() {
+private fun ScreenSizePreview() {
     ScreenPreviewContainer {
-        GlobalSessionListScreenPreviewContent(state = defaultSessionListPreviewState)
+        GlobalSessionListScreenPreviewContent(state = defaultGlobalSessionListPreviewState)
     }
 }
 
 @InternalApi
 @ThemePreviews
 @Composable
-private fun ThemePreviewGlobal() {
+private fun ThemePreview() {
     ScreenPreviewContainer {
-        GlobalSessionListScreenPreviewContent(state = defaultSessionListPreviewState)
+        GlobalSessionListScreenPreviewContent(state = defaultGlobalSessionListPreviewState)
     }
 }
 
 @InternalApi
 @FontScalePreviews
 @Composable
-private fun FontScalePreviewGlobal() {
+private fun FontScalePreview() {
     ScreenPreviewContainer {
-        GlobalSessionListScreenPreviewContent(state = defaultSessionListPreviewState)
+        GlobalSessionListScreenPreviewContent(state = defaultGlobalSessionListPreviewState)
     }
 }
 
@@ -289,6 +307,6 @@ object GlobalSessionListTestTags {
     const val FILTER_BUTTON = "GlobalSessionList_FilterButton"
     const val REFRESH_BUTTON = "GlobalSessionList_RefreshButton"
     const val GLOBAL_ERROR_TEXT = "GlobalSessionList_GlobalErrorText"
-    const val ACTION_ERROR_TEXT = "GlobalSessionList_ActionErrorText"
     const val SESSION_LIST = "GlobalSessionList_List"
+    const val ACTION_ERROR_TEXT = "GlobalSessionList_ActionErrorText"
 }

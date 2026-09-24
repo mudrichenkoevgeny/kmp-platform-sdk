@@ -6,7 +6,15 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -17,13 +25,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardType
 import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.BooleanListingFilterDefinition
@@ -45,6 +56,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_apply
+import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_clear_all
 import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_no
 import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_sort_asc
 import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_sort_desc
@@ -61,29 +73,44 @@ fun ListingOptionsPanel(
     onApplyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .heightIn(max = 480.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = CoreTheme.dimens.elevationHeader
+        )
     ) {
-        if (config.sortOptions.isNotEmpty()) {
-            ListingSortSection(
-                options = config.sortOptions,
-                currentState = sortState,
-                onSortChanged = onSortChanged
-            )
-        }
-        if (config.filters.isNotEmpty()) {
-            ListingFiltersSection(
-                filters = config.filters,
-                states = filterStates,
-                onFilterChanged = onFilterChanged
-            )
-        }
-        androidx.compose.material3.Button(
-            onClick = onApplyClick,
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(CoreTheme.dimens.paddingMedium),
+            verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
         ) {
-            Text(stringResource(Res.string.ui_common_apply))
+            if (config.sortOptions.isNotEmpty()) {
+                ListingSortSection(
+                    options = config.sortOptions,
+                    currentState = sortState,
+                    onSortChanged = onSortChanged
+                )
+            }
+            if (config.filters.isNotEmpty()) {
+                ListingFiltersSection(
+                    filters = config.filters,
+                    states = filterStates,
+                    onFilterChanged = onFilterChanged
+                )
+            }
+            Button(
+                onClick = onApplyClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(Res.string.ui_common_apply))
+            }
         }
     }
 }
@@ -104,37 +131,45 @@ private fun ListingSortSection(
         horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ExposedDropdownMenuBox(
-            expanded = isExpanded,
-            onExpandedChange = { isExpanded = it },
-            modifier = Modifier.weight(1f)
-        ) {
-            OutlinedTextField(
-                value = selectedOption.title,
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
-                },
-                modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, enabled = true)
+        if (options.size == 1) {
+            Text(
+                text = selectedOption.title,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.weight(1f)
             )
-            ExposedDropdownMenu(
+        } else {
+            ExposedDropdownMenuBox(
                 expanded = isExpanded,
-                onDismissRequest = { isExpanded = false }
+                onExpandedChange = { isExpanded = it },
+                modifier = Modifier.weight(1f)
             ) {
-                options.forEach { option ->
-                    DropdownMenuItem(
-                        text = { Text(text = option.title) },
-                        onClick = {
-                            onSortChanged(
-                                ListingSortState(
-                                    optionId = option.id,
-                                    isAscending = isAscending
+                OutlinedTextField(
+                    value = selectedOption.title,
+                    onValueChange = {},
+                    readOnly = true,
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
+                    },
+                    modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, enabled = true)
+                )
+                ExposedDropdownMenu(
+                    expanded = isExpanded,
+                    onDismissRequest = { isExpanded = false }
+                ) {
+                    options.forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text(text = option.title) },
+                            onClick = {
+                                onSortChanged(
+                                    ListingSortState(
+                                        optionId = option.id,
+                                        isAscending = isAscending
+                                    )
                                 )
-                            )
-                            isExpanded = false
-                        }
-                    )
+                                isExpanded = false
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -193,14 +228,39 @@ private fun ListingFilterItem(
     state: ListingFilterState?,
     onFilterChanged: (ListingFilterState?) -> Unit
 ) {
+    val isFilterActive = when (filter) {
+        is NumberListingFilterDefinition -> {
+            val numberState = state as? NumberListingFilterState
+            numberState != null && numberState.value != filter.defaultValueOnFocusLost
+        }
+        else -> state != null
+    }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(
-            text = filter.title,
-            style = MaterialTheme.typography.titleMedium
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = filter.title,
+                style = MaterialTheme.typography.titleMedium
+            )
+            if (isFilterActive) {
+                TextButton(
+                    onClick = { onFilterChanged(null) }
+                ) {
+                    Text(
+                        text = stringResource(Res.string.ui_common_clear_all),
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
+            }
+        }
+
         when (filter) {
             is TextListingFilterDefinition -> {
                 val textState = state as? TextListingFilterState
@@ -219,19 +279,51 @@ private fun ListingFilterItem(
             }
             is NumberListingFilterDefinition -> {
                 val numberState = state as? NumberListingFilterState
+                var rawText by remember {
+                    mutableStateOf(numberState?.value?.toString() ?: "")
+                }
+                var isFocused by remember { mutableStateOf(false) }
+
+                LaunchedEffect(numberState) {
+                    if (!isFocused) {
+                        rawText = numberState?.value?.toString() ?: ""
+                    }
+                }
+
                 OutlinedTextField(
-                    value = numberState?.value?.toString() ?: "",
+                    value = rawText,
                     onValueChange = { newValue ->
-                        val parsed = newValue.toLongOrNull()
-                        if (parsed == null) {
+                        if (newValue.isEmpty()) {
+                            rawText = ""
                             onFilterChanged(null)
                         } else {
-                            onFilterChanged(NumberListingFilterState(parsed))
+                            val parsed = newValue.toLongOrNull()
+                            if (parsed != null) {
+                                val clamped = if (filter.minValue != null && filter.maxValue != null) {
+                                    parsed.coerceIn(filter.minValue, filter.maxValue)
+                                } else if (filter.minValue != null) {
+                                    parsed.coerceAtLeast(filter.minValue)
+                                } else if (filter.maxValue != null) {
+                                    parsed.coerceAtMost(filter.maxValue)
+                                } else {
+                                    parsed
+                                }
+                                rawText = clamped.toString()
+                                onFilterChanged(NumberListingFilterState(clamped))
+                            }
                         }
                     },
                     placeholder = { Text(text = filter.placeholder) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onFocusChanged { focusState ->
+                            isFocused = focusState.isFocused
+                            if (!focusState.isFocused && rawText.isEmpty() && filter.defaultValueOnFocusLost != null) {
+                                rawText = filter.defaultValueOnFocusLost.toString()
+                                onFilterChanged(NumberListingFilterState(filter.defaultValueOnFocusLost))
+                            }
+                        }
                 )
             }
             is BooleanListingFilterDefinition -> {

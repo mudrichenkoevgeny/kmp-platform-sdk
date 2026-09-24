@@ -16,6 +16,8 @@ class AuditEventDetailComponentMock(
 
     var backCalls = 0
     var retryCalls = 0
+    var resourceClickCalls = 0
+    var subjectClickCalls = 0
 
     fun updateState(state: AuditEventDetailScreenState) {
         _state.value = state
@@ -27,5 +29,13 @@ class AuditEventDetailComponentMock(
 
     override fun onBackClick() {
         backCalls++
+    }
+
+    override fun onResourceClick() {
+        resourceClickCalls++
+    }
+
+    override fun onSubjectClick() {
+        subjectClickCalls++
     }
 }

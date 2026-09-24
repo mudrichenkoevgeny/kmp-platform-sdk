@@ -73,4 +73,23 @@
     <string name="ui_common_lockout_none">Нет</string>
     <string name="ui_common_lockout_indefinite">Бессрочная</string>
     <string name="ui_common_lockout_temporary">Временная</string>
+    <string name="ui_common_apple">Apple</string>
+    <string name="ui_common_updated_at">Дата обновления</string>
+    <string name="ui_common_last_accessed_at">Дата последнего доступа</string>
+    <string name="ui_common_last_reauthenticated_at">Дата повторной аутентификации</string>
+    <string name="ui_common_expires_at">Дата истечения</string>
+    <string name="ui_common_user_id">ID пользователя</string>
+    <string name="ui_common_identifier_id">ID учетной записи</string>
+    <string name="ui_common_language">Язык</string>
+    <string name="ui_common_device_id">ID устройства</string>
+    <string name="ui_common_app_version">Версия приложения</string>
+    <string name="ui_common_os_version">Версия ОС</string>
+    <string name="ui_common_total_count">Всего: %1$d</string>
+    <string name="ui_common_page_info">Страница %1$d из %2$d</string>
+    <string name="ui_common_empty_list">Ничего не найдено</string>
+    <string name="ui_common_last_login_at">Дата последнего входа</string>
+    <string name="ui_common_last_active_at">Дата последней активности</string>
+    <string name="ui_common_scheduled_permanent_deletion_at">Дата запланированного удаления</string>
+    <string name="ui_common_actor_id">ID актора</string>
+    <string name="ui_common_resource_id">ID ресурса</string>
 </resources>

@@ -21,4 +21,7 @@ interface MainManagementComponent {
 
     /** Navigates to all platform sessions screen. */
     fun onGlobalSessionListClick()
+
+    /** Navigates to all platform identifiers screen. */
+    fun onGlobalIdentifierListClick()
 }

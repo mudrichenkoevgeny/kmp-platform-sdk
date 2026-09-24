@@ -110,7 +110,8 @@ class ManagementRootComponentImpl(
                 onNavigateToEditSecuritySettings = { navigation.bringToFront(ManagementDestination.EditSecuritySettings) },
                 onNavigateToGlobalUserList = { navigation.bringToFront(ManagementDestination.GlobalUserList) },
                 onNavigateToAuditEventList = { navigation.bringToFront(ManagementDestination.AuditEventList) },
-                onNavigateToGlobalSessionList = { navigation.bringToFront(ManagementDestination.GlobalSessionList) }
+                onNavigateToGlobalSessionList = { navigation.bringToFront(ManagementDestination.GlobalSessionList) },
+                onNavigateToGlobalIdentifierList = { navigation.bringToFront(ManagementDestination.GlobalIdentifierList) }
             )
         )
         is ManagementDestination.EditAuthSettings -> ManagementRootComponent.Child.EditAuthSettings(
@@ -217,6 +218,18 @@ class ManagementRootComponentImpl(
                 componentContext = context,
                 eventId = config.eventId,
                 getAuditEventUseCase = getAuditEventUseCase,
+                onNavigateToUserDetail = { userId ->
+                    navigation.bringToFront(ManagementDestination.UserDetail(userId.asHexDashString()))
+                },
+                onNavigateToSessionDetail = { sessionId ->
+                    navigation.bringToFront(ManagementDestination.SessionDetail(sessionId.asHexDashString()))
+                },
+                onNavigateToIdentifierDetail = { identifierId ->
+                    navigation.bringToFront(ManagementDestination.IdentifierDetail(identifierId.asHexDashString()))
+                },
+                onNavigateToProfile = {
+                    navigation.bringToFront(ManagementDestination.Main)
+                },
                 onBack = navigation::pop
             )
         )
@@ -250,6 +263,12 @@ class ManagementRootComponentImpl(
                 onNavigateToIdentifierDetail = { identifierId ->
                     navigation.bringToFront(ManagementDestination.IdentifierDetail(identifierId.asHexDashString()))
                 },
+                onNavigateToUserDetail = { userId ->
+                    navigation.bringToFront(ManagementDestination.UserDetail(userId.asHexDashString()))
+                },
+                onNavigateToProfile = {
+                    navigation.bringToFront(ManagementDestination.Main)
+                },
                 onBack = navigation::pop
             )
         )
@@ -277,6 +296,12 @@ class ManagementRootComponentImpl(
                     managementDeleteIdentifierPasswordUseCase(UserId.generate(), targetId.asHexDashString())
                 },
                 onIdentifierDeleted = { stack.value.notifyIdentifierDeleted(it) },
+                onNavigateToUserDetail = { userId ->
+                    navigation.bringToFront(ManagementDestination.UserDetail(userId.asHexDashString()))
+                },
+                onNavigateToProfile = {
+                    navigation.bringToFront(ManagementDestination.Main)
+                },
                 onBack = navigation::pop
             )
         )

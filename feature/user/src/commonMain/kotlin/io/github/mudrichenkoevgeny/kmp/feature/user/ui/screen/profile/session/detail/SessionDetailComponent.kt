@@ -20,4 +20,7 @@ interface SessionDetailComponent {
 
     /** Navigates to identifier detail screen. */
     fun onIdentifierClick()
+
+    /** Navigates to user profile or user detail screen depending on current user. */
+    fun onUserClick()
 }

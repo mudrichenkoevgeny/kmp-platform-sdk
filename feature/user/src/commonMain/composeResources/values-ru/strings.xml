@@ -183,4 +183,5 @@
     <string name="identifier_delete_button">Удалить идентификатор</string>
     <string name="identifier_delete_password_button">Удалить пароль</string>
     <string name="add_identifier">Добавить идентификатор</string>
+  <string name="user_label">Пользователь</string>
 </resources>

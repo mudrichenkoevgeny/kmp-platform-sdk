@@ -15,6 +15,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.toUserSessionIdOrNull
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.launch
 
 /**
@@ -31,6 +32,8 @@ import kotlinx.coroutines.launch
  * @param authStorage Storage used to resolve active session ID if [isCurrentSession] is omitted.
  * @param onSessionRevoked Callback invoked when the session is successfully revoked.
  * @param onNavigateToIdentifierDetail Callback to navigate to identifier detail screen.
+ * @param onNavigateToUserDetail Callback to navigate to user detail screen.
+ * @param onNavigateToProfile Callback to navigate to main profile screen.
  * @param onBack Callback to pop this screen from the navigation stack.
  */
 class SessionDetailComponentImpl(
@@ -43,6 +46,8 @@ class SessionDetailComponentImpl(
     private val authStorage: AuthStorage? = null,
     private val onSessionRevoked: ((UserSessionId) -> Unit)? = null,
     private val onNavigateToIdentifierDetail: ((UserIdentifierId) -> Unit)? = null,
+    private val onNavigateToUserDetail: ((UserId) -> Unit)? = null,
+    private val onNavigateToProfile: (() -> Unit)? = null,
     private val onBack: () -> Unit
 ) : SessionDetailComponent, ComponentContext by componentContext {
 
@@ -59,6 +64,8 @@ class SessionDetailComponentImpl(
         authStorage: AuthStorage? = null,
         onSessionRevoked: ((UserSessionId) -> Unit)? = null,
         onNavigateToIdentifierDetail: ((UserIdentifierId) -> Unit)? = null,
+        onNavigateToUserDetail: ((UserId) -> Unit)? = null,
+        onNavigateToProfile: (() -> Unit)? = null,
         onBack: () -> Unit
     ) : this(
         componentContext = componentContext,
@@ -70,6 +77,8 @@ class SessionDetailComponentImpl(
         authStorage = authStorage,
         onSessionRevoked = onSessionRevoked,
         onNavigateToIdentifierDetail = onNavigateToIdentifierDetail,
+        onNavigateToUserDetail = onNavigateToUserDetail,
+        onNavigateToProfile = onNavigateToProfile,
         onBack = onBack
     )
 
@@ -110,6 +119,15 @@ class SessionDetailComponentImpl(
     override fun onIdentifierClick() {
         val current = _state.value as? SessionDetailScreenState.Content ?: return
         onNavigateToIdentifierDetail?.invoke(current.session.identifierId)
+    }
+
+    override fun onUserClick() {
+        val current = _state.value as? SessionDetailScreenState.Content ?: return
+        if (current.isCurrentSession) {
+            onNavigateToProfile?.invoke()
+        } else {
+            onNavigateToUserDetail?.invoke(current.session.userId)
+        }
     }
 
     private fun initializeSession() {

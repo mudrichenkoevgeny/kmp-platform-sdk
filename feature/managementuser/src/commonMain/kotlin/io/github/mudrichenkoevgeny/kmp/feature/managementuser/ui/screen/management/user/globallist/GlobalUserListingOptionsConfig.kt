@@ -1,6 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist
 
 import androidx.compose.runtime.Composable
+import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.BooleanListingFilterDefinition
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ChoiceFilterPresentationStyle
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ChoiceListingFilterDefinition
@@ -8,24 +9,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.NumberListingFilterDefinition
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.option.ListingOptionsConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortDefinition
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_active
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_admin
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_authority_level_from
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_authority_level_to
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_banned
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_created_at
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_lockout_indefinite
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_lockout_none
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_lockout_temporary
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_lockout_type
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_lockout_until
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_pending_deletion
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_read_only
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_role
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_security_hold
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_staff
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_status
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_totp_enabled
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
@@ -38,8 +21,16 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 fun getGlobalUserListingOptionsConfig(): ListingOptionsConfig = ListingOptionsConfig(
     sortOptions = listOf(
         ListingSortDefinition(
-            id = UserSortValues.UserSortBy.CREATED_AT.name,
-            title = stringResource(CommonRes.string.ui_common_created_at)
+            id = UserSortValues.UserSortBy.LAST_LOGIN_AT.name,
+            title = stringResource(CommonRes.string.ui_common_last_login_at)
+        ),
+        ListingSortDefinition(
+            id = UserSortValues.UserSortBy.LAST_ACTIVE_AT.name,
+            title = stringResource(CommonRes.string.ui_common_last_active_at)
+        ),
+        ListingSortDefinition(
+            id = UserSortValues.UserSortBy.SCHEDULED_PERMANENT_DELETION_AT.name,
+            title = stringResource(CommonRes.string.ui_common_scheduled_permanent_deletion_at)
         ),
         ListingSortDefinition(
             id = UserSortValues.UserSortBy.ACCOUNT_LOCKOUT_TYPE.name,
@@ -48,6 +39,14 @@ fun getGlobalUserListingOptionsConfig(): ListingOptionsConfig = ListingOptionsCo
         ListingSortDefinition(
             id = UserSortValues.UserSortBy.TEMPORARY_LOCKOUT_UNTIL.name,
             title = stringResource(CommonRes.string.ui_common_lockout_until)
+        ),
+        ListingSortDefinition(
+            id = UserSortValues.UserSortBy.CREATED_AT.name,
+            title = stringResource(CommonRes.string.ui_common_created_at)
+        ),
+        ListingSortDefinition(
+            id = UserSortValues.UserSortBy.UPDATED_AT.name,
+            title = stringResource(CommonRes.string.ui_common_updated_at)
         )
     ),
     filters = listOf(
@@ -59,7 +58,7 @@ fun getGlobalUserListingOptionsConfig(): ListingOptionsConfig = ListingOptionsCo
                 ListingFilterChoiceOption(UserRole.ADMIN.name, stringResource(CommonRes.string.ui_common_admin))
             ),
             isMultiple = true,
-            presentationStyle = ChoiceFilterPresentationStyle.CHIPS
+            presentationStyle = ChoiceFilterPresentationStyle.DROPDOWN
         ),
         ChoiceListingFilterDefinition(
             id = UserFilterValues.UserFilterValues.ACCOUNT_STATUS,
@@ -92,12 +91,23 @@ fun getGlobalUserListingOptionsConfig(): ListingOptionsConfig = ListingOptionsCo
         NumberListingFilterDefinition(
             id = UserFilterValues.UserFilterValues.AUTHORITY_LEVEL_FROM,
             title = stringResource(CommonRes.string.ui_common_authority_level_from),
-            placeholder = "e.g. 1"
+            placeholder = "0",
+            minValue = AuthorityLevel.MIN_AUTHORITY_LEVEL,
+            maxValue = AuthorityLevel.MAX_AUTHORITY_LEVEL,
+            defaultValueOnFocusLost = AuthorityLevel.MIN_AUTHORITY_LEVEL
         ),
         NumberListingFilterDefinition(
             id = UserFilterValues.UserFilterValues.AUTHORITY_LEVEL_TO,
             title = stringResource(CommonRes.string.ui_common_authority_level_to),
-            placeholder = "e.g. 10"
+            placeholder = "100",
+            minValue = AuthorityLevel.MIN_AUTHORITY_LEVEL,
+            maxValue = AuthorityLevel.MAX_AUTHORITY_LEVEL,
+            defaultValueOnFocusLost = AuthorityLevel.MAX_AUTHORITY_LEVEL
         )
     )
 )
+
+object AuthorityLevel {
+    const val MIN_AUTHORITY_LEVEL = 0L
+    const val MAX_AUTHORITY_LEVEL = 100L
+}

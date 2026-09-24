@@ -42,6 +42,8 @@ class SessionDetailScreenTest {
         onNodeWithTag(SessionDetailTestTags.TITLE).assertIsDisplayed()
         onNodeWithTag(SessionDetailTestTags.BACK_BUTTON).assertIsDisplayed()
         onNodeWithTag(SessionDetailTestTags.SESSION_CARD).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.USER_ROW, useUnmergedTree = true).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.USER_ID, useUnmergedTree = true).assertIsDisplayed()
         onNodeWithTag(SessionDetailTestTags.IDENTIFIER_DISPLAY_NAME, useUnmergedTree = true).assertIsDisplayed()
         onNodeWithTag(SessionDetailTestTags.AUTH_PROVIDER, useUnmergedTree = true).assertIsDisplayed()
         onNodeWithTag(SessionDetailTestTags.DEVICE_NAME).assertIsDisplayed()
@@ -109,5 +111,25 @@ class SessionDetailScreenTest {
         onNodeWithTag(SessionDetailTestTags.BACK_BUTTON).performClick()
 
         assertEquals(1, component.backCalls)
+    }
+
+    @Test
+    fun userRow_invokesOnUserClick() = runComposeUiTest {
+        val component = SessionDetailComponentMock(
+            initialState = SessionDetailScreenState.Content(
+                session = userSessionMock(),
+                isCurrentSession = false
+            )
+        )
+
+        setContent {
+            ComponentTestHarness {
+                SessionDetailScreen(component)
+            }
+        }
+
+        onNodeWithTag(SessionDetailTestTags.USER_ROW).performClick()
+
+        assertEquals(1, component.userClickCalls)
     }
 }

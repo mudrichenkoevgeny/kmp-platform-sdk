@@ -14,4 +14,10 @@ interface AuditEventDetailComponent {
 
     /** Navigates back. */
     fun onBackClick()
+
+    /** Navigates to resource detail screen or profile depending on resource type and ownership. */
+    fun onResourceClick()
+
+    /** Navigates to subject user detail screen or profile depending on subject type and ownership. */
+    fun onSubjectClick()
 }

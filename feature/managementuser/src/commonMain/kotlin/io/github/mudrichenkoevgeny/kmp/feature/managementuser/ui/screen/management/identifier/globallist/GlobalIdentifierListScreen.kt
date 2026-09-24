@@ -37,6 +37,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingEmptyState
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingHeaderBar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
@@ -49,14 +51,20 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.identifiers.GlobalIdentifierListComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifiers
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_identifiers
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.identifier.item.IdentifierItem
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
+/**
+ * Screen displaying all platform user identifiers with filtering, sorting, and management actions.
+ *
+ * @param component Controller driving state and callbacks.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GlobalIdentifierListScreen(component: GlobalIdentifierListComponent) {
@@ -67,7 +75,7 @@ fun GlobalIdentifierListScreen(component: GlobalIdentifierListComponent) {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(io.github.mudrichenkoevgeny.kmp.feature.user.Res.string.identifiers),
+                        text = stringResource(Res.string.user_identifiers),
                         modifier = Modifier.testTag(GlobalIdentifierListTestTags.TITLE)
                     )
                 },
@@ -177,27 +185,38 @@ private fun Content(
                 )
             }
 
-            LazyColumn(
-                state = listState,
-                modifier = Modifier
-                    .weight(1f)
-                    .testTag(GlobalIdentifierListTestTags.IDENTIFIER_LIST),
-                contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
-                verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
-            ) {
-                items(state.paging.items, key = { it.id.value }) { identifier ->
-                    IdentifierItem(
-                        identifier = identifier,
-                        onClick = { component.onIdentifierClick(identifier.id.asHexDashString()) },
-                        isCurrentIdentifier = false
-                    )
-                }
+            if (state.paging.isEmpty && !state.paging.isInitialLoading && state.paging.error == null) {
+                ListingEmptyState(
+                    modifier = Modifier.weight(1f)
+                )
+            } else {
+                ListingHeaderBar(
+                    state = state.paging,
+                    lazyListState = listState
+                )
 
-                item {
-                    PagingFooter(
-                        state = state.paging,
-                        onRetry = onLoadNextPage
-                    )
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier
+                        .weight(1f)
+                        .testTag(GlobalIdentifierListTestTags.IDENTIFIER_LIST),
+                    contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
+                    verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+                ) {
+                    items(state.paging.items, key = { it.id.value }) { identifier ->
+                        IdentifierItem(
+                            identifier = identifier,
+                            onClick = { component.onIdentifierClick(identifier.id.asHexDashString()) },
+                            isCurrentIdentifier = false
+                        )
+                    }
+
+                    item {
+                        PagingFooter(
+                            state = state.paging,
+                            onRetry = onLoadNextPage
+                        )
+                    }
                 }
             }
         }
@@ -216,7 +235,7 @@ internal class GlobalIdentifierListPreviewProvider : PreviewParameterProvider<Gl
     private val items: List<Pair<String, GlobalIdentifierListScreenState>> = listOf(
         "Content" to GlobalIdentifierListScreenState.Content(
             paging = PaginationState(
-                items = listOf(userIdentifierMock())
+                items = listOf(userIdentifierMock(), userIdentifierMock())
             )
         ),
         "Error" to GlobalIdentifierListScreenState.Error(error = CommonError.Unknown()),
@@ -239,8 +258,8 @@ private fun GlobalIdentifierListScreenPreviewContent(state: GlobalIdentifierList
 }
 
 @InternalApi
-private val defaultGlobalIdentifiersPreviewState = GlobalIdentifierListScreenState.Content(
-    paging = PaginationState(items = listOf(userIdentifierMock()))
+private val defaultGlobalIdentifierListPreviewState = GlobalIdentifierListScreenState.Content(
+    paging = PaginationState(items = listOf(userIdentifierMock(), userIdentifierMock()))
 )
 
 @InternalApi
@@ -259,7 +278,7 @@ private fun StatesPreview(
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
-        GlobalIdentifierListScreenPreviewContent(state = defaultGlobalIdentifiersPreviewState)
+        GlobalIdentifierListScreenPreviewContent(state = defaultGlobalIdentifierListPreviewState)
     }
 }
 
@@ -268,7 +287,7 @@ private fun ScreenSizePreview() {
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
-        GlobalIdentifierListScreenPreviewContent(state = defaultGlobalIdentifiersPreviewState)
+        GlobalIdentifierListScreenPreviewContent(state = defaultGlobalIdentifierListPreviewState)
     }
 }
 
@@ -277,16 +296,16 @@ private fun ThemePreview() {
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {
-        GlobalIdentifierListScreenPreviewContent(state = defaultGlobalIdentifiersPreviewState)
+        GlobalIdentifierListScreenPreviewContent(state = defaultGlobalIdentifierListPreviewState)
     }
 }
 
 object GlobalIdentifierListTestTags {
-    const val TITLE = "GlobalIdentifiers_Title"
-    const val BACK_BUTTON = "GlobalIdentifiers_BackButton"
-    const val FILTER_BUTTON = "GlobalIdentifiers_FilterButton"
-    const val REFRESH_BUTTON = "GlobalIdentifiers_RefreshButton"
-    const val GLOBAL_ERROR_TEXT = "GlobalIdentifiers_GlobalErrorText"
-    const val ACTION_ERROR_TEXT = "GlobalIdentifiers_ActionErrorText"
-    const val IDENTIFIER_LIST = "GlobalIdentifiers_List"
+    const val TITLE = "GlobalIdentifierList_Title"
+    const val BACK_BUTTON = "GlobalIdentifierList_BackButton"
+    const val FILTER_BUTTON = "GlobalIdentifierList_FilterButton"
+    const val REFRESH_BUTTON = "GlobalIdentifierList_RefreshButton"
+    const val GLOBAL_ERROR_TEXT = "GlobalIdentifierList_GlobalErrorText"
+    const val IDENTIFIER_LIST = "GlobalIdentifierList_List"
+    const val ACTION_ERROR_TEXT = "GlobalIdentifierList_ActionErrorText"
 }

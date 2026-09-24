@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
@@ -22,6 +23,8 @@ class MainManagementScreenTest {
     @Test
     fun rendersTitleAndButtonsAndTriggersCallbacks() = runComposeUiTest {
         var usersClicked = false
+        var sessionsClicked = false
+        var identifiersClicked = false
         var auditClicked = false
         var authClicked = false
         var globalClicked = false
@@ -29,6 +32,8 @@ class MainManagementScreenTest {
 
         val component = object : MainManagementComponentMock() {
             override fun onGlobalUserListClick() { usersClicked = true }
+            override fun onGlobalSessionListClick() { sessionsClicked = true }
+            override fun onGlobalIdentifierListClick() { identifiersClicked = true }
             override fun onAuditEventListClick() { auditClicked = true }
             override fun onEditAuthSettingsClick() { authClicked = true }
             override fun onEditGlobalSettingsClick() { globalClicked = true }
@@ -43,19 +48,25 @@ class MainManagementScreenTest {
 
         onNodeWithTag(MainManagementTestTags.TITLE).assertIsDisplayed()
 
-        onNodeWithTag(MainManagementTestTags.GLOBAL_USER_LIST_BUTTON).performClick()
+        onNodeWithTag(MainManagementTestTags.GLOBAL_USER_LIST_BUTTON).performScrollTo().performClick()
         assertTrue(usersClicked)
 
-        onNodeWithTag(MainManagementTestTags.AUDIT_EVENT_LIST_BUTTON).performClick()
+        onNodeWithTag(MainManagementTestTags.SESSIONS_BUTTON).performScrollTo().performClick()
+        assertTrue(sessionsClicked)
+
+        onNodeWithTag(MainManagementTestTags.IDENTIFIERS_BUTTON).performScrollTo().performClick()
+        assertTrue(identifiersClicked)
+
+        onNodeWithTag(MainManagementTestTags.AUDIT_EVENT_LIST_BUTTON).performScrollTo().performClick()
         assertTrue(auditClicked)
 
-        onNodeWithTag(MainManagementTestTags.EDIT_AUTH_SETTINGS_BUTTON).performClick()
+        onNodeWithTag(MainManagementTestTags.EDIT_AUTH_SETTINGS_BUTTON).performScrollTo().performClick()
         assertTrue(authClicked)
 
-        onNodeWithTag(MainManagementTestTags.EDIT_GLOBAL_SETTINGS_BUTTON).performClick()
+        onNodeWithTag(MainManagementTestTags.EDIT_GLOBAL_SETTINGS_BUTTON).performScrollTo().performClick()
         assertTrue(globalClicked)
 
-        onNodeWithTag(MainManagementTestTags.EDIT_SECURITY_SETTINGS_BUTTON).performClick()
+        onNodeWithTag(MainManagementTestTags.EDIT_SECURITY_SETTINGS_BUTTON).performScrollTo().performClick()
         assertTrue(securityClicked)
     }
 }

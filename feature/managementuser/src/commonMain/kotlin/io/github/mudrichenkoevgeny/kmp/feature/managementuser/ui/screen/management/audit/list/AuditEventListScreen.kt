@@ -27,15 +27,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
+import io.github.mudrichenkoevgeny.kmp.core.common.*
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
-import io.github.mudrichenkoevgeny.kmp.core.common.ic_filter
-import io.github.mudrichenkoevgeny.kmp.core.common.ic_refresh
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingEmptyState
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingHeaderBar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
@@ -49,14 +51,13 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_logs_title
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.audit.list.AuditEventListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.component.audit.item.AuditItem
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_logs_title
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventId
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -162,40 +163,51 @@ private fun Content(
             )
         }
 
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-        ) {
-            LazyColumn(
-                state = listState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .testTag(AuditEventListTestTags.EVENT_LIST),
-                contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
-                verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
-            ) {
-                items(state.paging.items, key = { it.id.value }) { event ->
-                    AuditItem(
-                        event = event,
-                        onClick = { onEventClick(event.id) }
-                    )
-                }
-
-                item {
-                    PagingFooter(
-                        state = state.paging,
-                        onRetry = onLoadNextPage
-                    )
-                }
-            }
-
-            CoreLazyColumnScrollbar(
-                lazyListState = listState,
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .fillMaxHeight()
+        if (state.paging.isEmpty && !state.paging.isInitialLoading && state.paging.error == null) {
+            ListingEmptyState(
+                modifier = Modifier.weight(1f)
             )
+        } else {
+            ListingHeaderBar(
+                state = state.paging,
+                lazyListState = listState
+            )
+
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .testTag(AuditEventListTestTags.EVENT_LIST),
+                    contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
+                    verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+                ) {
+                    items(state.paging.items, key = { it.id.value }) { event ->
+                        AuditItem(
+                            event = event,
+                            onClick = { onEventClick(event.id) }
+                        )
+                    }
+
+                    item {
+                        PagingFooter(
+                            state = state.paging,
+                            onRetry = onLoadNextPage
+                        )
+                    }
+                }
+
+                CoreLazyColumnScrollbar(
+                    lazyListState = listState,
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .fillMaxHeight()
+                )
+            }
         }
     }
 }

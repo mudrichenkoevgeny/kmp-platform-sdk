@@ -133,12 +133,10 @@ class GlobalIdentifierListComponentImpl(
         filterStates: Map<String, ListingFilterState>?
     ) {
         val sortOrder = if (sortState?.isAscending == true) SortOrder.ASC else SortOrder.DESC
-        val sortBy = if (sortState?.optionId == "created_at") {
-            UserSortValues.UserIdentifierSortBy.CREATED_AT
-        } else {
-            null
-        }
+        val sortBy = sortState?.optionId?.let { UserSortValues.UserIdentifierSortBy.fromValueOrNull(it) }
 
+        val userIds = (filterStates?.get(UserFilterValues.UserIdentifierFilterValues.USER_ID) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
         val userAuthProviders = (filterStates?.get(UserFilterValues.UserIdentifierFilterValues.USER_AUTH_PROVIDER) as? ChoiceListingFilterState)
             ?.selectedIds?.mapNotNull { UserAuthProvider.fromValueOrNull(it) }
         val identifiers = (filterStates?.get(UserFilterValues.UserIdentifierFilterValues.IDENTIFIER) as? TextListingFilterState)
@@ -150,6 +148,7 @@ class GlobalIdentifierListComponentImpl(
                 pageSize = ListingConstants.DEFAULT_PAGE_SIZE,
                 sortBy = sortBy,
                 sortOrder = sortOrder,
+                userIds = userIds,
                 userAuthProviders = userAuthProviders,
                 identifiers = identifiers
             )

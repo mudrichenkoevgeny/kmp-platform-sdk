@@ -197,6 +197,9 @@ class ProfileRootComponentImpl(
                 onNavigateToIdentifierDetail = { identifierId ->
                     navigation.bringToFront(ProfileDestination.IdentifierDetail(identifierId.asHexDashString()))
                 },
+                onNavigateToProfile = {
+                    navigation.popTo(0)
+                },
                 onBack = navigation::pop
             )
         )
@@ -228,6 +231,9 @@ class ProfileRootComponentImpl(
                 emailChangePasswordUseCase = emailChangePasswordUseCase,
                 authStorage = authStorage,
                 onIdentifierDeleted = { stack.value.notifyIdentifierDeleted(it) },
+                onNavigateToProfile = {
+                    navigation.popTo(0)
+                },
                 onBack = navigation::pop
             )
         )

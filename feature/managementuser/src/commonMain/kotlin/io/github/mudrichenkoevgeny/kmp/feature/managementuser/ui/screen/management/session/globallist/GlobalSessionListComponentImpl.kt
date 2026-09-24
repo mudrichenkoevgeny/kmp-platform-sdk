@@ -30,11 +30,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 import kotlinx.coroutines.launch
 
 /**
- * Default [GlobalSessionListComponent] implementation: manages all sessions globally.
+ * Default [GlobalSessionListComponent] implementation: manages all sessions list globally.
  *
  * @param componentContext Decompose [ComponentContext].
  * @param managementGetSessionsUseCase Use case to fetch paginated list of global sessions.
- * @param managementDeleteSessionUseCase Use case to administratively delete a user session.
+ * @param managementDeleteSessionUseCase Use case to revoke a global session.
  * @param onNavigateToSessionDetail Callback invoked when a session is tapped.
  * @param onBack Pops this screen from the navigation stack.
  */
@@ -60,6 +60,28 @@ class GlobalSessionListComponentImpl(
 
     override fun onSessionClick(session: UserSession) {
         onNavigateToSessionDetail?.invoke(session)
+    }
+
+    override fun onDeleteSessionClick(userId: UserId, sessionId: String) {
+        val current = _state.value as? GlobalSessionListScreenState.Content ?: return
+        _state.value = current.copy(actionLoading = true, actionError = null)
+
+        scope.launch {
+            managementDeleteSessionUseCase(userId, sessionId)
+                .onSuccess {
+                    val newItems = current.paging.items.filterNot { it.id.asHexDashString() == sessionId }
+                    _state.value = current.copy(
+                        paging = current.paging.copy(items = newItems),
+                        actionLoading = false
+                    )
+                }
+                .onError { error ->
+                    _state.value = current.copy(
+                        actionLoading = false,
+                        actionError = error
+                    )
+                }
+        }
     }
 
     override fun onSessionRevoked(sessionId: UserSessionId) {
@@ -114,21 +136,6 @@ class GlobalSessionListComponentImpl(
         loadSessions()
     }
 
-    override fun onDeleteSessionClick(userId: UserId, sessionId: String) {
-        val currentContent = _state.value as? GlobalSessionListScreenState.Content ?: return
-        _state.value = currentContent.copy(actionLoading = true, actionError = null)
-
-        scope.launch {
-            managementDeleteSessionUseCase(userId = userId, sessionId = sessionId)
-                .onSuccess {
-                    loadSessions()
-                }
-                .onError { error ->
-                    _state.value = currentContent.copy(actionLoading = false, actionError = error)
-                }
-        }
-    }
-
     private fun loadSessions() {
         val currentContent = _state.value as? GlobalSessionListScreenState.Content
         if (currentContent != null) {
@@ -154,23 +161,33 @@ class GlobalSessionListComponentImpl(
         filterStates: Map<String, ListingFilterState>?
     ) {
         val sortOrder = if (sortState?.isAscending == true) SortOrder.ASC else SortOrder.DESC
-        val sortBy = if (sortState?.optionId == "created_at") {
-            UserSortValues.UserSessionSortBy.CREATED_AT
-        } else {
-            null
-        }
+        val sortBy = sortState?.optionId?.let { UserSortValues.UserSessionSortBy.fromValueOrNull(it) }
 
+        val userIds = (filterStates?.get(UserFilterValues.UserSessionFilterValues.USER_ID) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
         val userRoles = (filterStates?.get(UserFilterValues.UserSessionFilterValues.USER_ROLE) as? ChoiceListingFilterState)
             ?.selectedIds?.mapNotNull { UserRole.fromValueOrNull(it) }
+        val identifiers = (filterStates?.get(UserFilterValues.UserSessionFilterValues.IDENTIFIER) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+        val identifierIds = (filterStates?.get(UserFilterValues.UserSessionFilterValues.IDENTIFIER_ID) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
         val userAuthProviders = (filterStates?.get(UserFilterValues.UserSessionFilterValues.USER_AUTH_PROVIDER) as? ChoiceListingFilterState)
             ?.selectedIds?.mapNotNull { UserAuthProvider.fromValueOrNull(it) }
         val clientTypes = (filterStates?.get(UserFilterValues.UserSessionFilterValues.CLIENT_TYPE) as? ChoiceListingFilterState)
             ?.selectedIds?.mapNotNull { ClientType.fromValueOrNull(it) }
-        val ipAddresses = (filterStates?.get(UserFilterValues.UserSessionFilterValues.IP_ADDRESS) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
         val userAgents = (filterStates?.get(UserFilterValues.UserSessionFilterValues.USER_AGENT) as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+        val ipAddresses = (filterStates?.get(UserFilterValues.UserSessionFilterValues.IP_ADDRESS) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+        val languages = (filterStates?.get(UserFilterValues.UserSessionFilterValues.LANGUAGE) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+        val deviceIds = (filterStates?.get(UserFilterValues.UserSessionFilterValues.DEVICE_ID) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
         val deviceNames = (filterStates?.get(UserFilterValues.UserSessionFilterValues.DEVICE_NAME) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+        val appVersions = (filterStates?.get(UserFilterValues.UserSessionFilterValues.APP_VERSION) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+        val operationSystemVersions = (filterStates?.get(UserFilterValues.UserSessionFilterValues.OPERATION_SYSTEM_VERSION) as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
 
         scope.launch {
@@ -179,12 +196,19 @@ class GlobalSessionListComponentImpl(
                 pageSize = ListingConstants.DEFAULT_PAGE_SIZE,
                 sortBy = sortBy,
                 sortOrder = sortOrder,
+                userIds = userIds,
                 userRoles = userRoles,
+                identifiers = identifiers,
+                identifierIds = identifierIds,
                 userAuthProviders = userAuthProviders,
                 clientTypes = clientTypes,
-                ipAddresses = ipAddresses,
                 userAgents = userAgents,
-                deviceNames = deviceNames
+                ipAddresses = ipAddresses,
+                languages = languages,
+                deviceIds = deviceIds,
+                deviceNames = deviceNames,
+                appVersions = appVersions,
+                operationSystemVersions = operationSystemVersions
             )
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? GlobalSessionListScreenState.Content

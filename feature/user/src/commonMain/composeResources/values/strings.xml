@@ -183,4 +183,5 @@
     <string name="identifier_delete_button">Delete Identifier</string>
     <string name="identifier_delete_password_button">Delete Password</string>
     <string name="add_identifier">Add Identifier</string>
+  <string name="user_label">User</string>
 </resources>

@@ -35,4 +35,7 @@ interface IdentifierDetailComponent {
 
     /** Navigates back. */
     fun onBackClick()
+
+    /** Navigates to user profile or user detail screen depending on current user. */
+    fun onUserClick()
 }

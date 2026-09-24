@@ -25,14 +25,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_logs
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.edit_auth_settings
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.edit_global_settings
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.edit_security_settings
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.management_settings_title
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.main.MainManagementComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.sessions
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.users_management
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -73,6 +67,12 @@ fun MainManagementScreen(component: MainManagementComponent) {
                 text = stringResource(Res.string.sessions),
                 onClick = component::onGlobalSessionListClick,
                 modifier = Modifier.testTag(MainManagementTestTags.SESSIONS_BUTTON)
+            )
+
+            CoreButton(
+                text = stringResource(Res.string.identifiers),
+                onClick = component::onGlobalIdentifierListClick,
+                modifier = Modifier.testTag(MainManagementTestTags.IDENTIFIERS_BUTTON)
             )
 
             CoreButton(
@@ -151,9 +151,10 @@ private fun FontScalePreview() {
 object MainManagementTestTags {
     const val TITLE = "MainManagement_Title"
     const val GLOBAL_USER_LIST_BUTTON = "MainManagement_GlobalUserListButton"
+    const val SESSIONS_BUTTON = "MainManagement_SessionsButton"
+    const val IDENTIFIERS_BUTTON = "MainManagement_IdentifiersButton"
     const val AUDIT_EVENT_LIST_BUTTON = "MainManagement_AuditEventListButton"
     const val EDIT_AUTH_SETTINGS_BUTTON = "MainManagement_EditAuthSettingsButton"
     const val EDIT_GLOBAL_SETTINGS_BUTTON = "MainManagement_EditGlobalSettingsButton"
     const val EDIT_SECURITY_SETTINGS_BUTTON = "MainManagement_EditSecuritySettingsButton"
-    const val SESSIONS_BUTTON = "MainManagement_SessionsButton"
 }

@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.detail
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,20 +47,18 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_action
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_actor
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_actor_role
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_actor_type
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_details_title
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_id
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_message
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_metadata
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_resource
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_resource_id
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_resource_sensitivity
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_status
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_timestamp
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.audit.detail.AuditEventDetailComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.not_available
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -99,7 +98,11 @@ fun AuditEventDetailScreen(component: AuditEventDetailComponent) {
                     modifier = Modifier.testTag(AuditEventDetailTestTags.GLOBAL_ERROR)
                 )
                 is AuditEventDetailScreenState.Content -> {
-                    Content(state = currentState)
+                    Content(
+                        state = currentState,
+                        onResourceClick = component::onResourceClick,
+                        onSubjectClick = component::onSubjectClick
+                    )
                 }
             }
         }
@@ -107,9 +110,39 @@ fun AuditEventDetailScreen(component: AuditEventDetailComponent) {
 }
 
 @Composable
-private fun Content(state: AuditEventDetailScreenState.Content) {
+private fun Content(
+    state: AuditEventDetailScreenState.Content,
+    onResourceClick: () -> Unit,
+    onSubjectClick: () -> Unit
+) {
     val event = state.event
-    val notAvailableText = stringResource(Res.string.not_available)
+
+    val resourceName = event.resource.serialName
+    val isResourceClickable = event.resourceId != null && (
+        resourceName.equals(UserAuditResourceType.USER.serialName, ignoreCase = true) ||
+            resourceName.equals(UserAuditResourceType.SESSION.serialName, ignoreCase = true) ||
+            resourceName.equals(UserAuditResourceType.IDENTIFIER.serialName, ignoreCase = true)
+    )
+    val isSubjectClickable = !event.actorId.isNullOrBlank() && (
+        event.actorType == AuditActorType.USER ||
+            event.actorType.serialName.equals(AuditActorType.USER.serialName, ignoreCase = true)
+    )
+
+    val resourceValue = if (event.resourceId != null) {
+        "${event.resource.serialName}: ${event.resourceId}"
+    } else {
+        event.resource.serialName
+    }
+
+    val subjectValue = buildString {
+        append(event.actorType.serialName)
+        if (!event.actorUserRole.isNullOrBlank()) {
+            append(" (${event.actorUserRole})")
+        }
+        if (!event.actorId.isNullOrBlank()) {
+            append(": ${event.actorId}")
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -141,32 +174,20 @@ private fun Content(state: AuditEventDetailScreenState.Content) {
                 )
                 DetailRow(
                     label = stringResource(Res.string.audit_event_resource),
-                    value = event.resource.serialName
+                    value = resourceValue,
+                    onClick = if (isResourceClickable) onResourceClick else null,
+                    modifier = Modifier.testTag(AuditEventDetailTestTags.RESOURCE_ROW)
                 )
-                event.resourceId?.let { resId ->
-                    DetailRow(
-                        label = stringResource(Res.string.audit_event_resource_id),
-                        value = resId
-                    )
-                }
                 DetailRow(
                     label = stringResource(Res.string.audit_event_resource_sensitivity),
                     value = event.resourceValueSensitivity.name
                 )
                 DetailRow(
                     label = stringResource(Res.string.audit_event_actor),
-                    value = event.actorId ?: notAvailableText
+                    value = subjectValue,
+                    onClick = if (isSubjectClickable) onSubjectClick else null,
+                    modifier = Modifier.testTag(AuditEventDetailTestTags.SUBJECT_ROW)
                 )
-                DetailRow(
-                    label = stringResource(Res.string.audit_event_actor_type),
-                    value = event.actorType.serialName
-                )
-                event.actorUserRole?.let { role ->
-                    DetailRow(
-                        label = stringResource(Res.string.audit_event_actor_role),
-                        value = role
-                    )
-                }
                 event.message?.let { msg ->
                     DetailRow(
                         label = stringResource(Res.string.audit_event_message),
@@ -212,10 +233,14 @@ private fun Content(state: AuditEventDetailScreenState.Content) {
 @Composable
 private fun DetailRow(
     label: String,
-    value: String
+    value: String,
+    onClick: (() -> Unit)? = null,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Top
     ) {
@@ -226,6 +251,7 @@ private fun DetailRow(
         )
         CoreBodyText(
             text = value,
+            color = if (onClick != null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(1.5f)
         )
     }
@@ -302,4 +328,6 @@ object AuditEventDetailTestTags {
     const val TITLE = "AuditEventDetail_Title"
     const val BACK_BUTTON = "AuditEventDetail_BackButton"
     const val GLOBAL_ERROR = "AuditEventDetail_GlobalError"
+    const val RESOURCE_ROW = "AuditEventDetail_ResourceRow"
+    const val SUBJECT_ROW = "AuditEventDetail_SubjectRow"
 }

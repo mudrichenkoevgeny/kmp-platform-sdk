@@ -13,6 +13,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.Dele
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.GetUserIdentifierUseCaseMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -135,6 +136,46 @@ class IdentifierDetailComponentImplTest {
             context.destroy()
         }
     }
+
+    @Test
+    fun onUserClick_whenCurrentIdentifier_navigatesToProfile() = runComponentTest {
+        var profileCalled = false
+        var userDetailCalled = false
+        val context = createTestContext(
+            identifier = userIdentifierMock(),
+            isCurrentIdentifier = true,
+            onNavigateToProfile = { profileCalled = true },
+            onNavigateToUserDetail = { userDetailCalled = true }
+        )
+        try {
+            advanceTimeBy(100.milliseconds)
+            context.component.onUserClick()
+            assertTrue(profileCalled)
+            assertTrue(!userDetailCalled)
+        } finally {
+            context.destroy()
+        }
+    }
+
+    @Test
+    fun onUserClick_whenNotCurrentIdentifier_navigatesToUserDetail() = runComponentTest {
+        var profileCalled = false
+        var userDetailCalled = false
+        val context = createTestContext(
+            identifier = userIdentifierMock(),
+            isCurrentIdentifier = false,
+            onNavigateToProfile = { profileCalled = true },
+            onNavigateToUserDetail = { userDetailCalled = true }
+        )
+        try {
+            advanceTimeBy(100.milliseconds)
+            context.component.onUserClick()
+            assertTrue(!profileCalled)
+            assertTrue(userDetailCalled)
+        } finally {
+            context.destroy()
+        }
+    }
 }
 
 private class TestContext(
@@ -153,6 +194,8 @@ private fun createTestContext(
     getUserIdentifierUseCase: GetUserIdentifierUseCaseMock? = null,
     deleteUserIdentifierUseCase: DeleteUserIdentifierUseCaseMock? = null,
     isCurrentIdentifier: Boolean = false,
+    onNavigateToUserDetail: ((UserId) -> Unit)? = null,
+    onNavigateToProfile: (() -> Unit)? = null,
     onBack: () -> Unit = {}
 ): TestContext {
     val lifecycleRegistry = LifecycleRegistry()
@@ -165,6 +208,8 @@ private fun createTestContext(
         getUserIdentifierUseCase = getUserIdentifierUseCase,
         deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
         isCurrentIdentifier = isCurrentIdentifier,
+        onNavigateToUserDetail = onNavigateToUserDetail,
+        onNavigateToProfile = onNavigateToProfile,
         onBack = onBack
     )
     return TestContext(component, lifecycleRegistry)

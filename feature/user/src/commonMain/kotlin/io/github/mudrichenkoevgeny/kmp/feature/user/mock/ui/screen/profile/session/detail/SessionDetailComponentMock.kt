@@ -17,6 +17,7 @@ class SessionDetailComponentMock(
     var revokeSessionCalls = 0
     var retryCalls = 0
     var backCalls = 0
+    var userClickCalls = 0
 
     fun updateState(state: SessionDetailScreenState) {
         _state.value = state
@@ -35,4 +36,8 @@ class SessionDetailComponentMock(
     }
 
     override fun onIdentifierClick() {}
+
+    override fun onUserClick() {
+        userClickCalls++
+    }
 }

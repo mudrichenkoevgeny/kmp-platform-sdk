@@ -16,6 +16,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.toUserIdentifierIdOrNull
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.launch
 
 /**
@@ -33,6 +34,8 @@ import kotlinx.coroutines.launch
  * @param isCurrentIdentifier Indicates if this is the active session's identifier.
  * @param authStorage Storage used to resolve active identifier ID if [isCurrentIdentifier] is omitted.
  * @param onIdentifierDeleted Callback invoked when the identifier is deleted.
+ * @param onNavigateToUserDetail Callback to navigate to user detail screen.
+ * @param onNavigateToProfile Callback to navigate to main profile screen.
  * @param onBack Callback to pop this screen from navigation stack.
  */
 class IdentifierDetailComponentImpl(
@@ -46,6 +49,8 @@ class IdentifierDetailComponentImpl(
     private val isCurrentIdentifier: Boolean? = null,
     private val authStorage: AuthStorage? = null,
     private val onIdentifierDeleted: ((UserIdentifierId) -> Unit)? = null,
+    private val onNavigateToUserDetail: ((UserId) -> Unit)? = null,
+    private val onNavigateToProfile: (() -> Unit)? = null,
     private val onBack: () -> Unit
 ) : IdentifierDetailComponent, ComponentContext by componentContext {
 
@@ -62,6 +67,8 @@ class IdentifierDetailComponentImpl(
         isCurrentIdentifier: Boolean? = null,
         authStorage: AuthStorage? = null,
         onIdentifierDeleted: ((UserIdentifierId) -> Unit)? = null,
+        onNavigateToUserDetail: ((UserId) -> Unit)? = null,
+        onNavigateToProfile: (() -> Unit)? = null,
         onBack: () -> Unit
     ) : this(
         componentContext = componentContext,
@@ -74,6 +81,8 @@ class IdentifierDetailComponentImpl(
         isCurrentIdentifier = isCurrentIdentifier,
         authStorage = authStorage,
         onIdentifierDeleted = onIdentifierDeleted,
+        onNavigateToUserDetail = onNavigateToUserDetail,
+        onNavigateToProfile = onNavigateToProfile,
         onBack = onBack
     )
 
@@ -166,6 +175,15 @@ class IdentifierDetailComponentImpl(
 
     override fun onBackClick() {
         onBack()
+    }
+
+    override fun onUserClick() {
+        val current = _state.value as? IdentifierDetailScreenState.Content ?: return
+        if (current.isCurrentIdentifier) {
+            onNavigateToProfile?.invoke()
+        } else {
+            onNavigateToUserDetail?.invoke(current.identifier.userId)
+        }
     }
 
     private fun initializeIdentifier() {

@@ -74,6 +74,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_os_version
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_title_current_session
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_title_session
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_revoke
+import io.github.mudrichenkoevgeny.kmp.feature.user.user_id
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -124,7 +125,8 @@ fun SessionDetailScreen(component: SessionDetailComponent) {
                     Content(
                         state = currentState,
                         onIdentifierClick = component::onIdentifierClick,
-                        onRevokeClick = component::onRevokeSessionClick
+                        onRevokeClick = component::onRevokeSessionClick,
+                        onUserClick = component::onUserClick
                     )
                 }
             }
@@ -136,7 +138,8 @@ fun SessionDetailScreen(component: SessionDetailComponent) {
 private fun Content(
     state: SessionDetailScreenState.Content,
     onIdentifierClick: () -> Unit,
-    onRevokeClick: () -> Unit
+    onRevokeClick: () -> Unit,
+    onUserClick: () -> Unit
 ) {
     val session = state.session
     val notAvailableText = stringResource(Res.string.not_available)
@@ -152,6 +155,25 @@ private fun Content(
                 modifier = Modifier.padding(CoreTheme.dimens.paddingMedium),
                 verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
             ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onUserClick() }
+                        .testTag(SessionDetailTestTags.USER_ROW),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = stringResource(Res.string.user_id, session.userId.asHexDashString()),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.testTag(SessionDetailTestTags.USER_ID)
+                        )
+                    }
+                }
+
+                HorizontalDivider()
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -348,6 +370,8 @@ object SessionDetailTestTags {
     const val TITLE = "SessionDetail_Title"
     const val BACK_BUTTON = "SessionDetail_BackButton"
     const val GLOBAL_ERROR = "SessionDetail_GlobalError"
+    const val USER_ROW = "SessionDetail_UserRow"
+    const val USER_ID = "SessionDetail_UserId"
     const val SESSION_CARD = "SessionDetail_SessionCard"
     const val IDENTIFIER_DISPLAY_NAME = "SessionDetail_IdentifierDisplayName"
     const val AUTH_PROVIDER = "SessionDetail_AuthProvider"

@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -74,6 +75,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.ident
 import io.github.mudrichenkoevgeny.kmp.feature.user.new_password
 import io.github.mudrichenkoevgeny.kmp.feature.user.not_available
 import io.github.mudrichenkoevgeny.kmp.feature.user.old_password
+import io.github.mudrichenkoevgeny.kmp.feature.user.user_id
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -127,7 +129,8 @@ fun IdentifierDetailScreen(component: IdentifierDetailComponent) {
                         onChangePasswordClick = component::onChangePasswordClick,
                         onConfirmChangePasswordClick = component::onConfirmChangePasswordClick,
                         onDismissChangePasswordDialog = component::onDismissChangePasswordDialog,
-                        onDeletePasswordClick = component::onDeletePasswordClick
+                        onDeletePasswordClick = component::onDeletePasswordClick,
+                        onUserClick = component::onUserClick
                     )
                 }
             }
@@ -144,7 +147,8 @@ private fun Content(
     onChangePasswordClick: () -> Unit,
     onConfirmChangePasswordClick: (String, String) -> Unit,
     onDismissChangePasswordDialog: () -> Unit,
-    onDeletePasswordClick: () -> Unit
+    onDeletePasswordClick: () -> Unit,
+    onUserClick: () -> Unit
 ) {
     val identifier = state.identifier
 
@@ -165,6 +169,13 @@ private fun Content(
                 )
 
                 HorizontalDivider()
+
+                DetailRow(
+                    label = stringResource(Res.string.user_id, "").replace(":", "").replace("%1\$s", "").trim(),
+                    value = identifier.userId.asHexDashString(),
+                    onClick = onUserClick,
+                    modifier = Modifier.testTag(IdentifierDetailTestTags.USER_ROW)
+                )
 
                 DetailRow(
                     label = stringResource(Res.string.identifier_detail_value),
@@ -286,10 +297,14 @@ private fun Content(
 @Composable
 private fun DetailRow(
     label: String,
-    value: String
+    value: String,
+    onClick: (() -> Unit)? = null,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -441,6 +456,7 @@ object IdentifierDetailTestTags {
     const val BACK_BUTTON = "identifier_detail_back_button"
     const val GLOBAL_ERROR = "identifier_detail_global_error"
     const val CARD = "identifier_detail_card"
+    const val USER_ROW = "identifier_detail_user_row"
     const val DELETE_BUTTON = "identifier_detail_delete_button"
     const val CHANGE_PASSWORD_BUTTON = "identifier_detail_change_password_button"
     const val DELETE_PASSWORD_BUTTON = "identifier_detail_delete_password_button"

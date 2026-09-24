@@ -38,4 +38,5 @@ class IdentifierDetailComponentMock(
     override fun onDeletePasswordClick() { deletePasswordCalls++ }
     override fun onRetry() { retryCalls++ }
     override fun onBackClick() { backCalls++ }
+    override fun onUserClick() {}
 }

@@ -74,6 +74,7 @@
     <string name="user_sessions">User Sessions</string>
     <string name="sessions">Sessions</string>
     <string name="user_identifiers">User Identifiers</string>
+    <string name="identifiers">Identifiers</string>
     <string name="disable_totp">Disable TOTP</string>
     <string name="disabling_totp">Disabling TOTP...</string>
     <string name="revoke_all_sessions">Revoke All Sessions</string>

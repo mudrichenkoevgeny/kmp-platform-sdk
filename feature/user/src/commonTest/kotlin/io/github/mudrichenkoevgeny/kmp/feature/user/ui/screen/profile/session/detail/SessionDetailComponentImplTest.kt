@@ -13,6 +13,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.DeleteS
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.GetSessionUseCaseMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -135,6 +136,46 @@ class SessionDetailComponentImplTest {
             context.destroy()
         }
     }
+
+    @Test
+    fun onUserClick_whenCurrentSession_navigatesToProfile() = runComponentTest {
+        var profileCalled = false
+        var userDetailCalled = false
+        val context = createSessionDetailComponentTestContext(
+            session = userSessionMock(),
+            isCurrentSession = true,
+            onNavigateToProfile = { profileCalled = true },
+            onNavigateToUserDetail = { userDetailCalled = true }
+        )
+        try {
+            advanceTimeBy(100.milliseconds)
+            context.component.onUserClick()
+            assertTrue(profileCalled)
+            assertTrue(!userDetailCalled)
+        } finally {
+            context.destroy()
+        }
+    }
+
+    @Test
+    fun onUserClick_whenNotCurrentSession_navigatesToUserDetail() = runComponentTest {
+        var profileCalled = false
+        var userDetailCalled = false
+        val context = createSessionDetailComponentTestContext(
+            session = userSessionMock(),
+            isCurrentSession = false,
+            onNavigateToProfile = { profileCalled = true },
+            onNavigateToUserDetail = { userDetailCalled = true }
+        )
+        try {
+            advanceTimeBy(100.milliseconds)
+            context.component.onUserClick()
+            assertTrue(!profileCalled)
+            assertTrue(userDetailCalled)
+        } finally {
+            context.destroy()
+        }
+    }
 }
 
 private class SessionDetailComponentTestContext(
@@ -153,6 +194,8 @@ private fun createSessionDetailComponentTestContext(
     getSessionUseCase: GetSessionUseCaseMock? = null,
     deleteSessionUseCase: DeleteSessionUseCaseMock? = null,
     isCurrentSession: Boolean = false,
+    onNavigateToUserDetail: ((UserId) -> Unit)? = null,
+    onNavigateToProfile: (() -> Unit)? = null,
     onBack: () -> Unit = {}
 ): SessionDetailComponentTestContext {
     val lifecycleRegistry = LifecycleRegistry()
@@ -165,6 +208,8 @@ private fun createSessionDetailComponentTestContext(
         getSessionUseCase = getSessionUseCase,
         deleteSessionUseCase = deleteSessionUseCase,
         isCurrentSession = isCurrentSession,
+        onNavigateToUserDetail = onNavigateToUserDetail,
+        onNavigateToProfile = onNavigateToProfile,
         onBack = onBack
     )
     return SessionDetailComponentTestContext(component, lifecycleRegistry)

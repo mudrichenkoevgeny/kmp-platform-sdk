@@ -73,4 +73,23 @@
     <string name="ui_common_lockout_none">None</string>
     <string name="ui_common_lockout_indefinite">Indefinite</string>
     <string name="ui_common_lockout_temporary">Temporary</string>
+    <string name="ui_common_apple">Apple</string>
+    <string name="ui_common_updated_at">Updated Date</string>
+    <string name="ui_common_last_accessed_at">Last Accessed Date</string>
+    <string name="ui_common_last_reauthenticated_at">Last Reauthenticated Date</string>
+    <string name="ui_common_expires_at">Expiration Date</string>
+    <string name="ui_common_user_id">User ID</string>
+    <string name="ui_common_identifier_id">Credential ID</string>
+    <string name="ui_common_language">Language</string>
+    <string name="ui_common_device_id">Device ID</string>
+    <string name="ui_common_app_version">App Version</string>
+    <string name="ui_common_os_version">OS Version</string>
+    <string name="ui_common_total_count">Total: %1$d</string>
+    <string name="ui_common_page_info">Page %1$d of %2$d</string>
+    <string name="ui_common_empty_list">No items found</string>
+    <string name="ui_common_last_login_at">Last Login Date</string>
+    <string name="ui_common_last_active_at">Last Active Date</string>
+    <string name="ui_common_scheduled_permanent_deletion_at">Scheduled Deletion Date</string>
+    <string name="ui_common_actor_id">Actor ID</string>
+    <string name="ui_common_resource_id">Resource ID</string>
 </resources>

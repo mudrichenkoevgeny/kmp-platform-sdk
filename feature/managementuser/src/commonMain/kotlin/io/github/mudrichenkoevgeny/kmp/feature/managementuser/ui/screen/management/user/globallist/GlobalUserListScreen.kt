@@ -1,10 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -30,7 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -39,13 +33,15 @@ import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
+import io.github.mudrichenkoevgeny.kmp.core.common.ic_add
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_filter
-import io.github.mudrichenkoevgeny.kmp.core.common.ic_profile
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_refresh
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingEmptyState
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingHeaderBar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
@@ -59,7 +55,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.create_user
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.main.GlobalUserListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.component.user.item.UserItem
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.users_management_title
@@ -69,6 +64,11 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
+/**
+ * Main management screen for displaying paginated list of all users, filtering, and creating new users.
+ *
+ * @param component Controller driving state and callbacks.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GlobalUserListScreen(component: GlobalUserListComponent) {
@@ -119,9 +119,8 @@ fun GlobalUserListScreen(component: GlobalUserListComponent) {
                 modifier = Modifier.testTag(GlobalUserListTestTags.CREATE_USER_FAB)
             ) {
                 Icon(
-                    painter = painterResource(CommonRes.drawable.ic_profile),
-                    contentDescription = stringResource(Res.string.create_user),
-                    modifier = Modifier.size(CoreTheme.dimens.progressIndicatorSizeSmall)
+                    painter = painterResource(CommonRes.drawable.ic_add),
+                    contentDescription = null
                 )
             }
         }
@@ -193,26 +192,37 @@ private fun Content(
                 )
             }
 
-            LazyColumn(
-                state = listState,
-                modifier = Modifier
-                    .weight(1f)
-                    .testTag(GlobalUserListTestTags.USER_LIST),
-                contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
-                verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
-            ) {
-                items(state.paging.items, key = { it.id.value }) { user ->
-                    UserItem(
-                        user = user,
-                        onClick = { onUserClick(user.id) }
-                    )
-                }
+            if (state.paging.isEmpty && !state.paging.isInitialLoading && state.paging.error == null) {
+                ListingEmptyState(
+                    modifier = Modifier.weight(1f)
+                )
+            } else {
+                ListingHeaderBar(
+                    state = state.paging,
+                    lazyListState = listState
+                )
 
-                item {
-                    PagingFooter(
-                        state = state.paging,
-                        onRetry = onLoadNextPage
-                    )
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier
+                        .weight(1f)
+                        .testTag(GlobalUserListTestTags.USER_LIST),
+                    contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
+                    verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+                ) {
+                    items(state.paging.items, key = { it.id.value }) { user ->
+                        UserItem(
+                            user = user,
+                            onClick = { onUserClick(user.id) }
+                        )
+                    }
+
+                    item {
+                        PagingFooter(
+                            state = state.paging,
+                            onRetry = onLoadNextPage
+                        )
+                    }
                 }
             }
 
@@ -233,21 +243,14 @@ private fun Content(
 
 @Composable
 private fun ErrorText(error: AppError?, testTag: String) {
-    AnimatedVisibility(
-        visible = error != null,
-        enter = fadeIn() + expandVertically(),
-        exit = fadeOut() + shrinkVertically()
-    ) {
-        error?.let {
-            CoreErrorText(
-                text = it.toLocalizedMessage(),
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(CoreTheme.dimens.paddingMedium)
-                    .fillMaxWidth()
-                    .testTag(testTag)
-            )
-        }
+    if (error != null) {
+        CoreErrorText(
+            text = error.toLocalizedMessage(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(CoreTheme.dimens.paddingMedium)
+                .testTag(testTag)
+        )
     }
 }
 
