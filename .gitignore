@@ -1,18 +1,52 @@
+# Gradle
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+.kotlin/
 
+# Android
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+*.aar
+*.jks
+*.keystore
+*.gpg
+
+# IntelliJ IDEA & Android Studio
+.idea/
 *.iml
-.gradle
-.idea
-.kotlin
-.DS_Store
-build
-*/build
-captures
-.externalNativeBuild
-.cxx
-local.properties
+*.iws
+*.ipr
+out/
+
+# Kotlin Native / Apple (iOS/Desktop) / Wasm / JS
+.konan/
+kotlin-js-store/
+*.kexe
+*.klib
+*.kt.bc
+*.obj
+*.vfs
+node_modules/
+*yarn.lock
+package-lock.json
 xcuserdata/
 Pods/
-*.jks
-*.gpg
-*yarn.lock
-.artifacts/*
+
+# Local configuration & System
+local.properties
+.DS_Store
+Thumbs.db
+
+# Temporary & Dump files
+*.hprof
+*.log
+
+# Editors & Tooling
+.vscode/
+.history/
+.artifacts/

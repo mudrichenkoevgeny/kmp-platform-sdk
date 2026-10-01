@@ -30,5 +30,11 @@ This document defines standards for UI components, screens, preview tooling, and
 - **Visual Feedback:** Rely on IDE Previews (`@Preview`) for rapid layout inspection.
 - **Automated Verification:** Use companion unit tests (`*Test.kt`) and Roborazzi screenshot tests (`*ScreenshotTest.kt`) for regression prevention.
 
+## 6. Design Tokens & Theme Integration
+- **Single Source of Truth:** All visual design tokens (colors, spacing, sizing, radius, elevation) and font assets (`assets/fonts/ttf/*.ttf`) originate from the [platform-design-system](https://github.com/mudrichenkoevgeny/platform-design-system) repository.
+- **Generated Tokens Artifact:** `GeneratedDesignTokens.kt` (`core/common/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/ui/theme/tokens/GeneratedDesignTokens.kt`) is generated automatically by the design system toolchain. **Manual modifications to `GeneratedDesignTokens.kt` are strictly prohibited.**
+- **Font Assets Location:** Physical font files (`.ttf` / `.otf`) are copied directly from `platform-design-system` (`assets/fonts/ttf/`) into `core/common/src/commonMain/composeResources/font/` so Compose Resources can generate `Res.font.*` accessors.
+- **Theme Wiring:** Theme primitives in `CoreTheme` (`Color.kt`, `Dimens.kt`, `Shapes.kt`, `Typography.kt`) must map their values directly from `GeneratedDesignTokens`.
+
 ---
 *Refer to `AGENTS.md` for the full list of project standards.*

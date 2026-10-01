@@ -3,86 +3,97 @@ package io.github.mudrichenkoevgeny.kmp.core.common.ui.theme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.tokens.GeneratedDesignTokens
 
 /**
  * Primary accent color for light theme.
  */
-val PrimaryLight: Color = Color(0xFF2C3137)
+val PrimaryLight: Color = GeneratedDesignTokens.Colors.Light.primary
 
 /**
  * Color used for content drawn on top of [PrimaryLight].
  */
-val OnPrimaryLight: Color = Color(0xFFFFFFFF)
+val OnPrimaryLight: Color = GeneratedDesignTokens.Colors.Light.onPrimary
 
 /**
  * Container color for primary elements in light theme.
  */
-val PrimaryContainerLight: Color = Color(0xFFE2E6ED)
+val PrimaryContainerLight: Color = GeneratedDesignTokens.Colors.Light.primaryContainer
 
 /**
  * Color used for content drawn on top of [PrimaryContainerLight].
  */
-val OnPrimaryContainerLight: Color = Color(0xFF161C22)
+val OnPrimaryContainerLight: Color = GeneratedDesignTokens.Colors.Light.onPrimaryContainer
 
 /**
  * Background color for light theme.
  */
-val BackgroundLight: Color = Color(0xFFE5E4E4)
+val BackgroundLight: Color = GeneratedDesignTokens.Colors.Light.background
 
 /**
  * Color used for content drawn on top of [BackgroundLight].
  */
-val OnBackgroundLight: Color = Color(0xFF191C1A)
+val OnBackgroundLight: Color = GeneratedDesignTokens.Colors.Light.onBackground
 
 /**
  * Surface color for light theme.
  */
-val SurfaceLight: Color = Color(0xFFE5E4E4)
+val SurfaceLight: Color = GeneratedDesignTokens.Colors.Light.surface
 
 /**
  * Color used for content drawn on top of [SurfaceLight].
  */
-val OnSurfaceLight: Color = Color(0xFF191C1A)
+val OnSurfaceLight: Color = GeneratedDesignTokens.Colors.Light.onSurface
+
+/**
+ * Error color for light theme.
+ */
+val ErrorLight: Color = GeneratedDesignTokens.Colors.Light.error
 
 /**
  * Primary accent color for dark theme.
  */
-val PrimaryDark: Color = Color(0xFFC4CBD4)
+val PrimaryDark: Color = GeneratedDesignTokens.Colors.Dark.primary
 
 /**
  * Color used for content drawn on top of [PrimaryDark].
  */
-val OnPrimaryDark: Color = Color(0xFF2C3137)
+val OnPrimaryDark: Color = GeneratedDesignTokens.Colors.Dark.onPrimary
 
 /**
  * Container color for primary elements in dark theme.
  */
-val PrimaryContainerDark: Color = Color(0xFF424952)
+val PrimaryContainerDark: Color = GeneratedDesignTokens.Colors.Dark.primaryContainer
 
 /**
  * Color used for content drawn on top of [PrimaryContainerDark].
  */
-val OnPrimaryContainerDark: Color = Color(0xFFE2E6ED)
+val OnPrimaryContainerDark: Color = GeneratedDesignTokens.Colors.Dark.onPrimaryContainer
 
 /**
  * Background color for dark theme.
  */
-val BackgroundDark: Color = Color(0xFF121412)
+val BackgroundDark: Color = GeneratedDesignTokens.Colors.Dark.background
 
 /**
  * Color used for content drawn on top of [BackgroundDark].
  */
-val OnBackgroundDark: Color = Color(0xFFE2E3DC)
+val OnBackgroundDark: Color = GeneratedDesignTokens.Colors.Dark.onBackground
 
 /**
  * Surface color for dark theme.
  */
-val SurfaceDark: Color = Color(0xFF121412)
+val SurfaceDark: Color = GeneratedDesignTokens.Colors.Dark.surface
 
 /**
  * Color used for content drawn on top of [SurfaceDark].
  */
-val OnSurfaceDark: Color = Color(0xFFE2E3DC)
+val OnSurfaceDark: Color = GeneratedDesignTokens.Colors.Dark.onSurface
+
+/**
+ * Error color for dark theme.
+ */
+val ErrorDark: Color = GeneratedDesignTokens.Colors.Dark.error
 
 /**
  * Default light color scheme configured with neutral charcoal accent and custom background colors.
@@ -95,7 +106,8 @@ val CoreLightColorScheme = lightColorScheme(
     background = BackgroundLight,
     onBackground = OnBackgroundLight,
     surface = SurfaceLight,
-    onSurface = OnSurfaceLight
+    onSurface = OnSurfaceLight,
+    error = ErrorLight
 )
 
 /**
@@ -109,5 +121,6 @@ val CoreDarkColorScheme = darkColorScheme(
     background = BackgroundDark,
     onBackground = OnBackgroundDark,
     surface = SurfaceDark,
-    onSurface = OnSurfaceDark
+    onSurface = OnSurfaceDark,
+    error = ErrorDark
 )

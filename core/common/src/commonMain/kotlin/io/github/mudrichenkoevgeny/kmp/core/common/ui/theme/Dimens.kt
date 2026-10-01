@@ -3,38 +3,38 @@ package io.github.mudrichenkoevgeny.kmp.core.common.ui.theme
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.tokens.GeneratedDesignTokens
 
 /**
  * Centralized dimension data class used by shared UI components.
  */
 @Immutable
 data class CoreDimens(
-    val paddingExtraSmall: Dp = 4.dp,
-    val paddingSmall: Dp = 8.dp,
-    val paddingMedium: Dp = 16.dp,
-    val paddingLarge: Dp = 24.dp,
-    val headerHeight: Dp = 64.dp,
-    val iconSizeHeader: Dp = 32.dp,
-    val iconButtonSize: Dp = 48.dp,
-    val actionButtonHeight: Dp = 52.dp,
-    val actionButtonIconSize: Dp = 20.dp,
-    val elevationHeader: Dp = 2.dp,
-    val roundedCornerShape: Dp = 8.dp,
-    val shadowElevation: Dp = 4.dp,
-    val rowHeight: Dp = 64.dp,
-    val progressIndicatorStrokeWidth: Dp = 4.dp,
-    val progressIndicatorStrokeWidthSmall: Dp = 2.dp,
-    val progressIndicatorSizeSmall: Dp = 24.dp,
-    val progressIndicatorSizeLarge: Dp = 52.dp,
-    val qrCodeSize: Dp = 200.dp,
-    val previewContainerHeight: Dp = 300.dp,
-    val dialogWidth: Dp = 480.dp,
-    val dialogHeight: Dp = 520.dp,
-    val maxFormWidth: Dp = 480.dp,
-    val maxContentWidth: Dp = 800.dp,
-    val maxButtonWidth: Dp = 400.dp,
-    val navigationRailWidth: Dp = 80.dp
+    val paddingExtraSmall: Dp = GeneratedDesignTokens.Spacing.extraSmall,
+    val paddingSmall: Dp = GeneratedDesignTokens.Spacing.small,
+    val paddingMedium: Dp = GeneratedDesignTokens.Spacing.medium,
+    val paddingLarge: Dp = GeneratedDesignTokens.Spacing.large,
+    val headerHeight: Dp = GeneratedDesignTokens.Sizing.headerHeight,
+    val iconSizeHeader: Dp = GeneratedDesignTokens.Sizing.iconSizeHeader,
+    val iconButtonSize: Dp = GeneratedDesignTokens.Sizing.iconButtonSize,
+    val actionButtonHeight: Dp = GeneratedDesignTokens.Sizing.actionButtonHeight,
+    val actionButtonIconSize: Dp = GeneratedDesignTokens.Sizing.actionButtonIconSize,
+    val elevationHeader: Dp = GeneratedDesignTokens.Elevation.header,
+    val roundedCornerShape: Dp = GeneratedDesignTokens.Radius.small,
+    val shadowElevation: Dp = GeneratedDesignTokens.Elevation.shadow,
+    val rowHeight: Dp = GeneratedDesignTokens.Sizing.rowHeight,
+    val progressIndicatorStrokeWidth: Dp = GeneratedDesignTokens.Sizing.progressIndicatorStrokeWidth,
+    val progressIndicatorStrokeWidthSmall: Dp = GeneratedDesignTokens.Sizing.progressIndicatorStrokeWidthSmall,
+    val progressIndicatorSizeSmall: Dp = GeneratedDesignTokens.Sizing.progressIndicatorSizeSmall,
+    val progressIndicatorSizeLarge: Dp = GeneratedDesignTokens.Sizing.progressIndicatorSizeLarge,
+    val qrCodeSize: Dp = GeneratedDesignTokens.Sizing.qrCodeSize,
+    val previewContainerHeight: Dp = GeneratedDesignTokens.Sizing.previewContainerHeight,
+    val dialogWidth: Dp = GeneratedDesignTokens.Sizing.dialogWidth,
+    val dialogHeight: Dp = GeneratedDesignTokens.Sizing.dialogHeight,
+    val maxFormWidth: Dp = GeneratedDesignTokens.Sizing.maxFormWidth,
+    val maxContentWidth: Dp = GeneratedDesignTokens.Sizing.maxContentWidth,
+    val maxButtonWidth: Dp = GeneratedDesignTokens.Sizing.maxButtonWidth,
+    val navigationRailWidth: Dp = GeneratedDesignTokens.Sizing.navigationRailWidth
 )
 
 internal val LocalCoreDimens = staticCompositionLocalOf { CoreDimens() }

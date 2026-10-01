@@ -43,6 +43,19 @@ Published artifacts (versions aligned via the BOM):
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** — Build environment configurations, dependency analysis, Roborazzi screenshot testing, and Maven Central publishing guidelines.
 - **[AGENTS.MD](AGENTS.MD)** — Project standards, module boundaries, coding style, and architectural rules for contributors and AI coding assistants.
 
+## Design Tokens & Theme Integration
+
+Visual design decisions across the SDK are driven by design tokens:
+
+1. **Source of Truth**: The single source of truth (SSOT) for all design tokens and font assets is the [platform-design-system](https://github.com/mudrichenkoevgeny/platform-design-system) repository.
+2. **Target Path for Generated Tokens**:
+   `core/common/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/ui/theme/tokens/GeneratedDesignTokens.kt`
+3. **Target Path for Font Assets**:
+   `core/common/src/commonMain/composeResources/font/` (copied from `assets/fonts/ttf/*.ttf` in `platform-design-system`).
+4. **Update Rule**: The tokens file is generated automatically in the design system platform (`generated/compose/GeneratedDesignTokens.kt`) and manually copied alongside font files to the SDK target paths above. Manual edits to `GeneratedDesignTokens.kt` are strictly forbidden.
+5. **Theme Integration**: `CoreTheme` maps colors (`Color.kt`), dimensions (`Dimens.kt`), shapes (`Shapes.kt`), and typography (`Typography.kt`) directly from the `GeneratedDesignTokens` object.
+6. **Font Resources**: `Typography.kt` loads custom fonts via Compose Multiplatform resources (`Res.font.*`). The physical font files (`.ttf` / `.otf`) synced from the design system reside in `core/common/src/commonMain/composeResources/font/`.
+
 ## Integration Steps
 
 ### 1. Storage & Infrastructure
