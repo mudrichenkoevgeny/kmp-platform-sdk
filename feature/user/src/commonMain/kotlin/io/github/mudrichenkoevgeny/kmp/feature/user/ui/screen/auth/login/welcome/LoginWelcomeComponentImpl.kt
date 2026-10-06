@@ -12,7 +12,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.GetOpenGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByGoogleUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
@@ -29,7 +28,6 @@ import kotlinx.coroutines.launch
  * Default [LoginWelcomeComponent]: loads auth providers and legal URLs on init, routes provider taps, runs Google login.
  *
  * @param componentContext Decompose [ComponentContext].
- * @param appType Operational context (Client or Management).
  * @param externalLauncher opens privacy/terms URLs in the system browser or equivalent.
  * @param getOpenGlobalSettingsUseCase loads legal URLs and related settings.
  * @param getAvailableUserAuthProvidersUseCase loads which [UserAuthProvider] values are enabled.
@@ -42,7 +40,6 @@ import kotlinx.coroutines.launch
  */
 class LoginWelcomeComponentImpl(
     componentContext: ComponentContext,
-    private val appType: AppType,
     private val externalLauncher: ExternalLauncher,
     private val getOpenGlobalSettingsUseCase: GetOpenGlobalSettingsUseCase,
     private val getAvailableUserAuthProvidersUseCase: GetAvailableUserAuthProvidersUseCase,

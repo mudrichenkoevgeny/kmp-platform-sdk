@@ -8,6 +8,8 @@ import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.Value
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
+import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.ManagementDestination
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.detail.AuditEventDetailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list.AuditEventListComponentImpl
@@ -50,9 +52,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.secur
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.notifyIdentifierDeleted
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailScreenState
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.notifySessionRevoked
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 
 /**
  * Default implementation of [ManagementRootComponent].
@@ -252,12 +252,14 @@ class ManagementRootComponentImpl(
                     { targetId -> useCase(targetId.asHexDashString()) }
                 },
                 revokeSession = { targetId ->
-                    val currentChild = stack.value.items.lastOrNull()?.instance
-                    val session = (currentChild as? ManagementRootComponent.Child.SessionDetail)
-                        ?.component?.state?.value
-                        ?.let { (it as? SessionDetailScreenState.Content)?.session }
-                    val targetUserId = session?.userId ?: UserId.generate()
-                    managementDeleteSessionUseCase(targetUserId, targetId.asHexDashString())
+                    if (managementGetSessionUseCase == null) return@SessionDetailComponentImpl AppResult.Error(CommonError.Unknown())
+
+                    when (val sessionRes = managementGetSessionUseCase(targetId.asHexDashString())) {
+                        is AppResult.Success -> {
+                            managementDeleteSessionUseCase(sessionRes.data.userId, targetId.asHexDashString())
+                        }
+                        is AppResult.Error -> AppResult.Error(sessionRes.error)
+                    }
                 },
                 onSessionRevoked = { stack.value.notifySessionRevoked(it) },
                 onNavigateToIdentifierDetail = { identifierId ->
@@ -290,10 +292,20 @@ class ManagementRootComponentImpl(
                     { targetId -> useCase(targetId.asHexDashString()) }
                 },
                 deleteIdentifier = { targetId ->
-                    managementDeleteIdentifierUseCase(UserId.generate(), targetId.asHexDashString())
+                    if (managementGetIdentifierUseCase == null) return@IdentifierDetailComponentImpl AppResult.Error(CommonError.Unknown())
+
+                    when (val idRes = managementGetIdentifierUseCase(targetId.asHexDashString())) {
+                        is AppResult.Success -> managementDeleteIdentifierUseCase(idRes.data.userId, targetId.asHexDashString())
+                        is AppResult.Error -> AppResult.Error(idRes.error)
+                    }
                 },
                 deletePassword = { targetId ->
-                    managementDeleteIdentifierPasswordUseCase(UserId.generate(), targetId.asHexDashString())
+                    if (managementGetIdentifierUseCase == null) return@IdentifierDetailComponentImpl AppResult.Error(CommonError.Unknown())
+
+                    when (val idRes = managementGetIdentifierUseCase(targetId.asHexDashString())) {
+                        is AppResult.Success -> managementDeleteIdentifierPasswordUseCase(idRes.data.userId, targetId.asHexDashString())
+                        is AppResult.Error -> AppResult.Error(idRes.error)
+                    }
                 },
                 onIdentifierDeleted = { stack.value.notifyIdentifierDeleted(it) },
                 onNavigateToUserDetail = { userId ->

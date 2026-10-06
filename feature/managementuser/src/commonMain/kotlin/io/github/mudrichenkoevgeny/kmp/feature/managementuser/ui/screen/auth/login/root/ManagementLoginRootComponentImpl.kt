@@ -47,7 +47,6 @@ class ManagementLoginRootComponentImpl(
         is ManagementLoginDestination.Welcome -> ManagementLoginRootComponent.Child.Welcome(
             LoginWelcomeComponentImpl(
                 componentContext = context,
-                appType = AppType.MANAGEMENT,
                 externalLauncher = managementUserComponent.commonComponent.externalLauncher,
                 getOpenGlobalSettingsUseCase = settingsComponent.getGlobalSettingsUseCase,
                 getAvailableUserAuthProvidersUseCase = managementUserComponent.getAvailableUserAuthProvidersUseCase,

@@ -1,9 +1,5 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.utils
 
-import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator.MIN_PHONE_LENGTH
-import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator.isPhoneNumberValid
-
-
 /**
  * Lightweight client-side validation helpers for auth form fields (phone, email).
  *
@@ -11,8 +7,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator.isPhone
  */
 object FieldValidator {
 
-    /** Minimum inclusive length for [isPhoneNumberValid] when all characters are digits. */
-    const val MIN_PHONE_LENGTH = 10
+    /** Minimum inclusive length for a valid phone number (excluding symbols). */
+    const val MIN_PHONE_LENGTH = 7
 
     /** Standard length for TOTP verification codes (RFC 6238). */
     const val TOTP_CODE_LENGTH = 6
@@ -21,12 +17,16 @@ object FieldValidator {
     const val DEFAULT_OTP_LENGTH = 6
 
     private val EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
+    private val PHONE_REGEX = "^\\+?[1-9]\\d{6,14}$".toRegex()
+    private val PHONE_CLEANUP_REGEX = "[\\s()-]".toRegex()
 
     /**
-     * Returns true when [phone] contains only digits and its length is at least [MIN_PHONE_LENGTH].
+     * Returns true when [phone] matches the standard E.164 format (7 to 15 digits),
+     * safely ignoring visual separators like spaces, hyphens, and parentheses.
      */
     fun isPhoneNumberValid(phone: String): Boolean {
-        return phone.length >= MIN_PHONE_LENGTH && phone.all { it.isDigit() }
+        val cleanPhone = phone.replace(PHONE_CLEANUP_REGEX, "")
+        return cleanPhone.matches(PHONE_REGEX)
     }
 
     /**
