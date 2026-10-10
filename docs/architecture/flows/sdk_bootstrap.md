@@ -26,7 +26,7 @@ sequenceDiagram
 
     Host->>EncStorage: Instantiate with platformContext
     EncStorage-->>Host: EncryptedSettings instance
-    Host->>CommonComp: Instantiate CommonComponent(baseUrl, deviceInfo, accessTokenProvider, appScope)
+    Host->>CommonComp: Instantiate CommonComponent(baseUrl, clientDeviceInfo, accessTokenProvider, appScope)
     CommonComp-->>Host: CommonComponent (provides HttpClient, WebSocketService)
     
     Host->>CoreFeatures: Instantiate SettingsComponent & SecurityComponent(webSocketService, httpClient, encryptedSettings)

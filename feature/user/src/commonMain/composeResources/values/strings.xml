@@ -78,8 +78,8 @@
     <string name="session_detail_title_session">Session</string>
     <string name="session_detail_title_current_session">Current Session</string>
     <string name="session_detail_auth_provider">Auth Provider</string>
-    <string name="session_detail_device_info">Device Information</string>
-    <string name="session_detail_device_name">Device Name</string>
+    <string name="session_detail_client_device_info">Device Information</string>
+    <string name="session_detail_client_device_name">Device Name</string>
     <string name="session_detail_client_type">Client Type</string>
     <string name="session_detail_language">Language</string>
     <string name="session_detail_app_version">App Version</string>

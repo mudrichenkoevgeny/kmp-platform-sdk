@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo
+package io.github.mudrichenkoevgeny.kmp.core.common.platform.clientdeviceinfo
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
@@ -10,9 +10,9 @@ class WasmDeviceInfoProviderTest {
 
     @Test
     fun `getDeviceInfo uses web client type and app version`() {
-        val provider = WasmDeviceInfoProvider(appVersion = "9.8.7")
+        val provider = WasmClientDeviceInfoProvider(appVersion = "9.8.7")
 
-        val info = provider.getDeviceInfo()
+        val info = provider.getClientDeviceInfo()
 
         assertEquals(ClientType.WEB, info.clientType)
         assertEquals("9.8.7", info.appVersion)
@@ -21,10 +21,10 @@ class WasmDeviceInfoProviderTest {
 
     @Test
     fun `getDeviceInfo persists deviceId across calls`() {
-        val provider = WasmDeviceInfoProvider(appVersion = "1.0.0")
+        val provider = WasmClientDeviceInfoProvider(appVersion = "1.0.0")
 
-        val firstInfo = provider.getDeviceInfo()
-        val secondInfo = provider.getDeviceInfo()
+        val firstInfo = provider.getClientDeviceInfo()
+        val secondInfo = provider.getClientDeviceInfo()
 
         assertEquals(firstInfo.deviceId, secondInfo.deviceId)
     }

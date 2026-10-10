@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.sampleclient.android
 
 import android.app.Application
-import io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo.AndroidDeviceInfoProvider
+import io.github.mudrichenkoevgeny.kmp.core.common.platform.clientdeviceinfo.AndroidClientDeviceInfoProvider
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.AndroidUserAuthServices
 import io.github.mudrichenkoevgeny.kmp.sampleclient.BuildConfig
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.ClientAppComponent
@@ -17,12 +17,12 @@ class AndroidApp : Application() {
 
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
-    val deviceInfoProvider = AndroidDeviceInfoProvider(this)
+    val clientDeviceInfoProvider = AndroidClientDeviceInfoProvider(this)
 
     val clientAppComponent: ClientAppComponent by lazy {
         ClientAppComponent(
             platformContext = this,
-            deviceInfo = deviceInfoProvider.getDeviceInfo(),
+            clientDeviceInfo = clientDeviceInfoProvider.getClientDeviceInfo(),
             baseUrl = BuildConfig.BASE_URL,
             authServices = AndroidUserAuthServices(
                 context = this,

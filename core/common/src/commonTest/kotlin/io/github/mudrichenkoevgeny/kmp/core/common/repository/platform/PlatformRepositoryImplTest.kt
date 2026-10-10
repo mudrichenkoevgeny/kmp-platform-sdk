@@ -14,7 +14,7 @@ class PlatformRepositoryImplTest {
     fun `returns provided device info`() {
         val deviceId = "123e4567-e89b-12d3-a456-426614174000".toClientDeviceIdOrThrow()
 
-        val deviceInfo = ClientDeviceInfo(
+        val clientDeviceInfo = ClientDeviceInfo(
             deviceId = deviceId,
             deviceName = "Test Device",
             clientType = ClientType.ANDROID,
@@ -23,8 +23,8 @@ class PlatformRepositoryImplTest {
             operationSystemVersion = "16"
         )
 
-        val repo = PlatformRepositoryImpl(deviceInfo)
+        val repo = PlatformRepositoryImpl(clientDeviceInfo)
 
-        assertEquals(deviceInfo, repo.getDeviceInfo())
+        assertEquals(clientDeviceInfo, repo.getClientDeviceInfo())
     }
 }

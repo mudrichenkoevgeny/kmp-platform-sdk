@@ -52,7 +52,7 @@ internal class CommonNetworkModule(
             setupCommonConfig(
                 baseUrl = baseUrl,
                 networkLogger = networkLogger,
-                deviceInfo = platformRepository.getDeviceInfo()
+                clientDeviceInfo = platformRepository.getClientDeviceInfo()
             )
             httpClientConfigPlugins.forEach { plugin ->
                 plugin.install(this, networkLogger)
@@ -65,7 +65,7 @@ internal class CommonNetworkModule(
             setupCommonConfig(
                 baseUrl = baseUrl,
                 networkLogger = networkLogger,
-                deviceInfo = platformRepository.getDeviceInfo()
+                clientDeviceInfo = platformRepository.getClientDeviceInfo()
             )
         }
     }
@@ -81,7 +81,7 @@ internal class CommonNetworkModule(
             webSocketPath = webSocketPath,
             networkLogger = networkLogger,
             accessTokenProvider = accessTokenProvider,
-            deviceInfo = platformRepository.getDeviceInfo(),
+            clientDeviceInfo = platformRepository.getClientDeviceInfo(),
             scope = appScope
         )
     }

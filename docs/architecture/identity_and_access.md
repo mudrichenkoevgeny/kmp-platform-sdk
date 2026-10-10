@@ -80,7 +80,7 @@ An identifier represents a login credential attached to a core `UserId`.
 A session represents an authenticated login instance on a specific device.
 
 - **Token Pair**: Consists of a short-lived `AccessToken` (JWT string used for HTTP Bearer auth and WebSocket query params) and a long-lived `RefreshToken` persisted securely in `AuthStorage`.
-- **Device Metadata**: Captures OS version, device model, app version, and platform type via `ClientDeviceInfo` (`DeviceInfoProvider`).
+- **Device Metadata**: Captures OS version, device model, app version, and platform type via `ClientDeviceInfo` (`ClientDeviceInfoProvider`).
 - **Session Identification**: Identified by `UserSessionId` (value class wrapping `Uuid`).
 - **Lifecycle & Revocation**:
   - Automatically refreshed via `RefreshTokenUseCase` when `AuthHttpClientConfigPlugin` intercepts a 401 Unauthorized response.

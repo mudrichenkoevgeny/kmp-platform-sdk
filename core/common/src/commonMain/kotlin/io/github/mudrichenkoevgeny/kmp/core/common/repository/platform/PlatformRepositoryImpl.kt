@@ -6,8 +6,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.cl
  * Default [PlatformRepository] implementation that returns a provided immutable [ClientDeviceInfo].
  */
 internal class PlatformRepositoryImpl(
-    private val deviceInfo: ClientDeviceInfo
+    private val clientDeviceInfo: ClientDeviceInfo
 ) : PlatformRepository {
 
-    override fun getDeviceInfo(): ClientDeviceInfo = deviceInfo
+    override fun getClientDeviceInfo(): ClientDeviceInfo = clientDeviceInfo
 }

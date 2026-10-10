@@ -55,7 +55,7 @@ In your root DI component (e.g., `AppComponent`), initialize [CommonComponent] a
 ```kotlin
 class AppComponent(
     platformContext: Any? = null,
-    deviceInfo: ClientDeviceInfo,
+    clientDeviceInfo: ClientDeviceInfo,
     baseUrl: String,
     authServices: UserAuthServices
 ) {
@@ -66,7 +66,7 @@ class AppComponent(
     // 2. Assemble CommonComponent
     val commonComponent = CommonComponent(
         encryptedSettings = encryptedSettings,
-        deviceInfo = deviceInfo,
+        clientDeviceInfo = clientDeviceInfo,
         baseUrl = baseUrl,
         accessTokenProvider = authStorage,
         appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
@@ -134,7 +134,7 @@ FullscreenError(message = errorMessage)
 [SettingsFactory]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/storage/SettingsFactory.kt
 [getSettingsFactory]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/storage/SettingsFactory.kt
 [ExternalLauncher]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/platform/externallauncher/ExternalLauncher.kt
-[DeviceInfoProvider]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/platform/deviceinfo/DeviceInfoProvider.kt
+[DeviceInfoProvider]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/platform/clientdeviceinfo/ClientDeviceInfoProvider.kt
 [PlatformRepository]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/repository/platform/PlatformRepository.kt
 [FullscreenLoading]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/ui/component/loading/FullscreenLoading.kt
 [FullscreenError]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/ui/component/error/FullscreenError.kt

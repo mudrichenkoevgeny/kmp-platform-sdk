@@ -29,7 +29,7 @@ class SessionItemTest {
         var revokeClicks = 0
         val baseSession = userSessionMock()
         val session = baseSession.copy(
-            deviceInfo = baseSession.deviceInfo.copy(deviceName = "Mock Device")
+            clientDeviceInfo = baseSession.clientDeviceInfo.copy(deviceName = "Mock Device")
         )
 
         setContent {

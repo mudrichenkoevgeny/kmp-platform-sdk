@@ -11,12 +11,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.cl
  * the provided [ClientDeviceInfo].
  */
 internal class CommonRepositoryModule(
-    private val deviceInfo: ClientDeviceInfo
+    private val clientDeviceInfo: ClientDeviceInfo
 ) {
     /**
      * Provides access to platform/device information required by networking and websocket bootstrapping.
      */
     val platformRepository: PlatformRepository by lazy {
-        PlatformRepositoryImpl(deviceInfo)
+        PlatformRepositoryImpl(clientDeviceInfo)
     }
 }

@@ -11,7 +11,7 @@ For detailed domain models, component relationships, and sequence diagrams of sp
 - **[WebSocket Synchronization](docs/architecture/flows/websockets.md)** — `WebSocketService` lifecycle, token-aware connection management, ping/pong heartbeats, message handler routing (`WebSocketMessageHandler`), and reactive cache invalidation.
 - **[Security & Password Policy / TOTP / Unlock](docs/architecture/flows/security.md)** — Dynamic password policy validation (`PasswordPolicyValidator`), TOTP MFA lifecycle (setup, QR code, recovery codes), and account recovery (`UnlockRootComponent` for `SECURITY_HOLD`).
 - **[Account & Profile Management Flows](docs/architecture/flows/account_management_flows.md)** — Active sessions listing & remote revocation, identifier linking & OTP code throttling (`ConfirmationRepository`), password changes, and account deletion scheduling & grace period restoration.
-- **[Encrypted Storage & Platform Infrastructure](docs/architecture/flows/storage_and_platform.md)** — `EncryptedSettings` abstraction across targets (Android DataStore + Google Tink vs Wasm `localStorage`), platform metadata (`DeviceInfoProvider`), external launchers, and pagination infrastructure (`PaginationState`).
+- **[Encrypted Storage & Platform Infrastructure](docs/architecture/flows/storage_and_platform.md)** — `EncryptedSettings` abstraction across targets (Android DataStore + Google Tink vs Wasm `localStorage`), platform metadata (`ClientDeviceInfoProvider`), external launchers, and pagination infrastructure (`PaginationState`).
 
 ---
 

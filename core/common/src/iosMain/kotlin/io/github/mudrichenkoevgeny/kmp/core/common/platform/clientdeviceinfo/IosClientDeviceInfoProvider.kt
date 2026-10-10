@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo
+package io.github.mudrichenkoevgeny.kmp.core.common.platform.clientdeviceinfo
 
 import platform.Foundation.NSBundle
 import platform.UIKit.UIDevice
@@ -9,8 +9,8 @@ import platform.Foundation.NSLocale
 import platform.Foundation.currentLocale
 import platform.Foundation.languageCode
 
-class IosDeviceInfoProvider : DeviceInfoProvider {
-    override fun getDeviceInfo(): ClientDeviceInfo {
+class IosClientDeviceInfoProvider : ClientDeviceInfoProvider {
+    override fun getCLientDeviceInfo(): ClientDeviceInfo {
         val device = UIDevice.currentDevice
         val appVersion = NSBundle.mainBundle.infoDictionary
             ?.get("CFBundleShortVersionString") as? String

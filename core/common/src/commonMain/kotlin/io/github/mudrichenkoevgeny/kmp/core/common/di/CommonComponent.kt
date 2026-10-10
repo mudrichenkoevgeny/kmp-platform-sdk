@@ -32,7 +32,7 @@ import kotlinx.coroutines.CoroutineScope
  */
 class CommonComponent(
     val encryptedSettings: EncryptedSettings,
-    deviceInfo: ClientDeviceInfo,
+    clientDeviceInfo: ClientDeviceInfo,
     baseUrl: String,
     webSocketPath: String,
     httpClientConfigPlugins: List<HttpClientConfigPlugin> = emptyList(),
@@ -44,7 +44,7 @@ class CommonComponent(
     @InternalApi
     constructor(
         encryptedSettings: EncryptedSettings,
-        deviceInfo: ClientDeviceInfo,
+        clientDeviceInfo: ClientDeviceInfo,
         baseUrl: String,
         webSocketPath: String,
         accessTokenProvider: AccessTokenProvider,
@@ -52,7 +52,7 @@ class CommonComponent(
         platformContext: Any? = null
     ) : this(
         encryptedSettings,
-        deviceInfo,
+        clientDeviceInfo,
         baseUrl,
         webSocketPath,
         emptyList(),
@@ -75,7 +75,7 @@ class CommonComponent(
 
     private val repositoryModule by lazy {
         CommonRepositoryModule(
-            deviceInfo
+            clientDeviceInfo
         )
     }
     val platformRepository get() = repositoryModule.platformRepository

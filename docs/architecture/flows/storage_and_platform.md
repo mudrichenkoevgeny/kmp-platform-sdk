@@ -42,7 +42,7 @@ classDiagram
 
 ---
 
-## 2. Platform Metadata Resolution (`DeviceInfoProvider`)
+## 2. Platform Metadata Resolution (`ClientDeviceInfoProvider`)
 
 `PlatformRepository` collects immutable hardware and environment metadata via platform actuals:
 
@@ -50,7 +50,7 @@ classDiagram
 sequenceDiagram
     autonumber
     participant Core as PlatformRepository
-    participant Provider as DeviceInfoProvider
+    participant Provider as ClientDeviceInfoProvider
     participant Context as Android / Wasm Context
 
     Core->>Provider: getDeviceInfo()

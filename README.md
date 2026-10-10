@@ -66,7 +66,7 @@ val encryptedSettingsComponent = EncryptedSettingsComponent(platformContext)
 
 val commonComponent = CommonComponent(
     encryptedSettings = encryptedSettingsComponent.encryptedSettings,
-    deviceInfo = deviceInfo,
+    clientDeviceInfo = clientDeviceInfo,
     baseUrl = "https://api.example.com",
     accessTokenProvider = authStorage,
     appScope = appScope,

@@ -43,7 +43,7 @@ private const val LOGGER_RESPONSE_VALIDATOR_PREFIX = "Response validator"
 fun HttpClientConfig<*>.setupCommonConfig(
     baseUrl: String,
     networkLogger: Logger,
-    deviceInfo: ClientDeviceInfo
+    clientDeviceInfo: ClientDeviceInfo
 ) {
     install(ContentNegotiation) {
         json(FoundationJson)
@@ -68,12 +68,12 @@ fun HttpClientConfig<*>.setupCommonConfig(
     defaultRequest {
         url(baseUrl)
         header(HttpHeaders.ContentType, ContentType.Application.Json)
-        header(CommonHttpHeaders.CLIENT_TYPE_HEADER_NAME, deviceInfo.clientType?.serialName)
-        header(CommonHttpHeaders.DEVICE_ID_HEADER_NAME, deviceInfo.deviceId?.asHexDashString())
-        header(CommonHttpHeaders.DEVICE_NAME_HEADER_NAME, deviceInfo.deviceName)
-        header(CommonHttpHeaders.APP_VERSION_HEADER_NAME, deviceInfo.appVersion)
-        header(CommonHttpHeaders.OPERATION_SYSTEM_VERSION_HEADER_NAME, deviceInfo.operationSystemVersion)
-        header(HttpHeaders.AcceptLanguage, deviceInfo.language)
+        header(CommonHttpHeaders.CLIENT_TYPE_HEADER_NAME, clientDeviceInfo.clientType?.serialName)
+        header(CommonHttpHeaders.DEVICE_ID_HEADER_NAME, clientDeviceInfo.deviceId?.asHexDashString())
+        header(CommonHttpHeaders.DEVICE_NAME_HEADER_NAME, clientDeviceInfo.deviceName)
+        header(CommonHttpHeaders.APP_VERSION_HEADER_NAME, clientDeviceInfo.appVersion)
+        header(CommonHttpHeaders.OPERATION_SYSTEM_VERSION_HEADER_NAME, clientDeviceInfo.operationSystemVersion)
+        header(HttpHeaders.AcceptLanguage, clientDeviceInfo.language)
     }
 
     expectSuccess = true

@@ -33,7 +33,7 @@ Administrative host applications that demonstrate how to wire **kmp-platform-sdk
 | :--- | :--- |
 | **core/common** | [README](../core/common/README.md) |
 | **feature/managementuser** | [README](../feature/managementuser/README.md) |
-
+todo refactor docs
 ---
 
 [ManagementAppComponent]: composeApp/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/samplemanagement/app/di/ManagementAppComponent.kt

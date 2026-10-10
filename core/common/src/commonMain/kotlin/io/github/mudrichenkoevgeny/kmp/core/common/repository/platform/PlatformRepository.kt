@@ -9,5 +9,5 @@ interface PlatformRepository {
     /**
      * @return current [ClientDeviceInfo] for the running host platform.
      */
-    fun getDeviceInfo(): ClientDeviceInfo
+    fun getClientDeviceInfo(): ClientDeviceInfo
 }

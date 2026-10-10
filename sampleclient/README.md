@@ -77,11 +77,11 @@ Reference host applications that demonstrate how to wire **kmp-platform-sdk** mo
 
 [AndroidApp]: androidApp/src/main/kotlin/io/github/mudrichenkoevgeny/kmp/sampleclient/android/AndroidApp.kt
 [MainActivity]: androidApp/src/main/kotlin/io/github/mudrichenkoevgeny/kmp/sampleclient/android/MainActivity.kt
-[AndroidDeviceInfoProvider]: ../core/common/src/androidMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/platform/deviceinfo/AndroidDeviceInfoProvider.kt
+[AndroidDeviceInfoProvider]: ../core/common/src/androidMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/platform/clientdeviceinfo/AndroidClientDeviceInfoProvider.kt
 [AndroidUserAuthServices]: ../feature/user/src/androidMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/auth/AndroidUserAuthServices.kt
 
 [main]: composeApp/src/wasmJsMain/kotlin/io/github/mudrichenkoevgeny/kmp/sampleclient/app/main.kt
-[WasmDeviceInfoProvider]: ../core/common/src/wasmJsMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/platform/deviceinfo/WasmDeviceInfoProvider.kt
+[WasmDeviceInfoProvider]: ../core/common/src/wasmJsMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/platform/clientdeviceinfo/WasmClientDeviceInfoProvider.kt
 [WasmUserAuthServices]: ../feature/user/src/wasmJsMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/auth/WasmUserAuthServices.kt
 
 [composeApp build.gradle.kts]: composeApp/build.gradle.kts

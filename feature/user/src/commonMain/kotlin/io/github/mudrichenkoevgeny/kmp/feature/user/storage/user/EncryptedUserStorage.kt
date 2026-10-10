@@ -284,7 +284,7 @@ class EncryptedUserStorage(
             }
             val matchesIdentifierIds = identifierIds == null || identifierIds.contains(item.identifierId.value.toHexDashString())
             val matchesProviders = userAuthProviders == null || item.identifierAuthProvider in userAuthProviders
-            val matchesClientTypes = clientTypes == null || item.deviceInfo.clientType in clientTypes
+            val matchesClientTypes = clientTypes == null || item.clientDeviceInfo.clientType in clientTypes
             val matchesUserAgents = userAgents == null || userAgents.any { pattern ->
                 item.userAgent?.contains(pattern, ignoreCase = true) == true
             }
@@ -292,17 +292,17 @@ class EncryptedUserStorage(
                 item.ipAddress?.contains(pattern, ignoreCase = true) == true
             }
             val matchesLanguages = languages == null || languages.any { pattern ->
-                item.deviceInfo.language?.contains(pattern, ignoreCase = true) == true
+                item.clientDeviceInfo.language?.contains(pattern, ignoreCase = true) == true
             }
-            val matchesDeviceIds = deviceIds == null || item.deviceInfo.deviceId?.value?.toHexDashString() in deviceIds
+            val matchesDeviceIds = deviceIds == null || item.clientDeviceInfo.deviceId?.value?.toHexDashString() in deviceIds
             val matchesDeviceNames = deviceNames == null || deviceNames.any { pattern ->
-                item.deviceInfo.deviceName?.contains(pattern, ignoreCase = true) == true
+                item.clientDeviceInfo.deviceName?.contains(pattern, ignoreCase = true) == true
             }
             val matchesAppVersions = appVersions == null || appVersions.any { pattern ->
-                item.deviceInfo.appVersion?.contains(pattern, ignoreCase = true) == true
+                item.clientDeviceInfo.appVersion?.contains(pattern, ignoreCase = true) == true
             }
             val matchesOsVersions = operationSystemVersions == null || operationSystemVersions.any { pattern ->
-                item.deviceInfo.operationSystemVersion?.contains(pattern, ignoreCase = true) == true
+                item.clientDeviceInfo.operationSystemVersion?.contains(pattern, ignoreCase = true) == true
             }
 
             matchesUserIds && matchesUserRoles && matchesIdentifiers && matchesIdentifierIds &&

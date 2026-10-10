@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo.model
+package io.github.mudrichenkoevgeny.kmp.core.common.platform.clientdeviceinfo.model
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceId
@@ -9,11 +9,11 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @InternalApi
-class DeviceInfoTest {
+class ClientDeviceInfoTest {
 
     @Test
     fun `isMobileClient is true for Android`() {
-        val deviceInfo = ClientDeviceInfo(
+        val clientDeviceInfo = ClientDeviceInfo(
             deviceId = ClientDeviceId.generate(),
             deviceName = "Test",
             clientType = ClientType.ANDROID,
@@ -22,12 +22,12 @@ class DeviceInfoTest {
             operationSystemVersion = "16"
         )
 
-        assertTrue(deviceInfo.isMobileClient())
+        assertTrue(clientDeviceInfo.isMobileClient())
     }
 
     @Test
     fun `isMobileClient is true for iOS`() {
-        val deviceInfo = ClientDeviceInfo(
+        val clientDeviceInfo = ClientDeviceInfo(
             deviceId = ClientDeviceId.generate(),
             deviceName = "Test",
             clientType = ClientType.IOS,
@@ -36,12 +36,12 @@ class DeviceInfoTest {
             operationSystemVersion = "16"
         )
 
-        assertTrue(deviceInfo.isMobileClient())
+        assertTrue(clientDeviceInfo.isMobileClient())
     }
 
     @Test
     fun `isMobileClient is false for Web`() {
-        val deviceInfo = ClientDeviceInfo(
+        val clientDeviceInfo = ClientDeviceInfo(
             deviceId = ClientDeviceId.generate(),
             deviceName = "Test",
             clientType = ClientType.WEB,
@@ -50,7 +50,7 @@ class DeviceInfoTest {
             operationSystemVersion = "16"
         )
 
-        assertFalse(deviceInfo.isMobileClient())
+        assertFalse(clientDeviceInfo.isMobileClient())
     }
 }
 

@@ -109,11 +109,11 @@ fun SessionItem(
             }
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
             Text(
-                text = session.deviceInfo.deviceName ?: session.userAgent ?: "Unknown device",
+                text = session.clientDeviceInfo.deviceName ?: session.userAgent ?: "Unknown device",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold
             )
-            session.deviceInfo.clientType?.name?.let { clientTypeName ->
+            session.clientDeviceInfo.clientType?.name?.let { clientTypeName ->
                 Spacer(Modifier.height(CoreTheme.dimens.paddingExtraSmall))
                 Text(
                     text = clientTypeName,

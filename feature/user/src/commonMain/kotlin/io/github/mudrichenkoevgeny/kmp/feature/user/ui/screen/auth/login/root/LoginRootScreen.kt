@@ -28,7 +28,7 @@ fun <C : Any, T : Any> LoginRootContainer(
 ) {
     val commonComponent = LocalCommonComponent.current
 
-    if (commonComponent.platformRepository.getDeviceInfo().isMobileClient()) {
+    if (commonComponent.platformRepository.getClientDeviceInfo().isMobileClient()) {
         ModalBottomSheet(onDismissRequest = onDismiss) {
             LoginDialogSurface(stack = stack, content = content)
         }
@@ -45,7 +45,7 @@ private fun <C : Any, T : Any> LoginDialogSurface(
     content: @Composable (T) -> Unit
 ) {
     val commonComponent = LocalCommonComponent.current
-    val isMobile = commonComponent.platformRepository.getDeviceInfo().isMobileClient()
+    val isMobile = commonComponent.platformRepository.getClientDeviceInfo().isMobileClient()
 
     val surfaceModifier = if (isMobile) {
         Modifier

@@ -46,7 +46,7 @@ class KtorWebSocketService(
     private val webSocketPath: String,
     private val networkLogger: Logger,
     private val accessTokenProvider: AccessTokenProvider,
-    private val deviceInfo: ClientDeviceInfo,
+    private val clientDeviceInfo: ClientDeviceInfo,
     private val scope: CoroutineScope
 ) : WebSocketService {
 
@@ -260,7 +260,7 @@ class KtorWebSocketService(
     }
 
     private suspend fun sendInitializeFrame() {
-        val payload = deviceInfo.toWebSocketInitializePayload("1")
+        val payload = clientDeviceInfo.toWebSocketInitializePayload("1")
         sendEvent(
             type = CommonWebSocketEventTypes.INITIALIZE,
             payload = FoundationJson.encodeToJsonElement(payload)

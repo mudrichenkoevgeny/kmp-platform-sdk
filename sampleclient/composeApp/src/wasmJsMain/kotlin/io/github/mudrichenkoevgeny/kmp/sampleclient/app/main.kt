@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.sampleclient.app
 
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
-import io.github.mudrichenkoevgeny.kmp.core.common.platform.deviceinfo.WasmDeviceInfoProvider
+import io.github.mudrichenkoevgeny.kmp.core.common.platform.clientdeviceinfo.WasmClientDeviceInfoProvider
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.WasmUserAuthServices
 import io.github.mudrichenkoevgeny.kmp.sampleclient.BuildConfig
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.ClientAppComponent
@@ -16,13 +16,13 @@ import kotlinx.coroutines.launch
  */
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    val deviceInfoProvider = WasmDeviceInfoProvider(
+    val clientDeviceInfoProvider = WasmClientDeviceInfoProvider(
         appVersion = BuildConfig.APP_VERSION
     )
 
     val clientAppComponent = ClientAppComponent(
         platformContext = null,
-        deviceInfo = deviceInfoProvider.getDeviceInfo(),
+        clientDeviceInfo = clientDeviceInfoProvider.getClientDeviceInfo(),
         baseUrl = BuildConfig.BASE_URL,
         authServices = WasmUserAuthServices(
             googleWebClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID

@@ -4,7 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import io.github.mudrichenkoevgeny.kmp.core.common.di.CommonComponent
 import io.github.mudrichenkoevgeny.kmp.core.common.di.EncryptedSettingsComponent
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.platform.model.deviceInfoMock
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.platform.model.clientDeviceInfoMock
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.security.error.parser.SecurityErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
@@ -48,7 +48,7 @@ import kotlinx.coroutines.flow.asStateFlow
  */
 class ManagementAppComponent(
     platformContext: Any? = null,
-    deviceInfo: ClientDeviceInfo,
+    clientDeviceInfo: ClientDeviceInfo,
     baseUrl: String,
     authServices: UserAuthServices
 ) {
@@ -69,7 +69,7 @@ class ManagementAppComponent(
         mockManagementUserComponent: ManagementUserComponent
     ) : this(
         platformContext = platformContext,
-        deviceInfo = deviceInfoMock(),
+        clientDeviceInfo = clientDeviceInfoMock(),
         baseUrl = "",
         authServices = UserAuthServicesMock()
     ) {
@@ -134,7 +134,7 @@ class ManagementAppComponent(
     val commonComponent: CommonComponent by lazy {
         mockCommonComponent ?: CommonComponent(
             encryptedSettings = encryptedSettings,
-            deviceInfo = deviceInfo,
+            clientDeviceInfo = clientDeviceInfo,
             baseUrl = baseUrl,
             webSocketPath = WebSocketContract.WS_MANAGEMENT_REALTIME_PATH,
             httpClientConfigPlugins = listOf(authHttpClientConfigPlugin, mfaStepUpHttpClientConfigPlugin),

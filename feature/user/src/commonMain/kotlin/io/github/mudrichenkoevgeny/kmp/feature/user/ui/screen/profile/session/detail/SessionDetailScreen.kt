@@ -210,27 +210,27 @@ private fun Content(
                 HorizontalDivider()
 
                 CoreTitleText(
-                    text = stringResource(Res.string.session_detail_device_info),
+                    text = stringResource(Res.string.session_detail_client_device_info),
                     style = MaterialTheme.typography.titleSmall
                 )
                 CoreBodyText(
-                    text = "${stringResource(Res.string.session_detail_device_name)}: ${session.deviceInfo.deviceName ?: session.userAgent ?: notAvailableText}",
+                    text = "${stringResource(Res.string.session_detail_client_device_name)}: ${session.clientDeviceInfo.deviceName ?: session.userAgent ?: notAvailableText}",
                     modifier = Modifier.testTag(SessionDetailTestTags.DEVICE_NAME)
                 )
                 CoreBodyText(
-                    text = "${stringResource(Res.string.session_detail_client_type)}: ${session.deviceInfo.clientType?.name ?: notAvailableText}",
+                    text = "${stringResource(Res.string.session_detail_client_type)}: ${session.clientDeviceInfo.clientType?.name ?: notAvailableText}",
                     modifier = Modifier.testTag(SessionDetailTestTags.CLIENT_TYPE)
                 )
                 CoreBodyText(
-                    text = "${stringResource(Res.string.session_detail_language)}: ${session.deviceInfo.language ?: notAvailableText}",
+                    text = "${stringResource(Res.string.session_detail_language)}: ${session.clientDeviceInfo.language ?: notAvailableText}",
                     modifier = Modifier.testTag(SessionDetailTestTags.LANGUAGE)
                 )
                 CoreBodyText(
-                    text = "${stringResource(Res.string.session_detail_app_version)}: ${session.deviceInfo.appVersion ?: notAvailableText}",
+                    text = "${stringResource(Res.string.session_detail_app_version)}: ${session.clientDeviceInfo.appVersion ?: notAvailableText}",
                     modifier = Modifier.testTag(SessionDetailTestTags.APP_VERSION)
                 )
                 CoreBodyText(
-                    text = "${stringResource(Res.string.session_detail_os_version)}: ${session.deviceInfo.operationSystemVersion ?: notAvailableText}",
+                    text = "${stringResource(Res.string.session_detail_os_version)}: ${session.clientDeviceInfo.operationSystemVersion ?: notAvailableText}",
                     modifier = Modifier.testTag(SessionDetailTestTags.OS_VERSION)
                 )
 
