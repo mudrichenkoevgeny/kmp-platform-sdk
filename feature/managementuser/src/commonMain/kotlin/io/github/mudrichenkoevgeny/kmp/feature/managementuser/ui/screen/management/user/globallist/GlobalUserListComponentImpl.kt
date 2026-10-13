@@ -128,7 +128,7 @@ class GlobalUserListComponentImpl(
     ) {
         val sortOrder = if (sortState?.isAscending == true) SortOrder.ASC else SortOrder.DESC
         val sortBy = sortState?.optionId?.let { optionId ->
-            UserSortValues.UserSortBy.entries.firstOrNull { it.name == optionId || it.serialName == optionId }
+            UserSortValues.UserSortBy.entries.firstOrNull { it.name == optionId || it.value == optionId }
         }
 
         val roles = (filterStates?.get(UserFilterValues.UserFilterValues.ROLE) as? ChoiceListingFilterState)

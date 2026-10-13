@@ -13,8 +13,8 @@ fun userPrivatePayloadMock(
     createdAtEpochMs: Long = 1L
 ): UserPrivatePayload = UserPrivatePayload(
     id = id,
-    role = UserRole.USER.serialName,
-    accountStatus = UserAccountStatus.ACTIVE.serialName,
+    role = UserRole.USER.value,
+    accountStatus = UserAccountStatus.ACTIVE.value,
     accountStatusOnRestore = null,
     authorityLevel = 0,
     permissionCodes = emptySet(),
@@ -24,7 +24,7 @@ fun userPrivatePayloadMock(
     createdAt = createdAtEpochMs,
     updatedAt = null,
     scheduledPermanentDeletionAt = null,
-    lockoutType = AccountLockoutType.NONE.serialName,
+    lockoutType = AccountLockoutType.NONE.value,
     temporaryLockoutUntil = null
 )
 
@@ -33,8 +33,8 @@ fun userSummaryPayloadMock(
     id: String = "123e4567-e89b-12d3-a456-426614174000"
 ): UserSummaryPayload = UserSummaryPayload(
     id = id,
-    role = UserRole.USER.serialName,
-    accountStatus = UserAccountStatus.ACTIVE.serialName
+    role = UserRole.USER.value,
+    accountStatus = UserAccountStatus.ACTIVE.value
 )
 
 @InternalApi

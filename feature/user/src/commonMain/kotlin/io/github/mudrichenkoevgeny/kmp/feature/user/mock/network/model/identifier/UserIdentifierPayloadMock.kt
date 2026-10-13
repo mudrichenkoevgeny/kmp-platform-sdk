@@ -8,11 +8,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 @InternalApi
 fun userIdentifierSummaryPayloadMock(
     id: String = "223e4567-e89b-12d3-a456-426614174001",
-    userAuthProvider: String = UserAuthProvider.EMAIL.serialName,
+    userId: String = "123e4567-e89b-12d3-a456-426614174000",
+    userAuthProvider: String = UserAuthProvider.EMAIL.value,
     identifier: String = "user@example.com",
     displayName: String = identifier
 ): UserIdentifierSummaryPayload = UserIdentifierSummaryPayload(
     id = id,
+    userId = userId,
     userAuthProvider = userAuthProvider,
     identifier = identifier,
     displayName = displayName
@@ -22,7 +24,7 @@ fun userIdentifierSummaryPayloadMock(
 fun userIdentifierPrivatePayloadMock(
     id: String = "223e4567-e89b-12d3-a456-426614174001",
     userId: String = "123e4567-e89b-12d3-a456-426614174000",
-    userAuthProvider: String = UserAuthProvider.EMAIL.serialName,
+    userAuthProvider: String = UserAuthProvider.EMAIL.value,
     identifier: String = "user@example.com",
     displayName: String = identifier
 ): UserIdentifierPrivatePayload = UserIdentifierPrivatePayload(

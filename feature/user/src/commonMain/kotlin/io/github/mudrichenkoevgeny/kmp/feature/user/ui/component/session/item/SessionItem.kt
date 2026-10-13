@@ -61,8 +61,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun SessionItem(
     session: UserSessionSummary,
-    onRevokeClick: () -> Unit,
     enabled: Boolean,
+    onRevokeClick: (() -> Unit)? = null,
     isCurrentSession: Boolean = false,
     onSessionClick: (() -> Unit)? = null
 ) {
@@ -122,7 +122,7 @@ fun SessionItem(
                 style = MaterialTheme.typography.bodySmall
             )
 
-            if (!isCurrentSession) {
+            if (!isCurrentSession && onRevokeClick != null) {
                 Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
                 HorizontalDivider()
                 Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))

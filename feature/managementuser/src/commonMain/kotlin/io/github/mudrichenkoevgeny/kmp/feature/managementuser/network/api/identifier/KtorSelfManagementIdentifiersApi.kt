@@ -13,7 +13,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contra
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.security.password.EmailPasswordChangeRequest
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.identifier.SelfManagementIdentifierRoutes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.self.user.identifier.SelfManagementIdentifierRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -48,12 +48,12 @@ class KtorSelfManagementIdentifiersApi(
         get(SelfManagementIdentifierRoutes.GET_IDENTIFIERS) {
             parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
             parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
-            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.serialName)
-            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.serialName)
+            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.value)
+            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.value)
             userAuthProviders?.forEach { userAuthProvider ->
                 parameter(
                     UserFilterValues.UserIdentifierFilterValues.USER_AUTH_PROVIDER,
-                    userAuthProvider.serialName
+                    userAuthProvider.value
                 )
             }
             identifiers?.forEach { identifier ->

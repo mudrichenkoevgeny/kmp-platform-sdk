@@ -70,7 +70,7 @@ class UserDetailComponentImpl(
         val current = _state.value as? UserDetailScreenState.Content ?: return
         val authLevel = current.authorityLevelInput.toIntOrNull() ?: 0
         val status = current.accountStatusInput.takeIf { it.isNotBlank() } ?: current.user.accountStatus.name
-        val lockoutType = AccountLockoutType.fromValueOrNull(current.lockoutTypeInput)?.serialName ?: current.user.lockoutType.serialName
+        val lockoutType = AccountLockoutType.fromValueOrNull(current.lockoutTypeInput)?.value ?: current.user.lockoutType.value
         val temporaryLockoutUntil = current.temporaryLockoutUntilInput.toLongOrNull() ?: current.user.temporaryLockoutUntil?.toEpochMilliseconds()
 
         _state.value = current.copy(isSaving = true, saveError = null)

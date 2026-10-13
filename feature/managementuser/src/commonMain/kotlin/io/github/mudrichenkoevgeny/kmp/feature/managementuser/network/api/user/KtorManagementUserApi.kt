@@ -17,7 +17,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.create.CreateByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.user.ManagementUserRoutes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.users.ManagementUsersRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
@@ -32,7 +32,7 @@ class KtorManagementUserApi(
 ) : ManagementUserApi {
 
     override suspend fun createUser(request: CreateByEmailRequest): AppResult<UserPrivatePayload> = client.callResult {
-        post(ManagementUserRoutes.CREATE_USER) {
+        post(ManagementUsersRoutes.CREATE_USER) {
             setBody(request)
         }
     }
@@ -51,27 +51,27 @@ class KtorManagementUserApi(
         isTotpEnabled: Boolean?,
         permissionCodes: List<PermissionCode>?
     ): AppResult<PagedResult<UserSummaryPayload>> = client.callResult {
-        get(ManagementUserRoutes.GET_USERS) {
+        get(ManagementUsersRoutes.GET_USERS) {
             parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
             parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
-            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.serialName)
-            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.serialName)
+            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.value)
+            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.value)
             roles?.forEach { role ->
-                parameter(UserFilterValues.UserFilterValues.ROLE, role.serialName)
+                parameter(UserFilterValues.UserFilterValues.ROLE, role.value)
             }
             accountStatuses?.forEach { accountStatus ->
-                parameter(UserFilterValues.UserFilterValues.ACCOUNT_STATUS, accountStatus.serialName)
+                parameter(UserFilterValues.UserFilterValues.ACCOUNT_STATUS, accountStatus.value)
             }
             accountStatusesBeforeDeletion?.forEach { accountStatusOnRestore ->
                 parameter(
                     UserFilterValues.UserFilterValues.ACCOUNT_STATUS_ON_RESTORE,
-                    accountStatusOnRestore.serialName
+                    accountStatusOnRestore.value
                 )
             }
             accountLockoutTypes?.forEach { accountLockoutType ->
                 parameter(
                     UserFilterValues.UserFilterValues.ACCOUNT_LOCKOUT_TYPE,
-                    accountLockoutType.serialName
+                    accountLockoutType.value
                 )
             }
             parameter(UserFilterValues.UserFilterValues.AUTHORITY_LEVEL_FROM, authorityLevelFrom)
@@ -84,20 +84,20 @@ class KtorManagementUserApi(
     }
 
     override suspend fun getUser(userId: UserId): AppResult<UserPrivatePayload> = client.callResult {
-        get(ManagementUserRoutes.GET_USER) {
+        get(ManagementUsersRoutes.GET_USER) {
             parameter(UserApiPaths.USER_ID, userId.value)
         }
     }
 
     override suspend fun updateUser(userId: UserId, request: UpdateUserRequest): AppResult<Unit> = client.callResult {
-        patch(ManagementUserRoutes.UPDATE_USER) {
+        patch(ManagementUsersRoutes.UPDATE_USER) {
             parameter(UserApiPaths.USER_ID, userId.value)
             setBody(request)
         }
     }
 
     override suspend fun deleteUser(userId: UserId): AppResult<Unit> = client.callResult {
-        delete(ManagementUserRoutes.DELETE_USER) {
+        delete(ManagementUsersRoutes.DELETE_USER) {
             parameter(UserApiPaths.USER_ID, userId.value)
         }
     }

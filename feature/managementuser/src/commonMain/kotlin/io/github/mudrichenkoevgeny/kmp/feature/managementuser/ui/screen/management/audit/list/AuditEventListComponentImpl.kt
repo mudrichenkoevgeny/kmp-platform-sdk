@@ -142,7 +142,7 @@ class AuditEventListComponentImpl(
         filterStates: Map<String, ListingFilterState>?
     ) {
         val sortOrder = if (sortState?.isAscending == true) SortOrder.ASC else SortOrder.DESC
-        val sortBy = if (sortState?.optionId == AuditSortValues.AuditEventSortBy.CREATED_AT.serialName) {
+        val sortBy = if (sortState?.optionId == AuditSortValues.AuditEventSortBy.CREATED_AT.value) {
             AuditSortValues.AuditEventSortBy.CREATED_AT
         } else {
             null

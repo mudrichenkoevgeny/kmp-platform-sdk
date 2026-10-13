@@ -26,7 +26,7 @@ class AddUserIdentifierGoogleUseCase(
         return authService.signIn()
             .flatMap { externalProviderToken ->
                 identifierRepository.addUserIdentifierExternalAuthProvider(
-                    UserAuthProvider.GOOGLE.serialName,
+                    UserAuthProvider.GOOGLE.value,
                     externalProviderToken
                 )
             }

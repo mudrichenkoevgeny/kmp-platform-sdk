@@ -11,10 +11,10 @@ fun openGlobalSettingsPayloadMock(
     terms: String? = "https://terms",
     email: String? = "a@b.c",
     minSupportedAppVersions: Map<String, String> = mapOf(
-        ClientType.ANDROID.serialName to "1.0.0",
-        ClientType.IOS.serialName to "1.0.0",
-        ClientType.WEB.serialName to "1.0.0",
-        ClientType.DESKTOP.serialName to "1.0.0"
+        ClientType.ANDROID.value to "1.0.0",
+        ClientType.IOS.value to "1.0.0",
+        ClientType.WEB.value to "1.0.0",
+        ClientType.DESKTOP.value to "1.0.0"
     )
 ) = OpenGlobalSettingsPayload(
     privacyPolicyUrl = privacy,
@@ -29,10 +29,10 @@ fun managementGlobalSettingsPayloadMock(
     terms: String? = "https://terms",
     email: String? = "a@b.c",
     minSupportedAppVersions: Map<String, String> = mapOf(
-        ClientType.ANDROID.serialName to "1.0.0",
-        ClientType.IOS.serialName to "1.0.0",
-        ClientType.WEB.serialName to "1.0.0",
-        ClientType.DESKTOP.serialName to "1.0.0"
+        ClientType.ANDROID.value to "1.0.0",
+        ClientType.IOS.value to "1.0.0",
+        ClientType.WEB.value to "1.0.0",
+        ClientType.DESKTOP.value to "1.0.0"
     ),
     isTracingEnabled: Boolean = true,
     isMetricsEnabled: Boolean = true,

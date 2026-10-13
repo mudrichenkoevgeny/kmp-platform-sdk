@@ -207,6 +207,7 @@ private fun Content(
                         SessionItem(
                             session = session,
                             enabled = !state.actionLoading,
+                            onRevokeClick = { component.onRevokeClick(session) },
                             onSessionClick = { component.onSessionClick(session) }
                         )
                     }

@@ -46,7 +46,7 @@ class SessionItemTest {
             }
         }
 
-        onNodeWithText("Mock Device").assertIsDisplayed()
+        onNodeWithText("user@example.com").assertIsDisplayed()
 
         onNodeWithText("Revoke").performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, revokeClicks)

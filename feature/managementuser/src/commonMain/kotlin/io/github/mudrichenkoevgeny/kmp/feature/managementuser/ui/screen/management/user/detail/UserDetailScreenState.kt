@@ -31,7 +31,7 @@ sealed interface UserDetailScreenState {
                 return currentAuthLevel != initialAuthLevel ||
                     !accountStatusInput.equals(initialAccountStatus, ignoreCase = true) ||
                     (!lockoutTypeInput.equals(initialLockoutType, ignoreCase = true) &&
-                        !lockoutTypeInput.equals(user.lockoutType.serialName, ignoreCase = true)) ||
+                        !lockoutTypeInput.equals(user.lockoutType.value, ignoreCase = true)) ||
                     temporaryLockoutUntilInput != initialTempLockout
             }
     }

@@ -54,7 +54,7 @@ class OpenLoginRepositoryImpl(
         externalProviderToken: String
     ): AppResult<AuthData> {
         return openLoginApi.loginByExternalAuthProvider(
-            LoginByExternalAuthProviderRequest(authProvider.serialName, externalProviderToken)
+            LoginByExternalAuthProviderRequest(authProvider.value, externalProviderToken)
         ).mapSuccess { authDataPayload ->
             authDataPayload.toAuthData()
         }

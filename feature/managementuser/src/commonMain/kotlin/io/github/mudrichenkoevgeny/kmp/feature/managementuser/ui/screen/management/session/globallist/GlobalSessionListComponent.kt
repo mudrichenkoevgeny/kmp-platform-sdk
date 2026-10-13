@@ -36,4 +36,7 @@ interface GlobalSessionListComponent : SessionListOwner {
     
     /** Navigates to session detail screen for the specified session. */
     fun onSessionClick(session: UserSessionSummary)
+
+    /** Revokes the specified session. */
+    fun onRevokeClick(session: UserSessionSummary)
 }

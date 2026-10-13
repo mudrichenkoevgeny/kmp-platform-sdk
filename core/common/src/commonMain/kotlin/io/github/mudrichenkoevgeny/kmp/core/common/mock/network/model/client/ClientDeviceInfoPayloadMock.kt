@@ -7,7 +7,7 @@ import kotlin.uuid.Uuid
 
 @InternalApi
 fun clientDeviceInfoPayloadMock(
-    clientType: String? = ClientType.ANDROID.serialName,
+    clientType: String? = ClientType.ANDROID.value,
     language: String? = "en",
     deviceId: String? = Uuid.random().toHexDashString(),
     deviceName: String? = "Pixel",

@@ -55,10 +55,10 @@ fun getGlobalSessionListingOptionsConfig(): ListingOptionsConfig = ListingOption
             id = UserFilterValues.UserSessionFilterValues.USER_AUTH_PROVIDER,
             title = stringResource(CommonRes.string.ui_common_auth_provider),
             options = listOf(
-                ListingFilterChoiceOption(UserAuthProvider.EMAIL.serialName, stringResource(CommonRes.string.ui_common_email)),
-                ListingFilterChoiceOption(UserAuthProvider.PHONE.serialName, stringResource(CommonRes.string.ui_common_phone)),
-                ListingFilterChoiceOption(UserAuthProvider.GOOGLE.serialName, stringResource(CommonRes.string.ui_common_google)),
-                ListingFilterChoiceOption(UserAuthProvider.APPLE.serialName, stringResource(CommonRes.string.ui_common_apple))
+                ListingFilterChoiceOption(UserAuthProvider.EMAIL.value, stringResource(CommonRes.string.ui_common_email)),
+                ListingFilterChoiceOption(UserAuthProvider.PHONE.value, stringResource(CommonRes.string.ui_common_phone)),
+                ListingFilterChoiceOption(UserAuthProvider.GOOGLE.value, stringResource(CommonRes.string.ui_common_google)),
+                ListingFilterChoiceOption(UserAuthProvider.APPLE.value, stringResource(CommonRes.string.ui_common_apple))
             ),
             isMultiple = true,
             presentationStyle = ChoiceFilterPresentationStyle.DROPDOWN
@@ -67,10 +67,10 @@ fun getGlobalSessionListingOptionsConfig(): ListingOptionsConfig = ListingOption
             id = UserFilterValues.UserSessionFilterValues.CLIENT_TYPE,
             title = stringResource(CommonRes.string.ui_common_client_type),
             options = listOf(
-                ListingFilterChoiceOption(ClientType.ANDROID.serialName, stringResource(CommonRes.string.ui_common_android)),
-                ListingFilterChoiceOption(ClientType.IOS.serialName, stringResource(CommonRes.string.ui_common_ios)),
-                ListingFilterChoiceOption(ClientType.WEB.serialName, stringResource(CommonRes.string.ui_common_web)),
-                ListingFilterChoiceOption(ClientType.DESKTOP.serialName, stringResource(CommonRes.string.ui_common_desktop))
+                ListingFilterChoiceOption(ClientType.ANDROID.value, stringResource(CommonRes.string.ui_common_android)),
+                ListingFilterChoiceOption(ClientType.IOS.value, stringResource(CommonRes.string.ui_common_ios)),
+                ListingFilterChoiceOption(ClientType.WEB.value, stringResource(CommonRes.string.ui_common_web)),
+                ListingFilterChoiceOption(ClientType.DESKTOP.value, stringResource(CommonRes.string.ui_common_desktop))
             ),
             isMultiple = true,
             presentationStyle = ChoiceFilterPresentationStyle.DROPDOWN

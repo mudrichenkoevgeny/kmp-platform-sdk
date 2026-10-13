@@ -14,7 +14,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserApiPaths
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.session.ManagementSessionRoutes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.users.sessions.ManagementSessionsRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
@@ -44,16 +44,16 @@ class KtorManagementSessionApi(
         appVersions: List<String>?,
         operationSystemVersions: List<String>?
     ): AppResult<PagedResult<UserSessionSummaryPayload>> = client.callResult {
-        get(ManagementSessionRoutes.GET_SESSIONS) {
+        get(ManagementSessionsRoutes.GET_SESSIONS) {
             parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
             parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
-            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.serialName)
-            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.serialName)
+            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.value)
+            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.value)
             userIds?.forEach { userId ->
                 parameter(UserFilterValues.UserSessionFilterValues.USER_ID, userId)
             }
             userRoles?.forEach { role ->
-                parameter(UserFilterValues.UserSessionFilterValues.USER_ROLE, role.serialName)
+                parameter(UserFilterValues.UserSessionFilterValues.USER_ROLE, role.value)
             }
             identifiers?.forEach { identifier ->
                 parameter(UserFilterValues.UserSessionFilterValues.IDENTIFIER, identifier)
@@ -62,10 +62,10 @@ class KtorManagementSessionApi(
                 parameter(UserFilterValues.UserSessionFilterValues.IDENTIFIER_ID, identifierId)
             }
             userAuthProviders?.forEach { provider ->
-                parameter(UserFilterValues.UserSessionFilterValues.USER_AUTH_PROVIDER, provider.serialName)
+                parameter(UserFilterValues.UserSessionFilterValues.USER_AUTH_PROVIDER, provider.value)
             }
             clientTypes?.forEach { type ->
-                parameter(UserFilterValues.UserSessionFilterValues.CLIENT_TYPE, type.serialName)
+                parameter(UserFilterValues.UserSessionFilterValues.CLIENT_TYPE, type.value)
             }
             userAgents?.forEach { agent ->
                 parameter(UserFilterValues.UserSessionFilterValues.USER_AGENT, agent)
@@ -92,20 +92,20 @@ class KtorManagementSessionApi(
     }
 
     override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivatePayload> = client.callResult {
-        get(ManagementSessionRoutes.GET_SESSION) {
+        get(ManagementSessionsRoutes.GET_SESSION) {
             parameter(UserApiPaths.SESSION_ID, sessionId)
         }
     }
 
     override suspend fun deleteSession(userId: UserId, sessionId: String): AppResult<Unit> = client.callResult {
-        delete(ManagementSessionRoutes.DELETE_SESSION) {
+        delete(ManagementSessionsRoutes.DELETE_SESSION) {
             parameter(UserApiPaths.USER_ID, userId.value)
             parameter(UserApiPaths.SESSION_ID, sessionId)
         }
     }
 
     override suspend fun deleteAllUserSessions(userId: UserId): AppResult<Unit> = client.callResult {
-        delete(ManagementSessionRoutes.DELETE_ALL_USER_SESSIONS) {
+        delete(ManagementSessionsRoutes.DELETE_ALL_USER_SESSIONS) {
             parameter(UserApiPaths.USER_ID, userId.value)
         }
     }

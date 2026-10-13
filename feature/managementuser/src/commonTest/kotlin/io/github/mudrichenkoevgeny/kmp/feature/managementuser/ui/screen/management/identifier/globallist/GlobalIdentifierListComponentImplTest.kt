@@ -83,7 +83,7 @@ class GlobalIdentifierListComponentImplTest {
         val context = createTestContext(repository = repository, identifiers = listOf(userIdentifierSummaryMock()))
         advanceUntilIdle()
 
-        context.component.onSortChanged(ListingSortState(optionId = UserSortValues.UserIdentifierSortBy.CREATED_AT.serialName, isAscending = false))
+        context.component.onSortChanged(ListingSortState(optionId = UserSortValues.UserIdentifierSortBy.CREATED_AT.value, isAscending = false))
         advanceUntilIdle()
 
         assertEquals(UserSortValues.UserIdentifierSortBy.CREATED_AT, repository.lastSortBy)

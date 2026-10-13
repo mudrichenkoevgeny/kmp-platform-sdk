@@ -19,7 +19,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.security.useridentifiers.AddUserIdentifierEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.security.useridentifiers.AddUserIdentifierExternalAuthProviderRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.security.useridentifiers.AddUserIdentifierPhoneRequest
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.identifier.OpenIdentifierRoutes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.user.identifier.OpenIdentifierRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
@@ -55,12 +55,12 @@ class KtorOpenIdentifiersApi(
         get(OpenIdentifierRoutes.GET_IDENTIFIERS) {
             parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
             parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
-            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.serialName)
-            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.serialName)
+            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.value)
+            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.value)
             userAuthProviders?.forEach { userAuthProvider ->
                 parameter(
                     UserFilterValues.UserIdentifierFilterValues.USER_AUTH_PROVIDER,
-                    userAuthProvider.serialName
+                    userAuthProvider.value
                 )
             }
             identifiers?.forEach { identifier ->

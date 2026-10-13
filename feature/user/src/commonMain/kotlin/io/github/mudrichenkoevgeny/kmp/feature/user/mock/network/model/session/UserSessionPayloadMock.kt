@@ -9,12 +9,14 @@ import kotlin.uuid.Uuid
 @InternalApi
 fun userSessionSummaryPayloadMock(
     id: String = Uuid.random().toHexDashString(),
+    userId: String = Uuid.random().toHexDashString(),
     identifierDisplayName: String = "user@example.com",
     identifierAuthProvider: String = "email",
     expiresAt: Long = 1717244400000L,
     lastAccessedAt: Long = 1717240800000L
 ): UserSessionSummaryPayload = UserSessionSummaryPayload(
     id = id,
+    userId = userId,
     clientDeviceInfo = clientDeviceInfoPayloadMock(),
     identifierDisplayName = identifierDisplayName,
     identifierAuthProvider = identifierAuthProvider,

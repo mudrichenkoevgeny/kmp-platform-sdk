@@ -16,7 +16,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contra
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.DeletedSessionsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.session.SelfManagementSessionRoutes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.self.user.session.SelfManagementSessionRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
@@ -49,8 +49,8 @@ class KtorSelfManagementSessionApi(
         get(SelfManagementSessionRoutes.GET_SESSIONS) {
             parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
             parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
-            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.serialName)
-            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.serialName)
+            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.value)
+            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.value)
             identifiers?.forEach { identifier ->
                 parameter(UserFilterValues.UserSessionFilterValues.IDENTIFIER, identifier)
             }
@@ -58,10 +58,10 @@ class KtorSelfManagementSessionApi(
                 parameter(UserFilterValues.UserSessionFilterValues.IDENTIFIER_ID, identifierId)
             }
             userAuthProviders?.forEach { provider ->
-                parameter(UserFilterValues.UserSessionFilterValues.USER_AUTH_PROVIDER, provider.serialName)
+                parameter(UserFilterValues.UserSessionFilterValues.USER_AUTH_PROVIDER, provider.value)
             }
             clientTypes?.forEach { type ->
-                parameter(UserFilterValues.UserSessionFilterValues.CLIENT_TYPE, type.serialName)
+                parameter(UserFilterValues.UserSessionFilterValues.CLIENT_TYPE, type.value)
             }
             userAgents?.forEach { agent ->
                 parameter(UserFilterValues.UserSessionFilterValues.USER_AGENT, agent)

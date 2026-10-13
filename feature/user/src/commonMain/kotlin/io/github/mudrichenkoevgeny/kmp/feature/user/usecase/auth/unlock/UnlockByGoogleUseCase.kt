@@ -25,7 +25,7 @@ open class UnlockByGoogleUseCase(
     open suspend fun execute(): AppResult<Unit> {
         return authService.signIn().flatMap { externalProviderToken ->
             unlockRepository.unlockByExternalAuthProvider(
-                authProvider = UserAuthProvider.GOOGLE.serialName,
+                authProvider = UserAuthProvider.GOOGLE.value,
                 externalProviderToken = externalProviderToken
             )
         }

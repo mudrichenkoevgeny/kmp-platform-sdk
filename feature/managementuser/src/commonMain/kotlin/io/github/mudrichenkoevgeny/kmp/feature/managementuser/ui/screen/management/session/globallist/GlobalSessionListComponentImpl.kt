@@ -17,6 +17,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toInit
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toNextPageLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
@@ -33,12 +34,14 @@ import kotlinx.coroutines.launch
  *
  * @param componentContext Decompose [ComponentContext].
  * @param managementGetSessionsUseCase Use case to fetch paginated list of global sessions.
+ * @param managementDeleteSessionUseCase Use case to administratively delete a session.
  * @param onNavigateToSessionDetail Callback invoked when a session is tapped.
  * @param onBack Pops this screen from the navigation stack.
  */
 class GlobalSessionListComponentImpl(
     componentContext: ComponentContext,
     private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
+    private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase? = null,
     private val onNavigateToSessionDetail: ((UserSessionSummary) -> Unit)? = null,
     private val onBack: () -> Unit
 ) : GlobalSessionListComponent, ComponentContext by componentContext {
@@ -57,6 +60,35 @@ class GlobalSessionListComponentImpl(
 
     override fun onSessionClick(session: UserSessionSummary) {
         onNavigateToSessionDetail?.invoke(session)
+    }
+
+    override fun onRevokeClick(session: UserSessionSummary) {
+        val deleteUseCase = managementDeleteSessionUseCase ?: return
+        val currentContent = _state.value as? GlobalSessionListScreenState.Content ?: return
+        if (currentContent.actionLoading) return
+
+        _state.value = currentContent.copy(actionLoading = true, actionError = null)
+
+        scope.launch {
+            deleteUseCase(
+                userId = session.userId,
+                sessionId = session.id.asHexDashString()
+            )
+                .onSuccess {
+                    val updatedItems = currentContent.paging.items.filterNot { it.id == session.id }
+                    _state.value = currentContent.copy(
+                        paging = currentContent.paging.copy(items = updatedItems),
+                        actionLoading = false,
+                        actionError = null
+                    )
+                }
+                .onError { error ->
+                    _state.value = currentContent.copy(
+                        actionLoading = false,
+                        actionError = error
+                    )
+                }
+        }
     }
 
     override fun onSessionRevoked(sessionId: UserSessionId) {

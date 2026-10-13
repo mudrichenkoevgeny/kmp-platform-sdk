@@ -12,7 +12,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserApiPaths
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.identifier.ManagementIdentifierRoutes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.users.identifiers.ManagementIdentifiersRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
@@ -32,18 +32,18 @@ class KtorManagementIdentifierApi(
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
     ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = client.callResult {
-        get(ManagementIdentifierRoutes.GET_IDENTIFIERS) {
+        get(ManagementIdentifiersRoutes.GET_IDENTIFIERS) {
             parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
             parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
-            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.serialName)
-            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.serialName)
+            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.value)
+            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.value)
             userIds?.forEach { userId ->
                 parameter(UserFilterValues.UserIdentifierFilterValues.USER_ID, userId)
             }
             userAuthProviders?.forEach { userAuthProvider ->
                 parameter(
                     UserFilterValues.UserIdentifierFilterValues.USER_AUTH_PROVIDER,
-                    userAuthProvider.serialName
+                    userAuthProvider.value
                 )
             }
             identifiers?.forEach { identifier ->
@@ -55,7 +55,7 @@ class KtorManagementIdentifierApi(
     override suspend fun getIdentifier(
         identifierId: String
     ): AppResult<UserIdentifierPrivatePayload> = client.callResult {
-        get(ManagementIdentifierRoutes.GET_IDENTIFIER) {
+        get(ManagementIdentifiersRoutes.GET_IDENTIFIER) {
             parameter(UserApiPaths.USER_IDENTIFIER_ID, identifierId)
         }
     }
@@ -64,7 +64,7 @@ class KtorManagementIdentifierApi(
         userId: UserId,
         identifierId: String
     ): AppResult<Unit> = client.callResult {
-        delete(ManagementIdentifierRoutes.DELETE_IDENTIFIER) {
+        delete(ManagementIdentifiersRoutes.DELETE_IDENTIFIER) {
             parameter(UserApiPaths.USER_ID, userId.value)
             parameter(UserApiPaths.USER_IDENTIFIER_ID, identifierId)
         }
@@ -74,7 +74,7 @@ class KtorManagementIdentifierApi(
         userId: UserId,
         identifierId: String
     ): AppResult<Unit> = client.callResult {
-        delete(ManagementIdentifierRoutes.DELETE_IDENTIFIER_PASSWORD) {
+        delete(ManagementIdentifiersRoutes.DELETE_IDENTIFIER_PASSWORD) {
             parameter(UserApiPaths.USER_ID, userId.value)
             parameter(UserApiPaths.USER_IDENTIFIER_ID, identifierId)
         }

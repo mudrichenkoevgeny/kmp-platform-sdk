@@ -62,7 +62,7 @@ class OpenLoginRepositoryImplTest {
         val success = assertIs<AppResult.Success<AuthData>>(loginResult)
         assertEquals(wire.toAuthData(), success.data)
         assertEquals(
-            LoginByExternalAuthProviderRequest(UserAuthProvider.GOOGLE.serialName, EXTERNAL_ID_TOKEN),
+            LoginByExternalAuthProviderRequest(UserAuthProvider.GOOGLE.value, EXTERNAL_ID_TOKEN),
             api.lastLoginByExternalAuthProviderRequest
         )
     }

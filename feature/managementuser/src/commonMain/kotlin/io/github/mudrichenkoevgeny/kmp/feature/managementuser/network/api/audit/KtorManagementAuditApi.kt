@@ -43,15 +43,15 @@ class KtorManagementAuditApi(
         get(ManagementAuditRoutes.GET_AUDIT_EVENTS) {
             parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
             parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
-            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.serialName)
-            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.serialName)
+            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.value)
+            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.value)
             actorIds?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.ACTOR_ID, it) }
-            actorTypes?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.ACTOR_TYPE, it.serialName) }
+            actorTypes?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.ACTOR_TYPE, it.value) }
             actorUserRoles?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.ACTOR_USER_ROLE, it.name) }
             actions?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.ACTION, it) }
             resources?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.RESOURCE, it) }
             resourceIds?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.RESOURCE_ID, it) }
-            statuses?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.STATUS, it.serialName) }
+            statuses?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.STATUS, it.value) }
             messages?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.MESSAGE, it) }
         }
     }

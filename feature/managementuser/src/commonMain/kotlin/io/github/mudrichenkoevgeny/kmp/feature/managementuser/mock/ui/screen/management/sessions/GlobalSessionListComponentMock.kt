@@ -44,8 +44,14 @@ class GlobalSessionListComponentMock(
 
     override fun onApplyFilters() {}
 
+    var revokedSessionCalls: MutableList<UserSessionSummary> = mutableListOf()
+
     override fun onSessionClick(session: UserSessionSummary) {
         sessionClickCalls.add(session)
+    }
+
+    override fun onRevokeClick(session: UserSessionSummary) {
+        revokedSessionCalls.add(session)
     }
 
     override fun onSessionRevoked(sessionId: UserSessionId) {}

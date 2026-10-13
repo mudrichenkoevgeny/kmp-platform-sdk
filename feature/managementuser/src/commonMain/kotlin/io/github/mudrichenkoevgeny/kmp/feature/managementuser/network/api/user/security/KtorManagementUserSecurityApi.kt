@@ -4,7 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.network.utils.callResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserApiPaths
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.user.security.ManagementUserSecurityRoutes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.users.security.ManagementUsersSecurityRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
 import io.ktor.client.request.parameter
@@ -15,7 +15,7 @@ class KtorManagementUserSecurityApi(
 ) : ManagementUserSecurityApi {
 
     override suspend fun disableTotp(userId: UserId): AppResult<Unit> = client.callResult {
-        delete(ManagementUserSecurityRoutes.DISABLE_TOTP) {
+        delete(ManagementUsersSecurityRoutes.DISABLE_TOTP) {
             parameter(UserApiPaths.USER_ID, userId.value)
         }
     }

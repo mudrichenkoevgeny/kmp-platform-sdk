@@ -15,10 +15,12 @@ import kotlin.time.Duration.Companion.days
 @InternalApi
 fun userSessionSummaryMock(
     id: UserSessionId = UserSessionId.generate(),
+    userId: UserId = UserId.generate(),
     identifierDisplayName: String = "user@example.com",
     identifierAuthProvider: UserAuthProvider = UserAuthProvider.EMAIL
 ) = UserSessionSummary(
     id = id,
+    userId = userId,
     clientDeviceInfo = clientDeviceInfoMock(),
     identifierDisplayName = identifierDisplayName,
     identifierAuthProvider = identifierAuthProvider,

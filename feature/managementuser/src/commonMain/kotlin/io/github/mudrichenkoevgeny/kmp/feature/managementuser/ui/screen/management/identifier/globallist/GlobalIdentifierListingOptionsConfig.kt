@@ -31,10 +31,10 @@ fun getGlobalIdentifierListingOptionsConfig(): ListingOptionsConfig = ListingOpt
             id = UserFilterValues.UserIdentifierFilterValues.USER_AUTH_PROVIDER,
             title = stringResource(CommonRes.string.ui_common_auth_provider),
             options = listOf(
-                ListingFilterChoiceOption(UserAuthProvider.EMAIL.serialName, stringResource(CommonRes.string.ui_common_email)),
-                ListingFilterChoiceOption(UserAuthProvider.PHONE.serialName, stringResource(CommonRes.string.ui_common_phone)),
-                ListingFilterChoiceOption(UserAuthProvider.GOOGLE.serialName, stringResource(CommonRes.string.ui_common_google)),
-                ListingFilterChoiceOption(UserAuthProvider.APPLE.serialName, stringResource(CommonRes.string.ui_common_apple))
+                ListingFilterChoiceOption(UserAuthProvider.EMAIL.value, stringResource(CommonRes.string.ui_common_email)),
+                ListingFilterChoiceOption(UserAuthProvider.PHONE.value, stringResource(CommonRes.string.ui_common_phone)),
+                ListingFilterChoiceOption(UserAuthProvider.GOOGLE.value, stringResource(CommonRes.string.ui_common_google)),
+                ListingFilterChoiceOption(UserAuthProvider.APPLE.value, stringResource(CommonRes.string.ui_common_apple))
             ),
             isMultiple = true,
             presentationStyle = ChoiceFilterPresentationStyle.DROPDOWN

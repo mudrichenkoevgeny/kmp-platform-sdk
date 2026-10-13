@@ -20,7 +20,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 fun getAuditEventListingOptionsConfig(): ListingOptionsConfig = ListingOptionsConfig(
     sortOptions = listOf(
         ListingSortDefinition(
-            id = AuditSortValues.AuditEventSortBy.CREATED_AT.serialName,
+            id = AuditSortValues.AuditEventSortBy.CREATED_AT.value,
             title = stringResource(CommonRes.string.ui_common_created_at)
         )
     ),
@@ -34,9 +34,9 @@ fun getAuditEventListingOptionsConfig(): ListingOptionsConfig = ListingOptionsCo
             id = AuditFilterValues.AuditEventFilterValues.ACTOR_TYPE,
             title = stringResource(CommonRes.string.ui_common_actor_type),
             options = listOf(
-                ListingFilterChoiceOption(AuditActorType.USER.serialName, stringResource(CommonRes.string.ui_common_user)),
-                ListingFilterChoiceOption(AuditActorType.SYSTEM.serialName, stringResource(CommonRes.string.ui_common_system)),
-                ListingFilterChoiceOption(AuditActorType.SERVICE.serialName, stringResource(CommonRes.string.ui_common_service))
+                ListingFilterChoiceOption(AuditActorType.USER.value, stringResource(CommonRes.string.ui_common_user)),
+                ListingFilterChoiceOption(AuditActorType.SYSTEM.value, stringResource(CommonRes.string.ui_common_system)),
+                ListingFilterChoiceOption(AuditActorType.SERVICE.value, stringResource(CommonRes.string.ui_common_service))
             ),
             isMultiple = true,
             presentationStyle = ChoiceFilterPresentationStyle.DROPDOWN
@@ -70,9 +70,9 @@ fun getAuditEventListingOptionsConfig(): ListingOptionsConfig = ListingOptionsCo
             id = AuditFilterValues.AuditEventFilterValues.STATUS,
             title = stringResource(CommonRes.string.ui_common_status),
             options = listOf(
-                ListingFilterChoiceOption(AuditStatus.SUCCESS.serialName, stringResource(CommonRes.string.ui_common_success)),
-                ListingFilterChoiceOption(AuditStatus.FAILED.serialName, stringResource(CommonRes.string.ui_common_failed)),
-                ListingFilterChoiceOption(AuditStatus.DENIED.serialName, stringResource(CommonRes.string.ui_common_denied))
+                ListingFilterChoiceOption(AuditStatus.SUCCESS.value, stringResource(CommonRes.string.ui_common_success)),
+                ListingFilterChoiceOption(AuditStatus.FAILED.value, stringResource(CommonRes.string.ui_common_failed)),
+                ListingFilterChoiceOption(AuditStatus.DENIED.value, stringResource(CommonRes.string.ui_common_denied))
             ),
             isMultiple = true,
             presentationStyle = ChoiceFilterPresentationStyle.DROPDOWN

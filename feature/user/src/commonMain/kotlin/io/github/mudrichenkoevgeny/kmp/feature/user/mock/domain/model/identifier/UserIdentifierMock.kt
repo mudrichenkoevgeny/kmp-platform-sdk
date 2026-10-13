@@ -11,11 +11,13 @@ import kotlin.time.Clock
 @InternalApi
 fun userIdentifierSummaryMock(
     id: UserIdentifierId = UserIdentifierId.generate(),
+    userId: UserId = UserId.generate(),
     userAuthProvider: UserAuthProvider = UserAuthProvider.EMAIL,
     identifier: String = "user@example.com",
     displayName: String = "user@example.com"
 ) = UserIdentifierSummary(
     id = id,
+    userId = userId,
     userAuthProvider = userAuthProvider,
     identifier = identifier,
     displayName = displayName

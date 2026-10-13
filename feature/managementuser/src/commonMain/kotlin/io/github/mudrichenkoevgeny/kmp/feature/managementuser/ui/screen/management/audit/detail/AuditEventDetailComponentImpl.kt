@@ -75,20 +75,20 @@ class AuditEventDetailComponentImpl(
     override fun onResourceClick() {
         val event = (_state.value as? AuditEventDetailScreenState.Content)?.event ?: return
         val resourceIdStr = event.resourceId ?: return
-        val resourceName = event.resource.serialName
+        val resourceName = event.resource.value
 
         when {
-            resourceName.equals(UserAuditResourceType.IDENTIFIER.serialName, ignoreCase = true) -> {
+            resourceName.equals(UserAuditResourceType.IDENTIFIER.value, ignoreCase = true) -> {
                 resourceIdStr.toUserIdentifierIdOrNull()?.let { id ->
                     onNavigateToIdentifierDetail?.invoke(id)
                 }
             }
-            resourceName.equals(UserAuditResourceType.SESSION.serialName, ignoreCase = true) -> {
+            resourceName.equals(UserAuditResourceType.SESSION.value, ignoreCase = true) -> {
                 resourceIdStr.toUserSessionIdOrNull()?.let { id ->
                     onNavigateToSessionDetail?.invoke(id)
                 }
             }
-            resourceName.equals(UserAuditResourceType.USER.serialName, ignoreCase = true) -> {
+            resourceName.equals(UserAuditResourceType.USER.value, ignoreCase = true) -> {
                 resourceIdStr.toUserIdOrNull()?.let { userId ->
                     if (currentUserId != null && userId == currentUserId) {
                         onNavigateToProfile()
@@ -104,7 +104,7 @@ class AuditEventDetailComponentImpl(
         val event = (_state.value as? AuditEventDetailScreenState.Content)?.event ?: return
         val actorIdStr = event.actorId ?: return
         val isUserActor = event.actorType == AuditActorType.USER ||
-                event.actorType.serialName.equals(AuditActorType.USER.serialName, ignoreCase = true)
+                event.actorType.value.equals(AuditActorType.USER.value, ignoreCase = true)
 
         if (isUserActor) {
             actorIdStr.toUserIdOrNull()?.let { userId ->

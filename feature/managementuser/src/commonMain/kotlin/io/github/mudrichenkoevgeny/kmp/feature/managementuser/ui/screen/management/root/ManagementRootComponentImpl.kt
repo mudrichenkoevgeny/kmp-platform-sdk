@@ -287,6 +287,7 @@ class ManagementRootComponentImpl(
             GlobalSessionListComponentImpl(
                 componentContext = context,
                 managementGetSessionsUseCase = managementGetSessionsUseCase,
+                managementDeleteSessionUseCase = managementDeleteSessionUseCase,
                 onNavigateToSessionDetail = { session ->
                     navigation.bringToFront(ManagementDestination.SessionDetail(SessionDetailParams(session.id.asHexDashString())))
                 },

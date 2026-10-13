@@ -117,25 +117,25 @@ private fun Content(
 ) {
     val event = state.event
 
-    val resourceName = event.resource.serialName
+    val resourceName = event.resource.value
     val isResourceClickable = event.resourceId != null && (
-        resourceName.equals(UserAuditResourceType.USER.serialName, ignoreCase = true) ||
-            resourceName.equals(UserAuditResourceType.SESSION.serialName, ignoreCase = true) ||
-            resourceName.equals(UserAuditResourceType.IDENTIFIER.serialName, ignoreCase = true)
+        resourceName.equals(UserAuditResourceType.USER.value, ignoreCase = true) ||
+            resourceName.equals(UserAuditResourceType.SESSION.value, ignoreCase = true) ||
+            resourceName.equals(UserAuditResourceType.IDENTIFIER.value, ignoreCase = true)
     )
     val isSubjectClickable = !event.actorId.isNullOrBlank() && (
         event.actorType == AuditActorType.USER ||
-            event.actorType.serialName.equals(AuditActorType.USER.serialName, ignoreCase = true)
+            event.actorType.value.equals(AuditActorType.USER.value, ignoreCase = true)
     )
 
     val resourceValue = if (event.resourceId != null) {
-        "${event.resource.serialName}: ${event.resourceId}"
+        "${event.resource.value}: ${event.resourceId}"
     } else {
-        event.resource.serialName
+        event.resource.value
     }
 
     val subjectValue = buildString {
-        append(event.actorType.serialName)
+        append(event.actorType.value)
         if (!event.actorUserRole.isNullOrBlank()) {
             append(" (${event.actorUserRole})")
         }
@@ -166,11 +166,11 @@ private fun Content(
             ) {
                 DetailRow(
                     label = stringResource(Res.string.audit_event_action),
-                    value = event.action.serialName
+                    value = event.action.value
                 )
                 DetailRow(
                     label = stringResource(Res.string.audit_event_status),
-                    value = event.status.serialName
+                    value = event.status.value
                 )
                 DetailRow(
                     label = stringResource(Res.string.audit_event_resource),
@@ -223,7 +223,7 @@ private fun Content(
 
                     event.metadata.forEach { item ->
                         DetailRow(
-                            label = item.key.serialName,
+                            label = item.key.value,
                             value = item.value
                         )
                     }
