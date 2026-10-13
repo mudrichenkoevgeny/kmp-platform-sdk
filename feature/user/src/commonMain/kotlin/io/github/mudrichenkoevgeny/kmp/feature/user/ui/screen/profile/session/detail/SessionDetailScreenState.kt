@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 
 /**
  * Represents the UI state for the session detail screen.
@@ -22,7 +22,7 @@ sealed interface SessionDetailScreenState {
      * @property actionError Error from a failed revoke action.
      */
     data class Content(
-        val session: UserSession,
+        val session: UserSessionPrivate,
         val isCurrentSession: Boolean = false,
         val actionLoading: Boolean = false,
         val actionError: AppError? = null

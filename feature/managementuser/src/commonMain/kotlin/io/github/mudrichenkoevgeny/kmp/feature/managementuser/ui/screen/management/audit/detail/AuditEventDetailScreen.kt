@@ -52,10 +52,10 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_id
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_message
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_metadata
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_resource
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_resource_sensitivity
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_status
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_timestamp
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_updated_at
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.audit.detail.AuditEventDetailComponentMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
@@ -179,10 +179,6 @@ private fun Content(
                     modifier = Modifier.testTag(AuditEventDetailTestTags.RESOURCE_ROW)
                 )
                 DetailRow(
-                    label = stringResource(Res.string.audit_event_resource_sensitivity),
-                    value = event.resourceValueSensitivity.name
-                )
-                DetailRow(
                     label = stringResource(Res.string.audit_event_actor),
                     value = subjectValue,
                     onClick = if (isSubjectClickable) onSubjectClick else null,
@@ -199,6 +195,13 @@ private fun Content(
                     label = stringResource(Res.string.audit_event_timestamp),
                     value = timestampFormatted
                 )
+                event.updatedAt?.let { updatedAt ->
+                    val updatedAtFormatted = formatInstantToDateTime(updatedAt) ?: updatedAt.toString()
+                    DetailRow(
+                        label = stringResource(Res.string.audit_event_updated_at),
+                        value = updatedAtFormatted
+                    )
+                }
             }
         }
 
@@ -261,7 +264,7 @@ private fun DetailRow(
 internal class AuditEventDetailPreviewProvider : PreviewParameterProvider<AuditEventDetailScreenState> {
     @InternalApi
     private val items: List<Pair<String, AuditEventDetailScreenState>> = listOf(
-        "Content" to AuditEventDetailScreenState.Content(event = auditEventMock()),
+        "Content" to AuditEventDetailScreenState.Content(event = auditEventPrivateMock()),
         "Error" to AuditEventDetailScreenState.Error(error = CommonError.Unknown()),
         "Loading" to AuditEventDetailScreenState.Loading
     )
@@ -283,7 +286,7 @@ private fun AuditEventDetailScreenPreviewContent(state: AuditEventDetailScreenSt
 
 @InternalApi
 private val defaultAuditEventDetailPreviewState = AuditEventDetailScreenState.Content(
-    event = auditEventMock()
+    event = auditEventPrivateMock()
 )
 
 @InternalApi

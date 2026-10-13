@@ -1,8 +1,13 @@
 package io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.phone
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
+import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.error.logger.log
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
@@ -26,6 +31,7 @@ import kotlinx.coroutines.launch
  * Default [LoginByPhoneComponent]: send-code, cooldown handling, and login-by-phone confirmation.
  *
  * @param componentContext Decompose [ComponentContext].
+ * @param initialConfig Optional initial step configuration.
  * @param loginRepository reads remaining confirmation delay for a phone number.
  * @param sendLoginConfirmationToPhoneUseCase requests an SMS code.
  * @param loginByPhoneUseCase completes login with phone and code.
@@ -36,6 +42,7 @@ import kotlinx.coroutines.launch
  */
 class LoginByPhoneComponentImpl(
     componentContext: ComponentContext,
+    initialConfig: LoginByPhoneStepConfig = LoginByPhoneStepConfig.PhoneInput(),
     private val loginRepository: LoginRepository,
     private val sendLoginConfirmationToPhoneUseCase: SendLoginConfirmationToPhoneUseCase,
     private val loginByPhoneUseCase: LoginByPhoneUseCase,
@@ -52,16 +59,49 @@ class LoginByPhoneComponentImpl(
     private val scope = componentCoroutineScope()
     private var timerJob: Job? = null
 
-    private val _state = MutableValue<LoginByPhoneScreenState>(
-        LoginByPhoneScreenState.PhoneInput()
+    override val stackNavigation = StackNavigation<LoginByPhoneStepConfig>()
+
+    override val stack: Value<ChildStack<LoginByPhoneStepConfig, LoginByPhoneComponent.Child>> =
+        childStack(
+            source = stackNavigation,
+            serializer = LoginByPhoneStepConfig.serializer(),
+            initialConfiguration = initialConfig,
+            handleBackButton = true,
+            childFactory = ::createChild
+        )
+
+    private val _state = MutableValue(
+        LoginByPhoneScreenState(
+            phoneNumber = when (initialConfig) {
+                is LoginByPhoneStepConfig.PhoneInput -> initialConfig.initialPhone
+                is LoginByPhoneStepConfig.CodeInput -> initialConfig.phone
+            },
+            resendTimerSeconds = when (initialConfig) {
+                is LoginByPhoneStepConfig.PhoneInput -> 0
+                is LoginByPhoneStepConfig.CodeInput -> initialConfig.resendTimerSeconds
+            }
+        )
     )
     override val state: Value<LoginByPhoneScreenState> = _state
 
+    init {
+        if (initialConfig is LoginByPhoneStepConfig.CodeInput && initialConfig.resendTimerSeconds > 0) {
+            startTimer(initialConfig.resendTimerSeconds)
+        }
+    }
+
+    private fun createChild(
+        config: LoginByPhoneStepConfig,
+        context: ComponentContext
+    ): LoginByPhoneComponent.Child = when (config) {
+        is LoginByPhoneStepConfig.PhoneInput -> LoginByPhoneComponent.Child.PhoneInput(config.initialPhone)
+        is LoginByPhoneStepConfig.CodeInput -> LoginByPhoneComponent.Child.CodeInput(config.phone)
+    }
+
     override fun onPhoneChanged(phone: String) {
-        val current = _state.value as? LoginByPhoneScreenState.PhoneInput ?: return
         val isValid = FieldValidator.isPhoneNumberValid(phone)
 
-        _state.value = current.copy(
+        _state.value = _state.value.copy(
             phoneNumber = phone,
             isPhoneNumberValid = isValid,
             actionError = null
@@ -76,9 +116,8 @@ class LoginByPhoneComponentImpl(
     }
 
     override fun onCodeChanged(code: String) {
-        val current = _state.value as? LoginByPhoneScreenState.CodeInput ?: return
-        if (code.length <= current.codeLength) {
-            val updated = current.copy(code = code, actionError = null)
+        if (code.length <= _state.value.codeLength) {
+            val updated = _state.value.copy(code = code, actionError = null)
             _state.value = updated
             if (updated.isCodeFullLength) {
                 onConfirmCodeClick()
@@ -87,7 +126,7 @@ class LoginByPhoneComponentImpl(
     }
 
     override fun onSendCodeClick() {
-        val current = _state.value as? LoginByPhoneScreenState.PhoneInput ?: return
+        val current = _state.value
         if (current.actionLoading) return
 
         _state.value = current.copy(actionLoading = true, actionError = null)
@@ -101,14 +140,14 @@ class LoginByPhoneComponentImpl(
                     if (error is UserError.TooManyConfirmationRequests) {
                         moveToCodeInput(current.phoneNumber, error.retryAfterSeconds)
                     } else {
-                        _state.value = current.copy(actionLoading = false, actionError = error)
+                        _state.value = _state.value.copy(actionLoading = false, actionError = error)
                     }
                 }
         }
     }
 
     override fun onConfirmCodeClick() {
-        val current = _state.value as? LoginByPhoneScreenState.CodeInput ?: return
+        val current = _state.value
         if (current.actionLoading || !current.isCodeFullLength) return
 
         _state.value = current.copy(actionLoading = true, actionError = null)
@@ -116,7 +155,8 @@ class LoginByPhoneComponentImpl(
         scope.launch {
             loginByPhoneUseCase.execute(current.phoneNumber, current.code)
                 .onSuccess { authData ->
-                    if (authData.userDetails.accountStatus == UserAccountStatus.PENDING_DELETION) {
+                    _state.value = _state.value.copy(actionLoading = false)
+                    if (authData.userPrivate.accountStatus == UserAccountStatus.PENDING_DELETION) {
                         onNavigateToPendingDeletion()
                     } else {
                         onFinished()
@@ -140,7 +180,7 @@ class LoginByPhoneComponentImpl(
                         return@onError
                     }
 
-                    _state.value = current.copy(actionLoading = false, actionError = error)
+                    _state.value = _state.value.copy(actionLoading = false, actionError = error)
                     error.log()
                 }
         }
@@ -148,23 +188,29 @@ class LoginByPhoneComponentImpl(
 
     override fun onResetPhoneClick() {
         timerJob?.cancel()
-        val phone = (_state.value as? LoginByPhoneScreenState.CodeInput)?.phoneNumber ?: ""
-        _state.value = LoginByPhoneScreenState.PhoneInput(phoneNumber = phone)
+        val phone = _state.value.phoneNumber
+        _state.value = _state.value.copy(
+            code = "",
+            actionError = null,
+            resendTimerSeconds = 0
+        )
+        stackNavigation.bringToFront(LoginByPhoneStepConfig.PhoneInput(phone))
     }
 
     override fun onBackClick() {
-        if (_state.value is LoginByPhoneScreenState.CodeInput) {
-            onResetPhoneClick()
-        } else {
+        if ((backHandler as? BackDispatcher)?.back() != true) {
             onBack()
         }
     }
 
     private fun moveToCodeInput(phone: String, seconds: Int) {
-        _state.value = LoginByPhoneScreenState.CodeInput(
+        _state.value = _state.value.copy(
             phoneNumber = phone,
-            resendTimerSeconds = seconds
+            resendTimerSeconds = seconds,
+            actionLoading = false,
+            actionError = null
         )
+        stackNavigation.bringToFront(LoginByPhoneStepConfig.CodeInput(phone, seconds))
         startTimer(seconds)
     }
 
@@ -181,7 +227,6 @@ class LoginByPhoneComponentImpl(
     }
 
     private fun updateTimerState(seconds: Int) {
-        val current = _state.value as? LoginByPhoneScreenState.CodeInput ?: return
-        _state.value = current.copy(resendTimerSeconds = seconds)
+        _state.value = _state.value.copy(resendTimerSeconds = seconds)
     }
 }

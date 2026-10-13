@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
@@ -18,8 +19,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit.GetAuditEventsUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEvent
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventId
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventSummary
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
@@ -37,6 +38,7 @@ import kotlinx.coroutines.launch
  */
 class AuditEventListComponentImpl(
     componentContext: ComponentContext,
+    private val params: AuditEventListParams = AuditEventListParams(),
     private val getAuditEventsUseCase: GetAuditEventsUseCase,
     private val onNavigateToEventDetail: (AuditEventId) -> Unit,
     private val onBack: () -> Unit
@@ -72,7 +74,9 @@ class AuditEventListComponentImpl(
     }
 
     override fun onBackClick() {
-        onBack()
+        if ((backHandler as? BackDispatcher)?.back() != true) {
+            onBack()
+        }
     }
 
     override fun onToggleFilterPanel() {
@@ -104,20 +108,31 @@ class AuditEventListComponentImpl(
     }
 
     private fun loadEvents() {
-        val content = _state.value as? AuditEventListScreenState.Content
-        if (content != null) {
-            _state.value = content.copy(
-                paging = content.paging.toInitialLoading(),
+        val currentContent = _state.value as? AuditEventListScreenState.Content
+
+        val initialFilters = mutableMapOf<String, ListingFilterState>()
+        params.initialFilters?.actorIds?.firstOrNull()?.let { firstActorId ->
+            initialFilters[AuditFilterValues.AuditEventFilterValues.ACTOR_ID] = TextListingFilterState(value = firstActorId)
+        }
+
+        val filtersToUse = currentContent?.filterStates ?: initialFilters
+
+        if (currentContent != null) {
+            _state.value = currentContent.copy(
+                paging = currentContent.paging.toInitialLoading(),
                 actionError = null
             )
         } else {
-            _state.value = AuditEventListScreenState.Loading
+            _state.value = AuditEventListScreenState.Content(
+                paging = PaginationState(),
+                filterStates = filtersToUse
+            )
         }
 
         fetchPage(
             pageNumber = ListingConstants.INITIAL_PAGE_NUMBER,
-            sortState = content?.sortState,
-            filterStates = content?.filterStates
+            sortState = currentContent?.sortState,
+            filterStates = filtersToUse
         )
     }
 
@@ -166,7 +181,7 @@ class AuditEventListComponentImpl(
                 messages = messages
             ).onSuccess { pagedResult ->
                 val currentContent = _state.value as? AuditEventListScreenState.Content
-                val newPaging = (currentContent?.paging ?: PaginationState<AuditEvent>()).appendResult(pagedResult)
+                val newPaging = (currentContent?.paging ?: PaginationState<AuditEventSummary>()).appendResult(pagedResult)
                 _state.value = currentContent?.copy(paging = newPaging) ?: AuditEventListScreenState.Content(paging = newPaging)
             }.onError { error ->
                 val currentContent = _state.value as? AuditEventListScreenState.Content

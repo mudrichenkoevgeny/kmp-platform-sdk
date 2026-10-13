@@ -18,9 +18,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
@@ -85,19 +85,29 @@ fun RegistrationByEmailScreen(component: RegistrationByEmailComponent) {
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            when (val s = state) {
-                is RegistrationByEmailScreenState.EmailInput -> {
-                    EmailInputContent(s, component::onEmailChanged, component::onSendCodeClick)
-                }
-                is RegistrationByEmailScreenState.RegistrationInput -> {
-                    RegistrationInputContent(
-                        s,
-                        component::onCodeChanged,
-                        component::onPasswordChanged,
-                        component::onTogglePasswordVisibility,
-                        component::onRegisterClick,
-                        component::onSendCodeClick
-                    )
+            Children(
+                stack = component.stack,
+                modifier = Modifier.fillMaxSize()
+            ) { child ->
+                when (val activeChild = child.instance) {
+                    is RegistrationByEmailComponent.Child.EmailInput -> {
+                        EmailInputContent(
+                            state = state,
+                            onEmailChanged = component::onEmailChanged,
+                            onSendCodeClick = component::onSendCodeClick
+                        )
+                    }
+                    is RegistrationByEmailComponent.Child.ConfirmInput -> {
+                        RegistrationInputContent(
+                            state = state,
+                            email = activeChild.email,
+                            onCodeChanged = component::onCodeChanged,
+                            onPasswordChanged = component::onPasswordChanged,
+                            onTogglePasswordVisibility = component::onTogglePasswordVisibility,
+                            onRegisterClick = component::onRegisterClick,
+                            onResendClick = component::onSendCodeClick
+                        )
+                    }
                 }
             }
 
@@ -112,7 +122,7 @@ fun RegistrationByEmailScreen(component: RegistrationByEmailComponent) {
 
 @Composable
 private fun EmailInputContent(
-    state: RegistrationByEmailScreenState.EmailInput,
+    state: RegistrationByEmailScreenState,
     onEmailChanged: (String) -> Unit,
     onSendCodeClick: () -> Unit
 ) {
@@ -155,7 +165,8 @@ private fun EmailInputContent(
 
 @Composable
 private fun RegistrationInputContent(
-    state: RegistrationByEmailScreenState.RegistrationInput,
+    state: RegistrationByEmailScreenState,
+    email: String,
     onCodeChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onTogglePasswordVisibility: () -> Unit,
@@ -174,7 +185,7 @@ private fun RegistrationInputContent(
         )
 
         CoreBodyText(
-            text = stringResource(Res.string.code_sent_to, state.email),
+            text = stringResource(Res.string.code_sent_to, email),
             modifier = Modifier.testTag(RegistrationByEmailTestTags.CODE_SENT_INFO_TEXT)
         )
 
@@ -263,29 +274,29 @@ internal class RegistrationByEmailPreviewProvider :
     PreviewParameterProvider<RegistrationByEmailScreenState> {
 
     private val items: List<Pair<String, RegistrationByEmailScreenState>> = listOf(
-        "Email Input" to RegistrationByEmailScreenState.EmailInput(
+        "Email Input" to RegistrationByEmailScreenState(
             email = "user@example.com"
         ),
-        "Email Error" to RegistrationByEmailScreenState.EmailInput(
+        "Email Error" to RegistrationByEmailScreenState(
             email = "invalid-email",
             actionError = CommonError.Unknown()
         ),
-        "Code & Password Input" to RegistrationByEmailScreenState.RegistrationInput(
+        "Code & Password Input" to RegistrationByEmailScreenState(
             email = "user@example.com",
             code = "123456",
             password = "SecretPassword123!"
         ),
-        "Code Resend Timer" to RegistrationByEmailScreenState.RegistrationInput(
+        "Code Resend Timer" to RegistrationByEmailScreenState(
             email = "user@example.com",
             code = "",
             password = "",
             resendTimerSeconds = 45
         ),
-        "Action Loading" to RegistrationByEmailScreenState.EmailInput(
+        "Action Loading" to RegistrationByEmailScreenState(
             email = "user@example.com",
             actionLoading = true
         ),
-        "Long Text Overflow" to RegistrationByEmailScreenState.RegistrationInput(
+        "Long Text Overflow" to RegistrationByEmailScreenState(
             email = "this_is_an_extremely_long_email_address_for_testing_overflow_behavior@example.domain.com",
             code = "",
             password = "",
@@ -312,14 +323,14 @@ private fun RegistrationByEmailScreenPreviewContent(state: RegistrationByEmailSc
     }
 }
 
-private val defaultPreviewState = RegistrationByEmailScreenState.RegistrationInput(
+private val defaultPreviewState = RegistrationByEmailScreenState(
     email = "user@example.com",
     code = "123",
     password = "pass"
 )
 
 @InternalApi
-@Preview(showBackground = true, group = "States")
+@ScreenSizePreviews
 @Composable
 private fun StatesPreview(
     @PreviewParameter(RegistrationByEmailPreviewProvider::class) state: RegistrationByEmailScreenState

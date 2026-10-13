@@ -48,7 +48,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_locked
 import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_locked_until
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.unlock.selection.UnlockMethodSelectionComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_by_apple
 import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_by_email
@@ -231,7 +231,7 @@ internal class UnlockMethodSelectionPreviewProvider :
         ),
         "Email Only Identifier" to UnlockMethodSelectionScreenState(
             knownIdentifiers = listOf(
-                userIdentifierMock().copy(userAuthProvider = UserAuthProvider.EMAIL, identifier = "user@example.com")
+                userIdentifierSummaryMock().copy(userAuthProvider = UserAuthProvider.EMAIL, identifier = "user@example.com")
             )
         )
     )

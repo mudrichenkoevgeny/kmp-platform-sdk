@@ -8,7 +8,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
 
 /** Administrative user sessions management. */
 interface ManagementSessionApi {
@@ -53,7 +54,7 @@ interface ManagementSessionApi {
         deviceNames: List<String>? = null,
         appVersions: List<String>? = null,
         operationSystemVersions: List<String>? = null
-    ): AppResult<PagedResult<UserSessionPayload>>
+    ): AppResult<PagedResult<UserSessionSummaryPayload>>
 
     /**
      * Retrieves specific session details.
@@ -61,7 +62,7 @@ interface ManagementSessionApi {
      * @param sessionId Unique session identifier.
      * @return Detailed information of the target session, or a mapped failure.
      */
-    suspend fun getSession(sessionId: String): AppResult<UserSessionPayload>
+    suspend fun getSession(sessionId: String): AppResult<UserSessionPrivatePayload>
 
     /**
      * Deletes a specific session for the given user.

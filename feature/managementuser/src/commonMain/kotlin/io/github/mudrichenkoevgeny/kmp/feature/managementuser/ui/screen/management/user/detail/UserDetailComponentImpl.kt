@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
@@ -17,15 +18,18 @@ import kotlinx.coroutines.launch
 
 class UserDetailComponentImpl(
     componentContext: ComponentContext,
-    private val userId: UserId,
+    private val params: UserDetailParams,
     private val getUserUseCase: GetUserUseCase,
     private val updateUserUseCase: UpdateUserUseCase,
     private val deleteUserUseCase: DeleteUserUseCase,
     private val managementDisableTotpUseCase: ManagementDisableTotpUseCase,
     private val onNavigateToSessions: (UserId) -> Unit,
     private val onNavigateToIdentifiers: (UserId) -> Unit,
+    private val onNavigateToAuditEvents: (UserId) -> Unit,
     private val onBack: () -> Unit
 ) : UserDetailComponent, ComponentContext by componentContext {
+
+    private val userId: UserId get() = params.userId
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue<UserDetailScreenState>(UserDetailScreenState.Loading)
@@ -137,12 +141,18 @@ class UserDetailComponentImpl(
         onNavigateToIdentifiers(userId)
     }
 
+    override fun onAuditEventsClick() {
+        onNavigateToAuditEvents(userId)
+    }
+
     override fun onRetry() {
         loadUser()
     }
 
     override fun onBackClick() {
-        onBack()
+        if ((backHandler as? BackDispatcher)?.back() != true) {
+            onBack()
+        }
     }
 
     private fun loadUser() {

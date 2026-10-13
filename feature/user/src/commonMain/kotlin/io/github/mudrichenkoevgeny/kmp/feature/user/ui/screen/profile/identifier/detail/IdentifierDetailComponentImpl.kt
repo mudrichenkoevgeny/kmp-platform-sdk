@@ -3,18 +3,20 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifie
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.DeleteUserIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.EmailChangePasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.GetUserIdentifierUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.toUserIdentifierIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.launch
@@ -25,8 +27,9 @@ import kotlinx.coroutines.launch
  * Supports displaying identifier details and deleting/modifying credentials across both end-user and administrative contexts.
  *
  * @param componentContext Decompose [ComponentContext].
- * @param identifier Initial [UserIdentifier] model if available.
+ * @param identifier Initial [UserIdentifierPrivate] model if available.
  * @param identifierId Target [UserIdentifierId] identifier.
+ * @param userRepository Source of the current user profile state.
  * @param fetchIdentifier Suspend callback to fetch identifier details remotely when [identifier] is omitted.
  * @param deleteIdentifier Suspend callback to delete the target identifier.
  * @param changePassword Suspend callback to change password for email identifier.
@@ -40,9 +43,11 @@ import kotlinx.coroutines.launch
  */
 class IdentifierDetailComponentImpl(
     componentContext: ComponentContext,
-    private val identifier: UserIdentifier? = null,
-    private val identifierId: UserIdentifierId? = identifier?.id,
-    private val fetchIdentifier: (suspend (UserIdentifierId) -> AppResult<UserIdentifier>)? = null,
+    private val params: IdentifierDetailParams? = null,
+    private val identifier: UserIdentifierPrivate? = null,
+    private val identifierId: UserIdentifierId? = params?.identifierId ?: identifier?.id,
+    private val userRepository: UserRepository? = null,
+    private val fetchIdentifier: (suspend (UserIdentifierId) -> AppResult<UserIdentifierPrivate>)? = null,
     private val deleteIdentifier: (suspend (UserIdentifierId) -> AppResult<Unit>)? = null,
     private val changePassword: (suspend (email: String, oldPass: String, newPass: String) -> AppResult<Unit>)? = null,
     private val deletePassword: (suspend (UserIdentifierId) -> AppResult<Unit>)? = null,
@@ -50,7 +55,7 @@ class IdentifierDetailComponentImpl(
     private val authStorage: AuthStorage? = null,
     private val onIdentifierDeleted: ((UserIdentifierId) -> Unit)? = null,
     private val onNavigateToUserDetail: ((UserId) -> Unit)? = null,
-    private val onNavigateToProfile: (() -> Unit)? = null,
+    private val onNavigateToProfile: () -> Unit,
     private val onBack: () -> Unit
 ) : IdentifierDetailComponent, ComponentContext by componentContext {
 
@@ -59,8 +64,10 @@ class IdentifierDetailComponentImpl(
      */
     constructor(
         componentContext: ComponentContext,
-        identifier: UserIdentifier? = null,
-        identifierId: UserIdentifierId? = identifier?.id,
+        params: IdentifierDetailParams? = null,
+        identifier: UserIdentifierPrivate? = null,
+        identifierId: UserIdentifierId? = params?.identifierId ?: identifier?.id,
+        userRepository: UserRepository? = null,
         getUserIdentifierUseCase: GetUserIdentifierUseCase? = null,
         deleteUserIdentifierUseCase: DeleteUserIdentifierUseCase? = null,
         emailChangePasswordUseCase: EmailChangePasswordUseCase? = null,
@@ -68,12 +75,14 @@ class IdentifierDetailComponentImpl(
         authStorage: AuthStorage? = null,
         onIdentifierDeleted: ((UserIdentifierId) -> Unit)? = null,
         onNavigateToUserDetail: ((UserId) -> Unit)? = null,
-        onNavigateToProfile: (() -> Unit)? = null,
+        onNavigateToProfile: () -> Unit,
         onBack: () -> Unit
     ) : this(
         componentContext = componentContext,
+        params = params,
         identifier = identifier,
         identifierId = identifierId,
+        userRepository = userRepository,
         fetchIdentifier = getUserIdentifierUseCase?.let { useCase -> { id -> useCase(id) } },
         deleteIdentifier = deleteUserIdentifierUseCase?.let { useCase -> { id -> useCase(id) } },
         changePassword = emailChangePasswordUseCase?.let { useCase -> { email, oldPass, newPass -> useCase(email, oldPass, newPass) } },
@@ -90,7 +99,14 @@ class IdentifierDetailComponentImpl(
     private val _state = MutableValue<IdentifierDetailScreenState>(IdentifierDetailScreenState.Loading)
     override val state: Value<IdentifierDetailScreenState> = _state
 
+    private var currentUserId: UserId? = null
+
     init {
+        scope.launch {
+            userRepository?.currentUser?.collect { user ->
+                currentUserId = user?.id
+            }
+        }
         initializeIdentifier()
     }
 
@@ -106,12 +122,12 @@ class IdentifierDetailComponentImpl(
 
     override fun onDeleteIdentifierClick() {
         val current = _state.value as? IdentifierDetailScreenState.Content ?: return
-        val targetId = current.identifier.id
-        _state.value = current.copy(isDeleteConfirmationVisible = false, actionLoading = true, actionError = null)
+        val targetId = identifierId ?: current.identifier.id
+        if (deleteIdentifier == null) return
 
+        _state.value = current.copy(actionLoading = true, actionError = null)
         scope.launch {
-            val result = deleteIdentifier?.invoke(targetId) ?: AppResult.Success(Unit)
-            result
+            deleteIdentifier.invoke(targetId)
                 .onSuccess {
                     onIdentifierDeleted?.invoke(targetId)
                     onBack()
@@ -129,19 +145,19 @@ class IdentifierDetailComponentImpl(
 
     override fun onConfirmChangePasswordClick(oldPassword: String, newPassword: String) {
         val current = _state.value as? IdentifierDetailScreenState.Content ?: return
-        val email = current.identifier.identifier
-        _state.value = current.copy(actionLoading = true, actionError = null)
+        if (changePassword == null) return
 
+        _state.value = current.copy(actionLoading = true, actionError = null)
         scope.launch {
-            val result = changePassword?.invoke(email, oldPassword, newPassword) ?: AppResult.Success(Unit)
-            result
+            changePassword.invoke(current.identifier.identifier, oldPassword, newPassword)
                 .onSuccess {
-                    val latest = _state.value as? IdentifierDetailScreenState.Content ?: return@onSuccess
-                    _state.value = latest.copy(actionLoading = false, isChangePasswordDialogVisible = false)
+                    _state.value = current.copy(
+                        actionLoading = false,
+                        isChangePasswordDialogVisible = false
+                    )
                 }
                 .onError { error ->
-                    val latest = _state.value as? IdentifierDetailScreenState.Content ?: return@onError
-                    _state.value = latest.copy(actionLoading = false, actionError = error)
+                    _state.value = current.copy(actionLoading = false, actionError = error)
                 }
         }
     }
@@ -153,14 +169,13 @@ class IdentifierDetailComponentImpl(
 
     override fun onDeletePasswordClick() {
         val current = _state.value as? IdentifierDetailScreenState.Content ?: return
-        val targetId = current.identifier.id
-        _state.value = current.copy(actionLoading = true, actionError = null)
+        val targetId = identifierId ?: current.identifier.id
+        if (deletePassword == null) return
 
+        _state.value = current.copy(actionLoading = true, actionError = null)
         scope.launch {
-            val result = deletePassword?.invoke(targetId) ?: AppResult.Success(Unit)
-            result
+            deletePassword.invoke(targetId)
                 .onSuccess {
-                    _state.value = current.copy(actionLoading = false)
                     initializeIdentifier()
                 }
                 .onError { error ->
@@ -174,13 +189,15 @@ class IdentifierDetailComponentImpl(
     }
 
     override fun onBackClick() {
-        onBack()
+        if ((backHandler as? BackDispatcher)?.back() != true) {
+            onBack()
+        }
     }
 
     override fun onUserClick() {
         val current = _state.value as? IdentifierDetailScreenState.Content ?: return
-        if (current.isCurrentIdentifier) {
-            onNavigateToProfile?.invoke()
+        if (current.isCurrentIdentifier || (currentUserId != null && current.identifier.userId == currentUserId)) {
+            onNavigateToProfile()
         } else {
             onNavigateToUserDetail?.invoke(current.identifier.userId)
         }

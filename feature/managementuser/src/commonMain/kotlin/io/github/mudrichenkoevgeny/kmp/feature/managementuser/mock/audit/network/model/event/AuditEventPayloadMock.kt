@@ -4,12 +4,30 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.model.event.AuditEventMetadataPayload
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.model.event.AuditEventPayload
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.model.event.AuditEventPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.model.event.AuditEventSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.action.UserAuditActionType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
 
 @InternalApi
-fun auditEventPayloadMock(
+fun auditEventSummaryPayloadMock(
+    id: String = "550e8400-e29b-41d4-a716-446655440000",
+    actorType: String = AuditActorType.USER.name,
+    action: String = UserAuditActionType.MANAGEMENT_UPDATE_USER.name,
+    resource: String = UserAuditResourceType.USER.name,
+    status: String = AuditStatus.SUCCESS.name,
+    createdAt: Long = 1000L
+) = AuditEventSummaryPayload(
+    id = id,
+    actorType = actorType,
+    action = action,
+    resource = resource,
+    status = status,
+    createdAt = createdAt
+)
+
+@InternalApi
+fun auditEventPrivatePayloadMock(
     id: String = "550e8400-e29b-41d4-a716-446655440000",
     actorType: String = AuditActorType.USER.name,
     action: String = UserAuditActionType.MANAGEMENT_UPDATE_USER.name,
@@ -21,7 +39,7 @@ fun auditEventPayloadMock(
     resourceId: String? = null,
     message: String? = null,
     metadata: List<AuditEventMetadataPayload> = emptyList()
-) = AuditEventPayload(
+) = AuditEventPrivatePayload(
     id = id,
     actorType = actorType,
     action = action,
@@ -32,5 +50,9 @@ fun auditEventPayloadMock(
     actorUserRole = actorUserRole,
     resourceId = resourceId,
     message = message,
-    metadata = metadata
+    metadata = metadata,
+    updatedAt = null
 )
+
+@InternalApi
+fun auditEventPayloadMock() = auditEventSummaryPayloadMock()

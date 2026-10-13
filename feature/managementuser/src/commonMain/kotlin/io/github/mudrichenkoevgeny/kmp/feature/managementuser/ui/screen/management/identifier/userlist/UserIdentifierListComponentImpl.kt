@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
@@ -13,8 +14,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toNext
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.launch
 
@@ -29,11 +30,13 @@ import kotlinx.coroutines.launch
  */
 class UserIdentifierListComponentImpl(
     componentContext: ComponentContext,
-    private val userId: UserId,
+    private val params: UserIdentifierListParams,
     private val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase,
     private val onIdentifierSelect: ((String) -> Unit)? = null,
     private val onBack: () -> Unit
 ) : UserIdentifierListComponent, ComponentContext by componentContext {
+
+    private val userId: UserId get() = params.userId
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue<UserIdentifierListScreenState>(UserIdentifierListScreenState.Loading)
@@ -69,7 +72,9 @@ class UserIdentifierListComponentImpl(
     }
 
     override fun onBackClick() {
-        onBack()
+        if ((backHandler as? BackDispatcher)?.back() != true) {
+            onBack()
+        }
     }
 
     private fun loadIdentifiers() {
@@ -94,7 +99,7 @@ class UserIdentifierListComponentImpl(
                 userIds = listOf(userId.asHexDashString())
             ).onSuccess { pagedResult ->
                 val currentContent = _state.value as? UserIdentifierListScreenState.Content
-                val newPaging = (currentContent?.paging ?: PaginationState<UserIdentifier>()).appendResult(pagedResult)
+                val newPaging = (currentContent?.paging ?: PaginationState<UserIdentifierSummary>()).appendResult(pagedResult)
                 _state.value = currentContent?.copy(paging = newPaging) ?: UserIdentifierListScreenState.Content(paging = newPaging)
             }.onError { error ->
                 val currentContent = _state.value as? UserIdentifierListScreenState.Content

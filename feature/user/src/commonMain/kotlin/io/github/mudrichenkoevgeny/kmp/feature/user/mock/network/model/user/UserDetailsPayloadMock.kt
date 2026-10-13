@@ -4,13 +4,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserDetailsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserSummaryPayload
 
 @InternalApi
-fun userDetailsPayloadMock(
+fun userPrivatePayloadMock(
     id: String = "123e4567-e89b-12d3-a456-426614174000",
     createdAtEpochMs: Long = 1L
-): UserDetailsPayload = UserDetailsPayload(
+): UserPrivatePayload = UserPrivatePayload(
     id = id,
     role = UserRole.USER.serialName,
     accountStatus = UserAccountStatus.ACTIVE.serialName,
@@ -25,4 +26,22 @@ fun userDetailsPayloadMock(
     scheduledPermanentDeletionAt = null,
     lockoutType = AccountLockoutType.NONE.serialName,
     temporaryLockoutUntil = null
+)
+
+@InternalApi
+fun userSummaryPayloadMock(
+    id: String = "123e4567-e89b-12d3-a456-426614174000"
+): UserSummaryPayload = UserSummaryPayload(
+    id = id,
+    role = UserRole.USER.serialName,
+    accountStatus = UserAccountStatus.ACTIVE.serialName
+)
+
+@InternalApi
+fun userDetailsPayloadMock(
+    id: String = "123e4567-e89b-12d3-a456-426614174000",
+    createdAtEpochMs: Long = 1L
+): UserPrivatePayload = userPrivatePayloadMock(
+    id = id,
+    createdAtEpochMs = createdAtEpochMs
 )

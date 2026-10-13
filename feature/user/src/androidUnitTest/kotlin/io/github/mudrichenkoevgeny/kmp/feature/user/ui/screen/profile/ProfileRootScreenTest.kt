@@ -8,7 +8,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.ProfileRootComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.identifier.SelfIdentifierListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.MainProfileComponentMock
@@ -20,6 +20,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainP
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailParams
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SelfSessionListTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainScreenState
@@ -38,7 +39,7 @@ class ProfileRootScreenTest {
     @Test
     fun displaysMainChild_whenActiveConfigurationIsMain() = runComposeUiTest {
         val mainComponent = MainProfileComponentMock(
-            initialState = MainProfileScreenState.Content(user = userDetailsMock())
+            initialState = MainProfileScreenState.Content(user = userPrivateMock())
         )
         val rootComponent = ProfileRootComponentMock(
             initialChild = ProfileRootComponent.Child.Main(mainComponent),
@@ -57,11 +58,11 @@ class ProfileRootScreenTest {
     @Test
     fun displaysTotpMainChild_whenActiveConfigurationIsTotpMain() = runComposeUiTest {
         val totpComponent = TotpMainComponentMock(
-            initialState = TotpMainScreenState.Disabled()
+            initialState = TotpMainScreenState(isInitialized = true, isEnabled = false)
         )
         val rootComponent = ProfileRootComponentMock(
             initialChild = ProfileRootComponent.Child.TotpMain(totpComponent),
-            initialConfiguration = ProfileDestination.TotpMain
+            initialConfiguration = ProfileDestination.TotpMain()
         )
 
         setContent {
@@ -98,7 +99,7 @@ class ProfileRootScreenTest {
         val sessionDetailComponent = SessionDetailComponentMock()
         val rootComponent = ProfileRootComponentMock(
             initialChild = ProfileRootComponent.Child.SessionDetail(sessionDetailComponent),
-            initialConfiguration = ProfileDestination.SessionDetail("00000000-0000-0000-0000-000000000000")
+            initialConfiguration = ProfileDestination.SessionDetail(SessionDetailParams("00000000-0000-0000-0000-000000000000"))
         )
 
         setContent {
@@ -118,7 +119,7 @@ class ProfileRootScreenTest {
         val identifierComponent = SelfIdentifierListComponentMock()
         val rootComponent = ProfileRootComponentMock(
             initialChild = ProfileRootComponent.Child.Identifiers(identifierComponent),
-            initialConfiguration = ProfileDestination.Identifiers
+            initialConfiguration = ProfileDestination.Identifiers()
         )
 
         setContent {

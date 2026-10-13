@@ -1,6 +1,10 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.security
 
+import com.arkivanov.decompose.router.slot.ChildSlot
+import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.value.Value
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogChild
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogConfig
 
 /**
  * Decompose controller for editing security settings.
@@ -8,6 +12,12 @@ import com.arkivanov.decompose.value.Value
 interface EditSecuritySettingsComponent {
     /** Observable UI state. */
     val state: Value<EditSecuritySettingsScreenState>
+
+    /** Decompose child slot for settings confirmation dialogs. */
+    val dialogSlot: Value<ChildSlot<SettingsDialogConfig, SettingsDialogChild>>
+
+    /** Slot navigator for settings dialogs. */
+    val dialogSlotNavigation: SlotNavigation<SettingsDialogConfig>
 
     /** Retries loading settings. */
     fun onRetry()
@@ -111,8 +121,14 @@ interface EditSecuritySettingsComponent {
     /** Saves security settings to the backend. */
     fun onSaveClick()
 
-    /** Resets security settings to defaults on the backend. */
+    /** Shows reset confirmation dialog. */
     fun onResetClick()
+
+    /** Confirms resetting security settings to defaults. */
+    fun onConfirmReset()
+
+    /** Dismisses active confirmation dialogs. */
+    fun onDismissDialog()
 
     /** Navigates back. */
     fun onBackClick()

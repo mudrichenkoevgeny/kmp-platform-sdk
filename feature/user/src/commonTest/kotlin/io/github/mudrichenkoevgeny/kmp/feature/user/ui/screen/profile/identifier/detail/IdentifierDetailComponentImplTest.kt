@@ -8,11 +8,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.DeleteUserIdentifierUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.GetUserIdentifierUseCaseMock
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
@@ -25,159 +25,134 @@ import kotlin.time.Duration.Companion.milliseconds
 class IdentifierDetailComponentImplTest {
 
     @Test
-    fun init_withProvidedIdentifier_setsContentStateImmediately() = runComponentTest {
-        val mockIdentifier = userIdentifierMock()
-        val context = createTestContext(
-            identifier = mockIdentifier,
-            isCurrentIdentifier = true
-        )
+    fun state_initWithIdentifier_emitsContent() = runComponentTest {
+        val identifier = userIdentifierPrivateMock()
+        val testContext = createTestContext(identifier = identifier)
         try {
             advanceTimeBy(100.milliseconds)
-            val state = assertIs<IdentifierDetailScreenState.Content>(context.component.state.value)
-            assertEquals(mockIdentifier, state.identifier)
-            assertTrue(state.isCurrentIdentifier)
+            val state = testContext.component.state.value
+            assertIs<IdentifierDetailScreenState.Content>(state)
+            assertEquals(identifier, state.identifier)
         } finally {
-            context.destroy()
+            testContext.destroy()
         }
     }
 
     @Test
-    fun init_withIdentifierId_loadsIdentifierSuccessfully() = runComponentTest {
-        val mockIdentifier = userIdentifierMock()
+    fun state_initWithIdAndSuccessUseCase_emitsContent() = runComponentTest {
+        val identifier = userIdentifierPrivateMock()
         val getUserIdentifierUseCase = GetUserIdentifierUseCaseMock().apply {
-            resultProvider = { AppResult.Success(mockIdentifier) }
+            resultProvider = { AppResult.Success(identifier) }
         }
-        val context = createTestContext(
+        val testContext = createTestContext(
             identifier = null,
-            identifierId = mockIdentifier.id,
+            identifierId = identifier.id,
             getUserIdentifierUseCase = getUserIdentifierUseCase
         )
         try {
             advanceTimeBy(100.milliseconds)
-            val state = assertIs<IdentifierDetailScreenState.Content>(context.component.state.value)
-            assertEquals(mockIdentifier, state.identifier)
+            val state = testContext.component.state.value
+            assertIs<IdentifierDetailScreenState.Content>(state)
+            assertEquals(identifier, state.identifier)
         } finally {
-            context.destroy()
+            testContext.destroy()
         }
     }
 
     @Test
-    fun init_whenLoadFails_emitsError() = runComponentTest {
+    fun state_initWithIdAndFailureUseCase_emitsError() = runComponentTest {
+        val identifierId = userIdentifierPrivateMock().id
         val getUserIdentifierUseCase = GetUserIdentifierUseCaseMock().apply {
             resultProvider = { AppResult.Error(CommonError.Unknown()) }
         }
-        val context = createTestContext(
+        val testContext = createTestContext(
             identifier = null,
-            identifierId = UserIdentifierId.generate(),
+            identifierId = identifierId,
             getUserIdentifierUseCase = getUserIdentifierUseCase
         )
         try {
             advanceTimeBy(100.milliseconds)
-            val state = assertIs<IdentifierDetailScreenState.Error>(context.component.state.value)
-            assertIs<CommonError.Unknown>(state.error)
+            val state = testContext.component.state.value
+            assertIs<IdentifierDetailScreenState.Error>(state)
         } finally {
-            context.destroy()
+            testContext.destroy()
         }
     }
 
     @Test
-    fun onDeleteIdentifierClick_success_callsOnBack() = runComponentTest {
-        var backCalled = false
+    fun onDeleteClick_showsConfirmationDialog() = runComponentTest {
+        val identifier = userIdentifierPrivateMock()
+        val testContext = createTestContext(identifier = identifier)
+        try {
+            advanceTimeBy(100.milliseconds)
+            testContext.component.onDeleteIdentifierRequested()
+            val state = testContext.component.state.value
+            assertIs<IdentifierDetailScreenState.Content>(state)
+            assertTrue(state.isDeleteConfirmationVisible)
+        } finally {
+            testContext.destroy()
+        }
+    }
+
+    @Test
+    fun onConfirmDelete_success_invokesOnBack() = runComponentTest {
+        var onBackCalls = 0
+        val identifier = userIdentifierPrivateMock()
         val deleteUserIdentifierUseCase = DeleteUserIdentifierUseCaseMock().apply {
             resultProvider = { AppResult.Success(Unit) }
         }
-        val context = createTestContext(
-            identifier = userIdentifierMock(),
+        val testContext = createTestContext(
+            identifier = identifier,
             deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
-            onBack = { backCalled = true }
+            onBack = { onBackCalls++ }
         )
         try {
             advanceTimeBy(100.milliseconds)
-            context.component.onDeleteIdentifierClick()
+            testContext.component.onDeleteIdentifierRequested()
+            testContext.component.onDeleteIdentifierClick()
             advanceTimeBy(100.milliseconds)
-            assertTrue(backCalled)
+            assertEquals(1, onBackCalls)
         } finally {
-            context.destroy()
+            testContext.destroy()
         }
     }
 
     @Test
-    fun onDeleteIdentifierClick_error_setsActionError() = runComponentTest {
-        val deleteUserIdentifierUseCase = DeleteUserIdentifierUseCaseMock().apply {
-            resultProvider = { AppResult.Error(CommonError.Unknown()) }
-        }
-        val context = createTestContext(
-            identifier = userIdentifierMock(),
-            deleteUserIdentifierUseCase = deleteUserIdentifierUseCase
+    fun onUserClick_invokesNavigateToUserDetail() = runComponentTest {
+        var navigatedUserId: UserId? = null
+        val identifier = userIdentifierPrivateMock()
+        val testContext = createTestContext(
+            identifier = identifier,
+            onNavigateToUserDetail = { navigatedUserId = it }
         )
         try {
             advanceTimeBy(100.milliseconds)
-            context.component.onDeleteIdentifierClick()
-            advanceTimeBy(100.milliseconds)
-            val state = assertIs<IdentifierDetailScreenState.Content>(context.component.state.value)
-            assertIs<CommonError.Unknown>(state.actionError)
+            testContext.component.onUserClick()
+            assertEquals(identifier.userId, navigatedUserId)
         } finally {
-            context.destroy()
+            testContext.destroy()
         }
     }
 
     @Test
-    fun onBackClick_callsOnBack() = runComponentTest {
-        var backCalled = false
-        val context = createTestContext(
-            identifier = userIdentifierMock(),
-            onBack = { backCalled = true }
+    fun onBackClick_invokesOnBack() = runComponentTest {
+        var onBackCalls = 0
+        val identifier = userIdentifierPrivateMock()
+        val testContext = createTestContext(
+            identifier = identifier,
+            onBack = { onBackCalls++ }
         )
         try {
             advanceTimeBy(100.milliseconds)
-            context.component.onBackClick()
-            assertTrue(backCalled)
+            testContext.component.onBackClick()
+            assertEquals(1, onBackCalls)
         } finally {
-            context.destroy()
-        }
-    }
-
-    @Test
-    fun onUserClick_whenCurrentIdentifier_navigatesToProfile() = runComponentTest {
-        var profileCalled = false
-        var userDetailCalled = false
-        val context = createTestContext(
-            identifier = userIdentifierMock(),
-            isCurrentIdentifier = true,
-            onNavigateToProfile = { profileCalled = true },
-            onNavigateToUserDetail = { userDetailCalled = true }
-        )
-        try {
-            advanceTimeBy(100.milliseconds)
-            context.component.onUserClick()
-            assertTrue(profileCalled)
-            assertTrue(!userDetailCalled)
-        } finally {
-            context.destroy()
-        }
-    }
-
-    @Test
-    fun onUserClick_whenNotCurrentIdentifier_navigatesToUserDetail() = runComponentTest {
-        var profileCalled = false
-        var userDetailCalled = false
-        val context = createTestContext(
-            identifier = userIdentifierMock(),
-            isCurrentIdentifier = false,
-            onNavigateToProfile = { profileCalled = true },
-            onNavigateToUserDetail = { userDetailCalled = true }
-        )
-        try {
-            advanceTimeBy(100.milliseconds)
-            context.component.onUserClick()
-            assertTrue(!profileCalled)
-            assertTrue(userDetailCalled)
-        } finally {
-            context.destroy()
+            testContext.destroy()
         }
     }
 }
 
+@InternalApi
 private class TestContext(
     val component: IdentifierDetailComponentImpl,
     val lifecycleRegistry: LifecycleRegistry
@@ -189,13 +164,13 @@ private class TestContext(
 
 @InternalApi
 private fun createTestContext(
-    identifier: UserIdentifier? = userIdentifierMock(),
+    identifier: UserIdentifierPrivate? = userIdentifierPrivateMock(),
     identifierId: UserIdentifierId? = identifier?.id,
     getUserIdentifierUseCase: GetUserIdentifierUseCaseMock? = null,
     deleteUserIdentifierUseCase: DeleteUserIdentifierUseCaseMock? = null,
     isCurrentIdentifier: Boolean = false,
     onNavigateToUserDetail: ((UserId) -> Unit)? = null,
-    onNavigateToProfile: (() -> Unit)? = null,
+    onNavigateToProfile: () -> Unit = {},
     onBack: () -> Unit = {}
 ): TestContext {
     val lifecycleRegistry = LifecycleRegistry()

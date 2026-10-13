@@ -1,10 +1,17 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.auth
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.router.slot.ChildSlot
+import com.arkivanov.decompose.router.slot.SlotNavigation
+import com.arkivanov.decompose.router.slot.activate
+import com.arkivanov.decompose.router.slot.childSlot
+import com.arkivanov.decompose.router.slot.dismiss
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogChild
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogConfig
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings.GetManagementAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings.ResetRemoteAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings.SaveRemoteAuthSettingsUseCase
@@ -19,6 +26,7 @@ import kotlinx.coroutines.launch
  */
 class EditAuthSettingsComponentImpl(
     componentContext: ComponentContext,
+    initialDialogConfig: SettingsDialogConfig? = null,
     private val getManagementAuthSettingsUseCase: GetManagementAuthSettingsUseCase,
     private val saveRemoteAuthSettingsUseCase: SaveRemoteAuthSettingsUseCase,
     private val resetRemoteAuthSettingsUseCase: ResetRemoteAuthSettingsUseCase,
@@ -29,8 +37,25 @@ class EditAuthSettingsComponentImpl(
     private val _state = MutableValue<EditAuthSettingsScreenState>(EditAuthSettingsScreenState.Loading)
     override val state: Value<EditAuthSettingsScreenState> = _state
 
+    override val dialogSlotNavigation = SlotNavigation<SettingsDialogConfig>()
+
+    override val dialogSlot: Value<ChildSlot<SettingsDialogConfig, SettingsDialogChild>> =
+        childSlot(
+            source = dialogSlotNavigation,
+            serializer = SettingsDialogConfig.serializer(),
+            handleBackButton = true,
+            childFactory = { config, _ ->
+                when (config) {
+                    is SettingsDialogConfig.ConfirmReset -> SettingsDialogChild.ConfirmReset
+                }
+            }
+        )
+
     init {
         loadSettings()
+        initialDialogConfig?.let {
+            dialogSlotNavigation.activate(it)
+        }
     }
 
     override fun onRetry() {
@@ -216,6 +241,11 @@ class EditAuthSettingsComponentImpl(
     }
 
     override fun onResetClick() {
+        dialogSlotNavigation.activate(SettingsDialogConfig.ConfirmReset)
+    }
+
+    override fun onConfirmReset() {
+        dialogSlotNavigation.dismiss()
         val current = _state.value as? EditAuthSettingsScreenState.Content ?: return
         scope.launch {
             _state.value = current.copy(isSaving = true, saveError = null)
@@ -229,6 +259,10 @@ class EditAuthSettingsComponentImpl(
             }
             _state.value = nextState
         }
+    }
+
+    override fun onDismissDialog() {
+        dialogSlotNavigation.dismiss()
     }
 
     override fun onBackClick() {

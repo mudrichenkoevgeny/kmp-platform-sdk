@@ -8,20 +8,26 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
+import io.github.mudrichenkoevgeny.kmp.feature.user.navigation.deeplink.ProfileDeepLinkConstants
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileDestination
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailParams
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.AddIdentifierDialogConfig
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.SelfIdentifierListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.notifyIdentifierDeleted
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailParams
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SelfSessionListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.notifySessionRevoked
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpStepConfig
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.recovery.TotpRecoveryCodesComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
@@ -134,6 +140,10 @@ class ProfileRootComponentImpl(
             childFactory = ::createChild
         )
 
+    override fun navigateTo(destination: ProfileDestination) {
+        navigation.bringToFront(destination)
+    }
+
     private fun createChild(
         config: ProfileDestination,
         context: ComponentContext
@@ -149,20 +159,25 @@ class ProfileRootComponentImpl(
                 getAuthSettingsUseCase = getAuthSettingsUseCase,
                 observeAuthSettingsUseCase = observeAuthSettingsUseCase,
                 onNavigateToLogin = onNavigateToLogin,
-                onNavigateToTotp = { navigation.bringToFront(ProfileDestination.TotpMain) },
+                onNavigateToTotp = { navigation.bringToFront(ProfileDestination.TotpMain()) },
                 onNavigateToSessions = { navigation.bringToFront(ProfileDestination.Sessions) },
-                onNavigateToIdentifiers = { navigation.bringToFront(ProfileDestination.Identifiers) }
+                onNavigateToIdentifiers = { navigation.bringToFront(ProfileDestination.Identifiers()) }
             )
         )
-        ProfileDestination.TotpMain -> ProfileRootComponent.Child.TotpMain(
+        is ProfileDestination.TotpMain -> ProfileRootComponent.Child.TotpMain(
             TotpMainComponentImpl(
                 componentContext = context,
+                initialConfig = if (config.params.token != null) {
+                    TotpStepConfig.Setup(mfaToken = config.params.token, otpAuthUrl = "", secretKey = "")
+                } else {
+                    TotpStepConfig.Status
+                },
                 userRepository = userRepository,
                 setupTotpUseCase = setupTotpUseCase,
                 enableTotpUseCase = enableTotpUseCase,
                 disableTotpUseCase = disableTotpUseCase,
                 onNavigateToRecoveryCodes = { navigation.bringToFront(ProfileDestination.TotpRecoveryCodes) },
-                onBack = navigation::pop
+                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
             )
         )
         ProfileDestination.TotpRecoveryCodes -> ProfileRootComponent.Child.TotpRecoveryCodes(
@@ -170,7 +185,7 @@ class ProfileRootComponentImpl(
                 componentContext = context,
                 getRecoveryCodesUseCase = getRecoveryCodesUseCase,
                 regenerateRecoveryCodesUseCase = regenerateRecoveryCodesUseCase,
-                onBack = navigation::pop
+                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
             )
         )
         ProfileDestination.Sessions -> ProfileRootComponent.Child.Sessions(
@@ -180,52 +195,66 @@ class ProfileRootComponentImpl(
                 deleteSessionUseCase = deleteSessionUseCase,
                 deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase,
                 onNavigateToSessionDetail = { session ->
-                    navigation.bringToFront(ProfileDestination.SessionDetail(session.id.asHexDashString()))
+                    navigation.bringToFront(ProfileDestination.SessionDetail(SessionDetailParams(session.id.asHexDashString())))
                 },
-                onBack = navigation::pop,
+                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() },
                 authStorage = authStorage
             )
         )
         is ProfileDestination.SessionDetail -> ProfileRootComponent.Child.SessionDetail(
             SessionDetailComponentImpl(
                 componentContext = context,
-                sessionId = config.sessionId,
+                params = config.params,
                 getSessionUseCase = getSessionUseCase,
                 deleteSessionUseCase = deleteSessionUseCase,
                 authStorage = authStorage,
                 onSessionRevoked = { stack.value.notifySessionRevoked(it) },
                 onNavigateToIdentifierDetail = { identifierId ->
-                    navigation.bringToFront(ProfileDestination.IdentifierDetail(identifierId.asHexDashString()))
+                    navigation.bringToFront(ProfileDestination.IdentifierDetail(IdentifierDetailParams(identifierId.asHexDashString())))
                 },
                 onNavigateToProfile = {
                     navigation.popTo(0)
                 },
-                onBack = navigation::pop
+                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
             )
         )
-        ProfileDestination.Identifiers -> ProfileRootComponent.Child.Identifiers(
-            SelfIdentifierListComponentImpl(
-                componentContext = context,
-                appType = appType,
-                getUserIdentifiersUseCase = getUserIdentifiersUseCase,
-                getAvailableUserAuthProvidersUseCase = getAvailableUserAuthProvidersUseCase,
-                sendAddEmailIdentifierConfirmationUseCase = sendAddEmailIdentifierConfirmationUseCase,
-                addUserIdentifierEmailUseCase = addUserIdentifierEmailUseCase,
-                sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase,
-                addUserIdentifierPhoneUseCase = addUserIdentifierPhoneUseCase,
-                addUserIdentifierGoogleUseCase = addUserIdentifierGoogleUseCase,
-                identifierRepository = identifierRepository,
-                authStorage = authStorage,
-                onIdentifierSelect = { identifierId ->
-                    navigation.bringToFront(ProfileDestination.IdentifierDetail(identifierId.asHexDashString()))
-                },
-                onBack = navigation::pop
+        is ProfileDestination.Identifiers -> {
+            val initialDialogConfig = when (config.params.dialog) {
+                ProfileDeepLinkConstants.Value.DIALOG_ADD -> when (config.params.step) {
+                    ProfileDeepLinkConstants.Value.STEP_EMAIL -> AddIdentifierDialogConfig.EmailInput(config.params.value ?: "")
+                    ProfileDeepLinkConstants.Value.STEP_EMAIL_CONFIRM -> AddIdentifierDialogConfig.EmailConfirm(config.params.value ?: "")
+                    ProfileDeepLinkConstants.Value.STEP_PHONE -> AddIdentifierDialogConfig.PhoneInput(config.params.value ?: "")
+                    ProfileDeepLinkConstants.Value.STEP_PHONE_CONFIRM -> AddIdentifierDialogConfig.PhoneConfirm(config.params.value ?: "")
+                    else -> AddIdentifierDialogConfig.ProviderSelection
+                }
+                else -> null
+            }
+
+            ProfileRootComponent.Child.Identifiers(
+                SelfIdentifierListComponentImpl(
+                    componentContext = context,
+                    initialDialogConfig = initialDialogConfig,
+                    appType = appType,
+                    getUserIdentifiersUseCase = getUserIdentifiersUseCase,
+                    getAvailableUserAuthProvidersUseCase = getAvailableUserAuthProvidersUseCase,
+                    sendAddEmailIdentifierConfirmationUseCase = sendAddEmailIdentifierConfirmationUseCase,
+                    addUserIdentifierEmailUseCase = addUserIdentifierEmailUseCase,
+                    sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase,
+                    addUserIdentifierPhoneUseCase = addUserIdentifierPhoneUseCase,
+                    addUserIdentifierGoogleUseCase = addUserIdentifierGoogleUseCase,
+                    identifierRepository = identifierRepository,
+                    authStorage = authStorage,
+                    onIdentifierSelect = { identifierId ->
+                        navigation.bringToFront(ProfileDestination.IdentifierDetail(IdentifierDetailParams(identifierId.asHexDashString())))
+                    },
+                    onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
+                )
             )
-        )
+        }
         is ProfileDestination.IdentifierDetail -> ProfileRootComponent.Child.IdentifierDetail(
             IdentifierDetailComponentImpl(
                 componentContext = context,
-                identifierId = config.identifierId,
+                params = config.params,
                 getUserIdentifierUseCase = getUserIdentifierUseCase,
                 deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
                 emailChangePasswordUseCase = emailChangePasswordUseCase,
@@ -234,7 +263,7 @@ class ProfileRootComponentImpl(
                 onNavigateToProfile = {
                     navigation.popTo(0)
                 },
-                onBack = navigation::pop
+                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
             )
         )
     }

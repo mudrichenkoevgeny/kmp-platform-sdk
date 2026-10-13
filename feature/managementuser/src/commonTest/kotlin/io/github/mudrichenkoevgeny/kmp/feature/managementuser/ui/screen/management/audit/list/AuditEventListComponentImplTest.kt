@@ -7,7 +7,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.repository.ManagementAuditRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit.GetAuditEventsUseCase
 import kotlinx.coroutines.test.advanceTimeBy
@@ -21,7 +21,7 @@ class AuditEventListComponentImplTest {
 
     @Test
     fun init_loadsEventsSuccessfully() = runComponentTest {
-        val event = auditEventMock()
+        val event = auditEventSummaryMock()
         val pagedResult = pagedResultMock(listOf(event))
         val repository = ManagementAuditRepositoryMock(getAuditEventsResult = AppResult.Success(pagedResult))
         val useCase = GetAuditEventsUseCase(repository)

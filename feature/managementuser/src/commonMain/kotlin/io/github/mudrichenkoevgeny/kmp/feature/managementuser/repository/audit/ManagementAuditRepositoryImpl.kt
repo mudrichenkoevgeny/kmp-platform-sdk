@@ -5,12 +5,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.audit.ManagementAuditApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.action.CompositeAuditActionTypeParser
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEvent
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventSummary
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.metadata.CompositeAuditMetadataKeyParser
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.resource.CompositeAuditResourceTypeParser
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.mapper.audit.toAuditEvent
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.mapper.audit.toAuditEventPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.mapper.audit.toAuditEventSummary
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedresult.mapItems
@@ -44,7 +46,7 @@ class ManagementAuditRepositoryImpl(
         resourceIds: List<String>?,
         statuses: List<AuditStatus>?,
         messages: List<String>?
-    ): AppResult<PagedResult<AuditEvent>> {
+    ): AppResult<PagedResult<AuditEventSummary>> {
         return managementAuditApi.getAuditEvents(
             pageNumber = pageNumber,
             pageSize = pageSize,
@@ -60,18 +62,17 @@ class ManagementAuditRepositoryImpl(
             messages = messages
         ).mapSuccess { pagedPayload ->
             pagedPayload.mapItems { payload ->
-                payload.toAuditEvent(
+                payload.toAuditEventSummary(
                     compositeActionTypeParser = compositeAuditActionTypeParser,
-                    compositeResourceTypeParser = compositeAuditResourceTypeParser,
-                    compositeMetadataKeyParser = compositeAuditMetadataKeyParser
+                    compositeResourceTypeParser = compositeAuditResourceTypeParser
                 )
             }
         }
     }
 
-    override suspend fun getAuditEvent(eventId: String): AppResult<AuditEvent> {
+    override suspend fun getAuditEvent(eventId: String): AppResult<AuditEventPrivate> {
         return managementAuditApi.getAuditEvent(eventId).mapSuccess { payload ->
-            payload.toAuditEvent(
+            payload.toAuditEventPrivate(
                 compositeActionTypeParser = compositeAuditActionTypeParser,
                 compositeResourceTypeParser = compositeAuditResourceTypeParser,
                 compositeMetadataKeyParser = compositeAuditMetadataKeyParser

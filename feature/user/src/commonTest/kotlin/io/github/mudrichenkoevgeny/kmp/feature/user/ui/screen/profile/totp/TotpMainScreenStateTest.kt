@@ -14,42 +14,19 @@ import kotlin.test.assertTrue
 class TotpMainScreenStateTest {
 
     @Test
-    fun disabled_defaultParameters_setsExpectedFlags() {
-        val state = TotpMainScreenState.Disabled()
+    fun defaultParameters_setsExpectedFlags() {
+        val state = TotpMainScreenState()
 
+        assertFalse(state.isInitialized)
+        assertFalse(state.isEnabled)
         assertFalse(state.actionLoading)
         assertNull(state.actionError)
+        assertNull(state.initError)
     }
 
     @Test
-    fun disabled_customParameters_setsExpectedValues() {
-        val error = CommonError.Unknown()
-        val state = TotpMainScreenState.Disabled(
-            actionLoading = ACTION_LOADING,
-            actionError = error
-        )
-
-        assertTrue(state.actionLoading)
-        assertEquals(error, state.actionError)
-    }
-
-    @Test
-    fun setupInProgress_defaultParameters_setsExpectedFlags() {
-        val setup = createMockTotpSetup()
-        val state = TotpMainScreenState.SetupInProgress(setup = setup)
-
-        assertEquals(setup, state.setup)
-        assertEquals(EMPTY_STRING, state.code)
-        assertFalse(state.actionLoading)
-        assertNull(state.actionError)
-        assertFalse(state.canConfirm)
-    }
-
-    @Test
-    fun setupInProgress_canConfirm_requiresCorrectLengthDigitsAndNotLoading() {
-        val setup = createMockTotpSetup()
-        val state = TotpMainScreenState.SetupInProgress(
-            setup = setup,
+    fun canConfirm_requiresCorrectLengthDigitsAndNotLoading() {
+        val state = TotpMainScreenState(
             code = VALID_CODE,
             actionLoading = NOT_LOADING
         )
@@ -58,10 +35,8 @@ class TotpMainScreenStateTest {
     }
 
     @Test
-    fun setupInProgress_canConfirm_falseWhenCodeTooShort() {
-        val setup = createMockTotpSetup()
-        val state = TotpMainScreenState.SetupInProgress(
-            setup = setup,
+    fun canConfirm_falseWhenCodeTooShort() {
+        val state = TotpMainScreenState(
             code = SHORT_CODE,
             actionLoading = NOT_LOADING
         )
@@ -70,10 +45,8 @@ class TotpMainScreenStateTest {
     }
 
     @Test
-    fun setupInProgress_canConfirm_falseWhenCodeContainsNonDigits() {
-        val setup = createMockTotpSetup()
-        val state = TotpMainScreenState.SetupInProgress(
-            setup = setup,
+    fun canConfirm_falseWhenCodeContainsNonDigits() {
+        val state = TotpMainScreenState(
             code = NON_DIGIT_CODE,
             actionLoading = NOT_LOADING
         )
@@ -82,46 +55,13 @@ class TotpMainScreenStateTest {
     }
 
     @Test
-    fun setupInProgress_canConfirm_falseWhenActionLoading() {
-        val setup = createMockTotpSetup()
-        val state = TotpMainScreenState.SetupInProgress(
-            setup = setup,
+    fun canConfirm_falseWhenActionLoading() {
+        val state = TotpMainScreenState(
             code = VALID_CODE,
             actionLoading = ACTION_LOADING
         )
 
         assertFalse(state.canConfirm)
-    }
-
-    @Test
-    fun enabled_defaultParameters_setsExpectedFlags() {
-        val state = TotpMainScreenState.Enabled()
-
-        assertFalse(state.showDisableConfirmation)
-        assertFalse(state.actionLoading)
-        assertNull(state.actionError)
-    }
-
-    @Test
-    fun enabled_customParameters_setsExpectedValues() {
-        val error = CommonError.Unknown()
-        val state = TotpMainScreenState.Enabled(
-            showDisableConfirmation = true,
-            actionLoading = ACTION_LOADING,
-            actionError = error
-        )
-
-        assertTrue(state.showDisableConfirmation)
-        assertTrue(state.actionLoading)
-        assertEquals(error, state.actionError)
-    }
-
-    @Test
-    fun error_holdsProvidedAppError() {
-        val error = CommonError.Unknown()
-        val state = TotpMainScreenState.Error(error = error)
-
-        assertEquals(error, state.error)
     }
 
     private companion object {

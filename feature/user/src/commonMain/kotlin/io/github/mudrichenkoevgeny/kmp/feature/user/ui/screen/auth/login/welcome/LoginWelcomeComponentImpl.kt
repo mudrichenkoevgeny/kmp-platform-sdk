@@ -139,7 +139,8 @@ class LoginWelcomeComponentImpl(
         scope.launch {
             loginByGoogle.execute()
                 .onSuccess { authData ->
-                    if (authData.userDetails.accountStatus == UserAccountStatus.PENDING_DELETION) {
+                    stopActionState()
+                    if (authData.userPrivate.accountStatus == UserAccountStatus.PENDING_DELETION) {
                         onNavigateToPendingDeletion()
                     } else {
                         onFinished()

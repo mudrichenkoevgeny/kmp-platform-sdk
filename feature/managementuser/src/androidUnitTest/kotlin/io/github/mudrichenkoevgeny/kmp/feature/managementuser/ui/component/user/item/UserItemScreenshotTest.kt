@@ -13,8 +13,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.captureAppScreen
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userSummaryMock
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserSummary
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -31,7 +31,7 @@ import kotlin.test.Test
 )
 class UserItemScreenshotTest(
     private val stateName: String,
-    private val user: UserDetails
+    private val user: UserSummary
 ) {
 
     @Test
@@ -61,7 +61,7 @@ class UserItemScreenshotTest(
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
         fun data(): Collection<Array<Any>> {
             return listOf(
-                arrayOf("Default", userDetailsMock())
+                arrayOf("Default", userSummaryMock())
             )
         }
     }

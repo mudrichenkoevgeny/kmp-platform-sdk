@@ -56,7 +56,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.session.SelfSessionListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_revoke_all_others
 import io.github.mudrichenkoevgeny.kmp.feature.user.sessions
@@ -232,8 +232,8 @@ private fun ErrorText(error: AppError?, testTag: String) {
 
 @InternalApi
 internal class SelfSessionListPreviewProvider : PreviewParameterProvider<SelfSessionListScreenState> {
-    private val session1 = userSessionMock()
-    private val session2 = userSessionMock()
+    private val session1 = userSessionSummaryMock()
+    private val session2 = userSessionSummaryMock()
     private val items: List<Pair<String, SelfSessionListScreenState>> = listOf(
         "Current and Other Sessions" to SelfSessionListScreenState.Content(
             paging = PaginationState(
@@ -243,17 +243,17 @@ internal class SelfSessionListPreviewProvider : PreviewParameterProvider<SelfSes
         ),
         "Multiple Sessions" to SelfSessionListScreenState.Content(
             paging = PaginationState(
-                items = listOf(userSessionMock(), userSessionMock())
+                items = listOf(userSessionSummaryMock(), userSessionSummaryMock())
             )
         ),
         "Single Session" to SelfSessionListScreenState.Content(
             paging = PaginationState(
-                items = listOf(userSessionMock())
+                items = listOf(userSessionSummaryMock())
             )
         ),
         "Action Loading" to SelfSessionListScreenState.Content(
             paging = PaginationState(
-                items = listOf(userSessionMock())
+                items = listOf(userSessionSummaryMock())
             ),
             actionLoading = true
         ),
@@ -278,7 +278,7 @@ private fun SelfSessionListScreenPreviewContent(state: SelfSessionListScreenStat
 
 @InternalApi
 private val defaultSelfSessionListPreviewState = SelfSessionListScreenState.Content(
-    paging = PaginationState(items = listOf(userSessionMock(), userSessionMock()))
+    paging = PaginationState(items = listOf(userSessionSummaryMock(), userSessionSummaryMock()))
 )
 
 @InternalApi

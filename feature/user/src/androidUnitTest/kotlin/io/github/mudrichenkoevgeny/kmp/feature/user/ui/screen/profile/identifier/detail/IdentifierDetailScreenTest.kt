@@ -10,7 +10,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.identifier.detail.IdentifierDetailComponentMock
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -25,7 +25,7 @@ class IdentifierDetailScreenTest {
 
     @Test
     fun displaysIdentifierDetails_andInvokesDelete() = runComposeUiTest {
-        val identifier = userIdentifierMock()
+        val identifier = userIdentifierPrivateMock()
         val component = IdentifierDetailComponentMock(
             initialState = IdentifierDetailScreenState.Content(
                 identifier = identifier,
@@ -53,7 +53,7 @@ class IdentifierDetailScreenTest {
 
     @Test
     fun currentIdentifier_hidesDeleteButton() = runComposeUiTest {
-        val identifier = userIdentifierMock()
+        val identifier = userIdentifierPrivateMock()
         val component = IdentifierDetailComponentMock(
             initialState = IdentifierDetailScreenState.Content(
                 identifier = identifier,
@@ -91,7 +91,7 @@ class IdentifierDetailScreenTest {
     fun backButton_invokesOnBackClick() = runComposeUiTest {
         val component = IdentifierDetailComponentMock(
             initialState = IdentifierDetailScreenState.Content(
-                identifier = userIdentifierMock(),
+                identifier = userIdentifierPrivateMock(),
                 isCurrentIdentifier = false
             )
         )

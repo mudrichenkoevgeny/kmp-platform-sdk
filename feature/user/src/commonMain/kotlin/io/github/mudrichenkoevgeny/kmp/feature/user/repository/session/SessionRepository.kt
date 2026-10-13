@@ -6,8 +6,9 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 
 /**
  * Manages active sessions linked to the current authenticated management account.
@@ -50,7 +51,7 @@ interface SessionRepository {
         deviceNames: List<String>? = null,
         appVersions: List<String>? = null,
         operationSystemVersions: List<String>? = null
-    ): AppResult<PagedResult<UserSession>>
+    ): AppResult<PagedResult<UserSessionSummary>>
 
     /**
      * Returns details of a specific session owned by the current management account.
@@ -58,7 +59,7 @@ interface SessionRepository {
      * @param userSessionId Unique session identifier.
      * @return Detailed session model or a mapped failure.
      */
-    suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSession>
+    suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivate>
 
     /**
      * Ends the current active management session on the server (sign-out for this client).

@@ -24,6 +24,7 @@ Reference host applications that demonstrate how to wire **kmp-platform-sdk** mo
     - A **splash screen** during the initialization phase.
     - `CompositionLocalProvider` for shared components (`LocalCommonComponent`, `LocalErrorParser`, `LocalClientAppComponent`).
     - Hosting for **[MainScreen]** or auth flows.
+- **Universal Deep Linking**: Implements `ClientAppDeepLinkParser` and `ClientAppDeepLinkRoute` for client application routing (`/profile/*`) with authentication guards and tab selection (`Config.Profile`). Handles Android App Links, Wasm browser history (`DefaultWebHistoryController`), Desktop URI handlers (`registerDesktopUriHandler`), and iOS URL routing.
 - **Platform Hosts**:
     - **Android**: **[AndroidApp]** initializes **[ClientAppComponent]** with `BuildConfig.BASE_URL`, **[AndroidDeviceInfoProvider]**, and **[AndroidUserAuthServices]**.
     - **Wasm**: **[main]** builds the component using **[WasmDeviceInfoProvider]** and **[WasmUserAuthServices]**, running the app in a browser viewport.

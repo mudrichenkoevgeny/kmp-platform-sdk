@@ -12,8 +12,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.se
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteAllUserSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
@@ -25,7 +25,7 @@ class UserSessionListComponentImplTest {
 
     @Test
     fun init_loadsSessionsSuccessfully() = runComponentTest {
-        val session = userSessionMock()
+        val session = userSessionSummaryMock()
         val context = createTestContext(sessions = listOf(session))
 
         advanceUntilIdle()
@@ -65,7 +65,7 @@ class UserSessionListComponentImplTest {
 
     private fun createTestContext(
         userId: UserId = UserId.generate(),
-        sessions: List<UserSession>? = null,
+        sessions: List<UserSessionSummary>? = null,
         repository: ManagementSessionRepositoryMock = ManagementSessionRepositoryMock()
     ): TestContext {
         if (sessions != null) {
@@ -82,7 +82,7 @@ class UserSessionListComponentImplTest {
 
         context.component = UserSessionListComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
-            userId = userId,
+            params = UserSessionListParams(userId.asHexDashString()),
             managementGetSessionsUseCase = useCase,
             managementDeleteSessionUseCase = deleteSessionUseCase,
             managementDeleteAllUserSessionsUseCase = deleteAllSessionsUseCase,

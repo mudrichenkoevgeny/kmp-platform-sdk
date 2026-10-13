@@ -21,16 +21,13 @@ class UserDetailComponentMock(
     var disableTotpCalls = 0
     var sessionsCalls = 0
     var identifiersCalls = 0
+    var auditEventsCalls = 0
     var retryCalls = 0
     var backCalls = 0
     var lastAuthorityLevelChanged: String? = null
     var lastAccountStatusChanged: String? = null
     var lastLockoutTypeChanged: String? = null
     var lastTemporaryLockoutUntilChanged: String? = null
-
-    fun updateState(state: UserDetailScreenState) {
-        _state.value = state
-    }
 
     override fun onAuthorityLevelChanged(value: String) {
         lastAuthorityLevelChanged = value
@@ -74,6 +71,10 @@ class UserDetailComponentMock(
 
     override fun onIdentifiersClick() {
         identifiersCalls++
+    }
+
+    override fun onAuditEventsClick() {
+        auditEventsCalls++
     }
 
     override fun onRetry() {

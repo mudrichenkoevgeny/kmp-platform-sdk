@@ -39,6 +39,7 @@ class PendingDeletionComponentImpl(
         scope.launch {
             restoreUserUseCase()
                 .onSuccess {
+                    _state.value = _state.value.copy(actionLoading = false)
                     onRestoreSuccess()
                 }
                 .onError { error ->

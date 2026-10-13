@@ -4,7 +4,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.model.event.AuditEventPayload
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.model.event.AuditEventPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.model.event.AuditEventSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
@@ -16,11 +17,19 @@ interface ManagementAuditApi {
     /**
      * Retrieves a paginated list of audit events.
      *
-     * @param pageNumber One-based page index.
-     * @param pageSize Maximum items returned per page.
-     * @param sortBy Field to sort by.
-     * @param sortOrder Sorting direction.
-     * @return Paginated result containing audit event payloads, or a failure.
+     * @param pageNumber Zero-based page index.
+     * @param pageSize Number of items per page.
+     * @param sortBy Field by which to sort results.
+     * @param sortOrder Sorting direction (ascending or descending).
+     * @param actorIds Filter by actor IDs.
+     * @param actorTypes Filter by actor types.
+     * @param actorUserRoles Filter by actor user roles.
+     * @param actions Filter by action names.
+     * @param resources Filter by resource types.
+     * @param resourceIds Filter by resource IDs.
+     * @param statuses Filter by audit statuses.
+     * @param messages Filter by message substrings.
+     * @return Paged result containing audit event summaries, or a failure.
      */
     suspend fun getAuditEvents(
         pageNumber: Int? = null,
@@ -35,7 +44,7 @@ interface ManagementAuditApi {
         resourceIds: List<String>? = null,
         statuses: List<AuditStatus>? = null,
         messages: List<String>? = null
-    ): AppResult<PagedResult<AuditEventPayload>>
+    ): AppResult<PagedResult<AuditEventSummaryPayload>>
 
     /**
      * Retrieves specific audit event details by ID.
@@ -43,5 +52,5 @@ interface ManagementAuditApi {
      * @param eventId Unique audit event identifier string.
      * @return Audit event payload, or a failure.
      */
-    suspend fun getAuditEvent(eventId: String): AppResult<AuditEventPayload>
+    suspend fun getAuditEvent(eventId: String): AppResult<AuditEventPrivatePayload>
 }

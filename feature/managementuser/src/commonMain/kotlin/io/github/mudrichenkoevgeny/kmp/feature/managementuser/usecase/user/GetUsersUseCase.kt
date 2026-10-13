@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserSummary
 
 /**
  * Returns a paginated and filtered list of users based on search criteria for administrative purposes.
@@ -32,7 +32,7 @@ class GetUsersUseCase(
      * @param authorityLevelTo Upper bound filter for authority level.
      * @param isTotpEnabled Filters users by whether TOTP second-factor authentication is active.
      * @param permissionCodes Filters users possessing specific permission codes.
-     * @return Paginated result containing user details domain models, or a mapped failure.
+     * @return Paginated result containing user summary domain models, or a mapped failure.
      */
     suspend operator fun invoke(
         pageNumber: Int? = null,
@@ -47,7 +47,7 @@ class GetUsersUseCase(
         authorityLevelTo: Int? = null,
         isTotpEnabled: Boolean? = null,
         permissionCodes: List<PermissionCode>? = null
-    ): AppResult<PagedResult<UserDetails>> {
+    ): AppResult<PagedResult<UserSummary>> {
         return managementUserRepository.getUsers(
             pageNumber = pageNumber,
             pageSize = pageSize,

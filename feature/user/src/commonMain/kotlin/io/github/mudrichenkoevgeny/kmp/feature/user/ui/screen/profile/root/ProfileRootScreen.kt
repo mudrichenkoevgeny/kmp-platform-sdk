@@ -13,7 +13,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.ProfileRootComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.MainProfileComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailScreen
@@ -47,7 +47,7 @@ fun ProfileRootScreen(component: ProfileRootComponent) {
 @Composable
 private fun ProfileRootScreenPreviewContent() {
     val mainMock = MainProfileComponentMock(
-        initialState = MainProfileScreenState.Content(user = userDetailsMock())
+        initialState = MainProfileScreenState.Content(user = userPrivateMock())
     )
     val rootMock = ProfileRootComponentMock(
         initialChild = ProfileRootComponent.Child.Main(mainMock)

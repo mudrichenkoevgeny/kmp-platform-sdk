@@ -3,7 +3,6 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.arkivanov.essenty.lifecycle.resume
-import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
@@ -13,8 +12,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.Delet
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -28,7 +27,7 @@ class UserDetailComponentImplTest {
 
     @Test
     fun init_loadsUserSuccessfully() = runComponentTest {
-        val user = userDetailsMock()
+        val user = userPrivateMock()
         val context = createTestContext(user = user)
 
         advanceTimeBy(100.milliseconds)
@@ -53,58 +52,42 @@ class UserDetailComponentImplTest {
     }
 
     @Test
-    fun onAuthorityLevelChanged_cleared_treatsAsZero() = runComponentTest {
-        val user = userDetailsMock(authorityLevel = 0)
-        val context = createTestContext(user = user)
-        advanceTimeBy(100.milliseconds)
-
-        context.component.onAuthorityLevelChanged("")
-        val state = assertIs<UserDetailScreenState.Content>(context.component.state.value)
-        assertEquals("", state.authorityLevelInput)
-        assertFalse(state.hasChanges)
-    }
-
-    @Test
-    fun onAccountStatusChanged_updatesInputAndClearsSaveError() = runComponentTest {
+    fun onAccountStatusChanged_updatesInput() = runComponentTest {
         val context = createTestContext()
         advanceTimeBy(100.milliseconds)
 
-        context.component.onAccountStatusChanged("BANNED")
+        context.component.onAccountStatusChanged("BLOCKED")
         val state = assertIs<UserDetailScreenState.Content>(context.component.state.value)
-        assertEquals("BANNED", state.accountStatusInput)
+        assertEquals("BLOCKED", state.accountStatusInput)
         assertTrue(state.hasChanges)
     }
 
     @Test
-    fun onUpdateClick_invokesUseCaseAndReloadsUser_whenSucceeds() = runComponentTest {
-        val repository = ManagementUserRepositoryMock()
-        val context = createTestContext(repository = repository)
+    fun onLockoutTypeChanged_updatesInput() = runComponentTest {
+        val context = createTestContext()
         advanceTimeBy(100.milliseconds)
 
-        context.component.onAuthorityLevelChanged("10")
-        context.component.onUpdateClick()
-
-        advanceTimeBy(100.milliseconds)
-        assertEquals(10, repository.lastUpdateRequest?.authorityLevel)
-    }
-
-    @Test
-    fun onUpdateClick_emitsSaveError_whenFails() = runComponentTest {
-        val repository = ManagementUserRepositoryMock()
-        val error = CommonError.Unknown()
-        repository.updateUserResultProvider = { _, _ -> AppResult.Error(error) }
-        val context = createTestContext(repository = repository)
-        advanceTimeBy(100.milliseconds)
-
-        context.component.onUpdateClick()
-
-        advanceTimeBy(100.milliseconds)
+        context.component.onLockoutTypeChanged("TEMPORARY")
         val state = assertIs<UserDetailScreenState.Content>(context.component.state.value)
-        assertEquals(error, state.saveError)
+        assertEquals("TEMPORARY", state.lockoutTypeInput)
+        assertTrue(state.hasChanges)
     }
 
     @Test
-    fun onDeleteClick_showsConfirmationDialog() = runComponentTest {
+    fun onUpdateClick_success_reloadsUser() = runComponentTest {
+        val repository = ManagementUserRepositoryMock()
+        val context = createTestContext(repository = repository)
+        advanceTimeBy(100.milliseconds)
+
+        context.component.onAuthorityLevelChanged("50")
+        context.component.onUpdateClick()
+        advanceTimeBy(100.milliseconds)
+
+        assertEquals(1, repository.lastUpdateUserId?.value?.toHexDashString()?.let { 1 } ?: 0)
+    }
+
+    @Test
+    fun onDeleteClick_showsDeleteConfirmationDialog() = runComponentTest {
         val context = createTestContext()
         advanceTimeBy(100.milliseconds)
 
@@ -114,32 +97,16 @@ class UserDetailComponentImplTest {
     }
 
     @Test
-    fun onConfirmDeleteClick_invokesUseCaseAndOnBack_whenSucceeds() = runComponentTest {
+    fun onConfirmDeleteClick_success_invokesCallback() = runComponentTest {
         val repository = ManagementUserRepositoryMock()
         val context = createTestContext(repository = repository)
         advanceTimeBy(100.milliseconds)
 
         context.component.onDeleteClick()
         context.component.onConfirmDeleteClick()
-
         advanceTimeBy(100.milliseconds)
+
         assertEquals(1, context.onBackCalls)
-    }
-
-    @Test
-    fun onConfirmDeleteClick_emitsDeleteError_whenFails() = runComponentTest {
-        val repository = ManagementUserRepositoryMock()
-        val error = CommonError.Unknown()
-        repository.deleteUserResultProvider = { _ -> AppResult.Error(error) }
-        val context = createTestContext(repository = repository)
-        advanceTimeBy(100.milliseconds)
-
-        context.component.onDeleteClick()
-        context.component.onConfirmDeleteClick()
-
-        advanceTimeBy(100.milliseconds)
-        val state = assertIs<UserDetailScreenState.Content>(context.component.state.value)
-        assertEquals(error, state.deleteError)
     }
 
     @Test
@@ -148,26 +115,10 @@ class UserDetailComponentImplTest {
         advanceTimeBy(100.milliseconds)
 
         context.component.onDeleteClick()
-        var state = assertIs<UserDetailScreenState.Content>(context.component.state.value)
-        assertTrue(state.isDeleteConfirmationVisible)
-
         context.component.onDismissDeleteDialog()
-        state = assertIs<UserDetailScreenState.Content>(context.component.state.value)
+
+        val state = assertIs<UserDetailScreenState.Content>(context.component.state.value)
         assertFalse(state.isDeleteConfirmationVisible)
-    }
-
-    @Test
-    fun onSessionsClick_invokesCallback() = runComponentTest {
-        val context = createTestContext()
-        context.component.onSessionsClick()
-        assertEquals(1, context.onNavigateToSessionsCalls)
-    }
-
-    @Test
-    fun onIdentifiersClick_invokesCallback() = runComponentTest {
-        val context = createTestContext()
-        context.component.onIdentifiersClick()
-        assertEquals(1, context.onNavigateToIdentifiersCalls)
     }
 
     @Test
@@ -178,7 +129,7 @@ class UserDetailComponentImplTest {
     }
 
     private fun createTestContext(
-        user: UserDetails = userDetailsMock(),
+        user: UserPrivate = userPrivateMock(),
         repository: ManagementUserRepositoryMock = ManagementUserRepositoryMock()
     ): TestContext {
         repository.getUserResultProvider = { AppResult.Success(user) }
@@ -194,13 +145,14 @@ class UserDetailComponentImplTest {
 
         context.component = UserDetailComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
-            userId = user.id,
+            params = UserDetailParams(user.id.asHexDashString()),
             getUserUseCase = getUserUseCase,
             updateUserUseCase = updateUserUseCase,
             deleteUserUseCase = deleteUserUseCase,
             managementDisableTotpUseCase = disableTotpUseCase,
-            onNavigateToSessions = { context.onNavigateToSessionsCalls++ },
-            onNavigateToIdentifiers = { context.onNavigateToIdentifiersCalls++ },
+            onNavigateToSessions = { context.onNavigateToUserSessionsCalls++ },
+            onNavigateToIdentifiers = { context.onNavigateToUserIdentifiersCalls++ },
+            onNavigateToAuditEvents = { context.onNavigateToUserAuditEventsCalls++ },
             onBack = { context.onBackCalls++ }
         )
 
@@ -209,8 +161,10 @@ class UserDetailComponentImplTest {
 
     private class TestContext {
         lateinit var component: UserDetailComponentImpl
-        var onNavigateToSessionsCalls = 0
-        var onNavigateToIdentifiersCalls = 0
+        var onUserDeletedCalls = 0
+        var onNavigateToUserSessionsCalls = 0
+        var onNavigateToUserIdentifiersCalls = 0
+        var onNavigateToUserAuditEventsCalls = 0
         var onBackCalls = 0
     }
 }

@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.audit.ManagementAuditRepository
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEvent
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventPrivate
 
 /**
  * Retrieves full details of a specific audit event.
@@ -16,7 +16,7 @@ class GetAuditEventUseCase(
      * @param eventId Unique audit event identifier string.
      * @return Detailed audit event model, or a failure.
      */
-    suspend operator fun invoke(eventId: String): AppResult<AuditEvent> {
+    suspend operator fun invoke(eventId: String): AppResult<AuditEventPrivate> {
         return managementAuditRepository.getAuditEvent(eventId)
     }
 }

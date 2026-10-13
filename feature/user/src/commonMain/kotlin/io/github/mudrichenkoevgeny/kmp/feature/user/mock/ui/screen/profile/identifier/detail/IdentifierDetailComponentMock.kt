@@ -3,14 +3,14 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.iden
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailScreenState
 
 @InternalApi
 class IdentifierDetailComponentMock(
     initialState: IdentifierDetailScreenState = IdentifierDetailScreenState.Content(
-        identifier = userIdentifierMock(),
+        identifier = userIdentifierPrivateMock(),
         isCurrentIdentifier = false,
         canChangePassword = true,
         canDeletePassword = false

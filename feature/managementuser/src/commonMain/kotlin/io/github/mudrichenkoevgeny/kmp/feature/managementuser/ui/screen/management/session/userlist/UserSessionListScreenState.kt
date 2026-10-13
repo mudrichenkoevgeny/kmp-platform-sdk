@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 
 /**
  * UI state for a specific user's active sessions management screen.
@@ -23,7 +23,7 @@ sealed interface UserSessionListScreenState {
      * @param actionError error from the last revocation attempt.
      */
     data class Content(
-        val paging: PaginationState<UserSession>,
+        val paging: PaginationState<UserSessionSummary>,
         val actionLoading: Boolean = false,
         val actionError: AppError? = null
     ) : UserSessionListScreenState

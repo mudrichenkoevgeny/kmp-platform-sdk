@@ -29,7 +29,7 @@ With a Version Catalog (`gradle/libs.versions.toml`), declare the BOM and module
 
 Published artifacts (versions aligned via the BOM):
 
-- **core-common** — Foundation for all modules: Ktor HTTP client bootstrap, WebSocket lifecycle management, `EncryptedSettings` abstraction, platform metadata, error modeling, Chain of Responsibility error parser, and listing/pagination infrastructure ([module README](core/common/README.md)).
+- **core-common** — Foundation for all modules: Ktor HTTP client bootstrap, WebSocket lifecycle management, `EncryptedSettings` abstraction, platform metadata, error modeling, Chain of Responsibility error parser, listing/pagination infrastructure, and deep link navigation contracts (`DeepLinkParser` / `UrlFormatter`) ([module README](core/common/README.md)).
 - **core-settings** — Global application settings management, REST API client, encrypted caching, and reactive WebSocket updates ([module README](core/settings/README.md)).
 - **core-security** — Password policy validation, MFA state management, Ktor API client, encrypted storage, and localized security error parsing ([module README](core/security/README.md)).
 - **feature-user** — Foundational identity & auth domain logic: core models, use cases, token storage (`AuthStorage`), session auto-refresh, TOTP 2FA, session management, identifier linking, and account deletion ([module README](feature/user/README.md)).
@@ -39,7 +39,7 @@ Published artifacts (versions aligned via the BOM):
 
 ## Documentation & Architecture
 
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** — High-level architecture, module dependency graph, domain models (`AppType`, `UserRole`, `UserAccountStatus` state machine, `UserSession`), and detailed sequence diagrams for runtime flows (SDK bootstrap, token refresh, error parsing, WebSockets, TOTP/security, account management).
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** — High-level architecture, module dependency graph, domain models (`AppType`, `UserRole`, `UserAccountStatus` state machine, `UserSession`), universal deep linking architecture, `*Params` screen arguments, and detailed sequence diagrams for runtime flows (SDK bootstrap, token refresh, error parsing, WebSockets, TOTP/security, account management).
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** — Build environment configurations, dependency analysis, Roborazzi screenshot testing, and Maven Central publishing guidelines.
 - **[AGENTS.MD](AGENTS.MD)** — Project standards, module boundaries, coding style, and architectural rules for contributors and AI coding assistants.
 

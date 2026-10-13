@@ -39,9 +39,7 @@ class LoginByPhoneScreenScreenshotTest(
             }
         }
 
-        if ((state is LoginByPhoneScreenState.PhoneInput && state.actionLoading) ||
-            (state is LoginByPhoneScreenState.CodeInput && state.actionLoading)
-        ) {
+        if (state.actionLoading) {
             mainClock.autoAdvance = false
             mainClock.advanceTimeBy(FullscreenLoadingConfig.DELAY_MILLIS + 50L)
         }

@@ -8,7 +8,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 
 /**
  * Administrative retrieval of user sessions based on filters.
@@ -56,7 +56,7 @@ class ManagementGetSessionsUseCase(
         deviceNames: List<String>? = null,
         appVersions: List<String>? = null,
         operationSystemVersions: List<String>? = null
-    ): AppResult<PagedResult<UserSession>> {
+    ): AppResult<PagedResult<UserSessionSummary>> {
         return managementSessionRepository.getSessions(
             pageNumber = pageNumber,
             pageSize = pageSize,

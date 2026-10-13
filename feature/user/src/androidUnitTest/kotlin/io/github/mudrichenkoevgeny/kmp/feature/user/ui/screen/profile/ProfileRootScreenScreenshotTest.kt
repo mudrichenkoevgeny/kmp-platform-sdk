@@ -8,7 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.captureAppScreen
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.ProfileRootComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.MainProfileComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileScreenState
@@ -33,7 +33,7 @@ class ProfileRootScreenScreenshotTest {
     @Test
     fun capture() = runComposeUiTest {
         val mainMock = MainProfileComponentMock(
-            initialState = MainProfileScreenState.Content(user = userDetailsMock())
+            initialState = MainProfileScreenState.Content(user = userPrivateMock())
         )
         val component = ProfileRootComponentMock(
             initialChild = ProfileRootComponent.Child.Main(mainMock)

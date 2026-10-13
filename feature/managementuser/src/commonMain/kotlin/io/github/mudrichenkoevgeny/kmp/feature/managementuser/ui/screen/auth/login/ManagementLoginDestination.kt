@@ -1,6 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login
 
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpParams
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.AccountUnlockParams
 import kotlinx.serialization.Serializable
 
 /**
@@ -20,14 +21,17 @@ sealed interface ManagementLoginDestination {
     @Serializable object ResetEmailPassword : ManagementLoginDestination
 
     /** MFA/TOTP verification after successful initial login. */
-    @Serializable data class LoginByTotp(val mfaToken: String) : ManagementLoginDestination
+    @Serializable data class LoginByTotp(
+        val params: LoginByTotpParams
+    ) : ManagementLoginDestination {
+        val mfaToken: String get() = params.mfaToken
+    }
 
     /** Intercepts logins for accounts scheduled for deletion. */
     @Serializable object PendingDeletion : ManagementLoginDestination
 
     /** Intercepts logins for locked accounts. */
     @Serializable data class AccountUnlock(
-        val lockoutType: AccountLockoutType? = null,
-        val lockoutUntil: Long? = null
+        val params: AccountUnlockParams = AccountUnlockParams()
     ) : ManagementLoginDestination
 }

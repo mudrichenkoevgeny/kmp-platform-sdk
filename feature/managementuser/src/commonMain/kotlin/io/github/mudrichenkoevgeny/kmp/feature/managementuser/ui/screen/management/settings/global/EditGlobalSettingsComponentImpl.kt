@@ -1,10 +1,17 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.global
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.router.slot.ChildSlot
+import com.arkivanov.decompose.router.slot.SlotNavigation
+import com.arkivanov.decompose.router.slot.activate
+import com.arkivanov.decompose.router.slot.childSlot
+import com.arkivanov.decompose.router.slot.dismiss
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogChild
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogConfig
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.GetManagementGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.ResetRemoteGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.SaveRemoteGlobalSettingsUseCase
@@ -17,6 +24,7 @@ import kotlinx.coroutines.launch
  */
 class EditGlobalSettingsComponentImpl(
     componentContext: ComponentContext,
+    initialDialogConfig: SettingsDialogConfig? = null,
     private val getManagementGlobalSettingsUseCase: GetManagementGlobalSettingsUseCase,
     private val saveRemoteGlobalSettingsUseCase: SaveRemoteGlobalSettingsUseCase,
     private val resetRemoteGlobalSettingsUseCase: ResetRemoteGlobalSettingsUseCase,
@@ -27,8 +35,25 @@ class EditGlobalSettingsComponentImpl(
     private val _state = MutableValue<EditGlobalSettingsScreenState>(EditGlobalSettingsScreenState.Loading)
     override val state: Value<EditGlobalSettingsScreenState> = _state
 
+    override val dialogSlotNavigation = SlotNavigation<SettingsDialogConfig>()
+
+    override val dialogSlot: Value<ChildSlot<SettingsDialogConfig, SettingsDialogChild>> =
+        childSlot(
+            source = dialogSlotNavigation,
+            serializer = SettingsDialogConfig.serializer(),
+            handleBackButton = true,
+            childFactory = { config, _ ->
+                when (config) {
+                    is SettingsDialogConfig.ConfirmReset -> SettingsDialogChild.ConfirmReset
+                }
+            }
+        )
+
     init {
         loadSettings()
+        initialDialogConfig?.let {
+            dialogSlotNavigation.activate(it)
+        }
     }
 
     override fun onRetry() {
@@ -141,6 +166,11 @@ class EditGlobalSettingsComponentImpl(
     }
 
     override fun onResetClick() {
+        dialogSlotNavigation.activate(SettingsDialogConfig.ConfirmReset)
+    }
+
+    override fun onConfirmReset() {
+        dialogSlotNavigation.dismiss()
         val current = _state.value as? EditGlobalSettingsScreenState.Content ?: return
         scope.launch {
             _state.value = current.copy(isSaving = true, saveError = null)
@@ -154,6 +184,10 @@ class EditGlobalSettingsComponentImpl(
             }
             _state.value = nextState
         }
+    }
+
+    override fun onDismissDialog() {
+        dialogSlotNavigation.dismiss()
     }
 
     override fun onBackClick() {

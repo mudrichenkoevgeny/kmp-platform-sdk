@@ -9,7 +9,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserDetailsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.create.CreateByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
 
@@ -22,7 +23,7 @@ interface ManagementUserApi {
      * @param request Payload details for creating an account via email.
      * @return Detailed information of the newly created user, or a mapped failure.
      */
-    suspend fun createUser(request: CreateByEmailRequest): AppResult<UserDetailsPayload>
+    suspend fun createUser(request: CreateByEmailRequest): AppResult<UserPrivatePayload>
 
     /**
      * Returns a paginated and filtered list of users based on search criteria.
@@ -54,7 +55,7 @@ interface ManagementUserApi {
         authorityLevelTo: Int? = null,
         isTotpEnabled: Boolean? = null,
         permissionCodes: List<PermissionCode>? = null
-    ): AppResult<PagedResult<UserDetailsPayload>>
+    ): AppResult<PagedResult<UserSummaryPayload>>
 
     /**
      * Retrieves full management-level details of a specific user.
@@ -62,7 +63,7 @@ interface ManagementUserApi {
      * @param userId Unique account identifier.
      * @return Detailed profile information of the target user, or a mapped failure.
      */
-    suspend fun getUser(userId: UserId): AppResult<UserDetailsPayload>
+    suspend fun getUser(userId: UserId): AppResult<UserPrivatePayload>
 
     /**
      * Updates profile details, status, or permissions for a specific user.

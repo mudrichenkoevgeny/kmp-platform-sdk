@@ -35,9 +35,9 @@ class RegistrationByEmailComponentImplTest {
         try {
             context.component.onEmailChanged(INVALID_EMAIL)
             advanceUntilIdle()
-            val emailState = assertIs<RegistrationByEmailScreenState.EmailInput>(context.component.state.value)
-            assertFalse(emailState.isEmailValid)
-            assertEquals(INVALID_EMAIL, emailState.email)
+            val state = context.component.state.value
+            assertFalse(state.isEmailValid)
+            assertEquals(INVALID_EMAIL, state.email)
         } finally {
             context.destroy()
         }
@@ -52,9 +52,10 @@ class RegistrationByEmailComponentImplTest {
         try {
             context.component.onEmailChanged(VALID_EMAIL)
             advanceTimeBy(100.milliseconds)
-            val reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
-            assertEquals(VALID_EMAIL, reg.email)
-            assertEquals(REMAINING_DELAY_SECONDS, reg.resendTimerSeconds)
+            val state = context.component.state.value
+            assertEquals(VALID_EMAIL, state.email)
+            assertEquals(REMAINING_DELAY_SECONDS, state.resendTimerSeconds)
+            assertIs<RegistrationByEmailComponent.Child.ConfirmInput>(context.component.stack.value.active.instance)
         } finally {
             context.destroy()
         }
@@ -70,9 +71,10 @@ class RegistrationByEmailComponentImplTest {
             context.component.onEmailChanged(VALID_EMAIL)
             context.component.onSendCodeClick()
             advanceTimeBy(100.milliseconds)
-            val reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
-            assertEquals(VALID_EMAIL, reg.email)
-            assertEquals(RETRY_AFTER_SEND_SUCCESS, reg.resendTimerSeconds)
+            val state = context.component.state.value
+            assertEquals(VALID_EMAIL, state.email)
+            assertEquals(RETRY_AFTER_SEND_SUCCESS, state.resendTimerSeconds)
+            assertIs<RegistrationByEmailComponent.Child.ConfirmInput>(context.component.stack.value.active.instance)
         } finally {
             context.destroy()
         }
@@ -88,8 +90,9 @@ class RegistrationByEmailComponentImplTest {
             context.component.onEmailChanged(VALID_EMAIL)
             context.component.onSendCodeClick()
             advanceTimeBy(100.milliseconds)
-            val reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
-            assertEquals(RETRY_AFTER_RATE_LIMIT, reg.resendTimerSeconds)
+            val state = context.component.state.value
+            assertEquals(RETRY_AFTER_RATE_LIMIT, state.resendTimerSeconds)
+            assertIs<RegistrationByEmailComponent.Child.ConfirmInput>(context.component.stack.value.active.instance)
         } finally {
             context.destroy()
         }
@@ -105,8 +108,9 @@ class RegistrationByEmailComponentImplTest {
             context.component.onEmailChanged(VALID_EMAIL)
             context.component.onSendCodeClick()
             advanceUntilIdle()
-            val emailState = assertIs<RegistrationByEmailScreenState.EmailInput>(context.component.state.value)
-            assertIs<CommonError.Unknown>(emailState.actionError)
+            val state = context.component.state.value
+            assertIs<CommonError.Unknown>(state.actionError)
+            assertIs<RegistrationByEmailComponent.Child.EmailInput>(context.component.stack.value.active.instance)
         } finally {
             context.destroy()
         }
@@ -120,18 +124,18 @@ class RegistrationByEmailComponentImplTest {
             context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
             context.component.onSendCodeClick()
             advanceUntilIdle()
-            
+
             context.validatePasswordUseCase.resultProvider = { AppResult.Error(SecurityError.PasswordTooShort()) }
             context.component.onPasswordChanged(SHORT_PASSWORD)
             advanceUntilIdle()
-            var reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
-            assertFalse(reg.isPasswordValid)
-            
+            var state = context.component.state.value
+            assertFalse(state.isPasswordValid)
+
             context.validatePasswordUseCase.resultProvider = { AppResult.Success(Unit) }
             context.component.onPasswordChanged(VALID_PASSWORD)
             advanceUntilIdle()
-            reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
-            assertTrue(reg.isPasswordValid)
+            state = context.component.state.value
+            assertTrue(state.isPasswordValid)
         } finally {
             context.destroy()
         }
@@ -176,8 +180,8 @@ class RegistrationByEmailComponentImplTest {
             advanceUntilIdle()
             context.component.onRegisterClick()
             advanceUntilIdle()
-            val reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
-            assertIs<CommonError.Unknown>(reg.actionError)
+            val state = context.component.state.value
+            assertIs<CommonError.Unknown>(state.actionError)
         } finally {
             context.destroy()
         }
@@ -193,8 +197,9 @@ class RegistrationByEmailComponentImplTest {
             advanceUntilIdle()
             context.component.onBackClick()
             advanceUntilIdle()
-            val emailState = assertIs<RegistrationByEmailScreenState.EmailInput>(context.component.state.value)
-            assertEquals(VALID_EMAIL, emailState.email)
+            val state = context.component.state.value
+            assertEquals(VALID_EMAIL, state.email)
+            assertIs<RegistrationByEmailComponent.Child.EmailInput>(context.component.stack.value.active.instance)
         } finally {
             context.destroy()
         }
@@ -221,11 +226,11 @@ class RegistrationByEmailComponentImplTest {
             context.component.onSendCodeClick()
             advanceUntilIdle()
             context.component.onTogglePasswordVisibility()
-            var reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
-            assertTrue(reg.isPasswordVisible)
+            var state = context.component.state.value
+            assertTrue(state.isPasswordVisible)
             context.component.onTogglePasswordVisibility()
-            reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
-            assertFalse(reg.isPasswordVisible)
+            state = context.component.state.value
+            assertFalse(state.isPasswordVisible)
         } finally {
             context.destroy()
         }
@@ -241,8 +246,8 @@ class RegistrationByEmailComponentImplTest {
             advanceUntilIdle()
             context.component.onCodeChanged(FULL_CODE)
             context.component.onCodeChanged(TOO_LONG_CODE)
-            val reg = assertIs<RegistrationByEmailScreenState.RegistrationInput>(context.component.state.value)
-            assertEquals(FULL_CODE, reg.code)
+            val state = context.component.state.value
+            assertEquals(FULL_CODE, state.code)
         } finally {
             context.destroy()
         }
@@ -256,7 +261,7 @@ class RegistrationByEmailComponentImplTest {
     ): RegistrationByEmailComponentTestContext {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
-        
+
         val context = RegistrationByEmailComponentTestContext(
             lifecycle = lifecycle,
             sendRegistrationConfirmationToEmailUseCase = sendRegistrationConfirmationToEmailUseCase,
@@ -273,7 +278,7 @@ class RegistrationByEmailComponentImplTest {
             onBack = { context.onBackCalls++ },
             onFinished = { context.onFinishedCalls++ }
         )
-        
+
         return context
     }
 

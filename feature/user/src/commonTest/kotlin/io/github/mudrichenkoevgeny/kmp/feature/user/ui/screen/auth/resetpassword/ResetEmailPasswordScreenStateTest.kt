@@ -9,14 +9,14 @@ class ResetEmailPasswordScreenStateTest {
     @Test
     fun resetInput_isCodeFullLength_respectsCodeLength() {
         assertTrue(
-            ResetEmailPasswordScreenState.ResetInput(
+            ResetEmailPasswordScreenState(
                 email = EMAIL,
                 code = CODE_SIX_CHARS,
                 codeLength = CODE_LENGTH_SIX
             ).isCodeFullLength
         )
         assertFalse(
-            ResetEmailPasswordScreenState.ResetInput(
+            ResetEmailPasswordScreenState(
                 email = EMAIL,
                 code = CODE_FIVE_CHARS,
                 codeLength = CODE_LENGTH_SIX
@@ -27,7 +27,7 @@ class ResetEmailPasswordScreenStateTest {
     @Test
     fun resetInput_canConfirm_requiresFullCodeValidPasswordAndNotLoading() {
         assertTrue(
-            ResetEmailPasswordScreenState.ResetInput(
+            ResetEmailPasswordScreenState(
                 email = EMAIL,
                 code = CODE_SIX_CHARS,
                 newPassword = NEW_PASSWORD,
@@ -40,7 +40,7 @@ class ResetEmailPasswordScreenStateTest {
     @Test
     fun resetInput_canConfirm_falseWhenCodeIncomplete() {
         assertFalse(
-            ResetEmailPasswordScreenState.ResetInput(
+            ResetEmailPasswordScreenState(
                 email = EMAIL,
                 code = CODE_TWO_CHARS,
                 isPasswordValid = PASSWORD_VALID,
@@ -52,7 +52,7 @@ class ResetEmailPasswordScreenStateTest {
     @Test
     fun resetInput_canConfirm_falseWhenPasswordInvalid() {
         assertFalse(
-            ResetEmailPasswordScreenState.ResetInput(
+            ResetEmailPasswordScreenState(
                 email = EMAIL,
                 code = CODE_SIX_CHARS,
                 isPasswordValid = PASSWORD_INVALID,
@@ -64,7 +64,7 @@ class ResetEmailPasswordScreenStateTest {
     @Test
     fun resetInput_canConfirm_falseWhenLoading() {
         assertFalse(
-            ResetEmailPasswordScreenState.ResetInput(
+            ResetEmailPasswordScreenState(
                 email = EMAIL,
                 code = CODE_SIX_CHARS,
                 isPasswordValid = PASSWORD_VALID,
@@ -76,21 +76,21 @@ class ResetEmailPasswordScreenStateTest {
     @Test
     fun resetInput_canResendCode_whenTimerZeroAndNotLoading() {
         assertTrue(
-            ResetEmailPasswordScreenState.ResetInput(
+            ResetEmailPasswordScreenState(
                 email = EMAIL,
                 resendTimerSeconds = RESEND_TIMER_READY,
                 actionLoading = NOT_LOADING
             ).canResendCode
         )
         assertFalse(
-            ResetEmailPasswordScreenState.ResetInput(
+            ResetEmailPasswordScreenState(
                 email = EMAIL,
                 resendTimerSeconds = RESEND_TIMER_BLOCKING,
                 actionLoading = NOT_LOADING
             ).canResendCode
         )
         assertFalse(
-            ResetEmailPasswordScreenState.ResetInput(
+            ResetEmailPasswordScreenState(
                 email = EMAIL,
                 resendTimerSeconds = RESEND_TIMER_READY,
                 actionLoading = LOADING

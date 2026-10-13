@@ -5,12 +5,13 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import com.arkivanov.decompose.router.slot.activate
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.identifier.SelfIdentifierListComponentMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.AvailableAuthProviders
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
@@ -27,7 +28,7 @@ class SelfIdentifierListScreenTest {
 
     @Test
     fun displaysIdentifiers_andInvokesActions() = runComposeUiTest {
-        val identifier = userIdentifierMock()
+        val identifier = userIdentifierSummaryMock()
         val component = SelfIdentifierListComponentMock(
             initialState = SelfIdentifierListScreenState.Content(
                 paging = PaginationState(items = listOf(identifier))
@@ -94,7 +95,6 @@ class SelfIdentifierListScreenTest {
         val component = SelfIdentifierListComponentMock(
             initialState = SelfIdentifierListScreenState.Content(
                 paging = PaginationState(),
-                addIdentifierDialogState = AddIdentifierDialogState.ProviderSelection,
                 isAddIdentifierSupported = true,
                 availableAuthProviders = AvailableAuthProviders(
                     primary = listOf(UserAuthProvider.EMAIL),
@@ -102,6 +102,7 @@ class SelfIdentifierListScreenTest {
                 )
             )
         )
+        component.setDialog(AddIdentifierDialogConfig.ProviderSelection)
         setContent {
             ComponentTestHarness {
                 SelfIdentifierListScreen(component)

@@ -7,9 +7,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.repository.ManagementAuditRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit.GetAuditEventUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.UserRepositoryMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
@@ -24,9 +25,11 @@ import kotlin.time.Duration.Companion.milliseconds
 @InternalApi
 class AuditEventDetailComponentImplTest {
 
+    private val userRepository = UserRepositoryMock()
+
     @Test
     fun init_loadsEventSuccessfully() = runComponentTest {
-        val event = auditEventMock()
+        val event = auditEventPrivateMock()
         val repository = ManagementAuditRepositoryMock(getAuditEventResult = AppResult.Success(event))
         val useCase = GetAuditEventUseCase(repository)
 
@@ -36,141 +39,171 @@ class AuditEventDetailComponentImplTest {
 
         val component = AuditEventDetailComponentImpl(
             componentContext = componentContext,
-            eventId = event.id,
+            params = AuditEventDetailParams(event.id.asHexDashString()),
+            userRepository = userRepository,
             getAuditEventUseCase = useCase,
+            onNavigateToUserDetail = {},
+            onNavigateToSessionDetail = {},
+            onNavigateToProfile = {},
             onBack = {}
         )
 
         advanceTimeBy(100.milliseconds)
+
         val state = assertIs<AuditEventDetailScreenState.Content>(component.state.value)
         assertEquals(event, state.event)
     }
 
     @Test
     fun init_emitsErrorState_whenUseCaseFails() = runComponentTest {
-        val repository = ManagementAuditRepositoryMock(getAuditEventResult = AppResult.Error(CommonError.Unknown()))
+        val error = CommonError.Unknown()
+        val repository = ManagementAuditRepositoryMock(getAuditEventResult = AppResult.Error(error))
         val useCase = GetAuditEventUseCase(repository)
 
         val lifecycle = LifecycleRegistry()
         val componentContext = DefaultComponentContext(lifecycle)
         lifecycle.resume()
 
+        val eventId = AuditEventId.generate()
         val component = AuditEventDetailComponentImpl(
             componentContext = componentContext,
-            eventId = AuditEventId.generate(),
+            params = AuditEventDetailParams(eventId.asHexDashString()),
+            userRepository = userRepository,
             getAuditEventUseCase = useCase,
+            onNavigateToUserDetail = {},
+            onNavigateToSessionDetail = {},
+            onNavigateToProfile = {},
             onBack = {}
         )
 
         advanceTimeBy(100.milliseconds)
-        assertIs<AuditEventDetailScreenState.Error>(component.state.value)
+
+        val state = assertIs<AuditEventDetailScreenState.Error>(component.state.value)
+        assertEquals(error, state.error)
     }
 
     @Test
-    fun onBackClick_invokesOnBackCallback() = runComponentTest {
-        val repository = ManagementAuditRepositoryMock(getAuditEventResult = AppResult.Error(CommonError.Unknown()))
+    fun onSubjectClick_whenSubjectIsUser_invokesNavigateToUserDetail() = runComponentTest {
+        val userId = UserId.generate()
+        val event = auditEventPrivateMock(
+            actorType = AuditActorType.USER,
+            actorId = userId.value.toHexDashString()
+        )
+        val repository = ManagementAuditRepositoryMock(getAuditEventResult = AppResult.Success(event))
         val useCase = GetAuditEventUseCase(repository)
 
+        var navigatedUserId: UserId? = null
         val lifecycle = LifecycleRegistry()
         val componentContext = DefaultComponentContext(lifecycle)
         lifecycle.resume()
 
-        var backClicked = false
         val component = AuditEventDetailComponentImpl(
             componentContext = componentContext,
-            eventId = AuditEventId.generate(),
+            params = AuditEventDetailParams(event.id.asHexDashString()),
+            userRepository = userRepository,
             getAuditEventUseCase = useCase,
-            onBack = { backClicked = true }
+            onNavigateToUserDetail = { navigatedUserId = it },
+            onNavigateToSessionDetail = {},
+            onNavigateToProfile = {},
+            onBack = {}
+        )
+
+        advanceTimeBy(100.milliseconds)
+
+        component.onSubjectClick()
+
+        assertEquals(userId, navigatedUserId)
+    }
+
+    @Test
+    fun onResourceClick_whenResourceIsUser_invokesNavigateToUserDetail() = runComponentTest {
+        val userId = UserId.generate()
+        val event = auditEventPrivateMock(
+            resource = UserAuditResourceType.USER,
+            resourceId = userId.value.toHexDashString()
+        )
+        val repository = ManagementAuditRepositoryMock(getAuditEventResult = AppResult.Success(event))
+        val useCase = GetAuditEventUseCase(repository)
+
+        var navigatedUserId: UserId? = null
+        val lifecycle = LifecycleRegistry()
+        val componentContext = DefaultComponentContext(lifecycle)
+        lifecycle.resume()
+
+        val component = AuditEventDetailComponentImpl(
+            componentContext = componentContext,
+            params = AuditEventDetailParams(event.id.asHexDashString()),
+            userRepository = userRepository,
+            getAuditEventUseCase = useCase,
+            onNavigateToUserDetail = { navigatedUserId = it },
+            onNavigateToSessionDetail = {},
+            onNavigateToProfile = {},
+            onBack = {}
+        )
+
+        advanceTimeBy(100.milliseconds)
+
+        component.onResourceClick()
+
+        assertEquals(userId, navigatedUserId)
+    }
+
+    @Test
+    fun onResourceClick_whenResourceIsSession_invokesNavigateToSessionDetail() = runComponentTest {
+        val sessionId = UserSessionId.generate()
+        val event = auditEventPrivateMock(
+            resource = UserAuditResourceType.SESSION,
+            resourceId = sessionId.value.toHexDashString()
+        )
+        val repository = ManagementAuditRepositoryMock(getAuditEventResult = AppResult.Success(event))
+        val useCase = GetAuditEventUseCase(repository)
+
+        var navigatedSessionId: UserSessionId? = null
+        val lifecycle = LifecycleRegistry()
+        val componentContext = DefaultComponentContext(lifecycle)
+        lifecycle.resume()
+
+        val component = AuditEventDetailComponentImpl(
+            componentContext = componentContext,
+            params = AuditEventDetailParams(event.id.asHexDashString()),
+            userRepository = userRepository,
+            getAuditEventUseCase = useCase,
+            onNavigateToUserDetail = {},
+            onNavigateToSessionDetail = { navigatedSessionId = it },
+            onNavigateToProfile = {},
+            onBack = {}
+        )
+
+        advanceTimeBy(100.milliseconds)
+
+        component.onResourceClick()
+
+        assertEquals(sessionId, navigatedSessionId)
+    }
+
+    @Test
+    fun onBackClick_invokesOnBack() = runComponentTest {
+        val repository = ManagementAuditRepositoryMock()
+        val useCase = GetAuditEventUseCase(repository)
+
+        var onBackCalled = false
+        val lifecycle = LifecycleRegistry()
+        val componentContext = DefaultComponentContext(lifecycle)
+        lifecycle.resume()
+
+        val component = AuditEventDetailComponentImpl(
+            componentContext = componentContext,
+            params = AuditEventDetailParams(AuditEventId.generate().asHexDashString()),
+            userRepository = userRepository,
+            getAuditEventUseCase = useCase,
+            onNavigateToUserDetail = {},
+            onNavigateToSessionDetail = {},
+            onNavigateToProfile = {},
+            onBack = { onBackCalled = true }
         )
 
         component.onBackClick()
-        assertEquals(true, backClicked)
-    }
 
-    @Test
-    fun onResourceClick_navigatesToSessionDetail_whenResourceIsSession() = runComponentTest {
-        val targetSessionId = UserSessionId.generate()
-        val event = auditEventMock(
-            resource = UserAuditResourceType.SESSION,
-            resourceId = targetSessionId.asHexDashString()
-        )
-        val repository = ManagementAuditRepositoryMock(getAuditEventResult = AppResult.Success(event))
-        val useCase = GetAuditEventUseCase(repository)
-
-        val lifecycle = LifecycleRegistry()
-        val componentContext = DefaultComponentContext(lifecycle)
-        lifecycle.resume()
-
-        var navigatedSessionId: UserSessionId? = null
-        val component = AuditEventDetailComponentImpl(
-            componentContext = componentContext,
-            eventId = event.id,
-            getAuditEventUseCase = useCase,
-            onNavigateToSessionDetail = { navigatedSessionId = it },
-            onBack = {}
-        )
-
-        advanceTimeBy(100.milliseconds)
-        component.onResourceClick()
-        assertEquals(targetSessionId, navigatedSessionId)
-    }
-
-    @Test
-    fun onSubjectClick_navigatesToUserDetail_whenActorIsOtherUser() = runComponentTest {
-        val actorUserId = UserId.generate()
-        val currentUserId = UserId.generate()
-        val event = auditEventMock(
-            actorId = actorUserId.asHexDashString(),
-            actorType = AuditActorType.USER
-        )
-        val repository = ManagementAuditRepositoryMock(getAuditEventResult = AppResult.Success(event))
-        val useCase = GetAuditEventUseCase(repository)
-
-        val lifecycle = LifecycleRegistry()
-        val componentContext = DefaultComponentContext(lifecycle)
-        lifecycle.resume()
-
-        var navigatedUserId: UserId? = null
-        val component = AuditEventDetailComponentImpl(
-            componentContext = componentContext,
-            eventId = event.id,
-            getAuditEventUseCase = useCase,
-            currentUserId = currentUserId,
-            onNavigateToUserDetail = { navigatedUserId = it },
-            onBack = {}
-        )
-
-        advanceTimeBy(100.milliseconds)
-        component.onSubjectClick()
-        assertEquals(actorUserId, navigatedUserId)
-    }
-
-    @Test
-    fun onSubjectClick_navigatesToProfile_whenActorIsSelfUser() = runComponentTest {
-        val selfUserId = UserId.generate()
-        val event = auditEventMock(
-            actorId = selfUserId.asHexDashString(),
-            actorType = AuditActorType.USER
-        )
-        val repository = ManagementAuditRepositoryMock(getAuditEventResult = AppResult.Success(event))
-        val useCase = GetAuditEventUseCase(repository)
-
-        val lifecycle = LifecycleRegistry()
-        val componentContext = DefaultComponentContext(lifecycle)
-        lifecycle.resume()
-
-        var profileNavigated = false
-        val component = AuditEventDetailComponentImpl(
-            componentContext = componentContext,
-            eventId = event.id,
-            getAuditEventUseCase = useCase,
-            currentUserId = selfUserId,
-            onNavigateToProfile = { profileNavigated = true },
-            onBack = {}
-        )
-
-        advanceTimeBy(100.milliseconds)
-        component.onSubjectClick()
-        assertEquals(true, profileNavigated)
+        assertEquals(true, onBackCalled)
     }
 }

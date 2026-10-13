@@ -4,8 +4,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.identifier.ManagementIdentifierRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierPrivateMock
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -16,7 +16,7 @@ class ManagementGetIdentifierUseCaseTest {
 
     @Test
     fun invoke_returnsIdentifier_whenRepositorySucceeds() = runTest {
-        val expectedIdentifier = userIdentifierMock()
+        val expectedIdentifier = userIdentifierPrivateMock()
         val repository = ManagementIdentifierRepositoryMock().apply {
             getIdentifierResultProvider = { AppResult.Success(expectedIdentifier) }
         }
@@ -25,7 +25,7 @@ class ManagementGetIdentifierUseCaseTest {
 
         val result = useCase(identifierId)
 
-        assertIs<AppResult.Success<UserIdentifier>>(result)
+        assertIs<AppResult.Success<UserIdentifierPrivate>>(result)
         assertEquals(expectedIdentifier, result.data)
         assertEquals(identifierId, repository.lastIdentifierId)
     }

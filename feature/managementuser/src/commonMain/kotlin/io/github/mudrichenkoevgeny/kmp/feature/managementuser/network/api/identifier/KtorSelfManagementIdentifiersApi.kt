@@ -10,7 +10,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserApiPaths
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.security.password.EmailPasswordChangeRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.identifier.SelfManagementIdentifierRoutes
 import io.ktor.client.HttpClient
@@ -26,7 +27,7 @@ class KtorSelfManagementIdentifiersApi(
 
     override suspend fun getUserIdentifier(
         userIdentifierId: UserIdentifierId
-    ): AppResult<UserIdentifierPayload> = client.callResult {
+    ): AppResult<UserIdentifierPrivatePayload> = client.callResult {
         get(
             SelfManagementIdentifierRoutes.GET_IDENTIFIER
                 .replace(
@@ -43,7 +44,7 @@ class KtorSelfManagementIdentifiersApi(
         sortOrder: SortOrder?,
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
-    ): AppResult<PagedResult<UserIdentifierPayload>> = client.callResult {
+    ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = client.callResult {
         get(SelfManagementIdentifierRoutes.GET_IDENTIFIERS) {
             parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
             parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)

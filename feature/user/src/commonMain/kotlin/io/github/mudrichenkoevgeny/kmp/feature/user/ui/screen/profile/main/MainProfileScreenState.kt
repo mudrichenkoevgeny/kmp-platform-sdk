@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
 
 /**
  * UI state for the main profile screen.
@@ -19,7 +19,7 @@ sealed interface MainProfileScreenState {
 
     /** User profile content with management options. */
     data class Content(
-        val user: UserDetails,
+        val user: UserPrivate,
         val appType: AppType = AppType.CLIENT,
         val isAccountDeletionAvailable: Boolean = true,
         val showDeleteConfirmation: Boolean = false,

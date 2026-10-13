@@ -25,21 +25,21 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_id
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_status
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list.AuditEventListTestTags
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEvent
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventSummary
 import org.jetbrains.compose.resources.stringResource
 
 /**
  * A list item representing a single audit event record.
  *
- * @param event The [AuditEvent] data to display.
+ * @param event The [AuditEventSummary] data to display.
  * @param onClick Callback invoked when the item is clicked.
  * @param modifier Optional [Modifier].
  */
 @Composable
 fun AuditItem(
-    event: AuditEvent,
+    event: AuditEventSummary,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -67,7 +67,7 @@ fun AuditItem(
 
 @InternalApi
 @Composable
-private fun AuditItemPreviewContent(event: AuditEvent) {
+private fun AuditItemPreviewContent(event: AuditEventSummary) {
     CoreTheme {
         Surface {
             Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
@@ -81,7 +81,7 @@ private fun AuditItemPreviewContent(event: AuditEvent) {
 }
 
 @InternalApi
-private val defaultAuditItemPreviewState = auditEventMock()
+private val defaultAuditItemPreviewState = auditEventSummaryMock()
 
 @InternalApi
 @Preview(showBackground = true, group = "States")

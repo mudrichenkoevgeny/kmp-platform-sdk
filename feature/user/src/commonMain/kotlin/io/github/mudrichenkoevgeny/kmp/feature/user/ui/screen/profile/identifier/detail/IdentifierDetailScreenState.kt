@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 
 /**
  * Represents the UI state for the identifier detail screen.
@@ -25,7 +25,7 @@ sealed interface IdentifierDetailScreenState {
      * @property isChangePasswordDialogVisible Whether the change password dialog is currently visible.
      */
     data class Content(
-        val identifier: UserIdentifier,
+        val identifier: UserIdentifierPrivate,
         val isCurrentIdentifier: Boolean = false,
         val canChangePassword: Boolean = false,
         val canDeletePassword: Boolean = false,

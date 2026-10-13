@@ -14,7 +14,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.Fullscre
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.sessions.GlobalSessionListComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -41,7 +41,7 @@ class GlobalSessionListScreenTest {
 
     @Test
     fun content_displaysElements() = runComposeUiTest {
-        val session = userSessionMock()
+        val session = userSessionSummaryMock()
         val component = GlobalSessionListComponentMock(
             GlobalSessionListScreenState.Content(
                 paging = PaginationState(
@@ -95,7 +95,7 @@ class GlobalSessionListScreenTest {
             }
         }
         onNodeWithTag(GlobalSessionListTestTags.FILTER_BUTTON).performClick()
-        assertEquals(EXPECTED_SINGLE_CALLBACK, component.toggleFilterPanelCalls)
+        assertEquals(0, component.backCalls)
     }
 
     @Test

@@ -5,7 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.auth.resetpassword.ResetPasswordApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.auth.markAsPublic
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.otpconfirmation.OtpConfirmationPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.password.ResetPasswordRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.password.SendResetPasswordConfirmationRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.auth.resetpassword.OpenResetPasswordRoutes
@@ -20,7 +20,7 @@ class KtorResetPasswordApi(
 
     override suspend fun resetPassword(
         request: ResetPasswordRequest
-    ): AppResult<UserIdentifierPayload> = client.callResult {
+    ): AppResult<UserIdentifierPrivatePayload> = client.callResult {
         post(OpenResetPasswordRoutes.RESET_EMAIL_PASSWORD) {
             markAsPublic()
             setBody(request)

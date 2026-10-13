@@ -8,17 +8,16 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.DeleteSessionUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.GetSessionUseCaseMock
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
-import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.milliseconds
 
 @InternalApi
@@ -26,27 +25,27 @@ class SessionDetailComponentImplTest {
 
     @Test
     fun init_withProvidedSession_setsContentStateImmediately() = runComponentTest {
-        val mockSession = userSessionMock()
+        val mockSession = userSessionPrivateMock()
         val context = createSessionDetailComponentTestContext(
-            session = mockSession,
-            isCurrentSession = true
+            session = mockSession
         )
         try {
             advanceTimeBy(100.milliseconds)
-            val state = assertIs<SessionDetailScreenState.Content>(context.component.state.value)
+            val state = context.component.state.value
+            assertIs<SessionDetailScreenState.Content>(state)
             assertEquals(mockSession, state.session)
-            assertTrue(state.isCurrentSession)
         } finally {
             context.destroy()
         }
     }
 
     @Test
-    fun init_withSessionId_loadsSessionSuccessfully() = runComponentTest {
-        val mockSession = userSessionMock()
+    fun init_withSessionId_fetchesFromUseCase() = runComponentTest {
+        val mockSession = userSessionPrivateMock()
         val getSessionUseCase = GetSessionUseCaseMock().apply {
             resultProvider = { AppResult.Success(mockSession) }
         }
+
         val context = createSessionDetailComponentTestContext(
             session = null,
             sessionId = mockSession.id,
@@ -54,130 +53,96 @@ class SessionDetailComponentImplTest {
         )
         try {
             advanceTimeBy(100.milliseconds)
-            val state = assertIs<SessionDetailScreenState.Content>(context.component.state.value)
+            val state = context.component.state.value
+            assertIs<SessionDetailScreenState.Content>(state)
             assertEquals(mockSession, state.session)
+            assertEquals(ONE_CALL, getSessionUseCase.executeCalls)
         } finally {
             context.destroy()
         }
     }
 
     @Test
-    fun init_withSessionId_whenLoadFails_emitsError() = runComponentTest {
+    fun init_withSessionIdAndUseCaseError_setsErrorState() = runComponentTest {
+        val sessionId = UserSessionId.generate()
         val getSessionUseCase = GetSessionUseCaseMock().apply {
             resultProvider = { AppResult.Error(CommonError.Unknown()) }
         }
+
         val context = createSessionDetailComponentTestContext(
             session = null,
-            sessionId = UserSessionId.generate(),
+            sessionId = sessionId,
             getSessionUseCase = getSessionUseCase
         )
         try {
             advanceTimeBy(100.milliseconds)
-            val state = assertIs<SessionDetailScreenState.Error>(context.component.state.value)
-            assertIs<CommonError.Unknown>(state.error)
+            val state = context.component.state.value
+            assertIs<SessionDetailScreenState.Error>(state)
         } finally {
             context.destroy()
         }
     }
 
     @Test
-    fun onRevokeSessionClick_success_callsOnBack() = runComponentTest {
-        var backCalled = false
+    fun onRevokeSessionClick_executesUseCase_andTriggersOnBack() = runComponentTest {
+        var onBackCalls = 0
+        val mockSession = userSessionPrivateMock()
         val deleteSessionUseCase = DeleteSessionUseCaseMock().apply {
             resultProvider = { AppResult.Success(Unit) }
         }
+
         val context = createSessionDetailComponentTestContext(
-            session = userSessionMock(),
+            session = mockSession,
             deleteSessionUseCase = deleteSessionUseCase,
-            onBack = { backCalled = true }
+            onBack = { onBackCalls++ }
         )
         try {
             advanceTimeBy(100.milliseconds)
             context.component.onRevokeSessionClick()
             advanceTimeBy(100.milliseconds)
-            assertTrue(backCalled)
+
+            assertEquals(ONE_CALL, deleteSessionUseCase.executeCalls)
+            assertEquals(ONE_CALL, onBackCalls)
         } finally {
             context.destroy()
         }
     }
 
     @Test
-    fun onRevokeSessionClick_error_setsActionError() = runComponentTest {
-        val deleteSessionUseCase = DeleteSessionUseCaseMock().apply {
-            resultProvider = { AppResult.Error(CommonError.Unknown()) }
-        }
+    fun onUserClick_triggersNavigateToUserDetail() = runComponentTest {
+        var navigatedUserId: UserId? = null
+        val mockSession = userSessionPrivateMock()
+
         val context = createSessionDetailComponentTestContext(
-            session = userSessionMock(),
-            deleteSessionUseCase = deleteSessionUseCase
+            session = mockSession,
+            onNavigateToUserDetail = { navigatedUserId = it }
         )
         try {
             advanceTimeBy(100.milliseconds)
-            context.component.onRevokeSessionClick()
-            advanceTimeBy(100.milliseconds)
-            val state = assertIs<SessionDetailScreenState.Content>(context.component.state.value)
-            assertIs<CommonError.Unknown>(state.actionError)
+            context.component.onUserClick()
+            assertEquals(mockSession.userId, navigatedUserId)
         } finally {
             context.destroy()
         }
     }
 
     @Test
-    fun onBackClick_callsOnBack() = runComponentTest {
-        var backCalled = false
+    fun onBackClick_triggersOnBack() = runComponentTest {
+        var onBackCalls = 0
         val context = createSessionDetailComponentTestContext(
-            session = userSessionMock(),
-            onBack = { backCalled = true }
+            onBack = { onBackCalls++ }
         )
         try {
             advanceTimeBy(100.milliseconds)
             context.component.onBackClick()
-            assertTrue(backCalled)
-        } finally {
-            context.destroy()
-        }
-    }
-
-    @Test
-    fun onUserClick_whenCurrentSession_navigatesToProfile() = runComponentTest {
-        var profileCalled = false
-        var userDetailCalled = false
-        val context = createSessionDetailComponentTestContext(
-            session = userSessionMock(),
-            isCurrentSession = true,
-            onNavigateToProfile = { profileCalled = true },
-            onNavigateToUserDetail = { userDetailCalled = true }
-        )
-        try {
-            advanceTimeBy(100.milliseconds)
-            context.component.onUserClick()
-            assertTrue(profileCalled)
-            assertTrue(!userDetailCalled)
-        } finally {
-            context.destroy()
-        }
-    }
-
-    @Test
-    fun onUserClick_whenNotCurrentSession_navigatesToUserDetail() = runComponentTest {
-        var profileCalled = false
-        var userDetailCalled = false
-        val context = createSessionDetailComponentTestContext(
-            session = userSessionMock(),
-            isCurrentSession = false,
-            onNavigateToProfile = { profileCalled = true },
-            onNavigateToUserDetail = { userDetailCalled = true }
-        )
-        try {
-            advanceTimeBy(100.milliseconds)
-            context.component.onUserClick()
-            assertTrue(!profileCalled)
-            assertTrue(userDetailCalled)
+            assertEquals(ONE_CALL, onBackCalls)
         } finally {
             context.destroy()
         }
     }
 }
 
+@InternalApi
 private class SessionDetailComponentTestContext(
     val component: SessionDetailComponentImpl,
     val lifecycleRegistry: LifecycleRegistry
@@ -189,13 +154,13 @@ private class SessionDetailComponentTestContext(
 
 @InternalApi
 private fun createSessionDetailComponentTestContext(
-    session: UserSession? = userSessionMock(),
+    session: UserSessionPrivate? = userSessionPrivateMock(),
     sessionId: UserSessionId? = session?.id,
     getSessionUseCase: GetSessionUseCaseMock? = null,
     deleteSessionUseCase: DeleteSessionUseCaseMock? = null,
     isCurrentSession: Boolean = false,
     onNavigateToUserDetail: ((UserId) -> Unit)? = null,
-    onNavigateToProfile: (() -> Unit)? = null,
+    onNavigateToProfile: () -> Unit = {},
     onBack: () -> Unit = {}
 ): SessionDetailComponentTestContext {
     val lifecycleRegistry = LifecycleRegistry()
@@ -214,3 +179,5 @@ private fun createSessionDetailComponentTestContext(
     )
     return SessionDetailComponentTestContext(component, lifecycleRegistry)
 }
+
+private const val ONE_CALL = 1

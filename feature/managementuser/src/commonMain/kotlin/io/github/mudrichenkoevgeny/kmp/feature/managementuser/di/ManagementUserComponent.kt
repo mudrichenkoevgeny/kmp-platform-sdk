@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.di.CommonComponent
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.di.audit.AuditApiComponent
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.ManagementLoginDestination
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.root.ManagementRootComponent
@@ -334,9 +335,11 @@ class ManagementUserComponent(
      */
     fun createLoginRootDialogComponent(
         componentContext: ComponentContext,
+        initialDestination: ManagementLoginDestination = ManagementLoginDestination.Welcome,
         onFinished: () -> Unit
     ): ManagementLoginRootComponent = ManagementLoginRootComponentImpl(
         componentContext = componentContext,
+        initialDestination = initialDestination,
         settingsComponent = settingsComponent,
         securityComponent = securityComponent,
         managementUserComponent = this,
@@ -380,13 +383,16 @@ class ManagementUserComponent(
      * Creates the root Decompose component for management flow.
      *
      * @param componentContext Decompose context for the component.
+     * @param onNavigateToProfile Callback to navigate to the current user's profile screen.
      * @return A new instance of [ManagementRootComponent].
      */
     fun createManagementComponent(
-        componentContext: ComponentContext
+        componentContext: ComponentContext,
+        onNavigateToProfile: () -> Unit = {}
     ): ManagementRootComponent =
         ManagementRootComponentImpl(
             componentContext = componentContext,
+            userRepository = userRepository,
             getManagementAuthSettingsUseCase = getManagementAuthSettingsUseCase,
             saveRemoteAuthSettingsUseCase = saveRemoteAuthSettingsUseCase,
             resetRemoteAuthSettingsUseCase = resetRemoteAuthSettingsUseCase,
@@ -411,6 +417,7 @@ class ManagementUserComponent(
             managementDeleteIdentifierUseCase = useCaseModule.managementDeleteIdentifierUseCase,
             managementDeleteIdentifierPasswordUseCase = useCaseModule.managementDeleteIdentifierPasswordUseCase,
             getAuditEventsUseCase = getAuditEventsUseCase,
-            getAuditEventUseCase = getAuditEventUseCase
+            getAuditEventUseCase = getAuditEventUseCase,
+            onNavigateToProfile = onNavigateToProfile
         )
 }

@@ -36,7 +36,7 @@ class LoginByEmailUseCaseTest {
         assertEquals(authData.sessionToken.accessToken, authStorage.getAccessToken())
         assertEquals(authData.sessionToken.refreshToken, authStorage.getRefreshToken())
         assertEquals<Long?>(authData.sessionToken.expiresAt.toEpochMilliseconds(), authStorage.getExpiresAt())
-        assertEquals(authData.userDetails, userStorage.getCurrentUser())
+        assertEquals(authData.userPrivate, userStorage.getCurrentUser())
     }
 
     @Test

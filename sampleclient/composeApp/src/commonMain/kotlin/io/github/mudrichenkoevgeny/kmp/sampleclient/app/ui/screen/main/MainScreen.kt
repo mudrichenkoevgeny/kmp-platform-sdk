@@ -77,8 +77,9 @@ fun MainScreen(screenComponent: MainScreenComponent) {
             }
         )
 
-        loginDialogSlot.child?.instance?.let { component ->
-            ClientLoginRootScreen(component = component)
+        loginDialogSlot.child?.let { child ->
+            val isDismissible = (child.configuration as? MainScreenComponent.DialogConfig.Login)?.isDismissible ?: true
+            ClientLoginRootScreen(component = child.instance, isDismissible = isDismissible)
         }
 
         mfaChallengeRequest?.let { request ->

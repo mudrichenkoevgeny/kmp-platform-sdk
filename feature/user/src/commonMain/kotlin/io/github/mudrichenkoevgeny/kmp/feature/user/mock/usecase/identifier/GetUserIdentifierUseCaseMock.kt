@@ -2,20 +2,22 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.identifier.IdentifierRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.GetUserIdentifierUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 
 @InternalApi
-class GetUserIdentifierUseCaseMock : GetUserIdentifierUseCase(
-    identifierRepository = IdentifierRepositoryMock()
-) {
-    var resultProvider: (UserIdentifierId) -> AppResult<UserIdentifier> = { AppResult.Success(userIdentifierMock()) }
-    var executeCalls = 0
+class GetUserIdentifierUseCaseMock(
+    identifierRepository: IdentifierRepository = IdentifierRepositoryMock()
+) : GetUserIdentifierUseCase(identifierRepository) {
 
-    override suspend fun invoke(userIdentifierId: UserIdentifierId): AppResult<UserIdentifier> {
+    var executeCalls = 0
+    var resultProvider: (UserIdentifierId) -> AppResult<UserIdentifierPrivate> = { AppResult.Success(userIdentifierPrivateMock()) }
+
+    override suspend fun invoke(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> {
         executeCalls++
         return resultProvider(userIdentifierId)
     }

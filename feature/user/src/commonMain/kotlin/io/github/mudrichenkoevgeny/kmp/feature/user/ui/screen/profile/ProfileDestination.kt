@@ -1,9 +1,11 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile
 
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailParams
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.IdentifierListParams
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailParams
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.toUserIdentifierIdOrThrow
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.toUserSessionIdOrThrow
 import kotlinx.serialization.Serializable
 
 /**
@@ -17,7 +19,9 @@ sealed interface ProfileDestination {
 
     /** TOTP main screen. */
     @Serializable
-    data object TotpMain : ProfileDestination
+    data class TotpMain(
+        val params: TotpMainParams = TotpMainParams()
+    ) : ProfileDestination
 
     /** TOTP recovery codes management. */
     @Serializable
@@ -30,20 +34,22 @@ sealed interface ProfileDestination {
     /** Active session detail screen. */
     @Serializable
     data class SessionDetail(
-        val sessionIdValue: String
+        val params: SessionDetailParams
     ) : ProfileDestination {
-        val sessionId: UserSessionId get() = sessionIdValue.toUserSessionIdOrThrow()
+        val sessionId: UserSessionId get() = params.sessionId
     }
 
     /** List of user identifiers (emails, phones). */
     @Serializable
-    data object Identifiers : ProfileDestination
+    data class Identifiers(
+        val params: IdentifierListParams = IdentifierListParams()
+    ) : ProfileDestination
 
     /** Identifier detail screen. */
     @Serializable
     data class IdentifierDetail(
-        val identifierIdValue: String
+        val params: IdentifierDetailParams
     ) : ProfileDestination {
-        val identifierId: UserIdentifierId get() = identifierIdValue.toUserIdentifierIdOrThrow()
+        val identifierId: UserIdentifierId get() = params.identifierId
     }
 }

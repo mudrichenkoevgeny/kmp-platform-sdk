@@ -12,9 +12,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.identifier.ManagementIdentifierRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -27,7 +28,7 @@ class GlobalIdentifierListComponentImplTest {
 
     @Test
     fun init_loadsIdentifiersSuccessfully() = runComponentTest {
-        val identifier = userIdentifierMock()
+        val identifier = userIdentifierSummaryMock()
         val context = createTestContext(identifiers = listOf(identifier))
 
         advanceUntilIdle()
@@ -48,13 +49,54 @@ class GlobalIdentifierListComponentImplTest {
     }
 
     @Test
+    fun onToggleFilterPanel_togglesIsFilterPanelExpanded() = runComponentTest {
+        val context = createTestContext(identifiers = listOf(userIdentifierSummaryMock()))
+        advanceUntilIdle()
+
+        var state = assertIs<GlobalIdentifierListScreenState.Content>(context.component.state.value)
+        assertFalse(state.isFilterPanelExpanded)
+
+        context.component.onToggleFilterPanel()
+        state = assertIs<GlobalIdentifierListScreenState.Content>(context.component.state.value)
+        assertTrue(state.isFilterPanelExpanded)
+    }
+
+    @Test
+    fun onApplyFilters_appliesFiltersAndReloads() = runComponentTest {
+        val repository = ManagementIdentifierRepositoryMock()
+        val context = createTestContext(repository = repository, identifiers = listOf(userIdentifierSummaryMock()))
+        advanceUntilIdle()
+
+        context.component.onFilterChanged(
+            UserFilterValues.UserIdentifierFilterValues.IDENTIFIER,
+            TextListingFilterState(value = "test@example.com")
+        )
+        context.component.onApplyFilters()
+        advanceUntilIdle()
+
+        assertEquals(listOf("test@example.com"), repository.lastIdentifiers)
+    }
+
+    @Test
+    fun onSortChanged_appliesSortAndReloads() = runComponentTest {
+        val repository = ManagementIdentifierRepositoryMock()
+        val context = createTestContext(repository = repository, identifiers = listOf(userIdentifierSummaryMock()))
+        advanceUntilIdle()
+
+        context.component.onSortChanged(ListingSortState(optionId = UserSortValues.UserIdentifierSortBy.CREATED_AT.serialName, isAscending = false))
+        advanceUntilIdle()
+
+        assertEquals(UserSortValues.UserIdentifierSortBy.CREATED_AT, repository.lastSortBy)
+    }
+
+    @Test
     fun onRefresh_reloadsIdentifiers() = runComponentTest {
-        val context = createTestContext()
+        val context = createTestContext(identifiers = listOf(userIdentifierSummaryMock()))
         advanceUntilIdle()
 
         context.component.onRefresh()
-
         advanceUntilIdle()
+
         assertIs<GlobalIdentifierListScreenState.Content>(context.component.state.value)
     }
 
@@ -65,69 +107,8 @@ class GlobalIdentifierListComponentImplTest {
         assertEquals(1, context.onBackCalls)
     }
 
-    @Test
-    fun onToggleFilterPanel_togglesExpandedState() = runComponentTest {
-        val context = createTestContext(identifiers = emptyList())
-        advanceUntilIdle()
-
-        val initialState = assertIs<GlobalIdentifierListScreenState.Content>(context.component.state.value)
-        assertFalse(initialState.isFilterPanelExpanded)
-
-        context.component.onToggleFilterPanel()
-        val expandedState = assertIs<GlobalIdentifierListScreenState.Content>(context.component.state.value)
-        assertTrue(expandedState.isFilterPanelExpanded)
-
-        context.component.onToggleFilterPanel()
-        val collapsedState = assertIs<GlobalIdentifierListScreenState.Content>(context.component.state.value)
-        assertFalse(collapsedState.isFilterPanelExpanded)
-    }
-
-    @Test
-    fun onSortChanged_updatesSortState() = runComponentTest {
-        val context = createTestContext(identifiers = emptyList())
-        advanceUntilIdle()
-
-        val newSortState = ListingSortState(optionId = "created_at", isAscending = true)
-        context.component.onSortChanged(newSortState)
-
-        val state = assertIs<GlobalIdentifierListScreenState.Content>(context.component.state.value)
-        assertEquals(newSortState, state.sortState)
-    }
-
-    @Test
-    fun onFilterChanged_updatesAndRemovesFilters() = runComponentTest {
-        val context = createTestContext(identifiers = emptyList())
-        advanceUntilIdle()
-
-        val filterId = UserFilterValues.UserIdentifierFilterValues.IDENTIFIER
-        val filterState = TextListingFilterState(value = "user@example.com")
-
-        context.component.onFilterChanged(filterId = filterId, filterState = filterState)
-        var state = assertIs<GlobalIdentifierListScreenState.Content>(context.component.state.value)
-        assertEquals(filterState, state.filterStates[filterId])
-
-        context.component.onFilterChanged(filterId = filterId, filterState = null)
-        state = assertIs<GlobalIdentifierListScreenState.Content>(context.component.state.value)
-        assertFalse(state.filterStates.containsKey(filterId))
-    }
-
-    @Test
-    fun onApplyFilters_closesPanelAndReloadsIdentifiers() = runComponentTest {
-        val context = createTestContext(identifiers = emptyList())
-        advanceUntilIdle()
-
-        context.component.onToggleFilterPanel()
-        assertTrue(assertIs<GlobalIdentifierListScreenState.Content>(context.component.state.value).isFilterPanelExpanded)
-
-        context.component.onApplyFilters()
-        advanceUntilIdle()
-
-        val state = assertIs<GlobalIdentifierListScreenState.Content>(context.component.state.value)
-        assertFalse(state.isFilterPanelExpanded)
-    }
-
     private fun createTestContext(
-        identifiers: List<UserIdentifier>? = null,
+        identifiers: List<UserIdentifierSummary>? = null,
         repository: ManagementIdentifierRepositoryMock = ManagementIdentifierRepositoryMock()
     ): TestContext {
         if (identifiers != null) {

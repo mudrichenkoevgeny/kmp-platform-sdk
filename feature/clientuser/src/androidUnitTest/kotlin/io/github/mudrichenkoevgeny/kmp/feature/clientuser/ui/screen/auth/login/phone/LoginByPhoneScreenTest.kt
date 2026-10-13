@@ -28,7 +28,7 @@ class LoginByPhoneScreenTest {
     @Test
     fun loading_showsIndeterminateProgressAfterDefaultDelay() = runComposeUiTest {
         val component = LoginByPhoneComponentMock(
-            LoginByPhoneScreenState.PhoneInput(actionLoading = true)
+            LoginByPhoneScreenState(actionLoading = true)
         )
         setContent {
             ComponentTestHarness {
@@ -43,7 +43,7 @@ class LoginByPhoneScreenTest {
     @Test
     fun phoneInput_displaysTitlePhoneLabelAndSendCode() = runComposeUiTest {
         val component = LoginByPhoneComponentMock(
-            LoginByPhoneScreenState.PhoneInput(phoneNumber = PHONE_NUMBER_FULL, isPhoneNumberValid = true)
+            LoginByPhoneScreenState(phoneNumber = PHONE_NUMBER_FULL, isPhoneNumberValid = true)
         )
         setContent {
             ComponentTestHarness {
@@ -59,7 +59,7 @@ class LoginByPhoneScreenTest {
     @Test
     fun phoneInput_inlineError_showsErrorTextNode() = runComposeUiTest {
         val component = LoginByPhoneComponentMock(
-            LoginByPhoneScreenState.PhoneInput(
+            LoginByPhoneScreenState(
                 phoneNumber = PHONE_NUMBER_FULL,
                 isPhoneNumberValid = true,
                 actionError = CommonError.Unknown()
@@ -76,7 +76,7 @@ class LoginByPhoneScreenTest {
     @Test
     fun phoneInput_clickSendCode_invokesCallback() = runComposeUiTest {
         val component = LoginByPhoneComponentMock(
-            LoginByPhoneScreenState.PhoneInput(phoneNumber = PHONE_NUMBER_FULL, isPhoneNumberValid = true)
+            LoginByPhoneScreenState(phoneNumber = PHONE_NUMBER_FULL, isPhoneNumberValid = true)
         )
         setContent {
             ComponentTestHarness {
@@ -91,8 +91,9 @@ class LoginByPhoneScreenTest {
     fun codeInput_displaysTitlesAndCodeSentLine() = runComposeUiTest {
         val phone = PHONE_NUMBER_E164
         val component = LoginByPhoneComponentMock(
-            LoginByPhoneScreenState.CodeInput(phoneNumber = phone, code = CODE_TWO_DIGITS)
+            LoginByPhoneScreenState(phoneNumber = phone, code = CODE_TWO_DIGITS)
         )
+        component.setStep(LoginByPhoneStepConfig.CodeInput(phone))
         setContent {
             ComponentTestHarness {
                 LoginByPhoneScreen(component)
@@ -109,12 +110,13 @@ class LoginByPhoneScreenTest {
     @Test
     fun codeInput_whenTimerPositive_showsResendCountdown() = runComposeUiTest {
         val component = LoginByPhoneComponentMock(
-            LoginByPhoneScreenState.CodeInput(
+            LoginByPhoneScreenState(
                 phoneNumber = PHONE_NUMBER_SHORT,
                 code = "",
                 resendTimerSeconds = RESEND_TIMER_SECONDS_UI
             )
         )
+        component.setStep(LoginByPhoneStepConfig.CodeInput(PHONE_NUMBER_SHORT, RESEND_TIMER_SECONDS_UI))
         setContent {
             ComponentTestHarness {
                 LoginByPhoneScreen(component)
@@ -126,12 +128,13 @@ class LoginByPhoneScreenTest {
     @Test
     fun codeInput_whenCanResend_showsResendButton() = runComposeUiTest {
         val component = LoginByPhoneComponentMock(
-            LoginByPhoneScreenState.CodeInput(
+            LoginByPhoneScreenState(
                 phoneNumber = PHONE_NUMBER_SHORT,
                 code = "",
                 resendTimerSeconds = RESEND_TIMER_EXPIRED_SECONDS
             )
         )
+        component.setStep(LoginByPhoneStepConfig.CodeInput(PHONE_NUMBER_SHORT, RESEND_TIMER_EXPIRED_SECONDS))
         setContent {
             ComponentTestHarness {
                 LoginByPhoneScreen(component)
@@ -143,12 +146,13 @@ class LoginByPhoneScreenTest {
     @Test
     fun codeInput_clickChangePhone_invokesCallback() = runComposeUiTest {
         val component = LoginByPhoneComponentMock(
-            LoginByPhoneScreenState.CodeInput(
+            LoginByPhoneScreenState(
                 phoneNumber = PHONE_NUMBER_SHORT,
                 code = CODE_SIX_DIGITS,
                 resendTimerSeconds = RESEND_TIMER_EXPIRED_SECONDS
             )
         )
+        component.setStep(LoginByPhoneStepConfig.CodeInput(PHONE_NUMBER_SHORT, RESEND_TIMER_EXPIRED_SECONDS))
         setContent {
             ComponentTestHarness {
                 LoginByPhoneScreen(component)

@@ -2,22 +2,22 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.session.SessionRepository
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 
 /**
- * Returns details of a specific session owned by the current authenticated account.
+ * Retrieves details for a specific active session.
  *
- * @param sessionRepository Remote session management API.
+ * @param sessionRepository Session management repository.
  */
 open class GetSessionUseCase(
     private val sessionRepository: SessionRepository
 ) {
     /**
-     * @param userSessionId Unique session identifier.
-     * @return Detailed session model or a mapped failure.
+     * @param userSessionId Session ID.
+     * @return [UserSessionPrivate] on success, or a mapped failure.
      */
-    open suspend operator fun invoke(userSessionId: UserSessionId): AppResult<UserSession> {
+    open suspend operator fun invoke(userSessionId: UserSessionId): AppResult<UserSessionPrivate> {
         return sessionRepository.getSession(userSessionId)
     }
 }

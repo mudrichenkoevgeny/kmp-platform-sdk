@@ -150,17 +150,17 @@ buildConfig {
 
     when (env) {
         "prod" -> {
-            buildConfigField("BASE_URL", "http://localhost:8080")
+            buildConfigField("BASE_URL", "http://192.168.0.134:8080")
             buildConfigField("ENV_NAME", "Production")
             buildConfigField("GOOGLE_WEB_CLIENT_ID", "982478008604-albtrhoegkqkpe2ev7rirg6c8h9hijfl.apps.googleusercontent.com")
         }
         "test" -> {
-            buildConfigField("BASE_URL", "http://localhost:8080")
+            buildConfigField("BASE_URL", "http://192.168.0.134:8080")
             buildConfigField("ENV_NAME", "Testing")
             buildConfigField("GOOGLE_WEB_CLIENT_ID", "982478008604-albtrhoegkqkpe2ev7rirg6c8h9hijfl.apps.googleusercontent.com")
         }
         else -> {
-            buildConfigField("BASE_URL", "http://localhost:8080")
+            buildConfigField("BASE_URL", "http://192.168.0.134:8080")
             buildConfigField("ENV_NAME", "Development")
             buildConfigField("GOOGLE_WEB_CLIENT_ID", "982478008604-albtrhoegkqkpe2ev7rirg6c8h9hijfl.apps.googleusercontent.com")
         }

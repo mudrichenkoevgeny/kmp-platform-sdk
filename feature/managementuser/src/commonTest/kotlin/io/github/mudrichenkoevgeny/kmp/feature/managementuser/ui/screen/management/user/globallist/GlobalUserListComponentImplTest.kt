@@ -10,9 +10,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.user.ManagementUserRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUsersUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userSummaryMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserSummary
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,7 +23,7 @@ class GlobalUserListComponentImplTest {
 
     @Test
     fun init_loadsUsersSuccessfully() = runComponentTest {
-        val user = userDetailsMock()
+        val user = userSummaryMock()
         val context = createTestContext(users = listOf(user))
 
         advanceUntilIdle()
@@ -45,7 +45,7 @@ class GlobalUserListComponentImplTest {
 
     @Test
     fun onUserClick_invokesCallback() = runComponentTest {
-        val user = userDetailsMock()
+        val user = userSummaryMock()
         val context = createTestContext(users = listOf(user))
         advanceUntilIdle()
 
@@ -79,7 +79,7 @@ class GlobalUserListComponentImplTest {
     }
 
     private fun createTestContext(
-        users: List<UserDetails>? = null,
+        users: List<UserSummary>? = null,
         repository: ManagementUserRepositoryMock = ManagementUserRepositoryMock()
     ): TestContext {
         if (users != null) {

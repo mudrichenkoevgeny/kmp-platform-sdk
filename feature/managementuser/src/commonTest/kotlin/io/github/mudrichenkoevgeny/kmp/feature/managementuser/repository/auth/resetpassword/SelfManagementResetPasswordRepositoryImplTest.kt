@@ -5,12 +5,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.network.model.otpconfirmation.otpConfirmationPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.network.api.auth.resetpassword.SelfManagementResetPasswordApiMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.identifier.userIdentifierPayloadMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.identifier.userIdentifierPrivatePayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.confirmation.ConfirmationRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.ConfirmationType
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.mapper.otpconfirmation.toOtpConfirmation
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.password.ResetPasswordRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.password.SendResetPasswordConfirmationRequest
 import kotlinx.coroutines.test.runTest
@@ -27,13 +27,13 @@ class SelfManagementResetPasswordRepositoryImplTest {
 
     @Test
     fun `resetPassword forwards request and maps user identifier`() = runTest {
-        val wire = userIdentifierPayloadMock(identifier = RESET_EMAIL)
+        val wire = userIdentifierPrivatePayloadMock(identifier = RESET_EMAIL)
         api.resetPasswordResult = AppResult.Success(wire)
 
         val result = repo.resetPassword(RESET_EMAIL, NEW_PASSWORD, CONFIRMATION_CODE)
 
-        val success = assertIs<AppResult.Success<UserIdentifier>>(result)
-        assertEquals(wire.toUserIdentifier(), success.data)
+        val success = assertIs<AppResult.Success<UserIdentifierPrivate>>(result)
+        assertEquals(wire.toUserIdentifierPrivate(), success.data)
         assertEquals(
             ResetPasswordRequest(
                 email = RESET_EMAIL,

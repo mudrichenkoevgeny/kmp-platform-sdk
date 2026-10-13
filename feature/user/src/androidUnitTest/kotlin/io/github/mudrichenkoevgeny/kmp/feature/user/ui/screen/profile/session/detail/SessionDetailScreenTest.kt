@@ -10,7 +10,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.session.detail.SessionDetailComponentMock
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -25,7 +25,7 @@ class SessionDetailScreenTest {
 
     @Test
     fun displaysSessionDetails_andInvokesRevoke() = runComposeUiTest {
-        val session = userSessionMock()
+        val session = userSessionPrivateMock()
         val component = SessionDetailComponentMock(
             initialState = SessionDetailScreenState.Content(
                 session = session,
@@ -61,7 +61,7 @@ class SessionDetailScreenTest {
 
     @Test
     fun currentSession_hidesRevokeButton() = runComposeUiTest {
-        val session = userSessionMock()
+        val session = userSessionPrivateMock()
         val component = SessionDetailComponentMock(
             initialState = SessionDetailScreenState.Content(
                 session = session,
@@ -97,7 +97,7 @@ class SessionDetailScreenTest {
     fun backButton_invokesOnBackClick() = runComposeUiTest {
         val component = SessionDetailComponentMock(
             initialState = SessionDetailScreenState.Content(
-                session = userSessionMock(),
+                session = userSessionPrivateMock(),
                 isCurrentSession = false
             )
         )
@@ -117,7 +117,7 @@ class SessionDetailScreenTest {
     fun userRow_invokesOnUserClick() = runComposeUiTest {
         val component = SessionDetailComponentMock(
             initialState = SessionDetailScreenState.Content(
-                session = userSessionMock(),
+                session = userSessionPrivateMock(),
                 isCurrentSession = false
             )
         )

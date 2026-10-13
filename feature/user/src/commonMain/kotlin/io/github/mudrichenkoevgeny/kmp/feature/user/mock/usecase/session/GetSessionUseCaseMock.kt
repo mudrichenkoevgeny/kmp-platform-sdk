@@ -2,23 +2,23 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.session.SessionRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.session.SessionRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 
 @InternalApi
-class GetSessionUseCaseMock : GetSessionUseCase(
-    sessionRepository = SessionRepositoryMock()
-) {
-    var resultProvider: (UserSessionId) -> AppResult<UserSession> = { AppResult.Success(userSessionMock()) }
-    var executeCalls = 0
-    var lastSessionId: UserSessionId? = null
+class GetSessionUseCaseMock(
+    sessionRepository: SessionRepository = SessionRepositoryMock()
+) : GetSessionUseCase(sessionRepository) {
 
-    override suspend fun invoke(userSessionId: UserSessionId): AppResult<UserSession> {
+    var executeCalls = 0
+    var resultProvider: (UserSessionId) -> AppResult<UserSessionPrivate> = { AppResult.Success(userSessionPrivateMock()) }
+
+    override suspend fun invoke(userSessionId: UserSessionId): AppResult<UserSessionPrivate> {
         executeCalls++
-        lastSessionId = userSessionId
         return resultProvider(userSessionId)
     }
 }

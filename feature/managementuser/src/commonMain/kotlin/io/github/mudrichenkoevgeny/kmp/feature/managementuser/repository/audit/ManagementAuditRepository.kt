@@ -2,7 +2,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.audit
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEvent
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventSummary
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
@@ -35,7 +36,7 @@ interface ManagementAuditRepository {
         resourceIds: List<String>? = null,
         statuses: List<AuditStatus>? = null,
         messages: List<String>? = null
-    ): AppResult<PagedResult<AuditEvent>>
+    ): AppResult<PagedResult<AuditEventSummary>>
 
     /**
      * Retrieves specific domain audit event details by ID.
@@ -43,5 +44,5 @@ interface ManagementAuditRepository {
      * @param eventId Unique audit event identifier string.
      * @return Domain audit event, or a failure.
      */
-    suspend fun getAuditEvent(eventId: String): AppResult<AuditEvent>
+    suspend fun getAuditEvent(eventId: String): AppResult<AuditEventPrivate>
 }

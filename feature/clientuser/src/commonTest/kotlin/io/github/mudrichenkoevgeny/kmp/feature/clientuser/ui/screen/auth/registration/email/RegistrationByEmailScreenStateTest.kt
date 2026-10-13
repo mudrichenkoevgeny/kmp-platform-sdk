@@ -9,14 +9,14 @@ class RegistrationByEmailScreenStateTest {
     @Test
     fun registrationInput_isCodeFullLength_respectsCodeLength() {
         assertTrue(
-            RegistrationByEmailScreenState.RegistrationInput(
+            RegistrationByEmailScreenState(
                 email = EMAIL,
                 code = CODE_SIX_CHARS,
                 codeLength = CODE_LENGTH_SIX
             ).isCodeFullLength
         )
         assertFalse(
-            RegistrationByEmailScreenState.RegistrationInput(
+            RegistrationByEmailScreenState(
                 email = EMAIL,
                 code = CODE_FIVE_CHARS,
                 codeLength = CODE_LENGTH_SIX
@@ -27,19 +27,19 @@ class RegistrationByEmailScreenStateTest {
     @Test
     fun registrationInput_canResendCode_whenTimerZeroAndNotLoading() {
         assertTrue(
-            baseRegistrationInput(
+            baseRegistrationState(
                 resendTimerSeconds = RESEND_TIMER_READY,
                 actionLoading = NOT_LOADING
             ).canResendCode
         )
         assertFalse(
-            baseRegistrationInput(
+            baseRegistrationState(
                 resendTimerSeconds = RESEND_TIMER_BLOCKING,
                 actionLoading = NOT_LOADING
             ).canResendCode
         )
         assertFalse(
-            baseRegistrationInput(
+            baseRegistrationState(
                 resendTimerSeconds = RESEND_TIMER_READY,
                 actionLoading = LOADING
             ).canResendCode
@@ -49,7 +49,7 @@ class RegistrationByEmailScreenStateTest {
     @Test
     fun registrationInput_canRegister_requiresFullCodeValidPasswordAndNotLoading() {
         assertTrue(
-            RegistrationByEmailScreenState.RegistrationInput(
+            RegistrationByEmailScreenState(
                 email = EMAIL,
                 code = CODE_SIX_CHARS,
                 codeLength = CODE_LENGTH_SIX,
@@ -63,7 +63,7 @@ class RegistrationByEmailScreenStateTest {
     @Test
     fun registrationInput_canRegister_falseWhenCodeIncomplete() {
         assertFalse(
-            RegistrationByEmailScreenState.RegistrationInput(
+            RegistrationByEmailScreenState(
                 email = EMAIL,
                 code = CODE_THREE_CHARS,
                 codeLength = CODE_LENGTH_SIX,
@@ -77,7 +77,7 @@ class RegistrationByEmailScreenStateTest {
     @Test
     fun registrationInput_canRegister_falseWhenPasswordInvalid() {
         assertFalse(
-            RegistrationByEmailScreenState.RegistrationInput(
+            RegistrationByEmailScreenState(
                 email = EMAIL,
                 code = CODE_SIX_CHARS,
                 password = PASSWORD,
@@ -90,7 +90,7 @@ class RegistrationByEmailScreenStateTest {
     @Test
     fun registrationInput_canRegister_falseWhenPasswordEmpty() {
         assertFalse(
-            RegistrationByEmailScreenState.RegistrationInput(
+            RegistrationByEmailScreenState(
                 email = EMAIL,
                 code = CODE_SIX_CHARS,
                 password = "",
@@ -103,7 +103,7 @@ class RegistrationByEmailScreenStateTest {
     @Test
     fun registrationInput_canRegister_falseWhenLoading() {
         assertFalse(
-            RegistrationByEmailScreenState.RegistrationInput(
+            RegistrationByEmailScreenState(
                 email = EMAIL,
                 code = CODE_SIX_CHARS,
                 password = PASSWORD,
@@ -113,11 +113,11 @@ class RegistrationByEmailScreenStateTest {
         )
     }
 
-    private fun baseRegistrationInput(
+    private fun baseRegistrationState(
         resendTimerSeconds: Int,
         actionLoading: Boolean
-    ): RegistrationByEmailScreenState.RegistrationInput =
-        RegistrationByEmailScreenState.RegistrationInput(
+    ): RegistrationByEmailScreenState =
+        RegistrationByEmailScreenState(
             email = EMAIL,
             resendTimerSeconds = resendTimerSeconds,
             actionLoading = actionLoading

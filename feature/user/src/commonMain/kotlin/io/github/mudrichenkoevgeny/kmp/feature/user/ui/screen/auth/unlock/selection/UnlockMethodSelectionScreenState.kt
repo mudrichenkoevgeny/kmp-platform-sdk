@@ -3,13 +3,13 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.selec
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 
 /** UI state for selecting an account unlock channel. */
 data class UnlockMethodSelectionScreenState(
     val lockoutType: AccountLockoutType? = null,
     val lockoutUntil: Long? = null,
-    val knownIdentifiers: List<UserIdentifier> = emptyList(),
+    val knownIdentifiers: List<UserIdentifierSummary> = emptyList(),
     val actionLoading: Boolean = false,
     val actionError: AppError? = null
 ) {

@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
@@ -24,8 +25,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserSummary
 import kotlinx.coroutines.launch
 
 class GlobalUserListComponentImpl(
@@ -57,7 +58,9 @@ class GlobalUserListComponentImpl(
     }
 
     override fun onBackClick() {
-        onBack()
+        if ((backHandler as? BackDispatcher)?.back() != true) {
+            onBack()
+        }
     }
 
     override fun onLoadNextPage() {
@@ -156,7 +159,7 @@ class GlobalUserListComponentImpl(
             )
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? GlobalUserListScreenState.Content
-                    val newPaging = (currentContent?.paging ?: PaginationState<UserDetails>()).appendResult(pagedResult)
+                    val newPaging = (currentContent?.paging ?: PaginationState<UserSummary>()).appendResult(pagedResult)
                     _state.value = currentContent?.copy(paging = newPaging) ?: GlobalUserListScreenState.Content(paging = newPaging)
                 }
                 .onError { error ->

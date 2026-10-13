@@ -11,6 +11,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.rememberCompon
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di.LocalManagementAppComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di.ManagementAppComponent
+import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.navigation.deeplink.ManagementAppDeepLinkRoute
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main.MainScreen
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.splash.SplashScreen
 
@@ -21,13 +22,19 @@ import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.splash.Spl
  * @param managementAppComponent Wired host graph; [ManagementAppComponent.init] must complete before navigation is shown.
  */
 @Composable
-fun RootContent(managementAppComponent: ManagementAppComponent) {
+fun RootContent(
+    managementAppComponent: ManagementAppComponent,
+    initialRoute: ManagementAppDeepLinkRoute? = null
+) {
     val isInitialized by managementAppComponent.isInitialized.collectAsState()
 
     if (isInitialized) {
         val componentContext = rememberComponentContext()
         val mainComponent = remember {
-            managementAppComponent.createMainScreenComponent(componentContext)
+            managementAppComponent.createMainScreenComponent(
+                componentContext = componentContext,
+                initialRoute = initialRoute
+            )
         }
 
         CompositionLocalProvider(

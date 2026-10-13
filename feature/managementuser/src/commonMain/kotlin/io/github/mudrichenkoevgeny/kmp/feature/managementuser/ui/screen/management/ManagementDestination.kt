@@ -1,13 +1,17 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management
 
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.detail.AuditEventDetailParams
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list.AuditEventListParams
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist.UserIdentifierListParams
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListParams
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsParams
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailParams
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailParams
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailParams
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventId
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.toAuditEventIdOrThrow
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.toUserIdentifierIdOrThrow
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.toUserSessionIdOrThrow
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.toUserIdOrThrow
 import kotlinx.serialization.Serializable
 
 /**
@@ -21,15 +25,21 @@ sealed class ManagementDestination {
 
     /** Screen for editing authentication settings. */
     @Serializable
-    object EditAuthSettings : ManagementDestination()
+    data class EditAuthSettings(
+        val params: SettingsParams = SettingsParams()
+    ) : ManagementDestination()
 
     /** Screen for editing global platform settings. */
     @Serializable
-    object EditGlobalSettings : ManagementDestination()
+    data class EditGlobalSettings(
+        val params: SettingsParams = SettingsParams()
+    ) : ManagementDestination()
 
     /** Screen for editing security policies and settings. */
     @Serializable
-    object EditSecuritySettings : ManagementDestination()
+    data class EditSecuritySettings(
+        val params: SettingsParams = SettingsParams()
+    ) : ManagementDestination()
 
     /** Screen for viewing all platform users. */
     @Serializable
@@ -42,37 +52,39 @@ sealed class ManagementDestination {
     /** Screen for viewing user details. */
     @Serializable
     data class UserDetail(
-        val userIdValue: String
+        val params: UserDetailParams
     ) : ManagementDestination() {
-        val userId: UserId get() = userIdValue.toUserIdOrThrow()
+        val userId: UserId get() = params.userId
     }
 
     /** Screen for viewing user sessions. */
     @Serializable
     data class UserSessionList(
-        val userIdValue: String
+        val params: UserSessionListParams
     ) : ManagementDestination() {
-        val userId: UserId get() = userIdValue.toUserIdOrThrow()
+        val userId: UserId get() = params.userId
     }
 
     /** Screen for viewing user identifiers. */
     @Serializable
     data class UserIdentifierList(
-        val userIdValue: String
+        val params: UserIdentifierListParams
     ) : ManagementDestination() {
-        val userId: UserId get() = userIdValue.toUserIdOrThrow()
+        val userId: UserId get() = params.userId
     }
 
     /** Screen for viewing audit logs. */
     @Serializable
-    object AuditEventList : ManagementDestination()
+    data class AuditEventList(
+        val params: AuditEventListParams = AuditEventListParams()
+    ) : ManagementDestination()
 
     /** Screen for viewing audit event details. */
     @Serializable
     data class AuditEventDetail(
-        val eventIdValue: String
+        val params: AuditEventDetailParams
     ) : ManagementDestination() {
-        val eventId: AuditEventId get() = eventIdValue.toAuditEventIdOrThrow()
+        val eventId: AuditEventId get() = params.eventId
     }
 
     /** Screen for viewing all platform sessions. */
@@ -82,9 +94,9 @@ sealed class ManagementDestination {
     /** Screen for viewing session details. */
     @Serializable
     data class SessionDetail(
-        val sessionIdValue: String
+        val params: SessionDetailParams
     ) : ManagementDestination() {
-        val sessionId: UserSessionId get() = sessionIdValue.toUserSessionIdOrThrow()
+        val sessionId: UserSessionId get() = params.sessionId
     }
 
     /** Screen for viewing all platform identifiers. */
@@ -94,8 +106,8 @@ sealed class ManagementDestination {
     /** Screen for viewing identifier details. */
     @Serializable
     data class IdentifierDetail(
-        val identifierIdValue: String
+        val params: IdentifierDetailParams
     ) : ManagementDestination() {
-        val identifierId: UserIdentifierId get() = identifierIdValue.toUserIdentifierIdOrThrow()
+        val identifierId: UserIdentifierId get() = params.identifierId
     }
 }

@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -14,10 +14,10 @@ class MainProfileScreenStateTest {
 
     @Test
     fun content_defaultParameters_setsExpectedFlags() {
-        val userDetails = userDetailsMock()
-        val state = MainProfileScreenState.Content(user = userDetails)
+        val userPrivate = userPrivateMock()
+        val state = MainProfileScreenState.Content(user = userPrivate)
 
-        assertEquals(userDetails, state.user)
+        assertEquals(userPrivate, state.user)
         assertTrue(state.isAccountDeletionAvailable)
         assertFalse(state.actionLoading)
         assertNull(state.actionError)
@@ -25,16 +25,16 @@ class MainProfileScreenStateTest {
 
     @Test
     fun content_customParameters_setsExpectedValues() {
-        val userDetails = userDetailsMock()
+        val userPrivate = userPrivateMock()
         val error = CommonError.Unknown()
         val state = MainProfileScreenState.Content(
-            user = userDetails,
+            user = userPrivate,
             isAccountDeletionAvailable = DELETION_NOT_AVAILABLE,
             actionLoading = ACTION_LOADING,
             actionError = error
         )
 
-        assertEquals(userDetails, state.user)
+        assertEquals(userPrivate, state.user)
         assertFalse(state.isAccountDeletionAvailable)
         assertTrue(state.actionLoading)
         assertEquals(error, state.actionError)

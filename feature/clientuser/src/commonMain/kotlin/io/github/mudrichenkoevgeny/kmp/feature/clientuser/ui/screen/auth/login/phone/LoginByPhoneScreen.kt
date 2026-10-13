@@ -20,9 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
@@ -87,18 +87,28 @@ fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            when (val s = state) {
-                is LoginByPhoneScreenState.PhoneInput -> {
-                    PhoneInputContent(s, component::onPhoneChanged, component::onSendCodeClick)
-                }
-                is LoginByPhoneScreenState.CodeInput -> {
-                    CodeInputContent(
-                        s,
-                        component::onCodeChanged,
-                        component::onConfirmCodeClick,
-                        component::onSendCodeClick,
-                        component::onResetPhoneClick
-                    )
+            Children(
+                stack = component.stack,
+                modifier = Modifier.fillMaxSize()
+            ) { child ->
+                when (val activeChild = child.instance) {
+                    is LoginByPhoneComponent.Child.PhoneInput -> {
+                        PhoneInputContent(
+                            state = state,
+                            onPhoneChanged = component::onPhoneChanged,
+                            onSendCodeClick = component::onSendCodeClick
+                        )
+                    }
+                    is LoginByPhoneComponent.Child.CodeInput -> {
+                        CodeInputContent(
+                            state = state,
+                            phone = activeChild.phone,
+                            onCodeChanged = component::onCodeChanged,
+                            onConfirmClick = component::onConfirmCodeClick,
+                            onResendClick = component::onSendCodeClick,
+                            onChangePhoneClick = component::onResetPhoneClick
+                        )
+                    }
                 }
             }
 
@@ -113,7 +123,7 @@ fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
 
 @Composable
 private fun PhoneInputContent(
-    state: LoginByPhoneScreenState.PhoneInput,
+    state: LoginByPhoneScreenState,
     onPhoneChanged: (String) -> Unit,
     onSendCodeClick: () -> Unit
 ) {
@@ -169,7 +179,8 @@ private fun PhoneInputContent(
 
 @Composable
 private fun CodeInputContent(
-    state: LoginByPhoneScreenState.CodeInput,
+    state: LoginByPhoneScreenState,
+    phone: String,
     onCodeChanged: (String) -> Unit,
     onConfirmClick: () -> Unit,
     onResendClick: () -> Unit,
@@ -187,7 +198,7 @@ private fun CodeInputContent(
         )
 
         CoreBodyText(
-            text = stringResource(Res.string.code_sent_to, state.phoneNumber),
+            text = stringResource(Res.string.code_sent_to, phone),
             modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_SENT_INFO_TEXT)
         )
 
@@ -254,23 +265,23 @@ private fun CodeInputContent(
 @InternalApi
 internal class LoginByPhonePreviewProvider : PreviewParameterProvider<LoginByPhoneScreenState> {
     private val items: List<Pair<String, LoginByPhoneScreenState>> = listOf(
-        "Phone Input" to LoginByPhoneScreenState.PhoneInput(
+        "Phone Input" to LoginByPhoneScreenState(
             phoneNumber = "+1234567890"
         ),
-        "Phone Error" to LoginByPhoneScreenState.PhoneInput(
+        "Phone Error" to LoginByPhoneScreenState(
             phoneNumber = "+1234567890",
             actionError = CommonError.Unknown()
         ),
-        "Code Input" to LoginByPhoneScreenState.CodeInput(
+        "Code Input" to LoginByPhoneScreenState(
             phoneNumber = "+1234567890",
             code = "123456"
         ),
-        "Code Timer Active" to LoginByPhoneScreenState.CodeInput(
+        "Code Timer Active" to LoginByPhoneScreenState(
             phoneNumber = "+1234567890",
             code = "",
             resendTimerSeconds = 30
         ),
-        "Action Loading" to LoginByPhoneScreenState.PhoneInput(
+        "Action Loading" to LoginByPhoneScreenState(
             phoneNumber = "+1234567890",
             actionLoading = true
         )
@@ -293,12 +304,12 @@ private fun LoginByPhoneScreenPreviewContent(state: LoginByPhoneScreenState) {
     }
 }
 
-private val defaultLoginByPhonePreviewState = LoginByPhoneScreenState.PhoneInput(
+private val defaultLoginByPhonePreviewState = LoginByPhoneScreenState(
     phoneNumber = "+1234567890"
 )
 
 @InternalApi
-@Preview(showBackground = true, group = "States")
+@ScreenSizePreviews
 @Composable
 private fun StatesPreview(
     @PreviewParameter(LoginByPhonePreviewProvider::class) state: LoginByPhoneScreenState

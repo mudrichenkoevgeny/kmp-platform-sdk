@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 /** Default implementation of [UnlockTargetInputComponent]. */
 class UnlockTargetInputComponentImpl(
     componentContext: ComponentContext,
-    method: UnlockMethod,
+    params: UnlockTargetInputParams,
     prefilledInput: String = "",
     private val sendUnlockEmailConfirmationUseCase: SendUnlockEmailConfirmationUseCase,
     private val sendUnlockPhoneConfirmationUseCase: SendUnlockPhoneConfirmationUseCase,
@@ -24,9 +24,29 @@ class UnlockTargetInputComponentImpl(
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
 ) : UnlockTargetInputComponent, ComponentContext by componentContext {
 
+    constructor(
+        componentContext: ComponentContext,
+        method: UnlockMethod,
+        prefilledInput: String = "",
+        sendUnlockEmailConfirmationUseCase: SendUnlockEmailConfirmationUseCase,
+        sendUnlockPhoneConfirmationUseCase: SendUnlockPhoneConfirmationUseCase,
+        onNavigateToOtp: (target: String, initialDelaySeconds: Int) -> Unit,
+        onBack: () -> Unit,
+        coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
+    ) : this(
+        componentContext = componentContext,
+        params = UnlockTargetInputParams(method = method),
+        prefilledInput = prefilledInput,
+        sendUnlockEmailConfirmationUseCase = sendUnlockEmailConfirmationUseCase,
+        sendUnlockPhoneConfirmationUseCase = sendUnlockPhoneConfirmationUseCase,
+        onNavigateToOtp = onNavigateToOtp,
+        onBack = onBack,
+        coroutineScope = coroutineScope
+    )
+
     private val _state = MutableValue(
         UnlockTargetInputScreenState(
-            method = method,
+            method = params.method,
             input = prefilledInput
         )
     )

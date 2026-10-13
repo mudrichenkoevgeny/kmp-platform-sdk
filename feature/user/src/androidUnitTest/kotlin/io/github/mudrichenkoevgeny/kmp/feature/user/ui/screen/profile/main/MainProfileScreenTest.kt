@@ -14,7 +14,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.MainProfileComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import org.junit.runner.RunWith
@@ -55,7 +55,7 @@ class MainProfileScreenTest {
 
     @Test
     fun content_displaysElements_withDeleteAccountAvailable() = runComposeUiTest {
-        val user = userDetailsMock()
+        val user = userPrivateMock()
         val component = MainProfileComponentMock(
             MainProfileScreenState.Content(
                 user = user,
@@ -80,7 +80,7 @@ class MainProfileScreenTest {
 
     @Test
     fun content_managementApp_displaysAuthorityLevelAndPermissions() = runComposeUiTest {
-        val user = userDetailsMock()
+        val user = userPrivateMock()
         val component = MainProfileComponentMock(
             MainProfileScreenState.Content(
                 user = user,
@@ -100,7 +100,7 @@ class MainProfileScreenTest {
     fun content_clickActions_invokesCallbacks() = runComposeUiTest {
         val component = MainProfileComponentMock(
             MainProfileScreenState.Content(
-                user = userDetailsMock(),
+                user = userPrivateMock(),
                 isAccountDeletionAvailable = true
             )
         )
@@ -130,7 +130,7 @@ class MainProfileScreenTest {
     fun content_inlineActionError_showsErrorTextNode() = runComposeUiTest {
         val component = MainProfileComponentMock(
             MainProfileScreenState.Content(
-                user = userDetailsMock(),
+                user = userPrivateMock(),
                 actionError = CommonError.Unknown()
             )
         )

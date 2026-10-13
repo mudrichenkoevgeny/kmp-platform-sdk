@@ -8,6 +8,7 @@ import androidx.compose.ui.test.hasProgressBarRangeInfo
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import com.arkivanov.decompose.router.stack.bringToFront
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig
@@ -26,22 +27,9 @@ import kotlin.test.assertEquals
 class ResetEmailPasswordScreenTest {
 
     @Test
-    fun loading_showsIndeterminateProgressAfterDefaultDelay() = runComposeUiTest {
-        val component = ResetEmailPasswordComponentMock(ResetEmailPasswordScreenState.Loading)
-        setContent {
-            ComponentTestHarness {
-                ResetEmailPasswordScreen(component)
-            }
-        }
-        mainClock.autoAdvance = false
-        mainClock.advanceTimeBy(FullscreenLoadingConfig.DELAY_MILLIS + LOADING_EXTRA_DELAY_MS)
-        onNode(hasProgressBarRangeInfo(ProgressBarRangeInfo.Indeterminate)).assertExists()
-    }
-
-    @Test
     fun emailInput_displaysTitleEmailAndSendCode() = runComposeUiTest {
         val component = ResetEmailPasswordComponentMock(
-            ResetEmailPasswordScreenState.EmailInput(email = EMAIL_SEND_STEP, isEmailValid = true)
+            ResetEmailPasswordScreenState(email = EMAIL_SEND_STEP, isEmailValid = true)
         )
         setContent {
             ComponentTestHarness {
@@ -57,7 +45,7 @@ class ResetEmailPasswordScreenTest {
     @Test
     fun emailInput_inlineError_showsErrorTextNode() = runComposeUiTest {
         val component = ResetEmailPasswordComponentMock(
-            ResetEmailPasswordScreenState.EmailInput(
+            ResetEmailPasswordScreenState(
                 email = EMAIL_SEND_STEP,
                 isEmailValid = true,
                 actionError = CommonError.Unknown()
@@ -74,7 +62,7 @@ class ResetEmailPasswordScreenTest {
     @Test
     fun emailInput_clickSendCode_invokesCallback() = runComposeUiTest {
         val component = ResetEmailPasswordComponentMock(
-            ResetEmailPasswordScreenState.EmailInput(email = EMAIL_SEND_STEP, isEmailValid = true)
+            ResetEmailPasswordScreenState(email = EMAIL_SEND_STEP, isEmailValid = true)
         )
         setContent {
             ComponentTestHarness {
@@ -89,7 +77,7 @@ class ResetEmailPasswordScreenTest {
     fun resetInput_displaysCodeSentLineAndFields() = runComposeUiTest {
         val email = EMAIL_CODE_SENT_LINE
         val component = ResetEmailPasswordComponentMock(
-            ResetEmailPasswordScreenState.ResetInput(
+            ResetEmailPasswordScreenState(
                 email = email,
                 code = CODE_THREE_DIGITS,
                 newPassword = NEW_PASSWORD_INVALID,
@@ -97,6 +85,7 @@ class ResetEmailPasswordScreenTest {
                 resendTimerSeconds = RESEND_TIMER_RESET_INPUT_SECONDS
             )
         )
+        component.setStep(ResetPasswordStepConfig.ConfirmInput(email, RESEND_TIMER_RESET_INPUT_SECONDS))
         setContent {
             ComponentTestHarness {
                 ResetEmailPasswordScreen(component)
@@ -114,11 +103,12 @@ class ResetEmailPasswordScreenTest {
     @Test
     fun resetInput_whenTimerPositive_showsCountdown() = runComposeUiTest {
         val component = ResetEmailPasswordComponentMock(
-            ResetEmailPasswordScreenState.ResetInput(
+            ResetEmailPasswordScreenState(
                 email = EMAIL_RESET_FLOW,
                 resendTimerSeconds = RESEND_TIMER_COUNTDOWN_SECONDS
             )
         )
+        component.setStep(ResetPasswordStepConfig.ConfirmInput(EMAIL_RESET_FLOW, RESEND_TIMER_COUNTDOWN_SECONDS))
         setContent {
             ComponentTestHarness {
                 ResetEmailPasswordScreen(component)
@@ -130,11 +120,12 @@ class ResetEmailPasswordScreenTest {
     @Test
     fun resetInput_whenCanResend_showsResendButton() = runComposeUiTest {
         val component = ResetEmailPasswordComponentMock(
-            ResetEmailPasswordScreenState.ResetInput(
+            ResetEmailPasswordScreenState(
                 email = EMAIL_RESET_FLOW,
                 resendTimerSeconds = RESEND_TIMER_EXPIRED_SECONDS
             )
         )
+        component.setStep(ResetPasswordStepConfig.ConfirmInput(EMAIL_RESET_FLOW, RESEND_TIMER_EXPIRED_SECONDS))
         setContent {
             ComponentTestHarness {
                 ResetEmailPasswordScreen(component)
@@ -146,7 +137,7 @@ class ResetEmailPasswordScreenTest {
     @Test
     fun resetInput_clickChangeEmail_invokesCallback() = runComposeUiTest {
         val component = ResetEmailPasswordComponentMock(
-            ResetEmailPasswordScreenState.ResetInput(
+            ResetEmailPasswordScreenState(
                 email = EMAIL_RESET_FLOW,
                 code = CODE_SIX_DIGITS,
                 newPassword = NEW_PASSWORD_VALID,
@@ -154,6 +145,7 @@ class ResetEmailPasswordScreenTest {
                 resendTimerSeconds = RESEND_TIMER_COUNTDOWN_SECONDS
             )
         )
+        component.setStep(ResetPasswordStepConfig.ConfirmInput(EMAIL_RESET_FLOW, RESEND_TIMER_COUNTDOWN_SECONDS))
         setContent {
             ComponentTestHarness {
                 ResetEmailPasswordScreen(component)

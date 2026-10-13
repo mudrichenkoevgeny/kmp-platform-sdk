@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
@@ -16,7 +17,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.Ma
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.launch
@@ -34,13 +35,15 @@ import kotlinx.coroutines.launch
  */
 class UserSessionListComponentImpl(
     componentContext: ComponentContext,
-    private val userId: UserId? = null,
+    private val params: UserSessionListParams? = null,
     private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
     private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase,
     private val managementDeleteAllUserSessionsUseCase: ManagementDeleteAllUserSessionsUseCase,
-    private val onNavigateToSessionDetail: ((UserSession) -> Unit)? = null,
+    private val onNavigateToSessionDetail: ((UserSessionSummary) -> Unit)? = null,
     private val onBack: () -> Unit
 ) : UserSessionListComponent, ComponentContext by componentContext {
+
+    private val userId: UserId? get() = params?.userId
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue<UserSessionListScreenState>(UserSessionListScreenState.Loading)
@@ -54,7 +57,7 @@ class UserSessionListComponentImpl(
         loadSessions()
     }
 
-    override fun onSessionClick(session: UserSession) {
+    override fun onSessionClick(session: UserSessionSummary) {
         onNavigateToSessionDetail?.invoke(session)
     }
 
@@ -67,7 +70,9 @@ class UserSessionListComponentImpl(
     }
 
     override fun onBackClick() {
-        onBack()
+        if ((backHandler as? BackDispatcher)?.back() != true) {
+            onBack()
+        }
     }
 
     override fun onLoadNextPage() {
@@ -149,7 +154,7 @@ class UserSessionListComponentImpl(
             )
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? UserSessionListScreenState.Content
-                    val newPaging = (currentContent?.paging ?: PaginationState<UserSession>()).appendResult(pagedResult)
+                    val newPaging = (currentContent?.paging ?: PaginationState<UserSessionSummary>()).appendResult(pagedResult)
                     _state.value = currentContent?.copy(paging = newPaging) ?: UserSessionListScreenState.Content(paging = newPaging)
                 }
                 .onError { error ->

@@ -10,7 +10,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.l
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserApiPaths
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.identifier.ManagementIdentifierRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
@@ -30,7 +31,7 @@ class KtorManagementIdentifierApi(
         userIds: List<String>?,
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
-    ): AppResult<PagedResult<UserIdentifierPayload>> = client.callResult {
+    ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = client.callResult {
         get(ManagementIdentifierRoutes.GET_IDENTIFIERS) {
             parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
             parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
@@ -53,7 +54,7 @@ class KtorManagementIdentifierApi(
 
     override suspend fun getIdentifier(
         identifierId: String
-    ): AppResult<UserIdentifierPayload> = client.callResult {
+    ): AppResult<UserIdentifierPrivatePayload> = client.callResult {
         get(ManagementIdentifierRoutes.GET_IDENTIFIER) {
             parameter(UserApiPaths.USER_IDENTIFIER_ID, identifierId)
         }

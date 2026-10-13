@@ -69,7 +69,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm_title
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifiers
 import io.github.mudrichenkoevgeny.kmp.feature.user.logout
 import io.github.mudrichenkoevgeny.kmp.feature.user.logout_confirm_msg
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.main.MainProfileComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.permission_codes_prefix
@@ -351,11 +351,11 @@ private fun ErrorText(error: AppError?) {
 internal class MainProfilePreviewProvider : PreviewParameterProvider<MainProfileScreenState> {
     private val items: List<Pair<String, MainProfileScreenState>> = listOf(
         "Unauthorized" to MainProfileScreenState.Unauthorized(),
-        "Content Client" to MainProfileScreenState.Content(user = userDetailsMock(), appType = AppType.CLIENT, isAccountDeletionAvailable = true),
-        "Content Management" to MainProfileScreenState.Content(user = userDetailsMock(), appType = AppType.MANAGEMENT, isAccountDeletionAvailable = false),
-        "Content Pending Deletion" to MainProfileScreenState.Content(user = userDetailsMock(accountStatus = UserAccountStatus.PENDING_DELETION)),
-        "Action Loading" to MainProfileScreenState.Content(user = userDetailsMock(), actionLoading = true),
-        "Inline Error" to MainProfileScreenState.Content(user = userDetailsMock(), actionError = CommonError.Unknown()),
+        "Content Client" to MainProfileScreenState.Content(user = userPrivateMock(), appType = AppType.CLIENT, isAccountDeletionAvailable = true),
+        "Content Management" to MainProfileScreenState.Content(user = userPrivateMock(), appType = AppType.MANAGEMENT, isAccountDeletionAvailable = false),
+        "Content Pending Deletion" to MainProfileScreenState.Content(user = userPrivateMock(accountStatus = UserAccountStatus.PENDING_DELETION)),
+        "Action Loading" to MainProfileScreenState.Content(user = userPrivateMock(), actionLoading = true),
+        "Inline Error" to MainProfileScreenState.Content(user = userPrivateMock(), actionError = CommonError.Unknown()),
         "Global Error" to MainProfileScreenState.Error(error = CommonError.Unknown()),
         "Fullscreen Loading" to MainProfileScreenState.Loading
     )
@@ -377,7 +377,7 @@ private fun MainProfileScreenPreviewContent(state: MainProfileScreenState) {
 
 @InternalApi
 private val defaultMainProfilePreviewState = MainProfileScreenState.Content(
-    user = userDetailsMock(),
+    user = userPrivateMock(),
     isAccountDeletionAvailable = true
 )
 

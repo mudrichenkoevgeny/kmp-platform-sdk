@@ -4,31 +4,33 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.otpConfirmationMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierPrivateMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 
 @InternalApi
 open class IdentifierRepositoryMock : IdentifierRepository {
 
-    var getUserIdentifierResultProvider: (UserIdentifierId) -> AppResult<UserIdentifier> = {
-        AppResult.Success(userIdentifierMock())
+    var getUserIdentifierResultProvider: (UserIdentifierId) -> AppResult<UserIdentifierPrivate> = {
+        AppResult.Success(userIdentifierPrivateMock())
     }
 
-    var getUserIdentifiersResultProvider: () -> AppResult<PagedResult<UserIdentifier>> = {
-        AppResult.Success(pagedResultMock(listOf(userIdentifierMock())))
+    var getUserIdentifiersResultProvider: () -> AppResult<PagedResult<UserIdentifierSummary>> = {
+        AppResult.Success(pagedResultMock(listOf(userIdentifierSummaryMock())))
     }
 
     var deleteUserIdentifierResultProvider: (UserIdentifierId) -> AppResult<Unit> = { _ -> AppResult.Success(Unit) }
 
-    var addUserIdentifierResultProvider: () -> AppResult<UserIdentifier> = {
-        AppResult.Success(userIdentifierMock())
+    var addUserIdentifierResultProvider: () -> AppResult<UserIdentifierPrivate> = {
+        AppResult.Success(userIdentifierPrivateMock())
     }
 
     var otpConfirmationResultProvider: () -> AppResult<OtpConfirmation> = {
@@ -47,7 +49,7 @@ open class IdentifierRepositoryMock : IdentifierRepository {
     var lastOldPassword: String? = null
     var lastNewPassword: String? = null
 
-    override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifier> {
+    override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> {
         lastIdentifierId = userIdentifierId
         return getUserIdentifierResultProvider(userIdentifierId)
     }
@@ -59,7 +61,7 @@ open class IdentifierRepositoryMock : IdentifierRepository {
         sortOrder: SortOrder?,
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
-    ): AppResult<PagedResult<UserIdentifier>> = getUserIdentifiersResultProvider()
+    ): AppResult<PagedResult<UserIdentifierSummary>> = getUserIdentifiersResultProvider()
 
     override suspend fun deleteUserIdentifier(identifierId: UserIdentifierId): AppResult<Unit> {
         lastIdentifierId = identifierId
@@ -70,7 +72,7 @@ open class IdentifierRepositoryMock : IdentifierRepository {
         email: String,
         password: String,
         confirmationCode: String
-    ): AppResult<UserIdentifier> {
+    ): AppResult<UserIdentifierPrivate> {
         lastEmail = email
         lastPassword = password
         lastConfirmationCode = confirmationCode
@@ -80,7 +82,7 @@ open class IdentifierRepositoryMock : IdentifierRepository {
     override suspend fun addUserIdentifierPhone(
         phoneNumber: String,
         confirmationCode: String
-    ): AppResult<UserIdentifier> {
+    ): AppResult<UserIdentifierPrivate> {
         lastPhoneNumber = phoneNumber
         lastConfirmationCode = confirmationCode
         return addUserIdentifierResultProvider()
@@ -89,7 +91,7 @@ open class IdentifierRepositoryMock : IdentifierRepository {
     override suspend fun addUserIdentifierExternalAuthProvider(
         authProvider: String,
         externalProviderToken: String
-    ): AppResult<UserIdentifier> {
+    ): AppResult<UserIdentifierPrivate> {
         lastAuthProvider = authProvider
         lastToken = externalProviderToken
         return addUserIdentifierResultProvider()

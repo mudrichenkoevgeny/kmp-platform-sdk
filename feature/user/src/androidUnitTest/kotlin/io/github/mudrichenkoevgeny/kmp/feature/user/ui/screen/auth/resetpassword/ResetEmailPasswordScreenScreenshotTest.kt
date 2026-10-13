@@ -39,10 +39,7 @@ class ResetEmailPasswordScreenScreenshotTest(
             }
         }
 
-        if ((state is ResetEmailPasswordScreenState.Loading) ||
-            (state is ResetEmailPasswordScreenState.EmailInput && state.actionLoading) ||
-            (state is ResetEmailPasswordScreenState.ResetInput && state.actionLoading)
-        ) {
+        if (state.actionLoading) {
             mainClock.autoAdvance = false
             mainClock.advanceTimeBy(FullscreenLoadingConfig.DELAY_MILLIS + 50L)
         }

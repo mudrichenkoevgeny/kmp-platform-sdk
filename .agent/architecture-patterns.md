@@ -73,5 +73,12 @@ All paged lists must use the standardized infrastructure from `core:common`:
 - **UI Trigger:** Monitor scroll position using the `LazyListState.OnBottomReached` extension from `io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing` to trigger next-page loads.
 - **UI Feedback:** Always include `PagingFooter` as the last item in the `LazyColumn` to show infinite loading indicators or retry actions for failed pages.
 
+## 9. Universal Deep Links & Screen Parameters
+
+- **Screen Parameter Encapsulation (`*Params` Data Classes):** Decompose screen destinations with arguments must encapsulate parameters inside dedicated, serializable data classes (e.g. `UserDetailParams(val userIdValue: String)`). Inner domain value class getters convert raw parameter values safely (`val userId: UserId get() = userIdValue.toUserIdOrThrow()`).
+- **Feature-Level Parsers & Formatters:** Modular navigation parsers (`*DeepLinkParser` / `*UrlFormatter`) reside in feature modules and utilize `*DeepLinkConstants` internal objects (with nested `Segment` and `Query` objects) for host, path, and query constants.
+- **App-Specific Aggregators:** Root aggregators (`ManagementAppDeepLinkParser`, `ClientAppDeepLinkParser`) and sealed route models (`ManagementAppDeepLinkRoute`, `ClientAppDeepLinkRoute`) reside in application modules (`samplemanagement` / `sampleclient`) to maintain strict dependency graph isolation.
+- **Race Condition Prevention:** Navigation dispatch searches for child instances synchronously across `stack.value.items.find { it.configuration == route.tab }?.instance` rather than inspecting `stack.value.active.instance` immediately after `bringToFront`.
+
 ---
 *Refer to `AGENTS.md` for coding style rules (No FQN, No Comments).*

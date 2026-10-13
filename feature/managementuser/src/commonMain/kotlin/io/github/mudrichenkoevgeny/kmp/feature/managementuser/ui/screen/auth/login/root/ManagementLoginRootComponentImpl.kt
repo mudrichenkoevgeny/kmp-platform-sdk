@@ -8,6 +8,7 @@ import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.di.ManagementUserComponent
@@ -16,12 +17,15 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.pendingdeletion.PendingDeletionComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpParams
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.AccountUnlockParams
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.root.UnlockRootComponentImpl
 
 class ManagementLoginRootComponentImpl(
     componentContext: ComponentContext,
+    initialDestination: ManagementLoginDestination = ManagementLoginDestination.Welcome,
     private val settingsComponent: SettingsComponent,
     private val securityComponent: SecurityComponent,
     private val managementUserComponent: ManagementUserComponent,
@@ -34,7 +38,7 @@ class ManagementLoginRootComponentImpl(
         childStack(
             source = navigation,
             serializer = ManagementLoginDestination.serializer(),
-            initialConfiguration = ManagementLoginDestination.Welcome,
+            initialConfiguration = initialDestination,
             handleBackButton = true,
             childFactory = ::createChild
         )
@@ -53,10 +57,10 @@ class ManagementLoginRootComponentImpl(
                 loginByGoogleUseCase = null,
                 onNavigateToLoginByEmail = { navigation.bringToFront(ManagementLoginDestination.LoginByEmail) },
                 onNavigateToLoginByPhone = { },
-                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ManagementLoginDestination.LoginByTotp(mfaToken)) },
+                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ManagementLoginDestination.LoginByTotp(LoginByTotpParams(mfaToken))) },
                 onNavigateToPendingDeletion = { navigation.bringToFront(ManagementLoginDestination.PendingDeletion) },
                 onNavigateToAccountUnlock = { lockoutType, lockoutUntil ->
-                    navigation.bringToFront(ManagementLoginDestination.AccountUnlock(lockoutType, lockoutUntil))
+                    navigation.bringToFront(ManagementLoginDestination.AccountUnlock(AccountUnlockParams(lockoutType, lockoutUntil)))
                 },
                 onFinished = onFinished
             )
@@ -68,12 +72,12 @@ class ManagementLoginRootComponentImpl(
                 loginByEmailUseCase = managementUserComponent.loginByEmailUseCase,
                 onNavigateToRegistrationByEmail = { },
                 onNavigateToForgotPassword = { navigation.bringToFront(ManagementLoginDestination.ResetEmailPassword) },
-                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ManagementLoginDestination.LoginByTotp(mfaToken)) },
+                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ManagementLoginDestination.LoginByTotp(LoginByTotpParams(mfaToken))) },
                 onNavigateToPendingDeletion = { navigation.bringToFront(ManagementLoginDestination.PendingDeletion) },
                 onNavigateToAccountUnlock = { lockoutType, lockoutUntil ->
-                    navigation.bringToFront(ManagementLoginDestination.AccountUnlock(lockoutType, lockoutUntil))
+                    navigation.bringToFront(ManagementLoginDestination.AccountUnlock(AccountUnlockParams(lockoutType, lockoutUntil)))
                 },
-                onBack = navigation::pop,
+                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() },
                 onFinished = onFinished
             )
         )
@@ -84,18 +88,18 @@ class ManagementLoginRootComponentImpl(
                 sendResetPasswordConfirmationToEmailUseCase = managementUserComponent.sendResetPasswordConfirmationToEmailUseCase,
                 resetEmailPasswordUseCase = managementUserComponent.resetEmailPasswordUseCase,
                 validatePasswordUseCase = securityComponent.validatePasswordUseCase,
-                onBack = navigation::pop,
+                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() },
                 onFinished = onFinished
             )
         )
         is ManagementLoginDestination.LoginByTotp -> ManagementLoginRootComponent.Child.LoginByTotp(
             LoginByTotpComponentImpl(
                 componentContext = context,
-                mfaToken = config.mfaToken,
+                params = config.params,
                 loginByTotpUseCase = managementUserComponent.loginByTotpUseCase,
                 loginByTotpRecoveryCodeUseCase = managementUserComponent.loginByTotpRecoveryCodeUseCase,
                 onNavigateToPendingDeletion = { navigation.bringToFront(ManagementLoginDestination.PendingDeletion) },
-                onBack = navigation::pop,
+                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() },
                 onFinished = onFinished
             )
         )
@@ -111,8 +115,7 @@ class ManagementLoginRootComponentImpl(
         is ManagementLoginDestination.AccountUnlock -> ManagementLoginRootComponent.Child.AccountUnlock(
             UnlockRootComponentImpl(
                 componentContext = context,
-                lockoutType = config.lockoutType,
-                lockoutUntil = config.lockoutUntil,
+                params = config.params,
                 getUserIdentifiersUseCase = managementUserComponent.getUserIdentifiersUseCase,
                 unlockByGoogleUseCase = null,
                 sendUnlockEmailConfirmationUseCase = managementUserComponent.sendUnlockEmailConfirmationUseCase,

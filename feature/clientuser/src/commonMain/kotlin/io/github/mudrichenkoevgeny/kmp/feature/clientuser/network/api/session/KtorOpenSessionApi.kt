@@ -14,7 +14,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.l
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserApiPaths
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.DeletedSessionsPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.session.OpenSessionRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
@@ -44,7 +45,7 @@ class KtorOpenSessionApi(
         deviceNames: List<String>?,
         appVersions: List<String>?,
         operationSystemVersions: List<String>?
-    ): AppResult<PagedResult<UserSessionPayload>> = client.callResult {
+    ): AppResult<PagedResult<UserSessionSummaryPayload>> = client.callResult {
         get(OpenSessionRoutes.GET_SESSIONS) {
             parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
             parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
@@ -86,7 +87,7 @@ class KtorOpenSessionApi(
         }
     }
 
-    override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPayload> =
+    override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivatePayload> =
         client.callResult {
             get(
                 OpenSessionRoutes.GET_SESSION.replace(

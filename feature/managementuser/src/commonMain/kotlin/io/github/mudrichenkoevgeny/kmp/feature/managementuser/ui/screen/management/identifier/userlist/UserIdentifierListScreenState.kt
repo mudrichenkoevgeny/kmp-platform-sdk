@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 
 /**
  * UI state for a specific user's identifiers management screen.
@@ -23,7 +23,7 @@ sealed interface UserIdentifierListScreenState {
      * @param actionError error from the last action attempt.
      */
     data class Content(
-        val paging: PaginationState<UserIdentifier>,
+        val paging: PaginationState<UserIdentifierSummary>,
         val actionLoading: Boolean = false,
         val actionError: AppError? = null
     ) : UserIdentifierListScreenState

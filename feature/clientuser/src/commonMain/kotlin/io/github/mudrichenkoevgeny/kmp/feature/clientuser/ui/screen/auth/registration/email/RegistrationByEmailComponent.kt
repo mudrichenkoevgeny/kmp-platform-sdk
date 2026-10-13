@@ -1,5 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email
 
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.value.Value
 
 /**
@@ -7,11 +9,27 @@ import com.arkivanov.decompose.value.Value
  */
 interface RegistrationByEmailComponent {
     /**
+     * Decompose navigation stack driving the registration wizard steps.
+     */
+    val stack: Value<ChildStack<RegistrationByEmailStepConfig, Child>>
+
+    /**
+     * Stack navigator for the registration wizard.
+     */
+    val stackNavigation: StackNavigation<RegistrationByEmailStepConfig>
+
+    /**
      * Current UI state for [RegistrationByEmailScreen].
-     *
-     * @return reactive [RegistrationByEmailScreenState].
      */
     val state: Value<RegistrationByEmailScreenState>
+
+    /**
+     * Child instances corresponding to each wizard step.
+     */
+    sealed interface Child {
+        data class EmailInput(val initialEmail: String) : Child
+        data class ConfirmInput(val email: String) : Child
+    }
 
     /**
      * Updates the email field; may auto-advance to password/code step if a cooldown is active.

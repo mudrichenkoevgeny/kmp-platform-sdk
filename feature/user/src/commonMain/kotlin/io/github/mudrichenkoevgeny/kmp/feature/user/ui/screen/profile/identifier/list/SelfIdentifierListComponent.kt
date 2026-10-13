@@ -1,5 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list
 
+import com.arkivanov.decompose.router.slot.ChildSlot
+import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
@@ -10,6 +12,21 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
 interface SelfIdentifierListComponent : IdentifierListOwner {
     /** Reactive UI state. */
     val state: Value<SelfIdentifierListScreenState>
+
+    /** Decompose child slot for the "Add Identifier" dialog wizard. */
+    val addIdentifierDialogSlot: Value<ChildSlot<AddIdentifierDialogConfig, AddIdentifierDialogChild>>
+
+    /** Slot navigator for the add identifier dialog. */
+    val addIdentifierDialogSlotNavigation: SlotNavigation<AddIdentifierDialogConfig>
+
+    /** Dialog child instances corresponding to each configuration step. */
+    sealed interface AddIdentifierDialogChild {
+        data object ProviderSelection : AddIdentifierDialogChild
+        data class EmailInput(val initialEmail: String) : AddIdentifierDialogChild
+        data class EmailConfirm(val email: String) : AddIdentifierDialogChild
+        data class PhoneInput(val initialPhone: String) : AddIdentifierDialogChild
+        data class PhoneConfirm(val phone: String) : AddIdentifierDialogChild
+    }
 
     /** Refreshes the identifier list. */
     fun onRefresh()

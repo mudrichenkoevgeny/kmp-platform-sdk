@@ -4,10 +4,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.identifier.IdentifierRepositoryMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -18,7 +18,7 @@ class GetUserIdentifiersUseCaseTest {
 
     @Test
     fun invoke_returnsPagedResult_whenRepositorySucceeds() = runTest {
-        val expectedPagedResult = pagedResultMock(listOf(userIdentifierMock()))
+        val expectedPagedResult = pagedResultMock(listOf(userIdentifierSummaryMock()))
         val repository = IdentifierRepositoryMock().apply {
             getUserIdentifiersResultProvider = { AppResult.Success(expectedPagedResult) }
         }
@@ -26,7 +26,7 @@ class GetUserIdentifiersUseCaseTest {
 
         val result = useCase()
 
-        assertIs<AppResult.Success<PagedResult<UserIdentifier>>>(result)
+        assertIs<AppResult.Success<PagedResult<UserIdentifierSummary>>>(result)
         assertEquals(expectedPagedResult, result.data)
     }
 

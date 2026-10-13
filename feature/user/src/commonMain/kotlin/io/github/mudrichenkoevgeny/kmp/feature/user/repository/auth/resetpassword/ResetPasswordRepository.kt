@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpasswo
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 
 /**
  * Password recovery: reset with a confirmation code and send-code flows with client-side retry hints.
@@ -15,13 +15,13 @@ interface ResetPasswordRepository {
      * @param email Account email used in the reset flow.
      * @param newPassword Replacement password after successful verification.
      * @param confirmationCode One-time code delivered to [email].
-     * @return [UserIdentifier] on success, or an error [AppResult] on failure.
+     * @return [UserIdentifierPrivate] on success, or an error [AppResult] on failure.
      */
     suspend fun resetPassword(
         email: String,
         newPassword: String,
         confirmationCode: String
-    ): AppResult<UserIdentifier>
+    ): AppResult<UserIdentifierPrivate>
 
     /**
      * Requests a password-reset confirmation code to be sent to [email].

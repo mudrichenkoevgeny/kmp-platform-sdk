@@ -210,7 +210,6 @@ class LoginWelcomeComponentImplTest {
 
         context.component = LoginWelcomeComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
-            appType = AppType.CLIENT,
             externalLauncher = externalLauncher,
             getOpenGlobalSettingsUseCase = GetOpenGlobalSettingsUseCase(globalSettingsRepository),
             getAvailableUserAuthProvidersUseCase = GetAvailableUserAuthProvidersUseCase(

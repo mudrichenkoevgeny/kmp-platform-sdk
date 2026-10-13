@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.user
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserDetailsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserPrivatePayload
 
 /** Current user profile fetch and account deletion. */
 interface OpenUserApi {
@@ -10,19 +10,19 @@ interface OpenUserApi {
      *
      * @return Current user DTO from the shared contract, or a mapped failure.
      */
-    suspend fun getUser(): AppResult<UserDetailsPayload>
+    suspend fun getUser(): AppResult<UserPrivatePayload>
 
     /**
      * Permanently deletes the signed-in account on the server.
      *
      * @return Success or a mapped failure.
      */
-    suspend fun scheduleUserDeletion(): AppResult<UserDetailsPayload>
+    suspend fun scheduleUserDeletion(): AppResult<UserPrivatePayload>
 
     /**
      * Cancels a scheduled account deletion and restores the user to an active state.
      *
      * @return Current user DTO reflecting the restored account status, or a mapped failure.
      */
-    suspend fun restoreUser(): AppResult<UserDetailsPayload>
+    suspend fun restoreUser(): AppResult<UserPrivatePayload>
 }

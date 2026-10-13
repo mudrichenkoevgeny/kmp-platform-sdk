@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.alexzhirkevich.qrose.rememberQrCodePainter
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
@@ -122,29 +123,68 @@ fun TotpMainScreen(component: TotpMainComponent) {
                     .padding(padding),
                 contentAlignment = Alignment.Center
             ) {
-                when (val currentState = state) {
-                    is TotpMainScreenState.Loading -> FullscreenLoading()
-                    is TotpMainScreenState.Disabled -> DisabledContent(
-                        state = currentState,
-                        onSetupClick = component::onSetupClick
+                val initError = state.initError
+                if (initError != null) {
+                    CoreErrorText(
+                        text = initError.toLocalizedMessage(),
+                        modifier = Modifier.testTag(TotpMainTestTags.GLOBAL_ERROR_TEXT)
                     )
-                    is TotpMainScreenState.SetupInProgress -> SetupInProgressContent(
-                        state = currentState,
-                        onCodeChanged = component::onCodeChanged,
-                        onConfirmClick = component::onConfirmSetupClick
-                    )
-                    is TotpMainScreenState.Enabled -> EnabledContent(
-                        state = currentState,
-                        onRecoveryCodesClick = component::onRecoveryCodesClick,
-                        onDisableClick = component::onDisableClick,
-                        onConfirmDisable = component::onConfirmDisable,
-                        onDismissDialogs = component::onDismissDialogs
-                    )
-                    is TotpMainScreenState.Error -> {
-                        CoreErrorText(
-                            text = currentState.error.toLocalizedMessage(),
-                            modifier = Modifier.testTag(TotpMainTestTags.GLOBAL_ERROR_TEXT)
-                        )
+                } else if (!state.isInitialized) {
+                    FullscreenLoading()
+                } else {
+                    Children(
+                        stack = component.stack,
+                        modifier = Modifier.fillMaxSize()
+                    ) { child ->
+                        when (val activeChild = child.instance) {
+                            is TotpMainComponent.Child.Status -> {
+                                if (state.isEnabled) {
+                                    EnabledContent(
+                                        state = state,
+                                        onRecoveryCodesClick = component::onRecoveryCodesClick,
+                                        onDisableClick = component::onDisableClick
+                                    )
+                                } else {
+                                    DisabledContent(
+                                        state = state,
+                                        onSetupClick = component::onSetupClick
+                                    )
+                                }
+                            }
+                            is TotpMainComponent.Child.Setup -> {
+                                SetupInProgressContent(
+                                    state = state,
+                                    setup = activeChild,
+                                    onCodeChanged = component::onCodeChanged,
+                                    onConfirmClick = component::onConfirmSetupClick
+                                )
+                            }
+                        }
+                    }
+                }
+                
+                val dialogSlot by component.dialogSlot.subscribeAsState()
+                dialogSlot.child?.instance?.let { dialogChild ->
+                    when (dialogChild) {
+                        is TotpMainComponent.DialogChild.ConfirmDisable -> {
+                            AlertDialog(
+                                onDismissRequest = component::onDismissDialogs,
+                                title = { CoreTitleText(text = stringResource(Res.string.dialog_confirm_title)) },
+                                text = { CoreBodyText(text = stringResource(Res.string.disable_totp_confirm_msg)) },
+                                confirmButton = {
+                                    CoreTextButton(
+                                        text = stringResource(Res.string.dialog_confirm),
+                                        onClick = component::onConfirmDisable
+                                    )
+                                },
+                                dismissButton = {
+                                    CoreTextButton(
+                                        text = stringResource(Res.string.dialog_cancel),
+                                        onClick = component::onDismissDialogs
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -154,7 +194,7 @@ fun TotpMainScreen(component: TotpMainComponent) {
 
 @Composable
 private fun DisabledContent(
-    state: TotpMainScreenState.Disabled,
+    state: TotpMainScreenState,
     onSetupClick: () -> Unit
 ) {
     Column(
@@ -184,7 +224,8 @@ private fun DisabledContent(
 
 @Composable
 private fun SetupInProgressContent(
-    state: TotpMainScreenState.SetupInProgress,
+    state: TotpMainScreenState,
+    setup: TotpMainComponent.Child.Setup,
     onCodeChanged: (String) -> Unit,
     onConfirmClick: () -> Unit
 ) {
@@ -218,7 +259,7 @@ private fun SetupInProgressContent(
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = rememberQrCodePainter(state.setup.otpAuthUrl),
+                painter = rememberQrCodePainter(setup.otpAuthUrl),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize()
             )
@@ -236,7 +277,7 @@ private fun SetupInProgressContent(
             horizontalArrangement = Arrangement.Center
         ) {
             CoreTitleText(
-                text = state.setup.secretKey,
+                text = setup.secretKey,
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
@@ -244,7 +285,7 @@ private fun SetupInProgressContent(
                 modifier = Modifier.testTag(TotpMainTestTags.SECRET_KEY_TEXT)
             )
             IconButton(
-                onClick = { clipboardManager.setText(AnnotatedString(state.setup.secretKey)) },
+                onClick = { clipboardManager.setText(AnnotatedString(setup.secretKey)) },
                 modifier = Modifier.testTag(TotpMainTestTags.COPY_SECRET_KEY_BUTTON)
             ) {
                 Icon(
@@ -298,11 +339,9 @@ private fun SetupInProgressContent(
 
 @Composable
 private fun EnabledContent(
-    state: TotpMainScreenState.Enabled,
+    state: TotpMainScreenState,
     onRecoveryCodesClick: () -> Unit,
-    onDisableClick: () -> Unit,
-    onConfirmDisable: () -> Unit,
-    onDismissDialogs: () -> Unit
+    onDisableClick: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -355,26 +394,6 @@ private fun EnabledContent(
                 testTag = TotpMainTestTags.ENABLED_ACTION_ERROR_TEXT
             )
         }
-
-        if (state.showDisableConfirmation) {
-            AlertDialog(
-                onDismissRequest = onDismissDialogs,
-                title = { CoreTitleText(text = stringResource(Res.string.dialog_confirm_title)) },
-                text = { CoreBodyText(text = stringResource(Res.string.disable_totp_confirm_msg)) },
-                confirmButton = {
-                    CoreTextButton(
-                        text = stringResource(Res.string.dialog_confirm),
-                        onClick = onConfirmDisable
-                    )
-                },
-                dismissButton = {
-                    CoreTextButton(
-                        text = stringResource(Res.string.dialog_cancel),
-                        onClick = onDismissDialogs
-                    )
-                }
-            )
-        }
     }
 }
 
@@ -400,19 +419,27 @@ private fun ErrorText(error: AppError?, testTag: String) {
 @InternalApi
 internal class TotpMainPreviewProvider : PreviewParameterProvider<TotpMainScreenState> {
     private val items: List<Pair<String, TotpMainScreenState>> = listOf(
-        "Disabled" to TotpMainScreenState.Disabled(),
-        "Setup In Progress" to TotpMainScreenState.SetupInProgress(
-            setup = TotpSetup(
-                secretKey = "JBSWY3DPEHPK3PXP",
-                otpAuthUrl = "otpauth://totp/Example:user@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Example",
-                mfaToken = "mfa_token_sample"
-            ),
+        "Disabled" to TotpMainScreenState(
+            isInitialized = true,
+            isEnabled = false
+        ),
+        "Setup In Progress" to TotpMainScreenState(
+            isInitialized = true,
+            isEnabled = false,
             code = "123456"
         ),
-        "Enabled" to TotpMainScreenState.Enabled(),
-        "Action Loading" to TotpMainScreenState.Disabled(actionLoading = true),
-        "Global Error" to TotpMainScreenState.Error(error = CommonError.Unknown()),
-        "Fullscreen Loading" to TotpMainScreenState.Loading
+        "Enabled" to TotpMainScreenState(
+            isInitialized = true,
+            isEnabled = true
+        ),
+        "Action Loading" to TotpMainScreenState(
+            isInitialized = true,
+            actionLoading = true
+        ),
+        "Global Error" to TotpMainScreenState(
+            initError = CommonError.Unknown()
+        ),
+        "Fullscreen Loading" to TotpMainScreenState()
     )
 
     override val values: Sequence<TotpMainScreenState> = items.asSequence().map { it.second }
@@ -430,10 +457,13 @@ private fun TotpMainScreenPreviewContent(state: TotpMainScreenState) {
     }
 }
 
-private val defaultTotpMainPreviewState = TotpMainScreenState.Disabled()
+private val defaultTotpMainPreviewState = TotpMainScreenState(
+    isInitialized = true,
+    isEnabled = false
+)
 
 @InternalApi
-@Preview(showBackground = true, group = "States")
+@ScreenSizePreviews
 @Composable
 private fun StatesPreview(
     @PreviewParameter(TotpMainPreviewProvider::class) state: TotpMainScreenState

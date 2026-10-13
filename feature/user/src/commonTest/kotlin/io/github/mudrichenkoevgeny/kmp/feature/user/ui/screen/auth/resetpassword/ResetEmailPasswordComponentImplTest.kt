@@ -11,11 +11,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.otpConfirmationMock
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.usecase.ValidatePasswordUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.identifier.userIdentifierPayloadMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.identifier.userIdentifierPrivatePayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.resetpassword.ResetPasswordRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.resetpassword.ResetEmailPasswordUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.resetpassword.SendResetPasswordConfirmationToEmailUseCaseMock
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierPrivate
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlin.test.Test
@@ -36,9 +36,9 @@ class ResetEmailPasswordComponentImplTest {
         try {
             context.component.onEmailChanged(INVALID_EMAIL)
             runCurrent()
-            val emailState = assertIs<ResetEmailPasswordScreenState.EmailInput>(context.component.state.value)
-            assertFalse(emailState.isEmailValid)
-            assertEquals(INVALID_EMAIL, emailState.email)
+            val state = context.component.state.value
+            assertFalse(state.isEmailValid)
+            assertEquals(INVALID_EMAIL, state.email)
         } finally {
             context.destroy()
         }
@@ -52,9 +52,10 @@ class ResetEmailPasswordComponentImplTest {
         try {
             context.component.onEmailChanged(VALID_EMAIL)
             advanceTimeBy(100.milliseconds)
-            val reset = assertIs<ResetEmailPasswordScreenState.ResetInput>(context.component.state.value)
-            assertEquals(VALID_EMAIL, reset.email)
-            assertEquals(REMAINING_DELAY_SECONDS, reset.resendTimerSeconds)
+            val state = context.component.state.value
+            assertEquals(VALID_EMAIL, state.email)
+            assertEquals(REMAINING_DELAY_SECONDS, state.resendTimerSeconds)
+            assertIs<ResetEmailPasswordComponent.Child.ConfirmInput>(context.component.stack.value.active.instance)
         } finally {
             context.destroy()
         }
@@ -72,9 +73,10 @@ class ResetEmailPasswordComponentImplTest {
             context.component.onEmailChanged(VALID_EMAIL)
             context.component.onSendCodeClick()
             advanceTimeBy(100.milliseconds)
-            val reset = assertIs<ResetEmailPasswordScreenState.ResetInput>(context.component.state.value)
-            assertEquals(VALID_EMAIL, reset.email)
-            assertEquals(RETRY_AFTER_SEND_SUCCESS, reset.resendTimerSeconds)
+            val state = context.component.state.value
+            assertEquals(VALID_EMAIL, state.email)
+            assertEquals(RETRY_AFTER_SEND_SUCCESS, state.resendTimerSeconds)
+            assertIs<ResetEmailPasswordComponent.Child.ConfirmInput>(context.component.stack.value.active.instance)
         } finally {
             context.destroy()
         }
@@ -92,8 +94,9 @@ class ResetEmailPasswordComponentImplTest {
             context.component.onEmailChanged(VALID_EMAIL)
             context.component.onSendCodeClick()
             advanceTimeBy(100.milliseconds)
-            val reset = assertIs<ResetEmailPasswordScreenState.ResetInput>(context.component.state.value)
-            assertEquals(RETRY_AFTER_RATE_LIMIT, reset.resendTimerSeconds)
+            val state = context.component.state.value
+            assertEquals(RETRY_AFTER_RATE_LIMIT, state.resendTimerSeconds)
+            assertIs<ResetEmailPasswordComponent.Child.ConfirmInput>(context.component.stack.value.active.instance)
         } finally {
             context.destroy()
         }
@@ -111,9 +114,10 @@ class ResetEmailPasswordComponentImplTest {
             context.component.onEmailChanged(VALID_EMAIL)
             context.component.onSendCodeClick()
             advanceTimeBy(100.milliseconds)
-            val emailState = assertIs<ResetEmailPasswordScreenState.EmailInput>(context.component.state.value)
-            assertFalse(emailState.actionLoading)
-            assertIs<CommonError.Unknown>(emailState.actionError)
+            val state = context.component.state.value
+            assertFalse(state.actionLoading)
+            assertIs<CommonError.Unknown>(state.actionError)
+            assertIs<ResetEmailPasswordComponent.Child.EmailInput>(context.component.stack.value.active.instance)
         } finally {
             context.destroy()
         }
@@ -133,8 +137,8 @@ class ResetEmailPasswordComponentImplTest {
             context.validatePasswordUseCase.resultProvider = { AppResult.Success(Unit) }
             context.component.onPasswordChanged(VALID_PASSWORD)
             advanceTimeBy(100.milliseconds)
-            val reset = assertIs<ResetEmailPasswordScreenState.ResetInput>(context.component.state.value)
-            assertTrue(reset.isPasswordValid)
+            val state = context.component.state.value
+            assertTrue(state.isPasswordValid)
         } finally {
             context.destroy()
         }
@@ -142,7 +146,7 @@ class ResetEmailPasswordComponentImplTest {
 
     @Test
     fun onConfirmResetClick_success_callsOnFinished() = runComponentTest {
-        val userId = userIdentifierPayloadMock(identifier = VALID_EMAIL).toUserIdentifier()
+        val userId = userIdentifierPrivatePayloadMock(identifier = VALID_EMAIL).toUserIdentifierPrivate()
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = ZERO_RETRY
         val resetUseCase = ResetEmailPasswordUseCaseMock().apply {
@@ -183,8 +187,8 @@ class ResetEmailPasswordComponentImplTest {
             advanceTimeBy(100.milliseconds)
             context.component.onConfirmResetClick()
             advanceTimeBy(100.milliseconds)
-            val reset = assertIs<ResetEmailPasswordScreenState.ResetInput>(context.component.state.value)
-            assertIs<CommonError.Unknown>(reset.actionError)
+            val state = context.component.state.value
+            assertIs<CommonError.Unknown>(state.actionError)
         } finally {
             context.destroy()
         }

@@ -4,13 +4,13 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEvent
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventSummary
 
 sealed interface AuditEventListScreenState {
     object Loading : AuditEventListScreenState
     data class Error(val error: AppError) : AuditEventListScreenState
     data class Content(
-        val paging: PaginationState<AuditEvent>,
+        val paging: PaginationState<AuditEventSummary>,
         val sortState: ListingSortState? = null,
         val filterStates: Map<String, ListingFilterState> = emptyMap(),
         val isFilterPanelExpanded: Boolean = false,

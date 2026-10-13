@@ -1,5 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword
 
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.value.Value
 
 /**
@@ -7,11 +9,30 @@ import com.arkivanov.decompose.value.Value
  */
 interface ResetEmailPasswordComponent {
     /**
+     * Decompose navigation stack driving the wizard steps.
+     */
+    val stack: Value<ChildStack<ResetPasswordStepConfig, Child>>
+
+    /**
+     * Stack navigator for the password reset wizard.
+     */
+    val stackNavigation: StackNavigation<ResetPasswordStepConfig>
+
+    /**
      * Current UI state for [ResetEmailPasswordScreen].
-     *
-     * @return reactive [ResetEmailPasswordScreenState].
      */
     val state: Value<ResetEmailPasswordScreenState>
+
+    /**
+     * Child instances created for each step configuration.
+     */
+    sealed interface Child {
+        /** Email input step instance. */
+        data class EmailInput(val initialEmail: String) : Child
+
+        /** Code & new password confirmation step instance. */
+        data class ConfirmInput(val email: String) : Child
+    }
 
     /**
      * Updates email; may advance to reset input if a cooldown still applies.

@@ -27,13 +27,13 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_account_status
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_id
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_role
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userSummaryMock
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserSummary
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun UserItem(
-    user: UserDetails,
+    user: UserSummary,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -64,7 +64,7 @@ fun UserItem(
 
 @InternalApi
 @Composable
-private fun UserItemPreviewContent(user: UserDetails) {
+private fun UserItemPreviewContent(user: UserSummary) {
     CoreTheme {
         Surface {
             Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
@@ -78,7 +78,7 @@ private fun UserItemPreviewContent(user: UserDetails) {
 }
 
 @InternalApi
-private val defaultUserItemPreviewState = userDetailsMock()
+private val defaultUserItemPreviewState = userSummaryMock()
 
 @InternalApi
 @Preview(showBackground = true, group = "States")

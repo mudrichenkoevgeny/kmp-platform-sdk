@@ -70,7 +70,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_title
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_title_current
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_updated_at
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_value
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.identifier.detail.IdentifierDetailComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.new_password
 import io.github.mudrichenkoevgeny.kmp.feature.user.not_available
@@ -387,13 +387,13 @@ private class IdentifierDetailPreviewProvider : PreviewParameterProvider<Identif
         IdentifierDetailScreenState.Loading,
         IdentifierDetailScreenState.Error(CommonError.Unknown()),
         IdentifierDetailScreenState.Content(
-            identifier = userIdentifierMock(),
+            identifier = userIdentifierPrivateMock(),
             isCurrentIdentifier = true,
             canChangePassword = true,
             canDeletePassword = false
         ),
         IdentifierDetailScreenState.Content(
-            identifier = userIdentifierMock(),
+            identifier = userIdentifierPrivateMock(),
             isCurrentIdentifier = false,
             canChangePassword = false,
             canDeletePassword = true
@@ -415,7 +415,7 @@ private fun IdentifierDetailPreviewContent(state: IdentifierDetailScreenState) {
 
 @InternalApi
 private val defaultIdentifierDetailPreviewState = IdentifierDetailScreenState.Content(
-    identifier = userIdentifierMock(),
+    identifier = userIdentifierPrivateMock(),
     isCurrentIdentifier = false,
     canChangePassword = true,
     canDeletePassword = false

@@ -7,28 +7,28 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedresult.mapItems
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifier
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSession
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserDetails
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserDetailsPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserDetailsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierSummaryPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionSummaryPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserPrivatePayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlin.math.ceil
 
 /**
- * [UserStorage] backed by [EncryptedSettings], using [FoundationJson] to encode [UserDetails], identifier, and session lists.
+ * [UserStorage] backed by [EncryptedSettings], using [FoundationJson] to encode [UserPrivate], identifier, and session lists.
  *
  * @param encryptedSettings Encrypted key-value store supplied by the host.
  */
@@ -38,26 +38,26 @@ class EncryptedUserStorage(
 
     private val json = FoundationJson
 
-    override suspend fun getCurrentUser(): UserDetails? {
+    override suspend fun getCurrentUser(): UserPrivate? {
         val data = encryptedSettings.get(KEY_CURRENT_USER)
             ?: return null
 
         return try {
-            json.decodeFromString<UserDetailsPayload>(data).toUserDetails()
+            json.decodeFromString<UserPrivatePayload>(data).toUserPrivate()
         } catch (_: Exception) {
             encryptedSettings.remove(KEY_CURRENT_USER)
             null
         }
     }
 
-    override fun observeCurrentUser(): Flow<UserDetails?> {
+    override fun observeCurrentUser(): Flow<UserPrivate?> {
         return encryptedSettings.observe(KEY_CURRENT_USER).map { data ->
             if (data == null) {
                 return@map null
             }
 
             try {
-                json.decodeFromString<UserDetailsPayload>(data).toUserDetails()
+                json.decodeFromString<UserPrivatePayload>(data).toUserPrivate()
             } catch (_: Exception) {
                 encryptedSettings.remove(KEY_CURRENT_USER)
                 null
@@ -65,22 +65,22 @@ class EncryptedUserStorage(
         }
     }
 
-    override suspend fun updateCurrentUser(currentUser: UserDetails) {
-        val userDetailsPayload = currentUser.toUserDetailsPayload()
-        val data = json.encodeToString(userDetailsPayload)
+    override suspend fun updateCurrentUser(currentUser: UserPrivate) {
+        val userPrivatePayload = currentUser.toUserPrivatePayload()
+        val data = json.encodeToString(userPrivatePayload)
 
         encryptedSettings.put(KEY_CURRENT_USER, data)
     }
 
-    private suspend fun getAllUserIdentifiersInternal(): List<UserIdentifier> {
+    private suspend fun getAllUserIdentifiersInternal(): List<UserIdentifierSummary> {
         val data = encryptedSettings.get(KEY_USER_IDENTIFIERS) ?: return emptyList()
         val pagedPayload = try {
-            json.decodeFromString<PagedResult<UserIdentifierPayload>>(data)
+            json.decodeFromString<PagedResult<UserIdentifierSummaryPayload>>(data)
         } catch (_: Exception) {
             encryptedSettings.remove(KEY_USER_IDENTIFIERS)
             return emptyList()
         }
-        return pagedPayload.items.map { it.toUserIdentifier() }
+        return pagedPayload.items.map { it.toUserIdentifierSummary() }
     }
 
     override suspend fun getUserIdentifiersList(
@@ -91,31 +91,18 @@ class EncryptedUserStorage(
         userIds: List<String>?,
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
-    ): PagedResult<UserIdentifier> {
+    ): PagedResult<UserIdentifierSummary> {
         val allItems = getAllUserIdentifiersInternal()
         if (allItems.isEmpty()) {
             return PagedResult.empty()
         }
 
         val filteredItems = allItems.filter { item ->
-            val matchesUserIds = userIds == null || userIds.contains(item.userId.value.toHexDashString())
             val matchesProvider = userAuthProviders == null || item.userAuthProvider in userAuthProviders
             val matchesValue = identifiers == null || identifiers.any { pattern ->
-                item.identifier.contains(pattern, ignoreCase = true)
+                item.identifier.contains(pattern, ignoreCase = true) || item.displayName.contains(pattern, ignoreCase = true)
             }
-            matchesUserIds && matchesProvider && matchesValue
-        }.let { list ->
-            when (sortBy) {
-                UserSortValues.UserIdentifierSortBy.CREATED_AT -> {
-                    if (sortOrder == SortOrder.DESC) list.sortedByDescending { it.createdAt }
-                    else list.sortedBy { it.createdAt }
-                }
-                UserSortValues.UserIdentifierSortBy.UPDATED_AT -> {
-                    if (sortOrder == SortOrder.DESC) list.sortedByDescending { it.updatedAt }
-                    else list.sortedBy { it.updatedAt }
-                }
-                null -> list
-            }
+            matchesProvider && matchesValue
         }
 
         val totalCount = filteredItems.size
@@ -159,7 +146,7 @@ class EncryptedUserStorage(
         userIds: List<String>?,
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
-    ): Flow<PagedResult<UserIdentifier>> {
+    ): Flow<PagedResult<UserIdentifierSummary>> {
         return encryptedSettings.observe(KEY_USER_IDENTIFIERS).map {
             getUserIdentifiersList(
                 pageNumber = pageNumber,
@@ -173,22 +160,22 @@ class EncryptedUserStorage(
         }
     }
 
-    override suspend fun updateUserIdentifiersList(userIdentifiersList: PagedResult<UserIdentifier>) {
+    override suspend fun updateUserIdentifiersList(userIdentifiersList: PagedResult<UserIdentifierSummary>) {
         val pagedPayload = userIdentifiersList.mapItems { userIdentifier ->
-            userIdentifier.toUserIdentifierPayload()
+            userIdentifier.toUserIdentifierSummaryPayload()
         }
 
         updateUserIdentifiersPayloadList(pagedPayload)
     }
 
     override suspend fun updateUserIdentifiersPayloadList(
-        userIdentifiersList: PagedResult<UserIdentifierPayload>
+        userIdentifiersList: PagedResult<UserIdentifierSummaryPayload>
     ) {
         val data = json.encodeToString(userIdentifiersList)
         encryptedSettings.put(KEY_USER_IDENTIFIERS, data)
     }
 
-    override suspend fun addUserIdentifier(userIdentifier: UserIdentifier) {
+    override suspend fun addUserIdentifier(userIdentifier: UserIdentifierSummary) {
         val allItems = getAllUserIdentifiersInternal()
         var contains = false
 
@@ -241,15 +228,15 @@ class EncryptedUserStorage(
         )
     }
 
-    private suspend fun getAllUserSessionsInternal(): List<UserSession> {
+    private suspend fun getAllUserSessionsInternal(): List<UserSessionSummary> {
         val data = encryptedSettings.get(KEY_USER_SESSIONS) ?: return emptyList()
         val pagedPayload = try {
-            json.decodeFromString<PagedResult<UserSessionPayload>>(data)
+            json.decodeFromString<PagedResult<UserSessionSummaryPayload>>(data)
         } catch (_: Exception) {
             encryptedSettings.remove(KEY_USER_SESSIONS)
             return emptyList()
         }
-        return pagedPayload.items.map { it.toUserSession() }
+        return pagedPayload.items.map { it.toUserSessionSummary() }
     }
 
     override suspend fun getUserSessionsList(
@@ -270,27 +257,18 @@ class EncryptedUserStorage(
         deviceNames: List<String>?,
         appVersions: List<String>?,
         operationSystemVersions: List<String>?
-    ): PagedResult<UserSession> {
+    ): PagedResult<UserSessionSummary> {
         val allItems = getAllUserSessionsInternal()
         if (allItems.isEmpty()) {
             return PagedResult.empty()
         }
 
         val filteredItems = allItems.filter { item ->
-            val matchesUserIds = userIds == null || userIds.contains(item.userId.value.toHexDashString())
-            val matchesUserRoles = userRoles == null || item.userRole in userRoles
             val matchesIdentifiers = identifiers == null || identifiers.any { pattern ->
-                item.identifier.contains(pattern, ignoreCase = true)
+                item.identifierDisplayName.contains(pattern, ignoreCase = true)
             }
-            val matchesIdentifierIds = identifierIds == null || identifierIds.contains(item.identifierId.value.toHexDashString())
             val matchesProviders = userAuthProviders == null || item.identifierAuthProvider in userAuthProviders
             val matchesClientTypes = clientTypes == null || item.clientDeviceInfo.clientType in clientTypes
-            val matchesUserAgents = userAgents == null || userAgents.any { pattern ->
-                item.userAgent?.contains(pattern, ignoreCase = true) == true
-            }
-            val matchesIpAddresses = ipAddresses == null || ipAddresses.any { pattern ->
-                item.ipAddress?.contains(pattern, ignoreCase = true) == true
-            }
             val matchesLanguages = languages == null || languages.any { pattern ->
                 item.clientDeviceInfo.language?.contains(pattern, ignoreCase = true) == true
             }
@@ -305,8 +283,7 @@ class EncryptedUserStorage(
                 item.clientDeviceInfo.operationSystemVersion?.contains(pattern, ignoreCase = true) == true
             }
 
-            matchesUserIds && matchesUserRoles && matchesIdentifiers && matchesIdentifierIds &&
-                    matchesProviders && matchesClientTypes && matchesUserAgents && matchesIpAddresses &&
+            matchesIdentifiers && matchesProviders && matchesClientTypes &&
                     matchesLanguages && matchesDeviceIds && matchesDeviceNames && matchesAppVersions &&
                     matchesOsVersions
         }.let { list ->
@@ -315,23 +292,11 @@ class EncryptedUserStorage(
                     if (sortOrder == SortOrder.DESC) list.sortedByDescending { it.lastAccessedAt }
                     else list.sortedBy { it.lastAccessedAt }
                 }
-                UserSortValues.UserSessionSortBy.LAST_REAUTHENTICATED_AT -> {
-                    if (sortOrder == SortOrder.DESC) list.sortedByDescending { it.lastReauthenticatedAt }
-                    else list.sortedBy { it.lastReauthenticatedAt }
-                }
                 UserSortValues.UserSessionSortBy.EXPIRES_AT -> {
                     if (sortOrder == SortOrder.DESC) list.sortedByDescending { it.expiresAt }
                     else list.sortedBy { it.expiresAt }
                 }
-                UserSortValues.UserSessionSortBy.CREATED_AT -> {
-                    if (sortOrder == SortOrder.DESC) list.sortedByDescending { it.createdAt }
-                    else list.sortedBy { it.createdAt }
-                }
-                UserSortValues.UserSessionSortBy.UPDATED_AT -> {
-                    if (sortOrder == SortOrder.DESC) list.sortedByDescending { it.updatedAt }
-                    else list.sortedBy { it.updatedAt }
-                }
-                null -> list
+                else -> list
             }
         }
 
@@ -386,7 +351,7 @@ class EncryptedUserStorage(
         deviceNames: List<String>?,
         appVersions: List<String>?,
         operationSystemVersions: List<String>?
-    ): Flow<PagedResult<UserSession>> {
+    ): Flow<PagedResult<UserSessionSummary>> {
         return encryptedSettings.observe(KEY_USER_SESSIONS).map {
             getUserSessionsList(
                 pageNumber = pageNumber,
@@ -410,19 +375,19 @@ class EncryptedUserStorage(
         }
     }
 
-    override suspend fun updateUserSessionsList(userSessionsList: PagedResult<UserSession>) {
+    override suspend fun updateUserSessionsList(userSessionsList: PagedResult<UserSessionSummary>) {
         val pagedPayload = userSessionsList.mapItems { userSession ->
-            userSession.toUserSessionPayload()
+            userSession.toUserSessionSummaryPayload()
         }
         updateUserSessionsPayloadList(pagedPayload)
     }
 
-    override suspend fun updateUserSessionsPayloadList(userSessionsList: PagedResult<UserSessionPayload>) {
+    override suspend fun updateUserSessionsPayloadList(userSessionsList: PagedResult<UserSessionSummaryPayload>) {
         val data = json.encodeToString(userSessionsList)
         encryptedSettings.put(KEY_USER_SESSIONS, data)
     }
 
-    override suspend fun addUserSession(userSession: UserSession) {
+    override suspend fun addUserSession(userSession: UserSessionSummary) {
         val allItems = getAllUserSessionsInternal()
         var contains = false
 

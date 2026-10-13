@@ -1,6 +1,10 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.auth
 
+import com.arkivanov.decompose.router.slot.ChildSlot
+import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.value.Value
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogChild
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogConfig
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 
 /**
@@ -9,6 +13,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 interface EditAuthSettingsComponent {
     /** Observable UI state. */
     val state: Value<EditAuthSettingsScreenState>
+
+    /** Decompose child slot for settings confirmation dialogs. */
+    val dialogSlot: Value<ChildSlot<SettingsDialogConfig, SettingsDialogChild>>
+
+    /** Slot navigator for settings dialogs. */
+    val dialogSlotNavigation: SlotNavigation<SettingsDialogConfig>
 
     /** Retries loading settings. */
     fun onRetry()
@@ -76,8 +86,14 @@ interface EditAuthSettingsComponent {
     /** Saves updated auth settings to the backend. */
     fun onSaveClick()
 
-    /** Resets auth settings to defaults on the backend. */
+    /** Shows reset confirmation dialog. */
     fun onResetClick()
+
+    /** Confirms resetting auth settings to defaults. */
+    fun onConfirmReset()
+
+    /** Dismisses active confirmation dialogs. */
+    fun onDismissDialog()
 
     /** Navigates back. */
     fun onBackClick()

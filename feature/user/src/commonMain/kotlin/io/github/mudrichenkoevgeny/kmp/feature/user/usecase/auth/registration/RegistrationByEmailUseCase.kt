@@ -37,7 +37,7 @@ open class RegistrationByEmailUseCase(
             confirmationCode = confirmationCode
         ).onSuccess { authData ->
             authStorage.updateTokens(authData.sessionToken)
-            userStorage.updateCurrentUser(authData.userDetails)
+            userStorage.updateCurrentUser(authData.userPrivate)
         }
     }
 }

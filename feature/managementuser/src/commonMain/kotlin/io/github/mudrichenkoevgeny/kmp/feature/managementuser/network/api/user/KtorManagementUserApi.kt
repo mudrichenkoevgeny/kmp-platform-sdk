@@ -13,7 +13,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.l
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserApiPaths
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserDetailsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.create.CreateByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.user.ManagementUserRoutes
@@ -30,7 +31,7 @@ class KtorManagementUserApi(
     private val client: HttpClient
 ) : ManagementUserApi {
 
-    override suspend fun createUser(request: CreateByEmailRequest): AppResult<UserDetailsPayload> = client.callResult {
+    override suspend fun createUser(request: CreateByEmailRequest): AppResult<UserPrivatePayload> = client.callResult {
         post(ManagementUserRoutes.CREATE_USER) {
             setBody(request)
         }
@@ -49,7 +50,7 @@ class KtorManagementUserApi(
         authorityLevelTo: Int?,
         isTotpEnabled: Boolean?,
         permissionCodes: List<PermissionCode>?
-    ): AppResult<PagedResult<UserDetailsPayload>> = client.callResult {
+    ): AppResult<PagedResult<UserSummaryPayload>> = client.callResult {
         get(ManagementUserRoutes.GET_USERS) {
             parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
             parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
@@ -82,7 +83,7 @@ class KtorManagementUserApi(
         }
     }
 
-    override suspend fun getUser(userId: UserId): AppResult<UserDetailsPayload> = client.callResult {
+    override suspend fun getUser(userId: UserId): AppResult<UserPrivatePayload> = client.callResult {
         get(ManagementUserRoutes.GET_USER) {
             parameter(UserApiPaths.USER_ID, userId.value)
         }

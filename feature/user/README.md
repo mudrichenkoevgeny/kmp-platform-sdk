@@ -29,8 +29,9 @@ Kotlin Multiplatform feature module for user identity, authentication flows, ses
 - **Throttling:** [ConfirmationRepository] manages client-side cooldowns for sending verification codes (SMS/Email) using [ConfirmationType].
 
 ### 6. UI & Navigation
-- **Decompose Routing:** [LoginRootComponent] manages a full navigation stack (**Welcome** -> **Login** -> **Registration** -> **Reset Password**).
-- **Profile Settings:** [ProfileRootComponent] hosts management screens for Security, Sessions, and Identifiers.
+- **Decompose Routing:** [ProfileRootComponent] hosts management screens for Security, TOTP, Sessions, and Identifiers.
+- **Screen Parameter Encapsulation (`*Params`):** Parametric screen configurations wrap arguments in dedicated serializable data classes (`SessionDetailParams`, `IdentifierDetailParams`).
+- **Deep Link Parsing & Formatting:** [ProfileDeepLinkParser] and [ProfileUrlFormatter] parse and format profile deep links (e.g. `/profile/sessions/{id}`, `/profile/totp`) using `ProfileDeepLinkConstants` (with nested `Segment` object).
 - **Validation:** [FieldValidator] provides conservative client-side checks for emails, phone numbers, and TOTP codes.
 - **Legal Integration:** Standardized [LegalFooter] for Privacy Policy and Terms of Service links.
 - **UI Components:** Reusable [AuthProviderGrid] and [AuthProviderButton] for consistent social login presentation.

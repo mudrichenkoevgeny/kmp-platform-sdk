@@ -11,9 +11,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserDetails
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.create.CreateByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
 
@@ -26,9 +28,9 @@ class ManagementUserRepositoryImpl(
     private val managementUserApi: ManagementUserApi
 ) : ManagementUserRepository {
 
-    override suspend fun createUser(request: CreateByEmailRequest): AppResult<UserDetails> {
+    override suspend fun createUser(request: CreateByEmailRequest): AppResult<UserPrivate> {
         return managementUserApi.createUser(request).mapSuccess { payload ->
-            payload.toUserDetails()
+            payload.toUserPrivate()
         }
     }
 
@@ -45,7 +47,7 @@ class ManagementUserRepositoryImpl(
         authorityLevelTo: Int?,
         isTotpEnabled: Boolean?,
         permissionCodes: List<PermissionCode>?
-    ): AppResult<PagedResult<UserDetails>> {
+    ): AppResult<PagedResult<UserSummary>> {
         return managementUserApi.getUsers(
             pageNumber = pageNumber,
             pageSize = pageSize,
@@ -61,14 +63,14 @@ class ManagementUserRepositoryImpl(
             permissionCodes = permissionCodes
         ).mapSuccess { pagedPayload ->
             pagedPayload.mapItems { payload ->
-                payload.toUserDetails()
+                payload.toUserSummary()
             }
         }
     }
 
-    override suspend fun getUser(userId: UserId): AppResult<UserDetails> {
+    override suspend fun getUser(userId: UserId): AppResult<UserPrivate> {
         return managementUserApi.getUser(userId).mapSuccess { payload ->
-            payload.toUserDetails()
+            payload.toUserPrivate()
         }
     }
 

@@ -10,7 +10,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToPhoneRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.security.password.EmailPasswordChangeRequest
@@ -21,17 +22,17 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
 @InternalApi
 open class OpenIdentifiersApiMock : OpenIdentifiersApi {
 
-    var getUserIdentifierResult: AppResult<UserIdentifierPayload> = AppResult.Error(CommonError.Unknown())
-    var getUserIdentifiersResult: AppResult<PagedResult<UserIdentifierPayload>> = AppResult.Success(PagedResult(emptyList(), 0, 1, 20, 0))
+    var getUserIdentifierResult: AppResult<UserIdentifierPrivatePayload> = AppResult.Error(CommonError.Unknown())
+    var getUserIdentifiersResult: AppResult<PagedResult<UserIdentifierSummaryPayload>> = AppResult.Success(PagedResult(emptyList(), 0, 1, 20, 0))
     var deleteUserIdentifierResult: AppResult<Unit> = AppResult.Success(Unit)
-    var addUserIdentifierEmailResult: AppResult<UserIdentifierPayload> = AppResult.Error(CommonError.Unknown())
-    var addUserIdentifierPhoneResult: AppResult<UserIdentifierPayload> = AppResult.Error(CommonError.Unknown())
-    var addUserIdentifierExternalAuthProviderResult: AppResult<UserIdentifierPayload> = AppResult.Error(CommonError.Unknown())
+    var addUserIdentifierEmailResult: AppResult<UserIdentifierPrivatePayload> = AppResult.Error(CommonError.Unknown())
+    var addUserIdentifierPhoneResult: AppResult<UserIdentifierPrivatePayload> = AppResult.Error(CommonError.Unknown())
+    var addUserIdentifierExternalAuthProviderResult: AppResult<UserIdentifierPrivatePayload> = AppResult.Error(CommonError.Unknown())
     var sendAddEmailIdentifierConfirmationResult: AppResult<OtpConfirmationPayload> = AppResult.Error(CommonError.Unknown())
     var sendAddPhoneIdentifierConfirmationResult: AppResult<OtpConfirmationPayload> = AppResult.Error(CommonError.Unknown())
     var emailChangePasswordResult: AppResult<Unit> = AppResult.Success(Unit)
 
-    override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPayload> = getUserIdentifierResult
+    override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivatePayload> = getUserIdentifierResult
 
     override suspend fun getUserIdentifiers(
         pageNumber: Int?,
@@ -40,15 +41,15 @@ open class OpenIdentifiersApiMock : OpenIdentifiersApi {
         sortOrder: SortOrder?,
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
-    ): AppResult<PagedResult<UserIdentifierPayload>> = getUserIdentifiersResult
+    ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = getUserIdentifiersResult
 
     override suspend fun deleteUserIdentifier(identifierId: UserIdentifierId): AppResult<Unit> = deleteUserIdentifierResult
 
-    override suspend fun addUserIdentifierEmail(request: AddUserIdentifierEmailRequest): AppResult<UserIdentifierPayload> = addUserIdentifierEmailResult
+    override suspend fun addUserIdentifierEmail(request: AddUserIdentifierEmailRequest): AppResult<UserIdentifierPrivatePayload> = addUserIdentifierEmailResult
 
-    override suspend fun addUserIdentifierPhone(request: AddUserIdentifierPhoneRequest): AppResult<UserIdentifierPayload> = addUserIdentifierPhoneResult
+    override suspend fun addUserIdentifierPhone(request: AddUserIdentifierPhoneRequest): AppResult<UserIdentifierPrivatePayload> = addUserIdentifierPhoneResult
 
-    override suspend fun addUserIdentifierExternalAuthProvider(request: AddUserIdentifierExternalAuthProviderRequest): AppResult<UserIdentifierPayload> = addUserIdentifierExternalAuthProviderResult
+    override suspend fun addUserIdentifierExternalAuthProvider(request: AddUserIdentifierExternalAuthProviderRequest): AppResult<UserIdentifierPrivatePayload> = addUserIdentifierExternalAuthProviderResult
 
     override suspend fun sendAddEmailIdentifierConfirmation(request: SendConfirmationToEmailRequest): AppResult<OtpConfirmationPayload> = sendAddEmailIdentifierConfirmationResult
 

@@ -90,7 +90,11 @@ class LoginByEmailComponentImpl(
         scope.launch {
             loginByEmailUseCase.execute(current.email, current.password)
                 .onSuccess { authData ->
-                    if (authData.userDetails.accountStatus == UserAccountStatus.PENDING_DELETION) {
+                    val latest = _state.value as? LoginByEmailScreenState.Content
+                    if (latest != null) {
+                        _state.value = latest.copy(actionLoading = false)
+                    }
+                    if (authData.userPrivate.accountStatus == UserAccountStatus.PENDING_DELETION) {
                         onNavigateToPendingDeletion()
                     } else {
                         onFinished()

@@ -19,10 +19,13 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.EncryptedAuthStorage
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main.MainScreenComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main.ManagementMainScreenComponentImpl
+import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.navigation.deeplink.ManagementAppDeepLinkParser
+import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.navigation.deeplink.ManagementAppDeepLinkRoute
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceInfo
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.contract.WebSocketContract
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.auth.refreshtoken.SelfManagementRefreshTokenRoutes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.session.SelfManagementSessionRoutes
+import io.ktor.http.Url
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -222,16 +225,35 @@ class ManagementAppComponent(
         _isInitialized.value = true
     }
 
+    var mainScreenComponent: MainScreenComponent? = null
+        private set
+
     /**
      * @param componentContext Decompose context for the tab stack and dialog slot.
+     * @param initialRoute Optional initial deep link route.
      * @return [MainScreenComponent] hosting home and profile destinations.
      */
     fun createMainScreenComponent(
-        componentContext: ComponentContext
+        componentContext: ComponentContext,
+        initialRoute: ManagementAppDeepLinkRoute? = null
     ): MainScreenComponent {
-        return ManagementMainScreenComponentImpl(
+        val component = ManagementMainScreenComponentImpl(
             componentContext = componentContext,
-            managementAppComponent = this
+            managementAppComponent = this,
+            initialDeepLinkRoute = initialRoute
         )
+        mainScreenComponent = component
+        return component
+    }
+
+    /**
+     * Parses and handles a deep link URL string if the [mainScreenComponent] is active.
+     */
+    fun handleDeepLink(urlString: String) {
+        val parser = ManagementAppDeepLinkParser()
+        val route = parser.parse(Url(urlString))
+        if (route != null) {
+            mainScreenComponent?.handleDeepLink(route)
+        }
     }
 }

@@ -9,30 +9,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.DeletedSessionsPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
 
 /** Session listing, logout, and per-session revocation for the authenticated user. */
 interface SessionApi {
 
     /**
      * Returns a paginated and filtered list of active sessions for the current authenticated account.
-     *
-     * @param pageNumber One-based page index.
-     * @param pageSize Maximum items returned per page.
-     * @param sortBy Field to sort by (last_accessed_at, last_reauthenticated_at, expires_at, created_at, updated_at).
-     * @param sortOrder Sorting direction (ASC, DESC).
-     * @param identifiers Filters by server-defined free-text identifier values.
-     * @param identifierIds Filters by unique credential record IDs.
-     * @param userAuthProviders Filters by authentication provider types.
-     * @param clientTypes Filters by client category types.
-     * @param userAgents Filters by server-defined user agent substrings.
-     * @param ipAddresses Filters by server-defined IP address substrings.
-     * @param languages Filters by server-defined language tags.
-     * @param deviceIds Filters by opaque unique device IDs.
-     * @param deviceNames Filters by server-defined device name substrings.
-     * @param appVersions Filters by application version strings.
-     * @param operationSystemVersions Filters by server-defined operating system version substrings.
-     * @return Paginated result containing matching active session payloads, or a mapped failure.
      */
     suspend fun getSessions(
         pageNumber: Int? = null,
@@ -50,43 +34,30 @@ interface SessionApi {
         deviceNames: List<String>? = null,
         appVersions: List<String>? = null,
         operationSystemVersions: List<String>? = null
-    ): AppResult<PagedResult<UserSessionPayload>>
+    ): AppResult<PagedResult<UserSessionSummaryPayload>>
 
     /**
      * Returns details of a specific session owned by the current management account.
-     *
-     * @param userSessionId Unique session identifier.
-     * @return Detailed session info or a mapped failure.
      */
-    suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPayload>
+    suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivatePayload>
 
     /**
      * Ends the current active management session on the server (sign-out for this client).
-     *
-     * @return Empty success indicator, or a mapped failure.
      */
     suspend fun logout(): AppResult<Unit>
 
     /**
      * Deletes a specific active session for the current management account.
-     *
-     * @param userSessionId Unique session identifier to revoke.
-     * @return Empty success indicator, or a mapped failure.
      */
     suspend fun deleteSession(userSessionId: UserSessionId): AppResult<Unit>
 
     /**
      * Deletes all sessions for the current management account except the one used for this request.
-     *
-     * @return Metrics summary of the deleted sessions, or a mapped failure.
      */
     suspend fun deleteAllOtherSessions(): AppResult<DeletedSessionsPayload>
 
     /**
      * Performs re-authentication via TOTP for the current management session to update its trust level.
-     *
-     * @param request Verification payload containing the current TOTP token.
-     * @return Empty success indicator, or a mapped failure.
      */
     suspend fun reauthenticateSession(request: VerifyTotpPayload): AppResult<Unit>
 }

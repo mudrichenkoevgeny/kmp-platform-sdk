@@ -14,7 +14,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.Fullscre
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.identifiers.GlobalIdentifierListComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -41,7 +41,7 @@ class GlobalIdentifierListScreenTest {
 
     @Test
     fun content_displaysElements() = runComposeUiTest {
-        val identifier = userIdentifierMock()
+        val identifier = userIdentifierSummaryMock()
         val component = GlobalIdentifierListComponentMock(
             GlobalIdentifierListScreenState.Content(
                 paging = PaginationState(
@@ -57,7 +57,6 @@ class GlobalIdentifierListScreenTest {
         }
         onNodeWithTag(GlobalIdentifierListTestTags.TITLE).assertIsDisplayed()
         onNodeWithTag(GlobalIdentifierListTestTags.BACK_BUTTON).assertIsDisplayed()
-        onNodeWithTag(GlobalIdentifierListTestTags.FILTER_BUTTON).assertIsDisplayed()
         onNodeWithTag(GlobalIdentifierListTestTags.REFRESH_BUTTON).assertIsDisplayed()
         onNodeWithTag(GlobalIdentifierListTestTags.IDENTIFIER_LIST).assertIsDisplayed()
     }

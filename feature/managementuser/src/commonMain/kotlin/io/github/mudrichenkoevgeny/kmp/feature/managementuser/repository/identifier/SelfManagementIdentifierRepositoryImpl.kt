@@ -10,10 +10,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedresult.mapItems
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.security.password.EmailPasswordChangeRequest
 
 /**
@@ -24,9 +26,9 @@ class SelfManagementIdentifierRepositoryImpl(
     private val selfManagementIdentifiersApi: SelfManagementIdentifiersApi
 ) : IdentifierRepository {
 
-    override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifier> {
+    override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> {
         return selfManagementIdentifiersApi.getUserIdentifier(userIdentifierId)
-            .mapSuccess { it.toUserIdentifier() }
+            .mapSuccess { it.toUserIdentifierPrivate() }
     }
 
     override suspend fun getUserIdentifiers(
@@ -36,12 +38,12 @@ class SelfManagementIdentifierRepositoryImpl(
         sortOrder: SortOrder?,
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
-    ): AppResult<PagedResult<UserIdentifier>> {
+    ): AppResult<PagedResult<UserIdentifierSummary>> {
         return selfManagementIdentifiersApi.getUserIdentifiers(
             pageNumber, pageSize, sortBy, sortOrder, userAuthProviders, identifiers
         ).mapSuccess { pagedPayload ->
             pagedPayload.mapItems { userIdentifierPayload ->
-                userIdentifierPayload.toUserIdentifier()
+                userIdentifierPayload.toUserIdentifierSummary()
             }
         }
     }
@@ -64,21 +66,21 @@ class SelfManagementIdentifierRepositoryImpl(
         email: String,
         password: String,
         confirmationCode: String
-    ): AppResult<UserIdentifier> {
+    ): AppResult<UserIdentifierPrivate> {
         return methodNotSupported()
     }
 
     override suspend fun addUserIdentifierPhone(
         phoneNumber: String,
         confirmationCode: String
-    ): AppResult<UserIdentifier> {
+    ): AppResult<UserIdentifierPrivate> {
         return methodNotSupported()
     }
 
     override suspend fun addUserIdentifierExternalAuthProvider(
         authProvider: String,
         externalProviderToken: String
-    ): AppResult<UserIdentifier> {
+    ): AppResult<UserIdentifierPrivate> {
         return methodNotSupported()
     }
 

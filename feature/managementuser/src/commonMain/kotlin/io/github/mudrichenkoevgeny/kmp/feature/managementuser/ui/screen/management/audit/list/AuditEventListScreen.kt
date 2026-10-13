@@ -51,7 +51,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.audit.list.AuditEventListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.component.audit.item.AuditItem
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_logs_title
@@ -217,7 +217,7 @@ internal class AuditEventListPreviewProvider : PreviewParameterProvider<AuditEve
     private val items: List<Pair<String, AuditEventListScreenState>> = listOf(
         "Content" to AuditEventListScreenState.Content(
             paging = PaginationState(
-                items = listOf(auditEventMock(), auditEventMock())
+                items = listOf(auditEventSummaryMock(), auditEventSummaryMock())
             )
         ),
         "Error" to AuditEventListScreenState.Error(error = CommonError.Unknown()),
@@ -241,7 +241,7 @@ private fun AuditEventListScreenPreviewContent(state: AuditEventListScreenState)
 
 @InternalApi
 private val defaultAuditEventListPreviewState = AuditEventListScreenState.Content(
-    paging = PaginationState(items = listOf(auditEventMock(), auditEventMock()))
+    paging = PaginationState(items = listOf(auditEventSummaryMock(), auditEventSummaryMock()))
 )
 
 @InternalApi

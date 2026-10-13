@@ -10,7 +10,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.session.SelfSessionListComponentMock
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -25,7 +25,7 @@ class SelfSessionListScreenTest {
 
     @Test
     fun displaysSessions_andInvokesActions() = runComposeUiTest {
-        val session = userSessionMock()
+        val session = userSessionSummaryMock()
         val component = SelfSessionListComponentMock(
             initialState = SelfSessionListScreenState.Content(
                 paging = PaginationState(items = listOf(session))

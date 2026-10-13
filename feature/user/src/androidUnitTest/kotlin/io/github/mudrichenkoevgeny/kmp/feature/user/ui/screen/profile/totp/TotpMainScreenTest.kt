@@ -9,7 +9,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.runComposeUiTest
+import com.arkivanov.decompose.router.stack.bringToFront
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpStepConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
@@ -31,21 +33,8 @@ import kotlin.test.assertEquals
 class TotpMainScreenTest {
 
     @Test
-    fun loading_showsIndeterminateProgressAfterDefaultDelay() = runComposeUiTest {
-        val component = TotpMainComponentMock(TotpMainScreenState.Loading)
-        setContent {
-            ComponentTestHarness {
-                TotpMainScreen(component)
-            }
-        }
-        mainClock.autoAdvance = false
-        mainClock.advanceTimeBy(FullscreenLoadingConfig.DELAY_MILLIS + LOADING_EXTRA_DELAY_MS)
-        onNode(hasProgressBarRangeInfo(ProgressBarRangeInfo.Indeterminate)).assertExists()
-    }
-
-    @Test
     fun disabled_displaysElementsAndInvokesSetup() = runComposeUiTest {
-        val component = TotpMainComponentMock(TotpMainScreenState.Disabled())
+        val component = TotpMainComponentMock(TotpMainScreenState(isInitialized = true, isEnabled = false))
         setContent {
             ComponentTestHarness {
                 TotpMainScreen(component)
@@ -61,7 +50,7 @@ class TotpMainScreenTest {
     @Test
     fun disabled_showsActionError() = runComposeUiTest {
         val component = TotpMainComponentMock(
-            TotpMainScreenState.Disabled(actionError = CommonError.Unknown())
+            TotpMainScreenState(isInitialized = true, isEnabled = false, actionError = CommonError.Unknown())
         )
         setContent {
             ComponentTestHarness {
@@ -75,8 +64,9 @@ class TotpMainScreenTest {
     fun setupInProgress_displaysElementsAndInvokesConfirm() = runComposeUiTest {
         val setup = TotpSetup(secretKey = SECRET_KEY, otpAuthUrl = OTP_AUTH_URL, mfaToken = MFA_TOKEN)
         val component = TotpMainComponentMock(
-            TotpMainScreenState.SetupInProgress(setup = setup, code = CODE_SIX_DIGITS)
+            TotpMainScreenState(isInitialized = true, isEnabled = false, code = CODE_SIX_DIGITS)
         )
+        component.setStep(TotpStepConfig.Setup(mfaToken = MFA_TOKEN, otpAuthUrl = OTP_AUTH_URL, secretKey = SECRET_KEY))
         setContent {
             ComponentTestHarness {
                 TotpMainScreen(component)
@@ -101,8 +91,9 @@ class TotpMainScreenTest {
     fun setupInProgress_showsActionError() = runComposeUiTest {
         val setup = TotpSetup(secretKey = SECRET_KEY, otpAuthUrl = OTP_AUTH_URL, mfaToken = MFA_TOKEN)
         val component = TotpMainComponentMock(
-            TotpMainScreenState.SetupInProgress(setup = setup, actionError = CommonError.Unknown())
+            TotpMainScreenState(isInitialized = true, isEnabled = false, actionError = CommonError.Unknown())
         )
+        component.setStep(TotpStepConfig.Setup(mfaToken = MFA_TOKEN, otpAuthUrl = OTP_AUTH_URL, secretKey = SECRET_KEY))
         setContent {
             ComponentTestHarness {
                 TotpMainScreen(component)
@@ -114,7 +105,7 @@ class TotpMainScreenTest {
     @Test
     fun enabled_displaysElementsAndInvokesActions() = runComposeUiTest {
         val component = TotpMainComponentMock(
-            TotpMainScreenState.Enabled()
+            TotpMainScreenState(isInitialized = true, isEnabled = true)
         )
         setContent {
             ComponentTestHarness {
@@ -136,7 +127,7 @@ class TotpMainScreenTest {
     @Test
     fun enabled_showsActionError() = runComposeUiTest {
         val component = TotpMainComponentMock(
-            TotpMainScreenState.Enabled(actionError = CommonError.Unknown())
+            TotpMainScreenState(isInitialized = true, isEnabled = true, actionError = CommonError.Unknown())
         )
         setContent {
             ComponentTestHarness {
@@ -149,7 +140,7 @@ class TotpMainScreenTest {
     @Test
     fun error_showsGlobalErrorTextNode() = runComposeUiTest {
         val component = TotpMainComponentMock(
-            TotpMainScreenState.Error(error = CommonError.Unknown())
+            TotpMainScreenState(initError = CommonError.Unknown())
         )
         setContent {
             ComponentTestHarness {
@@ -161,7 +152,7 @@ class TotpMainScreenTest {
 
     @Test
     fun backButton_invokesOnBackClick() = runComposeUiTest {
-        val component = TotpMainComponentMock(TotpMainScreenState.Disabled())
+        val component = TotpMainComponentMock(TotpMainScreenState(isInitialized = true, isEnabled = false))
         setContent {
             ComponentTestHarness {
                 TotpMainScreen(component)

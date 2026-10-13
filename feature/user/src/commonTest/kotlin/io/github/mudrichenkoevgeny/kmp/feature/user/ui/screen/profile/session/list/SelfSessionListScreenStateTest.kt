@@ -3,7 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.l
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -18,7 +18,7 @@ class SelfSessionListScreenStateTest {
 
     @Test
     fun content_holdsSessionsAndActions() {
-        val sessions = listOf(userSessionMock())
+        val sessions = listOf(userSessionSummaryMock())
         val paging = PaginationState(items = sessions)
         val error = CommonError.Unknown()
         val state = SelfSessionListScreenState.Content(

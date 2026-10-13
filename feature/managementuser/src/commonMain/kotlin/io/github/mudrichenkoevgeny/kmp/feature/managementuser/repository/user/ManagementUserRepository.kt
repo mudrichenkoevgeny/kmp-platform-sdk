@@ -8,7 +8,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.create.CreateByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
@@ -25,7 +26,7 @@ interface ManagementUserRepository {
      * @param request Payload details for creating an account via email.
      * @return Detailed information of the newly created user domain model, or a mapped failure.
      */
-    suspend fun createUser(request: CreateByEmailRequest): AppResult<UserDetails>
+    suspend fun createUser(request: CreateByEmailRequest): AppResult<UserPrivate>
 
     /**
      * Returns a paginated and filtered list of users based on search criteria.
@@ -42,7 +43,7 @@ interface ManagementUserRepository {
      * @param authorityLevelTo Upper bound filter for authority level.
      * @param isTotpEnabled Filters users by whether TOTP second-factor authentication is active.
      * @param permissionCodes Filters users possessing specific permission codes.
-     * @return Paginated result containing user details domain models, or a mapped failure.
+     * @return Paginated result containing user summary domain models, or a mapped failure.
      */
     suspend fun getUsers(
         pageNumber: Int? = null,
@@ -57,7 +58,7 @@ interface ManagementUserRepository {
         authorityLevelTo: Int? = null,
         isTotpEnabled: Boolean? = null,
         permissionCodes: List<PermissionCode>? = null
-    ): AppResult<PagedResult<UserDetails>>
+    ): AppResult<PagedResult<UserSummary>>
 
     /**
      * Retrieves full management-level details of a specific user.
@@ -65,7 +66,7 @@ interface ManagementUserRepository {
      * @param userId Unique account identifier.
      * @return Detailed profile information of the target user domain model, or a mapped failure.
      */
-    suspend fun getUser(userId: UserId): AppResult<UserDetails>
+    suspend fun getUser(userId: UserId): AppResult<UserPrivate>
 
     /**
      * Updates profile details, status, or permissions for a specific user.

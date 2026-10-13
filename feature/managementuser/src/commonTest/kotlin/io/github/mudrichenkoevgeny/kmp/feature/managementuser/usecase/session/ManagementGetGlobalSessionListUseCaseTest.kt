@@ -5,9 +5,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.session.ManagementSessionRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -18,7 +18,7 @@ class ManagementGetGlobalSessionListUseCaseTest {
 
     @Test
     fun invoke_returnsSessions_whenRepositorySucceeds() = runTest {
-        val expectedSessions = pagedResultMock(listOf(userSessionMock()))
+        val expectedSessions = pagedResultMock(listOf(userSessionSummaryMock()))
         val repository = ManagementSessionRepositoryMock().apply {
             getSessionsResultProvider = { AppResult.Success(expectedSessions) }
         }
@@ -26,7 +26,7 @@ class ManagementGetGlobalSessionListUseCaseTest {
 
         val result = useCase()
 
-        assertIs<AppResult.Success<PagedResult<UserSession>>>(result)
+        assertIs<AppResult.Success<PagedResult<UserSessionSummary>>>(result)
         assertEquals(expectedSessions, result.data)
     }
 

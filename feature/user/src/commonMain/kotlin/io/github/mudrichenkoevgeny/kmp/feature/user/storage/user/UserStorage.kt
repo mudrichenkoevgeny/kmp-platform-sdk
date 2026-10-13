@@ -4,15 +4,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.cl
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -21,14 +21,14 @@ import kotlinx.coroutines.flow.Flow
  * Implementations typically encrypt at rest via the `EncryptedSettings` abstraction from `core:common`.
  */
 interface UserStorage {
-    /** @return Cached [UserDetails], or null if none has been stored. */
-    suspend fun getCurrentUser(): UserDetails?
+    /** @return Cached [UserPrivate], or null if none has been stored. */
+    suspend fun getCurrentUser(): UserPrivate?
 
     /** Hot stream of the cached user; emits null until a user is written or after [clear]. */
-    fun observeCurrentUser(): Flow<UserDetails?>
+    fun observeCurrentUser(): Flow<UserPrivate?>
 
     /** @param currentUser Serialized snapshot to persist as the active user. */
-    suspend fun updateCurrentUser(currentUser: UserDetails)
+    suspend fun updateCurrentUser(currentUser: UserPrivate)
 
     /**
      * Returns a paginated and filtered list of identifiers from local cache based on search criteria.
@@ -50,7 +50,7 @@ interface UserStorage {
         userIds: List<String>? = null,
         userAuthProviders: List<UserAuthProvider>? = null,
         identifiers: List<String>? = null
-    ): PagedResult<UserIdentifier>
+    ): PagedResult<UserIdentifierSummary>
 
     /**
      * Hot stream of the paginated and filtered list of identifiers from local cache based on search criteria.
@@ -72,16 +72,16 @@ interface UserStorage {
         userIds: List<String>? = null,
         userAuthProviders: List<UserAuthProvider>? = null,
         identifiers: List<String>? = null
-    ): Flow<PagedResult<UserIdentifier>>
+    ): Flow<PagedResult<UserIdentifierSummary>>
 
     /** @param userIdentifiersList Replaces the stored identifiers paged result. */
-    suspend fun updateUserIdentifiersList(userIdentifiersList: PagedResult<UserIdentifier>)
+    suspend fun updateUserIdentifiersList(userIdentifiersList: PagedResult<UserIdentifierSummary>)
 
     /** @param userIdentifiersList Replaces the stored identifiers paged result. */
-    suspend fun updateUserIdentifiersPayloadList(userIdentifiersList: PagedResult<UserIdentifierPayload>)
+    suspend fun updateUserIdentifiersPayloadList(userIdentifiersList: PagedResult<UserIdentifierSummaryPayload>)
 
     /** Adds a single identifier to the cached list. */
-    suspend fun addUserIdentifier(userIdentifier: UserIdentifier)
+    suspend fun addUserIdentifier(userIdentifier: UserIdentifierSummary)
 
     /** Removes an identifier by its ID from the cached list. */
     suspend fun removeUserIdentifier(identifierId: UserIdentifierId)
@@ -126,7 +126,7 @@ interface UserStorage {
         deviceNames: List<String>? = null,
         appVersions: List<String>? = null,
         operationSystemVersions: List<String>? = null
-    ): PagedResult<UserSession>
+    ): PagedResult<UserSessionSummary>
 
     /**
      * Hot stream of the paginated and filtered list of active sessions from local cache based on search criteria.
@@ -168,26 +168,26 @@ interface UserStorage {
         deviceNames: List<String>? = null,
         appVersions: List<String>? = null,
         operationSystemVersions: List<String>? = null
-    ): Flow<PagedResult<UserSession>>
+    ): Flow<PagedResult<UserSessionSummary>>
 
     /** @param userSessionsList Replaces the stored sessions paged result. */
-    suspend fun updateUserSessionsList(userSessionsList: PagedResult<UserSession>)
+    suspend fun updateUserSessionsList(userSessionsList: PagedResult<UserSessionSummary>)
 
     /** @param userSessionsList Replaces the stored sessions paged result. */
-    suspend fun updateUserSessionsPayloadList(userSessionsList: PagedResult<UserSessionPayload>)
+    suspend fun updateUserSessionsPayloadList(userSessionsList: PagedResult<UserSessionSummaryPayload>)
 
     /**
-     * Adds a single [UserSession] to the cached list and increments the total count.
+     * Adds a single [UserSessionSummary] to the cached list.
      */
-    suspend fun addUserSession(userSession: UserSession)
+    suspend fun addUserSession(userSession: UserSessionSummary)
 
     /**
-     * Removes a [UserSession] by its [UserSessionId] from the cached list and decrements the total count.
+     * Removes a [UserSessionSummary] by its [UserSessionId] from the cached list.
      */
     suspend fun removeUserSession(sessionId: UserSessionId)
 
     /**
-     * Removes multiple [UserSession]s by their identifiers from the cached list.
+     * Removes multiple [UserSessionSummary]s by their identifiers from the cached list.
      */
     suspend fun removeUserSessions(sessionIds: List<UserSessionId>)
 

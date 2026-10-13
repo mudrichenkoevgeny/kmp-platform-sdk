@@ -8,7 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.LogoutUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.RestoreUserUseCaseMock
 import kotlinx.coroutines.test.advanceTimeBy
@@ -23,9 +23,9 @@ class PendingDeletionComponentImplTest {
 
     @Test
     fun onRestoreAccountClick_success_callsOnRestoreSuccess() = runComponentTest {
-        val userDetails = userDetailsMock()
+        val userPrivate = userPrivateMock()
         val restoreUserUseCase = RestoreUserUseCaseMock().apply {
-            resultProvider = { AppResult.Success(userDetails) }
+            resultProvider = { AppResult.Success(userPrivate) }
         }
         val context = createPendingDeletionComponentTestContext(restoreUserUseCase = restoreUserUseCase)
         try {

@@ -28,6 +28,9 @@ interface ManagementRootComponent {
     /** Navigation stack of child screens. */
     val stack: Value<ChildStack<ManagementDestination, Child>>
 
+    /** Navigate to an arbitrary destination (useful for deep links). */
+    fun navigateTo(destination: ManagementDestination)
+
     /** Active child component in the navigation stack. */
     sealed interface Child {
         /** Main management landing screen. */

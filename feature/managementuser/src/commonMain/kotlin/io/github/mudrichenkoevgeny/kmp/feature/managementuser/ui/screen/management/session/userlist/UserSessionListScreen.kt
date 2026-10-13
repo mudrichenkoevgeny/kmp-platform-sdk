@@ -53,7 +53,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.sessions.UserSessionListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.revoke_all_sessions
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_sessions
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.session.item.SessionItem
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -209,7 +209,7 @@ internal class UserSessionsPreviewProvider : PreviewParameterProvider<UserSessio
     private val items: List<Pair<String, UserSessionListScreenState>> = listOf(
         "Content" to UserSessionListScreenState.Content(
             paging = PaginationState(
-                items = listOf(userSessionMock(), userSessionMock())
+                items = listOf(userSessionSummaryMock(), userSessionSummaryMock())
             )
         ),
         "Error" to UserSessionListScreenState.Error(error = CommonError.Unknown()),
@@ -233,7 +233,7 @@ private fun UserSessionsScreenPreviewContent(state: UserSessionListScreenState) 
 
 @InternalApi
 private val defaultUserSessionsPreviewState = UserSessionListScreenState.Content(
-    paging = PaginationState(items = listOf(userSessionMock(), userSessionMock()))
+    paging = PaginationState(items = listOf(userSessionSummaryMock(), userSessionSummaryMock()))
 )
 
 @InternalApi

@@ -11,13 +11,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
 
 @InternalApi
 class ManagementSessionApiMock : ManagementSessionApi {
 
-    var getSessionsResult: AppResult<PagedResult<UserSessionPayload>> = AppResult.Error(CommonError.Unknown())
-    var getSessionResult: AppResult<UserSessionPayload> = AppResult.Error(CommonError.Unknown())
+    var getSessionsResult: AppResult<PagedResult<UserSessionSummaryPayload>> = AppResult.Error(CommonError.Unknown())
+    var getSessionResult: AppResult<UserSessionPrivatePayload> = AppResult.Error(CommonError.Unknown())
     var deleteSessionResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
     var deleteAllUserSessionsResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
 
@@ -39,9 +40,9 @@ class ManagementSessionApiMock : ManagementSessionApi {
         deviceNames: List<String>?,
         appVersions: List<String>?,
         operationSystemVersions: List<String>?
-    ): AppResult<PagedResult<UserSessionPayload>> = getSessionsResult
+    ): AppResult<PagedResult<UserSessionSummaryPayload>> = getSessionsResult
 
-    override suspend fun getSession(sessionId: String): AppResult<UserSessionPayload> = getSessionResult
+    override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivatePayload> = getSessionResult
 
     override suspend fun deleteSession(userId: UserId, sessionId: String): AppResult<Unit> = deleteSessionResult
 

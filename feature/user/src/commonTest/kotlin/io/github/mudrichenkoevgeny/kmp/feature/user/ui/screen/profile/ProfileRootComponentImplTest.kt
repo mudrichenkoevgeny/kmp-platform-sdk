@@ -27,12 +27,16 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.security.G
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.security.RegenerateRecoveryCodesUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.security.SetupTotpUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.IdentifierListParams
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.SelfIdentifierListComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.SelfIdentifierListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.main.MainProfileComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SelfSessionListComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainParams
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.recovery.TotpRecoveryCodesComponentImpl
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -78,7 +82,7 @@ class ProfileRootComponentImplTest {
             mainComponent.onTotpMainClick()
 
             val totpChild = assertIs<ProfileRootComponent.Child.TotpMain>(context.component.stack.value.active.instance)
-            assertEquals(ProfileDestination.TotpMain, context.component.stack.value.active.configuration)
+            assertIs<ProfileDestination.TotpMain>(context.component.stack.value.active.configuration)
 
             val totpComponent = assertIs<TotpMainComponentImpl>(totpChild.component)
             totpComponent.onBack()
@@ -111,7 +115,7 @@ class ProfileRootComponentImplTest {
             recoveryCodesComponent.onBackClick()
 
             assertIs<ProfileRootComponent.Child.TotpMain>(context.component.stack.value.active.instance)
-            assertEquals(ProfileDestination.TotpMain, context.component.stack.value.active.configuration)
+            assertIs<ProfileDestination.TotpMain>(context.component.stack.value.active.configuration)
         } finally {
             context.destroy()
         }
@@ -149,13 +153,51 @@ class ProfileRootComponentImplTest {
             mainComponent.onIdentifiersClick()
 
             val identifiersChild = assertIs<ProfileRootComponent.Child.Identifiers>(context.component.stack.value.active.instance)
-            assertEquals(ProfileDestination.Identifiers, context.component.stack.value.active.configuration)
+            assertIs<ProfileDestination.Identifiers>(context.component.stack.value.active.configuration)
 
             val identifiersComponent = assertIs<SelfIdentifierListComponent>(identifiersChild.component)
             identifiersComponent.onBackClick()
 
             assertIs<ProfileRootComponent.Child.Main>(context.component.stack.value.active.instance)
             assertEquals(ProfileDestination.Main, context.component.stack.value.active.configuration)
+        } finally {
+            context.destroy()
+        }
+    }
+
+    @Test
+    fun navigateTo_totpMainWithToken_initializesSetupStep() = runComponentTest {
+        val context = createProfileRootComponentTestContext()
+        try {
+            context.component.navigateTo(ProfileDestination.TotpMain(TotpMainParams(token = "test_mfa_token")))
+
+            val totpChild = assertIs<ProfileRootComponent.Child.TotpMain>(context.component.stack.value.active.instance)
+            val totpComponent = assertIs<TotpMainComponentImpl>(totpChild.component)
+
+            val activeStep = assertIs<TotpMainComponent.Child.Setup>(totpComponent.stack.value.active.instance)
+            assertEquals("test_mfa_token", activeStep.mfaToken)
+        } finally {
+            context.destroy()
+        }
+    }
+
+    @Test
+    fun navigateTo_identifiersWithAddEmailDialog_initializesEmailInputDialogSlot() = runComponentTest {
+        val context = createProfileRootComponentTestContext()
+        try {
+            context.component.navigateTo(
+                ProfileDestination.Identifiers(
+                    IdentifierListParams(dialog = "add", step = "email", value = "test@example.com")
+                )
+            )
+
+            val identifiersChild = assertIs<ProfileRootComponent.Child.Identifiers>(context.component.stack.value.active.instance)
+            val identifiersComponent = assertIs<SelfIdentifierListComponentImpl>(identifiersChild.component)
+
+            val activeDialog = assertIs<SelfIdentifierListComponent.AddIdentifierDialogChild.EmailInput>(
+                identifiersComponent.addIdentifierDialogSlot.value.child?.instance
+            )
+            assertEquals("test@example.com", activeDialog.initialEmail)
         } finally {
             context.destroy()
         }

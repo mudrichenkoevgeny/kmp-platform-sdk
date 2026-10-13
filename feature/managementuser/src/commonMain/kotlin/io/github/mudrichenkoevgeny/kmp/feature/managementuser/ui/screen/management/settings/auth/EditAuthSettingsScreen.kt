@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -53,6 +54,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.reset_to_defaults
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogChild
+import io.github.mudrichenkoevgeny.kmp.feature.user.Res as UserRes
+import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_cancel
+import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm
+import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm_title
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.access_token_expiration_seconds
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.account_deletion_check_interval_seconds
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.account_deletion_delay_seconds
@@ -153,6 +160,32 @@ fun EditAuthSettingsScreen(component: EditAuthSettingsComponent) {
                         .padding(CoreTheme.dimens.paddingMedium)
                         .verticalScroll(rememberScrollState())
                 )
+
+                val dialogSlot by component.dialogSlot.subscribeAsState()
+                val dialogChild = dialogSlot.child?.instance
+                if (dialogChild != null) {
+                    when (dialogChild) {
+                        is SettingsDialogChild.ConfirmReset -> {
+                            AlertDialog(
+                                onDismissRequest = component::onDismissDialog,
+                                title = { CoreTitleText(text = stringResource(UserRes.string.dialog_confirm_title)) },
+                                text = { CoreBodyText(text = stringResource(Res.string.reset_to_defaults)) },
+                                confirmButton = {
+                                    CoreTextButton(
+                                        text = stringResource(UserRes.string.dialog_confirm),
+                                        onClick = component::onConfirmReset
+                                    )
+                                },
+                                dismissButton = {
+                                    CoreTextButton(
+                                        text = stringResource(UserRes.string.dialog_cancel),
+                                        onClick = component::onDismissDialog
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -502,7 +535,7 @@ private val defaultEditAuthSettingsPreviewState = EditAuthSettingsScreenState.Co
 )
 
 @InternalApi
-@Preview(showBackground = true, group = "States")
+@ScreenSizePreviews
 @Composable
 private fun StatesPreview(
     @PreviewParameter(EditAuthSettingsPreviewProvider::class) state: EditAuthSettingsScreenState

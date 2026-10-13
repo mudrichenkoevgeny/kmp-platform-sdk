@@ -13,14 +13,18 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedres
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.verifytotp.VerifyTotpPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionSummary
 
 /**
  * Implements [SessionRepository] using [SessionApi].
  *
  * @param sessionApi HTTP endpoints for session management and re-authentication.
+ * @param userStorage Local persistent storage cache.
+ * @param authStorage Auth storage for tokens.
  */
 class OpenSessionRepositoryImpl(
     private val sessionApi: SessionApi,
@@ -44,7 +48,7 @@ class OpenSessionRepositoryImpl(
         deviceNames: List<String>?,
         appVersions: List<String>?,
         operationSystemVersions: List<String>?
-    ): AppResult<PagedResult<UserSession>> {
+    ): AppResult<PagedResult<UserSessionSummary>> {
         val networkResult = sessionApi.getSessions(
             pageNumber = pageNumber,
             pageSize = pageSize,
@@ -66,7 +70,7 @@ class OpenSessionRepositoryImpl(
             is AppResult.Success -> {
                 userStorage.updateUserSessionsPayloadList(networkResult.data)
                 networkResult.mapSuccess { pagedPayload ->
-                    pagedPayload.mapItems { it.toUserSession() }
+                    pagedPayload.mapItems { it.toUserSessionSummary() }
                 }
             }
             is AppResult.Error -> {
@@ -98,42 +102,16 @@ class OpenSessionRepositoryImpl(
         }
     }
 
-    override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSession> {
+    override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivate> {
         val networkResult = sessionApi.getSession(userSessionId)
         return when (networkResult) {
             is AppResult.Success -> {
-                val session = networkResult.data.toUserSession()
-                userStorage.addUserSession(session)
+                val session = networkResult.data.toUserSessionPrivate()
+                userStorage.addUserSession(session.toUserSessionSummary())
                 AppResult.Success(session)
             }
             is AppResult.Error -> {
-                val cachedList = userStorage.getUserSessionsList(
-                    pageNumber = null,
-                    pageSize = null,
-                    sortBy = null,
-                    sortOrder = null,
-                    userIds = null,
-                    userRoles = null,
-                    identifiers = null,
-                    identifierIds = null,
-                    userAuthProviders = null,
-                    clientTypes = null,
-                    userAgents = null,
-                    ipAddresses = null,
-                    languages = null,
-                    deviceIds = null,
-                    deviceNames = null,
-                    appVersions = null,
-                    operationSystemVersions = null
-                )
-                val cachedSession = cachedList.items.find { userSession ->
-                    userSession.id == userSessionId
-                }
-                if (cachedSession != null) {
-                    AppResult.Success(cachedSession)
-                } else {
-                    networkResult
-                }
+                networkResult
             }
         }
     }

@@ -4,7 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.auth.google.GoogleAuthServiceMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.login.LoginRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
@@ -33,7 +33,7 @@ class LoginByGoogleUseCaseTest {
 
     private val authDataMock = AuthData(
         sessionToken = sessionToken,
-        userDetails = userDetailsMock()
+        userPrivate = userPrivateMock()
     )
 
     @Test
@@ -54,7 +54,7 @@ class LoginByGoogleUseCaseTest {
         assertEquals(authDataMock, result.data)
         
         assertEquals(authDataMock.sessionToken.accessToken, authStorage.getAccessToken())
-        assertEquals(authDataMock.userDetails, userStorage.getCurrentUser())
+        assertEquals(authDataMock.userPrivate, userStorage.getCurrentUser())
     }
 
     @Test

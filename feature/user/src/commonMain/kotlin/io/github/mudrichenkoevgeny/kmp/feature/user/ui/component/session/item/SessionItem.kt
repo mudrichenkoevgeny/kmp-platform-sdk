@@ -40,11 +40,10 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_email
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_google
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_phone
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_ip_address
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_last_accessed
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_revoke
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -53,7 +52,7 @@ import org.jetbrains.compose.resources.stringResource
  *
  * Displays device info, IP address, and timestamps for last access and expiration.
  *
- * @param session The [UserSession] data to display.
+ * @param session The [UserSessionSummary] data to display.
  * @param onRevokeClick Callback invoked when the revoke button is clicked.
  * @param enabled Whether the revoke action and UI interactions are permitted.
  * @param isCurrentSession Indicates if this session is the current device session.
@@ -61,7 +60,7 @@ import org.jetbrains.compose.resources.stringResource
  */
 @Composable
 fun SessionItem(
-    session: UserSession,
+    session: UserSessionSummary,
     onRevokeClick: () -> Unit,
     enabled: Boolean,
     isCurrentSession: Boolean = false,
@@ -108,11 +107,6 @@ fun SessionItem(
                 )
             }
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-            Text(
-                text = session.clientDeviceInfo.deviceName ?: session.userAgent ?: "Unknown device",
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.SemiBold
-            )
             session.clientDeviceInfo.clientType?.name?.let { clientTypeName ->
                 Spacer(Modifier.height(CoreTheme.dimens.paddingExtraSmall))
                 Text(
@@ -122,10 +116,6 @@ fun SessionItem(
                 )
             }
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-            Text(
-                text = stringResource(Res.string.session_ip_address, session.ipAddress ?: "Unknown"),
-                style = MaterialTheme.typography.bodySmall
-            )
             val formattedDate = formatInstantToDateTime(session.lastAccessedAt) ?: session.lastAccessedAt.toString()
             Text(
                 text = stringResource(Res.string.session_last_accessed, formattedDate),
@@ -153,7 +143,7 @@ fun SessionItem(
 }
 
 private data class SessionItemPreviewState(
-    val session: UserSession,
+    val session: UserSessionSummary,
     val enabled: Boolean,
     val isCurrentSession: Boolean = false
 )
@@ -163,13 +153,6 @@ private class SessionItemPreviewProvider : PreviewParameterProvider<SessionItemP
     private val items: List<Pair<String, SessionItemPreviewState>> = listOf(
         "Default" to SessionItemPreviewState(
             session = userSessionMock(),
-            enabled = true
-        ),
-        "Unknown Device and IP" to SessionItemPreviewState(
-            session = userSessionMock().copy(
-                userAgent = null,
-                ipAddress = null
-            ),
             enabled = true
         ),
         "Disabled Action" to SessionItemPreviewState(

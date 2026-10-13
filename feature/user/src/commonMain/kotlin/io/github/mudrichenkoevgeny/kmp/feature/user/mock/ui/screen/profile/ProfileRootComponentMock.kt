@@ -28,4 +28,6 @@ class ProfileRootComponentMock(
             instance = child
         )
     }
+
+    override fun navigateTo(destination: ProfileDestination) { }
 }

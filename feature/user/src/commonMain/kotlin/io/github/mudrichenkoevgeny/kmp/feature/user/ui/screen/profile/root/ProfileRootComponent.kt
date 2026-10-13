@@ -23,6 +23,8 @@ interface ProfileRootComponent {
      */
     val stack: Value<ChildStack<ProfileDestination, Child>>
 
+    fun navigateTo(destination: ProfileDestination)
+
     /**
      * Active child for a [ProfileDestination] configuration.
      */

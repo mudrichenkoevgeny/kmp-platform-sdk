@@ -7,7 +7,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.unlock.selection.UnlockMethodSelectionComponentMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.junit.runner.RunWith
@@ -26,7 +26,7 @@ class UnlockMethodSelectionScreenTest {
         var emailUnlockClicked = false
         val initialState = UnlockMethodSelectionScreenState(
             knownIdentifiers = listOf(
-                userIdentifierMock().copy(userAuthProvider = UserAuthProvider.EMAIL, identifier = "user@example.com")
+                userIdentifierSummaryMock().copy(userAuthProvider = UserAuthProvider.EMAIL, identifier = "user@example.com")
             )
         )
         val component = object : UnlockMethodSelectionComponentMock(initialState = initialState) {
@@ -51,7 +51,7 @@ class UnlockMethodSelectionScreenTest {
         var phoneUnlockClicked = false
         val initialState = UnlockMethodSelectionScreenState(
             knownIdentifiers = listOf(
-                userIdentifierMock().copy(userAuthProvider = UserAuthProvider.PHONE, identifier = "+1234567890")
+                userIdentifierSummaryMock().copy(userAuthProvider = UserAuthProvider.PHONE, identifier = "+1234567890")
             )
         )
         val component = object : UnlockMethodSelectionComponentMock(initialState = initialState) {
@@ -76,7 +76,7 @@ class UnlockMethodSelectionScreenTest {
         var googleUnlockClicked = false
         val initialState = UnlockMethodSelectionScreenState(
             knownIdentifiers = listOf(
-                userIdentifierMock().copy(userAuthProvider = UserAuthProvider.GOOGLE)
+                userIdentifierSummaryMock().copy(userAuthProvider = UserAuthProvider.GOOGLE)
             )
         )
         val component = object : UnlockMethodSelectionComponentMock(initialState = initialState) {

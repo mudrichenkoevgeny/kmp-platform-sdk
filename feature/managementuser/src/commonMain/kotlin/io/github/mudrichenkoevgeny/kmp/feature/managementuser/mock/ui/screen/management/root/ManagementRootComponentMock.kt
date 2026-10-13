@@ -24,4 +24,6 @@ class ManagementRootComponentMock(
             backStack = emptyList()
         )
     )
+
+    override fun navigateTo(destination: ManagementDestination) { }
 }

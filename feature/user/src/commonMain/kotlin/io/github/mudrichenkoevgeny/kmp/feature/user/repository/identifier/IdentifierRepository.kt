@@ -5,8 +5,9 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 
 /**
@@ -21,7 +22,7 @@ interface IdentifierRepository {
      * @param userIdentifierId Unique identifier payload id.
      * @return Detailed identifier info or a mapped failure.
      */
-    suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifier>
+    suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate>
 
     /**
      * Returns a paginated and filtered list of identifiers.
@@ -41,7 +42,7 @@ interface IdentifierRepository {
         sortOrder: SortOrder? = null,
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
-    ): AppResult<PagedResult<UserIdentifier>>
+    ): AppResult<PagedResult<UserIdentifierSummary>>
 
     /**
      * Removes an existing identifier from the user profile.
@@ -58,7 +59,7 @@ interface IdentifierRepository {
         email: String,
         password: String,
         confirmationCode: String
-    ): AppResult<UserIdentifier>
+    ): AppResult<UserIdentifierPrivate>
 
     /**
      * Associates a new phone number identifier with the account.
@@ -66,7 +67,7 @@ interface IdentifierRepository {
     suspend fun addUserIdentifierPhone(
         phoneNumber: String,
         confirmationCode: String
-    ): AppResult<UserIdentifier>
+    ): AppResult<UserIdentifierPrivate>
 
     /**
      * Associates an external authentication provider identifier (e.g., OAuth).
@@ -74,7 +75,7 @@ interface IdentifierRepository {
     suspend fun addUserIdentifierExternalAuthProvider(
         authProvider: String,
         externalProviderToken: String
-    ): AppResult<UserIdentifier>
+    ): AppResult<UserIdentifierPrivate>
 
     /**
      * Triggers a confirmation challenge for email association.

@@ -13,8 +13,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.captureAppScreen
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventMock
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEvent
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventSummaryMock
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventSummary
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -31,7 +31,7 @@ import kotlin.test.Test
 )
 class AuditItemScreenshotTest(
     private val stateName: String,
-    private val event: AuditEvent
+    private val event: AuditEventSummary
 ) {
 
     @Test
@@ -61,7 +61,7 @@ class AuditItemScreenshotTest(
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
         fun data(): Collection<Array<Any>> {
             return listOf(
-                arrayOf("Default", auditEventMock())
+                arrayOf("Default", auditEventSummaryMock())
             )
         }
     }

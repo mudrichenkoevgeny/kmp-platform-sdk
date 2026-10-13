@@ -7,17 +7,17 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.cl
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifier
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSession
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -25,25 +25,25 @@ import kotlinx.coroutines.flow.update
 @InternalApi
 class UserStorageMock : UserStorage {
 
-    private val currentUserFlow = MutableStateFlow<UserDetails?>(null)
-    private val identifiersFlow = MutableStateFlow(pagedResultMock<UserIdentifier>())
-    private val sessionsFlow = MutableStateFlow(pagedResultMock<UserSession>())
+    private val currentUserFlow = MutableStateFlow<UserPrivate?>(null)
+    private val identifiersFlow = MutableStateFlow(pagedResultMock<UserIdentifierSummary>())
+    private val sessionsFlow = MutableStateFlow(pagedResultMock<UserSessionSummary>())
 
     var isCleared = false
         private set
 
-    var lastUpdatedIdentifiersPayload: PagedResult<UserIdentifierPayload>? = null
+    var lastUpdatedIdentifiersPayload: PagedResult<UserIdentifierSummaryPayload>? = null
     var lastRemovedIdentifierId: UserIdentifierId? = null
-    var lastUpdatedSessionsPayload: PagedResult<UserSessionPayload>? = null
-    var lastAddedSession: UserSession? = null
+    var lastUpdatedSessionsPayload: PagedResult<UserSessionSummaryPayload>? = null
+    var lastAddedSession: UserSessionSummary? = null
     var lastRemovedSessionId: UserSessionId? = null
     var lastRemovedSessionsList: List<UserSessionId>? = null
 
-    override suspend fun getCurrentUser(): UserDetails? = currentUserFlow.value
+    override suspend fun getCurrentUser(): UserPrivate? = currentUserFlow.value
 
-    override fun observeCurrentUser(): Flow<UserDetails?> = currentUserFlow
+    override fun observeCurrentUser(): Flow<UserPrivate?> = currentUserFlow
 
-    override suspend fun updateCurrentUser(currentUser: UserDetails) {
+    override suspend fun updateCurrentUser(currentUser: UserPrivate) {
         currentUserFlow.value = currentUser
     }
 
@@ -55,7 +55,7 @@ class UserStorageMock : UserStorage {
         userIds: List<String>?,
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
-    ): PagedResult<UserIdentifier> = identifiersFlow.value
+    ): PagedResult<UserIdentifierSummary> = identifiersFlow.value
 
     override fun observeUserIdentifiersList(
         pageNumber: Int?,
@@ -65,15 +65,15 @@ class UserStorageMock : UserStorage {
         userIds: List<String>?,
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
-    ): Flow<PagedResult<UserIdentifier>> = identifiersFlow
+    ): Flow<PagedResult<UserIdentifierSummary>> = identifiersFlow
 
-    override suspend fun updateUserIdentifiersList(userIdentifiersList: PagedResult<UserIdentifier>) {
+    override suspend fun updateUserIdentifiersList(userIdentifiersList: PagedResult<UserIdentifierSummary>) {
         identifiersFlow.value = userIdentifiersList
     }
 
-    override suspend fun updateUserIdentifiersPayloadList(userIdentifiersList: PagedResult<UserIdentifierPayload>) {
+    override suspend fun updateUserIdentifiersPayloadList(userIdentifiersList: PagedResult<UserIdentifierSummaryPayload>) {
         lastUpdatedIdentifiersPayload = userIdentifiersList
-        val mapped = userIdentifiersList.items.map { it.toUserIdentifier() }
+        val mapped = userIdentifiersList.items.map { it.toUserIdentifierSummary() }
         identifiersFlow.value = pagedResultMock(
             items = mapped,
             totalCount = userIdentifiersList.totalCount,
@@ -83,7 +83,7 @@ class UserStorageMock : UserStorage {
         )
     }
 
-    override suspend fun addUserIdentifier(userIdentifier: UserIdentifier) {
+    override suspend fun addUserIdentifier(userIdentifier: UserIdentifierSummary) {
         identifiersFlow.update { current ->
             current.copy(
                 items = current.items + userIdentifier,
@@ -122,7 +122,7 @@ class UserStorageMock : UserStorage {
         deviceNames: List<String>?,
         appVersions: List<String>?,
         operationSystemVersions: List<String>?
-    ): PagedResult<UserSession> = sessionsFlow.value
+    ): PagedResult<UserSessionSummary> = sessionsFlow.value
 
     override fun observeUserSessionsList(
         pageNumber: Int?,
@@ -142,15 +142,15 @@ class UserStorageMock : UserStorage {
         deviceNames: List<String>?,
         appVersions: List<String>?,
         operationSystemVersions: List<String>?
-    ): Flow<PagedResult<UserSession>> = sessionsFlow
+    ): Flow<PagedResult<UserSessionSummary>> = sessionsFlow
 
-    override suspend fun updateUserSessionsList(userSessionsList: PagedResult<UserSession>) {
+    override suspend fun updateUserSessionsList(userSessionsList: PagedResult<UserSessionSummary>) {
         sessionsFlow.value = userSessionsList
     }
 
-    override suspend fun updateUserSessionsPayloadList(userSessionsList: PagedResult<UserSessionPayload>) {
+    override suspend fun updateUserSessionsPayloadList(userSessionsList: PagedResult<UserSessionSummaryPayload>) {
         lastUpdatedSessionsPayload = userSessionsList
-        val mapped = userSessionsList.items.map { it.toUserSession() }
+        val mapped = userSessionsList.items.map { it.toUserSessionSummary() }
         sessionsFlow.value = pagedResultMock(
             items = mapped,
             totalCount = userSessionsList.totalCount,
@@ -160,7 +160,7 @@ class UserStorageMock : UserStorage {
         )
     }
 
-    override suspend fun addUserSession(userSession: UserSession) {
+    override suspend fun addUserSession(userSession: UserSessionSummary) {
         lastAddedSession = userSession
         sessionsFlow.update { current ->
             current.copy(

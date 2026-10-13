@@ -42,11 +42,7 @@ class TotpMainScreenScreenshotTest(
             }
         }
 
-        if ((state is TotpMainScreenState.Loading) ||
-            (state is TotpMainScreenState.Disabled && state.actionLoading) ||
-            (state is TotpMainScreenState.SetupInProgress && state.actionLoading) ||
-            (state is TotpMainScreenState.Enabled && state.actionLoading)
-        ) {
+        if (!state.isInitialized || state.actionLoading) {
             mainClock.autoAdvance = false
             mainClock.advanceTimeBy(FullscreenLoadingConfig.DELAY_MILLIS + 50L)
         }

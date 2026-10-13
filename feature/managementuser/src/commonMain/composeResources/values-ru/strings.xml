@@ -24,7 +24,11 @@
     <string name="audit_event_actor_role">Роль субъекта</string>
     <string name="audit_event_message">Сообщение</string>
     <string name="audit_event_timestamp">Время</string>
+    <string name="audit_event_updated_at">Дата обновления</string>
     <string name="audit_event_metadata">Метаданные</string>
+
+    <!-- User Details Screen -->
+    <string name="user_detail_audit_events">Аудит логи</string>
 
     <!-- Edit Auth Settings Screen -->
     <string name="edit_auth_settings_title">Редактировать настройки авторизации</string>

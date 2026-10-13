@@ -4,7 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 
 /**
  * UI state for global user identifiers list management screen.
@@ -28,7 +28,7 @@ sealed interface GlobalIdentifierListScreenState {
      * @param actionError error from the last action attempt.
      */
     data class Content(
-        val paging: PaginationState<UserIdentifier>,
+        val paging: PaginationState<UserIdentifierSummary>,
         val sortState: ListingSortState? = null,
         val filterStates: Map<String, ListingFilterState> = emptyMap(),
         val isFilterPanelExpanded: Boolean = false,

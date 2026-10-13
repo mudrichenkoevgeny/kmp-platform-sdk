@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
  */
 class LoginByTotpComponentImpl(
     componentContext: ComponentContext,
-    mfaToken: String,
+    params: LoginByTotpParams,
     private val loginByTotpUseCase: LoginByTotpUseCase,
     private val loginByTotpRecoveryCodeUseCase: LoginByTotpRecoveryCodeUseCase,
     private val onNavigateToPendingDeletion: () -> Unit,
@@ -32,10 +32,28 @@ class LoginByTotpComponentImpl(
     private val onFinished: () -> Unit
 ) : LoginByTotpComponent, ComponentContext by componentContext {
 
+    constructor(
+        componentContext: ComponentContext,
+        mfaToken: String,
+        loginByTotpUseCase: LoginByTotpUseCase,
+        loginByTotpRecoveryCodeUseCase: LoginByTotpRecoveryCodeUseCase,
+        onNavigateToPendingDeletion: () -> Unit,
+        onBack: () -> Unit,
+        onFinished: () -> Unit
+    ) : this(
+        componentContext = componentContext,
+        params = LoginByTotpParams(mfaToken = mfaToken),
+        loginByTotpUseCase = loginByTotpUseCase,
+        loginByTotpRecoveryCodeUseCase = loginByTotpRecoveryCodeUseCase,
+        onNavigateToPendingDeletion = onNavigateToPendingDeletion,
+        onBack = onBack,
+        onFinished = onFinished
+    )
+
     private val scope = componentCoroutineScope()
 
     private val _state = MutableValue<LoginByTotpScreenState>(
-        LoginByTotpScreenState.Content(mfaToken = mfaToken)
+        LoginByTotpScreenState.Content(mfaToken = params.mfaToken)
     )
     override val state: Value<LoginByTotpScreenState> = _state
 
@@ -74,7 +92,11 @@ class LoginByTotpComponentImpl(
 
             result
                 .onSuccess { authData ->
-                    if (authData.userDetails.accountStatus == UserAccountStatus.PENDING_DELETION) {
+                    val latest = _state.value as? LoginByTotpScreenState.Content
+                    if (latest != null) {
+                        _state.value = latest.copy(actionLoading = false)
+                    }
+                    if (authData.userPrivate.accountStatus == UserAccountStatus.PENDING_DELETION) {
                         onNavigateToPendingDeletion()
                     } else {
                         onFinished()

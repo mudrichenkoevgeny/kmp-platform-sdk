@@ -30,7 +30,7 @@ open class LoginByTotpUseCase(
         return loginRepository.loginByTotp(mfaToken, code)
             .onSuccess { authData ->
                 authStorage.updateTokens(authData.sessionToken)
-                userStorage.updateCurrentUser(authData.userDetails)
+                userStorage.updateCurrentUser(authData.userPrivate)
             }
     }
 }

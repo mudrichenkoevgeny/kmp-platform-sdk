@@ -3,10 +3,10 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.session.SessionRepositoryMock
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -17,7 +17,7 @@ class GetSessionUseCaseTest {
 
     @Test
     fun invoke_returnsUserSession_whenRepositorySucceeds() = runTest {
-        val expectedSession = userSessionMock()
+        val expectedSession = userSessionPrivateMock()
         val repository = SessionRepositoryMock().apply {
             getSessionResultProvider = { AppResult.Success(expectedSession) }
         }
@@ -26,7 +26,7 @@ class GetSessionUseCaseTest {
 
         val result = useCase(sessionId)
 
-        assertIs<AppResult.Success<UserSession>>(result)
+        assertIs<AppResult.Success<UserSessionPrivate>>(result)
         assertEquals(expectedSession, result.data)
         assertEquals(sessionId, repository.lastSessionId)
     }

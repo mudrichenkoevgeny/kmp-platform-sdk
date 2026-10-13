@@ -5,7 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.identif
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 
 /**
@@ -34,7 +34,7 @@ class ManagementGetIdentifiersUseCase(
         userIds: List<String>? = null,
         userAuthProviders: List<UserAuthProvider>? = null,
         identifiers: List<String>? = null
-    ): AppResult<PagedResult<UserIdentifier>> {
+    ): AppResult<PagedResult<UserIdentifierSummary>> {
         return managementIdentifierRepository.getIdentifiers(
             pageNumber = pageNumber,
             pageSize = pageSize,

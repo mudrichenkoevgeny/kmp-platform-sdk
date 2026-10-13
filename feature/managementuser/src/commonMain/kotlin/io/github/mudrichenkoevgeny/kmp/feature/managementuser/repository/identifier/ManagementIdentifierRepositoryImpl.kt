@@ -7,10 +7,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedresult.mapItems
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierSummary
 
 /**
  * Implements [ManagementIdentifierRepository] by forwarding administrative operations to [ManagementIdentifierApi].
@@ -29,7 +31,7 @@ class ManagementIdentifierRepositoryImpl(
         userIds: List<String>?,
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
-    ): AppResult<PagedResult<UserIdentifier>> {
+    ): AppResult<PagedResult<UserIdentifierSummary>> {
         return managementIdentifierApi.getIdentifiers(
             pageNumber = pageNumber,
             pageSize = pageSize,
@@ -40,14 +42,14 @@ class ManagementIdentifierRepositoryImpl(
             identifiers = identifiers
         ).mapSuccess { pagedPayload ->
             pagedPayload.mapItems { userIdentifierPayload ->
-                userIdentifierPayload.toUserIdentifier()
+                userIdentifierPayload.toUserIdentifierSummary()
             }
         }
     }
 
-    override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifier> {
+    override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivate> {
         return managementIdentifierApi.getIdentifier(identifierId).mapSuccess { payload ->
-            payload.toUserIdentifier()
+            payload.toUserIdentifierPrivate()
         }
     }
 

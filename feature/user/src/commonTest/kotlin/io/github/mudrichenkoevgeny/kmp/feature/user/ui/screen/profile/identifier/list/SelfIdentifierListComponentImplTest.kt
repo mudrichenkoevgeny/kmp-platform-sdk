@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.Listin
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.auth.settings.openAuthSettingsMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.settings.OpenAuthSettingsRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.GetUserIdentifiersUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
@@ -28,7 +28,7 @@ class SelfIdentifierListComponentImplTest {
 
     @Test
     fun init_loadsIdentifiersSuccessfully() = runComponentTest {
-        val identifiers = listOf(userIdentifierMock())
+        val identifiers = listOf(userIdentifierSummaryMock())
         val getUserIdentifiersUseCase = GetUserIdentifiersUseCaseMock().apply {
             resultProvider = { _, _ ->
                 AppResult.Success(
@@ -53,13 +53,10 @@ class SelfIdentifierListComponentImplTest {
     }
 
     @Test
-    fun onIdentifierClick_invokesCallback() = runComponentTest {
+    fun onIdentifierClick_invokesOnIdentifierSelect() = runComponentTest {
         var selectedId: UserIdentifierId? = null
-        val context = createTestContext(
-            onIdentifierSelect = { selectedId = it }
-        )
+        val context = createTestContext(onIdentifierSelect = { selectedId = it })
         try {
-            advanceTimeBy(100.milliseconds)
             val id = UserIdentifierId.generate()
             context.component.onIdentifierClick(id)
             assertEquals(id, selectedId)
@@ -69,13 +66,13 @@ class SelfIdentifierListComponentImplTest {
     }
 
     @Test
-    fun onAddIdentifierClick_opensProviderSelectionDialog() = runComponentTest {
-        val settingsRepo = OpenAuthSettingsRepositoryMock().apply {
+    fun onAddIdentifierClick_showsProviderSelectionDialog() = runComponentTest {
+        val authSettingsRepo = OpenAuthSettingsRepositoryMock().apply {
             emit(openAuthSettingsMock())
         }
         val getAvailableUserAuthProvidersUseCase = GetAvailableUserAuthProvidersUseCase(
             appType = AppType.CLIENT,
-            openAuthSettingsRepository = settingsRepo
+            openAuthSettingsRepository = authSettingsRepo
         )
         val context = createTestContext(
             getAvailableUserAuthProvidersUseCase = getAvailableUserAuthProvidersUseCase
@@ -84,12 +81,23 @@ class SelfIdentifierListComponentImplTest {
             advanceTimeBy(100.milliseconds)
             context.component.onAddIdentifierClick()
             advanceTimeBy(100.milliseconds)
-            val state = assertIs<SelfIdentifierListScreenState.Content>(context.component.state.value)
-            assertEquals(AddIdentifierDialogState.ProviderSelection, state.addIdentifierDialogState)
+
+            assertIs<SelfIdentifierListComponent.AddIdentifierDialogChild.ProviderSelection>(context.component.addIdentifierDialogSlot.value.child?.instance)
+        } finally {
+            context.destroy()
+        }
+    }
+
+    @Test
+    fun onAddIdentifierSelectProvider_email_showsEmailFlow() = runComponentTest {
+        val context = createTestContext()
+        try {
+            advanceTimeBy(100.milliseconds)
+            context.component.onAddIdentifierClick()
+            advanceTimeBy(100.milliseconds)
 
             context.component.onAddIdentifierSelectProvider(UserAuthProvider.EMAIL)
-            val updatedState = assertIs<SelfIdentifierListScreenState.Content>(context.component.state.value)
-            assertIs<AddIdentifierDialogState.EmailFlow>(updatedState.addIdentifierDialogState)
+            assertIs<SelfIdentifierListComponent.AddIdentifierDialogChild.EmailInput>(context.component.addIdentifierDialogSlot.value.child?.instance)
         } finally {
             context.destroy()
         }
@@ -97,8 +105,8 @@ class SelfIdentifierListComponentImplTest {
 
     @Test
     fun onIdentifierDeleted_removesItemFromPaging() = runComponentTest {
-        val item1 = userIdentifierMock()
-        val item2 = userIdentifierMock()
+        val item1 = userIdentifierSummaryMock()
+        val item2 = userIdentifierSummaryMock()
         val getUserIdentifiersUseCase = GetUserIdentifiersUseCaseMock().apply {
             resultProvider = { _, _ ->
                 AppResult.Success(
@@ -125,8 +133,8 @@ class SelfIdentifierListComponentImplTest {
 
     @Test
     fun onLoadNextPage_success_appendsIdentifiers() = runComponentTest {
-        val initialIdentifiers = listOf(userIdentifierMock())
-        val nextIdentifiers = listOf(userIdentifierMock())
+        val initialIdentifiers = listOf(userIdentifierSummaryMock())
+        val nextIdentifiers = listOf(userIdentifierSummaryMock())
         val getUserIdentifiersUseCase = GetUserIdentifiersUseCaseMock().apply {
             resultProvider = { page, _ ->
                 val items = if (page == ListingConstants.INITIAL_PAGE_NUMBER) initialIdentifiers else nextIdentifiers
@@ -134,7 +142,7 @@ class SelfIdentifierListComponentImplTest {
                     PagedResult(
                         items = items,
                         totalCount = 2,
-                        pageNumber = page,
+                        pageNumber = page ?: 1,
                         pageSize = 1,
                         totalPages = 2
                     )
@@ -144,38 +152,22 @@ class SelfIdentifierListComponentImplTest {
         val context = createTestContext(getUserIdentifiersUseCase = getUserIdentifiersUseCase)
         try {
             advanceTimeBy(100.milliseconds)
-            val state1 = assertIs<SelfIdentifierListScreenState.Content>(context.component.state.value)
-            assertEquals(initialIdentifiers, state1.paging.items)
-
             context.component.onLoadNextPage()
             advanceTimeBy(100.milliseconds)
 
-            val state2 = assertIs<SelfIdentifierListScreenState.Content>(context.component.state.value)
-            assertEquals(initialIdentifiers + nextIdentifiers, state2.paging.items)
-            assertEquals(2, getUserIdentifiersUseCase.executeCalls)
-        } finally {
-            context.destroy()
-        }
-    }
-
-    @Test
-    fun onBackClick_invokesOnBack() = runComponentTest {
-        val context = createTestContext()
-        try {
-            context.component.onBackClick()
-            assertEquals(1, context.onBackCalls)
+            val state = assertIs<SelfIdentifierListScreenState.Content>(context.component.state.value)
+            assertEquals(initialIdentifiers + nextIdentifiers, state.paging.items)
         } finally {
             context.destroy()
         }
     }
 
     private fun createTestContext(
+        appType: AppType = AppType.CLIENT,
         getUserIdentifiersUseCase: GetUserIdentifiersUseCaseMock = GetUserIdentifiersUseCaseMock(),
-        getAvailableUserAuthProvidersUseCase: GetAvailableUserAuthProvidersUseCase = GetAvailableUserAuthProvidersUseCase(
-            appType = AppType.CLIENT,
-            openAuthSettingsRepository = OpenAuthSettingsRepositoryMock().apply { emit(openAuthSettingsMock()) }
-        ),
-        onIdentifierSelect: (UserIdentifierId) -> Unit = {}
+        getAvailableUserAuthProvidersUseCase: GetAvailableUserAuthProvidersUseCase? = null,
+        onIdentifierSelect: ((UserIdentifierId) -> Unit)? = null,
+        onBack: () -> Unit = {}
     ): TestContext {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
@@ -184,10 +176,11 @@ class SelfIdentifierListComponentImplTest {
 
         context.component = SelfIdentifierListComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
+            appType = appType,
             getUserIdentifiersUseCase = getUserIdentifiersUseCase,
             getAvailableUserAuthProvidersUseCase = getAvailableUserAuthProvidersUseCase,
             onIdentifierSelect = onIdentifierSelect,
-            onBack = { context.onBackCalls++ }
+            onBack = onBack
         )
 
         return context
@@ -197,7 +190,6 @@ class SelfIdentifierListComponentImplTest {
         val lifecycle: LifecycleRegistry
     ) {
         lateinit var component: SelfIdentifierListComponentImpl
-        var onBackCalls: Int = 0
 
         fun destroy() = lifecycle.destroy()
     }

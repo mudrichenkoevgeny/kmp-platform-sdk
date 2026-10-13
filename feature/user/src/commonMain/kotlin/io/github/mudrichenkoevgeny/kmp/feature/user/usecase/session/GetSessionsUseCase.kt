@@ -7,12 +7,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 
 /**
- * Returns a paginated and filtered list of active sessions for the current authenticated account.
+ * Retrieves a paginated list of active sessions for the current account.
  *
- * @param sessionRepository Remote session management API.
+ * @param sessionRepository Session management repository.
  */
 open class GetSessionsUseCase(
     private val sessionRepository: SessionRepository
@@ -33,7 +33,7 @@ open class GetSessionsUseCase(
      * @param deviceNames Filters by server-defined device name substrings.
      * @param appVersions Filters by application version strings.
      * @param operationSystemVersions Filters by server-defined operating system version substrings.
-     * @return Paginated result containing matching active session models, or a mapped failure.
+     * @return Paginated result containing [UserSessionSummary] items on success, or a mapped failure.
      */
     open suspend operator fun invoke(
         pageNumber: Int? = null,
@@ -51,7 +51,7 @@ open class GetSessionsUseCase(
         deviceNames: List<String>? = null,
         appVersions: List<String>? = null,
         operationSystemVersions: List<String>? = null
-    ): AppResult<PagedResult<UserSession>> {
+    ): AppResult<PagedResult<UserSessionSummary>> {
         return sessionRepository.getSessions(
             pageNumber = pageNumber,
             pageSize = pageSize,

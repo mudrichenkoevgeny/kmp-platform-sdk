@@ -58,7 +58,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.main.GlobalUserListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.component.user.item.UserItem
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.users_management_title
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userSummaryMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -259,7 +259,7 @@ internal class GlobalUserListPreviewProvider : PreviewParameterProvider<GlobalUs
     private val items: List<Pair<String, GlobalUserListScreenState>> = listOf(
         "Content" to GlobalUserListScreenState.Content(
             paging = PaginationState(
-                items = listOf(userDetailsMock(), userDetailsMock())
+                items = listOf(userSummaryMock(), userSummaryMock())
             )
         ),
         "Error" to GlobalUserListScreenState.Error(error = CommonError.Unknown()),
@@ -283,7 +283,7 @@ private fun GlobalUserListScreenPreviewContent(state: GlobalUserListScreenState)
 
 @InternalApi
 private val defaultGlobalUserListPreviewState = GlobalUserListScreenState.Content(
-    paging = PaginationState(items = listOf(userDetailsMock(), userDetailsMock()))
+    paging = PaginationState(items = listOf(userSummaryMock(), userSummaryMock()))
 )
 
 @InternalApi

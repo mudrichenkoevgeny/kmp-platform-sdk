@@ -9,15 +9,16 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
 
 @InternalApi
 class ManagementIdentifierApiMock : ManagementIdentifierApi {
 
-    var getIdentifiersResult: AppResult<PagedResult<UserIdentifierPayload>> = AppResult.Error(CommonError.Unknown())
-    var getIdentifierResult: AppResult<UserIdentifierPayload> = AppResult.Error(CommonError.Unknown())
-    var deleteIdentifierResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
-    var deleteIdentifierPasswordResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
+    var getIdentifiersResult: AppResult<PagedResult<UserIdentifierSummaryPayload>> = AppResult.Error(CommonError.Unknown())
+    var getIdentifierResult: AppResult<UserIdentifierPrivatePayload> = AppResult.Error(CommonError.Unknown())
+    var deleteIdentifierResult: AppResult<Unit> = AppResult.Success(Unit)
+    var deleteIdentifierPasswordResult: AppResult<Unit> = AppResult.Success(Unit)
 
     override suspend fun getIdentifiers(
         pageNumber: Int?,
@@ -27,9 +28,9 @@ class ManagementIdentifierApiMock : ManagementIdentifierApi {
         userIds: List<String>?,
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
-    ): AppResult<PagedResult<UserIdentifierPayload>> = getIdentifiersResult
+    ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = getIdentifiersResult
 
-    override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPayload> = getIdentifierResult
+    override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivatePayload> = getIdentifierResult
 
     override suspend fun deleteIdentifier(userId: UserId, identifierId: String): AppResult<Unit> = deleteIdentifierResult
 

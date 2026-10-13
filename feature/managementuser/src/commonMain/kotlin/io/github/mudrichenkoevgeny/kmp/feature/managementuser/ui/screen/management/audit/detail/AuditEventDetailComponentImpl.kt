@@ -3,10 +3,12 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit.GetAuditEventUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
@@ -23,8 +25,8 @@ import kotlinx.coroutines.launch
  *
  * @param componentContext Decompose [ComponentContext].
  * @param eventId Unique audit event identifier.
+ * @param userRepository Source of the current user profile state.
  * @param getAuditEventUseCase Fetches audit event details.
- * @param currentUserId Active authenticated user ID for self checks.
  * @param onNavigateToUserDetail Navigates to user detail screen.
  * @param onNavigateToSessionDetail Navigates to session detail screen.
  * @param onNavigateToIdentifierDetail Navigates to identifier detail screen.
@@ -33,21 +35,30 @@ import kotlinx.coroutines.launch
  */
 class AuditEventDetailComponentImpl(
     componentContext: ComponentContext,
-    private val eventId: AuditEventId,
+    private val params: AuditEventDetailParams,
+    private val userRepository: UserRepository,
     private val getAuditEventUseCase: GetAuditEventUseCase,
-    private val currentUserId: UserId? = null,
     private val onNavigateToUserDetail: ((UserId) -> Unit)? = null,
     private val onNavigateToSessionDetail: ((UserSessionId) -> Unit)? = null,
     private val onNavigateToIdentifierDetail: ((UserIdentifierId) -> Unit)? = null,
-    private val onNavigateToProfile: (() -> Unit)? = null,
+    private val onNavigateToProfile: () -> Unit,
     private val onBack: () -> Unit
 ) : AuditEventDetailComponent, ComponentContext by componentContext {
+
+    private val eventId: AuditEventId get() = params.eventId
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue<AuditEventDetailScreenState>(AuditEventDetailScreenState.Loading)
     override val state: Value<AuditEventDetailScreenState> = _state
 
+    private var currentUserId: UserId? = null
+
     init {
+        scope.launch {
+            userRepository.currentUser.collect { user ->
+                currentUserId = user?.id
+            }
+        }
         loadEvent()
     }
 
@@ -56,7 +67,9 @@ class AuditEventDetailComponentImpl(
     }
 
     override fun onBackClick() {
-        onBack()
+        if ((backHandler as? BackDispatcher)?.back() != true) {
+            onBack()
+        }
     }
 
     override fun onResourceClick() {
@@ -78,7 +91,7 @@ class AuditEventDetailComponentImpl(
             resourceName.equals(UserAuditResourceType.USER.serialName, ignoreCase = true) -> {
                 resourceIdStr.toUserIdOrNull()?.let { userId ->
                     if (currentUserId != null && userId == currentUserId) {
-                        onNavigateToProfile?.invoke()
+                        onNavigateToProfile()
                     } else {
                         onNavigateToUserDetail?.invoke(userId)
                     }
@@ -96,7 +109,7 @@ class AuditEventDetailComponentImpl(
         if (isUserActor) {
             actorIdStr.toUserIdOrNull()?.let { userId ->
                 if (currentUserId != null && userId == currentUserId) {
-                    onNavigateToProfile?.invoke()
+                    onNavigateToProfile()
                 } else {
                     onNavigateToUserDetail?.invoke(userId)
                 }

@@ -4,11 +4,10 @@ import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.arkivanov.essenty.lifecycle.destroy
 import com.arkivanov.essenty.lifecycle.resume
-import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.UserRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.LogoutUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.ScheduleUserDeletionUseCaseMock
@@ -27,14 +26,16 @@ import kotlin.time.Duration.Companion.milliseconds
 class MainProfileComponentImplTest {
 
     @Test
-    fun state_whenUserIsNull_emitsUnauthorized() = runComponentTest {
+    fun state_whenRepositoryFlowFails_emitsError() = runComponentTest {
         val userRepository = UserRepositoryMock()
+        userRepository.currentUserProvider = {
+            flow { throw RuntimeException(RUNTIME_ERROR_MESSAGE) }
+        }
         val context = createMainProfileComponentTestContext(userRepository = userRepository)
         try {
-            userRepository.emit(null)
             runCurrent()
-            val state = assertIs<MainProfileScreenState.Unauthorized>(context.component.state.value)
-            assertEquals(MainProfileScreenState.Unauthorized(), state)
+            val state = context.component.state.value
+            assertIs<MainProfileScreenState.Error>(state)
         } finally {
             context.destroy()
         }
@@ -42,17 +43,17 @@ class MainProfileComponentImplTest {
 
     @Test
     fun state_whenUserPresentAndClientApp_emitsContentWithDeletionAvailable() = runComponentTest {
-        val userDetails = userDetailsMock()
+        val userPrivate = userPrivateMock()
         val userRepository = UserRepositoryMock()
         val context = createMainProfileComponentTestContext(
             userRepository = userRepository,
             appType = AppType.CLIENT
         )
         try {
-            userRepository.emit(userDetails)
+            userRepository.emit(userPrivate)
             runCurrent()
             val state = assertIs<MainProfileScreenState.Content>(context.component.state.value)
-            assertEquals(userDetails, state.user)
+            assertEquals(userPrivate, state.user)
             assertTrue(state.isAccountDeletionAvailable)
         } finally {
             context.destroy()
@@ -60,18 +61,18 @@ class MainProfileComponentImplTest {
     }
 
     @Test
-    fun state_whenUserPresentAndManagementApp_emitsContentWithDeletionDisabled() = runComponentTest {
-        val userDetails = userDetailsMock()
+    fun state_whenUserPresentAndManagementApp_emitsContentWithoutDeletionAvailable() = runComponentTest {
+        val userPrivate = userPrivateMock()
         val userRepository = UserRepositoryMock()
         val context = createMainProfileComponentTestContext(
             userRepository = userRepository,
             appType = AppType.MANAGEMENT
         )
         try {
-            userRepository.emit(userDetails)
+            userRepository.emit(userPrivate)
             runCurrent()
             val state = assertIs<MainProfileScreenState.Content>(context.component.state.value)
-            assertEquals(userDetails, state.user)
+            assertEquals(userPrivate, state.user)
             assertFalse(state.isAccountDeletionAvailable)
         } finally {
             context.destroy()
@@ -79,26 +80,13 @@ class MainProfileComponentImplTest {
     }
 
     @Test
-    fun state_whenUserFlowThrows_emitsError() = runComponentTest {
-        val userRepository = UserRepositoryMock().apply {
-            currentUserProvider = { flow { throw RuntimeException(RUNTIME_ERROR_MESSAGE) } }
-        }
-        val context = createMainProfileComponentTestContext(userRepository = userRepository)
-        try {
-            runCurrent()
-            val state = assertIs<MainProfileScreenState.Error>(context.component.state.value)
-            assertIs<CommonError.Unknown>(state.error)
-        } finally {
-            context.destroy()
-        }
-    }
-
-    @Test
-    fun onLoginClick_invokesNavigateToLogin() = runComponentTest {
+    fun state_whenUserNull_emitsUnauthorized() = runComponentTest {
         val context = createMainProfileComponentTestContext()
         try {
-            context.component.onLoginClick()
-            assertEquals(ONE_CALL, context.onNavigateToLoginCalls)
+            context.userRepository.emit(null)
+            runCurrent()
+            val state = context.component.state.value
+            assertIs<MainProfileScreenState.Unauthorized>(state)
         } finally {
             context.destroy()
         }
@@ -109,6 +97,7 @@ class MainProfileComponentImplTest {
         val context = createMainProfileComponentTestContext()
         try {
             context.component.onTotpMainClick()
+            runCurrent()
             assertEquals(ONE_CALL, context.onNavigateToTotpCalls)
         } finally {
             context.destroy()
@@ -120,6 +109,7 @@ class MainProfileComponentImplTest {
         val context = createMainProfileComponentTestContext()
         try {
             context.component.onSessionsClick()
+            runCurrent()
             assertEquals(ONE_CALL, context.onNavigateToSessionsCalls)
         } finally {
             context.destroy()
@@ -131,6 +121,7 @@ class MainProfileComponentImplTest {
         val context = createMainProfileComponentTestContext()
         try {
             context.component.onIdentifiersClick()
+            runCurrent()
             assertEquals(ONE_CALL, context.onNavigateToIdentifiersCalls)
         } finally {
             context.destroy()
@@ -138,10 +129,10 @@ class MainProfileComponentImplTest {
     }
 
     @Test
-    fun onLogoutClick_showsLogoutConfirmationDialog() = runComponentTest {
+    fun onLogoutClick_showsLogoutConfirmation() = runComponentTest {
         val context = createMainProfileComponentTestContext()
         try {
-            context.userRepository.emit(userDetailsMock())
+            context.userRepository.emit(userPrivateMock())
             runCurrent()
 
             context.component.onLogoutClick()
@@ -161,7 +152,7 @@ class MainProfileComponentImplTest {
         }
         val context = createMainProfileComponentTestContext(logoutUseCase = logoutUseCase)
         try {
-            context.userRepository.emit(userDetailsMock())
+            context.userRepository.emit(userPrivateMock())
             runCurrent()
 
             context.component.onConfirmLogout()
@@ -174,10 +165,10 @@ class MainProfileComponentImplTest {
     }
 
     @Test
-    fun onDeleteAccountClick_showsConfirmationDialog() = runComponentTest {
+    fun onDeleteAccountClick_showsDeleteConfirmation() = runComponentTest {
         val context = createMainProfileComponentTestContext()
         try {
-            context.userRepository.emit(userDetailsMock())
+            context.userRepository.emit(userPrivateMock())
             runCurrent()
 
             context.component.onDeleteAccountClick()
@@ -192,13 +183,13 @@ class MainProfileComponentImplTest {
 
     @Test
     fun onConfirmDeleteAccount_executesScheduleUserDeletionUseCase() = runComponentTest {
-        val userDetails = userDetailsMock()
+        val userPrivate = userPrivateMock()
         val scheduleUserDeletionUseCase = ScheduleUserDeletionUseCaseMock().apply {
-            resultProvider = { AppResult.Success(userDetails) }
+            resultProvider = { AppResult.Success(userPrivate) }
         }
         val context = createMainProfileComponentTestContext(scheduleUserDeletionUseCase = scheduleUserDeletionUseCase)
         try {
-            context.userRepository.emit(userDetails)
+            context.userRepository.emit(userPrivate)
             runCurrent()
 
             context.component.onConfirmDeleteAccount()
@@ -214,7 +205,7 @@ class MainProfileComponentImplTest {
     fun onDismissDialog_hidesConfirmationDialog() = runComponentTest {
         val context = createMainProfileComponentTestContext()
         try {
-            context.userRepository.emit(userDetailsMock())
+            context.userRepository.emit(userPrivateMock())
             runCurrent()
 
             context.component.onDeleteAccountClick()

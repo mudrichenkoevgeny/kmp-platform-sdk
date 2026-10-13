@@ -17,6 +17,7 @@ Administrative host applications that demonstrate how to wire **kmp-platform-sdk
     - **Management Domain**: **[ManagementUserComponent]** which provides administrative access to users, sessions, and identifiers.
 - **Initialization**: Similar to the client application, it orchestrates the startup sequence via `init()`, registering administrative error parsers and WebSocket handlers.
 - **Administrative Logic**: Uses specialized repositories (e.g., `ManagementUserRepository`) that allow staff to oversee and manage resources that are not accessible to standard users.
+- **Universal Deep Linking**: Implements `ManagementAppDeepLinkParser` and `ManagementAppDeepLinkRoute` to handle cross-platform routing (`/management/*`, `/profile/*`) with authentication guards and tab selection (`Config.Settings`, `Config.Profile`). Handles Android App Links, Wasm browser history (`DefaultWebHistoryController`), Desktop URI handlers (`registerDesktopUriHandler`), and iOS URL routing.
 
 ---
 

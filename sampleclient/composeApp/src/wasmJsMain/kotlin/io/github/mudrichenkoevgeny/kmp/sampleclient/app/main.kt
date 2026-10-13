@@ -6,8 +6,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.platform.clientdeviceinfo.Was
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.WasmUserAuthServices
 import io.github.mudrichenkoevgeny.kmp.sampleclient.BuildConfig
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.ClientAppComponent
+import io.github.mudrichenkoevgeny.kmp.sampleclient.app.navigation.deeplink.ClientAppDeepLinkParser
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.root.RootContent
+import io.ktor.http.Url
 import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -32,13 +35,20 @@ fun main() {
     val container = document.getElementById("ComposeTarget")
         ?: error("Element not found")
 
+    val url = Url(window.location.href)
+    val parser = ClientAppDeepLinkParser()
+    val initialRoute = parser.parse(url)
+
     MainScope().launch {
         clientAppComponent.init()
         clientAppComponent.refreshUserConfigurationUseCase() // or appComponent.syncDataUseCase()
         clientAppComponent.commonComponent.webSocketService.connect()
 
         ComposeViewport(container) {
-            RootContent(clientAppComponent)
+            RootContent(
+                clientAppComponent = clientAppComponent,
+                initialRoute = initialRoute
+            )
         }
     }
 }

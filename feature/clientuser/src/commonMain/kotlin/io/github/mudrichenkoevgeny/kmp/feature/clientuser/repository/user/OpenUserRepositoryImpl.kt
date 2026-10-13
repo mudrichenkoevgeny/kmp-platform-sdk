@@ -11,10 +11,10 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserReposito
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserDetails
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserWebSocketEventTypes
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserDetailsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserPrivatePayload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -28,6 +28,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
  * and listening for live [UserWebSocketEventTypes.USER_UPDATED] events via [WebSocketService].
  *
  * @param userStorage Local source for the current user stream and persistence.
+ * @param authStorage Auth storage for tokens.
  * @param openUserApi User HTTP API for profile and account management.
  * @param webSocketService Source of push updates for user changes.
  * @param repositoryScope Scope used to collect WebSocket events throughout the repository's lifecycle.
@@ -42,7 +43,7 @@ class OpenUserRepositoryImpl(
 
     private val mutex = Mutex()
 
-    override val currentUser: Flow<UserDetails?> = userStorage.observeCurrentUser()
+    override val currentUser: Flow<UserPrivate?> = userStorage.observeCurrentUser()
 
     init {
         repositoryScope.launch {
@@ -60,32 +61,32 @@ class OpenUserRepositoryImpl(
         }
     }
 
-    override suspend fun refreshCurrentUser(): AppResult<UserDetails> {
+    override suspend fun refreshCurrentUser(): AppResult<UserPrivate> {
         return mutex.withLock {
-            openUserApi.getUser().mapSuccess { userDetailsPayload: UserDetailsPayload ->
-                val userDetails = userDetailsPayload.toUserDetails()
-                userStorage.updateCurrentUser(userDetails)
-                userDetails
+            openUserApi.getUser().mapSuccess { userPrivatePayload: UserPrivatePayload ->
+                val userPrivate = userPrivatePayload.toUserPrivate()
+                userStorage.updateCurrentUser(userPrivate)
+                userPrivate
             }
         }
     }
 
-    override suspend fun scheduleUserDeletion(): AppResult<UserDetails> {
+    override suspend fun scheduleUserDeletion(): AppResult<UserPrivate> {
         return mutex.withLock {
-            openUserApi.scheduleUserDeletion().mapSuccess { userDetailsPayload: UserDetailsPayload ->
-                val userDetails = userDetailsPayload.toUserDetails()
-                userStorage.updateCurrentUser(userDetails)
-                userDetails
+            openUserApi.scheduleUserDeletion().mapSuccess { userPrivatePayload: UserPrivatePayload ->
+                val userPrivate = userPrivatePayload.toUserPrivate()
+                userStorage.updateCurrentUser(userPrivate)
+                userPrivate
             }
         }
     }
 
-    override suspend fun restoreUser(): AppResult<UserDetails> {
+    override suspend fun restoreUser(): AppResult<UserPrivate> {
         return mutex.withLock {
-            openUserApi.restoreUser().mapSuccess { userDetailsPayload: UserDetailsPayload ->
-                val userDetails = userDetailsPayload.toUserDetails()
-                userStorage.updateCurrentUser(userDetails)
-                userDetails
+            openUserApi.restoreUser().mapSuccess { userPrivatePayload: UserPrivatePayload ->
+                val userPrivate = userPrivatePayload.toUserPrivate()
+                userStorage.updateCurrentUser(userPrivate)
+                userPrivate
             }
         }
     }
@@ -100,13 +101,13 @@ class OpenUserRepositoryImpl(
             return WebSocketMessageHandlerResult.Error(CommonError.ContractViolation())
         }
 
-        val userDetailsPayload = try {
-            FoundationJson.decodeFromJsonElement<UserDetailsPayload>(payload)
+        val userPrivatePayload = try {
+            FoundationJson.decodeFromJsonElement<UserPrivatePayload>(payload)
         } catch (e: Exception) {
             return WebSocketMessageHandlerResult.Error(CommonError.ContractViolation(e))
         }
 
-        userStorage.updateCurrentUser(userDetailsPayload.toUserDetails())
+        userStorage.updateCurrentUser(userPrivatePayload.toUserPrivate())
 
         return WebSocketMessageHandlerResult.Handled
     }

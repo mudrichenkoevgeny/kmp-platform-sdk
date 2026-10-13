@@ -11,6 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
@@ -24,16 +25,24 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 fun <C : Any, T : Any> LoginRootContainer(
     stack: Value<ChildStack<C, T>>,
     onDismiss: () -> Unit,
+    isDismissible: Boolean = true,
     content: @Composable (T) -> Unit
 ) {
     val commonComponent = LocalCommonComponent.current
+    val handleDismiss = if (isDismissible) onDismiss else { {} }
 
     if (commonComponent.platformRepository.getClientDeviceInfo().isMobileClient()) {
-        ModalBottomSheet(onDismissRequest = onDismiss) {
+        ModalBottomSheet(onDismissRequest = handleDismiss) {
             LoginDialogSurface(stack = stack, content = content)
         }
     } else {
-        Dialog(onDismissRequest = onDismiss) {
+        Dialog(
+            onDismissRequest = handleDismiss,
+            properties = DialogProperties(
+                dismissOnBackPress = isDismissible,
+                dismissOnClickOutside = isDismissible
+            )
+        ) {
             LoginDialogSurface(stack = stack, content = content)
         }
     }

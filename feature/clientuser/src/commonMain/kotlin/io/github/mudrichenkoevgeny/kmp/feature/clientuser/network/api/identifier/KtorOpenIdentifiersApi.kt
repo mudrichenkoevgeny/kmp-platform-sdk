@@ -11,7 +11,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserApiPaths
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToPhoneRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.security.password.EmailPasswordChangeRequest
@@ -33,7 +34,7 @@ class KtorOpenIdentifiersApi(
 
     override suspend fun getUserIdentifier(
         userIdentifierId: UserIdentifierId
-    ): AppResult<UserIdentifierPayload> = client.callResult {
+    ): AppResult<UserIdentifierPrivatePayload> = client.callResult {
         get(
             OpenIdentifierRoutes.GET_IDENTIFIER
                 .replace(
@@ -50,7 +51,7 @@ class KtorOpenIdentifiersApi(
         sortOrder: SortOrder?,
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
-    ): AppResult<PagedResult<UserIdentifierPayload>> = client.callResult {
+    ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = client.callResult {
         get(OpenIdentifierRoutes.GET_IDENTIFIERS) {
             parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
             parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
@@ -82,7 +83,7 @@ class KtorOpenIdentifiersApi(
 
     override suspend fun addUserIdentifierEmail(
         request: AddUserIdentifierEmailRequest
-    ): AppResult<UserIdentifierPayload> = client.callResult {
+    ): AppResult<UserIdentifierPrivatePayload> = client.callResult {
         post(OpenIdentifierRoutes.ADD_IDENTIFIER_EMAIL) {
             setBody(request)
         }
@@ -90,7 +91,7 @@ class KtorOpenIdentifiersApi(
 
     override suspend fun addUserIdentifierPhone(
         request: AddUserIdentifierPhoneRequest
-    ): AppResult<UserIdentifierPayload> = client.callResult {
+    ): AppResult<UserIdentifierPrivatePayload> = client.callResult {
         post(OpenIdentifierRoutes.ADD_IDENTIFIER_PHONE) {
             setBody(request)
         }
@@ -98,7 +99,7 @@ class KtorOpenIdentifiersApi(
 
     override suspend fun addUserIdentifierExternalAuthProvider(
         request: AddUserIdentifierExternalAuthProviderRequest
-    ): AppResult<UserIdentifierPayload> = client.callResult {
+    ): AppResult<UserIdentifierPrivatePayload> = client.callResult {
         post(OpenIdentifierRoutes.ADD_IDENTIFIER_EXTERNAL_AUTH_PROVIDER) {
             setBody(request)
         }

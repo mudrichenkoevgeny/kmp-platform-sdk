@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
@@ -19,8 +20,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import kotlinx.coroutines.launch
@@ -65,7 +66,9 @@ class GlobalIdentifierListComponentImpl(
     }
 
     override fun onBackClick() {
-        onBack()
+        if ((backHandler as? BackDispatcher)?.back() != true) {
+            onBack()
+        }
     }
 
     override fun onLoadNextPage() {
@@ -89,6 +92,7 @@ class GlobalIdentifierListComponentImpl(
     override fun onSortChanged(sortState: ListingSortState) {
         val currentContent = _state.value as? GlobalIdentifierListScreenState.Content ?: return
         _state.value = currentContent.copy(sortState = sortState)
+        loadIdentifiers()
     }
 
     override fun onFilterChanged(filterId: String, filterState: ListingFilterState?) {
@@ -154,7 +158,7 @@ class GlobalIdentifierListComponentImpl(
             )
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? GlobalIdentifierListScreenState.Content
-                    val newPaging = (currentContent?.paging ?: PaginationState<UserIdentifier>()).appendResult(pagedResult)
+                    val newPaging = (currentContent?.paging ?: PaginationState<UserIdentifierSummary>()).appendResult(pagedResult)
                     _state.value = currentContent?.copy(paging = newPaging) ?: GlobalIdentifierListScreenState.Content(paging = newPaging)
                 }
                 .onError { error ->

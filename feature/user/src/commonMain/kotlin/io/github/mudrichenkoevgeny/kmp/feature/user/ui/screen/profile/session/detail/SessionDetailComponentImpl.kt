@@ -3,17 +3,19 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.d
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.toUserSessionIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.launch
@@ -24,8 +26,9 @@ import kotlinx.coroutines.launch
  * Supports displaying session details and revoking active sessions across both end-user and administrative contexts.
  *
  * @param componentContext Decompose [ComponentContext].
- * @param session Initial [UserSession] model if already available.
+ * @param session Initial [UserSessionPrivate] model if already available.
  * @param sessionId Target [UserSessionId] identifier.
+ * @param userRepository Source of the current user profile state.
  * @param fetchSession Suspend callback to fetch session details remotely when [session] is not provided.
  * @param revokeSession Suspend callback to revoke the target session.
  * @param isCurrentSession Indicates whether this session belongs to the current device.
@@ -38,16 +41,18 @@ import kotlinx.coroutines.launch
  */
 class SessionDetailComponentImpl(
     componentContext: ComponentContext,
-    private val session: UserSession? = null,
-    private val sessionId: UserSessionId? = session?.id,
-    private val fetchSession: (suspend (UserSessionId) -> AppResult<UserSession>)? = null,
+    private val params: SessionDetailParams? = null,
+    private val session: UserSessionPrivate? = null,
+    private val sessionId: UserSessionId? = params?.sessionId ?: session?.id,
+    private val userRepository: UserRepository? = null,
+    private val fetchSession: (suspend (UserSessionId) -> AppResult<UserSessionPrivate>)? = null,
     private val revokeSession: (suspend (UserSessionId) -> AppResult<Unit>)? = null,
     private val isCurrentSession: Boolean? = null,
     private val authStorage: AuthStorage? = null,
     private val onSessionRevoked: ((UserSessionId) -> Unit)? = null,
     private val onNavigateToIdentifierDetail: ((UserIdentifierId) -> Unit)? = null,
     private val onNavigateToUserDetail: ((UserId) -> Unit)? = null,
-    private val onNavigateToProfile: (() -> Unit)? = null,
+    private val onNavigateToProfile: () -> Unit,
     private val onBack: () -> Unit
 ) : SessionDetailComponent, ComponentContext by componentContext {
 
@@ -56,8 +61,10 @@ class SessionDetailComponentImpl(
      */
     constructor(
         componentContext: ComponentContext,
-        session: UserSession? = null,
-        sessionId: UserSessionId? = session?.id,
+        params: SessionDetailParams? = null,
+        session: UserSessionPrivate? = null,
+        sessionId: UserSessionId? = params?.sessionId ?: session?.id,
+        userRepository: UserRepository? = null,
         getSessionUseCase: GetSessionUseCase? = null,
         deleteSessionUseCase: DeleteSessionUseCase? = null,
         isCurrentSession: Boolean? = null,
@@ -65,12 +72,14 @@ class SessionDetailComponentImpl(
         onSessionRevoked: ((UserSessionId) -> Unit)? = null,
         onNavigateToIdentifierDetail: ((UserIdentifierId) -> Unit)? = null,
         onNavigateToUserDetail: ((UserId) -> Unit)? = null,
-        onNavigateToProfile: (() -> Unit)? = null,
+        onNavigateToProfile: () -> Unit,
         onBack: () -> Unit
     ) : this(
         componentContext = componentContext,
+        params = params,
         session = session,
         sessionId = sessionId,
+        userRepository = userRepository,
         fetchSession = getSessionUseCase?.let { useCase -> { id -> useCase(id) } },
         revokeSession = deleteSessionUseCase?.let { useCase -> { id -> useCase(id) } },
         isCurrentSession = isCurrentSession,
@@ -86,20 +95,27 @@ class SessionDetailComponentImpl(
     private val _state = MutableValue<SessionDetailScreenState>(SessionDetailScreenState.Loading)
     override val state: Value<SessionDetailScreenState> = _state
 
+    private var currentUserId: UserId? = null
+
     init {
+        scope.launch {
+            userRepository?.currentUser?.collect { user ->
+                currentUserId = user?.id
+            }
+        }
         initializeSession()
     }
 
     override fun onRevokeSessionClick() {
         val current = _state.value as? SessionDetailScreenState.Content ?: return
-        val targetSessionId = current.session.id
-        _state.value = current.copy(actionLoading = true, actionError = null)
+        val targetId = sessionId ?: current.session.id
+        if (revokeSession == null) return
 
+        _state.value = current.copy(actionLoading = true, actionError = null)
         scope.launch {
-            val result = revokeSession?.invoke(targetSessionId) ?: AppResult.Success(Unit)
-            result
+            revokeSession.invoke(targetId)
                 .onSuccess {
-                    onSessionRevoked?.invoke(targetSessionId)
+                    onSessionRevoked?.invoke(targetId)
                     onBack()
                 }
                 .onError { error ->
@@ -113,7 +129,9 @@ class SessionDetailComponentImpl(
     }
 
     override fun onBackClick() {
-        onBack()
+        if ((backHandler as? BackDispatcher)?.back() != true) {
+            onBack()
+        }
     }
 
     override fun onIdentifierClick() {
@@ -123,8 +141,8 @@ class SessionDetailComponentImpl(
 
     override fun onUserClick() {
         val current = _state.value as? SessionDetailScreenState.Content ?: return
-        if (current.isCurrentSession) {
-            onNavigateToProfile?.invoke()
+        if (current.isCurrentSession || (currentUserId != null && current.session.userId == currentUserId)) {
+            onNavigateToProfile()
         } else {
             onNavigateToUserDetail?.invoke(current.session.userId)
         }

@@ -12,13 +12,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.DeletedSessionsPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
 
 @InternalApi
 class SelfManagementSessionApiMock : SessionApi {
 
-    var getSessionsResult: AppResult<PagedResult<UserSessionPayload>> = AppResult.Error(CommonError.Unknown())
-    var getSessionResult: AppResult<UserSessionPayload> = AppResult.Error(CommonError.Unknown())
+    var getSessionsResult: AppResult<PagedResult<UserSessionSummaryPayload>> = AppResult.Error(CommonError.Unknown())
+    var getSessionResult: AppResult<UserSessionPrivatePayload> = AppResult.Error(CommonError.Unknown())
     var logoutResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
     var deleteSessionResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
     var deleteAllOtherSessionsResult: AppResult<DeletedSessionsPayload> = AppResult.Error(CommonError.Unknown())
@@ -40,9 +41,9 @@ class SelfManagementSessionApiMock : SessionApi {
         deviceNames: List<String>?,
         appVersions: List<String>?,
         operationSystemVersions: List<String>?
-    ): AppResult<PagedResult<UserSessionPayload>> = getSessionsResult
+    ): AppResult<PagedResult<UserSessionSummaryPayload>> = getSessionsResult
 
-    override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPayload> = getSessionResult
+    override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivatePayload> = getSessionResult
 
     override suspend fun logout(): AppResult<Unit> = logoutResult
 

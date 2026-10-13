@@ -9,10 +9,13 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.UnlockMethod
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.AccountUnlockParams
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.UnlockDestination
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.otp.UnlockOtpComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.otp.UnlockOtpParams
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.selection.UnlockMethodSelectionComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.target.UnlockTargetInputComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.target.UnlockTargetInputParams
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.SendUnlockEmailConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.SendUnlockPhoneConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockByEmailUseCase
@@ -24,8 +27,9 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
 /** Default implementation of [UnlockRootComponent]. */
 class UnlockRootComponentImpl(
     componentContext: ComponentContext,
-    private val lockoutType: AccountLockoutType? = null,
-    private val lockoutUntil: Long? = null,
+    private val params: AccountUnlockParams? = null,
+    private val lockoutType: AccountLockoutType? = params?.lockoutType,
+    private val lockoutUntil: Long? = params?.lockoutUntil,
     private val getUserIdentifiersUseCase: GetUserIdentifiersUseCase? = null,
     private val unlockByGoogleUseCase: UnlockByGoogleUseCase? = null,
     private val sendUnlockEmailConfirmationUseCase: SendUnlockEmailConfirmationUseCase,
@@ -34,6 +38,31 @@ class UnlockRootComponentImpl(
     private val unlockByPhoneUseCase: UnlockByPhoneUseCase,
     private val onFinished: () -> Unit
 ) : UnlockRootComponent, ComponentContext by componentContext {
+
+    constructor(
+        componentContext: ComponentContext,
+        lockoutType: AccountLockoutType? = null,
+        lockoutUntil: Long? = null,
+        getUserIdentifiersUseCase: GetUserIdentifiersUseCase? = null,
+        unlockByGoogleUseCase: UnlockByGoogleUseCase? = null,
+        sendUnlockEmailConfirmationUseCase: SendUnlockEmailConfirmationUseCase,
+        sendUnlockPhoneConfirmationUseCase: SendUnlockPhoneConfirmationUseCase,
+        unlockByEmailUseCase: UnlockByEmailUseCase,
+        unlockByPhoneUseCase: UnlockByPhoneUseCase,
+        onFinished: () -> Unit
+    ) : this(
+        componentContext = componentContext,
+        params = AccountUnlockParams(lockoutType = lockoutType, lockoutUntil = lockoutUntil),
+        lockoutType = lockoutType,
+        lockoutUntil = lockoutUntil,
+        getUserIdentifiersUseCase = getUserIdentifiersUseCase,
+        unlockByGoogleUseCase = unlockByGoogleUseCase,
+        sendUnlockEmailConfirmationUseCase = sendUnlockEmailConfirmationUseCase,
+        sendUnlockPhoneConfirmationUseCase = sendUnlockPhoneConfirmationUseCase,
+        unlockByEmailUseCase = unlockByEmailUseCase,
+        unlockByPhoneUseCase = unlockByPhoneUseCase,
+        onFinished = onFinished
+    )
 
     private val navigation = StackNavigation<UnlockDestination>()
 
@@ -59,10 +88,10 @@ class UnlockRootComponentImpl(
                 getUserIdentifiersUseCase = getUserIdentifiersUseCase,
                 unlockByGoogleUseCase = unlockByGoogleUseCase,
                 onNavigateToEmailInput = {
-                    navigation.bringToFront(UnlockDestination.TargetInput(UnlockMethod.EMAIL))
+                    navigation.bringToFront(UnlockDestination.TargetInput(UnlockTargetInputParams(UnlockMethod.EMAIL)))
                 },
                 onNavigateToPhoneInput = {
-                    navigation.bringToFront(UnlockDestination.TargetInput(UnlockMethod.PHONE))
+                    navigation.bringToFront(UnlockDestination.TargetInput(UnlockTargetInputParams(UnlockMethod.PHONE)))
                 },
                 onUnlockSuccess = { navigation.bringToFront(UnlockDestination.Success) },
                 onBack = { onFinished() }
@@ -72,11 +101,11 @@ class UnlockRootComponentImpl(
         is UnlockDestination.TargetInput -> UnlockRootComponent.Child.TargetInput(
             UnlockTargetInputComponentImpl(
                 componentContext = context,
-                method = config.method,
+                params = config.params,
                 sendUnlockEmailConfirmationUseCase = sendUnlockEmailConfirmationUseCase,
                 sendUnlockPhoneConfirmationUseCase = sendUnlockPhoneConfirmationUseCase,
                 onNavigateToOtp = { target, initialDelaySeconds ->
-                    navigation.bringToFront(UnlockDestination.OtpInput(config.method, target, initialDelaySeconds))
+                    navigation.bringToFront(UnlockDestination.OtpInput(UnlockOtpParams(config.method, target, initialDelaySeconds)))
                 },
                 onBack = { navigation.pop() }
             )
@@ -85,9 +114,7 @@ class UnlockRootComponentImpl(
         is UnlockDestination.OtpInput -> UnlockRootComponent.Child.OtpInput(
             UnlockOtpComponentImpl(
                 componentContext = context,
-                method = config.method,
-                target = config.target,
-                initialDelaySeconds = config.initialDelaySeconds,
+                params = config.params,
                 unlockByEmailUseCase = unlockByEmailUseCase,
                 unlockByPhoneUseCase = unlockByPhoneUseCase,
                 sendUnlockEmailConfirmationUseCase = sendUnlockEmailConfirmationUseCase,

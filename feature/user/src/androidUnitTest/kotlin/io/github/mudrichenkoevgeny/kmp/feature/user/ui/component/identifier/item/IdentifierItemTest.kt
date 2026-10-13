@@ -12,7 +12,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.IdentifierListTestTags
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.junit.runner.RunWith
@@ -29,7 +29,7 @@ class IdentifierItemTest {
     @Test
     fun rendersIdentifierDataAndTriggersClick() = runComposeUiTest {
         var clicks = 0
-        val identifier = userIdentifierMock()
+        val identifier = userIdentifierSummaryMock()
 
         setContent {
             CoreTheme {
@@ -54,7 +54,7 @@ class IdentifierItemTest {
 
     @Test
     fun phoneIdentifier_rendersCorrectData() = runComposeUiTest {
-        val identifier = userIdentifierMock().copy(
+        val identifier = userIdentifierSummaryMock().copy(
             userAuthProvider = UserAuthProvider.PHONE,
             identifier = "+1234567890",
             displayName = "+1234567890"
@@ -82,4 +82,3 @@ class IdentifierItemTest {
         const val EXPECTED_SINGLE_CALLBACK = 1
     }
 }
-

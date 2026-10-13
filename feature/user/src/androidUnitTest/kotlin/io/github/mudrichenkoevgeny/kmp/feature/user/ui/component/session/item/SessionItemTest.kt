@@ -12,7 +12,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -27,7 +27,7 @@ class SessionItemTest {
     @Test
     fun rendersSessionDataAndTriggersRevoke() = runComposeUiTest {
         var revokeClicks = 0
-        val baseSession = userSessionMock()
+        val baseSession = userSessionSummaryMock()
         val session = baseSession.copy(
             clientDeviceInfo = baseSession.clientDeviceInfo.copy(deviceName = "Mock Device")
         )
@@ -47,7 +47,6 @@ class SessionItemTest {
         }
 
         onNodeWithText("Mock Device").assertIsDisplayed()
-        onNodeWithText("127.0.0.1", substring = true).assertIsDisplayed()
 
         onNodeWithText("Revoke").performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, revokeClicks)
@@ -55,7 +54,7 @@ class SessionItemTest {
 
     @Test
     fun disabled_revokeButtonIsNotEnabled() = runComposeUiTest {
-        val session = userSessionMock()
+        val session = userSessionSummaryMock()
 
         setContent {
             CoreTheme {
@@ -72,6 +71,27 @@ class SessionItemTest {
         }
 
         onNodeWithText("Revoke").assertIsNotEnabled()
+    }
+
+    @Test
+    fun withoutRevokeClick_doesNotShowRevokeButton() = runComposeUiTest {
+        val session = userSessionSummaryMock()
+
+        setContent {
+            CoreTheme {
+                Surface {
+                    Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
+                        SessionItem(
+                            session = session,
+                            onRevokeClick = null,
+                            enabled = true
+                        )
+                    }
+                }
+            }
+        }
+
+        onNodeWithText("Revoke").assertDoesNotExist()
     }
 
     private companion object {

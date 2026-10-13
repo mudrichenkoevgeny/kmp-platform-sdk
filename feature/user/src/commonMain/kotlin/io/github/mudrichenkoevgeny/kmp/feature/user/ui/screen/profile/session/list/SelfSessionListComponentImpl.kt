@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.l
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
@@ -17,7 +18,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteAllOth
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionsUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.toUserSessionIdOrNull
 import kotlinx.coroutines.launch
@@ -38,7 +39,7 @@ class SelfSessionListComponentImpl(
     private val getSessionsUseCase: GetSessionsUseCase,
     private val deleteSessionUseCase: DeleteSessionUseCase,
     private val deleteAllOtherSessionsUseCase: DeleteAllOtherSessionsUseCase,
-    private val onNavigateToSessionDetail: ((UserSession) -> Unit)? = null,
+    private val onNavigateToSessionDetail: ((UserSessionSummary) -> Unit)? = null,
     private val onBack: () -> Unit,
     private val authStorage: AuthStorage? = null
 ) : SelfSessionListComponent, ComponentContext by componentContext {
@@ -55,7 +56,7 @@ class SelfSessionListComponentImpl(
         loadSessions()
     }
 
-    override fun onSessionClick(session: UserSession) {
+    override fun onSessionClick(session: UserSessionSummary) {
         onNavigateToSessionDetail?.invoke(session)
     }
 
@@ -98,7 +99,9 @@ class SelfSessionListComponentImpl(
     }
 
     override fun onBackClick() {
-        onBack()
+        if ((backHandler as? BackDispatcher)?.back() != true) {
+            onBack()
+        }
     }
 
     override fun onLoadNextPage() {
@@ -145,7 +148,7 @@ class SelfSessionListComponentImpl(
             )
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? SelfSessionListScreenState.Content
-                    val newPaging = (currentContent?.paging ?: PaginationState<UserSession>()).appendResult(pagedResult)
+                    val newPaging = (currentContent?.paging ?: PaginationState<UserSessionSummary>()).appendResult(pagedResult)
                     val currentSessionId = authStorage?.getSessionId()?.toUserSessionIdOrNull()
                     _state.value = currentContent?.copy(
                         paging = newPaging,

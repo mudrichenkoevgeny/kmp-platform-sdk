@@ -17,12 +17,15 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.mfa.Defau
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.mfa.MfaStepUpHttpClientConfigPlugin
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.EncryptedAuthStorage
+import io.github.mudrichenkoevgeny.kmp.sampleclient.app.navigation.deeplink.ClientAppDeepLinkParser
+import io.github.mudrichenkoevgeny.kmp.sampleclient.app.navigation.deeplink.ClientAppDeepLinkRoute
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.ClientMainScreenComponentImpl
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.MainScreenComponent
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceInfo
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.contract.WebSocketContract
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.auth.refreshtoken.OpenRefreshTokenRoutes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.session.OpenSessionRoutes
+import io.ktor.http.Url
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -222,16 +225,35 @@ class ClientAppComponent(
         _isInitialized.value = true
     }
 
+    var mainScreenComponent: MainScreenComponent? = null
+        private set
+
     /**
      * @param componentContext Decompose context for the tab stack and dialog slot.
+     * @param initialRoute Optional initial deep link route.
      * @return [MainScreenComponent] hosting home and profile destinations.
      */
     fun createMainScreenComponent(
-        componentContext: ComponentContext
+        componentContext: ComponentContext,
+        initialRoute: ClientAppDeepLinkRoute? = null
     ): MainScreenComponent {
-        return ClientMainScreenComponentImpl(
+        val component = ClientMainScreenComponentImpl(
             componentContext = componentContext,
-            clientAppComponent = this
+            clientAppComponent = this,
+            initialDeepLinkRoute = initialRoute
         )
+        mainScreenComponent = component
+        return component
+    }
+
+    /**
+     * Parses and handles a deep link URL string if the [mainScreenComponent] is active.
+     */
+    fun handleDeepLink(urlString: String) {
+        val parser = ClientAppDeepLinkParser()
+        val route = parser.parse(Url(urlString))
+        if (route != null) {
+            mainScreenComponent?.handleDeepLink(route)
+        }
     }
 }

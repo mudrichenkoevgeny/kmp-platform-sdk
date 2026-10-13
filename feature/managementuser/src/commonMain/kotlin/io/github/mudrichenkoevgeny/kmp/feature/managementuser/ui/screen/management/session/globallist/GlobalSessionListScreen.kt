@@ -53,7 +53,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.sessions.GlobalSessionListComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.sessions
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.session.item.SessionItem
 import org.jetbrains.compose.resources.painterResource
@@ -206,7 +206,6 @@ private fun Content(
                     items(state.paging.items, key = { it.id.value }) { session ->
                         SessionItem(
                             session = session,
-                            onRevokeClick = { component.onDeleteSessionClick(session.userId, session.id.asHexDashString()) },
                             enabled = !state.actionLoading,
                             onSessionClick = { component.onSessionClick(session) }
                         )
@@ -236,7 +235,7 @@ internal class GlobalSessionListPreviewProvider : PreviewParameterProvider<Globa
     private val items: List<Pair<String, GlobalSessionListScreenState>> = listOf(
         "Content" to GlobalSessionListScreenState.Content(
             paging = PaginationState(
-                items = listOf(userSessionMock(), userSessionMock())
+                items = listOf(userSessionSummaryMock(), userSessionSummaryMock())
             )
         ),
         "Error" to GlobalSessionListScreenState.Error(error = CommonError.Unknown()),
@@ -260,7 +259,7 @@ private fun GlobalSessionListScreenPreviewContent(state: GlobalSessionListScreen
 
 @InternalApi
 private val defaultGlobalSessionListPreviewState = GlobalSessionListScreenState.Content(
-    paging = PaginationState(items = listOf(userSessionMock(), userSessionMock()))
+    paging = PaginationState(items = listOf(userSessionSummaryMock(), userSessionSummaryMock()))
 )
 
 @InternalApi

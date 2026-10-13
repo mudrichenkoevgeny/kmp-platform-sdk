@@ -9,21 +9,21 @@ class LoginByPhoneScreenStateTest {
     @Test
     fun codeInput_isCodeFullLength_matchesCodeLength() {
         assertTrue(
-            LoginByPhoneScreenState.CodeInput(
+            LoginByPhoneScreenState(
                 phoneNumber = PHONE,
                 code = CODE_SIX_CHARS,
                 codeLength = CODE_LENGTH_SIX
             ).isCodeFullLength
         )
         assertFalse(
-            LoginByPhoneScreenState.CodeInput(
+            LoginByPhoneScreenState(
                 phoneNumber = PHONE,
                 code = CODE_FIVE_CHARS,
                 codeLength = CODE_LENGTH_SIX
             ).isCodeFullLength
         )
         assertTrue(
-            LoginByPhoneScreenState.CodeInput(
+            LoginByPhoneScreenState(
                 phoneNumber = PHONE,
                 code = CODE_FOUR_CHARS,
                 codeLength = CODE_LENGTH_FOUR
@@ -34,7 +34,7 @@ class LoginByPhoneScreenStateTest {
     @Test
     fun codeInput_canResendCode_whenTimerZeroAndNotLoading() {
         assertTrue(
-            LoginByPhoneScreenState.CodeInput(
+            LoginByPhoneScreenState(
                 phoneNumber = PHONE,
                 resendTimerSeconds = RESEND_TIMER_READY,
                 actionLoading = NOT_LOADING
@@ -45,7 +45,7 @@ class LoginByPhoneScreenStateTest {
     @Test
     fun codeInput_canResendCode_falseWhenTimerPositive() {
         assertFalse(
-            LoginByPhoneScreenState.CodeInput(
+            LoginByPhoneScreenState(
                 phoneNumber = PHONE,
                 resendTimerSeconds = RESEND_TIMER_BLOCKING,
                 actionLoading = NOT_LOADING
@@ -56,7 +56,7 @@ class LoginByPhoneScreenStateTest {
     @Test
     fun codeInput_canResendCode_falseWhenLoading() {
         assertFalse(
-            LoginByPhoneScreenState.CodeInput(
+            LoginByPhoneScreenState(
                 phoneNumber = PHONE,
                 resendTimerSeconds = RESEND_TIMER_READY,
                 actionLoading = LOADING

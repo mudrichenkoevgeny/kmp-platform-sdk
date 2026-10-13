@@ -1,8 +1,13 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
+import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
@@ -23,6 +28,7 @@ import kotlinx.coroutines.launch
  * Default [ResetEmailPasswordComponent]: send reset code, cooldowns, and password update via use cases.
  *
  * @param componentContext Decompose [ComponentContext].
+ * @param initialConfig Optional initial step configuration.
  * @param resetPasswordRepository exposes remaining reset-confirmation delay per email.
  * @param sendResetPasswordConfirmationToEmailUseCase sends the reset verification code.
  * @param resetEmailPasswordUseCase applies the new password after code verification.
@@ -32,6 +38,7 @@ import kotlinx.coroutines.launch
  */
 class ResetEmailPasswordComponentImpl(
     componentContext: ComponentContext,
+    initialConfig: ResetPasswordStepConfig = ResetPasswordStepConfig.EmailInput(),
     private val resetPasswordRepository: ResetPasswordRepository,
     private val sendResetPasswordConfirmationToEmailUseCase: SendResetPasswordConfirmationToEmailUseCase,
     private val resetEmailPasswordUseCase: ResetEmailPasswordUseCase,
@@ -44,16 +51,49 @@ class ResetEmailPasswordComponentImpl(
     private var timerJob: Job? = null
     private var passwordValidationJob: Job? = null
 
-    private val _state = MutableValue<ResetEmailPasswordScreenState>(
-        ResetEmailPasswordScreenState.EmailInput()
+    override val stackNavigation = StackNavigation<ResetPasswordStepConfig>()
+
+    override val stack: Value<ChildStack<ResetPasswordStepConfig, ResetEmailPasswordComponent.Child>> =
+        childStack(
+            source = stackNavigation,
+            serializer = ResetPasswordStepConfig.serializer(),
+            initialConfiguration = initialConfig,
+            handleBackButton = true,
+            childFactory = ::createChild
+        )
+
+    private val _state = MutableValue(
+        ResetEmailPasswordScreenState(
+            email = when (initialConfig) {
+                is ResetPasswordStepConfig.EmailInput -> initialConfig.initialEmail
+                is ResetPasswordStepConfig.ConfirmInput -> initialConfig.email
+            },
+            resendTimerSeconds = when (initialConfig) {
+                is ResetPasswordStepConfig.EmailInput -> 0
+                is ResetPasswordStepConfig.ConfirmInput -> initialConfig.resendTimerSeconds
+            }
+        )
     )
     override val state: Value<ResetEmailPasswordScreenState> = _state
 
+    init {
+        if (initialConfig is ResetPasswordStepConfig.ConfirmInput && initialConfig.resendTimerSeconds > 0) {
+            startTimer(initialConfig.resendTimerSeconds)
+        }
+    }
+
+    private fun createChild(
+        config: ResetPasswordStepConfig,
+        context: ComponentContext
+    ): ResetEmailPasswordComponent.Child = when (config) {
+        is ResetPasswordStepConfig.EmailInput -> ResetEmailPasswordComponent.Child.EmailInput(config.initialEmail)
+        is ResetPasswordStepConfig.ConfirmInput -> ResetEmailPasswordComponent.Child.ConfirmInput(config.email)
+    }
+
     override fun onEmailChanged(email: String) {
-        val current = _state.value as? ResetEmailPasswordScreenState.EmailInput ?: return
         val isValid = FieldValidator.isEmailValid(email)
 
-        _state.value = current.copy(
+        _state.value = _state.value.copy(
             email = email,
             isEmailValid = isValid,
             actionError = null
@@ -69,9 +109,7 @@ class ResetEmailPasswordComponentImpl(
     }
 
     override fun onPasswordChanged(password: String) {
-        val current = _state.value as? ResetEmailPasswordScreenState.ResetInput ?: return
-
-        _state.value = current.copy(
+        _state.value = _state.value.copy(
             newPassword = password,
             actionError = null
         )
@@ -86,27 +124,20 @@ class ResetEmailPasswordComponentImpl(
                         result.error.code != ClientSecurityErrorCodes.PASSWORD_POLICY_UNAVAILABLE
             }
 
-            val updated = _state.value as? ResetEmailPasswordScreenState.ResetInput ?: return@launch
-            _state.value = updated.copy(
+            _state.value = _state.value.copy(
                 isPasswordValid = isPasswordValid
             )
         }
     }
 
     override fun onCodeChanged(code: String) {
-        val current = _state.value as? ResetEmailPasswordScreenState.ResetInput ?: return
-        if (code.length <= current.codeLength) {
-            _state.value = current.copy(code = code, actionError = null)
+        if (code.length <= _state.value.codeLength) {
+            _state.value = _state.value.copy(code = code, actionError = null)
         }
     }
 
     override fun onSendCodeClick() {
-        val email = when (val s = _state.value) {
-            is ResetEmailPasswordScreenState.EmailInput -> s.email
-            is ResetEmailPasswordScreenState.ResetInput -> s.email
-            else -> return
-        }
-
+        val email = _state.value.email
         updateLoading(true)
 
         scope.launch {
@@ -125,7 +156,7 @@ class ResetEmailPasswordComponentImpl(
     }
 
     override fun onConfirmResetClick() {
-        val current = _state.value as? ResetEmailPasswordScreenState.ResetInput ?: return
+        val current = _state.value
         if (!current.canConfirm) return
 
         _state.value = current.copy(actionLoading = true, actionError = null)
@@ -140,34 +171,42 @@ class ResetEmailPasswordComponentImpl(
                     )
                         .onSuccess { onFinished() }
                         .onError { error ->
-                            _state.value = current.copy(actionLoading = false, actionError = error)
+                            _state.value = _state.value.copy(actionLoading = false, actionError = error)
                         }
                 }
                 .onError { error ->
-                    _state.value = current.copy(actionLoading = false, actionError = error)
+                    _state.value = _state.value.copy(actionLoading = false, actionError = error)
                 }
         }
     }
 
     override fun onResetEmailClick() {
         timerJob?.cancel()
-        val email = (_state.value as? ResetEmailPasswordScreenState.ResetInput)?.email ?: ""
-        _state.value = ResetEmailPasswordScreenState.EmailInput(email = email)
+        val email = _state.value.email
+        _state.value = _state.value.copy(
+            code = "",
+            newPassword = "",
+            isPasswordValid = false,
+            actionError = null,
+            resendTimerSeconds = 0
+        )
+        stackNavigation.bringToFront(ResetPasswordStepConfig.EmailInput(email))
     }
 
     override fun onBackClick() {
-        if (_state.value is ResetEmailPasswordScreenState.ResetInput) {
-            onResetEmailClick()
-        } else {
+        if ((backHandler as? BackDispatcher)?.back() != true) {
             onBack()
         }
     }
 
     private fun moveToResetInput(email: String, seconds: Int) {
-        _state.value = ResetEmailPasswordScreenState.ResetInput(
+        _state.value = _state.value.copy(
             email = email,
-            resendTimerSeconds = seconds
+            resendTimerSeconds = seconds,
+            actionLoading = false,
+            actionError = null
         )
+        stackNavigation.bringToFront(ResetPasswordStepConfig.ConfirmInput(email, seconds))
         startTimer(seconds)
     }
 
@@ -184,41 +223,20 @@ class ResetEmailPasswordComponentImpl(
     }
 
     private fun updateTimerState(seconds: Int) {
-        val current = _state.value as? ResetEmailPasswordScreenState.ResetInput ?: return
-        _state.value = current.copy(resendTimerSeconds = seconds)
+        _state.value = _state.value.copy(resendTimerSeconds = seconds)
     }
 
     private fun updateLoading(isLoading: Boolean) {
-        val current = _state.value
-        _state.value = when (current) {
-            is ResetEmailPasswordScreenState.EmailInput -> current.copy(
-                actionLoading = isLoading,
-                actionError = null
-            )
-
-            is ResetEmailPasswordScreenState.ResetInput -> current.copy(
-                actionLoading = isLoading,
-                actionError = null
-            )
-
-            else -> current
-        }
+        _state.value = _state.value.copy(
+            actionLoading = isLoading,
+            actionError = null
+        )
     }
 
     private fun updateError(error: AppError) {
-        val current = _state.value
-        _state.value = when (current) {
-            is ResetEmailPasswordScreenState.EmailInput -> current.copy(
-                actionLoading = false,
-                actionError = error
-            )
-
-            is ResetEmailPasswordScreenState.ResetInput -> current.copy(
-                actionLoading = false,
-                actionError = error
-            )
-
-            else -> current
-        }
+        _state.value = _state.value.copy(
+            actionLoading = false,
+            actionError = error
+        )
     }
 }

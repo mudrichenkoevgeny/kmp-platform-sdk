@@ -10,8 +10,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.identifier.ManagementIdentifierRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
@@ -23,7 +23,7 @@ class UserIdentifierListComponentImplTest {
 
     @Test
     fun init_loadsIdentifiersSuccessfully() = runComponentTest {
-        val identifier = userIdentifierMock()
+        val identifier = userIdentifierSummaryMock()
         val context = createTestContext(identifiers = listOf(identifier))
 
         advanceUntilIdle()
@@ -63,7 +63,7 @@ class UserIdentifierListComponentImplTest {
 
     private fun createTestContext(
         userId: UserId = UserId.generate(),
-        identifiers: List<UserIdentifier>? = null,
+        identifiers: List<UserIdentifierSummary>? = null,
         repository: ManagementIdentifierRepositoryMock = ManagementIdentifierRepositoryMock()
     ): TestContext {
         if (identifiers != null) {
@@ -82,7 +82,7 @@ class UserIdentifierListComponentImplTest {
 
         context.component = UserIdentifierListComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
-            userId = userId,
+            params = UserIdentifierListParams(userId.asHexDashString()),
             managementGetIdentifiersUseCase = useCase,
             onBack = { context.onBackCalls++ }
         )

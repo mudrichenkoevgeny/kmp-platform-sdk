@@ -22,10 +22,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.root.UnlockRootScreen
 
 @Composable
-fun ManagementLoginRootScreen(component: ManagementLoginRootComponent) {
+fun ManagementLoginRootScreen(
+    component: ManagementLoginRootComponent,
+    isDismissible: Boolean = true
+) {
     LoginRootContainer(
         stack = component.stack,
-        onDismiss = component::onDismiss
+        onDismiss = component::onDismiss,
+        isDismissible = isDismissible
     ) { instance ->
         when (instance) {
             is ManagementLoginRootComponent.Child.Welcome -> LoginWelcomeScreen(instance.component)

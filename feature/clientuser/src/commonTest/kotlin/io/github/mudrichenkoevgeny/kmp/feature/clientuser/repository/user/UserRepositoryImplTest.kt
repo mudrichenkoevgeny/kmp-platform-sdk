@@ -5,7 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.model.websocket.
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.websocket.service.WebSocketServiceMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.network.api.user.OpenUserApiMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.user.userDetailsPayloadMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.user.userPrivatePayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
@@ -14,10 +14,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserDetails
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserDetails
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserWebSocketEventTypes
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserDetailsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserPrivatePayload
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
@@ -56,42 +56,42 @@ class UserRepositoryImplTest {
 
     @Test
     fun `refreshCurrentUser fetches from api and updates storage`() = runTest {
-        val wire = userDetailsPayloadMock()
+        val wire = userPrivatePayloadMock()
         userApi.getUserResult = AppResult.Success(wire)
         val repo = createRepository(this)
 
         val result = repo.refreshCurrentUser()
 
-        assertIs<AppResult.Success<UserDetails>>(result)
-        val expected = wire.toUserDetails()
+        assertIs<AppResult.Success<UserPrivate>>(result)
+        val expected = wire.toUserPrivate()
         assertEquals(expected, result.data)
         assertEquals(expected, userStorage.getCurrentUser())
     }
 
     @Test
     fun `scheduleUserDeletion fetches from api and updates storage`() = runTest {
-        val wire = userDetailsPayloadMock()
+        val wire = userPrivatePayloadMock()
         userApi.scheduleUserDeletionResult = AppResult.Success(wire)
         val repo = createRepository(this)
 
         val result = repo.scheduleUserDeletion()
 
-        assertIs<AppResult.Success<UserDetails>>(result)
-        val expected = wire.toUserDetails()
+        assertIs<AppResult.Success<UserPrivate>>(result)
+        val expected = wire.toUserPrivate()
         assertEquals(expected, result.data)
         assertEquals(expected, userStorage.getCurrentUser())
     }
 
     @Test
     fun `restoreUser fetches from api and updates storage`() = runTest {
-        val wire = userDetailsPayloadMock()
+        val wire = userPrivatePayloadMock()
         userApi.restoreUserResult = AppResult.Success(wire)
         val repo = createRepository(this)
 
         val result = repo.restoreUser()
 
-        assertIs<AppResult.Success<UserDetails>>(result)
-        val expected = wire.toUserDetails()
+        assertIs<AppResult.Success<UserPrivate>>(result)
+        val expected = wire.toUserPrivate()
         assertEquals(expected, result.data)
         assertEquals(expected, userStorage.getCurrentUser())
     }
@@ -101,17 +101,17 @@ class UserRepositoryImplTest {
         createRepository(this)
         runCurrent()
 
-        val pushed = userDetailsPayloadMock()
+        val pushed = userPrivatePayloadMock()
         val frame = socketFrameMock(
             type = UserWebSocketEventTypes.USER_UPDATED,
-            payload = FoundationJson.encodeToJsonElement<UserDetailsPayload>(pushed)
+            payload = FoundationJson.encodeToJsonElement<UserPrivatePayload>(pushed)
         )
 
         webSocketService.emit(frame)
         runCurrent()
         advanceUntilIdle()
 
-        val expected = pushed.toUserDetails()
+        val expected = pushed.toUserPrivate()
         val actual = userStorage.getCurrentUser()
 
         assertEquals(expected, actual)
@@ -122,7 +122,7 @@ class UserRepositoryImplTest {
         createRepository(this)
         runCurrent()
 
-        userStorage.updateCurrentUser(userDetailsPayloadMock().toUserDetails())
+        userStorage.updateCurrentUser(userPrivatePayloadMock().toUserPrivate())
 
         val token = SessionToken(
             accessToken = AccessToken("at"),

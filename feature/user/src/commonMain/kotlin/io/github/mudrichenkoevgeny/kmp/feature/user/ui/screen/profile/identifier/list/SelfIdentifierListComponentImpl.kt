@@ -1,8 +1,14 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.router.slot.ChildSlot
+import com.arkivanov.decompose.router.slot.SlotNavigation
+import com.arkivanov.decompose.router.slot.activate
+import com.arkivanov.decompose.router.slot.childSlot
+import com.arkivanov.decompose.router.slot.dismiss
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
@@ -28,7 +34,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.SendAddEm
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.SendAddPhoneIdentifierConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.toUserIdentifierIdOrNull
 import kotlinx.coroutines.Job
@@ -53,6 +59,7 @@ import kotlinx.coroutines.launch
  */
 class SelfIdentifierListComponentImpl(
     componentContext: ComponentContext,
+    initialDialogConfig: AddIdentifierDialogConfig? = null,
     private val appType: AppType = AppType.CLIENT,
     private val getUserIdentifiersUseCase: GetUserIdentifiersUseCase,
     private val getAvailableUserAuthProvidersUseCase: GetAvailableUserAuthProvidersUseCase? = null,
@@ -70,11 +77,35 @@ class SelfIdentifierListComponentImpl(
     private val scope = componentCoroutineScope()
     private var timerJob: Job? = null
 
+    override val addIdentifierDialogSlotNavigation = SlotNavigation<AddIdentifierDialogConfig>()
+
+    override val addIdentifierDialogSlot: Value<ChildSlot<AddIdentifierDialogConfig, SelfIdentifierListComponent.AddIdentifierDialogChild>> =
+        childSlot(
+            source = addIdentifierDialogSlotNavigation,
+            serializer = AddIdentifierDialogConfig.serializer(),
+            handleBackButton = true,
+            childFactory = ::createAddIdentifierDialogChild
+        )
+
+    private fun createAddIdentifierDialogChild(
+        config: AddIdentifierDialogConfig,
+        context: ComponentContext
+    ): SelfIdentifierListComponent.AddIdentifierDialogChild = when (config) {
+        is AddIdentifierDialogConfig.ProviderSelection -> SelfIdentifierListComponent.AddIdentifierDialogChild.ProviderSelection
+        is AddIdentifierDialogConfig.EmailInput -> SelfIdentifierListComponent.AddIdentifierDialogChild.EmailInput(config.initialEmail)
+        is AddIdentifierDialogConfig.EmailConfirm -> SelfIdentifierListComponent.AddIdentifierDialogChild.EmailConfirm(config.email)
+        is AddIdentifierDialogConfig.PhoneInput -> SelfIdentifierListComponent.AddIdentifierDialogChild.PhoneInput(config.initialPhone)
+        is AddIdentifierDialogConfig.PhoneConfirm -> SelfIdentifierListComponent.AddIdentifierDialogChild.PhoneConfirm(config.phone)
+    }
+
     private val _state = MutableValue<SelfIdentifierListScreenState>(SelfIdentifierListScreenState.Loading)
     override val state: Value<SelfIdentifierListScreenState> = _state
 
     init {
         loadIdentifiers()
+        initialDialogConfig?.let {
+            addIdentifierDialogSlotNavigation.activate(it)
+        }
     }
 
     override fun onRefresh() {
@@ -88,10 +119,10 @@ class SelfIdentifierListComponentImpl(
     override fun onAddIdentifierClick() {
         if (appType != AppType.CLIENT) return
 
+        addIdentifierDialogSlotNavigation.activate(AddIdentifierDialogConfig.ProviderSelection)
+
         val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
-        if (currentContent.availableAuthProviders != null) {
-            _state.value = currentContent.copy(addIdentifierDialogState = AddIdentifierDialogState.ProviderSelection)
-        } else {
+        if (currentContent.availableAuthProviders == null) {
             val useCase = getAvailableUserAuthProvidersUseCase
             if (useCase == null) {
                 _state.value = currentContent.copy(
@@ -110,7 +141,6 @@ class SelfIdentifierListComponentImpl(
                         if (content != null) {
                             _state.value = content.copy(
                                 availableAuthProviders = providers,
-                                addIdentifierDialogState = AddIdentifierDialogState.ProviderSelection,
                                 actionLoading = false
                             )
                         }
@@ -131,10 +161,10 @@ class SelfIdentifierListComponentImpl(
     override fun onAddIdentifierSelectProvider(authProvider: UserAuthProvider) {
         when (authProvider) {
             UserAuthProvider.EMAIL -> {
-                updateDialogState(AddIdentifierDialogState.EmailFlow())
+                addIdentifierDialogSlotNavigation.activate(AddIdentifierDialogConfig.EmailInput())
             }
             UserAuthProvider.PHONE -> {
-                updateDialogState(AddIdentifierDialogState.PhoneFlow())
+                addIdentifierDialogSlotNavigation.activate(AddIdentifierDialogConfig.PhoneInput())
             }
             UserAuthProvider.GOOGLE -> {
                 addGoogleIdentifier()
@@ -151,10 +181,8 @@ class SelfIdentifierListComponentImpl(
 
     override fun onAddIdentifierEmailChanged(email: String) {
         val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
-        val flow = currentContent.addIdentifierDialogState as? AddIdentifierDialogState.EmailFlow ?: return
         val isValid = FieldValidator.isEmailValid(email)
-
-        updateDialogState(flow.copy(email = email, isEmailValid = isValid, actionError = null))
+        _state.value = currentContent.copy(addEmail = email, isAddEmailValid = isValid, actionError = null)
 
         if (isValid) {
             val remaining = identifierRepository?.getRemainingEmailConfirmationDelayInSeconds(email) ?: 0
@@ -166,24 +194,18 @@ class SelfIdentifierListComponentImpl(
 
     override fun onAddIdentifierPasswordChanged(password: String) {
         val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
-        val flow = currentContent.addIdentifierDialogState as? AddIdentifierDialogState.EmailFlow ?: return
-
-        updateDialogState(flow.copy(password = password, isPasswordValid = password.isNotBlank(), actionError = null))
+        _state.value = currentContent.copy(addPassword = password, isAddPasswordValid = password.isNotBlank(), actionError = null)
     }
 
     override fun onAddIdentifierTogglePasswordVisibility() {
         val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
-        val flow = currentContent.addIdentifierDialogState as? AddIdentifierDialogState.EmailFlow ?: return
-
-        updateDialogState(flow.copy(isPasswordVisible = !flow.isPasswordVisible))
+        _state.value = currentContent.copy(isAddPasswordVisible = !currentContent.isAddPasswordVisible)
     }
 
     override fun onAddIdentifierPhoneChanged(phone: String) {
         val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
-        val flow = currentContent.addIdentifierDialogState as? AddIdentifierDialogState.PhoneFlow ?: return
         val isValid = FieldValidator.isPhoneNumberValid(phone)
-
-        updateDialogState(flow.copy(phoneNumber = phone, isPhoneNumberValid = isValid, actionError = null))
+        _state.value = currentContent.copy(addPhone = phone, isAddPhoneValid = isValid, actionError = null)
 
         if (isValid) {
             val remaining = identifierRepository?.getRemainingPhoneNumberConfirmationDelayInSeconds(phone) ?: 0
@@ -195,64 +217,50 @@ class SelfIdentifierListComponentImpl(
 
     override fun onAddIdentifierCodeChanged(code: String) {
         val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
-        val flow = currentContent.addIdentifierDialogState ?: return
-
-        when (flow) {
-            is AddIdentifierDialogState.EmailFlow -> {
-                if (code.length <= FieldValidator.DEFAULT_OTP_LENGTH) {
-                    updateDialogState(flow.copy(code = code, actionError = null))
-                }
+        if (code.length <= FieldValidator.DEFAULT_OTP_LENGTH) {
+            _state.value = currentContent.copy(addCode = code, actionError = null)
+            if (currentContent.canSubmitAddPhone && addIdentifierDialogSlot.value.child?.configuration is AddIdentifierDialogConfig.PhoneConfirm) {
+                onAddIdentifierSubmit()
             }
-            is AddIdentifierDialogState.PhoneFlow -> {
-                if (code.length <= FieldValidator.DEFAULT_OTP_LENGTH) {
-                    val updated = flow.copy(code = code, actionError = null)
-                    updateDialogState(updated)
-                    if (updated.canSubmit) {
-                        onAddIdentifierSubmit()
-                    }
-                }
-            }
-            else -> {}
         }
     }
 
     override fun onAddIdentifierSendCode() {
         val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
-        val flow = currentContent.addIdentifierDialogState ?: return
 
-        when (flow) {
-            is AddIdentifierDialogState.EmailFlow -> {
+        when (addIdentifierDialogSlot.value.child?.configuration) {
+            is AddIdentifierDialogConfig.EmailInput, is AddIdentifierDialogConfig.EmailConfirm -> {
                 val useCase = sendAddEmailIdentifierConfirmationUseCase ?: return
-                updateDialogState(flow.copy(actionLoading = true, actionError = null))
+                updateDialogLoading(true)
 
                 scope.launch {
-                    useCase(flow.email)
+                    useCase(currentContent.addEmail)
                         .onSuccess { otpConfirmation ->
                             val seconds = otpConfirmation.retryAfterSeconds.coerceAtLeast(0)
-                            moveToEmailConfirmation(flow.email, seconds)
+                            moveToEmailConfirmation(currentContent.addEmail, seconds)
                         }
                         .onError { error ->
                             if (error is UserError.TooManyConfirmationRequests) {
-                                moveToEmailConfirmation(flow.email, error.retryAfterSeconds)
+                                moveToEmailConfirmation(currentContent.addEmail, error.retryAfterSeconds)
                             } else {
                                 updateDialogError(error)
                             }
                         }
                 }
             }
-            is AddIdentifierDialogState.PhoneFlow -> {
+            is AddIdentifierDialogConfig.PhoneInput, is AddIdentifierDialogConfig.PhoneConfirm -> {
                 val useCase = sendAddPhoneIdentifierConfirmationUseCase ?: return
-                updateDialogState(flow.copy(actionLoading = true, actionError = null))
+                updateDialogLoading(true)
 
                 scope.launch {
-                    useCase(flow.phoneNumber)
+                    useCase(currentContent.addPhone)
                         .onSuccess { otpConfirmation ->
                             val seconds = otpConfirmation.retryAfterSeconds.coerceAtLeast(0)
-                            moveToPhoneConfirmation(flow.phoneNumber, seconds)
+                            moveToPhoneConfirmation(currentContent.addPhone, seconds)
                         }
                         .onError { error ->
                             if (error is UserError.TooManyConfirmationRequests) {
-                                moveToPhoneConfirmation(flow.phoneNumber, error.retryAfterSeconds)
+                                moveToPhoneConfirmation(currentContent.addPhone, error.retryAfterSeconds)
                             } else {
                                 updateDialogError(error)
                             }
@@ -265,16 +273,15 @@ class SelfIdentifierListComponentImpl(
 
     override fun onAddIdentifierSubmit() {
         val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
-        val flow = currentContent.addIdentifierDialogState ?: return
 
-        when (flow) {
-            is AddIdentifierDialogState.EmailFlow -> {
+        when (addIdentifierDialogSlot.value.child?.configuration) {
+            is AddIdentifierDialogConfig.EmailConfirm -> {
                 val useCase = addUserIdentifierEmailUseCase ?: return
-                if (!flow.canSubmit) return
-                updateDialogState(flow.copy(actionLoading = true, actionError = null))
+                if (!currentContent.canSubmitAddEmail) return
+                updateDialogLoading(true)
 
                 scope.launch {
-                    useCase(flow.email, flow.password, flow.code)
+                    useCase(currentContent.addEmail, currentContent.addPassword, currentContent.addCode)
                         .onSuccess {
                             onAddIdentifierDialogDismiss()
                             loadIdentifiers()
@@ -284,13 +291,13 @@ class SelfIdentifierListComponentImpl(
                         }
                 }
             }
-            is AddIdentifierDialogState.PhoneFlow -> {
+            is AddIdentifierDialogConfig.PhoneConfirm -> {
                 val useCase = addUserIdentifierPhoneUseCase ?: return
-                if (!flow.canSubmit) return
-                updateDialogState(flow.copy(actionLoading = true, actionError = null))
+                if (!currentContent.canSubmitAddPhone) return
+                updateDialogLoading(true)
 
                 scope.launch {
-                    useCase(flow.phoneNumber, flow.code)
+                    useCase(currentContent.addPhone, currentContent.addCode)
                         .onSuccess {
                             onAddIdentifierDialogDismiss()
                             loadIdentifiers()
@@ -305,11 +312,20 @@ class SelfIdentifierListComponentImpl(
     }
 
     override fun onAddIdentifierDialogBack() {
-        val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
-        when (currentContent.addIdentifierDialogState) {
-            is AddIdentifierDialogState.EmailFlow, is AddIdentifierDialogState.PhoneFlow -> {
+        when (addIdentifierDialogSlot.value.child?.configuration) {
+            is AddIdentifierDialogConfig.EmailConfirm -> {
                 timerJob?.cancel()
-                updateDialogState(AddIdentifierDialogState.ProviderSelection)
+                val email = (addIdentifierDialogSlot.value.child?.configuration as? AddIdentifierDialogConfig.EmailConfirm)?.email ?: ""
+                addIdentifierDialogSlotNavigation.activate(AddIdentifierDialogConfig.EmailInput(email))
+            }
+            is AddIdentifierDialogConfig.PhoneConfirm -> {
+                timerJob?.cancel()
+                val phone = (addIdentifierDialogSlot.value.child?.configuration as? AddIdentifierDialogConfig.PhoneConfirm)?.phone ?: ""
+                addIdentifierDialogSlotNavigation.activate(AddIdentifierDialogConfig.PhoneInput(phone))
+            }
+            is AddIdentifierDialogConfig.EmailInput, is AddIdentifierDialogConfig.PhoneInput -> {
+                timerJob?.cancel()
+                addIdentifierDialogSlotNavigation.activate(AddIdentifierDialogConfig.ProviderSelection)
             }
             else -> onAddIdentifierDialogDismiss()
         }
@@ -317,8 +333,20 @@ class SelfIdentifierListComponentImpl(
 
     override fun onAddIdentifierDialogDismiss() {
         timerJob?.cancel()
+        addIdentifierDialogSlotNavigation.dismiss()
         val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
-        _state.value = currentContent.copy(addIdentifierDialogState = null)
+        _state.value = currentContent.copy(
+            addEmail = "",
+            isAddEmailValid = false,
+            addPhone = "",
+            isAddPhoneValid = false,
+            addCode = "",
+            addPassword = "",
+            isAddPasswordValid = false,
+            addResendTimerSeconds = 0,
+            actionLoading = false,
+            actionError = null
+        )
     }
 
     override fun onIdentifierDeleted(identifierId: UserIdentifierId) {
@@ -339,7 +367,9 @@ class SelfIdentifierListComponentImpl(
     }
 
     override fun onBackClick() {
-        onBack()
+        if ((backHandler as? BackDispatcher)?.back() != true) {
+            onBack()
+        }
     }
 
     private fun addGoogleIdentifier() {
@@ -359,34 +389,12 @@ class SelfIdentifierListComponentImpl(
     }
 
     private fun moveToEmailConfirmation(email: String, seconds: Int) {
-        val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
-        val currentFlow = currentContent.addIdentifierDialogState as? AddIdentifierDialogState.EmailFlow
-        updateDialogState(
-            AddIdentifierDialogState.EmailFlow(
-                email = email,
-                isEmailValid = true,
-                code = currentFlow?.code ?: "",
-                password = currentFlow?.password ?: "",
-                isPasswordValid = currentFlow?.isPasswordValid ?: false,
-                isConfirmationSent = true,
-                resendTimerSeconds = seconds
-            )
-        )
+        addIdentifierDialogSlotNavigation.activate(AddIdentifierDialogConfig.EmailConfirm(email, seconds))
         startTimer(seconds)
     }
 
     private fun moveToPhoneConfirmation(phone: String, seconds: Int) {
-        val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
-        val currentFlow = currentContent.addIdentifierDialogState as? AddIdentifierDialogState.PhoneFlow
-        updateDialogState(
-            AddIdentifierDialogState.PhoneFlow(
-                phoneNumber = phone,
-                isPhoneNumberValid = true,
-                code = currentFlow?.code ?: "",
-                isConfirmationSent = true,
-                resendTimerSeconds = seconds
-            )
-        )
+        addIdentifierDialogSlotNavigation.activate(AddIdentifierDialogConfig.PhoneConfirm(phone, seconds))
         startTimer(seconds)
     }
 
@@ -404,36 +412,17 @@ class SelfIdentifierListComponentImpl(
 
     private fun updateTimerState(seconds: Int) {
         val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
-        when (val flow = currentContent.addIdentifierDialogState) {
-            is AddIdentifierDialogState.EmailFlow -> updateDialogState(flow.copy(resendTimerSeconds = seconds))
-            is AddIdentifierDialogState.PhoneFlow -> updateDialogState(flow.copy(resendTimerSeconds = seconds))
-            else -> {}
-        }
-    }
-
-    private fun updateDialogState(dialogState: AddIdentifierDialogState) {
-        val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
-        _state.value = currentContent.copy(addIdentifierDialogState = dialogState)
+        _state.value = currentContent.copy(addResendTimerSeconds = seconds)
     }
 
     private fun updateDialogError(error: AppError) {
         val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
-        val updatedDialog = when (val flow = currentContent.addIdentifierDialogState) {
-            is AddIdentifierDialogState.EmailFlow -> flow.copy(actionLoading = false, actionError = error)
-            is AddIdentifierDialogState.PhoneFlow -> flow.copy(actionLoading = false, actionError = error)
-            else -> flow
-        }
-        _state.value = currentContent.copy(addIdentifierDialogState = updatedDialog, actionLoading = false, actionError = error)
+        _state.value = currentContent.copy(actionLoading = false, actionError = error)
     }
 
     private fun updateDialogLoading(loading: Boolean) {
         val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
-        val updatedDialog = when (val flow = currentContent.addIdentifierDialogState) {
-            is AddIdentifierDialogState.EmailFlow -> flow.copy(actionLoading = loading, actionError = null)
-            is AddIdentifierDialogState.PhoneFlow -> flow.copy(actionLoading = loading, actionError = null)
-            else -> flow
-        }
-        _state.value = currentContent.copy(addIdentifierDialogState = updatedDialog, actionLoading = loading, actionError = null)
+        _state.value = currentContent.copy(actionLoading = loading, actionError = null)
     }
 
     private fun loadIdentifiers() {
@@ -460,7 +449,7 @@ class SelfIdentifierListComponentImpl(
             )
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? SelfIdentifierListScreenState.Content
-                    val newPaging = (currentContent?.paging ?: PaginationState<UserIdentifier>()).appendResult(pagedResult)
+                    val newPaging = (currentContent?.paging ?: PaginationState<UserIdentifierSummary>()).appendResult(pagedResult)
                     _state.value = SelfIdentifierListScreenState.Content(
                         paging = newPaging,
                         currentIdentifierId = activeIdentifierId,

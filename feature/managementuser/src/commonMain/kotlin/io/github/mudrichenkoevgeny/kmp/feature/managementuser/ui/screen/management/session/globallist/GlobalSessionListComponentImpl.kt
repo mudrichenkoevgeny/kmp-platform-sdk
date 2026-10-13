@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
@@ -16,7 +17,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toInit
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toNextPageLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
@@ -24,9 +24,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.launch
 
 /**
@@ -34,15 +33,13 @@ import kotlinx.coroutines.launch
  *
  * @param componentContext Decompose [ComponentContext].
  * @param managementGetSessionsUseCase Use case to fetch paginated list of global sessions.
- * @param managementDeleteSessionUseCase Use case to revoke a global session.
  * @param onNavigateToSessionDetail Callback invoked when a session is tapped.
  * @param onBack Pops this screen from the navigation stack.
  */
 class GlobalSessionListComponentImpl(
     componentContext: ComponentContext,
     private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
-    private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase,
-    private val onNavigateToSessionDetail: ((UserSession) -> Unit)? = null,
+    private val onNavigateToSessionDetail: ((UserSessionSummary) -> Unit)? = null,
     private val onBack: () -> Unit
 ) : GlobalSessionListComponent, ComponentContext by componentContext {
 
@@ -58,30 +55,8 @@ class GlobalSessionListComponentImpl(
         loadSessions()
     }
 
-    override fun onSessionClick(session: UserSession) {
+    override fun onSessionClick(session: UserSessionSummary) {
         onNavigateToSessionDetail?.invoke(session)
-    }
-
-    override fun onDeleteSessionClick(userId: UserId, sessionId: String) {
-        val current = _state.value as? GlobalSessionListScreenState.Content ?: return
-        _state.value = current.copy(actionLoading = true, actionError = null)
-
-        scope.launch {
-            managementDeleteSessionUseCase(userId, sessionId)
-                .onSuccess {
-                    val newItems = current.paging.items.filterNot { it.id.asHexDashString() == sessionId }
-                    _state.value = current.copy(
-                        paging = current.paging.copy(items = newItems),
-                        actionLoading = false
-                    )
-                }
-                .onError { error ->
-                    _state.value = current.copy(
-                        actionLoading = false,
-                        actionError = error
-                    )
-                }
-        }
     }
 
     override fun onSessionRevoked(sessionId: UserSessionId) {
@@ -93,7 +68,9 @@ class GlobalSessionListComponentImpl(
     }
 
     override fun onBackClick() {
-        onBack()
+        if ((backHandler as? BackDispatcher)?.back() != true) {
+            onBack()
+        }
     }
 
     override fun onLoadNextPage() {
@@ -117,6 +94,7 @@ class GlobalSessionListComponentImpl(
     override fun onSortChanged(sortState: ListingSortState) {
         val currentContent = _state.value as? GlobalSessionListScreenState.Content ?: return
         _state.value = currentContent.copy(sortState = sortState)
+        loadSessions()
     }
 
     override fun onFilterChanged(filterId: String, filterState: ListingFilterState?) {
@@ -212,7 +190,7 @@ class GlobalSessionListComponentImpl(
             )
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? GlobalSessionListScreenState.Content
-                    val newPaging = (currentContent?.paging ?: PaginationState<UserSession>()).appendResult(pagedResult)
+                    val newPaging = (currentContent?.paging ?: PaginationState<UserSessionSummary>()).appendResult(pagedResult)
                     _state.value = currentContent?.copy(paging = newPaging) ?: GlobalSessionListScreenState.Content(paging = newPaging)
                 }
                 .onError { error ->

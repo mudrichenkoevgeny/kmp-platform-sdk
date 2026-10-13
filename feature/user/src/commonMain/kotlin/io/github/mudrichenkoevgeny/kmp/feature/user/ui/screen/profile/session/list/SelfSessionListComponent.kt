@@ -1,8 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list
 
 import com.arkivanov.decompose.value.Value
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 
 /**
  * Manages the self active sessions lifecycle: listing, revoking specific sessions, and revoking all other sessions.
@@ -15,7 +15,7 @@ interface SelfSessionListComponent : SessionListOwner {
     fun onRefresh()
 
     /** Navigates to session detail screen for the specified session. */
-    fun onSessionClick(session: UserSession)
+    fun onSessionClick(session: UserSessionSummary)
 
     /** Revokes a specific session. */
     fun onRevokeSessionClick(sessionId: UserSessionId)

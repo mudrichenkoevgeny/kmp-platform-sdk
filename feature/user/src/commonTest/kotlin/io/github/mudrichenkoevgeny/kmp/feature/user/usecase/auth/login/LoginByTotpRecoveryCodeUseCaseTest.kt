@@ -35,7 +35,7 @@ class LoginByTotpRecoveryCodeUseCaseTest {
         assertEquals(TEST_CODE, loginRepository.lastCode)
         assertEquals(authData.sessionToken.accessToken, authStorage.getAccessToken())
         assertEquals(authData.sessionToken.refreshToken, authStorage.getRefreshToken())
-        assertEquals(authData.userDetails, userStorage.getCurrentUser())
+        assertEquals(authData.userPrivate, userStorage.getCurrentUser())
     }
 
     @Test

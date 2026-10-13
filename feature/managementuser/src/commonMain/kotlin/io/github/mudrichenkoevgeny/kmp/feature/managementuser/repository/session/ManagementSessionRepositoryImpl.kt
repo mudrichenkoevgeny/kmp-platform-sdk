@@ -10,9 +10,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedres
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionSummary
 
 /**
  * Implements [ManagementSessionRepository] by forwarding administrative operations to [ManagementSessionApi].
@@ -41,7 +43,7 @@ class ManagementSessionRepositoryImpl(
         deviceNames: List<String>?,
         appVersions: List<String>?,
         operationSystemVersions: List<String>?
-    ): AppResult<PagedResult<UserSession>> {
+    ): AppResult<PagedResult<UserSessionSummary>> {
         return managementSessionApi.getSessions(
             pageNumber = pageNumber,
             pageSize = pageSize,
@@ -62,14 +64,14 @@ class ManagementSessionRepositoryImpl(
             operationSystemVersions = operationSystemVersions
         ).mapSuccess { pagedPayload ->
             pagedPayload.mapItems { payload ->
-                payload.toUserSession()
+                payload.toUserSessionSummary()
             }
         }
     }
 
-    override suspend fun getSession(sessionId: String): AppResult<UserSession> {
+    override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivate> {
         return managementSessionApi.getSession(sessionId).mapSuccess { payload ->
-            payload.toUserSession()
+            payload.toUserSessionPrivate()
         }
     }
 

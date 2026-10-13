@@ -9,9 +9,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.refreshtoken.RefreshTokenUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.model.websocket.SocketFrame
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserDetails
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserWebSocketEventTypes
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserDetailsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserPrivatePayload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonElement
@@ -57,14 +57,14 @@ class UserWebSocketMessageHandler(
             return WebSocketMessageHandlerResult.Error(CommonError.ContractViolation())
         }
 
-        val userDetailsPayload = try {
-            FoundationJson.decodeFromJsonElement<UserDetailsPayload>(payload)
+        val userPrivatePayload = try {
+            FoundationJson.decodeFromJsonElement<UserPrivatePayload>(payload)
         } catch (e: Exception) {
             return WebSocketMessageHandlerResult.Error(CommonError.ContractViolation(e))
         }
 
         scope.launch {
-            userStorage.updateCurrentUser(userDetailsPayload.toUserDetails())
+            userStorage.updateCurrentUser(userPrivatePayload.toUserPrivate())
         }
 
         return WebSocketMessageHandlerResult.Handled

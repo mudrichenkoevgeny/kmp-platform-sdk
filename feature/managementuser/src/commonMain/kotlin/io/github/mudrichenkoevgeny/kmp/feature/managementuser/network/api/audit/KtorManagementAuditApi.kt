@@ -7,7 +7,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.lis
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.contract.AuditApiPaths
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.model.event.AuditEventPayload
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.model.event.AuditEventPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.model.event.AuditEventSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.route.management.ManagementAuditRoutes
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.ListingParamNames
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
@@ -38,7 +39,7 @@ class KtorManagementAuditApi(
         resourceIds: List<String>?,
         statuses: List<AuditStatus>?,
         messages: List<String>?
-    ): AppResult<PagedResult<AuditEventPayload>> = client.callResult {
+    ): AppResult<PagedResult<AuditEventSummaryPayload>> = client.callResult {
         get(ManagementAuditRoutes.GET_AUDIT_EVENTS) {
             parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
             parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
@@ -55,7 +56,7 @@ class KtorManagementAuditApi(
         }
     }
 
-    override suspend fun getAuditEvent(eventId: String): AppResult<AuditEventPayload> = client.callResult {
+    override suspend fun getAuditEvent(eventId: String): AppResult<AuditEventPrivatePayload> = client.callResult {
         get(
             ManagementAuditRoutes.GET_AUDIT_EVENT.replace(
                 "{${AuditApiPaths.EVENT_ID}}",

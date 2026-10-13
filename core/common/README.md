@@ -39,6 +39,10 @@ Base for all SDK modules: shared **Ktor HTTP client** bootstrap, **WebSocket** i
 - **Infrastructure:** [PaginationState] and [ListingConstants] provide a standardized way to handle paginated data from `PagedResult`.
 - **UI Components:** [PagingFooter] for loading/error states at the end of lists, and [OnBottomReached] extension for automatic page fetching during scroll.
 
+### 8. Navigation & Deep Linking Contracts
+- **[DeepLinkParser]:** Generic interface `DeepLinkParser<out Route : Any>` for parsing Ktor `Url` instances into typed navigation routes.
+- **[UrlFormatter]:** Generic interface `UrlFormatter<in T : Any>` for formatting typed screen destinations into canonical URL strings.
+
 ### 8. Mocks & Testing
 - Extensive **@InternalApi** test doubles for deterministic previews and unit tests:
   - [EncryptedSettingsMock], [WebSocketServiceMock], [AccessTokenProviderMock], [AppErrorParserMock], and `CommonComponentMock`.

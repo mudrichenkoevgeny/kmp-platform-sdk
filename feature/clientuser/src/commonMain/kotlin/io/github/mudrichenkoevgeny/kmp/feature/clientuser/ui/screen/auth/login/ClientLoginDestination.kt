@@ -1,6 +1,9 @@
 package io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login
 
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.phone.LoginByPhoneParams
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email.RegistrationByEmailParams
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpParams
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.AccountUnlockParams
 import kotlinx.serialization.Serializable
 
 /**
@@ -17,23 +20,30 @@ sealed interface ClientLoginDestination {
     @Serializable object LoginByEmail : ClientLoginDestination
 
     /** Phone number + SMS code sign-in. */
-    @Serializable object LoginByPhone : ClientLoginDestination
+    @Serializable data class LoginByPhone(
+        val params: LoginByPhoneParams = LoginByPhoneParams()
+    ) : ClientLoginDestination
 
     /** Email registration with confirmation code. */
-    @Serializable object RegistrationByEmail : ClientLoginDestination
+    @Serializable data class RegistrationByEmail(
+        val params: RegistrationByEmailParams = RegistrationByEmailParams()
+    ) : ClientLoginDestination
 
     /** Forgot password / reset password by email. */
     @Serializable object ResetEmailPassword : ClientLoginDestination
 
     /** MFA/TOTP verification after successful initial login. */
-    @Serializable data class LoginByTotp(val mfaToken: String) : ClientLoginDestination
+    @Serializable data class LoginByTotp(
+        val params: LoginByTotpParams
+    ) : ClientLoginDestination {
+        val mfaToken: String get() = params.mfaToken
+    }
 
     /** Intercepts logins for accounts scheduled for deletion. */
     @Serializable object PendingDeletion : ClientLoginDestination
 
     /** Intercepts logins for locked accounts. */
     @Serializable data class AccountUnlock(
-        val lockoutType: AccountLockoutType? = null,
-        val lockoutUntil: Long? = null
+        val params: AccountUnlockParams = AccountUnlockParams()
     ) : ClientLoginDestination
 }

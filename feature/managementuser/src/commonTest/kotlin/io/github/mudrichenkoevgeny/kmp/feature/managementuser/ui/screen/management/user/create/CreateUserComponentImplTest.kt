@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.user.ManagementUserRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.CreateUserUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -56,7 +56,7 @@ class CreateUserComponentImplTest {
     @Test
     fun onCreateClick_invokesUseCaseAndOnSuccess_whenUseCaseSucceeds() = runComponentTest {
         val repository = ManagementUserRepositoryMock()
-        repository.createUserResultProvider = { AppResult.Success(userDetailsMock()) }
+        repository.createUserResultProvider = { AppResult.Success(userPrivateMock()) }
         val context = createTestContext(repository = repository)
 
         context.component.onEmailChanged("user@example.com")
@@ -72,7 +72,7 @@ class CreateUserComponentImplTest {
     @Test
     fun onCreateClick_passesNullPassword_whenPasswordIsBlank() = runComponentTest {
         val repository = ManagementUserRepositoryMock()
-        repository.createUserResultProvider = { AppResult.Success(userDetailsMock()) }
+        repository.createUserResultProvider = { AppResult.Success(userPrivateMock()) }
         val context = createTestContext(repository = repository)
 
         context.component.onEmailChanged("user@example.com")

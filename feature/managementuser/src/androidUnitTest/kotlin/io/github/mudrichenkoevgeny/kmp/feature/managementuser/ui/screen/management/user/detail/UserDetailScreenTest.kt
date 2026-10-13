@@ -14,7 +14,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.Fullscre
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.detail.UserDetailComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -41,7 +41,7 @@ class UserDetailScreenTest {
 
     @Test
     fun content_displaysElements() = runComposeUiTest {
-        val user = userDetailsMock()
+        val user = userPrivateMock()
         val component = UserDetailComponentMock(
             UserDetailScreenState.Content(
                 user = user,
@@ -66,7 +66,7 @@ class UserDetailScreenTest {
 
     @Test
     fun content_clickUpdate_invokesCallback() = runComposeUiTest {
-        val user = userDetailsMock()
+        val user = userPrivateMock()
         val component = UserDetailComponentMock(
             UserDetailScreenState.Content(
                 user = user,
@@ -85,7 +85,7 @@ class UserDetailScreenTest {
 
     @Test
     fun content_clickDelete_invokesCallback() = runComposeUiTest {
-        val user = userDetailsMock()
+        val user = userPrivateMock()
         val component = UserDetailComponentMock(
             UserDetailScreenState.Content(
                 user = user,
@@ -104,7 +104,7 @@ class UserDetailScreenTest {
 
     @Test
     fun content_clickSessions_invokesCallback() = runComposeUiTest {
-        val user = userDetailsMock()
+        val user = userPrivateMock()
         val component = UserDetailComponentMock(
             UserDetailScreenState.Content(
                 user = user,
@@ -123,7 +123,7 @@ class UserDetailScreenTest {
 
     @Test
     fun content_clickIdentifiers_invokesCallback() = runComposeUiTest {
-        val user = userDetailsMock()
+        val user = userPrivateMock()
         val component = UserDetailComponentMock(
             UserDetailScreenState.Content(
                 user = user,
@@ -138,6 +138,25 @@ class UserDetailScreenTest {
         }
         onNodeWithTag(UserDetailTestTags.IDENTIFIERS_BUTTON).performScrollTo().performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.identifiersCalls)
+    }
+
+    @Test
+    fun content_clickAuditEvents_invokesCallback() = runComposeUiTest {
+        val user = userPrivateMock()
+        val component = UserDetailComponentMock(
+            UserDetailScreenState.Content(
+                user = user,
+                authorityLevelInput = "0",
+                accountStatusInput = "ACTIVE"
+            )
+        )
+        setContent {
+            ComponentTestHarness {
+                UserDetailScreen(component)
+            }
+        }
+        onNodeWithTag(UserDetailTestTags.AUDIT_EVENTS_BUTTON).performScrollTo().performClick()
+        assertEquals(EXPECTED_SINGLE_CALLBACK, component.auditEventsCalls)
     }
 
     @Test

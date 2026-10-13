@@ -36,5 +36,9 @@ This document defines standards for UI components, screens, preview tooling, and
 - **Font Assets Location:** Physical font files (`.ttf` / `.otf`) are copied directly from `platform-design-system` (`assets/fonts/ttf/`) into `core/common/src/commonMain/composeResources/font/` so Compose Resources can generate `Res.font.*` accessors.
 - **Theme Wiring:** Theme primitives in `CoreTheme` (`Color.kt`, `Dimens.kt`, `Shapes.kt`, `Typography.kt`) must map their values directly from `GeneratedDesignTokens`.
 
+## 7. Decompose Navigation & Screen Parameters
+- **Screen Parameter Classes (`*Params`):** When Decompose screen destinations require parameters, parameters must be wrapped into dedicated serializable `*Params` data classes (e.g., `UserDetailParams(val userIdValue: String)`). The parameters data class encapsulates conversion to domain value class IDs (`val userId: UserId get() = userIdValue.toUserIdOrThrow()`).
+- **Child Navigation Hooks:** Root Decompose components must provide `navigateTo(destination: Destination)` functions to allow app-level deep link handlers to programmatically push nested destinations.
+
 ---
 *Refer to `AGENTS.md` for the full list of project standards.*

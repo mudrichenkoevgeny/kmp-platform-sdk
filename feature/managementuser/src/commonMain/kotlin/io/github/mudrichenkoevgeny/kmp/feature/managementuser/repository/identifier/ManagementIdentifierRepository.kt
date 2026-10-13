@@ -4,7 +4,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 
@@ -33,31 +34,20 @@ interface ManagementIdentifierRepository {
         userIds: List<String>? = null,
         userAuthProviders: List<UserAuthProvider>? = null,
         identifiers: List<String>? = null
-    ): AppResult<PagedResult<UserIdentifier>>
+    ): AppResult<PagedResult<UserIdentifierSummary>>
 
     /**
      * Retrieves specific identifier details.
-     *
-     * @param identifierId Unique identifier record ID.
-     * @return Detailed information of the target identifier, or a mapped failure.
      */
-    suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifier>
+    suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivate>
 
     /**
      * Removes the identifier record for the given user.
-     *
-     * @param userId Unique identifier of the record owner.
-     * @param identifierId Unique identifier record ID to delete.
-     * @return Empty success indicator, or a mapped failure.
      */
     suspend fun deleteIdentifier(userId: UserId, identifierId: String): AppResult<Unit>
 
     /**
      * Removes the password credential for the given user's identifier record.
-     *
-     * @param userId Unique identifier of the record owner.
-     * @param identifierId Unique identifier record ID to remove password for.
-     * @return Empty success indicator, or a mapped failure.
      */
     suspend fun deleteIdentifierPassword(userId: UserId, identifierId: String): AppResult<Unit>
 }

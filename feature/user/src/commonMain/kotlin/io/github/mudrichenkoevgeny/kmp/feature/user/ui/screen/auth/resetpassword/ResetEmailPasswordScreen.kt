@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
@@ -78,26 +79,31 @@ fun ResetEmailPasswordScreen(component: ResetEmailPasswordComponent) {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        when (val currentState = state) {
-            is ResetEmailPasswordScreenState.Loading -> FullscreenLoading()
-            is ResetEmailPasswordScreenState.EmailInput -> {
-                EmailInputContent(
-                    state = currentState,
-                    onEmailChanged = component::onEmailChanged,
-                    onSendCodeClick = component::onSendCodeClick,
-                    onBackClick = component::onBackClick
-                )
-            }
-            is ResetEmailPasswordScreenState.ResetInput -> {
-                ResetInputContent(
-                    state = currentState,
-                    onCodeChanged = component::onCodeChanged,
-                    onPasswordChanged = component::onPasswordChanged,
-                    onConfirmResetClick = component::onConfirmResetClick,
-                    onResendCodeClick = component::onSendCodeClick,
-                    onResetEmailClick = component::onResetEmailClick,
-                    onBackClick = component::onBackClick
-                )
+        Children(
+            stack = component.stack,
+            modifier = Modifier.fillMaxSize()
+        ) { child ->
+            when (val activeChild = child.instance) {
+                is ResetEmailPasswordComponent.Child.EmailInput -> {
+                    EmailInputContent(
+                        state = state,
+                        onEmailChanged = component::onEmailChanged,
+                        onSendCodeClick = component::onSendCodeClick,
+                        onBackClick = component::onBackClick
+                    )
+                }
+                is ResetEmailPasswordComponent.Child.ConfirmInput -> {
+                    ResetInputContent(
+                        state = state,
+                        email = activeChild.email,
+                        onCodeChanged = component::onCodeChanged,
+                        onPasswordChanged = component::onPasswordChanged,
+                        onConfirmResetClick = component::onConfirmResetClick,
+                        onResendCodeClick = component::onSendCodeClick,
+                        onResetEmailClick = component::onResetEmailClick,
+                        onBackClick = component::onBackClick
+                    )
+                }
             }
         }
     }
@@ -105,7 +111,7 @@ fun ResetEmailPasswordScreen(component: ResetEmailPasswordComponent) {
 
 @Composable
 private fun EmailInputContent(
-    state: ResetEmailPasswordScreenState.EmailInput,
+    state: ResetEmailPasswordScreenState,
     onEmailChanged: (String) -> Unit,
     onSendCodeClick: () -> Unit,
     onBackClick: () -> Unit
@@ -168,7 +174,8 @@ private fun EmailInputContent(
 
 @Composable
 private fun ResetInputContent(
-    state: ResetEmailPasswordScreenState.ResetInput,
+    state: ResetEmailPasswordScreenState,
+    email: String,
     onCodeChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onConfirmResetClick: () -> Unit,
@@ -202,7 +209,7 @@ private fun ResetInputContent(
             }
 
             CoreBodyText(
-                text = stringResource(Res.string.code_sent_to, state.email),
+                text = stringResource(Res.string.code_sent_to, email),
                 color = MaterialTheme.colorScheme.outline,
                 modifier = Modifier
                     .padding(top = CoreTheme.dimens.paddingSmall)
@@ -300,34 +307,33 @@ internal class ResetEmailPasswordPreviewProvider :
     PreviewParameterProvider<ResetEmailPasswordScreenState> {
 
     private val items: List<Pair<String, ResetEmailPasswordScreenState>> = listOf(
-        "Email Step Input" to ResetEmailPasswordScreenState.EmailInput(
+        "Email Step Input" to ResetEmailPasswordScreenState(
             email = "user@example.com",
             isEmailValid = true
         ),
-        "Reset Step Input" to ResetEmailPasswordScreenState.ResetInput(
+        "Reset Step Input" to ResetEmailPasswordScreenState(
             email = "user@example.com",
             code = "123456",
             newPassword = "Password123!",
             isPasswordValid = true
         ),
-        "Email Step Error" to ResetEmailPasswordScreenState.EmailInput(
+        "Email Step Error" to ResetEmailPasswordScreenState(
             email = "wrong@example.com",
             actionError = CommonError.Unknown()
         ),
-        "Reset Step Error" to ResetEmailPasswordScreenState.ResetInput(
+        "Reset Step Error" to ResetEmailPasswordScreenState(
             email = "user@example.com",
             code = "123456",
             actionError = CommonError.Unknown()
         ),
-        "Resend Timer Active" to ResetEmailPasswordScreenState.ResetInput(
+        "Resend Timer Active" to ResetEmailPasswordScreenState(
             email = "user@example.com",
             resendTimerSeconds = 42
         ),
-        "Action Loading" to ResetEmailPasswordScreenState.ResetInput(
+        "Action Loading" to ResetEmailPasswordScreenState(
             email = "user@example.com",
             actionLoading = true
-        ),
-        "Fullscreen Loading" to ResetEmailPasswordScreenState.Loading
+        )
     )
 
     override val values: Sequence<ResetEmailPasswordScreenState> =
@@ -347,13 +353,13 @@ private fun ResetEmailPasswordScreenPreviewContent(state: ResetEmailPasswordScre
     }
 }
 
-private val defaultResetEmailPasswordPreviewState = ResetEmailPasswordScreenState.EmailInput(
+private val defaultResetEmailPasswordPreviewState = ResetEmailPasswordScreenState(
     email = "user@example.com",
     isEmailValid = true
 )
 
 @InternalApi
-@Preview(showBackground = true, group = "States")
+@DialogSizePreviews
 @Composable
 private fun StatesPreview(
     @PreviewParameter(ResetEmailPasswordPreviewProvider::class) state: ResetEmailPasswordScreenState

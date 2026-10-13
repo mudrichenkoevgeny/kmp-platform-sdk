@@ -19,9 +19,7 @@ import kotlinx.coroutines.launch
 /** Default implementation of [UnlockOtpComponent]. */
 class UnlockOtpComponentImpl(
     componentContext: ComponentContext,
-    method: UnlockMethod,
-    target: String,
-    initialDelaySeconds: Int = 0,
+    params: UnlockOtpParams,
     private val unlockByEmailUseCase: UnlockByEmailUseCase,
     private val unlockByPhoneUseCase: UnlockByPhoneUseCase,
     private val sendUnlockEmailConfirmationUseCase: SendUnlockEmailConfirmationUseCase,
@@ -30,21 +28,43 @@ class UnlockOtpComponentImpl(
     private val onBack: () -> Unit
 ) : UnlockOtpComponent, ComponentContext by componentContext {
 
+    constructor(
+        componentContext: ComponentContext,
+        method: UnlockMethod,
+        target: String,
+        initialDelaySeconds: Int = 0,
+        unlockByEmailUseCase: UnlockByEmailUseCase,
+        unlockByPhoneUseCase: UnlockByPhoneUseCase,
+        sendUnlockEmailConfirmationUseCase: SendUnlockEmailConfirmationUseCase,
+        sendUnlockPhoneConfirmationUseCase: SendUnlockPhoneConfirmationUseCase,
+        onUnlockSuccess: () -> Unit,
+        onBack: () -> Unit
+    ) : this(
+        componentContext = componentContext,
+        params = UnlockOtpParams(method = method, target = target, initialDelaySeconds = initialDelaySeconds),
+        unlockByEmailUseCase = unlockByEmailUseCase,
+        unlockByPhoneUseCase = unlockByPhoneUseCase,
+        sendUnlockEmailConfirmationUseCase = sendUnlockEmailConfirmationUseCase,
+        sendUnlockPhoneConfirmationUseCase = sendUnlockPhoneConfirmationUseCase,
+        onUnlockSuccess = onUnlockSuccess,
+        onBack = onBack
+    )
+
     private val scope = componentCoroutineScope()
     private var timerJob: Job? = null
 
     private val _state = MutableValue(
         UnlockOtpScreenState(
-            method = method,
-            target = target,
-            remainingDelaySeconds = initialDelaySeconds
+            method = params.method,
+            target = params.target,
+            remainingDelaySeconds = params.initialDelaySeconds
         )
     )
     override val state: Value<UnlockOtpScreenState> = _state
 
     init {
-        if (initialDelaySeconds > 0) {
-            startTimer(initialDelaySeconds)
+        if (params.initialDelaySeconds > 0) {
+            startTimer(params.initialDelaySeconds)
         }
     }
 

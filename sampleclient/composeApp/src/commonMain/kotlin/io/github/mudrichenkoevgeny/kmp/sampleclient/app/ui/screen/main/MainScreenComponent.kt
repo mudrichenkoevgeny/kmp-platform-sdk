@@ -2,9 +2,12 @@ package io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main
 
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.value.Value
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.ClientLoginDestination
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.root.ClientLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
+import io.github.mudrichenkoevgeny.kmp.sampleclient.app.navigation.deeplink.ClientAppDeepLinkRoute
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.home.HomeScreenComponent
 import kotlinx.serialization.Serializable
 
@@ -18,9 +21,19 @@ interface MainScreenComponent {
     val stack: Value<ChildStack<Config, Child>>
 
     /**
+     * Navigator for the main stack.
+     */
+    val stackNavigation: StackNavigation<Config>
+
+    /**
      * Optional overlay slot hosting [ClientLoginRootComponent] when login is requested from profile.
      */
     val loginDialogSlot: Value<ChildSlot<DialogConfig, ClientLoginRootComponent>>
+
+    /**
+     * Handles an incoming parsed deep link.
+     */
+    fun handleDeepLink(route: ClientAppDeepLinkRoute)
 
     /**
      * @param config Tab configuration to bring to the front of the stack.
@@ -48,6 +61,7 @@ interface MainScreenComponent {
     /**
      * Serializable tab keys for the main stack.
      */
+    @Serializable
     sealed class Config {
         @Serializable object Home : Config()
         @Serializable object Profile : Config()
@@ -58,6 +72,9 @@ interface MainScreenComponent {
      */
     @Serializable
     sealed class DialogConfig {
-        @Serializable object Login : DialogConfig()
+        @Serializable data class Login(
+            val initialDestination: ClientLoginDestination = ClientLoginDestination.Welcome,
+            val isDismissible: Boolean = true
+        ) : DialogConfig()
     }
 }

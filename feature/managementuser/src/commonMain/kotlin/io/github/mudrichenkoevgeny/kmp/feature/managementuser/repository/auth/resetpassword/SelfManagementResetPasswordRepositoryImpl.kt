@@ -8,8 +8,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpasswor
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.mapper.otpconfirmation.toOtpConfirmation
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.password.ResetPasswordRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.password.SendResetPasswordConfirmationRequest
 
@@ -29,7 +29,7 @@ class SelfManagementResetPasswordRepositoryImpl(
         email: String,
         newPassword: String,
         confirmationCode: String
-    ): AppResult<UserIdentifier> {
+    ): AppResult<UserIdentifierPrivate> {
         return resetPasswordApi.resetPassword(
             ResetPasswordRequest(
                 email = email,
@@ -37,7 +37,7 @@ class SelfManagementResetPasswordRepositoryImpl(
                 confirmationCode = confirmationCode
             )
         ).mapSuccess { response ->
-            response.toUserIdentifier()
+            response.toUserIdentifierPrivate()
         }
     }
 

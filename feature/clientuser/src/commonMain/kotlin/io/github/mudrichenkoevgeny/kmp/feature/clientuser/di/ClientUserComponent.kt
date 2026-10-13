@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import io.github.mudrichenkoevgeny.kmp.core.common.di.CommonComponent
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
+import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.ClientLoginDestination
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.root.ClientLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.root.ClientLoginRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
@@ -288,9 +289,11 @@ class ClientUserComponent(
      */
     fun createLoginRootDialogComponent(
         componentContext: ComponentContext,
+        initialDestination: ClientLoginDestination = ClientLoginDestination.Welcome,
         onFinished: () -> Unit
     ): ClientLoginRootComponent = ClientLoginRootComponentImpl(
         componentContext = componentContext,
+        initialDestination = initialDestination,
         settingsComponent = settingsComponent,
         securityComponent = securityComponent,
         clientUserComponent = this,

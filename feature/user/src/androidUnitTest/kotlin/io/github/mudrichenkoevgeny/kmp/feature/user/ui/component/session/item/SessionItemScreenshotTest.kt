@@ -13,8 +13,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.captureAppScreen
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -31,7 +31,7 @@ import kotlin.test.Test
 )
 class SessionItemScreenshotTest(
     private val stateName: String,
-    private val session: UserSession,
+    private val session: UserSessionSummary,
     private val enabled: Boolean,
     private val isCurrentSession: Boolean
 ) {
@@ -64,10 +64,9 @@ class SessionItemScreenshotTest(
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
         fun data(): Collection<Array<Any>> {
-            val standardSession = userSessionMock()
-            val unknownDeviceSession = userSessionMock().copy(
-                userAgent = null,
-                ipAddress = null
+            val standardSession = userSessionSummaryMock()
+            val unknownDeviceSession = userSessionSummaryMock().copy(
+                clientDeviceInfo = userSessionSummaryMock().clientDeviceInfo.copy(deviceName = null)
             )
             return listOf(
                 arrayOf("Default", standardSession, true, false),

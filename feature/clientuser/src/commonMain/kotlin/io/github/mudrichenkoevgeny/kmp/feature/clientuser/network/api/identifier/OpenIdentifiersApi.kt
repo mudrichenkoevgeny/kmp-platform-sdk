@@ -7,7 +7,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToPhoneRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.security.password.EmailPasswordChangeRequest
@@ -17,13 +18,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
 
 /** Manage user identifiers (email, phone, external providers) and related confirmations. */
 interface OpenIdentifiersApi {
+
     /**
      * Retrieves specific identifier details by its unique id.
      *
      * @param userIdentifierId Unique identifier payload id.
      * @return Detailed identifier info or a mapped failure.
      */
-    suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPayload>
+    suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivatePayload>
 
     /**
      * Returns a paginated and filtered list of identifiers linked to the current authenticated management account.
@@ -43,7 +45,7 @@ interface OpenIdentifiersApi {
         sortOrder: SortOrder? = null,
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
-    ): AppResult<PagedResult<UserIdentifierPayload>>
+    ): AppResult<PagedResult<UserIdentifierSummaryPayload>>
 
     /**
      * Removes an identifier from the account.
@@ -61,7 +63,7 @@ interface OpenIdentifiersApi {
      */
     suspend fun addUserIdentifierEmail(
         request: AddUserIdentifierEmailRequest
-    ): AppResult<UserIdentifierPayload>
+    ): AppResult<UserIdentifierPrivatePayload>
 
     /**
      * Starts linking a new phone identifier to the account.
@@ -71,7 +73,7 @@ interface OpenIdentifiersApi {
      */
     suspend fun addUserIdentifierPhone(
         request: AddUserIdentifierPhoneRequest
-    ): AppResult<UserIdentifierPayload>
+    ): AppResult<UserIdentifierPrivatePayload>
 
     /**
      * Starts linking an external auth provider identity to the account.
@@ -81,7 +83,7 @@ interface OpenIdentifiersApi {
      */
     suspend fun addUserIdentifierExternalAuthProvider(
         request: AddUserIdentifierExternalAuthProviderRequest
-    ): AppResult<UserIdentifierPayload>
+    ): AppResult<UserIdentifierPrivatePayload>
 
     /**
      * Sends a confirmation message for adding an email identifier.
@@ -103,12 +105,11 @@ interface OpenIdentifiersApi {
         request: SendConfirmationToPhoneRequest
     ): AppResult<OtpConfirmationPayload>
 
-
     /**
      * Changes the password for the signed-in user.
      *
      * @param request Current and new password payload from the shared contract.
-     * @return Domain user identifier after the change, or a mapped failure.
+     * @return Success indicator, or a mapped failure.
      */
     suspend fun emailChangePassword(request: EmailPasswordChangeRequest): AppResult<Unit>
 }

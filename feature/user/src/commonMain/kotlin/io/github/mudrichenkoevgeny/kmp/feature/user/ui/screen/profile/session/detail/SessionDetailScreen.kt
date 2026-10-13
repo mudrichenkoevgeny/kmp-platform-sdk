@@ -59,14 +59,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_apple
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_email
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_google
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_phone
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.session.detail.SessionDetailComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.not_available
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_app_version
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_client_type
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_created_at_label
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_device_info
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_device_name
+import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_client_device_info
+import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_client_device_name
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_ip_address_label
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_language
 import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_last_accessed_label
@@ -185,6 +185,7 @@ private fun Content(
                         UserAuthProvider.PHONE -> Res.drawable.auth_logo_phone
                         UserAuthProvider.GOOGLE -> Res.drawable.auth_logo_google
                         UserAuthProvider.APPLE -> Res.drawable.auth_logo_apple
+                        else -> Res.drawable.auth_logo_email
                     }
                     Icon(
                         painter = painterResource(iconRes),
@@ -286,20 +287,20 @@ private fun Content(
 internal class SessionDetailPreviewProvider : PreviewParameterProvider<SessionDetailScreenState> {
     private val items: List<Pair<String, SessionDetailScreenState>> = listOf(
         "Other Session Content" to SessionDetailScreenState.Content(
-            session = userSessionMock(),
+            session = userSessionPrivateMock(),
             isCurrentSession = false
         ),
         "Current Session Content" to SessionDetailScreenState.Content(
-            session = userSessionMock(),
+            session = userSessionPrivateMock(),
             isCurrentSession = true
         ),
         "Action Loading" to SessionDetailScreenState.Content(
-            session = userSessionMock(),
+            session = userSessionPrivateMock(),
             isCurrentSession = false,
             actionLoading = true
         ),
         "Action Error" to SessionDetailScreenState.Content(
-            session = userSessionMock(),
+            session = userSessionPrivateMock(),
             isCurrentSession = false,
             actionError = CommonError.Unknown()
         ),
@@ -324,7 +325,7 @@ private fun SessionDetailScreenPreviewContent(state: SessionDetailScreenState) {
 
 @InternalApi
 private val defaultSessionDetailPreviewState = SessionDetailScreenState.Content(
-    session = userSessionMock(),
+    session = userSessionPrivateMock(),
     isCurrentSession = false
 )
 

@@ -141,3 +141,25 @@ graph TD
     CoreSecurity --> CoreCommon
     CoreSettings --> CoreCommon
 ```
+
+---
+
+## 3. Universal Deep Linking & Screen Destination Parameters
+
+The SDK implements a 2-level composite routing system that works across Android, Wasm/Web, Desktop (JVM), and iOS:
+
+### Screen Parameter Encapsulation (`*Params` Pattern)
+Decompose screen configurations requiring parameters encapsulate them into dedicated, serializable data classes:
+- Examples: `UserDetailParams(val userIdValue: String)`, `SessionDetailParams`, `IdentifierDetailParams`, `AuditEventDetailParams`, `AuditEventListParams`, `UserSessionListParams`, `UserIdentifierListParams`.
+- Parameter conversion: Raw string values are converted to domain value class IDs via getters (e.g. `val userId: UserId get() = userIdValue.toUserIdOrThrow()`).
+
+### Deep Link Architecture
+1. **Contracts (`core:common`):** Generic interfaces `DeepLinkParser<out Route : Any>` and `UrlFormatter<in T : Any>`.
+2. **Feature Parsers & Formatters (`feature/*`):** Feature-specific parsers (`ManagementDeepLinkParser`, `ProfileDeepLinkParser`) and formatters (`ManagementUrlFormatter`, `ProfileUrlFormatter`) using internal `*DeepLinkConstants` objects (with `Segment` and `Query` nested namespaces) for host, path, and query constants.
+3. **App-Specific Aggregators (`samplemanagement` / `sampleclient`):** Application-level route models (`ManagementAppDeepLinkRoute`, `ClientAppDeepLinkRoute`) and aggregators (`ManagementAppDeepLinkParser`, `ClientAppDeepLinkParser`) maintain strict dependency graph isolation.
+4. **Platform Integration:**
+   - **Android:** `<intent-filter>` for HTTPS/custom schemes, `singleTask` launchMode, `onCreate` cold start with `intent.data = null` cleanup, and `onNewIntent` warm start dispatch.
+   - **Wasm/Web:** Browser URL parsing at startup (`window.location.href`) and history stack synchronization via Decompose `DefaultWebHistoryController`.
+   - **Desktop (JVM):** Native URI handler registration via `Desktop.getDesktop().setOpenURIHandler`.
+   - **iOS:** Application graph entry points via `handleDeepLink(urlString)`.
+

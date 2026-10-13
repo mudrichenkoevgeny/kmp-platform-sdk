@@ -76,6 +76,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.scheduled_deletion
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.totp_enabled_label
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.update_user
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_account_status
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_detail_audit_events
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_details_title
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_id
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_identifiers
@@ -84,7 +85,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_sessions
 import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_cancel
 import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm
 import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm_title
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userDetailsMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import org.jetbrains.compose.resources.stringResource
@@ -140,7 +141,8 @@ fun UserDetailScreen(component: UserDetailComponent) {
                         onDismissDeleteDialog = component::onDismissDeleteDialog,
                         onDisableTotpClick = component::onDisableTotpClick,
                         onSessionsClick = component::onSessionsClick,
-                        onIdentifiersClick = component::onIdentifiersClick
+                        onIdentifiersClick = component::onIdentifiersClick,
+                        onAuditEventsClick = component::onAuditEventsClick
                     )
                 }
             }
@@ -161,7 +163,8 @@ private fun Content(
     onDismissDeleteDialog: () -> Unit,
     onDisableTotpClick: () -> Unit,
     onSessionsClick: () -> Unit,
-    onIdentifiersClick: () -> Unit
+    onIdentifiersClick: () -> Unit,
+    onAuditEventsClick: () -> Unit
 ) {
     val notAvailableText = stringResource(Res.string.not_available)
     val createdAtText = formatInstantToDateTime(state.user.createdAt) ?: state.user.createdAt.toString()
@@ -223,6 +226,13 @@ private fun Content(
             text = stringResource(Res.string.user_identifiers),
             onClick = onIdentifiersClick,
             modifier = Modifier.testTag(UserDetailTestTags.IDENTIFIERS_BUTTON)
+        )
+
+        CoreButton(
+            text = stringResource(Res.string.user_detail_audit_events),
+            onClick = onAuditEventsClick,
+            modifier = Modifier.testTag(UserDetailTestTags.AUDIT_EVENTS_BUTTON),
+            enabled = !state.isSaving && !state.isDeleting
         )
 
         AccountStatusDropdown(
@@ -437,21 +447,21 @@ private fun LockoutTypeDropdown(
 internal class UserDetailPreviewProvider : PreviewParameterProvider<UserDetailScreenState> {
     private val items: List<Pair<String, UserDetailScreenState>> = listOf(
         "Content" to UserDetailScreenState.Content(
-            user = userDetailsMock(),
+            user = userPrivateMock(),
             authorityLevelInput = "0",
             accountStatusInput = "ACTIVE",
             lockoutTypeInput = "NONE",
             temporaryLockoutUntilInput = ""
         ),
         "Pending Deletion" to UserDetailScreenState.Content(
-            user = userDetailsMock(accountStatus = UserAccountStatus.PENDING_DELETION),
+            user = userPrivateMock(accountStatus = UserAccountStatus.PENDING_DELETION),
             authorityLevelInput = "0",
             accountStatusInput = "PENDING_DELETION",
             lockoutTypeInput = "NONE",
             temporaryLockoutUntilInput = ""
         ),
         "Saving" to UserDetailScreenState.Content(
-            user = userDetailsMock(),
+            user = userPrivateMock(),
             authorityLevelInput = "0",
             accountStatusInput = "ACTIVE",
             lockoutTypeInput = "NONE",
@@ -479,7 +489,7 @@ private fun UserDetailScreenPreviewContent(state: UserDetailScreenState) {
 
 @InternalApi
 private val defaultUserDetailPreviewState = UserDetailScreenState.Content(
-    user = userDetailsMock(),
+    user = userPrivateMock(),
     authorityLevelInput = "0",
     accountStatusInput = "ACTIVE",
     lockoutTypeInput = "NONE",
@@ -538,6 +548,7 @@ object UserDetailTestTags {
     const val DISABLE_TOTP_ERROR_TEXT = "UserDetail_DisableTotpErrorText"
     const val SESSIONS_BUTTON = "UserDetail_SessionsButton"
     const val IDENTIFIERS_BUTTON = "UserDetail_IdentifiersButton"
+    const val AUDIT_EVENTS_BUTTON = "UserDetail_AuditEventsButton"
     const val SAVE_ERROR_TEXT = "UserDetail_SaveErrorText"
     const val DELETE_ERROR_TEXT = "UserDetail_DeleteErrorText"
 }

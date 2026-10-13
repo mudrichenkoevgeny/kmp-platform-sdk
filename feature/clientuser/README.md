@@ -23,7 +23,7 @@ Kotlin Multiplatform feature module for user identity, authentication flows, ses
 - **Throttling:** [ConfirmationRepository] manages client-side cooldowns for sending verification codes (SMS/Email) using [ConfirmationType].
 
 ### 4. UI & Navigation
-- **Decompose Routing:** [LoginRootComponent] manages a full navigation stack (**Welcome** -> **Login** -> **Registration** -> **Reset Password**).
+- **Decompose Routing:** [ClientLoginRootComponent] manages authentication navigation (**Welcome** -> **Login** -> **Registration** -> **Reset Password**).
 - **Validation:** [FieldValidator] provides conservative client-side checks for emails and phone numbers.
 - **Legal Integration:** Standardized [LegalFooter] for Privacy Policy and Terms of Service links.
 - **UI Components:** Reusable [AuthProviderGrid] and [AuthProviderButton] for consistent social login presentation.

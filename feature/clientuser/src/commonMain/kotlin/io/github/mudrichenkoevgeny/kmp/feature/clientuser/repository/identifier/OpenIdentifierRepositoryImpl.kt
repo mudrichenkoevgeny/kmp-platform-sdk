@@ -13,10 +13,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedres
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.mapper.otpconfirmation.toOtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToPhoneRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.security.password.EmailPasswordChangeRequest
@@ -30,6 +32,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
  *
  * @param openIdentifiersApi HTTP endpoints for managing user identifiers and sending confirmations.
  * @param confirmationRepository Client-side cooldown for adding email and phone identifiers.
+ * @param userStorage Local persistent storage cache.
  */
 class OpenIdentifierRepositoryImpl(
     private val openIdentifiersApi: OpenIdentifiersApi,
@@ -37,9 +40,9 @@ class OpenIdentifierRepositoryImpl(
     private val userStorage: UserStorage
 ) : IdentifierRepository {
 
-    override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifier> {
+    override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> {
         return openIdentifiersApi.getUserIdentifier(userIdentifierId)
-            .mapSuccess { it.toUserIdentifier() }
+            .mapSuccess { it.toUserIdentifierPrivate() }
     }
 
     override suspend fun getUserIdentifiers(
@@ -49,12 +52,12 @@ class OpenIdentifierRepositoryImpl(
         sortOrder: SortOrder?,
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
-    ): AppResult<PagedResult<UserIdentifier>> {
+    ): AppResult<PagedResult<UserIdentifierSummary>> {
         return openIdentifiersApi.getUserIdentifiers(
             pageNumber, pageSize, sortBy, sortOrder, userAuthProviders, identifiers
         ).mapSuccess { pagedPayload ->
             pagedPayload.mapItems { userIdentifierPayload ->
-                userIdentifierPayload.toUserIdentifier()
+                userIdentifierPayload.toUserIdentifierSummary()
             }
         }
     }
@@ -69,12 +72,12 @@ class OpenIdentifierRepositoryImpl(
         email: String,
         password: String,
         confirmationCode: String
-    ): AppResult<UserIdentifier> {
+    ): AppResult<UserIdentifierPrivate> {
         return openIdentifiersApi.addUserIdentifierEmail(
             AddUserIdentifierEmailRequest(email, password, confirmationCode)
         ).mapSuccess { payload ->
-            val identifier = payload.toUserIdentifier()
-            userStorage.addUserIdentifier(identifier)
+            val identifier = payload.toUserIdentifierPrivate()
+            userStorage.addUserIdentifier(identifier.toUserIdentifierSummary())
             identifier
         }
     }
@@ -82,12 +85,12 @@ class OpenIdentifierRepositoryImpl(
     override suspend fun addUserIdentifierPhone(
         phoneNumber: String,
         confirmationCode: String
-    ): AppResult<UserIdentifier> {
+    ): AppResult<UserIdentifierPrivate> {
         return openIdentifiersApi.addUserIdentifierPhone(
             AddUserIdentifierPhoneRequest(phoneNumber, confirmationCode)
         ).mapSuccess { payload ->
-            val identifier = payload.toUserIdentifier()
-            userStorage.addUserIdentifier(identifier)
+            val identifier = payload.toUserIdentifierPrivate()
+            userStorage.addUserIdentifier(identifier.toUserIdentifierSummary())
             identifier
         }
     }
@@ -95,12 +98,12 @@ class OpenIdentifierRepositoryImpl(
     override suspend fun addUserIdentifierExternalAuthProvider(
         authProvider: String,
         externalProviderToken: String
-    ): AppResult<UserIdentifier> {
+    ): AppResult<UserIdentifierPrivate> {
         return openIdentifiersApi.addUserIdentifierExternalAuthProvider(
             AddUserIdentifierExternalAuthProviderRequest(authProvider, externalProviderToken)
         ).mapSuccess { payload ->
-            val identifier = payload.toUserIdentifier()
-            userStorage.addUserIdentifier(identifier)
+            val identifier = payload.toUserIdentifierPrivate()
+            userStorage.addUserIdentifier(identifier.toUserIdentifierSummary())
             identifier
         }
     }

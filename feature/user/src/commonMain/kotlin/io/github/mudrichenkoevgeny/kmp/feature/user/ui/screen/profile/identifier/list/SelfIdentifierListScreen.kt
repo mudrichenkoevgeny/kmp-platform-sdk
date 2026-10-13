@@ -70,7 +70,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.code_sent_to
 import io.github.mudrichenkoevgeny.kmp.feature.user.confirmation_code
 import io.github.mudrichenkoevgeny.kmp.feature.user.enter_confirmation_code
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifiers
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.profile.identifier.SelfIdentifierListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.password
 import io.github.mudrichenkoevgeny.kmp.feature.user.phone_number
@@ -158,10 +158,12 @@ fun SelfIdentifierListScreen(component: SelfIdentifierListComponent) {
                         )
                     }
 
-                    if (currentState.addIdentifierDialogState != null) {
+                    val dialogSlot by component.addIdentifierDialogSlot.subscribeAsState()
+                    val dialogChild = dialogSlot.child?.instance
+                    if (dialogChild != null) {
                         AddIdentifierDialog(
                             contentState = currentState,
-                            dialogState = currentState.addIdentifierDialogState,
+                            dialogChild = dialogChild,
                             component = component
                         )
                     }
@@ -180,7 +182,7 @@ fun SelfIdentifierListScreen(component: SelfIdentifierListComponent) {
 @Composable
 private fun AddIdentifierDialog(
     contentState: SelfIdentifierListScreenState.Content,
-    dialogState: AddIdentifierDialogState,
+    dialogChild: SelfIdentifierListComponent.AddIdentifierDialogChild,
     component: SelfIdentifierListComponent
 ) {
     AlertDialog(
@@ -198,8 +200,8 @@ private fun AddIdentifierDialog(
                     verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    when (dialogState) {
-                        is AddIdentifierDialogState.ProviderSelection -> {
+                    when (dialogChild) {
+                        is SelfIdentifierListComponent.AddIdentifierDialogChild.ProviderSelection -> {
                             val availableProviders = contentState.availableAuthProviders
                             if (availableProviders != null) {
                                 availableProviders.primary.forEach { provider ->
@@ -220,117 +222,113 @@ private fun AddIdentifierDialog(
                                 }
                             }
                         }
-                        is AddIdentifierDialogState.EmailFlow -> {
-                            if (!dialogState.isConfirmationSent) {
-                                CoreEmailTextField(
-                                    value = dialogState.email,
-                                    onValueChange = component::onAddIdentifierEmailChanged,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
+                        is SelfIdentifierListComponent.AddIdentifierDialogChild.EmailInput -> {
+                            CoreEmailTextField(
+                                value = contentState.addEmail,
+                                onValueChange = component::onAddIdentifierEmailChanged,
+                                modifier = Modifier.fillMaxWidth()
+                            )
 
-                                CoreButton(
-                                    text = stringResource(Res.string.send_code),
-                                    onClick = component::onAddIdentifierSendCode,
-                                    enabled = dialogState.canSendCode,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                            } else {
-                                CoreBodyText(stringResource(Res.string.code_sent_to, dialogState.email))
-
-                                CoreCodeTextField(
-                                    value = dialogState.code,
-                                    onValueChange = component::onAddIdentifierCodeChanged,
-                                    label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
-                                    placeholder = { CoreBodyText(stringResource(Res.string.enter_confirmation_code)) },
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-
-                                Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-
-                                CorePasswordTextField(
-                                    value = dialogState.password,
-                                    onValueChange = component::onAddIdentifierPasswordChanged,
-                                    isPasswordVisible = dialogState.isPasswordVisible,
-                                    onTogglePasswordVisibility = component::onAddIdentifierTogglePasswordVisibility,
-                                    label = { CoreBodyText(stringResource(Res.string.password)) },
-                                    placeholder = { CoreBodyText(stringResource(Res.string.password)) },
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-
-                                if (dialogState.resendTimerSeconds > 0) {
-                                    CoreSmallText(stringResource(Res.string.resend_code_timer, dialogState.resendTimerSeconds))
-                                } else {
-                                    CoreTextButton(
-                                        text = stringResource(Res.string.resend_code),
-                                        onClick = component::onAddIdentifierSendCode,
-                                        enabled = dialogState.canResendCode
-                                    )
-                                }
-
-                                CoreButton(
-                                    text = stringResource(Res.string.add_identifier),
-                                    onClick = component::onAddIdentifierSubmit,
-                                    enabled = dialogState.canSubmit,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-
-                                CoreTextButton(
-                                    text = stringResource(Res.string.change_email),
-                                    onClick = component::onAddIdentifierDialogBack
-                                )
-                            }
+                            CoreButton(
+                                text = stringResource(Res.string.send_code),
+                                onClick = component::onAddIdentifierSendCode,
+                                enabled = contentState.isAddEmailValid && !contentState.actionLoading,
+                                modifier = Modifier.fillMaxWidth()
+                            )
                         }
-                        is AddIdentifierDialogState.PhoneFlow -> {
-                            if (!dialogState.isConfirmationSent) {
-                                CoreOutlinedTextField(
-                                    value = dialogState.phoneNumber,
-                                    onValueChange = component::onAddIdentifierPhoneChanged,
-                                    label = { CoreBodyText(stringResource(Res.string.phone_number)) },
-                                    placeholder = { CoreBodyText(stringResource(Res.string.phone_number)) },
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                                    singleLine = true,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
+                        is SelfIdentifierListComponent.AddIdentifierDialogChild.EmailConfirm -> {
+                            CoreBodyText(stringResource(Res.string.code_sent_to, dialogChild.email))
 
-                                CoreButton(
-                                    text = stringResource(Res.string.send_code),
-                                    onClick = component::onAddIdentifierSendCode,
-                                    enabled = dialogState.canSendCode,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
+                            CoreCodeTextField(
+                                value = contentState.addCode,
+                                onValueChange = component::onAddIdentifierCodeChanged,
+                                label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
+                                placeholder = { CoreBodyText(stringResource(Res.string.enter_confirmation_code)) },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+
+                            CoreOutlinedTextField(
+                                value = contentState.addPassword,
+                                onValueChange = component::onAddIdentifierPasswordChanged,
+                                label = { CoreBodyText(stringResource(Res.string.password)) },
+                                placeholder = { CoreBodyText(stringResource(Res.string.password)) },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            if (contentState.addResendTimerSeconds > 0) {
+                                CoreSmallText(stringResource(Res.string.resend_code_timer, contentState.addResendTimerSeconds))
                             } else {
-                                CoreBodyText(stringResource(Res.string.code_sent_to, dialogState.phoneNumber))
-
-                                CoreCodeTextField(
-                                    value = dialogState.code,
-                                    onValueChange = component::onAddIdentifierCodeChanged,
-                                    label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
-                                    placeholder = { CoreBodyText(stringResource(Res.string.enter_confirmation_code)) },
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-
-                                if (dialogState.resendTimerSeconds > 0) {
-                                    CoreSmallText(stringResource(Res.string.resend_code_timer, dialogState.resendTimerSeconds))
-                                } else {
-                                    CoreTextButton(
-                                        text = stringResource(Res.string.resend_code),
-                                        onClick = component::onAddIdentifierSendCode,
-                                        enabled = dialogState.canResendCode
-                                    )
-                                }
-
-                                CoreButton(
-                                    text = stringResource(Res.string.add_identifier),
-                                    onClick = component::onAddIdentifierSubmit,
-                                    enabled = dialogState.canSubmit,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-
                                 CoreTextButton(
-                                    text = stringResource(Res.string.change_phone_number),
-                                    onClick = component::onAddIdentifierDialogBack
+                                    text = stringResource(Res.string.resend_code),
+                                    onClick = component::onAddIdentifierSendCode,
+                                    enabled = contentState.canResendCode
                                 )
                             }
+
+                            CoreButton(
+                                text = stringResource(Res.string.add_identifier),
+                                onClick = component::onAddIdentifierSubmit,
+                                enabled = contentState.canSubmitAddEmail,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            CoreTextButton(
+                                text = stringResource(Res.string.change_email),
+                                onClick = component::onAddIdentifierDialogBack
+                            )
+                        }
+                        is SelfIdentifierListComponent.AddIdentifierDialogChild.PhoneInput -> {
+                            CoreOutlinedTextField(
+                                value = contentState.addPhone,
+                                onValueChange = component::onAddIdentifierPhoneChanged,
+                                label = { CoreBodyText(stringResource(Res.string.phone_number)) },
+                                placeholder = { CoreBodyText(stringResource(Res.string.phone_number)) },
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                                singleLine = true,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            CoreButton(
+                                text = stringResource(Res.string.send_code),
+                                onClick = component::onAddIdentifierSendCode,
+                                enabled = contentState.isAddPhoneValid && !contentState.actionLoading,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                        is SelfIdentifierListComponent.AddIdentifierDialogChild.PhoneConfirm -> {
+                            CoreBodyText(stringResource(Res.string.code_sent_to, dialogChild.phone))
+
+                            CoreCodeTextField(
+                                value = contentState.addCode,
+                                onValueChange = component::onAddIdentifierCodeChanged,
+                                label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
+                                placeholder = { CoreBodyText(stringResource(Res.string.enter_confirmation_code)) },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            if (contentState.addResendTimerSeconds > 0) {
+                                CoreSmallText(stringResource(Res.string.resend_code_timer, contentState.addResendTimerSeconds))
+                            } else {
+                                CoreTextButton(
+                                    text = stringResource(Res.string.resend_code),
+                                    onClick = component::onAddIdentifierSendCode,
+                                    enabled = contentState.canResendCode
+                                )
+                            }
+
+                            CoreButton(
+                                text = stringResource(Res.string.add_identifier),
+                                onClick = component::onAddIdentifierSubmit,
+                                enabled = contentState.canSubmitAddPhone,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            CoreTextButton(
+                                text = stringResource(Res.string.change_phone_number),
+                                onClick = component::onAddIdentifierDialogBack
+                            )
                         }
                     }
 
@@ -349,17 +347,10 @@ private fun AddIdentifierDialog(
             }
         },
         confirmButton = {
-            if (dialogState != AddIdentifierDialogState.ProviderSelection) {
-                CoreTextButton(
-                    text = stringResource(Res.string.cancel),
-                    onClick = component::onAddIdentifierDialogDismiss
-                )
-            } else {
-                CoreTextButton(
-                    text = stringResource(Res.string.cancel),
-                    onClick = component::onAddIdentifierDialogDismiss
-                )
-            }
+            CoreTextButton(
+                text = stringResource(Res.string.cancel),
+                onClick = component::onAddIdentifierDialogDismiss
+            )
         }
     )
 }
@@ -428,12 +419,12 @@ internal class SelfIdentifierListPreviewProvider : PreviewParameterProvider<Self
     private val items: List<Pair<String, SelfIdentifierListScreenState>> = listOf(
         "Content List" to SelfIdentifierListScreenState.Content(
             paging = PaginationState(
-                items = listOf(userIdentifierMock())
+                items = listOf(userIdentifierSummaryMock())
             ),
             isAddIdentifierSupported = true
         ),
         "Action Loading" to SelfIdentifierListScreenState.Content(
-            paging = PaginationState(items = listOf(userIdentifierMock())),
+            paging = PaginationState(items = listOf(userIdentifierSummaryMock())),
             isAddIdentifierSupported = true,
             actionLoading = true
         ),
@@ -458,7 +449,7 @@ private fun SelfIdentifierListScreenPreviewContent(state: SelfIdentifierListScre
 
 @InternalApi
 private val defaultSelfIdentifierListPreviewState = SelfIdentifierListScreenState.Content(
-    paging = PaginationState(items = listOf(userIdentifierMock())),
+    paging = PaginationState(items = listOf(userIdentifierSummaryMock())),
     isAddIdentifierSupported = true
 )
 

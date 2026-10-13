@@ -4,104 +4,76 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.ManagementDestination
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.navigation.deeplink.ManagementUrlFormatter
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.root.ManagementRootComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileDestination
+import io.github.mudrichenkoevgeny.kmp.feature.user.navigation.deeplink.ProfileUrlFormatter
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
+import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.navigation.deeplink.ManagementAppDeepLinkParser
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main.MainScreenComponent
+import io.ktor.http.Url
 import kotlinx.browser.window
 import org.w3c.dom.events.Event
 
-private const val PATH_HOME = "/home"
-private const val PATH_PROFILE = "/profile"
-private const val PATH_TOTP = "/totp"
-private const val PATH_TOTP_RECOVERY_CODES = "/totp/recovery-codes"
-private const val PATH_SESSIONS = "/sessions"
-private const val PATH_IDENTIFIERS = "/identifiers"
-private const val PATH_SETTINGS = "/settings"
-private const val PATH_SETTINGS_AUTH = "/settings/auth"
-private const val PATH_SETTINGS_GLOBAL = "/settings/global"
-private const val PATH_SETTINGS_SECURITY = "/settings/security"
-private const val PATH_USERS = "/users"
-private const val PATH_AUDIT = "/audit"
+private const val PATH_ROOT = "/"
+private const val PATH_PROFILE_ROOT = "/profile"
+private const val PATH_MANAGEMENT_ROOT = "/management"
+private const val PATH_SETTINGS_ROOT = "/management/settings"
 private const val EVENT_POPSTATE = "popstate"
+
+private fun isTopLevelRootPath(path: String): Boolean {
+    val cleanPath = path.substringBefore('?').substringBefore('#')
+    return cleanPath == PATH_ROOT ||
+            cleanPath == PATH_PROFILE_ROOT ||
+            cleanPath == PATH_MANAGEMENT_ROOT ||
+            cleanPath == PATH_SETTINGS_ROOT
+}
 
 @OptIn(ExperimentalWasmJsInterop::class)
 @Composable
 actual fun SetupBrowserHistory(mainComponent: MainScreenComponent) {
-    val stackState by mainComponent.stack.subscribeAsState()
+    val profileUrlFormatter = remember { ProfileUrlFormatter() }
+    val managementUrlFormatter = remember { ManagementUrlFormatter() }
+    val parser = remember { ManagementAppDeepLinkParser() }
 
-    val path = when (val activeChild = stackState.active.instance) {
-        is MainScreenComponent.Child.HomeChild -> PATH_HOME
-        is MainScreenComponent.Child.ProfileChild -> {
-            val profileStackState by activeChild.component.stack.subscribeAsState()
-            when (profileStackState.active.configuration) {
-                is ProfileDestination.Main -> PATH_PROFILE
-                is ProfileDestination.TotpMain -> PATH_TOTP
-                is ProfileDestination.TotpRecoveryCodes -> PATH_TOTP_RECOVERY_CODES
-                is ProfileDestination.Sessions -> PATH_SESSIONS
-                is ProfileDestination.SessionDetail -> PATH_SESSIONS
-                is ProfileDestination.Identifiers -> PATH_IDENTIFIERS
-                is ProfileDestination.IdentifierDetail -> PATH_IDENTIFIERS
-            }
-        }
-        is MainScreenComponent.Child.SettingsChild -> {
-            val settingsStackState by activeChild.component.stack.subscribeAsState()
-            when (settingsStackState.active.configuration) {
-                is ManagementDestination.Main -> PATH_SETTINGS
-                is ManagementDestination.EditAuthSettings -> PATH_SETTINGS_AUTH
-                is ManagementDestination.EditGlobalSettings -> PATH_SETTINGS_GLOBAL
-                is ManagementDestination.EditSecuritySettings -> PATH_SETTINGS_SECURITY
-                is ManagementDestination.GlobalUserList -> PATH_USERS
-                is ManagementDestination.CreateUser -> PATH_USERS
-                is ManagementDestination.UserDetail -> PATH_USERS
-                is ManagementDestination.UserSessionList -> PATH_SESSIONS
-                is ManagementDestination.UserIdentifierList -> PATH_IDENTIFIERS
-                is ManagementDestination.AuditEventList -> PATH_AUDIT
-                is ManagementDestination.AuditEventDetail -> PATH_AUDIT
-                is ManagementDestination.GlobalSessionList -> PATH_SESSIONS
-                is ManagementDestination.SessionDetail -> PATH_SESSIONS
-                is ManagementDestination.GlobalIdentifierList -> PATH_IDENTIFIERS
-                is ManagementDestination.IdentifierDetail -> PATH_IDENTIFIERS
-            }
+    val activePath = calculateActivePath(
+        mainComponent = mainComponent,
+        profileUrlFormatter = profileUrlFormatter,
+        managementUrlFormatter = managementUrlFormatter
+    )
+
+    val historyStack = remember {
+        mutableListOf<String>().apply {
+            val initialPath = window.location.pathname + window.location.search
+            add(initialPath)
+            window.history.replaceState(null, "", initialPath)
         }
     }
 
+    var isProcessingPopState by remember { mutableStateOf(false) }
+
     DisposableEffect(Unit) {
         val listener: (Event) -> Unit = {
-            when (val currentChild = mainComponent.stack.value.active.instance) {
-                is MainScreenComponent.Child.ProfileChild -> {
-                    when (val profileChild = currentChild.component.stack.value.active.instance) {
-                        is ProfileRootComponent.Child.TotpRecoveryCodes -> profileChild.component.onBackClick()
-                        is ProfileRootComponent.Child.TotpMain -> profileChild.component.onBackClick()
-                        is ProfileRootComponent.Child.Sessions -> profileChild.component.onBackClick()
-                        is ProfileRootComponent.Child.SessionDetail -> profileChild.component.onBackClick()
-                        is ProfileRootComponent.Child.Identifiers -> profileChild.component.onBackClick()
-                        is ProfileRootComponent.Child.IdentifierDetail -> profileChild.component.onBackClick()
-                        is ProfileRootComponent.Child.Main -> { }
-                    }
+            isProcessingPopState = true
+            try {
+                val currentPath = window.location.pathname + window.location.search
+                val route = parser.parse(Url(window.location.origin + currentPath))
+                if (route != null) {
+                    mainComponent.handleDeepLink(route)
+                } else {
+                    mainComponent.onTabClick(MainScreenComponent.Config.Home)
                 }
-                is MainScreenComponent.Child.SettingsChild -> {
-                    when (val settingsChild = currentChild.component.stack.value.active.instance) {
-                        is ManagementRootComponent.Child.EditAuthSettings -> settingsChild.component.onBackClick()
-                        is ManagementRootComponent.Child.EditGlobalSettings -> settingsChild.component.onBackClick()
-                        is ManagementRootComponent.Child.EditSecuritySettings -> settingsChild.component.onBackClick()
-                        is ManagementRootComponent.Child.GlobalUserList -> settingsChild.component.onBackClick()
-                        is ManagementRootComponent.Child.CreateUser -> settingsChild.component.onBackClick()
-                        is ManagementRootComponent.Child.UserDetail -> settingsChild.component.onBackClick()
-                        is ManagementRootComponent.Child.UserSessionList -> settingsChild.component.onBackClick()
-                        is ManagementRootComponent.Child.UserIdentifierList -> settingsChild.component.onBackClick()
-                        is ManagementRootComponent.Child.AuditEventList -> settingsChild.component.onBackClick()
-                        is ManagementRootComponent.Child.AuditEventDetail -> settingsChild.component.onBackClick()
-                        is ManagementRootComponent.Child.GlobalSessionList -> settingsChild.component.onBackClick()
-                        is ManagementRootComponent.Child.SessionDetail -> settingsChild.component.onBackClick()
-                        is ManagementRootComponent.Child.GlobalIdentifierList -> settingsChild.component.onBackClick()
-                        is ManagementRootComponent.Child.IdentifierDetail -> settingsChild.component.onBackClick()
-                        is ManagementRootComponent.Child.Main -> { }
-                    }
+
+                if (historyStack.size >= 2 && currentPath == historyStack[historyStack.lastIndex - 1]) {
+                    historyStack.removeAt(historyStack.lastIndex)
+                } else if (historyStack.lastOrNull() != currentPath) {
+                    historyStack.add(currentPath)
                 }
-                is MainScreenComponent.Child.HomeChild -> { }
+            } finally {
+                isProcessingPopState = false
             }
         }
         window.addEventListener(EVENT_POPSTATE, listener)
@@ -110,9 +82,93 @@ actual fun SetupBrowserHistory(mainComponent: MainScreenComponent) {
         }
     }
 
-    LaunchedEffect(path) {
-        if (window.location.pathname != path) {
-            window.history.pushState(null, "", path)
+    LaunchedEffect(activePath) {
+        if (isProcessingPopState) return@LaunchedEffect
+        val currentPath = window.location.pathname + window.location.search
+        if (currentPath == activePath) return@LaunchedEffect
+
+        if (historyStack.size >= 2 && activePath == historyStack[historyStack.lastIndex - 1]) {
+            historyStack.removeAt(historyStack.lastIndex)
+            window.history.back()
+        } else if (historyStack.size == 1 && historyStack[0].startsWith(activePath.substringBefore('?'))) {
+            historyStack[0] = activePath
+            window.history.replaceState(null, "", activePath)
+        } else if (isTopLevelRootPath(activePath)) {
+            historyStack.clear()
+            historyStack.add(activePath)
+            window.history.replaceState(null, "", activePath)
+        } else {
+            if (historyStack.lastOrNull() != activePath) {
+                historyStack.add(activePath)
+            }
+            window.history.pushState(null, "", activePath)
+        }
+    }
+}
+
+@Composable
+private fun calculateActivePath(
+    mainComponent: MainScreenComponent,
+    profileUrlFormatter: ProfileUrlFormatter,
+    managementUrlFormatter: ManagementUrlFormatter
+): String {
+    val stackState by mainComponent.stack.subscribeAsState()
+    return when (val activeChild = stackState.active.instance) {
+        is MainScreenComponent.Child.HomeChild -> PATH_ROOT
+        is MainScreenComponent.Child.ProfileChild -> {
+            val profileStackState by activeChild.component.stack.subscribeAsState()
+            val profileActiveChild = profileStackState.active.instance
+            val rawUrl = when (profileActiveChild) {
+                is ProfileRootComponent.Child.TotpMain -> {
+                    profileActiveChild.component.stack.subscribeAsState()
+                    profileUrlFormatter.formatChild(
+                        profileStackState.active.configuration,
+                        profileActiveChild
+                    )
+                }
+                is ProfileRootComponent.Child.Identifiers -> {
+                    profileActiveChild.component.addIdentifierDialogSlot.subscribeAsState()
+                    profileUrlFormatter.formatChild(
+                        profileStackState.active.configuration,
+                        profileActiveChild
+                    )
+                }
+                else -> profileUrlFormatter.format(profileStackState.active.configuration)
+            }
+            val absoluteUrl = Url(rawUrl)
+            val query = if (absoluteUrl.encodedQuery.isEmpty()) "" else "?${absoluteUrl.encodedQuery}"
+            absoluteUrl.encodedPath + query
+        }
+        is MainScreenComponent.Child.SettingsChild -> {
+            val settingsStackState by activeChild.component.stack.subscribeAsState()
+            val settingsActiveChild = settingsStackState.active.instance
+            val rawUrl = when (settingsActiveChild) {
+                is ManagementRootComponent.Child.EditAuthSettings -> {
+                    settingsActiveChild.component.dialogSlot.subscribeAsState()
+                    managementUrlFormatter.formatChild(
+                        settingsStackState.active.configuration,
+                        settingsActiveChild
+                    )
+                }
+                is ManagementRootComponent.Child.EditGlobalSettings -> {
+                    settingsActiveChild.component.dialogSlot.subscribeAsState()
+                    managementUrlFormatter.formatChild(
+                        settingsStackState.active.configuration,
+                        settingsActiveChild
+                    )
+                }
+                is ManagementRootComponent.Child.EditSecuritySettings -> {
+                    settingsActiveChild.component.dialogSlot.subscribeAsState()
+                    managementUrlFormatter.formatChild(
+                        settingsStackState.active.configuration,
+                        settingsActiveChild
+                    )
+                }
+                else -> managementUrlFormatter.format(settingsStackState.active.configuration)
+            }
+            val absoluteUrl = Url(rawUrl)
+            val query = if (absoluteUrl.encodedQuery.isEmpty()) "" else "?${absoluteUrl.encodedQuery}"
+            absoluteUrl.encodedPath + query
         }
     }
 }

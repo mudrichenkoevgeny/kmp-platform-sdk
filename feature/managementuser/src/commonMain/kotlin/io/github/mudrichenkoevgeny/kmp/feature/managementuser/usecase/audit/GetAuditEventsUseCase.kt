@@ -3,7 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.audit.ManagementAuditRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEvent
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventSummary
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
@@ -23,7 +23,7 @@ class GetAuditEventsUseCase(
      * @param pageSize Maximum items returned per page.
      * @param sortBy Field to sort by.
      * @param sortOrder Sorting direction.
-     * @return Paginated result containing audit events, or a failure.
+     * @return Paginated result containing audit event summaries, or a failure.
      */
     suspend operator fun invoke(
         pageNumber: Int? = null,
@@ -38,7 +38,7 @@ class GetAuditEventsUseCase(
         resourceIds: List<String>? = null,
         statuses: List<AuditStatus>? = null,
         messages: List<String>? = null
-    ): AppResult<PagedResult<AuditEvent>> {
+    ): AppResult<PagedResult<AuditEventSummary>> {
         return managementAuditRepository.getAuditEvents(
             pageNumber = pageNumber,
             pageSize = pageSize,

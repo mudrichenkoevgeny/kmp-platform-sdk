@@ -13,7 +13,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.Pagina
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.audit.list.AuditEventListComponentMock
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -41,7 +41,7 @@ class AuditEventListScreenTest {
 
     @Test
     fun content_displaysElements() = runComposeUiTest {
-        val event = auditEventMock()
+        val event = auditEventSummaryMock()
         val component = AuditEventListComponentMock(
             AuditEventListScreenState.Content(
                 paging = PaginationState(

@@ -21,6 +21,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
+import kotlin.test.assertTrue
 
 @InternalApi
 class LoginByPhoneComponentImplTest {
@@ -30,8 +31,8 @@ class LoginByPhoneComponentImplTest {
         val context = createLoginByPhoneComponentTestContext()
         try {
             context.component.onPhoneChanged(INVALID_PHONE)
-            val phone = assertIs<LoginByPhoneScreenState.PhoneInput>(context.component.state.value)
-            assertFalse(phone.isPhoneNumberValid)
+            val state = context.component.state.value
+            assertFalse(state.isPhoneNumberValid)
         } finally {
             context.destroy()
         }
@@ -45,9 +46,10 @@ class LoginByPhoneComponentImplTest {
         val context = createLoginByPhoneComponentTestContext(loginRepository = repo)
         try {
             context.component.onPhoneChanged(VALID_PHONE)
-            val code = assertIs<LoginByPhoneScreenState.CodeInput>(context.component.state.value)
-            assertEquals(VALID_PHONE, code.phoneNumber)
-            assertEquals(REMAINING_DELAY_SECONDS, code.resendTimerSeconds)
+            val state = context.component.state.value
+            assertEquals(VALID_PHONE, state.phoneNumber)
+            assertEquals(REMAINING_DELAY_SECONDS, state.resendTimerSeconds)
+            assertIs<LoginByPhoneComponent.Child.CodeInput>(context.component.stack.value.active.instance)
         } finally {
             context.destroy()
         }
@@ -65,9 +67,10 @@ class LoginByPhoneComponentImplTest {
             context.component.onPhoneChanged(VALID_PHONE)
             context.component.onSendCodeClick()
             runCurrent()
-            val code = assertIs<LoginByPhoneScreenState.CodeInput>(context.component.state.value)
-            assertEquals(VALID_PHONE, code.phoneNumber)
-            assertEquals(RETRY_AFTER_SEND, code.resendTimerSeconds)
+            val state = context.component.state.value
+            assertEquals(VALID_PHONE, state.phoneNumber)
+            assertEquals(RETRY_AFTER_SEND, state.resendTimerSeconds)
+            assertIs<LoginByPhoneComponent.Child.CodeInput>(context.component.stack.value.active.instance)
         } finally {
             context.destroy()
         }
@@ -85,8 +88,9 @@ class LoginByPhoneComponentImplTest {
             context.component.onPhoneChanged(VALID_PHONE)
             context.component.onSendCodeClick()
             runCurrent()
-            val code = assertIs<LoginByPhoneScreenState.CodeInput>(context.component.state.value)
-            assertEquals(RETRY_AFTER_RATE_LIMIT, code.resendTimerSeconds)
+            val state = context.component.state.value
+            assertEquals(RETRY_AFTER_RATE_LIMIT, state.resendTimerSeconds)
+            assertIs<LoginByPhoneComponent.Child.CodeInput>(context.component.stack.value.active.instance)
         } finally {
             context.destroy()
         }
@@ -104,9 +108,10 @@ class LoginByPhoneComponentImplTest {
             context.component.onPhoneChanged(VALID_PHONE)
             context.component.onSendCodeClick()
             advanceUntilIdle()
-            val phone = assertIs<LoginByPhoneScreenState.PhoneInput>(context.component.state.value)
-            assertFalse(phone.actionLoading)
-            assertIs<CommonError.Unknown>(phone.actionError)
+            val state = context.component.state.value
+            assertFalse(state.actionLoading)
+            assertIs<CommonError.Unknown>(state.actionError)
+            assertIs<LoginByPhoneComponent.Child.PhoneInput>(context.component.stack.value.active.instance)
         } finally {
             context.destroy()
         }
@@ -146,9 +151,9 @@ class LoginByPhoneComponentImplTest {
             context.component.onCodeChanged(FULL_CODE)
             advanceUntilIdle()
             assertEquals(ZERO_CALLS, context.onFinishedCalls)
-            val code = assertIs<LoginByPhoneScreenState.CodeInput>(context.component.state.value)
-            assertFalse(code.actionLoading)
-            assertIs<CommonError.Unknown>(code.actionError)
+            val state = context.component.state.value
+            assertFalse(state.actionLoading)
+            assertIs<CommonError.Unknown>(state.actionError)
         } finally {
             context.destroy()
         }
@@ -178,10 +183,11 @@ class LoginByPhoneComponentImplTest {
             context.sendLoginConfirmationToPhoneUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
             context.component.onSendCodeClick()
             runCurrent()
-            assertIs<LoginByPhoneScreenState.CodeInput>(context.component.state.value)
+            assertIs<LoginByPhoneComponent.Child.CodeInput>(context.component.stack.value.active.instance)
             context.component.onResetPhoneClick()
-            val phone = assertIs<LoginByPhoneScreenState.PhoneInput>(context.component.state.value)
-            assertEquals(VALID_PHONE, phone.phoneNumber)
+            val state = context.component.state.value
+            assertEquals(VALID_PHONE, state.phoneNumber)
+            assertIs<LoginByPhoneComponent.Child.PhoneInput>(context.component.stack.value.active.instance)
         } finally {
             context.destroy()
         }
@@ -196,7 +202,7 @@ class LoginByPhoneComponentImplTest {
             context.component.onSendCodeClick()
             runCurrent()
             context.component.onBackClick()
-            assertIs<LoginByPhoneScreenState.PhoneInput>(context.component.state.value)
+            assertIs<LoginByPhoneComponent.Child.PhoneInput>(context.component.stack.value.active.instance)
             assertEquals(ZERO_CALLS, context.onBackCalls)
         } finally {
             context.destroy()
@@ -221,7 +227,7 @@ class LoginByPhoneComponentImplTest {
     ): LoginByPhoneComponentTestContext {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
-        
+
         val context = LoginByPhoneComponentTestContext(
             lifecycle = lifecycle,
             sendLoginConfirmationToPhoneUseCase = sendLoginConfirmationToPhoneUseCase,
@@ -238,7 +244,7 @@ class LoginByPhoneComponentImplTest {
             onBack = { context.onBackCalls++ },
             onFinished = { context.onFinishedCalls++ }
         )
-        
+
         return context
     }
 
@@ -257,7 +263,7 @@ class LoginByPhoneComponentImplTest {
     }
 
     private companion object {
-        const val VALID_PHONE = "0123456789"
+        const val VALID_PHONE = "+1234567890"
         const val INVALID_PHONE = "012"
         const val FULL_CODE = "123456"
         const val REMAINING_DELAY_SECONDS = 25

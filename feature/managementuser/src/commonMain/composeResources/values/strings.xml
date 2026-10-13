@@ -24,7 +24,11 @@
     <string name="audit_event_actor_role">Actor Role</string>
     <string name="audit_event_message">Message</string>
     <string name="audit_event_timestamp">Timestamp</string>
+    <string name="audit_event_updated_at">Updated At</string>
     <string name="audit_event_metadata">Metadata</string>
+
+    <!-- User Details Screen -->
+    <string name="user_detail_audit_events">Audit logs</string>
 
     <!-- Edit Auth Settings Screen -->
     <string name="edit_auth_settings_title">Edit Auth Settings</string>

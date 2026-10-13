@@ -12,16 +12,17 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserDetailsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.create.CreateByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
 
 @InternalApi
 class ManagementUserApiMock : ManagementUserApi {
 
-    var createUserResult: AppResult<UserDetailsPayload> = AppResult.Error(CommonError.Unknown())
-    var getUsersResult: AppResult<PagedResult<UserDetailsPayload>> = AppResult.Error(CommonError.Unknown())
-    var getUserResult: AppResult<UserDetailsPayload> = AppResult.Error(CommonError.Unknown())
+    var createUserResult: AppResult<UserPrivatePayload> = AppResult.Error(CommonError.Unknown())
+    var getUsersResult: AppResult<PagedResult<UserSummaryPayload>> = AppResult.Error(CommonError.Unknown())
+    var getUserResult: AppResult<UserPrivatePayload> = AppResult.Error(CommonError.Unknown())
     var updateUserResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
     var deleteUserResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
 

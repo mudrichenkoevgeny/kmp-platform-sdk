@@ -6,7 +6,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
 
 /** Administrative user identifiers management. */
 interface ManagementIdentifierApi {
@@ -31,7 +32,7 @@ interface ManagementIdentifierApi {
         userIds: List<String>? = null,
         userAuthProviders: List<UserAuthProvider>? = null,
         identifiers: List<String>? = null
-    ): AppResult<PagedResult<UserIdentifierPayload>>
+    ): AppResult<PagedResult<UserIdentifierSummaryPayload>>
 
     /**
      * Retrieves specific identifier details.
@@ -39,7 +40,7 @@ interface ManagementIdentifierApi {
      * @param identifierId Unique identifier record ID.
      * @return Detailed information of the target identifier, or a mapped failure.
      */
-    suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPayload>
+    suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivatePayload>
 
     /**
      * Removes the identifier record for the given user.

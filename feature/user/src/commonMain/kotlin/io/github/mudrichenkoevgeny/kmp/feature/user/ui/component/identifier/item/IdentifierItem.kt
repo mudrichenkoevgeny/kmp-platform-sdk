@@ -24,22 +24,22 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePrevi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.IdentifierListTestTags
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 
 /**
  * A list item representing a single user identifier (e.g., email or phone number).
  *
- * @param identifier The [UserIdentifier] data to display.
+ * @param identifier The [UserIdentifierSummary] data to display.
  * @param onClick Callback invoked when the item card is tapped.
  * @param isCurrentIdentifier Indicates if this identifier is the active session's identifier.
  * @param modifier Optional [Modifier] for layout adjustments.
  */
 @Composable
 fun IdentifierItem(
-    identifier: UserIdentifier,
+    identifier: UserIdentifierSummary,
     onClick: () -> Unit,
     isCurrentIdentifier: Boolean = false,
     modifier: Modifier = Modifier
@@ -78,7 +78,7 @@ fun IdentifierItem(
 }
 
 private data class IdentifierItemPreviewState(
-    val identifier: UserIdentifier,
+    val identifier: UserIdentifierSummary,
     val isCurrentIdentifier: Boolean
 )
 
@@ -86,13 +86,14 @@ private data class IdentifierItemPreviewState(
 private class IdentifierItemPreviewProvider : PreviewParameterProvider<IdentifierItemPreviewState> {
     private val items = listOf(
         IdentifierItemPreviewState(
-            identifier = userIdentifierMock(),
+            identifier = userIdentifierSummaryMock(),
             isCurrentIdentifier = true
         ),
         IdentifierItemPreviewState(
-            identifier = userIdentifierMock().copy(
+            identifier = userIdentifierSummaryMock().copy(
                 userAuthProvider = UserAuthProvider.PHONE,
-                identifier = "+1234567890"
+                identifier = "+1234567890",
+                displayName = "+1234567890"
             ),
             isCurrentIdentifier = false
         )
@@ -119,7 +120,7 @@ private fun IdentifierItemPreviewContent(state: IdentifierItemPreviewState) {
 
 @InternalApi
 private val defaultIdentifierItemPreviewState = IdentifierItemPreviewState(
-    identifier = userIdentifierMock(),
+    identifier = userIdentifierSummaryMock(),
     isCurrentIdentifier = false
 )
 
@@ -152,4 +153,3 @@ private fun IdentifierItemThemePreview() {
 private fun IdentifierItemFontScalePreview() {
     IdentifierItemPreviewContent(state = defaultIdentifierItemPreviewState)
 }
-

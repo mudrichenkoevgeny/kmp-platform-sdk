@@ -5,8 +5,8 @@ import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SelfSessionListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SelfSessionListScreenState
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 
 @InternalApi
 class SelfSessionListComponentMock(
@@ -17,7 +17,7 @@ class SelfSessionListComponentMock(
     override val state: Value<SelfSessionListScreenState> = _state
 
     var refreshCalls: Int = 0
-    var sessionClickCalls: MutableList<UserSession> = mutableListOf()
+    var sessionClickCalls: MutableList<UserSessionSummary> = mutableListOf()
     var sessionRevokedCalls: MutableList<UserSessionId> = mutableListOf()
     var revokeSessionCalls: MutableList<UserSessionId> = mutableListOf()
     var revokeAllOtherSessionsCalls: Int = 0
@@ -32,7 +32,7 @@ class SelfSessionListComponentMock(
         refreshCalls++
     }
 
-    override fun onSessionClick(session: UserSession) {
+    override fun onSessionClick(session: UserSessionSummary) {
         sessionClickCalls.add(session)
     }
 

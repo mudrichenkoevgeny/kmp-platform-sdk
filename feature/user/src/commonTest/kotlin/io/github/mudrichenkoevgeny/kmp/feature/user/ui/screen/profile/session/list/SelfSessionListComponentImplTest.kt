@@ -206,7 +206,7 @@ class SelfSessionListComponentImplTest {
                     PagedResult(
                         items = items,
                         totalCount = 2,
-                        pageNumber = page,
+                        pageNumber = page ?: 1,
                         pageSize = 1,
                         totalPages = 2
                     )

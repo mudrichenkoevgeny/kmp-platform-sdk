@@ -6,7 +6,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.security.password.EmailPasswordChangeRequest
 
 /** Manage user identifiers (email, phone, external providers) and related confirmations. */
@@ -17,7 +18,7 @@ interface SelfManagementIdentifiersApi {
      * @param userIdentifierId Unique identifier payload id.
      * @return Detailed identifier info or a mapped failure.
      */
-    suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPayload>
+    suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivatePayload>
 
     /**
      * Returns a paginated and filtered list of identifiers linked to the current authenticated management account.
@@ -37,7 +38,7 @@ interface SelfManagementIdentifiersApi {
         sortOrder: SortOrder? = null,
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
-    ): AppResult<PagedResult<UserIdentifierPayload>>
+    ): AppResult<PagedResult<UserIdentifierSummaryPayload>>
 
     /**
      * Updates the management account password using current credentials.

@@ -5,7 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.flatMap
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.google.GoogleAuthService
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 
 /**
  * Google Sign-In flow for associating a Google identity record with the current account.
@@ -20,9 +20,9 @@ class AddUserIdentifierGoogleUseCase(
     /**
      * Executes interactive Google sign-in and links the returned provider token with the account.
      *
-     * @return [UserIdentifier] on success, or a mapped failure.
+     * @return [UserIdentifierPrivate] on success, or a mapped failure.
      */
-    suspend fun execute(): AppResult<UserIdentifier> {
+    suspend fun execute(): AppResult<UserIdentifierPrivate> {
         return authService.signIn()
             .flatMap { externalProviderToken ->
                 identifierRepository.addUserIdentifierExternalAuthProvider(

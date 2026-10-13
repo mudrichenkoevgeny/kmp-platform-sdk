@@ -1,6 +1,10 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.global
 
+import com.arkivanov.decompose.router.slot.ChildSlot
+import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.value.Value
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogChild
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogConfig
 
 /**
  * Decompose controller for editing global platform settings.
@@ -8,6 +12,12 @@ import com.arkivanov.decompose.value.Value
 interface EditGlobalSettingsComponent {
     /** Observable UI state. */
     val state: Value<EditGlobalSettingsScreenState>
+
+    /** Decompose child slot for settings confirmation dialogs. */
+    val dialogSlot: Value<ChildSlot<SettingsDialogConfig, SettingsDialogChild>>
+
+    /** Slot navigator for settings dialogs. */
+    val dialogSlotNavigation: SlotNavigation<SettingsDialogConfig>
 
     /** Retries loading settings. */
     fun onRetry()
@@ -45,8 +55,14 @@ interface EditGlobalSettingsComponent {
     /** Saves global settings to the backend. */
     fun onSaveClick()
 
-    /** Resets global settings to defaults on the backend. */
+    /** Shows reset confirmation dialog. */
     fun onResetClick()
+
+    /** Confirms resetting global settings to defaults. */
+    fun onConfirmReset()
+
+    /** Dismisses active confirmation dialogs. */
+    fun onDismissDialog()
 
     /** Navigates back. */
     fun onBackClick()

@@ -15,12 +15,16 @@ This document defines the mandatory Kotlin syntax and formatting standards for t
 - **Resolution:** Use `import` or `typealias`.
 - **Exception:** Minimal FQN is allowed only when imports are technically impossible or cause unresolvable ambiguity (justify the reason in the commit message).
 
-### Comments
-- **Strict Ban:** Do not write or preserve comments in the code.
-- **Self-Documentation:** Logic must be clear through expressive naming and clean structure. If a complex algorithm requires explanation, refactor it into smaller, well-named functions or use KDoc for public APIs.
+### Implementation Comments vs. KDoc Documentation
+- **Strict Ban on Inline Comments:** Do not write inline implementation comments (`//` or `/* ... */`) inside method bodies or code blocks. Logic must be self-documenting through expressive naming and clean structure.
+- **MANDATORY KDoc Preservation:** KDoc blocks (`/** ... */`) are structured API documentation and are strictly MANDATORY. AI agents must **NEVER** delete, strip, or wipe existing KDoc documentation blocks during refactoring, updates, or code edits. All public interfaces, classes, functions, and properties must retain and maintain their KDoc documentation.
 
 ### Trailing Commas
 - **Strict Ban:** Do not write trailing commas at the end of argument, parameter, or entry lists.
+
+### Mandatory Complete Implementation
+- **Production-Ready Code:** All created or modified files must contain complete, production-ready code.
+- **No Stubs/Placeholders:** Placeholder code, dummy components, `TODO()` markers, and default generator stubs are strictly prohibited unless the developer explicitly asks for a stub.
 
 ## 2. Control Flow
 

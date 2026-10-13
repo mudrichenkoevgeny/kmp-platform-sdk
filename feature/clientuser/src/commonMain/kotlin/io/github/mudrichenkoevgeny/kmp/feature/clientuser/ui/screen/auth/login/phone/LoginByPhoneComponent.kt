@@ -1,5 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.phone
 
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.value.Value
 
 /**
@@ -7,11 +9,29 @@ import com.arkivanov.decompose.value.Value
  */
 interface LoginByPhoneComponent {
     /**
+     * Decompose navigation stack driving the phone login wizard steps.
+     */
+    val stack: Value<ChildStack<LoginByPhoneStepConfig, Child>>
+
+    /**
+     * Stack navigator for the phone login wizard.
+     */
+    val stackNavigation: StackNavigation<LoginByPhoneStepConfig>
+
+    /**
      * Current UI state for [LoginByPhoneScreen].
      *
      * @return reactive [LoginByPhoneScreenState].
      */
     val state: Value<LoginByPhoneScreenState>
+
+    /**
+     * Child instances corresponding to each wizard step.
+     */
+    sealed interface Child {
+        data class PhoneInput(val initialPhone: String) : Child
+        data class CodeInput(val phone: String) : Child
+    }
 
     /**
      * Updates the phone field; may auto-advance to code entry if a cooldown still applies for this number.

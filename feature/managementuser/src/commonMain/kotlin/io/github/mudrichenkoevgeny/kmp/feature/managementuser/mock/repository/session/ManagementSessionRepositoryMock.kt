@@ -4,25 +4,27 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.session.ManagementSessionRepository
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionPrivateMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSession
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 
 @InternalApi
 open class ManagementSessionRepositoryMock : ManagementSessionRepository {
 
-    var getSessionsResultProvider: () -> AppResult<PagedResult<UserSession>> = {
-        AppResult.Success(pagedResultMock(listOf(userSessionMock())))
+    var getSessionsResultProvider: () -> AppResult<PagedResult<UserSessionSummary>> = {
+        AppResult.Success(pagedResultMock(listOf(userSessionSummaryMock())))
     }
 
-    var getSessionResultProvider: (String) -> AppResult<UserSession> = {
-        AppResult.Success(userSessionMock())
+    var getSessionResultProvider: (String) -> AppResult<UserSessionPrivate> = {
+        AppResult.Success(userSessionPrivateMock())
     }
 
     var deleteSessionResultProvider: (UserId, String) -> AppResult<Unit> = { _, _ -> AppResult.Success(Unit) }
@@ -31,6 +33,8 @@ open class ManagementSessionRepositoryMock : ManagementSessionRepository {
 
     var lastUserId: UserId? = null
     var lastSessionId: String? = null
+    var lastIpAddresses: List<String>? = null
+    var lastSortBy: UserSortValues.UserSessionSortBy? = null
 
     override suspend fun getSessions(
         pageNumber: Int?,
@@ -50,9 +54,13 @@ open class ManagementSessionRepositoryMock : ManagementSessionRepository {
         deviceNames: List<String>?,
         appVersions: List<String>?,
         operationSystemVersions: List<String>?
-    ): AppResult<PagedResult<UserSession>> = getSessionsResultProvider()
+    ): AppResult<PagedResult<UserSessionSummary>> {
+        lastSortBy = sortBy
+        lastIpAddresses = ipAddresses
+        return getSessionsResultProvider()
+    }
 
-    override suspend fun getSession(sessionId: String): AppResult<UserSession> {
+    override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivate> {
         lastSessionId = sessionId
         return getSessionResultProvider(sessionId)
     }

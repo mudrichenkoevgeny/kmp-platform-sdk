@@ -5,11 +5,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.network.api.identifier.ManagementIdentifierApiMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.identifier.userIdentifierPayloadMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.identifier.userIdentifierPrivatePayloadMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.identifier.userIdentifierSummaryPayloadMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.toUserIdOrThrow
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifier
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierSummary
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,27 +26,27 @@ class ManagementIdentifierRepositoryImplTest {
 
     @Test
     fun `getIdentifiers forwards request and maps paged result`() = runTest {
-        val payload = userIdentifierPayloadMock()
+        val payload = userIdentifierSummaryPayloadMock()
         val wire = pagedResultMock(items = listOf(payload), totalCount = 1)
         api.getIdentifiersResult = AppResult.Success(wire)
 
         val result = repo.getIdentifiers(pageNumber = 1, pageSize = 20)
 
-        val success = assertIs<AppResult.Success<PagedResult<UserIdentifier>>>(result)
+        val success = assertIs<AppResult.Success<PagedResult<UserIdentifierSummary>>>(result)
         assertEquals(1, success.data.items.size)
-        assertEquals(payload.toUserIdentifier(), success.data.items.first())
+        assertEquals(payload.toUserIdentifierSummary(), success.data.items.first())
         assertEquals(wire.totalCount, success.data.totalCount)
     }
 
     @Test
     fun `getIdentifier forwards request and maps result`() = runTest {
-        val payload = userIdentifierPayloadMock()
+        val payload = userIdentifierPrivatePayloadMock()
         api.getIdentifierResult = AppResult.Success(payload)
 
         val result = repo.getIdentifier("id-1")
 
-        val success = assertIs<AppResult.Success<UserIdentifier>>(result)
-        assertEquals(payload.toUserIdentifier(), success.data)
+        val success = assertIs<AppResult.Success<UserIdentifierPrivate>>(result)
+        assertEquals(payload.toUserIdentifierPrivate(), success.data)
     }
 
     @Test
