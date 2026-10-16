@@ -21,7 +21,9 @@ class OpenSecuritySettingsRepositoryMock(
 
     override suspend fun getOpenSecuritySettings(): AppResult<OpenSecuritySettings> {
         val customResult = getSecuritySettingsResult
-        if (customResult != null) return customResult
+        if (customResult != null) {
+            return customResult
+        }
         val current = _settings.value
         return if (current != null) {
             AppResult.Success(current)
@@ -34,7 +36,9 @@ class OpenSecuritySettingsRepositoryMock(
 
     override suspend fun refreshOpenSecuritySettings(): AppResult<OpenSecuritySettings> {
         val customResult = refreshSecuritySettingsResult
-        if (customResult != null) return customResult
+        if (customResult != null) {
+            return customResult
+        }
         val fresh = openSecuritySettingsMock()
         _settings.value = fresh
         return AppResult.Success(fresh)

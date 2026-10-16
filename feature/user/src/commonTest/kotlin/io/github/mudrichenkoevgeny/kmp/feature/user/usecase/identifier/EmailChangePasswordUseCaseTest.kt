@@ -4,6 +4,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.identifier.IdentifierRepositoryMock
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import kotlinx.coroutines.test.runTest
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -19,10 +22,11 @@ class EmailChangePasswordUseCaseTest {
         }
         val useCase = EmailChangePasswordUseCase(repository)
 
-        val result = useCase(TEST_EMAIL, TEST_OLD_PASSWORD, TEST_NEW_PASSWORD)
+        val id = UserIdentifierId(Uuid.random())
+        val result = useCase(id, TEST_OLD_PASSWORD, TEST_NEW_PASSWORD)
 
         assertIs<AppResult.Success<Unit>>(result)
-        assertEquals(TEST_EMAIL, repository.lastEmail)
+        assertEquals(id, repository.lastIdentifierId)
         assertEquals(TEST_OLD_PASSWORD, repository.lastOldPassword)
         assertEquals(TEST_NEW_PASSWORD, repository.lastNewPassword)
     }
@@ -35,7 +39,8 @@ class EmailChangePasswordUseCaseTest {
         }
         val useCase = EmailChangePasswordUseCase(repository)
 
-        val result = useCase(TEST_EMAIL, TEST_OLD_PASSWORD, TEST_NEW_PASSWORD)
+        val id = UserIdentifierId(Uuid.random())
+        val result = useCase(id, TEST_OLD_PASSWORD, TEST_NEW_PASSWORD)
 
         assertIs<AppResult.Error>(result)
         assertEquals(expectedError, result.error)

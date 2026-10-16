@@ -6,34 +6,25 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.navigate
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackDispatcher
-import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.navigation.deeplink.ManagementDeepLinkConstants
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.ManagementDestination
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.detail.AuditEventDetailComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.detail.AuditEventDetailParams
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list.AuditEventListComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list.AuditEventListParams
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.globallist.GlobalIdentifierListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist.UserIdentifierListComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist.UserIdentifierListParams
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.main.MainManagementComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.globallist.GlobalSessionListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListParams
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogConfig
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.auth.EditAuthSettingsComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.global.EditGlobalSettingsComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.main.SettingsMainComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.security.EditSecuritySettingsComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create.CreateUserComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailParams
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailParams
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailParams
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.GlobalUserListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit.GetAuditEventUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit.GetAuditEventsUseCase
@@ -43,10 +34,10 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.setti
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.GetManagementGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.ResetRemoteGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.SaveRemoteGlobalSettingsUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierPasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetUserIdentifiersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.GetManagementSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.ResetRemoteSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.SaveRemoteSecuritySettingsUseCase
@@ -54,6 +45,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.Ma
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetUserSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.CreateUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.DeleteUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
@@ -62,14 +54,26 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.Updat
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.notifyIdentifierDeleted
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.notifySessionRevoked
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.route.management.ManagementAuditNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.screen.management.audit.detail.ManagementAuditEventDetailParams
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.screen.management.audit.list.ManagementAuditEventListParams
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.NavigationRoute
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.management.ManagementMainNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.navigation.route.management.ManagementSecurityNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.core.settings.navigation.route.management.ManagementSettingsNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.management.ManagementAuthSettingsNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.management.ManagementUsersNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.detail.IdentifierDetailParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.session.detail.SessionDetailParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.userlist.ManagementUserIdentifierListParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.userlist.ManagementUserSessionListParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.user.detail.UserDetailParams
+import kotlinx.serialization.PolymorphicSerializer
 
 /**
  * Default implementation of [ManagementRootComponent].
  */
-@OptIn(DelicateDecomposeApi::class)
 class ManagementRootComponentImpl(
     componentContext: ComponentContext,
     private val userRepository: UserRepository,
@@ -87,113 +91,118 @@ class ManagementRootComponentImpl(
     private val createUserUseCase: CreateUserUseCase,
     private val updateUserUseCase: UpdateUserUseCase,
     private val deleteUserUseCase: DeleteUserUseCase,
-    private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
-    private val managementGetSessionUseCase: ManagementGetSessionUseCase? = null,
-    private val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase,
-    private val managementGetIdentifierUseCase: ManagementGetIdentifierUseCase? = null,
     private val managementDisableTotpUseCase: ManagementDisableTotpUseCase,
+    private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
+    private val managementGetUserSessionsUseCase: ManagementGetUserSessionsUseCase,
     private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase,
     private val managementDeleteAllUserSessionsUseCase: ManagementDeleteAllUserSessionsUseCase,
-    private val managementDeleteIdentifierUseCase: ManagementDeleteIdentifierUseCase,
-    private val managementDeleteIdentifierPasswordUseCase: ManagementDeleteIdentifierPasswordUseCase,
+    private val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase,
+    private val managementGetUserIdentifiersUseCase: ManagementGetUserIdentifiersUseCase,
     private val getAuditEventsUseCase: GetAuditEventsUseCase,
     private val getAuditEventUseCase: GetAuditEventUseCase,
+    private val managementGetSessionUseCase: ManagementGetSessionUseCase? = null,
+    private val managementGetIdentifierUseCase: ManagementGetIdentifierUseCase? = null,
+    private val managementDeleteIdentifierUseCase: ManagementDeleteIdentifierUseCase? = null,
     private val onNavigateToProfile: () -> Unit = {}
 ) : ManagementRootComponent, ComponentContext by componentContext {
 
-    private val navigation = StackNavigation<ManagementDestination>()
+    private val navigation = StackNavigation<NavigationRoute>()
 
-    override val stack: Value<ChildStack<ManagementDestination, ManagementRootComponent.Child>> =
+    override val stack: Value<ChildStack<NavigationRoute, ManagementRootComponent.Child>> =
         childStack(
             source = navigation,
-            serializer = ManagementDestination.serializer(),
-            initialConfiguration = ManagementDestination.Main,
+            serializer = PolymorphicSerializer(NavigationRoute::class),
+            initialConfiguration = ManagementMainNavigation.Main,
             handleBackButton = true,
             childFactory = ::createChild
         )
 
-    override fun navigateTo(destination: ManagementDestination) {
+    override fun navigateTo(destination: NavigationRoute) {
         navigation.bringToFront(destination)
     }
 
+    private fun handleBack(parentDestination: NavigationRoute? = ManagementMainNavigation.Main) {
+        if ((backHandler as? BackDispatcher)?.back() == true) {
+            return
+        }
+        val items = stack.value.items
+        val previousConfig = if (items.size >= 2) items[items.size - 2].configuration else null
+
+        if (previousConfig != null && (parentDestination == null || previousConfig == parentDestination)) {
+            navigation.pop()
+        } else if (parentDestination != null && parentDestination != stack.value.active.configuration) {
+            navigation.navigate { currentStack ->
+                currentStack.dropLast(1) + parentDestination
+            }
+        }
+    }
+
+    @OptIn(DelicateDecomposeApi::class)
     private fun createChild(
-        config: ManagementDestination,
+        config: NavigationRoute,
         context: ComponentContext
     ): ManagementRootComponent.Child = when (config) {
-        is ManagementDestination.Main -> ManagementRootComponent.Child.Main(
+        ManagementMainNavigation.Main -> ManagementRootComponent.Child.Main(
             MainManagementComponentImpl(
                 componentContext = context,
-                onNavigateToEditAuthSettings = { navigation.bringToFront(ManagementDestination.EditAuthSettings()) },
-                onNavigateToEditGlobalSettings = { navigation.bringToFront(ManagementDestination.EditGlobalSettings()) },
-                onNavigateToEditSecuritySettings = { navigation.bringToFront(ManagementDestination.EditSecuritySettings()) },
-                onNavigateToGlobalUserList = { navigation.bringToFront(ManagementDestination.GlobalUserList) },
-                onNavigateToAuditEventList = { navigation.bringToFront(ManagementDestination.AuditEventList()) },
-                onNavigateToGlobalSessionList = { navigation.bringToFront(ManagementDestination.GlobalSessionList) },
-                onNavigateToGlobalIdentifierList = { navigation.bringToFront(ManagementDestination.GlobalIdentifierList) }
+                onNavigateToGlobalUserList = { navigation.bringToFront(ManagementUsersNavigation.UserList()) },
+                onNavigateToGlobalSessionList = { navigation.bringToFront(ManagementUsersNavigation.GlobalSessionList()) },
+                onNavigateToGlobalIdentifierList = { navigation.bringToFront(ManagementUsersNavigation.GlobalIdentifierList()) },
+                onNavigateToAuditEventList = { navigation.bringToFront(ManagementAuditNavigation.AuditEventList()) },
+                onNavigateToSettings = { navigation.bringToFront(ManagementSettingsNavigation.Main) }
             )
         )
-        is ManagementDestination.EditAuthSettings -> {
-            val initialDialogConfig = when (config.params.dialog) {
-                ManagementDeepLinkConstants.Value.DIALOG_RESET_CONFIRM -> SettingsDialogConfig.ConfirmReset
-                else -> null
-            }
-            ManagementRootComponent.Child.EditAuthSettings(
-                EditAuthSettingsComponentImpl(
-                    componentContext = context,
-                    initialDialogConfig = initialDialogConfig,
-                    getManagementAuthSettingsUseCase = getManagementAuthSettingsUseCase,
-                    saveRemoteAuthSettingsUseCase = saveRemoteAuthSettingsUseCase,
-                    resetRemoteAuthSettingsUseCase = resetRemoteAuthSettingsUseCase,
-                    onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
-                )
+        ManagementSettingsNavigation.Main -> ManagementRootComponent.Child.SettingsMain(
+            SettingsMainComponentImpl(
+                componentContext = context,
+                onNavigateToEditAuthSettings = { navigation.bringToFront(ManagementAuthSettingsNavigation.AuthSettings) },
+                onNavigateToEditGlobalSettings = { navigation.bringToFront(ManagementSettingsNavigation.GlobalSettings) },
+                onNavigateToEditSecuritySettings = { navigation.bringToFront(ManagementSecurityNavigation.SecuritySettings) },
+                onBack = { handleBack() }
             )
-        }
-        is ManagementDestination.EditGlobalSettings -> {
-            val initialDialogConfig = when (config.params.dialog) {
-                ManagementDeepLinkConstants.Value.DIALOG_RESET_CONFIRM -> SettingsDialogConfig.ConfirmReset
-                else -> null
-            }
-            ManagementRootComponent.Child.EditGlobalSettings(
-                EditGlobalSettingsComponentImpl(
-                    componentContext = context,
-                    initialDialogConfig = initialDialogConfig,
-                    getManagementGlobalSettingsUseCase = getManagementGlobalSettingsUseCase,
-                    saveRemoteGlobalSettingsUseCase = saveRemoteGlobalSettingsUseCase,
-                    resetRemoteGlobalSettingsUseCase = resetRemoteGlobalSettingsUseCase,
-                    onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
-                )
+        )
+        ManagementAuthSettingsNavigation.AuthSettings -> ManagementRootComponent.Child.EditAuthSettings(
+            EditAuthSettingsComponentImpl(
+                componentContext = context,
+                getManagementAuthSettingsUseCase = getManagementAuthSettingsUseCase,
+                saveRemoteAuthSettingsUseCase = saveRemoteAuthSettingsUseCase,
+                resetRemoteAuthSettingsUseCase = resetRemoteAuthSettingsUseCase,
+                onBack = { handleBack(ManagementSettingsNavigation.Main) }
             )
-        }
-        is ManagementDestination.EditSecuritySettings -> {
-            val initialDialogConfig = when (config.params.dialog) {
-                ManagementDeepLinkConstants.Value.DIALOG_RESET_CONFIRM -> SettingsDialogConfig.ConfirmReset
-                else -> null
-            }
-            ManagementRootComponent.Child.EditSecuritySettings(
-                EditSecuritySettingsComponentImpl(
-                    componentContext = context,
-                    initialDialogConfig = initialDialogConfig,
-                    getManagementSecuritySettingsUseCase = getManagementSecuritySettingsUseCase,
-                    saveRemoteSecuritySettingsUseCase = saveRemoteSecuritySettingsUseCase,
-                    resetRemoteSecuritySettingsUseCase = resetRemoteSecuritySettingsUseCase,
-                    onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
-                )
+        )
+        ManagementSettingsNavigation.GlobalSettings -> ManagementRootComponent.Child.EditGlobalSettings(
+            EditGlobalSettingsComponentImpl(
+                componentContext = context,
+                getManagementGlobalSettingsUseCase = getManagementGlobalSettingsUseCase,
+                saveRemoteGlobalSettingsUseCase = saveRemoteGlobalSettingsUseCase,
+                resetRemoteGlobalSettingsUseCase = resetRemoteGlobalSettingsUseCase,
+                onBack = { handleBack(ManagementSettingsNavigation.Main) }
             )
-        }
-        is ManagementDestination.GlobalUserList -> ManagementRootComponent.Child.GlobalUserList(
+        )
+        ManagementSecurityNavigation.SecuritySettings -> ManagementRootComponent.Child.EditSecuritySettings(
+            EditSecuritySettingsComponentImpl(
+                componentContext = context,
+                getManagementSecuritySettingsUseCase = getManagementSecuritySettingsUseCase,
+                saveRemoteSecuritySettingsUseCase = saveRemoteSecuritySettingsUseCase,
+                resetRemoteSecuritySettingsUseCase = resetRemoteSecuritySettingsUseCase,
+                onBack = { handleBack(ManagementSettingsNavigation.Main) }
+            )
+        )
+        is ManagementUsersNavigation.UserList -> ManagementRootComponent.Child.GlobalUserList(
             GlobalUserListComponentImpl(
                 componentContext = context,
+                params = config.params,
                 getUsersUseCase = getUsersUseCase,
                 onNavigateToUserDetail = { userId ->
-                    navigation.bringToFront(ManagementDestination.UserDetail(UserDetailParams(userId.asHexDashString())))
+                    navigation.bringToFront(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString())))
                 },
                 onNavigateToCreateUser = {
-                    navigation.bringToFront(ManagementDestination.CreateUser)
+                    navigation.bringToFront(ManagementUsersNavigation.CreateUser)
                 },
-                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
+                onBack = { handleBack() }
             )
         )
-        is ManagementDestination.UserDetail -> ManagementRootComponent.Child.UserDetail(
+        is ManagementUsersNavigation.UserDetail -> ManagementRootComponent.Child.UserDetail(
             UserDetailComponentImpl(
                 componentContext = context,
                 params = config.params,
@@ -202,99 +211,98 @@ class ManagementRootComponentImpl(
                 deleteUserUseCase = deleteUserUseCase,
                 managementDisableTotpUseCase = managementDisableTotpUseCase,
                 onNavigateToSessions = { userId ->
-                    navigation.bringToFront(ManagementDestination.UserSessionList(UserSessionListParams(userId.asHexDashString())))
+                    navigation.bringToFront(ManagementUsersNavigation.UserSessionList(ManagementUserSessionListParams(userId = userId.asHexDashString())))
                 },
                 onNavigateToIdentifiers = { userId ->
-                    navigation.bringToFront(ManagementDestination.UserIdentifierList(UserIdentifierListParams(userId.asHexDashString())))
+                    navigation.bringToFront(ManagementUsersNavigation.UserIdentifierList(ManagementUserIdentifierListParams(userId = userId.asHexDashString())))
                 },
                 onNavigateToAuditEvents = { userId ->
                     navigation.bringToFront(
-                        ManagementDestination.AuditEventList(
-                            params = AuditEventListParams(
-                                initialFilters = AuditEventListParams.Filters(
-                                    actorIds = listOf(userId.value.toHexDashString())
-                                )
+                        ManagementAuditNavigation.AuditEventList(
+                            params = ManagementAuditEventListParams(
+                                actorIds = listOf(userId.asHexDashString())
                             )
                         )
                     )
                 },
-                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
+                onBack = { handleBack(ManagementUsersNavigation.UserList()) }
             )
         )
-        ManagementDestination.CreateUser -> ManagementRootComponent.Child.CreateUser(
+        ManagementUsersNavigation.CreateUser -> ManagementRootComponent.Child.CreateUser(
             CreateUserComponentImpl(
                 componentContext = context,
                 createUserUseCase = createUserUseCase,
                 onSuccess = navigation::pop,
-                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
+                onBack = { handleBack(ManagementUsersNavigation.UserList()) }
             )
         )
-        is ManagementDestination.UserSessionList -> ManagementRootComponent.Child.UserSessionList(
+        is ManagementUsersNavigation.UserSessionList -> ManagementRootComponent.Child.UserSessionList(
             UserSessionListComponentImpl(
                 componentContext = context,
                 params = config.params,
-                managementGetSessionsUseCase = managementGetSessionsUseCase,
+                managementGetUserSessionsUseCase = managementGetUserSessionsUseCase,
                 managementDeleteSessionUseCase = managementDeleteSessionUseCase,
                 managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase,
                 onNavigateToSessionDetail = { session ->
-                    navigation.bringToFront(ManagementDestination.SessionDetail(SessionDetailParams(session.id.asHexDashString())))
+                    navigation.bringToFront(ManagementUsersNavigation.SessionDetail(SessionDetailParams(sessionId = session.id.asHexDashString())))
                 },
-                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
+                onBack = { handleBack(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = config.params.userId))) }
             )
         )
-        is ManagementDestination.UserIdentifierList -> ManagementRootComponent.Child.UserIdentifierList(
+        is ManagementUsersNavigation.UserIdentifierList -> ManagementRootComponent.Child.UserIdentifierList(
             UserIdentifierListComponentImpl(
                 componentContext = context,
                 params = config.params,
-                managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+                managementGetUserIdentifiersUseCase = managementGetUserIdentifiersUseCase,
                 onIdentifierSelect = { identifierId ->
-                    navigation.bringToFront(ManagementDestination.IdentifierDetail(IdentifierDetailParams(identifierId)))
+                    navigation.bringToFront(ManagementUsersNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId)))
                 },
-                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
+                onBack = { handleBack(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = config.params.userId))) }
             )
         )
-        is ManagementDestination.AuditEventList -> ManagementRootComponent.Child.AuditEventList(
+        is ManagementAuditNavigation.AuditEventList -> ManagementRootComponent.Child.AuditEventList(
             AuditEventListComponentImpl(
                 componentContext = context,
                 params = config.params,
                 getAuditEventsUseCase = getAuditEventsUseCase,
                 onNavigateToEventDetail = { eventId ->
-                    navigation.bringToFront(ManagementDestination.AuditEventDetail(AuditEventDetailParams(eventId.asHexDashString())))
+                    navigation.bringToFront(ManagementAuditNavigation.AuditEventDetail(ManagementAuditEventDetailParams(eventId = eventId.asHexDashString())))
                 },
-                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
+                onBack = { handleBack() }
             )
         )
-        is ManagementDestination.AuditEventDetail -> ManagementRootComponent.Child.AuditEventDetail(
+        is ManagementAuditNavigation.AuditEventDetail -> ManagementRootComponent.Child.AuditEventDetail(
             AuditEventDetailComponentImpl(
                 componentContext = context,
                 params = config.params,
                 userRepository = userRepository,
                 getAuditEventUseCase = getAuditEventUseCase,
                 onNavigateToUserDetail = { userId ->
-                    navigation.bringToFront(ManagementDestination.UserDetail(UserDetailParams(userId.asHexDashString())))
+                    navigation.bringToFront(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString())))
                 },
                 onNavigateToSessionDetail = { sessionId ->
-                    navigation.bringToFront(ManagementDestination.SessionDetail(SessionDetailParams(sessionId.asHexDashString())))
+                    navigation.bringToFront(ManagementUsersNavigation.SessionDetail(SessionDetailParams(sessionId = sessionId.asHexDashString())))
                 },
                 onNavigateToIdentifierDetail = { identifierId ->
-                    navigation.bringToFront(ManagementDestination.IdentifierDetail(IdentifierDetailParams(identifierId.asHexDashString())))
+                    navigation.bringToFront(ManagementUsersNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId.asHexDashString())))
                 },
                 onNavigateToProfile = onNavigateToProfile,
-                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
+                onBack = { handleBack(ManagementAuditNavigation.AuditEventList()) }
             )
         )
-        is ManagementDestination.GlobalSessionList -> ManagementRootComponent.Child.GlobalSessionList(
+        is ManagementUsersNavigation.GlobalSessionList -> ManagementRootComponent.Child.GlobalSessionList(
             GlobalSessionListComponentImpl(
                 componentContext = context,
+                params = config.params,
                 managementGetSessionsUseCase = managementGetSessionsUseCase,
                 managementDeleteSessionUseCase = managementDeleteSessionUseCase,
                 onNavigateToSessionDetail = { session ->
-                    navigation.bringToFront(ManagementDestination.SessionDetail(SessionDetailParams(session.id.asHexDashString())))
+                    navigation.bringToFront(ManagementUsersNavigation.SessionDetail(SessionDetailParams(sessionId = session.id.asHexDashString())))
                 },
-                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
+                onBack = { handleBack() }
             )
         )
-        is ManagementDestination.SessionDetail -> ManagementRootComponent.Child.SessionDetail(
+        is ManagementUsersNavigation.SessionDetail -> ManagementRootComponent.Child.SessionDetail(
             SessionDetailComponentImpl(
                 componentContext = context,
                 params = config.params,
@@ -302,38 +310,37 @@ class ManagementRootComponentImpl(
                 fetchSession = managementGetSessionUseCase?.let { useCase ->
                     { targetId -> useCase(targetId.asHexDashString()) }
                 },
-                revokeSession = { targetId ->
-                    if (managementGetSessionUseCase == null) return@SessionDetailComponentImpl AppResult.Error(CommonError.Unknown())
-
-                    when (val sessionRes = managementGetSessionUseCase(targetId.asHexDashString())) {
-                        is AppResult.Success -> {
-                            managementDeleteSessionUseCase(sessionRes.data.userId, targetId.asHexDashString())
+                revokeSession = if (managementGetSessionUseCase != null) {
+                    { targetId ->
+                        when (val sessionRes = managementGetSessionUseCase.invoke(targetId.asHexDashString())) {
+                            is AppResult.Success -> managementDeleteSessionUseCase.invoke(sessionRes.data.userId, targetId.asHexDashString())
+                            is AppResult.Error -> sessionRes
                         }
-                        is AppResult.Error -> AppResult.Error(sessionRes.error)
                     }
-                },
-                onSessionRevoked = { stack.value.notifySessionRevoked(it) },
+                } else null,
+                onSessionRevoked = { },
                 onNavigateToIdentifierDetail = { identifierId ->
-                    navigation.bringToFront(ManagementDestination.IdentifierDetail(IdentifierDetailParams(identifierId.asHexDashString())))
+                    navigation.bringToFront(ManagementUsersNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId.asHexDashString())))
                 },
                 onNavigateToUserDetail = { userId ->
-                    navigation.bringToFront(ManagementDestination.UserDetail(UserDetailParams(userId.asHexDashString())))
+                    navigation.bringToFront(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString())))
                 },
-                onNavigateToProfile = onNavigateToProfile,
-                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
+                onNavigateToProfile = { navigation.popTo(0) },
+                onBack = { handleBack(ManagementUsersNavigation.GlobalSessionList()) }
             )
         )
-        is ManagementDestination.GlobalIdentifierList -> ManagementRootComponent.Child.GlobalIdentifierList(
+        is ManagementUsersNavigation.GlobalIdentifierList -> ManagementRootComponent.Child.GlobalIdentifierList(
             GlobalIdentifierListComponentImpl(
                 componentContext = context,
+                params = config.params,
                 managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
                 onIdentifierSelect = { identifierId ->
-                    navigation.bringToFront(ManagementDestination.IdentifierDetail(IdentifierDetailParams(identifierId)))
+                    navigation.bringToFront(ManagementUsersNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId)))
                 },
-                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
+                onBack = { handleBack() }
             )
         )
-        is ManagementDestination.IdentifierDetail -> ManagementRootComponent.Child.IdentifierDetail(
+        is ManagementUsersNavigation.IdentifierDetail -> ManagementRootComponent.Child.IdentifierDetail(
             IdentifierDetailComponentImpl(
                 componentContext = context,
                 params = config.params,
@@ -341,28 +348,30 @@ class ManagementRootComponentImpl(
                 fetchIdentifier = managementGetIdentifierUseCase?.let { useCase ->
                     { targetId -> useCase(targetId.asHexDashString()) }
                 },
-                deleteIdentifier = { targetId ->
-                    if (managementGetIdentifierUseCase == null) return@IdentifierDetailComponentImpl AppResult.Error(CommonError.Unknown())
-
-                    when (val idRes = managementGetIdentifierUseCase(targetId.asHexDashString())) {
-                        is AppResult.Success -> managementDeleteIdentifierUseCase(idRes.data.userId, targetId.asHexDashString())
-                        is AppResult.Error -> AppResult.Error(idRes.error)
+                deleteIdentifier = if (managementGetIdentifierUseCase != null && managementDeleteIdentifierUseCase != null) {
+                    { targetId ->
+                        when (val idRes = managementGetIdentifierUseCase.invoke(targetId.asHexDashString())) {
+                            is AppResult.Success -> managementDeleteIdentifierUseCase.invoke(idRes.data.userId, targetId.asHexDashString())
+                            is AppResult.Error -> idRes
+                        }
                     }
-                },
-                deletePassword = { targetId ->
-                    if (managementGetIdentifierUseCase == null) return@IdentifierDetailComponentImpl AppResult.Error(CommonError.Unknown())
-
-                    when (val idRes = managementGetIdentifierUseCase(targetId.asHexDashString())) {
-                        is AppResult.Success -> managementDeleteIdentifierPasswordUseCase(idRes.data.userId, targetId.asHexDashString())
-                        is AppResult.Error -> AppResult.Error(idRes.error)
-                    }
-                },
-                onIdentifierDeleted = { stack.value.notifyIdentifierDeleted(it) },
+                } else null,
+                onIdentifierDeleted = { },
                 onNavigateToUserDetail = { userId ->
-                    navigation.bringToFront(ManagementDestination.UserDetail(UserDetailParams(userId.asHexDashString())))
+                    navigation.bringToFront(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString())))
                 },
-                onNavigateToProfile = onNavigateToProfile,
-                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() }
+                onNavigateToProfile = { navigation.popTo(0) },
+                onBack = { handleBack(ManagementUsersNavigation.GlobalIdentifierList()) }
+            )
+        )
+        else -> ManagementRootComponent.Child.Main(
+            MainManagementComponentImpl(
+                componentContext = context,
+                onNavigateToGlobalUserList = { navigation.bringToFront(ManagementUsersNavigation.UserList()) },
+                onNavigateToGlobalSessionList = { navigation.bringToFront(ManagementUsersNavigation.GlobalSessionList()) },
+                onNavigateToGlobalIdentifierList = { navigation.bringToFront(ManagementUsersNavigation.GlobalIdentifierList()) },
+                onNavigateToAuditEventList = { navigation.bringToFront(ManagementAuditNavigation.AuditEventList()) },
+                onNavigateToSettings = { navigation.bringToFront(ManagementSettingsNavigation.Main) }
             )
         )
     }

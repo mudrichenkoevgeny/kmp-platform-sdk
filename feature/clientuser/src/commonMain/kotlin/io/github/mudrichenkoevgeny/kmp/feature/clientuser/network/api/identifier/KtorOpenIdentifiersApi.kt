@@ -121,10 +121,18 @@ class KtorOpenIdentifiersApi(
         }
     }
 
-    override suspend fun emailChangePassword(request: EmailPasswordChangeRequest): AppResult<Unit> =
-        client.callResult {
-            post(OpenIdentifierRoutes.IDENTIFIER_EMAIL_CHANGE_PASSWORD) {
-                setBody(request)
-            }
+    override suspend fun emailChangePassword(
+        userIdentifierId: UserIdentifierId,
+        request: EmailPasswordChangeRequest
+    ): AppResult<Unit> = client.callResult {
+        post(
+            OpenIdentifierRoutes.IDENTIFIER_EMAIL_CHANGE_PASSWORD
+                .replace(
+                    "{${UserApiPaths.USER_IDENTIFIER_ID}}",
+                    userIdentifierId.asHexDashString()
+                )
+        ) {
+            setBody(request)
         }
+    }
 }

@@ -10,7 +10,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.mapper.otpconfirmation.toOtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.register.RegisterByEmailRequest
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.registration.RegistrationByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
 
 /**
@@ -31,7 +31,7 @@ class OpenRegistrationRepositoryImpl(
         confirmationCode: String
     ): AppResult<AuthData> {
         return registrationApi.registerByEmail(
-            RegisterByEmailRequest(email, password, confirmationCode)
+            RegistrationByEmailRequest(email, password, confirmationCode)
         ).mapSuccess { authDataPayload ->
             authDataPayload.toAuthData()
         }

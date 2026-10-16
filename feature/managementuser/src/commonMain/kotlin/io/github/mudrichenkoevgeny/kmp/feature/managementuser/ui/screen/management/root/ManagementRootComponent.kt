@@ -2,7 +2,6 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.ManagementDestination
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.detail.AuditEventDetailComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list.AuditEventListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.globallist.GlobalIdentifierListComponent
@@ -12,6 +11,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.auth.EditAuthSettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.global.EditGlobalSettingsComponent
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.main.SettingsMainComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.security.EditSecuritySettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create.CreateUserComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailComponent
@@ -20,21 +20,25 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.IdentifierListOwner
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SessionListOwner
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.NavigationRoute
 
 /**
  * Root Decompose component for management flows.
  */
 interface ManagementRootComponent {
     /** Navigation stack of child screens. */
-    val stack: Value<ChildStack<ManagementDestination, Child>>
+    val stack: Value<ChildStack<NavigationRoute, Child>>
 
     /** Navigate to an arbitrary destination (useful for deep links). */
-    fun navigateTo(destination: ManagementDestination)
+    fun navigateTo(destination: NavigationRoute)
 
     /** Active child component in the navigation stack. */
     sealed interface Child {
         /** Main management landing screen. */
         class Main(val component: MainManagementComponent) : Child
+
+        /** System main settings screen. */
+        class SettingsMain(val component: SettingsMainComponent) : Child
 
         /** Edit authentication settings screen. */
         class EditAuthSettings(val component: EditAuthSettingsComponent) : Child

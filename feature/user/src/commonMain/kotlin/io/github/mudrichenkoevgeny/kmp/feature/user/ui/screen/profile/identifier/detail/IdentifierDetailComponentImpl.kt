@@ -19,6 +19,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.toUserIdentifierIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.detail.IdentifierDetailParams
 import kotlinx.coroutines.launch
 
 /**
@@ -27,10 +28,9 @@ import kotlinx.coroutines.launch
  * Supports displaying identifier details and deleting/modifying credentials across both end-user and administrative contexts.
  *
  * @param componentContext Decompose [ComponentContext].
- * @param identifier Initial [UserIdentifierPrivate] model if available.
- * @param identifierId Target [UserIdentifierId] identifier.
+ * @param params Target identifier parameters.
  * @param userRepository Source of the current user profile state.
- * @param fetchIdentifier Suspend callback to fetch identifier details remotely when [identifier] is omitted.
+ * @param fetchIdentifier Suspend callback to fetch identifier details remotely.
  * @param deleteIdentifier Suspend callback to delete the target identifier.
  * @param changePassword Suspend callback to change password for email identifier.
  * @param deletePassword Suspend callback to delete password credential.
@@ -43,13 +43,11 @@ import kotlinx.coroutines.launch
  */
 class IdentifierDetailComponentImpl(
     componentContext: ComponentContext,
-    private val params: IdentifierDetailParams? = null,
-    private val identifier: UserIdentifierPrivate? = null,
-    private val identifierId: UserIdentifierId? = params?.identifierId ?: identifier?.id,
+    private val params: IdentifierDetailParams,
     private val userRepository: UserRepository? = null,
     private val fetchIdentifier: (suspend (UserIdentifierId) -> AppResult<UserIdentifierPrivate>)? = null,
     private val deleteIdentifier: (suspend (UserIdentifierId) -> AppResult<Unit>)? = null,
-    private val changePassword: (suspend (email: String, oldPass: String, newPass: String) -> AppResult<Unit>)? = null,
+    private val changePassword: (suspend (userIdentifierId: UserIdentifierId, oldPass: String, newPass: String) -> AppResult<Unit>)? = null,
     private val deletePassword: (suspend (UserIdentifierId) -> AppResult<Unit>)? = null,
     private val isCurrentIdentifier: Boolean? = null,
     private val authStorage: AuthStorage? = null,
@@ -64,9 +62,7 @@ class IdentifierDetailComponentImpl(
      */
     constructor(
         componentContext: ComponentContext,
-        params: IdentifierDetailParams? = null,
-        identifier: UserIdentifierPrivate? = null,
-        identifierId: UserIdentifierId? = params?.identifierId ?: identifier?.id,
+        params: IdentifierDetailParams,
         userRepository: UserRepository? = null,
         getUserIdentifierUseCase: GetUserIdentifierUseCase? = null,
         deleteUserIdentifierUseCase: DeleteUserIdentifierUseCase? = null,
@@ -80,8 +76,6 @@ class IdentifierDetailComponentImpl(
     ) : this(
         componentContext = componentContext,
         params = params,
-        identifier = identifier,
-        identifierId = identifierId,
         userRepository = userRepository,
         fetchIdentifier = getUserIdentifierUseCase?.let { useCase -> { id -> useCase(id) } },
         deleteIdentifier = deleteUserIdentifierUseCase?.let { useCase -> { id -> useCase(id) } },
@@ -94,6 +88,8 @@ class IdentifierDetailComponentImpl(
         onNavigateToProfile = onNavigateToProfile,
         onBack = onBack
     )
+
+    private val identifierId: UserIdentifierId? get() = params.typedIdentifierId
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue<IdentifierDetailScreenState>(IdentifierDetailScreenState.Loading)
@@ -123,7 +119,9 @@ class IdentifierDetailComponentImpl(
     override fun onDeleteIdentifierClick() {
         val current = _state.value as? IdentifierDetailScreenState.Content ?: return
         val targetId = identifierId ?: current.identifier.id
-        if (deleteIdentifier == null) return
+        if (deleteIdentifier == null) {
+            return
+        }
 
         _state.value = current.copy(actionLoading = true, actionError = null)
         scope.launch {
@@ -145,11 +143,14 @@ class IdentifierDetailComponentImpl(
 
     override fun onConfirmChangePasswordClick(oldPassword: String, newPassword: String) {
         val current = _state.value as? IdentifierDetailScreenState.Content ?: return
-        if (changePassword == null) return
+        val targetId = identifierId ?: current.identifier.id
+        if (changePassword == null) {
+            return
+        }
 
         _state.value = current.copy(actionLoading = true, actionError = null)
         scope.launch {
-            changePassword.invoke(current.identifier.identifier, oldPassword, newPassword)
+            changePassword.invoke(targetId, oldPassword, newPassword)
                 .onSuccess {
                     _state.value = current.copy(
                         actionLoading = false,
@@ -170,7 +171,9 @@ class IdentifierDetailComponentImpl(
     override fun onDeletePasswordClick() {
         val current = _state.value as? IdentifierDetailScreenState.Content ?: return
         val targetId = identifierId ?: current.identifier.id
-        if (deletePassword == null) return
+        if (deletePassword == null) {
+            return
+        }
 
         _state.value = current.copy(actionLoading = true, actionError = null)
         scope.launch {
@@ -205,18 +208,11 @@ class IdentifierDetailComponentImpl(
 
     private fun initializeIdentifier() {
         scope.launch {
-            val targetId = identifierId ?: identifier?.id
+            val targetId = identifierId
             val activeIdentifierId = authStorage?.getIdentifierId()?.toUserIdentifierIdOrNull()
             val resolvedIsCurrent = isCurrentIdentifier ?: (targetId != null && targetId == activeIdentifierId)
 
-            if (identifier != null) {
-                _state.value = IdentifierDetailScreenState.Content(
-                    identifier = identifier,
-                    isCurrentIdentifier = resolvedIsCurrent,
-                    canChangePassword = changePassword != null && identifier.userAuthProvider == UserAuthProvider.EMAIL,
-                    canDeletePassword = deletePassword != null && identifier.userAuthProvider == UserAuthProvider.EMAIL
-                )
-            } else if (targetId != null && fetchIdentifier != null) {
+            if (targetId != null && fetchIdentifier != null) {
                 _state.value = IdentifierDetailScreenState.Loading
                 fetchIdentifier(targetId)
                     .onSuccess { loaded ->
@@ -231,7 +227,9 @@ class IdentifierDetailComponentImpl(
                         _state.value = IdentifierDetailScreenState.Error(error)
                     }
             } else {
-                _state.value = IdentifierDetailScreenState.Error(CommonError.Unknown())
+                _state.value = IdentifierDetailScreenState.Error(
+                    CommonError.ContractViolation(throwable = IllegalStateException("Invalid identifierId in params"))
+                )
             }
         }
     }

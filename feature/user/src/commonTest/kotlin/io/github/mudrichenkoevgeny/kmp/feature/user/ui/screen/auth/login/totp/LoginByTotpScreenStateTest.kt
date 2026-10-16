@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp
 
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.login.totp.LoginByTotpMode
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -12,7 +13,7 @@ class LoginByTotpScreenStateTest {
             LoginByTotpScreenState.Content(
                 mfaToken = MFA_TOKEN,
                 code = VALID_TOTP_CODE,
-                mode = LoginByTotpScreenState.Mode.TOTP
+                mode = LoginByTotpMode.TOTP
             ).isCodeValid
         )
     }
@@ -23,7 +24,7 @@ class LoginByTotpScreenStateTest {
             LoginByTotpScreenState.Content(
                 mfaToken = MFA_TOKEN,
                 code = SHORT_TOTP_CODE,
-                mode = LoginByTotpScreenState.Mode.TOTP
+                mode = LoginByTotpMode.TOTP
             ).isCodeValid
         )
     }
@@ -34,7 +35,7 @@ class LoginByTotpScreenStateTest {
             LoginByTotpScreenState.Content(
                 mfaToken = MFA_TOKEN,
                 code = NON_DIGIT_TOTP_CODE,
-                mode = LoginByTotpScreenState.Mode.TOTP
+                mode = LoginByTotpMode.TOTP
             ).isCodeValid
         )
     }
@@ -45,7 +46,7 @@ class LoginByTotpScreenStateTest {
             LoginByTotpScreenState.Content(
                 mfaToken = MFA_TOKEN,
                 code = VALID_RECOVERY_CODE,
-                mode = LoginByTotpScreenState.Mode.RECOVERY_CODE
+                mode = LoginByTotpMode.RECOVERY_CODE
             ).isCodeValid
         )
     }
@@ -56,7 +57,7 @@ class LoginByTotpScreenStateTest {
             LoginByTotpScreenState.Content(
                 mfaToken = MFA_TOKEN,
                 code = BLANK_CODE,
-                mode = LoginByTotpScreenState.Mode.RECOVERY_CODE
+                mode = LoginByTotpMode.RECOVERY_CODE
             ).isCodeValid
         )
     }
@@ -67,7 +68,7 @@ class LoginByTotpScreenStateTest {
             LoginByTotpScreenState.Content(
                 mfaToken = MFA_TOKEN,
                 code = VALID_TOTP_CODE,
-                mode = LoginByTotpScreenState.Mode.TOTP,
+                mode = LoginByTotpMode.TOTP,
                 actionLoading = NOT_LOADING
             ).canSubmit
         )
@@ -79,7 +80,7 @@ class LoginByTotpScreenStateTest {
             LoginByTotpScreenState.Content(
                 mfaToken = MFA_TOKEN,
                 code = SHORT_TOTP_CODE,
-                mode = LoginByTotpScreenState.Mode.TOTP,
+                mode = LoginByTotpMode.TOTP,
                 actionLoading = NOT_LOADING
             ).canSubmit
         )
@@ -91,7 +92,7 @@ class LoginByTotpScreenStateTest {
             LoginByTotpScreenState.Content(
                 mfaToken = MFA_TOKEN,
                 code = VALID_TOTP_CODE,
-                mode = LoginByTotpScreenState.Mode.TOTP,
+                mode = LoginByTotpMode.TOTP,
                 actionLoading = LOADING
             ).canSubmit
         )

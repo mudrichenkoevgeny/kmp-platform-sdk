@@ -5,11 +5,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 
 @InternalApi
 open class MainManagementComponentMock : MainManagementComponent {
-    override fun onEditAuthSettingsClick() {}
-    override fun onEditGlobalSettingsClick() {}
-    override fun onEditSecuritySettingsClick() {}
     override fun onGlobalUserListClick() {}
-    override fun onAuditEventListClick() {}
     override fun onGlobalSessionListClick() {}
     override fun onGlobalIdentifierListClick() {}
+    override fun onAuditEventListClick() {}
+    override fun onSettingsClick() {}
 }

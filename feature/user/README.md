@@ -18,10 +18,10 @@ Kotlin Multiplatform feature module for user identity, authentication flows, ses
 - **Security API:** Dedicated [UserSecurityApi] for managing sensitive user security settings and verification.
 
 ### 4. Profile & Account Management
-- **Profile Root:** [ProfileRootComponent] manages a dedicated navigation stack for user settings.
-- **2FA/TOTP:** Full lifecycle for Time-based One-Time Passwords, including QR code setup and recovery codes management.
-- **Session Management:** [SessionListComponent] for viewing and revoking active authenticated sessions.
-- **Identity Management:** [IdentifierListComponent] for linking and verifying multiple email/phone identities.
+- **Profile Root:** [UserRootComponent] manages a dedicated navigation stack for user settings and account management.
+- **2FA/TOTP:** Full lifecycle for Time-based One-Time Passwords (`TotpMainComponent`), including QR code setup and recovery codes management (`TotpRecoveryCodesComponent`).
+- **Session Management:** [SelfSessionListComponent] for viewing and revoking active authenticated sessions.
+- **Identity Management:** [SelfIdentifierListComponent] for linking and verifying multiple email/phone identities.
 
 ### 5. Reactive Infrastructure
 - **WebSocket Integration:** [UserWebSocketMessageHandler] listens for real-time identity updates, such as profile changes or session invalidation.
@@ -29,9 +29,9 @@ Kotlin Multiplatform feature module for user identity, authentication flows, ses
 - **Throttling:** [ConfirmationRepository] manages client-side cooldowns for sending verification codes (SMS/Email) using [ConfirmationType].
 
 ### 6. UI & Navigation
-- **Decompose Routing:** [ProfileRootComponent] hosts management screens for Security, TOTP, Sessions, and Identifiers.
-- **Screen Parameter Encapsulation (`*Params`):** Parametric screen configurations wrap arguments in dedicated serializable data classes (`SessionDetailParams`, `IdentifierDetailParams`).
-- **Deep Link Parsing & Formatting:** [ProfileDeepLinkParser] and [ProfileUrlFormatter] parse and format profile deep links (e.g. `/profile/sessions/{id}`, `/profile/totp`) using `ProfileDeepLinkConstants` (with nested `Segment` object).
+- **Decompose Routing:** [UserRootComponent] hosts management screens for TOTP (`ClientUserNavigation.TotpMain`), Sessions (`ClientUserNavigation.SessionList`), and Identifiers (`ClientUserNavigation.IdentifierList`).
+- **Screen Parameter Encapsulation (`*Params`):** Parametric screen configurations wrap arguments in dedicated serializable data classes (`SessionDetailParams`, `IdentifierDetailParams`, `TotpMainParams`, `SelfSessionListParams`, `SelfIdentifierListParams`).
+- **Deep Link Parsing & Formatting:** [UserDeepLinkParser] parses raw URLs directly into typed `shared-foundation` `ClientUserNavigation` routes, and [UserUrlFormatter] formats typed destinations into canonical URLs using `destination.toFullUrl(baseUrl)`.
 - **Validation:** [FieldValidator] provides conservative client-side checks for emails, phone numbers, and TOTP codes.
 - **Legal Integration:** Standardized [LegalFooter] for Privacy Policy and Terms of Service links.
 - **UI Components:** Reusable [AuthProviderGrid] and [AuthProviderButton] for consistent social login presentation.
@@ -66,19 +66,6 @@ fun init(clientUserComponent: ClientUserComponent) {
         listOf(clientUserComponent.userWebSocketMessageHandler)
     )
 }
-```
-
-### 3. UI Integration (Decompose)
-To launch the authentication flow (Welcome -> Login -> OTP), use the LoginRootComponent factory:
-
-```kotlin
-val loginRoot = LoginRootComponentImpl(
-    componentContext = childContext("login_root"),
-    settingsComponent = settingsComponent,
-    securityComponent = securityComponent,
-    userComponent = userComponent,
-    onFinished = { }
-)
 ```
 
 ---
@@ -126,6 +113,8 @@ Compose Multiplatform resources for this module are generated with `publicResCla
 [UserWebSocketMessageHandler]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/network/websocket/messagehandler/UserWebSocketMessageHandler.kt
 [AuthProviderGrid]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/component/auth/AuthProviderGrid.kt
 [LegalFooter]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/component/legal/LegalFooter.kt
-[ProfileRootComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/screen/profile/ProfileRootComponent.kt
-[SessionListComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/screen/profile/session/SessionListComponent.kt
-[IdentifierListComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/screen/profile/identifier/IdentifierListComponent.kt
+[UserRootComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/screen/user/root/UserRootComponent.kt
+[SelfSessionListComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/screen/profile/session/list/SelfSessionListComponent.kt
+[SelfIdentifierListComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/screen/profile/identifier/list/SelfIdentifierListComponent.kt
+[UserDeepLinkParser]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/navigation/deeplink/UserDeepLinkParser.kt
+[UserUrlFormatter]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/navigation/deeplink/UserUrlFormatter.kt

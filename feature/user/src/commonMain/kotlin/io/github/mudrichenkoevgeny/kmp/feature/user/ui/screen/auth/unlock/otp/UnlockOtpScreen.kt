@@ -49,7 +49,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.confirmation_code
 import io.github.mudrichenkoevgeny.kmp.feature.user.enter_confirmation_code
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.unlock.otp.UnlockOtpComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.UnlockMethod
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.UnlockMethod
 import io.github.mudrichenkoevgeny.kmp.feature.user.resend_code
 import io.github.mudrichenkoevgeny.kmp.feature.user.resend_code_timer
 import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_account

@@ -211,7 +211,9 @@ class EncryptedUserStorage(
             userIdentifier.id != identifierId
         }
 
-        if (updatedItems.size == allItems.size) return
+        if (updatedItems.size == allItems.size) {
+            return
+        }
 
         val defaultSize = 20
         val totalCount = updatedItems.size
@@ -423,7 +425,9 @@ class EncryptedUserStorage(
             userSession.id != sessionId
         }
 
-        if (updatedItems.size == allItems.size) return
+        if (updatedItems.size == allItems.size) {
+            return
+        }
 
         val defaultSize = 20
         val totalCount = updatedItems.size
@@ -447,7 +451,9 @@ class EncryptedUserStorage(
             userSession.id !in idsToRemove
         }
 
-        if (updatedItems.size == allItems.size) return
+        if (updatedItems.size == allItems.size) {
+            return
+        }
 
         val defaultSize = 20
         val totalCount = updatedItems.size

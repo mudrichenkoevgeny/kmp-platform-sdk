@@ -5,9 +5,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.auth.markAsPublic
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.otpconfirmation.OtpConfirmationPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.data.AuthDataPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.register.RegisterByEmailRequest
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.registration.RegistrationByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.auth.register.OpenRegisterRoutes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.auth.registration.OpenRegistrationRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -18,9 +18,9 @@ class KtorRegistrationApi(
 ) : RegistrationApi {
 
     override suspend fun registerByEmail(
-        request: RegisterByEmailRequest
+        request: RegistrationByEmailRequest
     ): AppResult<AuthDataPayload> = client.callResult {
-        post(OpenRegisterRoutes.REGISTER_BY_EMAIL) {
+        post(OpenRegistrationRoutes.REGISTRATION_BY_EMAIL) {
             markAsPublic()
             setBody(request)
         }
@@ -29,7 +29,7 @@ class KtorRegistrationApi(
     override suspend fun sendRegistrationConfirmationToEmail(
         request: SendConfirmationToEmailRequest
     ): AppResult<OtpConfirmationPayload> = client.callResult {
-        post(OpenRegisterRoutes.SEND_REGISTER_CONFIRMATION_TO_EMAIL) {
+        post(OpenRegistrationRoutes.SEND_REGISTRATION_CONFIRMATION_TO_EMAIL) {
             markAsPublic()
             setBody(request)
         }

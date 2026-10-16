@@ -3,14 +3,15 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.backhandler.BackDispatcher
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit.GetAuditEventUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventId
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.toAuditEventIdOrNull
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.screen.management.audit.detail.ManagementAuditEventDetailParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.toUserIdentifierIdOrNull
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
  * Default implementation of [AuditEventDetailComponent].
  *
  * @param componentContext Decompose [ComponentContext].
- * @param eventId Unique audit event identifier.
+ * @param params Audit event detail parameters.
  * @param userRepository Source of the current user profile state.
  * @param getAuditEventUseCase Fetches audit event details.
  * @param onNavigateToUserDetail Navigates to user detail screen.
@@ -35,17 +36,17 @@ import kotlinx.coroutines.launch
  */
 class AuditEventDetailComponentImpl(
     componentContext: ComponentContext,
-    private val params: AuditEventDetailParams,
+    private val params: ManagementAuditEventDetailParams,
     private val userRepository: UserRepository,
     private val getAuditEventUseCase: GetAuditEventUseCase,
     private val onNavigateToUserDetail: ((UserId) -> Unit)? = null,
     private val onNavigateToSessionDetail: ((UserSessionId) -> Unit)? = null,
     private val onNavigateToIdentifierDetail: ((UserIdentifierId) -> Unit)? = null,
-    private val onNavigateToProfile: () -> Unit,
+    private val onNavigateToProfile: () -> Unit = {},
     private val onBack: () -> Unit
 ) : AuditEventDetailComponent, ComponentContext by componentContext {
 
-    private val eventId: AuditEventId get() = params.eventId
+    private val eventId: AuditEventId? get() = params.eventId.toAuditEventIdOrNull()
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue<AuditEventDetailScreenState>(AuditEventDetailScreenState.Loading)
@@ -54,73 +55,77 @@ class AuditEventDetailComponentImpl(
     private var currentUserId: UserId? = null
 
     init {
+        loadCurrentUserAndEvent()
+    }
+
+    override fun onRetry() {
+        loadEventDetails()
+    }
+
+    override fun onSubjectClick() {
+        val currentContent = _state.value as? AuditEventDetailScreenState.Content ?: return
+        val actorUserId = currentContent.event.actorId?.toUserIdOrNull() ?: return
+
+        if (actorUserId == currentUserId) {
+            onNavigateToProfile()
+        } else {
+            onNavigateToUserDetail?.invoke(actorUserId)
+        }
+    }
+
+    override fun onResourceClick() {
+        val currentContent = _state.value as? AuditEventDetailScreenState.Content ?: return
+        val event = currentContent.event
+        val resourceType = event.resource
+        val resourceId = event.resourceId ?: return
+
+        when (resourceType) {
+            UserAuditResourceType.USER -> {
+                val targetUserId = resourceId.toUserIdOrNull() ?: return
+                if (targetUserId == currentUserId) {
+                    onNavigateToProfile()
+                } else {
+                    onNavigateToUserDetail?.invoke(targetUserId)
+                }
+            }
+            UserAuditResourceType.SESSION -> {
+                val targetSessionId = resourceId.toUserSessionIdOrNull() ?: return
+                onNavigateToSessionDetail?.invoke(targetSessionId)
+            }
+            UserAuditResourceType.IDENTIFIER -> {
+                val targetIdentifierId = resourceId.toUserIdentifierIdOrNull() ?: return
+                onNavigateToIdentifierDetail?.invoke(targetIdentifierId)
+            }
+            else -> {}
+        }
+    }
+
+    override fun onBackClick() {
+        onBack()
+    }
+
+    private fun loadCurrentUserAndEvent() {
         scope.launch {
             userRepository.currentUser.collect { user ->
                 currentUserId = user?.id
             }
         }
-        loadEvent()
+        loadEventDetails()
     }
 
-    override fun onRetry() {
-        loadEvent()
-    }
-
-    override fun onBackClick() {
-        if ((backHandler as? BackDispatcher)?.back() != true) {
-            onBack()
+    private fun loadEventDetails() {
+        val targetEventId = eventId
+        if (targetEventId == null) {
+            _state.value = AuditEventDetailScreenState.Error(
+                CommonError.ContractViolation(throwable = IllegalStateException("Invalid eventId in params"))
+            )
+            return
         }
-    }
 
-    override fun onResourceClick() {
-        val event = (_state.value as? AuditEventDetailScreenState.Content)?.event ?: return
-        val resourceIdStr = event.resourceId ?: return
-        val resourceName = event.resource.value
-
-        when {
-            resourceName.equals(UserAuditResourceType.IDENTIFIER.value, ignoreCase = true) -> {
-                resourceIdStr.toUserIdentifierIdOrNull()?.let { id ->
-                    onNavigateToIdentifierDetail?.invoke(id)
-                }
-            }
-            resourceName.equals(UserAuditResourceType.SESSION.value, ignoreCase = true) -> {
-                resourceIdStr.toUserSessionIdOrNull()?.let { id ->
-                    onNavigateToSessionDetail?.invoke(id)
-                }
-            }
-            resourceName.equals(UserAuditResourceType.USER.value, ignoreCase = true) -> {
-                resourceIdStr.toUserIdOrNull()?.let { userId ->
-                    if (currentUserId != null && userId == currentUserId) {
-                        onNavigateToProfile()
-                    } else {
-                        onNavigateToUserDetail?.invoke(userId)
-                    }
-                }
-            }
-        }
-    }
-
-    override fun onSubjectClick() {
-        val event = (_state.value as? AuditEventDetailScreenState.Content)?.event ?: return
-        val actorIdStr = event.actorId ?: return
-        val isUserActor = event.actorType == AuditActorType.USER ||
-                event.actorType.value.equals(AuditActorType.USER.value, ignoreCase = true)
-
-        if (isUserActor) {
-            actorIdStr.toUserIdOrNull()?.let { userId ->
-                if (currentUserId != null && userId == currentUserId) {
-                    onNavigateToProfile()
-                } else {
-                    onNavigateToUserDetail?.invoke(userId)
-                }
-            }
-        }
-    }
-
-    private fun loadEvent() {
         _state.value = AuditEventDetailScreenState.Loading
+
         scope.launch {
-            getAuditEventUseCase(eventId.asHexDashString())
+            getAuditEventUseCase(targetEventId.asHexDashString())
                 .onSuccess { event ->
                     _state.value = AuditEventDetailScreenState.Content(event = event)
                 }

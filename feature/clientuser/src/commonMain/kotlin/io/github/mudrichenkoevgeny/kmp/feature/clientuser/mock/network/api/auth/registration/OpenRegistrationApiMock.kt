@@ -6,7 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.registration.RegistrationApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.otpconfirmation.OtpConfirmationPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.data.AuthDataPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.register.RegisterByEmailRequest
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.registration.RegistrationByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
 
 @InternalApi
@@ -15,10 +15,10 @@ open class OpenRegistrationApiMock : RegistrationApi {
     var registerByEmailResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
     var sendRegistrationConfirmationToEmailResult: AppResult<OtpConfirmationPayload> = AppResult.Error(CommonError.Unknown())
 
-    var lastRegisterByEmailRequest: RegisterByEmailRequest? = null
+    var lastRegisterByEmailRequest: RegistrationByEmailRequest? = null
     var lastSendRegistrationConfirmationToEmailRequest: SendConfirmationToEmailRequest? = null
 
-    override suspend fun registerByEmail(request: RegisterByEmailRequest): AppResult<AuthDataPayload> {
+    override suspend fun registerByEmail(request: RegistrationByEmailRequest): AppResult<AuthDataPayload> {
         lastRegisterByEmailRequest = request
         return registerByEmailResult
     }

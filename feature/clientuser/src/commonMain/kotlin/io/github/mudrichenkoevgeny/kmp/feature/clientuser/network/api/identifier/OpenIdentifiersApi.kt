@@ -108,8 +108,12 @@ interface OpenIdentifiersApi {
     /**
      * Changes the password for the signed-in user.
      *
+     * @param userIdentifierId Target identifier ID.
      * @param request Current and new password payload from the shared contract.
      * @return Success indicator, or a mapped failure.
      */
-    suspend fun emailChangePassword(request: EmailPasswordChangeRequest): AppResult<Unit>
+    suspend fun emailChangePassword(
+        userIdentifierId: UserIdentifierId,
+        request: EmailPasswordChangeRequest
+    ): AppResult<Unit>
 }

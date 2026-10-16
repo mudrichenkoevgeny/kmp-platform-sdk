@@ -4,15 +4,14 @@ import com.arkivanov.decompose.ComponentContext
 import io.github.mudrichenkoevgeny.kmp.core.common.di.CommonComponent
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.ClientLoginDestination
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.root.ClientLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.root.ClientLoginRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserStorageModule
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.root.UserRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.root.UserRootComponentImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -227,46 +226,43 @@ class ClientUserComponent(
     val observeAuthSettingsUseCase get() = useCaseModule.observeAuthSettingsUseCase
 
     /**
-     * Creates the root Decompose component for the profile management flow.
+     * Creates the root Decompose component for the user management flow.
      *
      * @param componentContext Decompose context for the new component.
-     * @param onNavigateToLogin Invoked when the user needs to sign in from the profile.
-     * @return A new instance of [ProfileRootComponent].
+     * @param onNavigateToLogin Invoked when the user needs to sign in.
+     * @return A new instance of [UserRootComponent].
      */
-    fun createProfileComponent(
+    fun createUserComponent(
         componentContext: ComponentContext,
         onNavigateToLogin: () -> Unit
-    ): ProfileRootComponent = ProfileRootComponentImpl(
+    ): UserRootComponent = UserRootComponentImpl(
         componentContext = componentContext,
         appType = AppType.CLIENT,
         userRepository = userRepository,
+        authStorage = authStorage,
+        identifierRepository = clientUserRepositoryModule.identifierRepository,
         logoutUseCase = logoutUseCase,
         scheduleUserDeletionUseCase = scheduleUserDeletionUseCase,
-        restoreUserUseCase = restoreUserUseCase,
-        getAuthSettingsUseCase = getAuthSettingsUseCase,
-        observeAuthSettingsUseCase = observeAuthSettingsUseCase,
         getAvailableUserAuthProvidersUseCase = getAvailableUserAuthProvidersUseCase,
-        setupTotpUseCase = setupTotpUseCase,
-        enableTotpUseCase = enableTotpUseCase,
-        disableTotpUseCase = disableTotpUseCase,
-        getRecoveryCodesUseCase = getRecoveryCodesUseCase,
-        regenerateRecoveryCodesUseCase = regenerateRecoveryCodesUseCase,
-        getSessionsUseCase = getSessionsUseCase,
-        getSessionUseCase = getSessionUseCase,
-        deleteSessionUseCase = deleteSessionUseCase,
-        deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase,
         getUserIdentifiersUseCase = getUserIdentifiersUseCase,
-        getUserIdentifierUseCase = getUserIdentifierUseCase,
-        deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
-        identifierRepository = clientUserRepositoryModule.identifierRepository,
         sendAddEmailIdentifierConfirmationUseCase = sendAddEmailIdentifierConfirmationUseCase,
         addUserIdentifierEmailUseCase = addUserIdentifierEmailUseCase,
         sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase,
         addUserIdentifierPhoneUseCase = addUserIdentifierPhoneUseCase,
         addUserIdentifierGoogleUseCase = useCaseModule.addUserIdentifierGoogleUseCase,
+        getSessionsUseCase = getSessionsUseCase,
+        deleteSessionUseCase = deleteSessionUseCase,
+        deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase,
+        setupTotpUseCase = setupTotpUseCase,
+        enableTotpUseCase = enableTotpUseCase,
+        disableTotpUseCase = disableTotpUseCase,
+        getRecoveryCodesUseCase = getRecoveryCodesUseCase,
+        regenerateRecoveryCodesUseCase = regenerateRecoveryCodesUseCase,
+        getSessionUseCase = getSessionUseCase,
+        getUserIdentifierUseCase = getUserIdentifierUseCase,
+        deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
         emailChangePasswordUseCase = emailChangePasswordUseCase,
-        onNavigateToLogin = onNavigateToLogin,
-        authStorage = authStorage
+        onNavigateToLogin = onNavigateToLogin
     )
 
     private val userWebSocketModule = ClientUserWebSocketModule(
@@ -289,11 +285,9 @@ class ClientUserComponent(
      */
     fun createLoginRootDialogComponent(
         componentContext: ComponentContext,
-        initialDestination: ClientLoginDestination = ClientLoginDestination.Welcome,
         onFinished: () -> Unit
     ): ClientLoginRootComponent = ClientLoginRootComponentImpl(
         componentContext = componentContext,
-        initialDestination = initialDestination,
         settingsComponent = settingsComponent,
         securityComponent = securityComponent,
         clientUserComponent = this,

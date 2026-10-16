@@ -6,167 +6,190 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.navigate
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.di.ClientUserComponent
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.ClientLoginDestination
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.phone.LoginByPhoneComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.phone.LoginByPhoneStepConfig
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email.RegistrationByEmailComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email.RegistrationByEmailStepConfig
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.pendingdeletion.PendingDeletionComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpParams
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.AccountUnlockParams
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.root.UnlockRootComponentImpl
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientAuthNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.login.totp.LoginByTotpParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.methodselection.UnlockMethodSelectionParams
 
 class ClientLoginRootComponentImpl(
     componentContext: ComponentContext,
-    initialDestination: ClientLoginDestination = ClientLoginDestination.Welcome,
     private val settingsComponent: SettingsComponent,
     private val securityComponent: SecurityComponent,
     private val clientUserComponent: ClientUserComponent,
     private val onFinished: () -> Unit
 ) : ClientLoginRootComponent, ComponentContext by componentContext {
 
-    private val navigation = StackNavigation<ClientLoginDestination>()
+    private val navigation = StackNavigation<ClientAuthNavigation>()
 
-    override val stack: Value<ChildStack<ClientLoginDestination, ClientLoginRootComponent.Child>> =
+    override val stack: Value<ChildStack<ClientAuthNavigation, ClientLoginRootComponent.Child>> =
         childStack(
             source = navigation,
-            serializer = ClientLoginDestination.serializer(),
-            initialConfiguration = initialDestination,
+            serializer = ClientAuthNavigation.serializer(),
+            initialConfiguration = ClientAuthNavigation.Main,
             handleBackButton = true,
             childFactory = ::createChild
         )
 
+    override fun navigateTo(destination: ClientAuthNavigation) {
+        navigation.bringToFront(destination)
+    }
+
+    private fun handleBack(parentDestination: ClientAuthNavigation? = ClientAuthNavigation.Main) {
+        if ((backHandler as? BackDispatcher)?.back() == true) {
+            return
+        }
+        val items = stack.value.items
+        val previousConfig = if (items.size >= 2) items[items.size - 2].configuration else null
+
+        if (previousConfig != null && (parentDestination == null || previousConfig == parentDestination)) {
+            navigation.pop()
+        } else if (parentDestination != null && parentDestination != stack.value.active.configuration) {
+            navigation.navigate { currentStack ->
+                currentStack.dropLast(1) + parentDestination
+            }
+        } else {
+            onFinished()
+        }
+    }
+
     @OptIn(DelicateDecomposeApi::class)
     private fun createChild(
-        config: ClientLoginDestination,
+        config: ClientAuthNavigation,
         context: ComponentContext
     ): ClientLoginRootComponent.Child = when (config) {
-        is ClientLoginDestination.Welcome -> ClientLoginRootComponent.Child.Welcome(
+        ClientAuthNavigation.Auth -> createChild(ClientAuthNavigation.Main, context)
+        ClientAuthNavigation.Main -> ClientLoginRootComponent.Child.Welcome(
             LoginWelcomeComponentImpl(
                 componentContext = context,
                 externalLauncher = clientUserComponent.commonComponent.externalLauncher,
                 getOpenGlobalSettingsUseCase = settingsComponent.getGlobalSettingsUseCase,
                 getAvailableUserAuthProvidersUseCase = clientUserComponent.getAvailableUserAuthProvidersUseCase,
                 loginByGoogleUseCase = clientUserComponent.loginByGoogleUseCase,
-                onNavigateToLoginByEmail = { navigation.bringToFront(ClientLoginDestination.LoginByEmail) },
-                onNavigateToLoginByPhone = { navigation.bringToFront(ClientLoginDestination.LoginByPhone()) },
-                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ClientLoginDestination.LoginByTotp(LoginByTotpParams(mfaToken))) },
-                onNavigateToPendingDeletion = { navigation.bringToFront(ClientLoginDestination.PendingDeletion) },
+                onNavigateToLoginByEmail = { navigation.bringToFront(ClientAuthNavigation.LoginByEmail()) },
+                onNavigateToLoginByPhone = { navigation.bringToFront(ClientAuthNavigation.LoginByPhone()) },
+                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ClientAuthNavigation.LoginByTotp(LoginByTotpParams(mfaToken = mfaToken))) },
+                onNavigateToPendingDeletion = { navigation.bringToFront(ClientAuthNavigation.PendingDeletion) },
                 onNavigateToAccountUnlock = { lockoutType, lockoutUntil ->
-                    navigation.bringToFront(ClientLoginDestination.AccountUnlock(AccountUnlockParams(lockoutType, lockoutUntil)))
+                    navigation.bringToFront(
+                        ClientAuthNavigation.UnlockMethodSelection(
+                            UnlockMethodSelectionParams(accountLockoutType = lockoutType, temporaryLockoutUntil = lockoutUntil)
+                        )
+                    )
                 },
                 onFinished = onFinished
             )
         )
-        is ClientLoginDestination.LoginByEmail -> ClientLoginRootComponent.Child.LoginByEmail(
+        is ClientAuthNavigation.LoginByEmail -> ClientLoginRootComponent.Child.LoginByEmail(
             LoginByEmailComponentImpl(
                 componentContext = context,
                 appType = AppType.CLIENT,
+                params = config.params,
                 loginByEmailUseCase = clientUserComponent.loginByEmailUseCase,
-                onNavigateToRegistrationByEmail = { navigation.bringToFront(ClientLoginDestination.RegistrationByEmail()) },
-                onNavigateToForgotPassword = { navigation.bringToFront(ClientLoginDestination.ResetEmailPassword) },
-                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ClientLoginDestination.LoginByTotp(LoginByTotpParams(mfaToken))) },
-                onNavigateToPendingDeletion = { navigation.bringToFront(ClientLoginDestination.PendingDeletion) },
+                onNavigateToRegistrationByEmail = { navigation.bringToFront(ClientAuthNavigation.Registration()) },
+                onNavigateToForgotPassword = { navigation.bringToFront(ClientAuthNavigation.ResetPassword()) },
+                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ClientAuthNavigation.LoginByTotp(LoginByTotpParams(mfaToken = mfaToken))) },
+                onNavigateToPendingDeletion = { navigation.bringToFront(ClientAuthNavigation.PendingDeletion) },
                 onNavigateToAccountUnlock = { lockoutType, lockoutUntil ->
-                    navigation.bringToFront(ClientLoginDestination.AccountUnlock(AccountUnlockParams(lockoutType, lockoutUntil)))
+                    navigation.bringToFront(
+                        ClientAuthNavigation.UnlockMethodSelection(
+                            UnlockMethodSelectionParams(accountLockoutType = lockoutType, temporaryLockoutUntil = lockoutUntil)
+                        )
+                    )
                 },
-                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() },
+                onBack = { handleBack(ClientAuthNavigation.Main) },
                 onFinished = onFinished
             )
         )
-        is ClientLoginDestination.LoginByPhone -> ClientLoginRootComponent.Child.LoginByPhone(
+        is ClientAuthNavigation.LoginByPhone -> ClientLoginRootComponent.Child.LoginByPhone(
             LoginByPhoneComponentImpl(
                 componentContext = context,
-                initialConfig = if (config.params.isConfirmStep) {
-                    LoginByPhoneStepConfig.CodeInput(phone = config.params.phone ?: "")
-                } else if (config.params.phone != null) {
-                    LoginByPhoneStepConfig.PhoneInput(initialPhone = config.params.phone)
-                } else {
-                    LoginByPhoneStepConfig.PhoneInput()
-                },
+                params = config.params,
                 loginRepository = clientUserComponent.loginRepository,
                 sendLoginConfirmationToPhoneUseCase = clientUserComponent.sendLoginConfirmationToPhoneUseCase,
                 loginByPhoneUseCase = clientUserComponent.loginByPhoneUseCase,
-                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ClientLoginDestination.LoginByTotp(LoginByTotpParams(mfaToken))) },
-                onNavigateToPendingDeletion = { navigation.bringToFront(ClientLoginDestination.PendingDeletion) },
+                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ClientAuthNavigation.LoginByTotp(LoginByTotpParams(mfaToken = mfaToken))) },
+                onNavigateToPendingDeletion = { navigation.bringToFront(ClientAuthNavigation.PendingDeletion) },
                 onNavigateToAccountUnlock = { lockoutType, lockoutUntil ->
-                    navigation.bringToFront(ClientLoginDestination.AccountUnlock(AccountUnlockParams(lockoutType, lockoutUntil)))
+                    navigation.bringToFront(
+                        ClientAuthNavigation.UnlockMethodSelection(
+                            UnlockMethodSelectionParams(accountLockoutType = lockoutType, temporaryLockoutUntil = lockoutUntil)
+                        )
+                    )
                 },
-                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() },
+                onBack = { handleBack(ClientAuthNavigation.Main) },
                 onFinished = onFinished
             )
         )
-        is ClientLoginDestination.RegistrationByEmail -> ClientLoginRootComponent.Child.RegistrationByEmail(
+        is ClientAuthNavigation.Registration -> ClientLoginRootComponent.Child.RegistrationByEmail(
             RegistrationByEmailComponentImpl(
                 componentContext = context,
-                initialConfig = if (config.params.isConfirmStep) {
-                    RegistrationByEmailStepConfig.ConfirmInput(email = config.params.email ?: "")
-                } else if (config.params.email != null) {
-                    RegistrationByEmailStepConfig.EmailInput(initialEmail = config.params.email)
-                } else {
-                    RegistrationByEmailStepConfig.EmailInput()
-                },
+                params = config.params,
                 registrationRepository = clientUserComponent.registrationRepository,
                 sendRegistrationConfirmationToEmailUseCase = clientUserComponent.sendRegistrationConfirmationToEmailUseCase,
                 registrationByEmailUseCase = clientUserComponent.registrationByEmailUseCase,
                 validatePasswordUseCase = securityComponent.validatePasswordUseCase,
-                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() },
+                onBack = { handleBack(ClientAuthNavigation.Main) },
                 onFinished = onFinished
             )
         )
-        is ClientLoginDestination.ResetEmailPassword -> ClientLoginRootComponent.Child.ResetEmailPassword(
+        is ClientAuthNavigation.ResetPassword -> ClientLoginRootComponent.Child.ResetEmailPassword(
             ResetEmailPasswordComponentImpl(
                 componentContext = context,
+                params = config.params,
                 resetPasswordRepository = clientUserComponent.passwordRepository,
                 sendResetPasswordConfirmationToEmailUseCase = clientUserComponent.sendResetPasswordConfirmationToEmailUseCase,
                 resetEmailPasswordUseCase = clientUserComponent.resetEmailPasswordUseCase,
                 validatePasswordUseCase = securityComponent.validatePasswordUseCase,
-                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() },
+                onBack = { handleBack(ClientAuthNavigation.Main) },
                 onFinished = onFinished
             )
         )
-        is ClientLoginDestination.LoginByTotp -> ClientLoginRootComponent.Child.LoginByTotp(
+        is ClientAuthNavigation.LoginByTotp -> ClientLoginRootComponent.Child.LoginByTotp(
             LoginByTotpComponentImpl(
                 componentContext = context,
                 params = config.params,
                 loginByTotpUseCase = clientUserComponent.loginByTotpUseCase,
                 loginByTotpRecoveryCodeUseCase = clientUserComponent.loginByTotpRecoveryCodeUseCase,
-                onNavigateToPendingDeletion = { navigation.bringToFront(ClientLoginDestination.PendingDeletion) },
-                onBack = { if ((backHandler as? BackDispatcher)?.back() != true) navigation.pop() },
+                onNavigateToPendingDeletion = { navigation.bringToFront(ClientAuthNavigation.PendingDeletion) },
+                onBack = { handleBack(ClientAuthNavigation.Main) },
                 onFinished = onFinished
             )
         )
-        is ClientLoginDestination.PendingDeletion -> ClientLoginRootComponent.Child.PendingDeletion(
+        ClientAuthNavigation.PendingDeletion -> ClientLoginRootComponent.Child.PendingDeletion(
             PendingDeletionComponentImpl(
                 componentContext = context,
                 restoreUserUseCase = clientUserComponent.restoreUserUseCase,
                 logoutUseCase = clientUserComponent.logoutUseCase,
                 onRestoreSuccess = onFinished,
-                onSignOut = { navigation.pop() }
+                onSignOut = { handleBack(ClientAuthNavigation.Main) }
             )
         )
-        is ClientLoginDestination.AccountUnlock -> ClientLoginRootComponent.Child.AccountUnlock(
+        is ClientAuthNavigation.UnlockMethodSelection,
+        is ClientAuthNavigation.UnlockTargetInput,
+        is ClientAuthNavigation.UnlockOtpInput,
+        is ClientAuthNavigation.UnlockSuccess -> ClientLoginRootComponent.Child.AccountUnlock(
             UnlockRootComponentImpl(
                 componentContext = context,
-                params = config.params,
-                getUserIdentifiersUseCase = clientUserComponent.getUserIdentifiersUseCase,
-                unlockByGoogleUseCase = clientUserComponent.unlockByGoogleUseCase,
                 sendUnlockEmailConfirmationUseCase = clientUserComponent.sendUnlockEmailConfirmationUseCase,
                 sendUnlockPhoneConfirmationUseCase = clientUserComponent.sendUnlockPhoneConfirmationUseCase,
                 unlockByEmailUseCase = clientUserComponent.unlockByEmailUseCase,
                 unlockByPhoneUseCase = clientUserComponent.unlockByPhoneUseCase,
-                onFinished = { navigation.pop() }
+                onFinished = { handleBack(ClientAuthNavigation.Main) }
             )
         )
     }

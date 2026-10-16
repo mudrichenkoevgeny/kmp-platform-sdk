@@ -14,6 +14,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.GetU
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.detail.IdentifierDetailParams
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -176,11 +177,11 @@ private fun createTestContext(
     val lifecycleRegistry = LifecycleRegistry()
     lifecycleRegistry.resume()
     val componentContext = DefaultComponentContext(lifecycleRegistry)
+    val targetIdentifierId = (identifierId ?: identifier?.id)?.asHexDashString() ?: ""
     val component = IdentifierDetailComponentImpl(
         componentContext = componentContext,
-        identifier = identifier,
-        identifierId = identifierId,
-        getUserIdentifierUseCase = getUserIdentifierUseCase,
+        params = IdentifierDetailParams(identifierId = targetIdentifierId),
+        getUserIdentifierUseCase = getUserIdentifierUseCase ?: identifier?.let { loaded -> GetUserIdentifierUseCaseMock().apply { resultProvider = { AppResult.Success(loaded) } } },
         deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
         isCurrentIdentifier = isCurrentIdentifier,
         onNavigateToUserDetail = onNavigateToUserDetail,

@@ -108,11 +108,11 @@ open class IdentifierRepositoryMock : IdentifierRepository {
     }
 
     override suspend fun emailChangePassword(
-        email: String,
+        userIdentifierId: UserIdentifierId,
         oldPassword: String,
         newPassword: String
     ): AppResult<Unit> {
-        lastEmail = email
+        lastIdentifierId = userIdentifierId
         lastOldPassword = oldPassword
         lastNewPassword = newPassword
         return emailChangePasswordResultProvider()

@@ -24,18 +24,21 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.globallist.ManagementGlobalIdentifierListParams
 import kotlinx.coroutines.launch
 
 /**
  * Default [GlobalIdentifierListComponent] implementation: manages all identifiers list globally.
  *
  * @param componentContext Decompose [ComponentContext].
+ * @param params Global identifiers list parameters.
  * @param managementGetIdentifiersUseCase Use case to fetch paginated list of global identifiers.
  * @param onIdentifierSelect Callback invoked when an identifier is tapped.
  * @param onBack Pops this screen from the navigation stack.
  */
 class GlobalIdentifierListComponentImpl(
     componentContext: ComponentContext,
+    private val params: ManagementGlobalIdentifierListParams = ManagementGlobalIdentifierListParams(),
     private val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase,
     private val onIdentifierSelect: ((String) -> Unit)? = null,
     private val onBack: () -> Unit
@@ -74,7 +77,9 @@ class GlobalIdentifierListComponentImpl(
     override fun onLoadNextPage() {
         val currentContent = _state.value as? GlobalIdentifierListScreenState.Content ?: return
         val paging = currentContent.paging
-        if (!paging.canLoadMore) return
+        if (!paging.canLoadMore) {
+            return
+        }
 
         _state.value = currentContent.copy(paging = paging.toNextPageLoading())
         fetchPage(
@@ -125,7 +130,7 @@ class GlobalIdentifierListComponentImpl(
         }
 
         fetchPage(
-            pageNumber = ListingConstants.INITIAL_PAGE_NUMBER,
+            pageNumber = params.pageNumber,
             sortState = currentContent?.sortState,
             filterStates = currentContent?.filterStates
         )
@@ -137,14 +142,14 @@ class GlobalIdentifierListComponentImpl(
         filterStates: Map<String, ListingFilterState>?
     ) {
         val sortOrder = if (sortState?.isAscending == true) SortOrder.ASC else SortOrder.DESC
-        val sortBy = sortState?.optionId?.let { UserSortValues.UserIdentifierSortBy.fromValueOrNull(it) }
+        val sortBy = sortState?.optionId?.let { UserSortValues.UserIdentifierSortBy.fromValueOrNull(it) } ?: params.sortBy
 
         val userIds = (filterStates?.get(UserFilterValues.UserIdentifierFilterValues.USER_ID) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.userIds.ifEmpty { null }
         val userAuthProviders = (filterStates?.get(UserFilterValues.UserIdentifierFilterValues.USER_AUTH_PROVIDER) as? ChoiceListingFilterState)
-            ?.selectedIds?.mapNotNull { UserAuthProvider.fromValueOrNull(it) }
+            ?.selectedIds?.mapNotNull { UserAuthProvider.fromValueOrNull(it) } ?: params.userAuthProviders.ifEmpty { null }
         val identifiers = (filterStates?.get(UserFilterValues.UserIdentifierFilterValues.IDENTIFIER) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.identifiers.ifEmpty { null }
 
         scope.launch {
             managementGetIdentifiersUseCase(

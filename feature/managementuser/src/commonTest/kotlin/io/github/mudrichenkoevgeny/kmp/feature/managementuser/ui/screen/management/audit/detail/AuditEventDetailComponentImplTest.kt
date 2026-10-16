@@ -13,6 +13,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit.GetA
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.UserRepositoryMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventId
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.screen.management.audit.detail.ManagementAuditEventDetailParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
@@ -39,7 +40,7 @@ class AuditEventDetailComponentImplTest {
 
         val component = AuditEventDetailComponentImpl(
             componentContext = componentContext,
-            params = AuditEventDetailParams(event.id.asHexDashString()),
+            params = ManagementAuditEventDetailParams(eventId = event.id.asHexDashString()),
             userRepository = userRepository,
             getAuditEventUseCase = useCase,
             onNavigateToUserDetail = {},
@@ -67,7 +68,7 @@ class AuditEventDetailComponentImplTest {
         val eventId = AuditEventId.generate()
         val component = AuditEventDetailComponentImpl(
             componentContext = componentContext,
-            params = AuditEventDetailParams(eventId.asHexDashString()),
+            params = ManagementAuditEventDetailParams(eventId = eventId.asHexDashString()),
             userRepository = userRepository,
             getAuditEventUseCase = useCase,
             onNavigateToUserDetail = {},
@@ -99,7 +100,7 @@ class AuditEventDetailComponentImplTest {
 
         val component = AuditEventDetailComponentImpl(
             componentContext = componentContext,
-            params = AuditEventDetailParams(event.id.asHexDashString()),
+            params = ManagementAuditEventDetailParams(eventId = event.id.asHexDashString()),
             userRepository = userRepository,
             getAuditEventUseCase = useCase,
             onNavigateToUserDetail = { navigatedUserId = it },
@@ -132,7 +133,7 @@ class AuditEventDetailComponentImplTest {
 
         val component = AuditEventDetailComponentImpl(
             componentContext = componentContext,
-            params = AuditEventDetailParams(event.id.asHexDashString()),
+            params = ManagementAuditEventDetailParams(eventId = event.id.asHexDashString()),
             userRepository = userRepository,
             getAuditEventUseCase = useCase,
             onNavigateToUserDetail = { navigatedUserId = it },
@@ -165,7 +166,7 @@ class AuditEventDetailComponentImplTest {
 
         val component = AuditEventDetailComponentImpl(
             componentContext = componentContext,
-            params = AuditEventDetailParams(event.id.asHexDashString()),
+            params = ManagementAuditEventDetailParams(eventId = event.id.asHexDashString()),
             userRepository = userRepository,
             getAuditEventUseCase = useCase,
             onNavigateToUserDetail = {},
@@ -193,7 +194,7 @@ class AuditEventDetailComponentImplTest {
 
         val component = AuditEventDetailComponentImpl(
             componentContext = componentContext,
-            params = AuditEventDetailParams(AuditEventId.generate().asHexDashString()),
+            params = ManagementAuditEventDetailParams(eventId = AuditEventId.generate().asHexDashString()),
             userRepository = userRepository,
             getAuditEventUseCase = useCase,
             onNavigateToUserDetail = {},

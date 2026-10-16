@@ -27,10 +27,22 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.l
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.user.globallist.ManagementUserListParams
 import kotlinx.coroutines.launch
 
+/**
+ * Default implementation of [GlobalUserListComponent].
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param params User list parameters.
+ * @param getUsersUseCase Use case to fetch paginated users list.
+ * @param onNavigateToUserDetail Callback to navigate to user detail screen.
+ * @param onNavigateToCreateUser Callback to navigate to create user screen.
+ * @param onBack Pops this screen from the navigation stack.
+ */
 class GlobalUserListComponentImpl(
     componentContext: ComponentContext,
+    private val params: ManagementUserListParams = ManagementUserListParams(),
     private val getUsersUseCase: GetUsersUseCase,
     private val onNavigateToUserDetail: (UserId) -> Unit,
     private val onNavigateToCreateUser: () -> Unit,
@@ -66,7 +78,9 @@ class GlobalUserListComponentImpl(
     override fun onLoadNextPage() {
         val currentContent = _state.value as? GlobalUserListScreenState.Content ?: return
         val paging = currentContent.paging
-        if (!paging.canLoadMore) return
+        if (!paging.canLoadMore) {
+            return
+        }
 
         _state.value = currentContent.copy(paging = paging.toNextPageLoading())
         fetchPage(
@@ -115,7 +129,7 @@ class GlobalUserListComponentImpl(
         }
 
         fetchPage(
-            pageNumber = ListingConstants.INITIAL_PAGE_NUMBER,
+            pageNumber = params.pageNumber,
             sortState = currentContent?.sortState,
             filterStates = currentContent?.filterStates
         )
@@ -129,10 +143,10 @@ class GlobalUserListComponentImpl(
         val sortOrder = if (sortState?.isAscending == true) SortOrder.ASC else SortOrder.DESC
         val sortBy = sortState?.optionId?.let { optionId ->
             UserSortValues.UserSortBy.entries.firstOrNull { it.name == optionId || it.value == optionId }
-        }
+        } ?: params.sortBy
 
         val roles = (filterStates?.get(UserFilterValues.UserFilterValues.ROLE) as? ChoiceListingFilterState)
-            ?.selectedIds?.mapNotNull { UserRole.fromValueOrNull(it) }
+            ?.selectedIds?.mapNotNull { UserRole.fromValueOrNull(it) } ?: params.userRoles.ifEmpty { null }
         val accountStatuses = (filterStates?.get(UserFilterValues.UserFilterValues.ACCOUNT_STATUS) as? ChoiceListingFilterState)
             ?.selectedIds?.mapNotNull { UserAccountStatus.fromValueOrNull(it) }
         val accountLockoutTypes = (filterStates?.get(UserFilterValues.UserFilterValues.ACCOUNT_LOCKOUT_TYPE) as? ChoiceListingFilterState)

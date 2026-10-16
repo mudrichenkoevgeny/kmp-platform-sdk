@@ -14,6 +14,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.GetSess
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.session.detail.SessionDetailParams
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -166,11 +167,11 @@ private fun createSessionDetailComponentTestContext(
     val lifecycleRegistry = LifecycleRegistry()
     lifecycleRegistry.resume()
     val componentContext = DefaultComponentContext(lifecycleRegistry)
+    val targetSessionId = (sessionId ?: session?.id)?.asHexDashString() ?: ""
     val component = SessionDetailComponentImpl(
         componentContext = componentContext,
-        session = session,
-        sessionId = sessionId,
-        getSessionUseCase = getSessionUseCase,
+        params = SessionDetailParams(sessionId = targetSessionId),
+        getSessionUseCase = getSessionUseCase ?: session?.let { loaded -> GetSessionUseCaseMock().apply { resultProvider = { AppResult.Success(loaded) } } },
         deleteSessionUseCase = deleteSessionUseCase,
         isCurrentSession = isCurrentSession,
         onNavigateToUserDetail = onNavigateToUserDetail,

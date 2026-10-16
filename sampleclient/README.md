@@ -1,11 +1,11 @@
-# sample
+# sampleclient
 
 Reference host applications that demonstrate how to wire **kmp-platform-sdk** modules for Android and Wasm (browser) using a manual DI pattern (Component-based).
 
 ## Modules
 
-*   **`sample:composeApp`** — Kotlin Multiplatform library with shared Compose UI, **[ClientAppComponent]**, Decompose screens, and platform entry points (`wasmJs`, **`android`**).
-*   **`sample:androidApp`** — Android application that depends on `composeApp` and hosts **[MainActivity]**.
+*   **`sampleclient:composeApp`** — Kotlin Multiplatform library with shared Compose UI, **[ClientAppComponent]**, Decompose screens, and platform entry points (`wasmJs`, `android`).
+*   **`sampleclient:androidApp`** — Android application that depends on `composeApp` and hosts **[MainActivity]**.
 
 ---
 
@@ -13,7 +13,6 @@ Reference host applications that demonstrate how to wire **kmp-platform-sdk** mo
 
 - **Root wiring**: **[ClientAppComponent]** acts as the central DI container. It aggregates:
     - **Core**: **[EncryptedSettingsComponent]** and **[CommonComponent]** (provides `HttpClient` and `WebSocketService`).
-    - **Feature APIs**: `SettingsApiComponent` and `SecurityApiComponent` for network communication.
     - **Domain Components**: **[SettingsComponent]**, **[SecurityComponent]**, and **[ClientUserComponent]** for business logic and state.
 - **Initialization**: **[ClientAppComponent.init]** orchestrates the startup sequence:
     - Attaches `authHttpClientConfigPlugin` to the Ktor pipeline.
@@ -24,7 +23,8 @@ Reference host applications that demonstrate how to wire **kmp-platform-sdk** mo
     - A **splash screen** during the initialization phase.
     - `CompositionLocalProvider` for shared components (`LocalCommonComponent`, `LocalErrorParser`, `LocalClientAppComponent`).
     - Hosting for **[MainScreen]** or auth flows.
-- **Universal Deep Linking**: Implements `ClientAppDeepLinkParser` and `ClientAppDeepLinkRoute` for client application routing (`/profile/*`) with authentication guards and tab selection (`Config.Profile`). Handles Android App Links, Wasm browser history (`DefaultWebHistoryController`), Desktop URI handlers (`registerDesktopUriHandler`), and iOS URL routing.
+- **Universal Deep Linking**: Implements `ClientAppDeepLinkParser` and `ClientAppDeepLinkRoute` for client application routing (`/user/*`, `/auth/*`) with authentication guards.
+- **Wasm Browser History Integration**: `SetupBrowserHistory` automatically seeds parent path chains (`getAncestorPaths`) into native `window.history` on direct deep link entry, maintaining consistent behavior between the UI Back button and the Browser native Back button. Dynamically tracks state parameters (`totp_step`, `login_by_totp_mode`, `unlock_method`).
 - **Platform Hosts**:
     - **Android**: **[AndroidApp]** initializes **[ClientAppComponent]** with `BuildConfig.BASE_URL`, **[AndroidDeviceInfoProvider]**, and **[AndroidUserAuthServices]**.
     - **Wasm**: **[main]** builds the component using **[WasmDeviceInfoProvider]** and **[WasmUserAuthServices]**, running the app in a browser viewport.
@@ -41,10 +41,10 @@ Reference host applications that demonstrate how to wire **kmp-platform-sdk** mo
 
 ## Usage
 
-1.  **Run**: Use the **`sample:androidApp`** run configuration for Android, or the `wasmJsBrowserRun` task for the Web version.
+1.  **Run**: Use the **`sampleclient:androidApp`** run configuration for Android, or the `wasmJsBrowserRun` task for the Web version.
 2.  **Reference**: To integrate the SDK into your own project, mirror the pattern in **[ClientAppComponent]**:
     *   Initialize core components first.
-    *   Link feature API components to the shared `HttpClient`.
+    *   Link feature components to the shared `HttpClient`.
     *   Pass shared storage and network objects to domain components.
     *   Call `init()` to wire the error and WebSocket pipelines before launching the UI.
 
@@ -57,8 +57,7 @@ Reference host applications that demonstrate how to wire **kmp-platform-sdk** mo
 | **core/common** | [README](../core/common/README.md) |
 | **core/settings** | [README](../core/settings/README.md) |
 | **core/security** | [README](../core/security/README.md) |
-| **feature/settingsapi** | [README](../feature/settingsapi/README.md) |
-| **feature/securityapi** | [README](../feature/securityapi/README.md) |
+| **feature/user** | [README](../feature/user/README.md) |
 | **feature/clientuser** | [README](../feature/clientuser/README.md) |
 
 ---

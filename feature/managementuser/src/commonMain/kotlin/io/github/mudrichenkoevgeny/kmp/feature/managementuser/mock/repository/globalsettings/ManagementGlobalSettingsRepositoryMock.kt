@@ -23,7 +23,9 @@ class ManagementGlobalSettingsRepositoryMock(
 
     override suspend fun getManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
         val customResult = getManagementGlobalSettingsResult
-        if (customResult != null) return customResult
+        if (customResult != null) {
+            return customResult
+        }
         val current = _settings.value
         return if (current != null) {
             AppResult.Success(current)
@@ -36,14 +38,18 @@ class ManagementGlobalSettingsRepositoryMock(
 
     override suspend fun saveRemoteManagementGlobalSettings(globalSettings: ManagementGlobalSettings): AppResult<Unit> {
         val customResult = saveRemoteGlobalSettingsResult
-        if (customResult != null) return customResult
+        if (customResult != null) {
+            return customResult
+        }
         _settings.value = globalSettings
         return AppResult.Success(Unit)
     }
 
     override suspend fun refreshManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
         val customResult = refreshManagementGlobalSettingsResult
-        if (customResult != null) return customResult
+        if (customResult != null) {
+            return customResult
+        }
         return getManagementGlobalSettings()
     }
 
@@ -53,7 +59,9 @@ class ManagementGlobalSettingsRepositoryMock(
 
     override suspend fun resetRemoteManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
         val customResult = resetRemoteGlobalSettingsResult
-        if (customResult != null) return customResult
+        if (customResult != null) {
+            return customResult
+        }
         return getManagementGlobalSettings()
     }
 

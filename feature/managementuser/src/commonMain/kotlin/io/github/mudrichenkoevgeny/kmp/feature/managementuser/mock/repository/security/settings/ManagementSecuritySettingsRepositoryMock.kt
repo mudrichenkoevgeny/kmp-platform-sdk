@@ -23,7 +23,9 @@ class ManagementSecuritySettingsRepositoryMock(
 
     override suspend fun getManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
         val customResult = getManagementSecuritySettingsResult
-        if (customResult != null) return customResult
+        if (customResult != null) {
+            return customResult
+        }
         val current = _settings.value
         return if (current != null) {
             AppResult.Success(current)
@@ -36,14 +38,18 @@ class ManagementSecuritySettingsRepositoryMock(
 
     override suspend fun saveRemoteManagementSecuritySettings(securitySettings: ManagementSecuritySettings): AppResult<Unit> {
         val customResult = saveRemoteSecuritySettingsResult
-        if (customResult != null) return customResult
+        if (customResult != null) {
+            return customResult
+        }
         _settings.value = securitySettings
         return AppResult.Success(Unit)
     }
 
     override suspend fun refreshManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
         val customResult = refreshManagementSecuritySettingsResult
-        if (customResult != null) return customResult
+        if (customResult != null) {
+            return customResult
+        }
         return getManagementSecuritySettings()
     }
 
@@ -53,7 +59,9 @@ class ManagementSecuritySettingsRepositoryMock(
 
     override suspend fun resetRemoteManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
         val customResult = resetRemoteSecuritySettingsResult
-        if (customResult != null) return customResult
+        if (customResult != null) {
+            return customResult
+        }
         return getManagementSecuritySettings()
     }
 

@@ -5,7 +5,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.di.CommonComponent
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.di.audit.AuditApiComponent
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.ManagementLoginDestination
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.root.ManagementRootComponent
@@ -14,8 +13,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserStorageModule
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.root.UserRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.root.UserRootComponentImpl
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.action.CompositeAuditActionTypeParser
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.metadata.CommonAuditMetadataKey
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.metadata.CompositeAuditMetadataKeyParser
@@ -251,11 +250,17 @@ class ManagementUserComponent(
     /** Retrieves user sessions administratively. */
     val managementGetSessionsUseCase get() = useCaseModule.managementGetSessionsUseCase
 
+    /** Retrieves active user sessions for a specific user administratively. */
+    val managementGetUserSessionsUseCase get() = useCaseModule.managementGetUserSessionsUseCase
+
     /** Retrieves specific user session details administratively. */
     val managementGetSessionUseCase get() = useCaseModule.managementGetSessionUseCase
 
     /** Retrieves user identifiers administratively. */
     val managementGetIdentifiersUseCase get() = useCaseModule.managementGetIdentifiersUseCase
+
+    /** Retrieves user identifiers for a specific user administratively. */
+    val managementGetUserIdentifiersUseCase get() = useCaseModule.managementGetUserIdentifiersUseCase
 
     /** Retrieves specific user identifier details administratively. */
     val managementGetIdentifierUseCase get() = useCaseModule.managementGetIdentifierUseCase
@@ -276,44 +281,43 @@ class ManagementUserComponent(
     val getAuditEventUseCase get() = auditApiComponent.getAuditEventUseCase
 
     /**
-     * Creates the root Decompose component for the management profile flow.
+     * Creates the root Decompose component for the management user flow.
      *
      * @param componentContext Decompose context for the new component.
      * @param onNavigateToLogin Invoked when the manager needs to sign in.
-     * @return A new instance of [ProfileRootComponent].
+     * @return A new instance of [UserRootComponent].
      */
-    fun createProfileComponent(
+    fun createUserComponent(
         componentContext: ComponentContext,
         onNavigateToLogin: () -> Unit
-    ): ProfileRootComponent = ProfileRootComponentImpl(
+    ): UserRootComponent = UserRootComponentImpl(
         componentContext = componentContext,
         appType = AppType.MANAGEMENT,
         userRepository = userRepository,
+        authStorage = authStorage,
+        identifierRepository = repositoryModule.selfManagementIdentifierRepository,
         logoutUseCase = logoutUseCase,
         scheduleUserDeletionUseCase = scheduleUserDeletionUseCase,
-        restoreUserUseCase = restoreUserUseCase,
         getAvailableUserAuthProvidersUseCase = getAvailableUserAuthProvidersUseCase,
-        setupTotpUseCase = setupTotpUseCase,
-        enableTotpUseCase = enableTotpUseCase,
-        disableTotpUseCase = disableTotpUseCase,
-        getRecoveryCodesUseCase = getRecoveryCodesUseCase,
-        regenerateRecoveryCodesUseCase = regenerateRecoveryCodesUseCase,
-        getSessionsUseCase = getSessionsUseCase,
-        getSessionUseCase = getSessionUseCase,
-        deleteSessionUseCase = deleteSessionUseCase,
-        deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase,
         getUserIdentifiersUseCase = getUserIdentifiersUseCase,
-        getUserIdentifierUseCase = getUserIdentifierUseCase,
-        deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
-        identifierRepository = repositoryModule.selfManagementIdentifierRepository,
         sendAddEmailIdentifierConfirmationUseCase = sendAddEmailIdentifierConfirmationUseCase,
         addUserIdentifierEmailUseCase = addUserIdentifierEmailUseCase,
         sendAddPhoneIdentifierConfirmationUseCase = sendAddPhoneIdentifierConfirmationUseCase,
         addUserIdentifierPhoneUseCase = addUserIdentifierPhoneUseCase,
         addUserIdentifierGoogleUseCase = useCaseModule.addUserIdentifierGoogleUseCase,
+        getSessionsUseCase = getSessionsUseCase,
+        deleteSessionUseCase = deleteSessionUseCase,
+        deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase,
+        setupTotpUseCase = setupTotpUseCase,
+        enableTotpUseCase = enableTotpUseCase,
+        disableTotpUseCase = disableTotpUseCase,
+        getRecoveryCodesUseCase = getRecoveryCodesUseCase,
+        regenerateRecoveryCodesUseCase = regenerateRecoveryCodesUseCase,
+        getSessionUseCase = getSessionUseCase,
+        getUserIdentifierUseCase = getUserIdentifierUseCase,
+        deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
         emailChangePasswordUseCase = emailChangePasswordUseCase,
-        onNavigateToLogin = onNavigateToLogin,
-        authStorage = authStorage
+        onNavigateToLogin = onNavigateToLogin
     )
 
     private val userWebSocketModule = ManagementUserWebSocketModule(
@@ -335,11 +339,9 @@ class ManagementUserComponent(
      */
     fun createLoginRootDialogComponent(
         componentContext: ComponentContext,
-        initialDestination: ManagementLoginDestination = ManagementLoginDestination.Welcome,
         onFinished: () -> Unit
     ): ManagementLoginRootComponent = ManagementLoginRootComponentImpl(
         componentContext = componentContext,
-        initialDestination = initialDestination,
         settingsComponent = settingsComponent,
         securityComponent = securityComponent,
         managementUserComponent = this,
@@ -409,13 +411,14 @@ class ManagementUserComponent(
             deleteUserUseCase = deleteUserUseCase,
             managementGetSessionsUseCase = managementGetSessionsUseCase,
             managementGetSessionUseCase = managementGetSessionUseCase,
+            managementGetUserSessionsUseCase = managementGetUserSessionsUseCase,
             managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
             managementGetIdentifierUseCase = managementGetIdentifierUseCase,
+            managementGetUserIdentifiersUseCase = managementGetUserIdentifiersUseCase,
             managementDisableTotpUseCase = managementDisableTotpUseCase,
             managementDeleteSessionUseCase = managementDeleteSessionUseCase,
             managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase,
             managementDeleteIdentifierUseCase = useCaseModule.managementDeleteIdentifierUseCase,
-            managementDeleteIdentifierPasswordUseCase = useCaseModule.managementDeleteIdentifierPasswordUseCase,
             getAuditEventsUseCase = getAuditEventsUseCase,
             getAuditEventUseCase = getAuditEventUseCase,
             onNavigateToProfile = onNavigateToProfile

@@ -185,7 +185,6 @@ private fun Content(
                         UserAuthProvider.PHONE -> Res.drawable.auth_logo_phone
                         UserAuthProvider.GOOGLE -> Res.drawable.auth_logo_google
                         UserAuthProvider.APPLE -> Res.drawable.auth_logo_apple
-                        else -> Res.drawable.auth_logo_email
                     }
                     Icon(
                         painter = painterResource(iconRes),

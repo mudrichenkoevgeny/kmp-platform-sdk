@@ -15,6 +15,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.login.email.LoginByEmailParams
 import kotlinx.coroutines.launch
 
 /**
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
  *
  * @param componentContext Decompose [ComponentContext].
  * @param appType Defines the application context (Client/Management) to toggle features like registration.
+ * @param params Prefilled login parameters.
  * @param loginByEmailUseCase Performs sign-in with email and password.
  * @param onNavigateToRegistrationByEmail Opens the registration screen on the parent stack.
  * @param onNavigateToForgotPassword Opens the reset-password screen on the parent stack.
@@ -33,6 +35,7 @@ import kotlinx.coroutines.launch
 class LoginByEmailComponentImpl(
     componentContext: ComponentContext,
     appType: AppType,
+    params: LoginByEmailParams = LoginByEmailParams(),
     private val loginByEmailUseCase: LoginByEmailUseCase,
     private val onNavigateToRegistrationByEmail: () -> Unit,
     private val onNavigateToForgotPassword: () -> Unit,
@@ -50,6 +53,7 @@ class LoginByEmailComponentImpl(
 
     private val _state = MutableValue<LoginByEmailScreenState>(
         LoginByEmailScreenState.Content(
+            email = params.email ?: "",
             isRegistrationAvailable = appType == AppType.CLIENT
         )
     )

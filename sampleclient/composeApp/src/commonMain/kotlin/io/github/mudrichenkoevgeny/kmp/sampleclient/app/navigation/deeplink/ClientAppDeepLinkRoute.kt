@@ -1,42 +1,42 @@
 package io.github.mudrichenkoevgeny.kmp.sampleclient.app.navigation.deeplink
 
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.ClientLoginDestination
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileDestination
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.MainScreenComponent
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientAuthNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientUserNavigation
 
 /**
- * Represents a parsed deep link route that can be executed by the client root component.
+ * Top-level application deep link destinations supported by the client sample app.
  */
 sealed interface ClientAppDeepLinkRoute {
-    /** Whether the user must be authenticated to access this route. */
-    val requiresAuth: Boolean
-
-    /** Top-level tab configuration required to display this route. */
+    /** Target navigation tab configuration inside [MainScreenComponent]. */
     val tab: MainScreenComponent.Config
 
+    /** Whether navigating to this deep link route requires an authenticated user session. */
+    val requiresAuth: Boolean
+
     /**
-     * Route intended for the Login/Auth flow.
+     * Authentication flow deep link route (e.g. login, registration, password reset, unlock).
      *
-     * @param destination The destination in the Login component stack.
-     * @param tab The target main tab to select.
-     * @param requiresAuth True if authentication is required.
+     * @param destination Specific client authentication navigation route.
+     * @param tab Target main screen tab (defaults to [MainScreenComponent.Config.User]).
+     * @param requiresAuth Unauthenticated entry allowed for login routes (defaults to `false`).
      */
     data class Login(
-        val destination: ClientLoginDestination,
-        override val tab: MainScreenComponent.Config = MainScreenComponent.Config.Home,
+        val destination: ClientAuthNavigation,
+        override val tab: MainScreenComponent.Config = MainScreenComponent.Config.User,
         override val requiresAuth: Boolean = false
     ) : ClientAppDeepLinkRoute
 
     /**
-     * Route intended for the Profile feature.
+     * Authenticated user profile and settings deep link route.
      *
-     * @param destination The destination in the Profile component stack.
-     * @param tab The target main tab to select.
-     * @param requiresAuth True if authentication is required.
+     * @param destination Specific client user navigation route.
+     * @param tab Target main screen tab (defaults to [MainScreenComponent.Config.User]).
+     * @param requiresAuth Authenticated entry required for profile routes (defaults to `true`).
      */
-    data class Profile(
-        val destination: ProfileDestination,
-        override val tab: MainScreenComponent.Config = MainScreenComponent.Config.Profile,
-        override val requiresAuth: Boolean = destination !is ProfileDestination.Main
+    data class User(
+        val destination: ClientUserNavigation,
+        override val tab: MainScreenComponent.Config = MainScreenComponent.Config.User,
+        override val requiresAuth: Boolean = true
     ) : ClientAppDeepLinkRoute
 }

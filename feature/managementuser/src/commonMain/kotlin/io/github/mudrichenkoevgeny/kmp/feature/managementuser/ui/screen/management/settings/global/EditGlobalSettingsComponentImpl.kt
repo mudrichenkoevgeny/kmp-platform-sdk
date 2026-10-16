@@ -21,6 +21,13 @@ import kotlinx.coroutines.launch
 
 /**
  * Default implementation of [EditGlobalSettingsComponent].
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param initialDialogConfig Optional initial modal dialog configuration.
+ * @param getManagementGlobalSettingsUseCase Retrieves current global settings.
+ * @param saveRemoteGlobalSettingsUseCase Saves updated global settings.
+ * @param resetRemoteGlobalSettingsUseCase Resets global settings to defaults.
+ * @param onBack Pops this screen from the navigation stack.
  */
 class EditGlobalSettingsComponentImpl(
     componentContext: ComponentContext,

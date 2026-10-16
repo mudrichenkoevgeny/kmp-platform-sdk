@@ -4,15 +4,13 @@ import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.value.Value
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.ClientLoginDestination
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.root.ClientLoginRootComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.root.UserRootComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.navigation.deeplink.ClientAppDeepLinkRoute
-import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.home.HomeScreenComponent
 import kotlinx.serialization.Serializable
 
 /**
- * Decompose root for the sample: tab stack (home and profile) and a dialog slot for the login flow.
+ * Decompose root for the sample: user stack and a dialog slot for the login flow.
  */
 interface MainScreenComponent {
     /**
@@ -26,7 +24,7 @@ interface MainScreenComponent {
     val stackNavigation: StackNavigation<Config>
 
     /**
-     * Optional overlay slot hosting [ClientLoginRootComponent] when login is requested from profile.
+     * Optional overlay slot hosting [ClientLoginRootComponent] when login is requested from user flow.
      */
     val loginDialogSlot: Value<ChildSlot<DialogConfig, ClientLoginRootComponent>>
 
@@ -54,8 +52,7 @@ interface MainScreenComponent {
      * Child instances created for each tab configuration.
      */
     sealed class Child {
-        class HomeChild(val component: HomeScreenComponent) : Child()
-        class ProfileChild(val component: ProfileRootComponent) : Child()
+        class UserChild(val component: UserRootComponent) : Child()
     }
 
     /**
@@ -63,8 +60,7 @@ interface MainScreenComponent {
      */
     @Serializable
     sealed class Config {
-        @Serializable object Home : Config()
-        @Serializable object Profile : Config()
+        @Serializable object User : Config()
     }
 
     /**
@@ -73,7 +69,6 @@ interface MainScreenComponent {
     @Serializable
     sealed class DialogConfig {
         @Serializable data class Login(
-            val initialDestination: ClientLoginDestination = ClientLoginDestination.Welcome,
             val isDismissible: Boolean = true
         ) : DialogConfig()
     }

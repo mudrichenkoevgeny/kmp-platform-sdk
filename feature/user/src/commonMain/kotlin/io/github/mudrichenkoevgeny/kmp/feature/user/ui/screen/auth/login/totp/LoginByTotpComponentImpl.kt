@@ -9,13 +9,15 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByTotpRecoveryCodeUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByTotpUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.login.totp.LoginByTotpMode
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.login.totp.LoginByTotpParams
 import kotlinx.coroutines.launch
 
 /**
  * Default [LoginByTotpComponent]: manages MFA state and performs login through TOTP or recovery codes.
  *
  * @param componentContext Decompose [ComponentContext].
- * @param mfaToken Opaque intermediate token required for the login call.
+ * @param params Screen destination parameters.
  * @param loginByTotpUseCase Performs sign-in with TOTP code.
  * @param loginByTotpRecoveryCodeUseCase Performs sign-in with recovery code.
  * @param onNavigateToPendingDeletion Opens the pending deletion restoration screen on the parent stack.
@@ -24,7 +26,7 @@ import kotlinx.coroutines.launch
  */
 class LoginByTotpComponentImpl(
     componentContext: ComponentContext,
-    params: LoginByTotpParams,
+    params: LoginByTotpParams = LoginByTotpParams(),
     private val loginByTotpUseCase: LoginByTotpUseCase,
     private val loginByTotpRecoveryCodeUseCase: LoginByTotpRecoveryCodeUseCase,
     private val onNavigateToPendingDeletion: () -> Unit,
@@ -53,7 +55,7 @@ class LoginByTotpComponentImpl(
     private val scope = componentCoroutineScope()
 
     private val _state = MutableValue<LoginByTotpScreenState>(
-        LoginByTotpScreenState.Content(mfaToken = params.mfaToken)
+        LoginByTotpScreenState.Content(mfaToken = params.mfaToken ?: "")
     )
     override val state: Value<LoginByTotpScreenState> = _state
 
@@ -67,12 +69,9 @@ class LoginByTotpComponentImpl(
 
     override fun onToggleModeClick() {
         val current = _state.value as? LoginByTotpScreenState.Content ?: return
-        val nextMode = when (current.mode) {
-            LoginByTotpScreenState.Mode.TOTP -> LoginByTotpScreenState.Mode.RECOVERY_CODE
-            LoginByTotpScreenState.Mode.RECOVERY_CODE -> LoginByTotpScreenState.Mode.TOTP
-        }
+        val newMode = if (current.mode == LoginByTotpMode.TOTP) LoginByTotpMode.RECOVERY_CODE else LoginByTotpMode.TOTP
         _state.value = current.copy(
-            mode = nextMode,
+            mode = newMode,
             code = "",
             actionError = null
         )
@@ -80,22 +79,21 @@ class LoginByTotpComponentImpl(
 
     override fun onSubmitClick() {
         val current = _state.value as? LoginByTotpScreenState.Content ?: return
-        if (!current.canSubmit) return
+        if (!current.canSubmit) {
+            return
+        }
 
         _state.value = current.copy(actionLoading = true, actionError = null)
 
         scope.launch {
-            val result = when (current.mode) {
-                LoginByTotpScreenState.Mode.TOTP -> loginByTotpUseCase.execute(current.mfaToken, current.code)
-                LoginByTotpScreenState.Mode.RECOVERY_CODE -> loginByTotpRecoveryCodeUseCase.execute(current.mfaToken, current.code)
+            val result = if (current.mode == LoginByTotpMode.RECOVERY_CODE) {
+                loginByTotpRecoveryCodeUseCase.execute(current.mfaToken, current.code)
+            } else {
+                loginByTotpUseCase.execute(current.mfaToken, current.code)
             }
 
             result
                 .onSuccess { authData ->
-                    val latest = _state.value as? LoginByTotpScreenState.Content
-                    if (latest != null) {
-                        _state.value = latest.copy(actionLoading = false)
-                    }
                     if (authData.userPrivate.accountStatus == UserAccountStatus.PENDING_DELETION) {
                         onNavigateToPendingDeletion()
                     } else {
@@ -103,10 +101,10 @@ class LoginByTotpComponentImpl(
                     }
                 }
                 .onError { error ->
-                    _state.value = current.copy(
-                        actionLoading = false,
-                        actionError = error
-                    )
+                    val latest = _state.value as? LoginByTotpScreenState.Content
+                    if (latest != null) {
+                        _state.value = latest.copy(actionLoading = false, actionError = error)
+                    }
                 }
         }
     }

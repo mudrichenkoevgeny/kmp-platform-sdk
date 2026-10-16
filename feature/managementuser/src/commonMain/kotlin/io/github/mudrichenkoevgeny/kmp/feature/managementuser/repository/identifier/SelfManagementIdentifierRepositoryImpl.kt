@@ -49,12 +49,13 @@ class SelfManagementIdentifierRepositoryImpl(
     }
 
     override suspend fun emailChangePassword(
-        email: String,
+        userIdentifierId: UserIdentifierId,
         oldPassword: String,
         newPassword: String
     ): AppResult<Unit> {
         return selfManagementIdentifiersApi.emailChangePassword(
-            EmailPasswordChangeRequest(email, oldPassword, newPassword)
+            userIdentifierId = userIdentifierId,
+            request = EmailPasswordChangeRequest(oldPassword, newPassword)
         )
     }
 

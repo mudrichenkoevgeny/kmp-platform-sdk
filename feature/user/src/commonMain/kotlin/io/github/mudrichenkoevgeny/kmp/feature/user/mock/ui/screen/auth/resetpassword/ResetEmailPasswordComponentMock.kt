@@ -11,16 +11,17 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword
 
 @InternalApi
 class ResetEmailPasswordComponentMock(
-    initialState: ResetEmailPasswordScreenState = ResetEmailPasswordScreenState(),
-    initialConfig: ResetPasswordStepConfig = ResetPasswordStepConfig.EmailInput()
+    initialState: ResetEmailPasswordScreenState = ResetEmailPasswordScreenState()
 ) : ResetEmailPasswordComponent {
 
     override val stackNavigation = StackNavigation<ResetPasswordStepConfig>()
 
+    private val defaultStepConfig: ResetPasswordStepConfig = ResetPasswordStepConfig.EmailInput(initialEmail = initialState.email)
+
     private val _stack = MutableValue(
         ChildStack(
-            configuration = initialConfig,
-            instance = createChild(initialConfig)
+            configuration = defaultStepConfig,
+            instance = createChild(defaultStepConfig)
         )
     )
     override val stack: Value<ChildStack<ResetPasswordStepConfig, ResetEmailPasswordComponent.Child>> = _stack

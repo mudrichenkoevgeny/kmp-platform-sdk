@@ -59,6 +59,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.totp_code
 import io.github.mudrichenkoevgeny.kmp.feature.user.use_recovery_code
 import io.github.mudrichenkoevgeny.kmp.feature.user.use_totp
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.login.totp.LoginByTotpMode
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -119,8 +120,8 @@ private fun LoginByTotpContent(
                 )
 
                 val titleRes = when (state.mode) {
-                    LoginByTotpScreenState.Mode.TOTP -> Res.string.login_by_totp
-                    LoginByTotpScreenState.Mode.RECOVERY_CODE -> Res.string.login_by_recovery_code
+                    LoginByTotpMode.TOTP -> Res.string.login_by_totp
+                    LoginByTotpMode.RECOVERY_CODE -> Res.string.login_by_recovery_code
                 }
 
                 CoreScreenTitleText(
@@ -137,11 +138,11 @@ private fun LoginByTotpContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val descriptionText = when (state.mode) {
-                    LoginByTotpScreenState.Mode.TOTP -> stringResource(
+                    LoginByTotpMode.TOTP -> stringResource(
                         Res.string.login_by_totp_desc,
                         FieldValidator.TOTP_CODE_LENGTH
                     )
-                    LoginByTotpScreenState.Mode.RECOVERY_CODE -> stringResource(
+                    LoginByTotpMode.RECOVERY_CODE -> stringResource(
                         Res.string.login_by_recovery_code_desc
                     )
                 }
@@ -156,13 +157,13 @@ private fun LoginByTotpContent(
                 )
 
                 val labelRes = when (state.mode) {
-                    LoginByTotpScreenState.Mode.TOTP -> Res.string.totp_code
-                    LoginByTotpScreenState.Mode.RECOVERY_CODE -> Res.string.recovery_code
+                    LoginByTotpMode.TOTP -> Res.string.totp_code
+                    LoginByTotpMode.RECOVERY_CODE -> Res.string.recovery_code
                 }
 
                 val keyboardType = when (state.mode) {
-                    LoginByTotpScreenState.Mode.TOTP -> KeyboardType.Number
-                    LoginByTotpScreenState.Mode.RECOVERY_CODE -> KeyboardType.Text
+                    LoginByTotpMode.TOTP -> KeyboardType.Number
+                    LoginByTotpMode.RECOVERY_CODE -> KeyboardType.Text
                 }
 
                 CoreOutlinedTextField(
@@ -190,8 +191,8 @@ private fun LoginByTotpContent(
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
             val toggleTextRes = when (state.mode) {
-                LoginByTotpScreenState.Mode.TOTP -> Res.string.use_recovery_code
-                LoginByTotpScreenState.Mode.RECOVERY_CODE -> Res.string.use_totp
+                LoginByTotpMode.TOTP -> Res.string.use_recovery_code
+                LoginByTotpMode.RECOVERY_CODE -> Res.string.use_totp
             }
 
             CoreTextButton(
@@ -232,23 +233,23 @@ internal class LoginByTotpPreviewProvider : PreviewParameterProvider<LoginByTotp
     private val items: List<Pair<String, LoginByTotpScreenState>> = listOf(
         "TOTP Mode" to LoginByTotpScreenState.Content(
             mfaToken = "token",
-            mode = LoginByTotpScreenState.Mode.TOTP,
+            mode = LoginByTotpMode.TOTP,
             code = "123456"
         ),
         "Recovery Code Mode" to LoginByTotpScreenState.Content(
             mfaToken = "token",
-            mode = LoginByTotpScreenState.Mode.RECOVERY_CODE,
+            mode = LoginByTotpMode.RECOVERY_CODE,
             code = "RECOVERY-CODE-123"
         ),
         "Inline Error" to LoginByTotpScreenState.Content(
             mfaToken = "token",
-            mode = LoginByTotpScreenState.Mode.TOTP,
+            mode = LoginByTotpMode.TOTP,
             code = "111111",
             actionError = CommonError.Unknown()
         ),
         "Action Loading" to LoginByTotpScreenState.Content(
             mfaToken = "token",
-            mode = LoginByTotpScreenState.Mode.TOTP,
+            mode = LoginByTotpMode.TOTP,
             code = "123456",
             actionLoading = true
         ),
@@ -272,7 +273,7 @@ private fun LoginByTotpScreenPreviewContent(state: LoginByTotpScreenState) {
 
 private val defaultLoginByTotpPreviewState = LoginByTotpScreenState.Content(
     mfaToken = "token",
-    mode = LoginByTotpScreenState.Mode.TOTP,
+    mode = LoginByTotpMode.TOTP,
     code = "123456"
 )
 

@@ -23,6 +23,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.auth.EditAuthSettingsScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.global.EditGlobalSettingsScreen
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.main.SettingsMainScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.security.EditSecuritySettingsScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create.CreateUserScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailScreen
@@ -43,6 +44,7 @@ fun ManagementRootScreen(component: ManagementRootComponent) {
     ) { child ->
         when (val instance = child.instance) {
             is ManagementRootComponent.Child.Main -> MainManagementScreen(instance.component)
+            is ManagementRootComponent.Child.SettingsMain -> SettingsMainScreen(instance.component)
             is ManagementRootComponent.Child.EditAuthSettings -> EditAuthSettingsScreen(instance.component)
             is ManagementRootComponent.Child.EditGlobalSettings -> EditGlobalSettingsScreen(instance.component)
             is ManagementRootComponent.Child.EditSecuritySettings -> EditSecuritySettingsScreen(instance.component)

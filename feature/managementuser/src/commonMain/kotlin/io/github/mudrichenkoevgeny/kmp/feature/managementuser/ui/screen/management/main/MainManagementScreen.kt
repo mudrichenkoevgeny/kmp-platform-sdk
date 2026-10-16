@@ -25,15 +25,23 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.*
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_logs
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.identifiers
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.management_settings_title
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.main.MainManagementComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.sessions
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.users_management
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Main management screen offering access to edit auth, global, and security settings.
- *
- * @param component Decompose controller for navigation callbacks.
- */
+object MainManagementTestTags {
+    const val TITLE = "MainManagement_Title"
+    const val GLOBAL_USER_LIST_BUTTON = "MainManagement_GlobalUserListButton"
+    const val SESSIONS_BUTTON = "MainManagement_SessionsButton"
+    const val IDENTIFIERS_BUTTON = "MainManagement_IdentifiersButton"
+    const val AUDIT_EVENT_LIST_BUTTON = "MainManagement_AuditEventListButton"
+    const val SETTINGS_BUTTON = "MainManagement_SettingsButton"
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainManagementScreen(component: MainManagementComponent) {
@@ -42,7 +50,7 @@ fun MainManagementScreen(component: MainManagementComponent) {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(Res.string.management_settings_title),
+                        text = stringResource(Res.string.users_management),
                         modifier = Modifier.testTag(MainManagementTestTags.TITLE)
                     )
                 }
@@ -82,21 +90,9 @@ fun MainManagementScreen(component: MainManagementComponent) {
             )
 
             CoreButton(
-                text = stringResource(Res.string.edit_auth_settings),
-                onClick = component::onEditAuthSettingsClick,
-                modifier = Modifier.testTag(MainManagementTestTags.EDIT_AUTH_SETTINGS_BUTTON)
-            )
-
-            CoreButton(
-                text = stringResource(Res.string.edit_global_settings),
-                onClick = component::onEditGlobalSettingsClick,
-                modifier = Modifier.testTag(MainManagementTestTags.EDIT_GLOBAL_SETTINGS_BUTTON)
-            )
-
-            CoreButton(
-                text = stringResource(Res.string.edit_security_settings),
-                onClick = component::onEditSecuritySettingsClick,
-                modifier = Modifier.testTag(MainManagementTestTags.EDIT_SECURITY_SETTINGS_BUTTON)
+                text = stringResource(Res.string.management_settings_title),
+                onClick = component::onSettingsClick,
+                modifier = Modifier.testTag(MainManagementTestTags.SETTINGS_BUTTON)
             )
         }
     }
@@ -104,7 +100,7 @@ fun MainManagementScreen(component: MainManagementComponent) {
 
 @InternalApi
 @Composable
-private fun MainManagementPreviewContent() {
+private fun MainManagementScreenPreviewContent() {
     CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
         MainManagementScreen(
             component = MainManagementComponentMock()
@@ -115,9 +111,9 @@ private fun MainManagementPreviewContent() {
 @InternalApi
 @Preview(showBackground = true)
 @Composable
-private fun MainManagementPreview() {
+private fun MainManagementScreenPreview() {
     ScreenPreviewContainer {
-        MainManagementPreviewContent()
+        MainManagementScreenPreviewContent()
     }
 }
 
@@ -126,7 +122,7 @@ private fun MainManagementPreview() {
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
-        MainManagementPreviewContent()
+        MainManagementScreenPreviewContent()
     }
 }
 
@@ -135,7 +131,7 @@ private fun ScreenSizePreview() {
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
-        MainManagementPreviewContent()
+        MainManagementScreenPreviewContent()
     }
 }
 
@@ -144,17 +140,6 @@ private fun ThemePreview() {
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {
-        MainManagementPreviewContent()
+        MainManagementScreenPreviewContent()
     }
-}
-
-object MainManagementTestTags {
-    const val TITLE = "MainManagement_Title"
-    const val GLOBAL_USER_LIST_BUTTON = "MainManagement_GlobalUserListButton"
-    const val SESSIONS_BUTTON = "MainManagement_SessionsButton"
-    const val IDENTIFIERS_BUTTON = "MainManagement_IdentifiersButton"
-    const val AUDIT_EVENT_LIST_BUTTON = "MainManagement_AuditEventListButton"
-    const val EDIT_AUTH_SETTINGS_BUTTON = "MainManagement_EditAuthSettingsButton"
-    const val EDIT_GLOBAL_SETTINGS_BUTTON = "MainManagement_EditGlobalSettingsButton"
-    const val EDIT_SECURITY_SETTINGS_BUTTON = "MainManagement_EditSecuritySettingsButton"
 }

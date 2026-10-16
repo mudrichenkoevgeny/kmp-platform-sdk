@@ -14,6 +14,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.Fullscre
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.totp.LoginByTotpComponentMock
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.login.totp.LoginByTotpMode
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -44,7 +45,7 @@ class LoginByTotpScreenTest {
             LoginByTotpScreenState.Content(
                 mfaToken = MFA_TOKEN,
                 code = TOTP_CODE,
-                mode = LoginByTotpScreenState.Mode.TOTP
+                mode = LoginByTotpMode.TOTP
             )
         )
         setContent {
@@ -65,7 +66,7 @@ class LoginByTotpScreenTest {
             LoginByTotpScreenState.Content(
                 mfaToken = MFA_TOKEN,
                 code = TOTP_CODE,
-                mode = LoginByTotpScreenState.Mode.TOTP
+                mode = LoginByTotpMode.TOTP
             )
         )
         setContent {
@@ -82,7 +83,7 @@ class LoginByTotpScreenTest {
         val component = LoginByTotpComponentMock(
             LoginByTotpScreenState.Content(
                 mfaToken = MFA_TOKEN,
-                mode = LoginByTotpScreenState.Mode.TOTP
+                mode = LoginByTotpMode.TOTP
             )
         )
         setContent {

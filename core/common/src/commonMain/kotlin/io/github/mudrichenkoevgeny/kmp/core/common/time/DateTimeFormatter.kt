@@ -13,7 +13,9 @@ import kotlin.time.Instant
  * @return Formatted date-time string, or `null` if [instant] is null.
  */
 fun formatInstantToDateTime(instant: Instant?): String? {
-    if (instant == null) return null
+    if (instant == null) {
+        return null
+    }
     return try {
         val timeZone = TimeZone.currentSystemDefault()
         val localDateTime = instant.toLocalDateTime(timeZone)
@@ -43,7 +45,9 @@ fun formatInstantToDateTime(instant: Instant?): String? {
  * @return Formatted date-time string, or `null` if [epochMillis] is null.
  */
 fun formatEpochMillisToDateTime(epochMillis: Long?): String? {
-    if (epochMillis == null) return null
+    if (epochMillis == null) {
+        return null
+    }
     return formatInstantToDateTime(Instant.fromEpochMilliseconds(epochMillis))
 }
 

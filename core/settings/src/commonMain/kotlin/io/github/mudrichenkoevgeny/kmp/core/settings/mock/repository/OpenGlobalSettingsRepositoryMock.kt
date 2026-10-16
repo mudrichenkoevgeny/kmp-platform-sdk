@@ -21,7 +21,9 @@ class OpenGlobalSettingsRepositoryMock(
 
     override suspend fun getOpenGlobalSettings(): AppResult<OpenGlobalSettings> {
         val customResult = getGlobalSettingsResult
-        if (customResult != null) return customResult
+        if (customResult != null) {
+            return customResult
+        }
         val current = _settings.value
         return if (current != null) {
             AppResult.Success(current)
@@ -34,7 +36,9 @@ class OpenGlobalSettingsRepositoryMock(
 
     override suspend fun refreshOpenGlobalSettings(): AppResult<OpenGlobalSettings> {
         val customResult = refreshGlobalSettingsResult
-        if (customResult != null) return customResult
+        if (customResult != null) {
+            return customResult
+        }
         val fresh = openGlobalSettingsMock()
         _settings.value = fresh
         return AppResult.Success(fresh)

@@ -11,16 +11,17 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.p
 
 @InternalApi
 class LoginByPhoneComponentMock(
-    initialState: LoginByPhoneScreenState = LoginByPhoneScreenState(),
-    initialConfig: LoginByPhoneStepConfig = LoginByPhoneStepConfig.PhoneInput()
+    initialState: LoginByPhoneScreenState = LoginByPhoneScreenState()
 ) : LoginByPhoneComponent {
 
     override val stackNavigation = StackNavigation<LoginByPhoneStepConfig>()
 
+    private val defaultStepConfig: LoginByPhoneStepConfig = LoginByPhoneStepConfig.PhoneInput(initialPhone = initialState.phoneNumber)
+
     private val _stack = MutableValue(
         ChildStack(
-            configuration = initialConfig,
-            instance = createChild(initialConfig)
+            configuration = defaultStepConfig,
+            instance = createChild(defaultStepConfig)
         )
     )
     override val stack: Value<ChildStack<LoginByPhoneStepConfig, LoginByPhoneComponent.Child>> = _stack

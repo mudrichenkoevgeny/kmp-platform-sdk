@@ -3,7 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.backhandler.BackDispatcher
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
@@ -15,19 +15,19 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteAllUserSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetUserSessionsUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.userlist.ManagementUserSessionListParams
 import kotlinx.coroutines.launch
 
 /**
  * Default [UserSessionListComponent] implementation: manages sessions list for a specific user.
  *
  * @param componentContext Decompose [ComponentContext].
- * @param userId Target user ID whose sessions are to be managed (null for current user conceptually, though here it's expected).
- * @param managementGetSessionsUseCase Use case to fetch paginated list of sessions for the user.
+ * @param params Screen destination parameters.
+ * @param managementGetUserSessionsUseCase Use case to fetch paginated list of sessions for the user.
  * @param managementDeleteSessionUseCase Use case to administratively delete a specific session.
  * @param managementDeleteAllUserSessionsUseCase Use case to administratively delete all sessions for the user.
  * @param onNavigateToSessionDetail Callback invoked when a session is tapped.
@@ -35,15 +35,15 @@ import kotlinx.coroutines.launch
  */
 class UserSessionListComponentImpl(
     componentContext: ComponentContext,
-    private val params: UserSessionListParams? = null,
-    private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
+    private val params: ManagementUserSessionListParams? = null,
+    private val managementGetUserSessionsUseCase: ManagementGetUserSessionsUseCase,
     private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase,
     private val managementDeleteAllUserSessionsUseCase: ManagementDeleteAllUserSessionsUseCase,
     private val onNavigateToSessionDetail: ((UserSessionSummary) -> Unit)? = null,
     private val onBack: () -> Unit
 ) : UserSessionListComponent, ComponentContext by componentContext {
 
-    private val userId: UserId? get() = params?.userId
+    private val userId: UserId? get() = params?.typedUserId
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue<UserSessionListScreenState>(UserSessionListScreenState.Loading)
@@ -61,45 +61,35 @@ class UserSessionListComponentImpl(
         onNavigateToSessionDetail?.invoke(session)
     }
 
-    override fun onSessionRevoked(sessionId: UserSessionId) {
-        val current = _state.value as? UserSessionListScreenState.Content ?: return
-        val newItems = current.paging.items.filterNot { it.id == sessionId }
-        _state.value = current.copy(
-            paging = current.paging.copy(items = newItems)
-        )
-    }
-
-    override fun onBackClick() {
-        if ((backHandler as? BackDispatcher)?.back() != true) {
-            onBack()
-        }
-    }
-
-    override fun onLoadNextPage() {
-        val currentContent = _state.value as? UserSessionListScreenState.Content ?: return
-        val paging = currentContent.paging
-        if (!paging.canLoadMore) return
-
-        _state.value = currentContent.copy(paging = paging.toNextPageLoading())
-        fetchPage(
-            pageNumber = paging.nextPageNumber
-        )
-    }
-
     override fun onDeleteSessionClick(sessionId: String) {
         val targetUserId = userId ?: return
         val currentContent = _state.value as? UserSessionListScreenState.Content ?: return
         _state.value = currentContent.copy(actionLoading = true, actionError = null)
 
         scope.launch {
-            managementDeleteSessionUseCase(userId = targetUserId, sessionId = sessionId)
+            managementDeleteSessionUseCase(targetUserId, sessionId)
                 .onSuccess {
-                    loadSessions()
+                    val updatedItems = currentContent.paging.items.filterNot { it.id.asHexDashString() == sessionId }
+                    _state.value = currentContent.copy(
+                        paging = currentContent.paging.copy(items = updatedItems),
+                        actionLoading = false
+                    )
                 }
                 .onError { error ->
-                    _state.value = currentContent.copy(actionLoading = false, actionError = error)
+                    val content = _state.value as? UserSessionListScreenState.Content
+                    if (content != null) {
+                        _state.value = content.copy(actionLoading = false, actionError = error)
+                    }
                 }
         }
+    }
+
+    override fun onSessionRevoked(sessionId: UserSessionId) {
+        val currentContent = _state.value as? UserSessionListScreenState.Content ?: return
+        val updatedItems = currentContent.paging.items.filterNot { it.id == sessionId }
+        _state.value = currentContent.copy(
+            paging = currentContent.paging.copy(items = updatedItems)
+        )
     }
 
     override fun onDeleteAllSessionsClick() {
@@ -108,54 +98,72 @@ class UserSessionListComponentImpl(
         _state.value = currentContent.copy(actionLoading = true, actionError = null)
 
         scope.launch {
-            managementDeleteAllUserSessionsUseCase(userId = targetUserId)
+            managementDeleteAllUserSessionsUseCase(targetUserId)
                 .onSuccess {
-                    loadSessions()
+                    _state.value = currentContent.copy(
+                        paging = PaginationState(),
+                        actionLoading = false
+                    )
                 }
                 .onError { error ->
-                    _state.value = currentContent.copy(actionLoading = false, actionError = error)
+                    val content = _state.value as? UserSessionListScreenState.Content
+                    if (content != null) {
+                        _state.value = content.copy(actionLoading = false, actionError = error)
+                    }
                 }
         }
     }
 
+    override fun onLoadNextPage() {
+        val currentContent = _state.value as? UserSessionListScreenState.Content ?: return
+        val paging = currentContent.paging
+        if (!paging.canLoadMore) {
+            return
+        }
+
+        _state.value = currentContent.copy(paging = paging.toNextPageLoading())
+        fetchPage(pageNumber = paging.nextPageNumber)
+    }
+
+    override fun onBackClick() {
+        onBack()
+    }
+
     private fun loadSessions() {
+        val targetUserId = userId
+        if (targetUserId == null) {
+            _state.value = UserSessionListScreenState.Error(
+                CommonError.ContractViolation(throwable = IllegalStateException("Invalid userId in params"))
+            )
+            return
+        }
+
         val currentContent = _state.value as? UserSessionListScreenState.Content
+
         if (currentContent != null) {
             _state.value = currentContent.copy(
                 paging = currentContent.paging.toInitialLoading(),
-                actionLoading = false,
                 actionError = null
             )
         } else {
             _state.value = UserSessionListScreenState.Loading
         }
 
-        fetchPage(
-            pageNumber = ListingConstants.INITIAL_PAGE_NUMBER
-        )
+        fetchPage(pageNumber = params?.pageNumber ?: ListingConstants.INITIAL_PAGE_NUMBER)
     }
 
-    private fun fetchPage(
-        pageNumber: Int
-    ) {
+    private fun fetchPage(pageNumber: Int) {
+        val targetUserId = userId ?: return
         scope.launch {
-            managementGetSessionsUseCase(
+            managementGetUserSessionsUseCase(
+                userId = targetUserId,
                 pageNumber = pageNumber,
-                pageSize = ListingConstants.DEFAULT_PAGE_SIZE,
-                userIds = userId?.let { listOf(it.asHexDashString()) },
-                sortBy = null,
-                sortOrder = SortOrder.DESC,
-                userRoles = null,
-                userAuthProviders = null,
-                clientTypes = null,
-                ipAddresses = null,
-                userAgents = null,
-                deviceNames = null
+                pageSize = params?.pageSize ?: ListingConstants.DEFAULT_PAGE_SIZE
             )
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? UserSessionListScreenState.Content
                     val newPaging = (currentContent?.paging ?: PaginationState<UserSessionSummary>()).appendResult(pagedResult)
-                    _state.value = currentContent?.copy(paging = newPaging) ?: UserSessionListScreenState.Content(paging = newPaging)
+                    _state.value = UserSessionListScreenState.Content(paging = newPaging)
                 }
                 .onError { error ->
                     val currentContent = _state.value as? UserSessionListScreenState.Content

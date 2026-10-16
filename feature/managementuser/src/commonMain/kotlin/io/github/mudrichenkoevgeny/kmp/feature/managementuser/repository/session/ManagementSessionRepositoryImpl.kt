@@ -69,6 +69,48 @@ class ManagementSessionRepositoryImpl(
         }
     }
 
+    override suspend fun getUserSessions(
+        userId: UserId,
+        pageNumber: Int?,
+        pageSize: Int?,
+        sortBy: UserSortValues.UserSessionSortBy?,
+        sortOrder: SortOrder?,
+        identifiers: List<String>?,
+        identifierIds: List<String>?,
+        userAuthProviders: List<UserAuthProvider>?,
+        clientTypes: List<ClientType>?,
+        userAgents: List<String>?,
+        ipAddresses: List<String>?,
+        languages: List<String>?,
+        deviceIds: List<String>?,
+        deviceNames: List<String>?,
+        appVersions: List<String>?,
+        operationSystemVersions: List<String>?
+    ): AppResult<PagedResult<UserSessionSummary>> {
+        return managementSessionApi.getUserSessions(
+            userId = userId,
+            pageNumber = pageNumber,
+            pageSize = pageSize,
+            sortBy = sortBy,
+            sortOrder = sortOrder,
+            identifiers = identifiers,
+            identifierIds = identifierIds,
+            userAuthProviders = userAuthProviders,
+            clientTypes = clientTypes,
+            userAgents = userAgents,
+            ipAddresses = ipAddresses,
+            languages = languages,
+            deviceIds = deviceIds,
+            deviceNames = deviceNames,
+            appVersions = appVersions,
+            operationSystemVersions = operationSystemVersions
+        ).mapSuccess { pagedPayload ->
+            pagedPayload.mapItems { userSessionPayload ->
+                userSessionPayload.toUserSessionSummary()
+            }
+        }
+    }
+
     override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivate> {
         return managementSessionApi.getSession(sessionId).mapSuccess { payload ->
             payload.toUserSessionPrivate()

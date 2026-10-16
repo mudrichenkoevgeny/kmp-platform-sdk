@@ -16,21 +16,19 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCorou
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di.ManagementAppComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.navigation.deeplink.ManagementAppDeepLinkRoute
-import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home.HomeScreenComponentImpl
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 
 /**
- * Default [MainScreenComponent]: stack navigation for home and profile, slot for [ManagementLoginRootComponent].
+ * Default [MainScreenComponent]: stack navigation for user and management, slot for [ManagementLoginRootComponent].
  *
  * @param componentContext Decompose lifecycle context.
  * @param managementAppComponent Host graph used to build feature components and dialogs.
  */
 class ManagementMainScreenComponentImpl(
     componentContext: ComponentContext,
-    private val managementAppComponent: ManagementAppComponent,
-    initialDeepLinkRoute: ManagementAppDeepLinkRoute? = null
+    private val managementAppComponent: ManagementAppComponent
 ) : MainScreenComponent, ComponentContext by componentContext {
 
     private val userRepository = managementAppComponent.managementUserComponent.userRepository
@@ -50,8 +48,8 @@ class ManagementMainScreenComponentImpl(
         childStack(
             source = navigation,
             serializer = null,
-            initialConfiguration = MainScreenComponent.Config.Home,
-            handleBackButton = true,
+            initialConfiguration = MainScreenComponent.Config.Management,
+            handleBackButton = false,
             childFactory = ::createChild
         )
 
@@ -70,19 +68,12 @@ class ManagementMainScreenComponentImpl(
                 if (user != null) {
                     dialogSlotNavigation.dismiss()
                 } else {
-                    if (stack.value.active.configuration is MainScreenComponent.Config.Settings) {
-                        navigation.bringToFront(MainScreenComponent.Config.Home)
-                    }
                     if (loginDialogSlot.value.child?.instance == null) {
                         dialogSlotNavigation.activate(MainScreenComponent.DialogConfig.Login(isDismissible = false))
                     }
                 }
             }
             .launchIn(componentCoroutineScope())
-
-        initialDeepLinkRoute?.let { route ->
-            handleDeepLink(route)
-        }
     }
 
     private fun createChild(
@@ -90,25 +81,20 @@ class ManagementMainScreenComponentImpl(
         context: ComponentContext
     ): MainScreenComponent.Child =
         when (config) {
-            is MainScreenComponent.Config.Home -> {
-                MainScreenComponent.Child.HomeChild(
-                    HomeScreenComponentImpl(context)
-                )
-            }
-            is MainScreenComponent.Config.Profile -> {
-                MainScreenComponent.Child.ProfileChild(
-                    managementAppComponent.managementUserComponent.createProfileComponent(
+            is MainScreenComponent.Config.User -> {
+                MainScreenComponent.Child.UserChild(
+                    managementAppComponent.managementUserComponent.createUserComponent(
                         componentContext = context,
                         onNavigateToLogin = ::onShowLogin
                     )
                 )
             }
-            is MainScreenComponent.Config.Settings -> {
-                MainScreenComponent.Child.SettingsChild(
+            is MainScreenComponent.Config.Management -> {
+                MainScreenComponent.Child.ManagementChild(
                     managementAppComponent.managementUserComponent.createManagementComponent(
                         componentContext = context,
                         onNavigateToProfile = {
-                            navigation.bringToFront(MainScreenComponent.Config.Profile)
+                            navigation.bringToFront(MainScreenComponent.Config.User)
                         }
                     )
                 )
@@ -123,7 +109,6 @@ class ManagementMainScreenComponentImpl(
             is MainScreenComponent.DialogConfig.Login -> {
                 managementAppComponent.managementUserComponent.createLoginRootDialogComponent(
                     componentContext = context,
-                    initialDestination = config.initialDestination,
                     onFinished = {
                         onDismissLogin()
                         pendingRoute?.let { route ->
@@ -153,12 +138,12 @@ class ManagementMainScreenComponentImpl(
         val targetChild = stack.value.items.find { it.configuration == route.tab }?.instance
         when (route) {
             is ManagementAppDeepLinkRoute.Management -> {
-                if (targetChild is MainScreenComponent.Child.SettingsChild) {
+                if (targetChild is MainScreenComponent.Child.ManagementChild) {
                     targetChild.component.navigateTo(route.destination)
                 }
             }
-            is ManagementAppDeepLinkRoute.Profile -> {
-                if (targetChild is MainScreenComponent.Child.ProfileChild) {
+            is ManagementAppDeepLinkRoute.User -> {
+                if (targetChild is MainScreenComponent.Child.UserChild) {
                     targetChild.component.navigateTo(route.destination)
                 }
             }
@@ -166,7 +151,7 @@ class ManagementMainScreenComponentImpl(
     }
 
     override fun onTabClick(config: MainScreenComponent.Config) {
-        if ((config is MainScreenComponent.Config.Settings) && (!isAuthorized.value)) {
+        if ((config is MainScreenComponent.Config.Management) && (!isAuthorized.value)) {
             dialogSlotNavigation.activate(MainScreenComponent.DialogConfig.Login(isDismissible = false))
             return
         }

@@ -3,7 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.backhandler.BackDispatcher
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
@@ -13,30 +13,32 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toInit
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toNextPageLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetUserIdentifiersUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.toUserIdOrNull
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.userlist.ManagementUserIdentifierListParams
 import kotlinx.coroutines.launch
 
 /**
  * Default [UserIdentifierListComponent] implementation: manages identifiers list for a specific user.
  *
  * @param componentContext Decompose [ComponentContext].
- * @param userId Target user ID whose identifiers are to be listed.
- * @param managementGetIdentifiersUseCase Use case to fetch paginated list of identifiers.
+ * @param params Screen destination parameters.
+ * @param managementGetUserIdentifiersUseCase Use case to fetch paginated list of identifiers.
  * @param onIdentifierSelect Callback invoked when an identifier is tapped.
  * @param onBack Pops this screen from the navigation stack.
  */
 class UserIdentifierListComponentImpl(
     componentContext: ComponentContext,
-    private val params: UserIdentifierListParams,
-    private val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase,
+    private val params: ManagementUserIdentifierListParams,
+    private val managementGetUserIdentifiersUseCase: ManagementGetUserIdentifiersUseCase,
     private val onIdentifierSelect: ((String) -> Unit)? = null,
     private val onBack: () -> Unit
 ) : UserIdentifierListComponent, ComponentContext by componentContext {
 
-    private val userId: UserId get() = params.userId
+    private val userId: UserId? get() = params.typedUserId
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue<UserIdentifierListScreenState>(UserIdentifierListScreenState.Loading)
@@ -65,52 +67,63 @@ class UserIdentifierListComponentImpl(
     override fun onLoadNextPage() {
         val currentContent = _state.value as? UserIdentifierListScreenState.Content ?: return
         val paging = currentContent.paging
-        if (!paging.canLoadMore) return
+        if (!paging.canLoadMore) {
+            return
+        }
 
         _state.value = currentContent.copy(paging = paging.toNextPageLoading())
         fetchPage(pageNumber = paging.nextPageNumber)
     }
 
     override fun onBackClick() {
-        if ((backHandler as? BackDispatcher)?.back() != true) {
-            onBack()
-        }
+        onBack()
     }
 
     private fun loadIdentifiers() {
+        val targetUserId = userId
+        if (targetUserId == null) {
+            _state.value = UserIdentifierListScreenState.Error(
+                CommonError.ContractViolation(throwable = IllegalStateException("Invalid userId in params"))
+            )
+            return
+        }
+
         val currentContent = _state.value as? UserIdentifierListScreenState.Content
+
         if (currentContent != null) {
             _state.value = currentContent.copy(
-                paging = currentContent.paging.toInitialLoading(),
-                actionError = null
+                paging = currentContent.paging.toInitialLoading()
             )
         } else {
             _state.value = UserIdentifierListScreenState.Loading
         }
 
-        fetchPage(pageNumber = ListingConstants.INITIAL_PAGE_NUMBER)
+        fetchPage(pageNumber = params.pageNumber)
     }
 
     private fun fetchPage(pageNumber: Int) {
+        val targetUserId = userId ?: return
         scope.launch {
-            managementGetIdentifiersUseCase(
+            managementGetUserIdentifiersUseCase(
+                userId = targetUserId,
                 pageNumber = pageNumber,
-                pageSize = ListingConstants.DEFAULT_PAGE_SIZE,
-                userIds = listOf(userId.asHexDashString())
-            ).onSuccess { pagedResult ->
-                val currentContent = _state.value as? UserIdentifierListScreenState.Content
-                val newPaging = (currentContent?.paging ?: PaginationState<UserIdentifierSummary>()).appendResult(pagedResult)
-                _state.value = currentContent?.copy(paging = newPaging) ?: UserIdentifierListScreenState.Content(paging = newPaging)
-            }.onError { error ->
-                val currentContent = _state.value as? UserIdentifierListScreenState.Content
-                if (currentContent != null) {
-                    _state.value = currentContent.copy(
-                        paging = currentContent.paging.toError(error, pageNumber = pageNumber)
-                    )
-                } else {
-                    _state.value = UserIdentifierListScreenState.Error(error)
+                pageSize = params.pageSize
+            )
+                .onSuccess { pagedResult ->
+                    val currentContent = _state.value as? UserIdentifierListScreenState.Content
+                    val newPaging = (currentContent?.paging ?: PaginationState<UserIdentifierSummary>()).appendResult(pagedResult)
+                    _state.value = UserIdentifierListScreenState.Content(paging = newPaging)
                 }
-            }
+                .onError { error ->
+                    val currentContent = _state.value as? UserIdentifierListScreenState.Content
+                    if (currentContent != null) {
+                        _state.value = currentContent.copy(
+                            paging = currentContent.paging.toError(error, pageNumber = pageNumber)
+                        )
+                    } else {
+                        _state.value = UserIdentifierListScreenState.Error(error)
+                    }
+                }
         }
     }
 }

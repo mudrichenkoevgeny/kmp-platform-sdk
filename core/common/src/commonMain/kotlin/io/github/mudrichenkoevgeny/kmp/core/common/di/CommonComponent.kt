@@ -33,7 +33,7 @@ import kotlinx.coroutines.CoroutineScope
 class CommonComponent(
     val encryptedSettings: EncryptedSettings,
     clientDeviceInfo: ClientDeviceInfo,
-    baseUrl: String,
+    val baseUrl: String,
     webSocketPath: String,
     httpClientConfigPlugins: List<HttpClientConfigPlugin> = emptyList(),
     private val accessTokenProvider: AccessTokenProvider,

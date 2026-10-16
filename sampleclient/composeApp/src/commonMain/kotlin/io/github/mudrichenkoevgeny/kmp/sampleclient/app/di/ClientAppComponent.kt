@@ -239,10 +239,10 @@ class ClientAppComponent(
     ): MainScreenComponent {
         val component = ClientMainScreenComponentImpl(
             componentContext = componentContext,
-            clientAppComponent = this,
-            initialDeepLinkRoute = initialRoute
+            clientAppComponent = this
         )
         mainScreenComponent = component
+        initialRoute?.let { component.handleDeepLink(it) }
         return component
     }
 

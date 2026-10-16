@@ -10,15 +10,31 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockByGoogleUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.GetUserIdentifiersUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.methodselection.UnlockMethodSelectionParams
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-/** Default implementation of [UnlockMethodSelectionComponent]. */
+/**
+ * Default implementation of [UnlockMethodSelectionComponent].
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param params Unlock method selection parameters.
+ * @param lockoutType Lockout cause.
+ * @param lockoutUntil Temporary lockout expiration epoch timestamp in milliseconds.
+ * @param getUserIdentifiersUseCase Fetches linked user identifiers.
+ * @param unlockByGoogleUseCase Unlocks account using Google OAuth.
+ * @param onNavigateToEmailInput Navigates to email input screen.
+ * @param onNavigateToPhoneInput Navigates to phone input screen.
+ * @param onUnlockSuccess Navigates to unlock success screen.
+ * @param onBack Pops this screen from the navigation stack.
+ * @param coroutineScope Scope for async operations.
+ */
 class UnlockMethodSelectionComponentImpl(
     componentContext: ComponentContext,
-    lockoutType: AccountLockoutType? = null,
-    lockoutUntil: Long? = null,
+    params: UnlockMethodSelectionParams = UnlockMethodSelectionParams(),
+    lockoutType: AccountLockoutType? = params.accountLockoutType,
+    lockoutUntil: Long? = params.temporaryLockoutUntil,
     private val getUserIdentifiersUseCase: GetUserIdentifiersUseCase? = null,
     private val unlockByGoogleUseCase: UnlockByGoogleUseCase? = null,
     private val onNavigateToEmailInput: () -> Unit,

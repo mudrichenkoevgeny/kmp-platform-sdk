@@ -2,95 +2,88 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import com.arkivanov.essenty.lifecycle.destroy
 import com.arkivanov.essenty.lifecycle.resume
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.identifier.ManagementIdentifierRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetUserIdentifiersUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import kotlinx.coroutines.test.advanceUntilIdle
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.userlist.ManagementUserIdentifierListParams
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.time.Duration.Companion.milliseconds
 
 @InternalApi
 class UserIdentifierListComponentImplTest {
 
     @Test
     fun init_loadsIdentifiersSuccessfully() = runComponentTest {
-        val identifier = userIdentifierSummaryMock()
-        val context = createTestContext(identifiers = listOf(identifier))
+        val userId = UserId.generate()
+        val testContext = createTestContext(userId = userId)
 
-        advanceUntilIdle()
-        val state = assertIs<UserIdentifierListScreenState.Content>(context.component.state.value)
-        assertEquals(listOf(identifier), state.paging.items)
+        advanceTimeBy(100.milliseconds)
+
+        val state = assertIs<UserIdentifierListScreenState.Content>(testContext.component.state.value)
+        assertEquals(1, state.paging.items.size)
+
+        testContext.lifecycle.destroy()
     }
 
     @Test
     fun init_emitsErrorState_whenUseCaseFails() = runComponentTest {
-        val repository = ManagementIdentifierRepositoryMock()
         val error = CommonError.Unknown()
-        repository.getIdentifiersResultProvider = { AppResult.Error(error) }
-        val context = createTestContext(repository = repository)
+        val repository = ManagementIdentifierRepositoryMock().apply {
+            getUserIdentifiersResultProvider = { AppResult.Error(error) }
+        }
+        val userId = UserId.generate()
+        val testContext = createTestContext(userId = userId, repository = repository)
 
-        advanceUntilIdle()
-        val state = assertIs<UserIdentifierListScreenState.Error>(context.component.state.value)
+        advanceTimeBy(100.milliseconds)
+
+        val state = assertIs<UserIdentifierListScreenState.Error>(testContext.component.state.value)
         assertEquals(error, state.error)
+
+        testContext.lifecycle.destroy()
     }
 
     @Test
-    fun onRefresh_reloadsIdentifiers() = runComponentTest {
-        val context = createTestContext()
-        advanceUntilIdle()
+    fun onBackClick_invokesOnBack() = runComponentTest {
+        val userId = UserId.generate()
+        val testContext = createTestContext(userId = userId)
 
-        context.component.onRefresh()
+        testContext.component.onBackClick()
 
-        advanceUntilIdle()
-        assertIs<UserIdentifierListScreenState.Content>(context.component.state.value)
-    }
+        assertEquals(1, testContext.onBackCalls)
 
-    @Test
-    fun onBackClick_invokesCallback() = runComponentTest {
-        val context = createTestContext()
-        context.component.onBackClick()
-        assertEquals(1, context.onBackCalls)
+        testContext.lifecycle.destroy()
     }
 
     private fun createTestContext(
-        userId: UserId = UserId.generate(),
-        identifiers: List<UserIdentifierSummary>? = null,
+        userId: UserId,
         repository: ManagementIdentifierRepositoryMock = ManagementIdentifierRepositoryMock()
     ): TestContext {
-        if (identifiers != null) {
-            repository.getIdentifiersResultProvider = { AppResult.Success(
-                pagedResultMock(
-                    identifiers
-                )
-            ) }
-        }
-
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
 
-        val useCase = ManagementGetIdentifiersUseCase(repository)
-        val context = TestContext()
+        val useCase = ManagementGetUserIdentifiersUseCase(repository)
+        val context = TestContext(lifecycle)
 
         context.component = UserIdentifierListComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
-            params = UserIdentifierListParams(userId.asHexDashString()),
-            managementGetIdentifiersUseCase = useCase,
+            params = ManagementUserIdentifierListParams(userId = userId.asHexDashString()),
+            managementGetUserIdentifiersUseCase = useCase,
             onBack = { context.onBackCalls++ }
         )
 
         return context
     }
 
-    private class TestContext {
+    private class TestContext(val lifecycle: LifecycleRegistry) {
         lateinit var component: UserIdentifierListComponentImpl
         var onBackCalls = 0
     }

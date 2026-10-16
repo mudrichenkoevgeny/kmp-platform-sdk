@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.target
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.UnlockMethod
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.UnlockMethod
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 
 /** UI state for the intermediate unlock input step (entering email or phone). */

@@ -135,12 +135,13 @@ class OpenIdentifierRepositoryImpl(
     }
 
     override suspend fun emailChangePassword(
-        email: String,
+        userIdentifierId: UserIdentifierId,
         oldPassword: String,
         newPassword: String
     ): AppResult<Unit> {
         return openIdentifiersApi.emailChangePassword(
-            EmailPasswordChangeRequest(email, oldPassword, newPassword)
+            userIdentifierId = userIdentifierId,
+            request = EmailPasswordChangeRequest(oldPassword, newPassword)
         )
     }
 

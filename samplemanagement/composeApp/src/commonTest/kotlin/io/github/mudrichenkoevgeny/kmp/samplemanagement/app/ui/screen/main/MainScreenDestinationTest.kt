@@ -7,25 +7,21 @@ import kotlin.test.assertSame
 class MainScreenDestinationTest {
 
     @Test
-    fun `fromConfig maps home, profile, and settings`() {
+    fun `fromConfig maps user and management`() {
         assertSame(
-            MainScreenDestination.Home,
-            MainScreenDestination.fromConfig(MainScreenComponent.Config.Home)
+            MainScreenDestination.User,
+            MainScreenDestination.fromConfig(MainScreenComponent.Config.User)
         )
         assertSame(
-            MainScreenDestination.Profile,
-            MainScreenDestination.fromConfig(MainScreenComponent.Config.Profile)
-        )
-        assertSame(
-            MainScreenDestination.Settings,
-            MainScreenDestination.fromConfig(MainScreenComponent.Config.Settings)
+            MainScreenDestination.Management,
+            MainScreenDestination.fromConfig(MainScreenComponent.Config.Management)
         )
     }
 
     @Test
-    fun `allDestinations contains home, profile, and settings in order`() {
+    fun `allDestinations contains management and user in order`() {
         assertEquals(
-            listOf(MainScreenDestination.Home, MainScreenDestination.Profile, MainScreenDestination.Settings),
+            listOf(MainScreenDestination.Management, MainScreenDestination.User),
             MainScreenDestination.allDestinations
         )
     }

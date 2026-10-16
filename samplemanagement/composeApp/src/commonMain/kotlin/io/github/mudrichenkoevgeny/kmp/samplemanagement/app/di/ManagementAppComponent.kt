@@ -239,10 +239,10 @@ class ManagementAppComponent(
     ): MainScreenComponent {
         val component = ManagementMainScreenComponentImpl(
             componentContext = componentContext,
-            managementAppComponent = this,
-            initialDeepLinkRoute = initialRoute
+            managementAppComponent = this
         )
         mainScreenComponent = component
+        initialRoute?.let { component.handleDeepLink(it) }
         return component
     }
 

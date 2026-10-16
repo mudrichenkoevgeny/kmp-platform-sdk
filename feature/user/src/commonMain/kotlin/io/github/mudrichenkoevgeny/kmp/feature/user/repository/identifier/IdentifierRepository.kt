@@ -94,13 +94,13 @@ interface IdentifierRepository {
     /**
      * Updates the account password using current credentials.
      *
-     * @param email Account email address.
+     * @param userIdentifierId Target identifier ID.
      * @param oldPassword Current valid password.
      * @param newPassword Target password to be applied.
      * @return Success indicator, or a mapped failure.
      */
     suspend fun emailChangePassword(
-        email: String,
+        userIdentifierId: UserIdentifierId,
         oldPassword: String,
         newPassword: String
     ): AppResult<Unit>

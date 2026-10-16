@@ -5,7 +5,6 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.appendResult
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toError
@@ -17,16 +16,17 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteAllOtherSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionsUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.toUserSessionIdOrNull
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.session.list.SelfSessionListParams
 import kotlinx.coroutines.launch
 
 /**
- * Default [SelfSessionListComponent] implementation: handles listing and revoking active sessions for self user.
+ * Default implementation of [SelfSessionListComponent].
  *
  * @param componentContext Decompose [ComponentContext].
+ * @param params Self-service sessions list parameters.
  * @param getSessionsUseCase Fetches the current list of active sessions.
  * @param deleteSessionUseCase Terminates a specific remote session.
  * @param deleteAllOtherSessionsUseCase Terminates all sessions except the current one.
@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
  */
 class SelfSessionListComponentImpl(
     componentContext: ComponentContext,
+    private val params: SelfSessionListParams = SelfSessionListParams(),
     private val getSessionsUseCase: GetSessionsUseCase,
     private val deleteSessionUseCase: DeleteSessionUseCase,
     private val deleteAllOtherSessionsUseCase: DeleteAllOtherSessionsUseCase,
@@ -107,7 +108,9 @@ class SelfSessionListComponentImpl(
     override fun onLoadNextPage() {
         val currentContent = _state.value as? SelfSessionListScreenState.Content ?: return
         val paging = currentContent.paging
-        if (!paging.canLoadMore) return
+        if (!paging.canLoadMore) {
+            return
+        }
 
         _state.value = currentContent.copy(paging = paging.toNextPageLoading())
         fetchPage(
@@ -128,7 +131,7 @@ class SelfSessionListComponentImpl(
         }
 
         fetchPage(
-            pageNumber = ListingConstants.INITIAL_PAGE_NUMBER
+            pageNumber = params.pageNumber
         )
     }
 
@@ -138,13 +141,13 @@ class SelfSessionListComponentImpl(
         scope.launch {
             getSessionsUseCase(
                 pageNumber = pageNumber,
-                pageSize = ListingConstants.DEFAULT_PAGE_SIZE,
+                pageSize = params.pageSize,
                 sortBy = null,
-                sortOrder = SortOrder.DESC,
-                userAuthProviders = null,
-                clientTypes = null,
-                ipAddresses = null,
-                deviceNames = null
+                sortOrder = params.sortOrder,
+                userAuthProviders = params.userAuthProviders.ifEmpty { null },
+                clientTypes = params.clientTypes.ifEmpty { null },
+                ipAddresses = params.ipAddresses.ifEmpty { null },
+                deviceNames = params.deviceNames.ifEmpty { null }
             )
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? SelfSessionListScreenState.Content

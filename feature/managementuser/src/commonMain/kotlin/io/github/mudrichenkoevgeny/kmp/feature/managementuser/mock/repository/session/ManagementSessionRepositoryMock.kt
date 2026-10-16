@@ -23,6 +23,10 @@ open class ManagementSessionRepositoryMock : ManagementSessionRepository {
         AppResult.Success(pagedResultMock(listOf(userSessionSummaryMock())))
     }
 
+    var getUserSessionsResultProvider: (UserId) -> AppResult<PagedResult<UserSessionSummary>> = { _ ->
+        AppResult.Success(pagedResultMock(listOf(userSessionSummaryMock())))
+    }
+
     var getSessionResultProvider: (String) -> AppResult<UserSessionPrivate> = {
         AppResult.Success(userSessionPrivateMock())
     }
@@ -58,6 +62,30 @@ open class ManagementSessionRepositoryMock : ManagementSessionRepository {
         lastSortBy = sortBy
         lastIpAddresses = ipAddresses
         return getSessionsResultProvider()
+    }
+
+    override suspend fun getUserSessions(
+        userId: UserId,
+        pageNumber: Int?,
+        pageSize: Int?,
+        sortBy: UserSortValues.UserSessionSortBy?,
+        sortOrder: SortOrder?,
+        identifiers: List<String>?,
+        identifierIds: List<String>?,
+        userAuthProviders: List<UserAuthProvider>?,
+        clientTypes: List<ClientType>?,
+        userAgents: List<String>?,
+        ipAddresses: List<String>?,
+        languages: List<String>?,
+        deviceIds: List<String>?,
+        deviceNames: List<String>?,
+        appVersions: List<String>?,
+        operationSystemVersions: List<String>?
+    ): AppResult<PagedResult<UserSessionSummary>> {
+        lastUserId = userId
+        lastSortBy = sortBy
+        lastIpAddresses = ipAddresses
+        return getUserSessionsResultProvider(userId)
     }
 
     override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivate> {

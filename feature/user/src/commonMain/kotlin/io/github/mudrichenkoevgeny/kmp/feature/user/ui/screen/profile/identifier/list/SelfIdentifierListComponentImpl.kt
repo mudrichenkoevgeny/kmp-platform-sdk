@@ -37,6 +37,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.toUserIdentifierIdOrNull
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.list.SelfIdentifierListParams
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -44,6 +45,7 @@ import kotlinx.coroutines.launch
  * Default [SelfIdentifierListComponent] implementation: manages account identifiers list and inline dialog add flow.
  *
  * @param componentContext Decompose [ComponentContext].
+ * @param params Self-service identifiers list parameters.
  * @param appType Operational context (Client or Management).
  * @param getUserIdentifiersUseCase Lists linked identity records.
  * @param getAvailableUserAuthProvidersUseCase Fetches allowed auth providers for adding identifiers.
@@ -59,6 +61,7 @@ import kotlinx.coroutines.launch
  */
 class SelfIdentifierListComponentImpl(
     componentContext: ComponentContext,
+    private val params: SelfIdentifierListParams = SelfIdentifierListParams(),
     initialDialogConfig: AddIdentifierDialogConfig? = null,
     private val appType: AppType = AppType.CLIENT,
     private val getUserIdentifiersUseCase: GetUserIdentifiersUseCase,
@@ -117,7 +120,9 @@ class SelfIdentifierListComponentImpl(
     }
 
     override fun onAddIdentifierClick() {
-        if (appType != AppType.CLIENT) return
+        if (appType != AppType.CLIENT) {
+            return
+        }
 
         addIdentifierDialogSlotNavigation.activate(AddIdentifierDialogConfig.ProviderSelection)
 
@@ -277,7 +282,9 @@ class SelfIdentifierListComponentImpl(
         when (addIdentifierDialogSlot.value.child?.configuration) {
             is AddIdentifierDialogConfig.EmailConfirm -> {
                 val useCase = addUserIdentifierEmailUseCase ?: return
-                if (!currentContent.canSubmitAddEmail) return
+                if (!currentContent.canSubmitAddEmail) {
+                    return
+                }
                 updateDialogLoading(true)
 
                 scope.launch {
@@ -293,7 +300,9 @@ class SelfIdentifierListComponentImpl(
             }
             is AddIdentifierDialogConfig.PhoneConfirm -> {
                 val useCase = addUserIdentifierPhoneUseCase ?: return
-                if (!currentContent.canSubmitAddPhone) return
+                if (!currentContent.canSubmitAddPhone) {
+                    return
+                }
                 updateDialogLoading(true)
 
                 scope.launch {
@@ -360,7 +369,9 @@ class SelfIdentifierListComponentImpl(
     override fun onLoadNextPage() {
         val currentContent = _state.value as? SelfIdentifierListScreenState.Content ?: return
         val paging = currentContent.paging
-        if (!paging.canLoadMore) return
+        if (!paging.canLoadMore) {
+            return
+        }
 
         _state.value = currentContent.copy(paging = paging.toNextPageLoading())
         fetchPage(pageNumber = paging.nextPageNumber)
@@ -400,7 +411,9 @@ class SelfIdentifierListComponentImpl(
 
     private fun startTimer(seconds: Int) {
         timerJob?.cancel()
-        if (seconds <= 0) return
+        if (seconds <= 0) {
+            return
+        }
 
         timerJob = scope.launch {
             resendCountdown(
@@ -437,7 +450,7 @@ class SelfIdentifierListComponentImpl(
             _state.value = SelfIdentifierListScreenState.Loading
         }
 
-        fetchPage(pageNumber = ListingConstants.INITIAL_PAGE_NUMBER)
+        fetchPage(pageNumber = params.pageNumber)
     }
 
     private fun fetchPage(pageNumber: Int) {
@@ -445,7 +458,7 @@ class SelfIdentifierListComponentImpl(
             val activeIdentifierId = authStorage?.getIdentifierId()?.toUserIdentifierIdOrNull()
             getUserIdentifiersUseCase(
                 pageNumber = pageNumber,
-                pageSize = ListingConstants.DEFAULT_PAGE_SIZE
+                pageSize = params.pageSize
             )
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? SelfIdentifierListScreenState.Content

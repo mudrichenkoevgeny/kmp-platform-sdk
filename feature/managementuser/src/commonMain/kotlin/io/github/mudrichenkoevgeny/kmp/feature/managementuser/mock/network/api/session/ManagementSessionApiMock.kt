@@ -18,6 +18,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 class ManagementSessionApiMock : ManagementSessionApi {
 
     var getSessionsResult: AppResult<PagedResult<UserSessionSummaryPayload>> = AppResult.Error(CommonError.Unknown())
+    var getUserSessionsResult: AppResult<PagedResult<UserSessionSummaryPayload>> = AppResult.Error(CommonError.Unknown())
     var getSessionResult: AppResult<UserSessionPrivatePayload> = AppResult.Error(CommonError.Unknown())
     var deleteSessionResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
     var deleteAllUserSessionsResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
@@ -41,6 +42,25 @@ class ManagementSessionApiMock : ManagementSessionApi {
         appVersions: List<String>?,
         operationSystemVersions: List<String>?
     ): AppResult<PagedResult<UserSessionSummaryPayload>> = getSessionsResult
+
+    override suspend fun getUserSessions(
+        userId: UserId,
+        pageNumber: Int?,
+        pageSize: Int?,
+        sortBy: UserSortValues.UserSessionSortBy?,
+        sortOrder: SortOrder?,
+        identifiers: List<String>?,
+        identifierIds: List<String>?,
+        userAuthProviders: List<UserAuthProvider>?,
+        clientTypes: List<ClientType>?,
+        userAgents: List<String>?,
+        ipAddresses: List<String>?,
+        languages: List<String>?,
+        deviceIds: List<String>?,
+        deviceNames: List<String>?,
+        appVersions: List<String>?,
+        operationSystemVersions: List<String>?
+    ): AppResult<PagedResult<UserSessionSummaryPayload>> = getUserSessionsResult
 
     override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivatePayload> = getSessionResult
 

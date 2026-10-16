@@ -11,16 +11,17 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registr
 
 @InternalApi
 class RegistrationByEmailComponentMock(
-    initialState: RegistrationByEmailScreenState = RegistrationByEmailScreenState(),
-    initialConfig: RegistrationByEmailStepConfig = RegistrationByEmailStepConfig.EmailInput()
+    initialState: RegistrationByEmailScreenState = RegistrationByEmailScreenState()
 ) : RegistrationByEmailComponent {
 
     override val stackNavigation = StackNavigation<RegistrationByEmailStepConfig>()
 
+    private val defaultStepConfig: RegistrationByEmailStepConfig = RegistrationByEmailStepConfig.EmailInput(initialEmail = initialState.email)
+
     private val _stack = MutableValue(
         ChildStack(
-            configuration = initialConfig,
-            instance = createChild(initialConfig)
+            configuration = defaultStepConfig,
+            instance = createChild(defaultStepConfig)
         )
     )
     override val stack: Value<ChildStack<RegistrationByEmailStepConfig, RegistrationByEmailComponent.Child>> = _stack

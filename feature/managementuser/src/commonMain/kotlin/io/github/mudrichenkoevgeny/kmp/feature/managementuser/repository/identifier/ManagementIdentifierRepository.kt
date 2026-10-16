@@ -37,6 +37,28 @@ interface ManagementIdentifierRepository {
     ): AppResult<PagedResult<UserIdentifierSummary>>
 
     /**
+     * Returns a paginated and filtered list of identifiers for a specific target user.
+     *
+     * @param userId Target user ID.
+     * @param pageNumber One-based page index.
+     * @param pageSize Maximum items returned per page.
+     * @param sortBy Field to sort by (created_at, updated_at).
+     * @param sortOrder Sorting direction (ASC, DESC).
+     * @param userAuthProviders Filters by authentication provider types.
+     * @param identifiers Filters by server-defined free-text identifier values.
+     * @return Paginated result containing matching user identifier models, or a mapped failure.
+     */
+    suspend fun getUserIdentifiers(
+        userId: UserId,
+        pageNumber: Int? = null,
+        pageSize: Int? = null,
+        sortBy: UserSortValues.UserIdentifierSortBy? = null,
+        sortOrder: SortOrder? = null,
+        userAuthProviders: List<UserAuthProvider>? = null,
+        identifiers: List<String>? = null
+    ): AppResult<PagedResult<UserIdentifierSummary>>
+
+    /**
      * Retrieves specific identifier details.
      */
     suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivate>

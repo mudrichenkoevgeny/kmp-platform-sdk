@@ -75,10 +75,11 @@ All paged lists must use the standardized infrastructure from `core:common`:
 
 ## 9. Universal Deep Links & Screen Parameters
 
-- **Screen Parameter Encapsulation (`*Params` Data Classes):** Decompose screen destinations with arguments must encapsulate parameters inside dedicated, serializable data classes (e.g. `UserDetailParams(val userIdValue: String)`). Inner domain value class getters convert raw parameter values safely (`val userId: UserId get() = userIdValue.toUserIdOrThrow()`).
-- **Feature-Level Parsers & Formatters:** Modular navigation parsers (`*DeepLinkParser` / `*UrlFormatter`) reside in feature modules and utilize `*DeepLinkConstants` internal objects (with nested `Segment` and `Query` objects) for host, path, and query constants.
+- **Shared Foundation Route Contracts (`shared-foundation`):** All navigation objects implement sealed interfaces (`@Serializable sealed interface`) implementing `NavigationRoute` or `ParameterizedNavigationRoute<P : NavigationScreenParams<*>>`. Every route class defines `val route: String` and `val parentRoute: String?`. Extensions like `NavigationRoute.toFullUrl(baseUrl)` serialize route paths and parameters into canonical URLs.
+- **Screen Parameter Encapsulation (`*Params` Data Classes):** Decompose screen destinations with arguments encapsulate parameters inside dedicated, serializable data classes (e.g. `UserDetailParams`, `SessionDetailParams`, `IdentifierDetailParams`, `TotpMainParams`, `LoginByEmailParams`). Inner getters convert raw parameter values safely (`val userId: UserId get() = userIdValue.toUserIdOrThrow()`).
+- **Feature-Level Parsers & Formatters:** Modular navigation parsers (`*DeepLinkParser` / `*UrlFormatter`) reside in feature modules and parse/format directly into typed `shared-foundation` routes using `destination.toFullUrl(baseUrl)`.
 - **App-Specific Aggregators:** Root aggregators (`ManagementAppDeepLinkParser`, `ClientAppDeepLinkParser`) and sealed route models (`ManagementAppDeepLinkRoute`, `ClientAppDeepLinkRoute`) reside in application modules (`samplemanagement` / `sampleclient`) to maintain strict dependency graph isolation.
-- **Race Condition Prevention:** Navigation dispatch searches for child instances synchronously across `stack.value.items.find { it.configuration == route.tab }?.instance` rather than inspecting `stack.value.active.instance` immediately after `bringToFront`.
+- **Wasm Browser History Integration (`SetupBrowserHistory`):** On direct deep link entry, `getAncestorPaths()` seeds ancestor paths into native `window.history` so Browser Back and UI Back maintain consistent history state. `calculateActivePath` observes inner component stack states reactively to update URLs when step parameters change (`totp_step`, `login_by_totp_mode`, `unlock_method`).
 
 ---
 *Refer to `AGENTS.md` for coding style rules (No FQN, No Comments).*

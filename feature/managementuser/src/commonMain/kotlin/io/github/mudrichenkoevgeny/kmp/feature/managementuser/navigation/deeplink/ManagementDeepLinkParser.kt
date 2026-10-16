@@ -1,75 +1,105 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.navigation.deeplink
 
 import io.github.mudrichenkoevgeny.kmp.core.common.navigation.deeplink.DeepLinkParser
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.ManagementDestination
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.detail.AuditEventDetailParams
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list.AuditEventListParams
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist.UserIdentifierListParams
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListParams
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsParams
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailParams
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailParams
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailParams
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.toAuditEventIdOrNull
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.route.management.ManagementAuditNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.screen.management.audit.detail.ManagementAuditEventDetailParams
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.screen.management.audit.list.ManagementAuditEventListParams
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.CommonNavigationRoutes
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.NavigationRoute
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.management.ManagementMainNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.navigation.route.management.ManagementSecurityNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.core.settings.navigation.route.management.ManagementSettingsNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.toUserIdentifierIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.toUserSessionIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.toUserIdOrNull
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.management.ManagementAuthSettingsNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.management.ManagementUsersNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.detail.IdentifierDetailParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.session.detail.SessionDetailParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.globallist.ManagementGlobalIdentifierListParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.userlist.ManagementUserIdentifierListParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.globallist.ManagementGlobalSessionListParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.userlist.ManagementUserSessionListParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.user.detail.UserDetailParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.user.globallist.ManagementUserListParams
 import io.ktor.http.Url
 
-class ManagementDeepLinkParser : DeepLinkParser<ManagementDestination> {
-    override fun parse(url: Url): ManagementDestination? {
-        val segments = url.segments.filter { it.isNotEmpty() }
-        if (segments.isEmpty() || segments[0] != ManagementDeepLinkConstants.Segment.ROOT) return null
+class ManagementDeepLinkParser : DeepLinkParser<NavigationRoute> {
+    override fun parse(url: Url): NavigationRoute? {
+        val queryMap: Map<String, Any?> = url.parameters.entries().associate { (key, values) ->
+            key to if (values.size == 1) values.first() else values
+        }
 
-        val p1 = segments.getOrNull(1)
-        val p2 = segments.getOrNull(2)
-        val p3 = segments.getOrNull(3)
+        val path = url.encodedPath.removePrefix(MANAGEMENT_PREFIX).trimEnd('/').ifEmpty { "/" }
+        val segments = path.split('/').filter { it.isNotEmpty() }
 
         return when {
-            p1 == null -> ManagementDestination.Main
-            p1 == ManagementDeepLinkConstants.Segment.SETTINGS && p2 == ManagementDeepLinkConstants.Segment.AUTH -> {
-                val dialog = url.parameters[ManagementDeepLinkConstants.Query.PARAM_DIALOG]
-                ManagementDestination.EditAuthSettings(SettingsParams(dialog))
-            }
-            p1 == ManagementDeepLinkConstants.Segment.SETTINGS && p2 == ManagementDeepLinkConstants.Segment.GLOBAL -> {
-                val dialog = url.parameters[ManagementDeepLinkConstants.Query.PARAM_DIALOG]
-                ManagementDestination.EditGlobalSettings(SettingsParams(dialog))
-            }
-            p1 == ManagementDeepLinkConstants.Segment.SETTINGS && p2 == ManagementDeepLinkConstants.Segment.SECURITY -> {
-                val dialog = url.parameters[ManagementDeepLinkConstants.Query.PARAM_DIALOG]
-                ManagementDestination.EditSecuritySettings(SettingsParams(dialog))
-            }
-            p1 == ManagementDeepLinkConstants.Segment.USERS && p2 == null -> ManagementDestination.GlobalUserList
-            p1 == ManagementDeepLinkConstants.Segment.USERS && p2 == ManagementDeepLinkConstants.Segment.CREATE -> ManagementDestination.CreateUser
-            p1 == ManagementDeepLinkConstants.Segment.USERS && p2 != null -> {
-                val userId = p2.toUserIdOrNull() ?: return ManagementDestination.GlobalUserList
-                when (p3) {
-                    null -> ManagementDestination.UserDetail(UserDetailParams(userId.asHexDashString()))
-                    ManagementDeepLinkConstants.Segment.SESSIONS -> ManagementDestination.UserSessionList(UserSessionListParams(userId.asHexDashString()))
-                    ManagementDeepLinkConstants.Segment.IDENTIFIERS -> ManagementDestination.UserIdentifierList(UserIdentifierListParams(userId.asHexDashString()))
-                    else -> ManagementDestination.UserDetail(UserDetailParams(userId.asHexDashString()))
+            path == ManagementMainNavigation.Main.route -> ManagementMainNavigation.Main
+
+            path == CommonNavigationRoutes.BASE_SETTINGS_ROUTE || path == ManagementSettingsNavigation.Main.route ->
+                ManagementSettingsNavigation.Main
+
+            path == ManagementSettingsNavigation.GlobalSettings.route ->
+                ManagementSettingsNavigation.GlobalSettings
+
+            path == ManagementAuthSettingsNavigation.AuthSettings.route ->
+                ManagementAuthSettingsNavigation.AuthSettings
+
+            path == ManagementSecurityNavigation.SecuritySettings.route ->
+                ManagementSecurityNavigation.SecuritySettings
+
+            path == ManagementUsersNavigation.BASE_USERS_ROUTE || path == ManagementUsersNavigation.UserList.ROUTE ->
+                ManagementUsersNavigation.UserList(ManagementUserListParams.parse(queryMap))
+
+            path == ManagementUsersNavigation.CreateUser.route ->
+                ManagementUsersNavigation.CreateUser
+
+            segments.size >= 2 && "/${segments[0]}" == ManagementUsersNavigation.BASE_USERS_ROUTE -> {
+                val userId = segments[1].toUserIdOrNull()
+                    ?: return ManagementUsersNavigation.UserList(ManagementUserListParams.parse(queryMap))
+                val subPath = segments.getOrNull(2)
+                when (subPath) {
+                    SESSIONS_SEGMENT -> ManagementUsersNavigation.UserSessionList(ManagementUserSessionListParams(userId = userId.asHexDashString()))
+                    IDENTIFIERS_SEGMENT -> ManagementUsersNavigation.UserIdentifierList(ManagementUserIdentifierListParams(userId = userId.asHexDashString()))
+                    else -> ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString()))
                 }
             }
-            p1 == ManagementDeepLinkConstants.Segment.AUDIT && p2 == null -> {
-                val actorIds = url.parameters.getAll(ManagementDeepLinkConstants.Query.PARAM_ACTOR_IDS)
-                val filters = if (!actorIds.isNullOrEmpty()) AuditEventListParams.Filters(actorIds) else null
-                ManagementDestination.AuditEventList(AuditEventListParams(filters))
+
+            path == ManagementAuditNavigation.Main.route || path == ManagementAuditNavigation.AuditEventList.ROUTE ->
+                ManagementAuditNavigation.AuditEventList(ManagementAuditEventListParams.parse(queryMap))
+
+            segments.size >= 2 && "/${segments[0]}" == ManagementAuditNavigation.AuditEventList.ROUTE -> {
+                val eventId = segments[1].toAuditEventIdOrNull()
+                    ?: return ManagementAuditNavigation.AuditEventList(ManagementAuditEventListParams.parse(queryMap))
+                ManagementAuditNavigation.AuditEventDetail(ManagementAuditEventDetailParams(eventId = eventId.asHexDashString()))
             }
-            p1 == ManagementDeepLinkConstants.Segment.AUDIT && p2 != null -> {
-                val eventId = p2.toAuditEventIdOrNull() ?: return ManagementDestination.AuditEventList()
-                ManagementDestination.AuditEventDetail(AuditEventDetailParams(eventId.asHexDashString()))
+
+            path == ManagementUsersNavigation.BASE_SESSIONS_ROUTE || path == ManagementUsersNavigation.GlobalSessionList.ROUTE ->
+                ManagementUsersNavigation.GlobalSessionList(ManagementGlobalSessionListParams.parse(queryMap))
+
+            segments.size >= 2 && "/${segments[0]}" == ManagementUsersNavigation.BASE_SESSIONS_ROUTE -> {
+                val sessionId = segments[1].toUserSessionIdOrNull()
+                    ?: return ManagementUsersNavigation.GlobalSessionList(ManagementGlobalSessionListParams.parse(queryMap))
+                ManagementUsersNavigation.SessionDetail(SessionDetailParams(sessionId = sessionId.asHexDashString()))
             }
-            p1 == ManagementDeepLinkConstants.Segment.SESSIONS && p2 == null -> ManagementDestination.GlobalSessionList
-            p1 == ManagementDeepLinkConstants.Segment.SESSIONS && p2 != null -> {
-                val sessionId = p2.toUserSessionIdOrNull() ?: return ManagementDestination.GlobalSessionList
-                ManagementDestination.SessionDetail(SessionDetailParams(sessionId.asHexDashString()))
+
+            path == ManagementUsersNavigation.BASE_IDENTIFIERS_ROUTE || path == ManagementUsersNavigation.GlobalIdentifierList.ROUTE ->
+                ManagementUsersNavigation.GlobalIdentifierList(ManagementGlobalIdentifierListParams.parse(queryMap))
+
+            segments.size >= 2 && "/${segments[0]}" == ManagementUsersNavigation.BASE_IDENTIFIERS_ROUTE -> {
+                val identifierId = segments[1].toUserIdentifierIdOrNull()
+                    ?: return ManagementUsersNavigation.GlobalIdentifierList(ManagementGlobalIdentifierListParams.parse(queryMap))
+                ManagementUsersNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId.asHexDashString()))
             }
-            p1 == ManagementDeepLinkConstants.Segment.IDENTIFIERS && p2 == null -> ManagementDestination.GlobalIdentifierList
-            p1 == ManagementDeepLinkConstants.Segment.IDENTIFIERS && p2 != null -> {
-                val identifierId = p2.toUserIdentifierIdOrNull() ?: return ManagementDestination.GlobalIdentifierList
-                ManagementDestination.IdentifierDetail(IdentifierDetailParams(identifierId.asHexDashString()))
-            }
-            else -> ManagementDestination.Main
+
+            else -> null
         }
+    }
+
+    private companion object {
+        const val MANAGEMENT_PREFIX = "/management"
+        const val SESSIONS_SEGMENT = "sessions"
+        const val IDENTIFIERS_SEGMENT = "identifiers"
     }
 }

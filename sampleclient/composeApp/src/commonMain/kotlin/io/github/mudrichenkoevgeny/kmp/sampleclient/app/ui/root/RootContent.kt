@@ -44,7 +44,10 @@ fun RootContent(
             LocalClientAppComponent provides clientAppComponent
         ) {
             CoreTheme {
-                SetupBrowserHistory(mainComponent)
+                SetupBrowserHistory(
+                    mainComponent = mainComponent,
+                    baseUrl = clientAppComponent.commonComponent.baseUrl
+                )
                 MainScreen(mainComponent)
             }
         }

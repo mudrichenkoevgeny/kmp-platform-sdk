@@ -31,5 +31,8 @@ class SelfManagementIdentifiersApiMock : SelfManagementIdentifiersApi {
         identifiers: List<String>?
     ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = getUserIdentifiersResult
 
-    override suspend fun emailChangePassword(request: EmailPasswordChangeRequest): AppResult<Unit> = emailChangePasswordResult
+    override suspend fun emailChangePassword(
+        userIdentifierId: UserIdentifierId,
+        request: EmailPasswordChangeRequest
+    ): AppResult<Unit> = emailChangePasswordResult
 }

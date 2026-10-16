@@ -23,7 +23,7 @@ import kotlin.test.assertIs
 class ClientMainScreenComponentImplTest {
 
     @Test
-    fun initialStackActiveChildIsHome() = withUiMainDispatcher {
+    fun initialStackActiveChildIsUser() = withUiMainDispatcher {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
@@ -32,26 +32,8 @@ class ClientMainScreenComponentImplTest {
         val main = ClientMainScreenComponentImpl(componentContext = ctx, clientAppComponent = app)
 
         val active = main.stack.value.active
-        assertIs<MainScreenComponent.Config.Home>(active.configuration)
-        assertIs<MainScreenComponent.Child.HomeChild>(active.instance)
-
-        lifecycle.destroy()
-    }
-
-    @Test
-    fun onTabClickProfile_switchesActiveChildToProfile() = withUiMainDispatcher {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        val lifecycle = LifecycleRegistry()
-        lifecycle.resume()
-        val ctx = DefaultComponentContext(lifecycle)
-        val app = clientAppComponentMock(platformContext = context)
-        val main = ClientMainScreenComponentImpl(componentContext = ctx, clientAppComponent = app)
-
-        main.onTabClick(MainScreenComponent.Config.Profile)
-
-        val active = main.stack.value.active
-        assertIs<MainScreenComponent.Config.Profile>(active.configuration)
-        assertIs<MainScreenComponent.Child.ProfileChild>(active.instance)
+        assertIs<MainScreenComponent.Config.User>(active.configuration)
+        assertIs<MainScreenComponent.Child.UserChild>(active.instance)
 
         lifecycle.destroy()
     }

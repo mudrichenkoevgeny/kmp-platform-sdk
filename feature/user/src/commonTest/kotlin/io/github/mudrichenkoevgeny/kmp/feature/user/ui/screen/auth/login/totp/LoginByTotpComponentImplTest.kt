@@ -12,6 +12,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.data
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.login.LoginByTotpRecoveryCodeUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.login.LoginByTotpUseCaseMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.login.totp.LoginByTotpMode
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -48,7 +49,7 @@ class LoginByTotpComponentImplTest {
             advanceUntilIdle()
 
             var content = assertIs<LoginByTotpScreenState.Content>(context.component.state.value)
-            assertEquals(LoginByTotpScreenState.Mode.RECOVERY_CODE, content.mode)
+            assertEquals(LoginByTotpMode.RECOVERY_CODE, content.mode)
             assertEquals("", content.code)
             assertNull(content.actionError)
 
@@ -56,7 +57,7 @@ class LoginByTotpComponentImplTest {
             advanceUntilIdle()
 
             content = assertIs<LoginByTotpScreenState.Content>(context.component.state.value)
-            assertEquals(LoginByTotpScreenState.Mode.TOTP, content.mode)
+            assertEquals(LoginByTotpMode.TOTP, content.mode)
             assertEquals("", content.code)
         } finally {
             context.destroy()

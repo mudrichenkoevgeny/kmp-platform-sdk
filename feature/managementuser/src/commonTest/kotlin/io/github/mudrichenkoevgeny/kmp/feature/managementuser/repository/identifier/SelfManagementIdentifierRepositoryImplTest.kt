@@ -61,7 +61,8 @@ class SelfManagementIdentifierRepositoryImplTest {
     fun `emailChangePassword forwards request`() = runTest {
         api.emailChangePasswordResult = AppResult.Success(Unit)
 
-        val result = repo.emailChangePassword("test@example.com", "old-pass", "new-pass")
+        val id = UserIdentifierId(Uuid.random())
+        val result = repo.emailChangePassword(id, "old-pass", "new-pass")
 
         assertIs<AppResult.Success<Unit>>(result)
     }

@@ -47,6 +47,30 @@ class ManagementIdentifierRepositoryImpl(
         }
     }
 
+    override suspend fun getUserIdentifiers(
+        userId: UserId,
+        pageNumber: Int?,
+        pageSize: Int?,
+        sortBy: UserSortValues.UserIdentifierSortBy?,
+        sortOrder: SortOrder?,
+        userAuthProviders: List<UserAuthProvider>?,
+        identifiers: List<String>?
+    ): AppResult<PagedResult<UserIdentifierSummary>> {
+        return managementIdentifierApi.getUserIdentifiers(
+            userId = userId,
+            pageNumber = pageNumber,
+            pageSize = pageSize,
+            sortBy = sortBy,
+            sortOrder = sortOrder,
+            userAuthProviders = userAuthProviders,
+            identifiers = identifiers
+        ).mapSuccess { pagedPayload ->
+            pagedPayload.mapItems { userIdentifierPayload ->
+                userIdentifierPayload.toUserIdentifierSummary()
+            }
+        }
+    }
+
     override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivate> {
         return managementIdentifierApi.getIdentifier(identifierId).mapSuccess { payload ->
             payload.toUserIdentifierPrivate()

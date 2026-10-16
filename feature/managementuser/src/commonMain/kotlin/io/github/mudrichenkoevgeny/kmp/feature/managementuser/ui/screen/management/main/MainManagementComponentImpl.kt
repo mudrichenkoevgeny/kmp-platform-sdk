@@ -7,33 +7,15 @@ import com.arkivanov.decompose.ComponentContext
  */
 class MainManagementComponentImpl(
     componentContext: ComponentContext,
-    private val onNavigateToEditAuthSettings: () -> Unit,
-    private val onNavigateToEditGlobalSettings: () -> Unit,
-    private val onNavigateToEditSecuritySettings: () -> Unit,
     private val onNavigateToGlobalUserList: () -> Unit,
-    private val onNavigateToAuditEventList: () -> Unit,
     private val onNavigateToGlobalSessionList: () -> Unit,
-    private val onNavigateToGlobalIdentifierList: () -> Unit
+    private val onNavigateToGlobalIdentifierList: () -> Unit,
+    private val onNavigateToAuditEventList: () -> Unit,
+    private val onNavigateToSettings: () -> Unit
 ) : MainManagementComponent, ComponentContext by componentContext {
-
-    override fun onEditAuthSettingsClick() {
-        onNavigateToEditAuthSettings()
-    }
-
-    override fun onEditGlobalSettingsClick() {
-        onNavigateToEditGlobalSettings()
-    }
-
-    override fun onEditSecuritySettingsClick() {
-        onNavigateToEditSecuritySettings()
-    }
 
     override fun onGlobalUserListClick() {
         onNavigateToGlobalUserList()
-    }
-
-    override fun onAuditEventListClick() {
-        onNavigateToAuditEventList()
     }
 
     override fun onGlobalSessionListClick() {
@@ -42,5 +24,13 @@ class MainManagementComponentImpl(
 
     override fun onGlobalIdentifierListClick() {
         onNavigateToGlobalIdentifierList()
+    }
+
+    override fun onAuditEventListClick() {
+        onNavigateToAuditEventList()
+    }
+
+    override fun onSettingsClick() {
+        onNavigateToSettings()
     }
 }

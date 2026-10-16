@@ -57,6 +57,46 @@ interface ManagementSessionApi {
     ): AppResult<PagedResult<UserSessionSummaryPayload>>
 
     /**
+     * Returns a paginated and filtered list of active summary sessions for a specific target user.
+     *
+     * @param userId Target user ID.
+     * @param pageNumber One-based page index.
+     * @param pageSize Maximum items returned per page.
+     * @param sortBy Field to sort by.
+     * @param sortOrder Sorting direction.
+     * @param identifiers Filters by server-defined free-text identifier values.
+     * @param identifierIds Filters by unique credential record IDs.
+     * @param userAuthProviders Filters by authentication provider types.
+     * @param clientTypes Filters by client category types.
+     * @param userAgents Filters by server-defined user agent substrings.
+     * @param ipAddresses Filters by server-defined IP address substrings.
+     * @param languages Filters by server-defined language tags.
+     * @param deviceIds Filters by opaque unique device IDs.
+     * @param deviceNames Filters by server-defined device name substrings.
+     * @param appVersions Filters by application version strings.
+     * @param operationSystemVersions Filters by server-defined operating system version substrings.
+     * @return Paginated result containing matching session payloads, or a mapped failure.
+     */
+    suspend fun getUserSessions(
+        userId: UserId,
+        pageNumber: Int? = null,
+        pageSize: Int? = null,
+        sortBy: UserSortValues.UserSessionSortBy? = null,
+        sortOrder: SortOrder? = null,
+        identifiers: List<String>? = null,
+        identifierIds: List<String>? = null,
+        userAuthProviders: List<UserAuthProvider>? = null,
+        clientTypes: List<ClientType>? = null,
+        userAgents: List<String>? = null,
+        ipAddresses: List<String>? = null,
+        languages: List<String>? = null,
+        deviceIds: List<String>? = null,
+        deviceNames: List<String>? = null,
+        appVersions: List<String>? = null,
+        operationSystemVersions: List<String>? = null
+    ): AppResult<PagedResult<UserSessionSummaryPayload>>
+
+    /**
      * Retrieves specific session details.
      *
      * @param sessionId Unique session identifier.

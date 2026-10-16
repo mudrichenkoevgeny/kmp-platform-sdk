@@ -1,8 +1,9 @@
 package io.github.mudrichenkoevgeny.kmp.samplemanagement.app.navigation.deeplink
 
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.ManagementDestination
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileDestination
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.route.management.ManagementAuditNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientUserNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.management.ManagementUsersNavigation
 import io.ktor.http.Url
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -20,36 +21,36 @@ class ManagementAppDeepLinkParserTest {
         val route = parser.parse(url)
 
         val managementRoute = assertIs<ManagementAppDeepLinkRoute.Management>(route)
-        val userDetailDest = assertIs<ManagementDestination.UserDetail>(managementRoute.destination)
-        assertEquals(userId, userDetailDest.userId.asHexDashString())
+        val userDetailDest = assertIs<ManagementUsersNavigation.UserDetail>(managementRoute.destination)
+        assertEquals(userId, userDetailDest.params.userId)
     }
 
     @Test
     fun `test valid profile route parsing`() {
-        val url = Url("https://kmp-platform.internal/profile/totp")
+        val url = Url("https://kmp-platform.internal/user/totp")
         val route = parser.parse(url)
 
-        val profileRoute = assertIs<ManagementAppDeepLinkRoute.Profile>(route)
-        assertEquals(ProfileDestination.TotpMain(), profileRoute.destination)
+        val userRoute = assertIs<ManagementAppDeepLinkRoute.User>(route)
+        assertEquals(ClientUserNavigation.TotpMain(), userRoute.destination)
     }
 
     @Test
     fun `test corrupted UUID falls back to parent list`() {
-        val url = Url("https://kmp-platform.internal/management/users/invalid-uuid")
-        val route = parser.parse(url)
+        val url = "https://kmp-platform.internal/management/users/invalid-uuid"
+        val route = parser.parse(Url(url))
 
         val managementRoute = assertIs<ManagementAppDeepLinkRoute.Management>(route)
-        assertEquals(ManagementDestination.GlobalUserList, managementRoute.destination)
+        assertEquals(ManagementUsersNavigation.UserList(), managementRoute.destination)
     }
 
     @Test
     fun `test query parameters parsing with URL decoding`() {
-        val url = Url("https://kmp-platform.internal/management/audit?actorIds=actor%201&actorIds=actor%202")
+        val url = Url("https://kmp-platform.internal/management/audit?actor_id=actor%201&actor_id=actor%202")
         val route = parser.parse(url)
 
         val managementRoute = assertIs<ManagementAppDeepLinkRoute.Management>(route)
-        val auditDest = assertIs<ManagementDestination.AuditEventList>(managementRoute.destination)
-        assertEquals(listOf("actor 1", "actor 2"), auditDest.params.initialFilters?.actorIds)
+        val auditDest = assertIs<ManagementAuditNavigation.AuditEventList>(managementRoute.destination)
+        assertEquals(listOf("actor 1", "actor 2"), auditDest.params.actorIds)
     }
 
     @Test

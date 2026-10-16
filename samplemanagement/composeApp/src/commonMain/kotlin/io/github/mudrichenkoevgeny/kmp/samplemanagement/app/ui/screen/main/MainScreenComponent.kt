@@ -4,16 +4,14 @@ import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.value.Value
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.ManagementLoginDestination
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.root.ManagementRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.root.UserRootComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.navigation.deeplink.ManagementAppDeepLinkRoute
-import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home.HomeScreenComponent
 import kotlinx.serialization.Serializable
 
 /**
- * Decompose root for the management sample: tab stack (home, profile, settings) and a dialog slot for login flow.
+ * Decompose root for the management sample: tab stack (user and management) and a dialog slot for login flow.
  */
 interface MainScreenComponent {
 
@@ -47,24 +45,21 @@ interface MainScreenComponent {
 
     /** Child instances created for each tab configuration. */
     sealed class Child {
-        class HomeChild(val component: HomeScreenComponent) : Child()
-        class ProfileChild(val component: ProfileRootComponent) : Child()
-        class SettingsChild(val component: ManagementRootComponent) : Child()
+        class ManagementChild(val component: ManagementRootComponent) : Child()
+        class UserChild(val component: UserRootComponent) : Child()
     }
 
     /** Serializable tab keys for the main stack. */
     @Serializable
     sealed class Config {
-        @Serializable object Home : Config()
-        @Serializable object Profile : Config()
-        @Serializable object Settings : Config()
+        @Serializable object Management : Config()
+        @Serializable object User : Config()
     }
 
     /** Serializable keys for dialog-slot children. */
     @Serializable
     sealed class DialogConfig {
         @Serializable data class Login(
-            val initialDestination: ManagementLoginDestination = ManagementLoginDestination.Welcome,
             val isDismissible: Boolean = true
         ) : DialogConfig()
     }

@@ -1,8 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.sampleclient.app.navigation.deeplink
 
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.ClientLoginDestination
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileDestination
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientAuthNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientUserNavigation
 import io.ktor.http.Url
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -16,65 +16,50 @@ class ClientAppDeepLinkParserTest {
     @Test
     fun `test valid profile route parsing`() {
         val sessionId = UserSessionId.generate().asHexDashString()
-        val url = Url("https://kmp-platform.internal/profile/sessions/$sessionId")
+        val url = Url("https://kmp-platform.internal/user/sessions/$sessionId")
         val route = parser.parse(url)
 
-        val profileRoute = assertIs<ClientAppDeepLinkRoute.Profile>(route)
-        val sessionDetailDest = assertIs<ProfileDestination.SessionDetail>(profileRoute.destination)
-        assertEquals(sessionId, sessionDetailDest.sessionId.asHexDashString())
+        val userRoute = assertIs<ClientAppDeepLinkRoute.User>(route)
+        val sessionDetailDest = assertIs<ClientUserNavigation.SessionDetail>(userRoute.destination)
+        assertEquals(sessionId, sessionDetailDest.params.sessionId)
+    }
+
+    @Test
+    fun `test welcome login deeplink parsing`() {
+        val url = Url("https://kmp-platform.internal/auth/login")
+        val route = parser.parse(url)
+
+        val loginRoute = assertIs<ClientAppDeepLinkRoute.Login>(route)
+        assertIs<ClientAuthNavigation.Main>(loginRoute.destination)
     }
 
     @Test
     fun `test phone login deeplink parsing with query param`() {
-        val url = Url("https://kmp-platform.internal/login/phone?phone=%2B1234567890")
+        val url = Url("https://kmp-platform.internal/auth/login/phone?phone_number=%2B1234567890")
         val route = parser.parse(url)
 
         val loginRoute = assertIs<ClientAppDeepLinkRoute.Login>(route)
-        val phoneDest = assertIs<ClientLoginDestination.LoginByPhone>(loginRoute.destination)
+        val phoneDest = assertIs<ClientAuthNavigation.LoginByPhone>(loginRoute.destination)
         assertEquals("+1234567890", phoneDest.params.phone)
-        assertEquals(false, phoneDest.params.isConfirmStep)
-    }
-
-    @Test
-    fun `test phone login confirm step deeplink parsing`() {
-        val url = Url("https://kmp-platform.internal/login/phone/confirm?phone=%2B1234567890")
-        val route = parser.parse(url)
-
-        val loginRoute = assertIs<ClientAppDeepLinkRoute.Login>(route)
-        val phoneDest = assertIs<ClientLoginDestination.LoginByPhone>(loginRoute.destination)
-        assertEquals("+1234567890", phoneDest.params.phone)
-        assertEquals(true, phoneDest.params.isConfirmStep)
     }
 
     @Test
     fun `test email registration deeplink parsing with query param`() {
-        val url = Url("https://kmp-platform.internal/register/email?email=user%40example.com")
+        val url = Url("https://kmp-platform.internal/auth/registration?email=user%40example.com")
         val route = parser.parse(url)
 
         val loginRoute = assertIs<ClientAppDeepLinkRoute.Login>(route)
-        val regDest = assertIs<ClientLoginDestination.RegistrationByEmail>(loginRoute.destination)
+        val regDest = assertIs<ClientAuthNavigation.Registration>(loginRoute.destination)
         assertEquals("user@example.com", regDest.params.email)
-        assertEquals(false, regDest.params.isConfirmStep)
-    }
-
-    @Test
-    fun `test email registration confirm step deeplink parsing`() {
-        val url = Url("https://kmp-platform.internal/register/email/confirm?email=user%40example.com")
-        val route = parser.parse(url)
-
-        val loginRoute = assertIs<ClientAppDeepLinkRoute.Login>(route)
-        val regDest = assertIs<ClientLoginDestination.RegistrationByEmail>(loginRoute.destination)
-        assertEquals("user@example.com", regDest.params.email)
-        assertEquals(true, regDest.params.isConfirmStep)
     }
 
     @Test
     fun `test corrupted UUID falls back to parent list`() {
-        val url = Url("https://kmp-platform.internal/profile/sessions/corrupted-session-id")
+        val url = Url("https://kmp-platform.internal/user/sessions/corrupted-session-id")
         val route = parser.parse(url)
 
-        val profileRoute = assertIs<ClientAppDeepLinkRoute.Profile>(route)
-        assertEquals(ProfileDestination.Sessions, profileRoute.destination)
+        val userRoute = assertIs<ClientAppDeepLinkRoute.User>(route)
+        assertEquals(ClientUserNavigation.SessionList(), userRoute.destination)
     }
 
     @Test

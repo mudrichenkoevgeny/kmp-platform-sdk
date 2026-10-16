@@ -24,6 +24,13 @@ import kotlinx.coroutines.launch
 
 /**
  * Default implementation of [EditSecuritySettingsComponent].
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param initialDialogConfig Optional initial modal dialog configuration.
+ * @param getManagementSecuritySettingsUseCase Retrieves current security settings.
+ * @param saveRemoteSecuritySettingsUseCase Saves updated security settings.
+ * @param resetRemoteSecuritySettingsUseCase Resets security settings to defaults.
+ * @param onBack Pops this screen from the navigation stack.
  */
 class EditSecuritySettingsComponentImpl(
     componentContext: ComponentContext,

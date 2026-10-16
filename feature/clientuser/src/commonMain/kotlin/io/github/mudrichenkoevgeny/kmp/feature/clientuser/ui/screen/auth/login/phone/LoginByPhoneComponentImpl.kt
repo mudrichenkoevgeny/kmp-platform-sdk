@@ -24,6 +24,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.login.phone.LoginByPhoneParams
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -31,7 +32,7 @@ import kotlinx.coroutines.launch
  * Default [LoginByPhoneComponent]: send-code, cooldown handling, and login-by-phone confirmation.
  *
  * @param componentContext Decompose [ComponentContext].
- * @param initialConfig Optional initial step configuration.
+ * @param params Screen destination parameters.
  * @param loginRepository reads remaining confirmation delay for a phone number.
  * @param sendLoginConfirmationToPhoneUseCase requests an SMS code.
  * @param loginByPhoneUseCase completes login with phone and code.
@@ -42,7 +43,7 @@ import kotlinx.coroutines.launch
  */
 class LoginByPhoneComponentImpl(
     componentContext: ComponentContext,
-    initialConfig: LoginByPhoneStepConfig = LoginByPhoneStepConfig.PhoneInput(),
+    params: LoginByPhoneParams = LoginByPhoneParams(),
     private val loginRepository: LoginRepository,
     private val sendLoginConfirmationToPhoneUseCase: SendLoginConfirmationToPhoneUseCase,
     private val loginByPhoneUseCase: LoginByPhoneUseCase,
@@ -65,30 +66,17 @@ class LoginByPhoneComponentImpl(
         childStack(
             source = stackNavigation,
             serializer = LoginByPhoneStepConfig.serializer(),
-            initialConfiguration = initialConfig,
+            initialConfiguration = LoginByPhoneStepConfig.PhoneInput(initialPhone = params.phone ?: ""),
             handleBackButton = true,
             childFactory = ::createChild
         )
 
     private val _state = MutableValue(
         LoginByPhoneScreenState(
-            phoneNumber = when (initialConfig) {
-                is LoginByPhoneStepConfig.PhoneInput -> initialConfig.initialPhone
-                is LoginByPhoneStepConfig.CodeInput -> initialConfig.phone
-            },
-            resendTimerSeconds = when (initialConfig) {
-                is LoginByPhoneStepConfig.PhoneInput -> 0
-                is LoginByPhoneStepConfig.CodeInput -> initialConfig.resendTimerSeconds
-            }
+            phoneNumber = params.phone ?: ""
         )
     )
     override val state: Value<LoginByPhoneScreenState> = _state
-
-    init {
-        if (initialConfig is LoginByPhoneStepConfig.CodeInput && initialConfig.resendTimerSeconds > 0) {
-            startTimer(initialConfig.resendTimerSeconds)
-        }
-    }
 
     private fun createChild(
         config: LoginByPhoneStepConfig,
@@ -127,7 +115,9 @@ class LoginByPhoneComponentImpl(
 
     override fun onSendCodeClick() {
         val current = _state.value
-        if (current.actionLoading) return
+        if (current.actionLoading) {
+            return
+        }
 
         _state.value = current.copy(actionLoading = true, actionError = null)
 
@@ -148,7 +138,9 @@ class LoginByPhoneComponentImpl(
 
     override fun onConfirmCodeClick() {
         val current = _state.value
-        if (current.actionLoading || !current.isCodeFullLength) return
+        if (current.actionLoading || !current.isCodeFullLength) {
+            return
+        }
 
         _state.value = current.copy(actionLoading = true, actionError = null)
 
@@ -216,7 +208,9 @@ class LoginByPhoneComponentImpl(
 
     private fun startTimer(seconds: Int) {
         timerJob?.cancel()
-        if (seconds <= 0) return
+        if (seconds <= 0) {
+            return
+        }
 
         timerJob = scope.launch {
             resendCountdown(

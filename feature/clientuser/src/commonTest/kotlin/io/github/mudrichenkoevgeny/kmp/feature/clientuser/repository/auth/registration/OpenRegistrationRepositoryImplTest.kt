@@ -12,7 +12,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.mapper.otpconfirmation.toOtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.register.RegisterByEmailRequest
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.registration.RegistrationByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -32,7 +32,7 @@ class OpenRegistrationRepositoryImplTest {
 
         val success = assertIs<AppResult.Success<AuthData>>(registerResult)
         assertEquals(wire.toAuthData(), success.data)
-        assertEquals(RegisterByEmailRequest(REGISTER_EMAIL, REGISTER_PASSWORD, REGISTER_CODE), api.lastRegisterByEmailRequest)
+        assertEquals(RegistrationByEmailRequest(REGISTER_EMAIL, REGISTER_PASSWORD, REGISTER_CODE), api.lastRegisterByEmailRequest)
     }
 
     @Test

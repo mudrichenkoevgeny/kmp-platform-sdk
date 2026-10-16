@@ -25,6 +25,14 @@ open class ManagementIdentifierRepositoryMock : ManagementIdentifierRepository {
         )
     }
 
+    var getUserIdentifiersResultProvider: (UserId) -> AppResult<PagedResult<UserIdentifierSummary>> = { _ ->
+        AppResult.Success(
+            pagedResultMock(
+                listOf(userIdentifierSummaryMock())
+            )
+        )
+    }
+
     var getIdentifierResultProvider: (String) -> AppResult<UserIdentifierPrivate> = {
         AppResult.Success(userIdentifierPrivateMock())
     }
@@ -49,6 +57,21 @@ open class ManagementIdentifierRepositoryMock : ManagementIdentifierRepository {
         lastSortBy = sortBy
         lastIdentifiers = identifiers
         return getIdentifiersResultProvider()
+    }
+
+    override suspend fun getUserIdentifiers(
+        userId: UserId,
+        pageNumber: Int?,
+        pageSize: Int?,
+        sortBy: UserSortValues.UserIdentifierSortBy?,
+        sortOrder: SortOrder?,
+        userAuthProviders: List<UserAuthProvider>?,
+        identifiers: List<String>?
+    ): AppResult<PagedResult<UserIdentifierSummary>> {
+        lastUserId = userId
+        lastSortBy = sortBy
+        lastIdentifiers = identifiers
+        return getUserIdentifiersResultProvider(userId)
     }
 
     override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivate> {

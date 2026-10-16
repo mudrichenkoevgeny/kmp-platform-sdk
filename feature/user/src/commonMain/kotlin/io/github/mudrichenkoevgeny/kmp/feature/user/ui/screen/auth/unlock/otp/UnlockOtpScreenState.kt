@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.otp
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.UnlockMethod
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.UnlockMethod
 
 /** UI state for entering an OTP code to unlock an account. */
 data class UnlockOtpScreenState(

@@ -1,6 +1,6 @@
 # feature/clientuser
 
-Kotlin Multiplatform feature module for user identity, authentication flows, session-oriented HTTP behavior, and related UI (Compose + Decompose). It depends on `core:common`, `core:settings`, and `core:security`. This module provides a complete identity solution, including multi-factor authentication (MFA), social login, and profile management.
+Kotlin Multiplatform feature module for client user identity, authentication flows, social sign-in, and Compose + Decompose UI. It depends on `core:common`, `core:settings`, `core:security`, and `feature:user`. This module provides the client-facing auth solution for consumer applications.
 
 ## What it provides
 
@@ -23,7 +23,9 @@ Kotlin Multiplatform feature module for user identity, authentication flows, ses
 - **Throttling:** [ConfirmationRepository] manages client-side cooldowns for sending verification codes (SMS/Email) using [ConfirmationType].
 
 ### 4. UI & Navigation
-- **Decompose Routing:** [ClientLoginRootComponent] manages authentication navigation (**Welcome** -> **Login** -> **Registration** -> **Reset Password**).
+- **Decompose Routing:** [ClientLoginRootComponent] manages authentication navigation (**Welcome** -> **Login** -> **Registration** -> **Reset Password** -> **Unlock**).
+- **Screen Parameter Encapsulation (`*Params`):** Screen configurations with arguments wrap parameters in dedicated serializable data classes (`LoginByEmailParams`, `LoginByPhoneParams`, `LoginByTotpParams`, `ClientRegistrationByEmailParams`, `ResetPasswordParams`, `UnlockMethodSelectionParams`, `UnlockTargetInputParams`, `UnlockOtpInputParams`).
+- **Deep Link Parsing & Formatting:** [ClientUserDeepLinkParser] and [ClientUserUrlFormatter] parse and format deep link paths directly into `shared-foundation` `ClientAuthNavigation` / `ClientUserNavigation` routes using `destination.toFullUrl(baseUrl)`.
 - **Validation:** [FieldValidator] provides conservative client-side checks for emails and phone numbers.
 - **Legal Integration:** Standardized [LegalFooter] for Privacy Policy and Terms of Service links.
 - **UI Components:** Reusable [AuthProviderGrid] and [AuthProviderButton] for consistent social login presentation.
@@ -123,3 +125,6 @@ Compose Multiplatform resources for this module are generated with `publicResCla
 [UserWebSocketMessageHandler]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/network/websocket/messagehandler/UserWebSocketMessageHandler.kt
 [AuthProviderGrid]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/component/auth/AuthProviderGrid.kt
 [LegalFooter]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/component/legal/LegalFooter.kt
+[ClientLoginRootComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/ui/screen/auth/login/root/ClientLoginRootComponent.kt
+[ClientUserDeepLinkParser]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/navigation/deeplink/ClientUserDeepLinkParser.kt
+[ClientUserUrlFormatter]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/navigation/deeplink/ClientUserUrlFormatter.kt

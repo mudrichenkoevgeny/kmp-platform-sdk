@@ -55,5 +55,8 @@ open class OpenIdentifiersApiMock : OpenIdentifiersApi {
 
     override suspend fun sendAddPhoneIdentifierConfirmation(request: SendConfirmationToPhoneRequest): AppResult<OtpConfirmationPayload> = sendAddPhoneIdentifierConfirmationResult
 
-    override suspend fun emailChangePassword(request: EmailPasswordChangeRequest): AppResult<Unit> = emailChangePasswordResult
+    override suspend fun emailChangePassword(
+        userIdentifierId: UserIdentifierId,
+        request: EmailPasswordChangeRequest
+    ): AppResult<Unit> = emailChangePasswordResult
 }

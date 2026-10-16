@@ -1,12 +1,10 @@
 package io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main
 
-import io.github.mudrichenkoevgeny.kmp.core.common.ic_home
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_profile
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_settings
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.Res
-import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.nav_home
-import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.nav_profile
-import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.nav_settings
+import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.nav_management
+import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.nav_user
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
@@ -19,40 +17,30 @@ sealed interface MainScreenDestination {
     val title: StringResource
     val iconRes: DrawableResource
 
-    data object Home : MainScreenDestination {
-        override val config = MainScreenComponent.Config.Home
-        override val title = Res.string.nav_home
-        override val iconRes = CommonRes.drawable.ic_home
-    }
-
-    data object Profile : MainScreenDestination {
-        override val config = MainScreenComponent.Config.Profile
-        override val title = Res.string.nav_profile
-        override val iconRes = CommonRes.drawable.ic_profile
-    }
-
-    data object Settings : MainScreenDestination {
-        override val config = MainScreenComponent.Config.Settings
-        override val title = Res.string.nav_settings
+    data object Management : MainScreenDestination {
+        override val config = MainScreenComponent.Config.Management
+        override val title = Res.string.nav_management
         override val iconRes = CommonRes.drawable.ic_settings
+    }
+
+    data object User : MainScreenDestination {
+        override val config = MainScreenComponent.Config.User
+        override val title = Res.string.nav_user
+        override val iconRes = CommonRes.drawable.ic_profile
     }
 
     companion object {
         /**
          * Tabs shown in mobile bottom navigation (order matches display).
          */
-        val allDestinations = listOf(Home, Profile, Settings)
+        val allDestinations = listOf(Management, User)
 
         /**
          * @param isAuthorized Whether the user is authenticated.
          * @return List of destinations available to the current user state.
          */
         fun getDestinations(isAuthorized: Boolean): List<MainScreenDestination> =
-            if (isAuthorized) {
-                listOf(Home, Profile, Settings)
-            } else {
-                listOf(Home, Profile)
-            }
+            allDestinations
 
         /**
          * @param config Stack configuration for the active child.
@@ -60,9 +48,8 @@ sealed interface MainScreenDestination {
          */
         fun fromConfig(config: MainScreenComponent.Config): MainScreenDestination =
             when (config) {
-                is MainScreenComponent.Config.Home -> Home
-                is MainScreenComponent.Config.Profile -> Profile
-                is MainScreenComponent.Config.Settings -> Settings
+                is MainScreenComponent.Config.Management -> Management
+                is MainScreenComponent.Config.User -> User
             }
     }
 }

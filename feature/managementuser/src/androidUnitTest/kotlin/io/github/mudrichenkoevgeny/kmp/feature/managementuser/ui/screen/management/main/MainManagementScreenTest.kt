@@ -26,18 +26,14 @@ class MainManagementScreenTest {
         var sessionsClicked = false
         var identifiersClicked = false
         var auditClicked = false
-        var authClicked = false
-        var globalClicked = false
-        var securityClicked = false
+        var settingsClicked = false
 
         val component = object : MainManagementComponentMock() {
             override fun onGlobalUserListClick() { usersClicked = true }
             override fun onGlobalSessionListClick() { sessionsClicked = true }
             override fun onGlobalIdentifierListClick() { identifiersClicked = true }
             override fun onAuditEventListClick() { auditClicked = true }
-            override fun onEditAuthSettingsClick() { authClicked = true }
-            override fun onEditGlobalSettingsClick() { globalClicked = true }
-            override fun onEditSecuritySettingsClick() { securityClicked = true }
+            override fun onSettingsClick() { settingsClicked = true }
         }
 
         setContent {
@@ -60,13 +56,7 @@ class MainManagementScreenTest {
         onNodeWithTag(MainManagementTestTags.AUDIT_EVENT_LIST_BUTTON).performScrollTo().performClick()
         assertTrue(auditClicked)
 
-        onNodeWithTag(MainManagementTestTags.EDIT_AUTH_SETTINGS_BUTTON).performScrollTo().performClick()
-        assertTrue(authClicked)
-
-        onNodeWithTag(MainManagementTestTags.EDIT_GLOBAL_SETTINGS_BUTTON).performScrollTo().performClick()
-        assertTrue(globalClicked)
-
-        onNodeWithTag(MainManagementTestTags.EDIT_SECURITY_SETTINGS_BUTTON).performScrollTo().performClick()
-        assertTrue(securityClicked)
+        onNodeWithTag(MainManagementTestTags.SETTINGS_BUTTON).performScrollTo().performClick()
+        assertTrue(settingsClicked)
     }
 }

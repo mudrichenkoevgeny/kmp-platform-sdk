@@ -16,22 +16,19 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCorou
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.root.ClientLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.ClientAppComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.navigation.deeplink.ClientAppDeepLinkRoute
-import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.home.HomeScreenComponentImpl
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 
 /**
- * Default [MainScreenComponent]: stack navigation for home and profile, slot for [ClientLoginRootComponent].
+ * Default [MainScreenComponent]: stack navigation for user flow and slot for [ClientLoginRootComponent].
  *
  * @param componentContext Decompose lifecycle context.
  * @param clientAppComponent Host graph used to build feature components and dialogs.
- * @param initialDeepLinkRoute Optional initial deep link route.
  */
 class ClientMainScreenComponentImpl(
     componentContext: ComponentContext,
-    private val clientAppComponent: ClientAppComponent,
-    initialDeepLinkRoute: ClientAppDeepLinkRoute? = null
+    private val clientAppComponent: ClientAppComponent
 ) : MainScreenComponent, ComponentContext by componentContext {
 
     private val userRepository = clientAppComponent.clientUserComponent.userRepository
@@ -51,7 +48,7 @@ class ClientMainScreenComponentImpl(
         childStack(
             source = navigation,
             serializer = null,
-            initialConfiguration = MainScreenComponent.Config.Home,
+            initialConfiguration = MainScreenComponent.Config.User,
             handleBackButton = true,
             childFactory = ::createChild
         )
@@ -73,10 +70,6 @@ class ClientMainScreenComponentImpl(
                 }
             }
             .launchIn(componentCoroutineScope())
-
-        initialDeepLinkRoute?.let { route ->
-            handleDeepLink(route)
-        }
     }
 
     private fun createChild(
@@ -84,14 +77,9 @@ class ClientMainScreenComponentImpl(
         context: ComponentContext
     ): MainScreenComponent.Child =
         when (config) {
-            is MainScreenComponent.Config.Home -> {
-                MainScreenComponent.Child.HomeChild(
-                    HomeScreenComponentImpl(context)
-                )
-            }
-            is MainScreenComponent.Config.Profile -> {
-                MainScreenComponent.Child.ProfileChild(
-                    clientAppComponent.clientUserComponent.createProfileComponent(
+            is MainScreenComponent.Config.User -> {
+                MainScreenComponent.Child.UserChild(
+                    clientAppComponent.clientUserComponent.createUserComponent(
                         componentContext = context,
                         onNavigateToLogin = { onShowLogin() }
                     )
@@ -107,7 +95,6 @@ class ClientMainScreenComponentImpl(
             is MainScreenComponent.DialogConfig.Login -> {
                 clientAppComponent.clientUserComponent.createLoginRootDialogComponent(
                     componentContext = context,
-                    initialDestination = config.initialDestination,
                     onFinished = {
                         onDismissLogin()
                         pendingRoute?.let { route ->
@@ -133,10 +120,11 @@ class ClientMainScreenComponentImpl(
         val targetChild = stack.value.items.find { it.configuration == route.tab }?.instance
         when (route) {
             is ClientAppDeepLinkRoute.Login -> {
-                dialogSlotNavigation.activate(MainScreenComponent.DialogConfig.Login(initialDestination = route.destination))
+                dialogSlotNavigation.activate(MainScreenComponent.DialogConfig.Login())
+                loginDialogSlot.value.child?.instance?.navigateTo(route.destination)
             }
-            is ClientAppDeepLinkRoute.Profile -> {
-                if (targetChild is MainScreenComponent.Child.ProfileChild) {
+            is ClientAppDeepLinkRoute.User -> {
+                if (targetChild is MainScreenComponent.Child.UserChild) {
                     targetChild.component.navigateTo(route.destination)
                 }
             }

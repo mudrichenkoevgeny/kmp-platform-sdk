@@ -2,16 +2,16 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.lo
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.ManagementLoginDestination
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.pendingdeletion.PendingDeletionComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.root.UnlockRootComponent
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.management.ManagementAuthNavigation
 
 /**
- * Root of the nested login flow for management: stack navigation over [ManagementLoginDestination] with restricted child components.
+ * Root of the nested login flow for management: stack navigation over [ManagementAuthNavigation] with restricted child components.
  */
 interface ManagementLoginRootComponent {
     /**
@@ -19,7 +19,14 @@ interface ManagementLoginRootComponent {
      *
      * @return reactive stack from Decompose ([Value] of [ChildStack]).
      */
-    val stack: Value<ChildStack<ManagementLoginDestination, Child>>
+    val stack: Value<ChildStack<ManagementAuthNavigation, Child>>
+
+    /**
+     * Navigates to the specified [ManagementAuthNavigation] destination.
+     *
+     * @param destination Destination route.
+     */
+    fun navigateTo(destination: ManagementAuthNavigation)
 
     /**
      * Called when the host should close the login surface (dialog or bottom sheet dismissed).
@@ -27,7 +34,7 @@ interface ManagementLoginRootComponent {
     fun onDismiss()
 
     /**
-     * Active child for a [ManagementLoginDestination] configuration; holds the corresponding Decompose component.
+     * Active child for a [ManagementAuthNavigation] configuration; holds the corresponding Decompose component.
      */
     sealed interface Child {
         /**

@@ -3,9 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.appendResult
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ChoiceListingFilterState
@@ -24,6 +22,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.eve
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.screen.management.audit.list.ManagementAuditEventListParams
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import kotlinx.coroutines.launch
@@ -32,13 +31,14 @@ import kotlinx.coroutines.launch
  * Default implementation of [AuditEventListComponent].
  *
  * @param componentContext Decompose [ComponentContext].
+ * @param params Audit event list parameters.
  * @param getAuditEventsUseCase Fetches paginated audit events.
  * @param onNavigateToEventDetail Navigates to audit event detail screen.
  * @param onBack Pops this screen from the navigation stack.
  */
 class AuditEventListComponentImpl(
     componentContext: ComponentContext,
-    private val params: AuditEventListParams = AuditEventListParams(),
+    private val params: ManagementAuditEventListParams = ManagementAuditEventListParams(),
     private val getAuditEventsUseCase: GetAuditEventsUseCase,
     private val onNavigateToEventDetail: (AuditEventId) -> Unit,
     private val onBack: () -> Unit
@@ -63,7 +63,9 @@ class AuditEventListComponentImpl(
     override fun onLoadNextPage() {
         val currentContent = _state.value as? AuditEventListScreenState.Content ?: return
         val paging = currentContent.paging
-        if (!paging.canLoadMore) return
+        if (!paging.canLoadMore) {
+            return
+        }
 
         _state.value = currentContent.copy(paging = paging.toNextPageLoading())
         fetchPage(
@@ -74,9 +76,7 @@ class AuditEventListComponentImpl(
     }
 
     override fun onBackClick() {
-        if ((backHandler as? BackDispatcher)?.back() != true) {
-            onBack()
-        }
+        onBack()
     }
 
     override fun onToggleFilterPanel() {
@@ -111,7 +111,7 @@ class AuditEventListComponentImpl(
         val currentContent = _state.value as? AuditEventListScreenState.Content
 
         val initialFilters = mutableMapOf<String, ListingFilterState>()
-        params.initialFilters?.actorIds?.firstOrNull()?.let { firstActorId ->
+        params.actorIds.firstOrNull()?.let { firstActorId ->
             initialFilters[AuditFilterValues.AuditEventFilterValues.ACTOR_ID] = TextListingFilterState(value = firstActorId)
         }
 
@@ -130,7 +130,7 @@ class AuditEventListComponentImpl(
         }
 
         fetchPage(
-            pageNumber = ListingConstants.INITIAL_PAGE_NUMBER,
+            pageNumber = params.pageNumber,
             sortState = currentContent?.sortState,
             filterStates = filtersToUse
         )
@@ -141,34 +141,34 @@ class AuditEventListComponentImpl(
         sortState: ListingSortState?,
         filterStates: Map<String, ListingFilterState>?
     ) {
-        val sortOrder = if (sortState?.isAscending == true) SortOrder.ASC else SortOrder.DESC
+        val sortOrder = if (sortState?.isAscending == true) SortOrder.ASC else params.sortOrder
         val sortBy = if (sortState?.optionId == AuditSortValues.AuditEventSortBy.CREATED_AT.value) {
             AuditSortValues.AuditEventSortBy.CREATED_AT
         } else {
-            null
+            params.sortBy
         }
 
         val actorIds = (filterStates?.get(AuditFilterValues.AuditEventFilterValues.ACTOR_ID) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.actorIds.ifEmpty { null }
         val actorTypes = (filterStates?.get(AuditFilterValues.AuditEventFilterValues.ACTOR_TYPE) as? ChoiceListingFilterState)
-            ?.selectedIds?.mapNotNull { AuditActorType.fromValueOrNull(it) }
+            ?.selectedIds?.mapNotNull { AuditActorType.fromValueOrNull(it) } ?: params.actorTypes.ifEmpty { null }
         val actorUserRoles = (filterStates?.get(AuditFilterValues.AuditEventFilterValues.ACTOR_USER_ROLE) as? ChoiceListingFilterState)
-            ?.selectedIds?.mapNotNull { UserRole.fromValueOrNull(it) }
+            ?.selectedIds?.mapNotNull { id -> UserRole.fromValueOrNull(id) } ?: params.actorUserRoles.mapNotNull { id -> UserRole.fromValueOrNull(id) }.ifEmpty { null }
         val actions = (filterStates?.get(AuditFilterValues.AuditEventFilterValues.ACTION) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.actions.ifEmpty { null }
         val resources = (filterStates?.get(AuditFilterValues.AuditEventFilterValues.RESOURCE) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.resources.ifEmpty { null }
         val resourceIds = (filterStates?.get(AuditFilterValues.AuditEventFilterValues.RESOURCE_ID) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.resourceIds.ifEmpty { null }
         val statuses = (filterStates?.get(AuditFilterValues.AuditEventFilterValues.STATUS) as? ChoiceListingFilterState)
-            ?.selectedIds?.mapNotNull { AuditStatus.fromValueOrNull(it) }
+            ?.selectedIds?.mapNotNull { AuditStatus.fromValueOrNull(it) } ?: params.statuses.ifEmpty { null }
         val messages = (filterStates?.get(AuditFilterValues.AuditEventFilterValues.MESSAGE) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.messages.ifEmpty { null }
 
         scope.launch {
             getAuditEventsUseCase(
                 pageNumber = pageNumber,
-                pageSize = ListingConstants.DEFAULT_PAGE_SIZE,
+                pageSize = params.pageSize,
                 sortBy = sortBy,
                 sortOrder = sortOrder,
                 actorIds = actorIds,
@@ -179,20 +179,35 @@ class AuditEventListComponentImpl(
                 resourceIds = resourceIds,
                 statuses = statuses,
                 messages = messages
-            ).onSuccess { pagedResult ->
-                val currentContent = _state.value as? AuditEventListScreenState.Content
-                val newPaging = (currentContent?.paging ?: PaginationState<AuditEventSummary>()).appendResult(pagedResult)
-                _state.value = currentContent?.copy(paging = newPaging) ?: AuditEventListScreenState.Content(paging = newPaging)
-            }.onError { error ->
-                val currentContent = _state.value as? AuditEventListScreenState.Content
-                if (currentContent != null) {
-                    _state.value = currentContent.copy(
-                        paging = currentContent.paging.toError(error, pageNumber = pageNumber)
-                    )
-                } else {
-                    _state.value = AuditEventListScreenState.Error(error)
+            )
+                .onSuccess { pagedResult ->
+                    val currentContent = _state.value as? AuditEventListScreenState.Content
+                    val newPaging = (currentContent?.paging ?: PaginationState<AuditEventSummary>()).appendResult(pagedResult)
+                    _state.value = createContent(currentContent, newPaging, sortState, filterStates)
                 }
-            }
+                .onError { error ->
+                    val currentContent = _state.value as? AuditEventListScreenState.Content
+                    if (currentContent != null) {
+                        _state.value = currentContent.copy(
+                            paging = currentContent.paging.toError(error, pageNumber = pageNumber)
+                        )
+                    } else {
+                        _state.value = AuditEventListScreenState.Error(error)
+                    }
+                }
         }
+    }
+
+    private fun createContent(
+        currentContent: AuditEventListScreenState.Content?,
+        newPaging: PaginationState<AuditEventSummary>,
+        sortState: ListingSortState?,
+        filterStates: Map<String, ListingFilterState>?
+    ): AuditEventListScreenState.Content {
+        return currentContent?.copy(paging = newPaging) ?: AuditEventListScreenState.Content(
+            paging = newPaging,
+            sortState = sortState,
+            filterStates = filterStates ?: emptyMap()
+        )
     }
 }

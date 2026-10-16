@@ -91,6 +91,71 @@ class KtorManagementSessionApi(
         }
     }
 
+    override suspend fun getUserSessions(
+        userId: UserId,
+        pageNumber: Int?,
+        pageSize: Int?,
+        sortBy: UserSortValues.UserSessionSortBy?,
+        sortOrder: SortOrder?,
+        identifiers: List<String>?,
+        identifierIds: List<String>?,
+        userAuthProviders: List<UserAuthProvider>?,
+        clientTypes: List<ClientType>?,
+        userAgents: List<String>?,
+        ipAddresses: List<String>?,
+        languages: List<String>?,
+        deviceIds: List<String>?,
+        deviceNames: List<String>?,
+        appVersions: List<String>?,
+        operationSystemVersions: List<String>?
+    ): AppResult<PagedResult<UserSessionSummaryPayload>> = client.callResult {
+        get(
+            ManagementSessionsRoutes.GET_USER_SESSIONS
+                .replace(
+                    "{${UserApiPaths.USER_ID}}",
+                    userId.asHexDashString()
+                )
+        ) {
+            parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
+            parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
+            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.value)
+            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.value)
+            identifiers?.forEach { identifier ->
+                parameter(UserFilterValues.UserSessionFilterValues.IDENTIFIER, identifier)
+            }
+            identifierIds?.forEach { identifierId ->
+                parameter(UserFilterValues.UserSessionFilterValues.IDENTIFIER_ID, identifierId)
+            }
+            userAuthProviders?.forEach { provider ->
+                parameter(UserFilterValues.UserSessionFilterValues.USER_AUTH_PROVIDER, provider.value)
+            }
+            clientTypes?.forEach { type ->
+                parameter(UserFilterValues.UserSessionFilterValues.CLIENT_TYPE, type.value)
+            }
+            userAgents?.forEach { agent ->
+                parameter(UserFilterValues.UserSessionFilterValues.USER_AGENT, agent)
+            }
+            ipAddresses?.forEach { ip ->
+                parameter(UserFilterValues.UserSessionFilterValues.IP_ADDRESS, ip)
+            }
+            languages?.forEach { lang ->
+                parameter(UserFilterValues.UserSessionFilterValues.LANGUAGE, lang)
+            }
+            deviceIds?.forEach { id ->
+                parameter(UserFilterValues.UserSessionFilterValues.DEVICE_ID, id)
+            }
+            deviceNames?.forEach { name ->
+                parameter(UserFilterValues.UserSessionFilterValues.DEVICE_NAME, name)
+            }
+            appVersions?.forEach { version ->
+                parameter(UserFilterValues.UserSessionFilterValues.APP_VERSION, version)
+            }
+            operationSystemVersions?.forEach { osVersion ->
+                parameter(UserFilterValues.UserSessionFilterValues.OPERATION_SYSTEM_VERSION, osVersion)
+            }
+        }
+    }
+
     override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivatePayload> = client.callResult {
         get(ManagementSessionsRoutes.GET_SESSION) {
             parameter(UserApiPaths.SESSION_ID, sessionId)

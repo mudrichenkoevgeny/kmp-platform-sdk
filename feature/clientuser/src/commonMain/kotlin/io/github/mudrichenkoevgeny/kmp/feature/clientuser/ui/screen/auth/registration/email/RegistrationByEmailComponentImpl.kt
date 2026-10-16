@@ -20,6 +20,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.registration
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.registration.RegistrationByEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.registration.SendRegistrationConfirmationToEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.client.auth.registration.email.ClientRegistrationByEmailParams
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -27,7 +28,7 @@ import kotlinx.coroutines.launch
  * Default [RegistrationByEmailComponent]: confirmation email, timers, and registration use case.
  *
  * @param componentContext Decompose [ComponentContext].
- * @param initialConfig Optional initial step configuration.
+ * @param params Screen destination parameters.
  * @param registrationRepository exposes remaining confirmation delay per email.
  * @param sendRegistrationConfirmationToEmailUseCase sends the email verification code.
  * @param registrationByEmailUseCase completes registration with email, password, and code.
@@ -37,7 +38,7 @@ import kotlinx.coroutines.launch
  */
 class RegistrationByEmailComponentImpl(
     componentContext: ComponentContext,
-    initialConfig: RegistrationByEmailStepConfig = RegistrationByEmailStepConfig.EmailInput(),
+    params: ClientRegistrationByEmailParams = ClientRegistrationByEmailParams(),
     private val registrationRepository: RegistrationRepository,
     private val sendRegistrationConfirmationToEmailUseCase: SendRegistrationConfirmationToEmailUseCase,
     private val registrationByEmailUseCase: RegistrationByEmailUseCase,
@@ -56,30 +57,17 @@ class RegistrationByEmailComponentImpl(
         childStack(
             source = stackNavigation,
             serializer = RegistrationByEmailStepConfig.serializer(),
-            initialConfiguration = initialConfig,
+            initialConfiguration = RegistrationByEmailStepConfig.EmailInput(initialEmail = params.email ?: ""),
             handleBackButton = true,
             childFactory = ::createChild
         )
 
     private val _state = MutableValue(
         RegistrationByEmailScreenState(
-            email = when (initialConfig) {
-                is RegistrationByEmailStepConfig.EmailInput -> initialConfig.initialEmail
-                is RegistrationByEmailStepConfig.ConfirmInput -> initialConfig.email
-            },
-            resendTimerSeconds = when (initialConfig) {
-                is RegistrationByEmailStepConfig.EmailInput -> 0
-                is RegistrationByEmailStepConfig.ConfirmInput -> initialConfig.resendTimerSeconds
-            }
+            email = params.email ?: ""
         )
     )
     override val state: Value<RegistrationByEmailScreenState> = _state
-
-    init {
-        if (initialConfig is RegistrationByEmailStepConfig.ConfirmInput && initialConfig.resendTimerSeconds > 0) {
-            startTimer(initialConfig.resendTimerSeconds)
-        }
-    }
 
     private fun createChild(
         config: RegistrationByEmailStepConfig,
@@ -108,7 +96,9 @@ class RegistrationByEmailComponentImpl(
 
     override fun onSendCodeClick() {
         val current = _state.value
-        if (current.actionLoading) return
+        if (current.actionLoading) {
+            return
+        }
 
         _state.value = current.copy(actionLoading = true, actionError = null)
 
@@ -161,7 +151,9 @@ class RegistrationByEmailComponentImpl(
 
     override fun onRegisterClick() {
         val current = _state.value
-        if (current.actionLoading || !current.canRegister) return
+        if (current.actionLoading || !current.canRegister) {
+            return
+        }
 
         _state.value = current.copy(actionLoading = true, actionError = null)
 
@@ -207,7 +199,9 @@ class RegistrationByEmailComponentImpl(
 
     private fun startTimer(seconds: Int) {
         timerJob?.cancel()
-        if (seconds <= 0) return
+        if (seconds <= 0) {
+            return
+        }
 
         timerJob = scope.launch {
             resendCountdown(

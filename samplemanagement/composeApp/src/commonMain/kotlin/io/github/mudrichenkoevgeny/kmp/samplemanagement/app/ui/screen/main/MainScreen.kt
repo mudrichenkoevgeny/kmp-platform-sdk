@@ -19,21 +19,23 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.arkivanov.decompose.Child
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalCommonComponent
+import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.rememberComponentContext
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
@@ -42,10 +44,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.root.ManagementRootScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.mfa.MfaChallengeDialog
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.root.ProfileRootScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.root.UserRootScreen
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di.LocalManagementAppComponent
-import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home.HomeScreen
-import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.home.HomeScreenComponent
+import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.mock.di.managementAppComponentMock
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -106,13 +107,10 @@ fun MainContent(
             animation = stackAnimation(fade())
         ) { child ->
             when (val instance = child.instance) {
-                is MainScreenComponent.Child.HomeChild -> {
-                    HomeScreen(instance.component)
+                is MainScreenComponent.Child.UserChild -> {
+                    UserRootScreen(instance.component)
                 }
-                is MainScreenComponent.Child.ProfileChild -> {
-                    ProfileRootScreen(instance.component)
-                }
-                is MainScreenComponent.Child.SettingsChild -> {
+                is MainScreenComponent.Child.ManagementChild -> {
                     ManagementRootScreen(instance.component)
                 }
             }
@@ -205,90 +203,56 @@ private fun WebLayout(
     }
 }
 
-private val screenStackMock = MutableValue(
-    ChildStack(
-        active = Child.Created(
-            configuration = MainScreenComponent.Config.Home,
-            instance = MainScreenComponent.Child.HomeChild(
-                object : HomeScreenComponent {}
-            )
-        ),
-        backStack = emptyList()
-    )
-)
-
-private class MainScreenPreviewProvider : PreviewParameterProvider<MainScreenDestination> {
-    private val items: List<Pair<String, MainScreenDestination>> = listOf(
-        "Home Tab Active" to MainScreenDestination.Home,
-        "Profile Tab Active" to MainScreenDestination.Profile,
-        "Settings Tab Active" to MainScreenDestination.Settings
-    )
-
-    override val values: Sequence<MainScreenDestination> =
-        items.asSequence().map { it.second }
-
-    override fun getDisplayName(index: Int): String? =
-        items.getOrNull(index)?.first
-}
-
+@InternalApi
 @Composable
-private fun MainScreenPreviewContent(
-    destination: MainScreenDestination,
-    isMobile: Boolean
-) {
-    Surface {
-        MainContent(
-            isMobile = isMobile,
-            screenStack = screenStackMock,
-            currentDestination = destination,
-            destinations = MainScreenDestination.allDestinations,
-            onDestinationChange = { }
-        )
+private fun MainScreenPreviewContent() {
+    val appComponent = remember { managementAppComponentMock() }
+    val componentContext = rememberComponentContext()
+    val mainComponent = remember {
+        appComponent.createMainScreenComponent(componentContext = componentContext)
+    }
+
+    CompositionLocalProvider(
+        LocalManagementAppComponent provides appComponent,
+        LocalCommonComponent provides appComponent.commonComponent,
+        LocalErrorParser provides AppErrorParserMock
+    ) {
+        MainScreen(screenComponent = mainComponent)
     }
 }
 
-@Preview(showBackground = true, group = "States")
+@InternalApi
+@Preview(showBackground = true)
 @Composable
-private fun MainScreenStatesPreview(
-    @PreviewParameter(MainScreenPreviewProvider::class) destination: MainScreenDestination
-) {
-    ScreenPreviewContainer { isMobile ->
-        MainScreenPreviewContent(
-            destination = destination,
-            isMobile = isMobile
-        )
+private fun MainScreenPreview() {
+    ScreenPreviewContainer {
+        MainScreenPreviewContent()
     }
 }
 
+@InternalApi
 @ScreenSizePreviews
 @Composable
-private fun MainScreenAdaptivePreview() {
-    ScreenPreviewContainer { isMobile ->
-        MainScreenPreviewContent(
-            destination = MainScreenDestination.Home,
-            isMobile = isMobile
-        )
+private fun ScreenSizePreview() {
+    ScreenPreviewContainer {
+        MainScreenPreviewContent()
     }
 }
 
+@InternalApi
 @ThemePreviews
 @Composable
-private fun MainScreenThemePreview() {
-    ScreenPreviewContainer { isMobile ->
-        MainScreenPreviewContent(
-            destination = MainScreenDestination.Home,
-            isMobile = isMobile
-        )
+private fun ThemePreview() {
+    ScreenPreviewContainer {
+        MainScreenPreviewContent()
     }
 }
 
+@InternalApi
 @FontScalePreviews
 @Composable
-private fun MainScreenFontScalePreview() {
-    ScreenPreviewContainer { isMobile ->
-        MainScreenPreviewContent(
-            destination = MainScreenDestination.Home,
-            isMobile = isMobile
-        )
+private fun FontScalePreview() {
+    ScreenPreviewContainer {
+        MainScreenPreviewContent()
     }
 }

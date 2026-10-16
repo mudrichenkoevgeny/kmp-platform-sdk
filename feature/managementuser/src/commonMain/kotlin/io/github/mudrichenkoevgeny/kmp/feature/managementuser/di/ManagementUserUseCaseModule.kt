@@ -18,6 +18,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetUserIdentifiersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.GetManagementSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.RefreshManagementSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings.ResetRemoteSecuritySettingsUseCase
@@ -26,6 +27,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.Ma
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetUserSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.CreateUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.DeleteUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
@@ -473,6 +475,13 @@ internal class ManagementUserUseCaseModule(
         )
     }
 
+    /** Retrieves active user sessions for a specific user administratively. */
+    val managementGetUserSessionsUseCase by lazy {
+        ManagementGetUserSessionsUseCase(
+            managementSessionRepository = managementUserRepositoryModule.managementSessionRepository
+        )
+    }
+
     /** Retrieves specific user session details administratively. */
     val managementGetSessionUseCase by lazy {
         ManagementGetSessionUseCase(
@@ -490,6 +499,13 @@ internal class ManagementUserUseCaseModule(
     /** Retrieves user identifiers administratively. */
     val managementGetIdentifiersUseCase by lazy {
         ManagementGetIdentifiersUseCase(
+            managementIdentifierRepository = managementUserRepositoryModule.managementIdentifierRepository
+        )
+    }
+
+    /** Retrieves user identifiers for a specific user administratively. */
+    val managementGetUserIdentifiersUseCase by lazy {
+        ManagementGetUserIdentifiersUseCase(
             managementIdentifierRepository = managementUserRepositoryModule.managementIdentifierRepository
         )
     }

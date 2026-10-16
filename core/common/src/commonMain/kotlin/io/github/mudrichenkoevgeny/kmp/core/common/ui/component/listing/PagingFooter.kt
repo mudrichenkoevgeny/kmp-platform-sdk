@@ -40,7 +40,9 @@ fun PagingFooter(
     state: PaginationState<*>,
     onRetry: () -> Unit
 ) {
-    if (state.items.isEmpty()) return
+    if (state.items.isEmpty()) {
+        return
+    }
 
     Box(
         modifier = Modifier

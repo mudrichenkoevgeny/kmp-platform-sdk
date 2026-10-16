@@ -52,6 +52,38 @@ class KtorManagementIdentifierApi(
         }
     }
 
+    override suspend fun getUserIdentifiers(
+        userId: UserId,
+        pageNumber: Int?,
+        pageSize: Int?,
+        sortBy: UserSortValues.UserIdentifierSortBy?,
+        sortOrder: SortOrder?,
+        userAuthProviders: List<UserAuthProvider>?,
+        identifiers: List<String>?
+    ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = client.callResult {
+        get(
+            ManagementIdentifiersRoutes.GET_USER_IDENTIFIERS
+                .replace(
+                    "{${UserApiPaths.USER_ID}}",
+                    userId.asHexDashString()
+                )
+        ) {
+            parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
+            parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
+            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.value)
+            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.value)
+            userAuthProviders?.forEach { userAuthProvider ->
+                parameter(
+                    UserFilterValues.UserIdentifierFilterValues.USER_AUTH_PROVIDER,
+                    userAuthProvider.value
+                )
+            }
+            identifiers?.forEach { identifier ->
+                parameter(UserFilterValues.UserIdentifierFilterValues.IDENTIFIER, identifier)
+            }
+        }
+    }
+
     override suspend fun getIdentifier(
         identifierId: String
     ): AppResult<UserIdentifierPrivatePayload> = client.callResult {

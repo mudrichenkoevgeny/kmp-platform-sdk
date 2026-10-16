@@ -5,17 +5,29 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.UnlockMethod
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.UnlockMethod
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.SendUnlockEmailConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.SendUnlockPhoneConfirmationUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.targetinput.UnlockTargetInputParams
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-/** Default implementation of [UnlockTargetInputComponent]. */
+/**
+ * Default implementation of [UnlockTargetInputComponent].
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param params Unlock target input parameters.
+ * @param prefilledInput Optional prefilled email or phone input string.
+ * @param sendUnlockEmailConfirmationUseCase Sends unlock confirmation code to email.
+ * @param sendUnlockPhoneConfirmationUseCase Sends unlock confirmation code to phone.
+ * @param onNavigateToOtp Navigates to OTP verification screen.
+ * @param onBack Pops this screen from the navigation stack.
+ * @param coroutineScope Scope for async operations.
+ */
 class UnlockTargetInputComponentImpl(
     componentContext: ComponentContext,
-    params: UnlockTargetInputParams,
+    params: UnlockTargetInputParams = UnlockTargetInputParams(),
     prefilledInput: String = "",
     private val sendUnlockEmailConfirmationUseCase: SendUnlockEmailConfirmationUseCase,
     private val sendUnlockPhoneConfirmationUseCase: SendUnlockPhoneConfirmationUseCase,
@@ -35,7 +47,7 @@ class UnlockTargetInputComponentImpl(
         coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
     ) : this(
         componentContext = componentContext,
-        params = UnlockTargetInputParams(method = method),
+        params = UnlockTargetInputParams(unlockMethod = method),
         prefilledInput = prefilledInput,
         sendUnlockEmailConfirmationUseCase = sendUnlockEmailConfirmationUseCase,
         sendUnlockPhoneConfirmationUseCase = sendUnlockPhoneConfirmationUseCase,
@@ -46,7 +58,7 @@ class UnlockTargetInputComponentImpl(
 
     private val _state = MutableValue(
         UnlockTargetInputScreenState(
-            method = params.method,
+            method = params.unlockMethod ?: UnlockMethod.EMAIL,
             input = prefilledInput
         )
     )
@@ -58,7 +70,9 @@ class UnlockTargetInputComponentImpl(
 
     override fun onSendCodeClick() {
         val current = _state.value
-        if (!current.canSendCode) return
+        if (!current.canSendCode) {
+            return
+        }
 
         val target = current.input.trim()
         _state.update { it.copy(actionLoading = true, actionError = null) }

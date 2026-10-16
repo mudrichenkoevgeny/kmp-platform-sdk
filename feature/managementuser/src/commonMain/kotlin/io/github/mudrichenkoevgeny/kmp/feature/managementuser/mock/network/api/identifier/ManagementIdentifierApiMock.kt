@@ -16,6 +16,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 class ManagementIdentifierApiMock : ManagementIdentifierApi {
 
     var getIdentifiersResult: AppResult<PagedResult<UserIdentifierSummaryPayload>> = AppResult.Error(CommonError.Unknown())
+    var getUserIdentifiersResult: AppResult<PagedResult<UserIdentifierSummaryPayload>> = AppResult.Error(CommonError.Unknown())
     var getIdentifierResult: AppResult<UserIdentifierPrivatePayload> = AppResult.Error(CommonError.Unknown())
     var deleteIdentifierResult: AppResult<Unit> = AppResult.Success(Unit)
     var deleteIdentifierPasswordResult: AppResult<Unit> = AppResult.Success(Unit)
@@ -29,6 +30,16 @@ class ManagementIdentifierApiMock : ManagementIdentifierApi {
         userAuthProviders: List<UserAuthProvider>?,
         identifiers: List<String>?
     ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = getIdentifiersResult
+
+    override suspend fun getUserIdentifiers(
+        userId: UserId,
+        pageNumber: Int?,
+        pageSize: Int?,
+        sortBy: UserSortValues.UserIdentifierSortBy?,
+        sortOrder: SortOrder?,
+        userAuthProviders: List<UserAuthProvider>?,
+        identifiers: List<String>?
+    ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = getUserIdentifiersResult
 
     override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivatePayload> = getIdentifierResult
 

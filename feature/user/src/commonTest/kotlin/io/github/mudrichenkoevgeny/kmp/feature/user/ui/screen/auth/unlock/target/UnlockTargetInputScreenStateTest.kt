@@ -1,6 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.target
 
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.UnlockMethod
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.UnlockMethod
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

@@ -51,7 +51,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.enter_phone_number
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.unlock.target.UnlockTargetInputComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.UnlockMethod
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.UnlockMethod
 import io.github.mudrichenkoevgeny.kmp.feature.user.phone_number
 import io.github.mudrichenkoevgeny.kmp.feature.user.send_code
 import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_by_email

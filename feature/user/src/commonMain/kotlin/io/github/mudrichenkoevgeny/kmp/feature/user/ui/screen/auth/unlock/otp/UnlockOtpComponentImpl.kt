@@ -8,18 +8,30 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCorou
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.time.resendCountdown
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.auth.UnlockMethod
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.UnlockMethod
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.SendUnlockEmailConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.SendUnlockPhoneConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockByEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockByPhoneUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.otpinput.UnlockOtpInputParams
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-/** Default implementation of [UnlockOtpComponent]. */
+/**
+ * Default implementation of [UnlockOtpComponent].
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param params Unlock OTP input parameters.
+ * @param unlockByEmailUseCase Unlocks account using email code.
+ * @param unlockByPhoneUseCase Unlocks account using phone code.
+ * @param sendUnlockEmailConfirmationUseCase Resends email confirmation code.
+ * @param sendUnlockPhoneConfirmationUseCase Resends phone confirmation code.
+ * @param onUnlockSuccess Navigates to unlock success screen.
+ * @param onBack Pops this screen from the navigation stack.
+ */
 class UnlockOtpComponentImpl(
     componentContext: ComponentContext,
-    params: UnlockOtpParams,
+    params: UnlockOtpInputParams = UnlockOtpInputParams(),
     private val unlockByEmailUseCase: UnlockByEmailUseCase,
     private val unlockByPhoneUseCase: UnlockByPhoneUseCase,
     private val sendUnlockEmailConfirmationUseCase: SendUnlockEmailConfirmationUseCase,
@@ -41,7 +53,11 @@ class UnlockOtpComponentImpl(
         onBack: () -> Unit
     ) : this(
         componentContext = componentContext,
-        params = UnlockOtpParams(method = method, target = target, initialDelaySeconds = initialDelaySeconds),
+        params = UnlockOtpInputParams(
+            unlockMethod = method,
+            identifier = target,
+            retryAfterSeconds = initialDelaySeconds
+        ),
         unlockByEmailUseCase = unlockByEmailUseCase,
         unlockByPhoneUseCase = unlockByPhoneUseCase,
         sendUnlockEmailConfirmationUseCase = sendUnlockEmailConfirmationUseCase,
@@ -55,16 +71,17 @@ class UnlockOtpComponentImpl(
 
     private val _state = MutableValue(
         UnlockOtpScreenState(
-            method = params.method,
-            target = params.target,
-            remainingDelaySeconds = params.initialDelaySeconds
+            method = params.unlockMethod ?: UnlockMethod.EMAIL,
+            target = params.identifier ?: "",
+            remainingDelaySeconds = params.retryAfterSeconds ?: 0
         )
     )
     override val state: Value<UnlockOtpScreenState> = _state
 
     init {
-        if (params.initialDelaySeconds > 0) {
-            startTimer(params.initialDelaySeconds)
+        val delay = params.retryAfterSeconds ?: 0
+        if (delay > 0) {
+            startTimer(delay)
         }
     }
 
@@ -75,7 +92,9 @@ class UnlockOtpComponentImpl(
     override fun onUnlockClick() {
         val currentState = _state.value
         val code = currentState.codeInput.trim()
-        if (code.isBlank()) return
+        if (code.isBlank()) {
+            return
+        }
 
         _state.update { it.copy(actionLoading = true, actionError = null) }
         scope.launch {
@@ -97,7 +116,9 @@ class UnlockOtpComponentImpl(
 
     override fun onResendCodeClick() {
         val currentState = _state.value
-        if (currentState.remainingDelaySeconds > 0) return
+        if (currentState.remainingDelaySeconds > 0) {
+            return
+        }
 
         _state.update { it.copy(actionLoading = true, actionError = null) }
         scope.launch {
@@ -128,7 +149,9 @@ class UnlockOtpComponentImpl(
 
     private fun startTimer(seconds: Int) {
         timerJob?.cancel()
-        if (seconds <= 0) return
+        if (seconds <= 0) {
+            return
+        }
 
         _state.update { it.copy(remainingDelaySeconds = seconds) }
         timerJob = scope.launch {

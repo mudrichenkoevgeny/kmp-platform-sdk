@@ -1,9 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main
 
-import io.github.mudrichenkoevgeny.kmp.core.common.ic_home
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_profile
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.Res
-import io.github.mudrichenkoevgeny.kmp.sampleclient.app.nav_home
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.nav_profile
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
@@ -17,14 +15,8 @@ sealed interface MainScreenDestination {
     val title: StringResource
     val iconRes: DrawableResource
 
-    data object Home : MainScreenDestination {
-        override val config = MainScreenComponent.Config.Home
-        override val title = Res.string.nav_home
-        override val iconRes = CommonRes.drawable.ic_home
-    }
-
-    data object Profile : MainScreenDestination {
-        override val config = MainScreenComponent.Config.Profile
+    data object User : MainScreenDestination {
+        override val config = MainScreenComponent.Config.User
         override val title = Res.string.nav_profile
         override val iconRes = CommonRes.drawable.ic_profile
     }
@@ -33,7 +25,7 @@ sealed interface MainScreenDestination {
         /**
          * Tabs shown in mobile bottom navigation (order matches display).
          */
-        val allDestinations = listOf(Home, Profile)
+        val allDestinations = listOf(User)
 
         /**
          * @param config Stack configuration for the active child.
@@ -41,8 +33,7 @@ sealed interface MainScreenDestination {
          */
         fun fromConfig(config: MainScreenComponent.Config): MainScreenDestination =
             when (config) {
-                is MainScreenComponent.Config.Home -> Home
-                is MainScreenComponent.Config.Profile -> Profile
+                is MainScreenComponent.Config.User -> User
             }
     }
 }

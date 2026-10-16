@@ -11,7 +11,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
  * @param block Function to execute with the successful data.
  */
 inline fun <T> AppResult<T>.onSuccess(block: (T) -> Unit): AppResult<T> {
-    if (this is AppResult.Success) block(data)
+    if (this is AppResult.Success) {
+        block(data)
+    }
     return this
 }
 
@@ -23,7 +25,9 @@ inline fun <T> AppResult<T>.onSuccess(block: (T) -> Unit): AppResult<T> {
  * @param block Function to execute with the error details.
  */
 inline fun <T> AppResult<T>.onError(block: (AppError) -> Unit): AppResult<T> {
-    if (this is AppResult.Error) block(error)
+    if (this is AppResult.Error) {
+        block(error)
+    }
     return this
 }
 

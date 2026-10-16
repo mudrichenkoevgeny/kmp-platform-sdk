@@ -27,12 +27,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.l
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.globallist.ManagementGlobalSessionListParams
 import kotlinx.coroutines.launch
 
 /**
  * Default [GlobalSessionListComponent] implementation: manages all sessions list globally.
  *
  * @param componentContext Decompose [ComponentContext].
+ * @param params Global session list parameters.
  * @param managementGetSessionsUseCase Use case to fetch paginated list of global sessions.
  * @param managementDeleteSessionUseCase Use case to administratively delete a session.
  * @param onNavigateToSessionDetail Callback invoked when a session is tapped.
@@ -40,6 +42,7 @@ import kotlinx.coroutines.launch
  */
 class GlobalSessionListComponentImpl(
     componentContext: ComponentContext,
+    private val params: ManagementGlobalSessionListParams = ManagementGlobalSessionListParams(),
     private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
     private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase? = null,
     private val onNavigateToSessionDetail: ((UserSessionSummary) -> Unit)? = null,
@@ -65,7 +68,9 @@ class GlobalSessionListComponentImpl(
     override fun onRevokeClick(session: UserSessionSummary) {
         val deleteUseCase = managementDeleteSessionUseCase ?: return
         val currentContent = _state.value as? GlobalSessionListScreenState.Content ?: return
-        if (currentContent.actionLoading) return
+        if (currentContent.actionLoading) {
+            return
+        }
 
         _state.value = currentContent.copy(actionLoading = true, actionError = null)
 
@@ -108,7 +113,9 @@ class GlobalSessionListComponentImpl(
     override fun onLoadNextPage() {
         val currentContent = _state.value as? GlobalSessionListScreenState.Content ?: return
         val paging = currentContent.paging
-        if (!paging.canLoadMore) return
+        if (!paging.canLoadMore) {
+            return
+        }
 
         _state.value = currentContent.copy(paging = paging.toNextPageLoading())
         fetchPage(
@@ -159,7 +166,7 @@ class GlobalSessionListComponentImpl(
         }
 
         fetchPage(
-            pageNumber = ListingConstants.INITIAL_PAGE_NUMBER,
+            pageNumber = params.pageNumber,
             sortState = currentContent?.sortState,
             filterStates = currentContent?.filterStates
         )
@@ -171,10 +178,10 @@ class GlobalSessionListComponentImpl(
         filterStates: Map<String, ListingFilterState>?
     ) {
         val sortOrder = if (sortState?.isAscending == true) SortOrder.ASC else SortOrder.DESC
-        val sortBy = sortState?.optionId?.let { UserSortValues.UserSessionSortBy.fromValueOrNull(it) }
+        val sortBy = sortState?.optionId?.let { UserSortValues.UserSessionSortBy.fromValueOrNull(it) } ?: params.sortBy
 
         val userIds = (filterStates?.get(UserFilterValues.UserSessionFilterValues.USER_ID) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.userIds.ifEmpty { null }
         val userRoles = (filterStates?.get(UserFilterValues.UserSessionFilterValues.USER_ROLE) as? ChoiceListingFilterState)
             ?.selectedIds?.mapNotNull { UserRole.fromValueOrNull(it) }
         val identifiers = (filterStates?.get(UserFilterValues.UserSessionFilterValues.IDENTIFIER) as? TextListingFilterState)

@@ -1,42 +1,42 @@
 package io.github.mudrichenkoevgeny.kmp.samplemanagement.app.navigation.deeplink
 
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.ManagementDestination
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.ProfileDestination
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main.MainScreenComponent
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.NavigationRoute
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientUserNavigation
 
 /**
- * Represents a parsed deep link route that can be executed by the root component.
+ * Top-level application deep link destinations supported by the management sample portal.
  */
 sealed interface ManagementAppDeepLinkRoute {
-    /** Whether the user must be authenticated to access this route. */
-    val requiresAuth: Boolean
-
-    /** Top-level tab configuration required to display this route. */
+    /** Target navigation tab configuration inside [MainScreenComponent]. */
     val tab: MainScreenComponent.Config
 
+    /** Whether navigating to this deep link route requires an authenticated user session. */
+    val requiresAuth: Boolean
+
     /**
-     * Route intended for the Management feature.
+     * Administrative management portal deep link route.
      *
-     * @param destination The destination in the Management component stack.
-     * @param tab The target main tab to select.
-     * @param requiresAuth True if authentication is required.
+     * @param destination Specific management navigation route.
+     * @param tab Target main screen tab (defaults to [MainScreenComponent.Config.Management]).
+     * @param requiresAuth Authenticated entry required for administrative routes (defaults to `true`).
      */
     data class Management(
-        val destination: ManagementDestination,
-        override val tab: MainScreenComponent.Config = MainScreenComponent.Config.Settings,
+        val destination: NavigationRoute,
+        override val tab: MainScreenComponent.Config = MainScreenComponent.Config.Management,
         override val requiresAuth: Boolean = true
     ) : ManagementAppDeepLinkRoute
 
     /**
-     * Route intended for the Profile feature.
+     * Authenticated staff user profile and settings deep link route.
      *
-     * @param destination The destination in the Profile component stack.
-     * @param tab The target main tab to select.
-     * @param requiresAuth True if authentication is required.
+     * @param destination Specific client user navigation route.
+     * @param tab Target main screen tab (defaults to [MainScreenComponent.Config.User]).
+     * @param requiresAuth Authenticated entry required for profile routes (defaults to `true`).
      */
-    data class Profile(
-        val destination: ProfileDestination,
-        override val tab: MainScreenComponent.Config = MainScreenComponent.Config.Profile,
-        override val requiresAuth: Boolean = destination !is ProfileDestination.Main
+    data class User(
+        val destination: ClientUserNavigation,
+        override val tab: MainScreenComponent.Config = MainScreenComponent.Config.User,
+        override val requiresAuth: Boolean = true
     ) : ManagementAppDeepLinkRoute
 }

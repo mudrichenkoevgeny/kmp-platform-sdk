@@ -23,6 +23,13 @@ import kotlinx.coroutines.launch
 
 /**
  * Default implementation of [EditAuthSettingsComponent].
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param initialDialogConfig Optional initial modal dialog configuration.
+ * @param getManagementAuthSettingsUseCase Retrieves current auth settings.
+ * @param saveRemoteAuthSettingsUseCase Saves updated auth settings.
+ * @param resetRemoteAuthSettingsUseCase Resets auth settings to defaults.
+ * @param onBack Pops this screen from the navigation stack.
  */
 class EditAuthSettingsComponentImpl(
     componentContext: ComponentContext,

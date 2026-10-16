@@ -148,18 +148,21 @@ graph TD
 
 The SDK implements a 2-level composite routing system that works across Android, Wasm/Web, Desktop (JVM), and iOS:
 
-### Screen Parameter Encapsulation (`*Params` Pattern)
-Decompose screen configurations requiring parameters encapsulate them into dedicated, serializable data classes:
-- Examples: `UserDetailParams(val userIdValue: String)`, `SessionDetailParams`, `IdentifierDetailParams`, `AuditEventDetailParams`, `AuditEventListParams`, `UserSessionListParams`, `UserIdentifierListParams`.
-- Parameter conversion: Raw string values are converted to domain value class IDs via getters (e.g. `val userId: UserId get() = userIdValue.toUserIdOrThrow()`).
+### Shared Foundation Route Contracts (shared-foundation)
+All 11 navigation objects across the ecosystem implement sealed interfaces (`@Serializable sealed interface`) backed by the foundational `NavigationRoute` and `ParameterizedNavigationRoute<P : NavigationScreenParams<*>>` contracts:
+- Every route class defines `val route: String` and `val parentRoute: String?`.
+- Parameterized routes carry typed parameter objects `override val params: P` (e.g. `UserDetailParams`, `SessionDetailParams`, `IdentifierDetailParams`, `TotpMainParams`, `LoginByEmailParams`, `UnlockMethodSelectionParams`).
+- Extension function `NavigationRoute.toFullUrl(baseUrl: String)` serializes route paths and query parameters into canonical URLs.
 
 ### Deep Link Architecture
 1. **Contracts (`core:common`):** Generic interfaces `DeepLinkParser<out Route : Any>` and `UrlFormatter<in T : Any>`.
-2. **Feature Parsers & Formatters (`feature/*`):** Feature-specific parsers (`ManagementDeepLinkParser`, `ProfileDeepLinkParser`) and formatters (`ManagementUrlFormatter`, `ProfileUrlFormatter`) using internal `*DeepLinkConstants` objects (with `Segment` and `Query` nested namespaces) for host, path, and query constants.
+2. **Feature Parsers & Formatters (`feature/*`):** Feature-specific parsers (`ManagementDeepLinkParser`, `UserDeepLinkParser`, `ClientUserDeepLinkParser`) and formatters (`ManagementUrlFormatter`, `UserUrlFormatter`, `ClientUserUrlFormatter`) parse raw URLs directly into typed `shared-foundation` `NavigationRoute` objects and format destinations via `destination.toFullUrl(baseUrl)`.
 3. **App-Specific Aggregators (`samplemanagement` / `sampleclient`):** Application-level route models (`ManagementAppDeepLinkRoute`, `ClientAppDeepLinkRoute`) and aggregators (`ManagementAppDeepLinkParser`, `ClientAppDeepLinkParser`) maintain strict dependency graph isolation.
-4. **Platform Integration:**
+4. **Wasm Browser History Integration (`SetupBrowserHistory`):**
+   - **Parent History Seeding:** On direct deep link entry (e.g., `/identifiers/123`), `getAncestorPaths()` decomposes URL segments and seeds ancestor paths (`/`, `/identifiers`) into native `window.history`. This aligns history behavior between UI navigation controls and browser native history controls.
+   - **Reactive Step/Mode Tracking:** `calculateActivePath` observes Decompose stack states reactively, including inner step configurations (e.g., `TotpStep.SETUP` ➔ `/user/totp?totp_step=setup`, `LoginByTotpMode.RECOVERY_CODE` ➔ `/auth/login/totp?mode=recovery_code`, `UnlockMethod` ➔ `/auth/unlock/target?unlock_method=email`).
+5. **Platform Integration:**
    - **Android:** `<intent-filter>` for HTTPS/custom schemes, `singleTask` launchMode, `onCreate` cold start with `intent.data = null` cleanup, and `onNewIntent` warm start dispatch.
-   - **Wasm/Web:** Browser URL parsing at startup (`window.location.href`) and history stack synchronization via Decompose `DefaultWebHistoryController`.
+   - **Wasm/Web:** Browser URL parsing at startup (`window.location.href`) and history stack synchronization via `SetupBrowserHistory`.
    - **Desktop (JVM):** Native URI handler registration via `Desktop.getDesktop().setOpenURIHandler`.
    - **iOS:** Application graph entry points via `handleDeepLink(urlString)`.
-

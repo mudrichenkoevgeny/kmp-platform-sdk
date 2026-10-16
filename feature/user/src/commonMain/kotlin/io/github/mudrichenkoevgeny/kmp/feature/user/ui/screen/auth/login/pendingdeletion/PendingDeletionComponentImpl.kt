@@ -33,7 +33,9 @@ class PendingDeletionComponentImpl(
 
     override fun onRestoreAccountClick() {
         val current = _state.value
-        if (current.actionLoading) return
+        if (current.actionLoading) {
+            return
+        }
         _state.value = current.copy(actionLoading = true, actionError = null)
 
         scope.launch {
@@ -50,7 +52,9 @@ class PendingDeletionComponentImpl(
 
     override fun onSignOutClick() {
         val current = _state.value
-        if (current.actionLoading) return
+        if (current.actionLoading) {
+            return
+        }
         _state.value = current.copy(actionLoading = true, actionError = null)
 
         scope.launch {

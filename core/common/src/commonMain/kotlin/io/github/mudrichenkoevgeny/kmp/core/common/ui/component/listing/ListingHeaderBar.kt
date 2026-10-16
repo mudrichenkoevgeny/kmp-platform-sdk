@@ -42,7 +42,9 @@ fun ListingHeaderBar(
     lazyListState: LazyListState,
     modifier: Modifier = Modifier
 ) {
-    if (state.items.isEmpty()) return
+    if (state.items.isEmpty()) {
+        return
+    }
 
     val totalPages = state.totalPages
     val currentPageState = remember(state.items.size, totalPages) {

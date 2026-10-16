@@ -10,9 +10,9 @@ import com.arkivanov.essenty.lifecycle.resume
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.ManagementDestination
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.mock.di.managementAppComponentMock
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.navigation.deeplink.ManagementAppDeepLinkRoute
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.navigation.route.management.ManagementSecurityNavigation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -65,7 +65,7 @@ class ManagementMainScreenComponentImplDialogSlotAndroidTest {
             val app = managementAppComponentMock(platformContext = context)
             val main = ManagementMainScreenComponentImpl(componentContext = ctx, managementAppComponent = app)
 
-            main.handleDeepLink(ManagementAppDeepLinkRoute.Management(ManagementDestination.EditSecuritySettings()))
+            main.handleDeepLink(ManagementAppDeepLinkRoute.Management(ManagementSecurityNavigation.SecuritySettings))
             assertNotNull(main.loginDialogSlot.value.child?.instance)
 
             main.onDismissLogin()

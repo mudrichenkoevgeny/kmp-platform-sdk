@@ -1,6 +1,6 @@
 # feature/managementuser
 
-Kotlin Multiplatform feature module for user identity, authentication flows, session-oriented HTTP behavior, and related UI (Compose + Decompose). It depends on `core:common`, `core:settings`, and `core:security`. This module provides a complete identity solution, including multi-factor authentication (MFA), social login, and profile management.
+Kotlin Multiplatform feature module for administrative user identity, authentication flows, staff oversight, resource management, and Compose + Decompose UI. It depends on `core:common`, `core:settings`, `core:security`, and `feature:user`. This module provides the administrative identity and management solution for internal staff portals.
 
 ## What it provides
 
@@ -23,9 +23,9 @@ Kotlin Multiplatform feature module for user identity, authentication flows, ses
 - **Throttling:** [ConfirmationRepository] manages client-side cooldowns for sending verification codes (SMS/Email) using [ConfirmationType].
 
 ### 4. UI & Navigation
-- **Decompose Routing:** [ManagementRootComponent] manages the administrative navigation stack (**Main**, **UserDetail**, **UserSessionList**, **AuditEventList**, etc.).
-- **Screen Parameter Encapsulation (`*Params`):** Screen configurations with arguments wrap parameters in dedicated serializable data classes (`UserDetailParams`, `UserSessionListParams`, `UserIdentifierListParams`, `AuditEventDetailParams`, `AuditEventListParams`).
-- **Deep Link Parsing & Formatting:** [ManagementDeepLinkParser] and [ManagementUrlFormatter] parse and format deep link paths (e.g. `/management/users/{id}`, `/management/audit`) using internal `ManagementDeepLinkConstants` (with nested `Segment` and `Query` objects).
+- **Decompose Routing:** [ManagementRootComponent] manages the administrative navigation stack (**Main**, **GlobalUserList**, **UserDetail**, **UserSessionList**, **GlobalSessionList**, **GlobalIdentifierList**, **AuditEventList**, **SettingsMain**, **EditAuthSettings**, **EditGlobalSettings**, **EditSecuritySettings**).
+- **Screen Parameter Encapsulation (`*Params`):** Screen configurations with arguments wrap parameters in dedicated serializable data classes (`UserDetailParams`, `ManagementUserListParams`, `ManagementUserSessionListParams`, `ManagementUserIdentifierListParams`, `ManagementGlobalSessionListParams`, `ManagementGlobalIdentifierListParams`, `AuditEventDetailParams`, `AuditEventListParams`, `SessionDetailParams`, `IdentifierDetailParams`).
+- **Deep Link Parsing & Formatting:** [ManagementDeepLinkParser] and [ManagementUrlFormatter] parse and format deep link paths directly into `shared-foundation` `NavigationRoute` objects (`ManagementMainNavigation`, `ManagementUsersNavigation`, `ManagementSettingsNavigation`, `ManagementAuthSettingsNavigation`, `ManagementSecurityNavigation`, `ManagementAuditNavigation`) using `destination.toFullUrl(baseUrl)`.
 - **Validation:** [FieldValidator] provides conservative client-side checks for emails and phone numbers.
 - **Legal Integration:** Standardized [LegalFooter] for Privacy Policy and Terms of Service links.
 - **UI Components:** Reusable [AuthProviderGrid] and [AuthProviderButton] for consistent social login presentation.
@@ -95,9 +95,9 @@ val loginRoot = managementUserComponent.createLoginRootDialogComponent(
 | `...user.network.websocket` | [UserWebSocketMessageHandler] for reactive profile and session updates. |
 | `...user.repository` | Repositories orchestrating APIs & storage (Login, Reg, ResetPassword, Session). |
 | `...user.storage` | [AuthStorage] (tokens) and [UserStorage] (profile) with encrypted persistence. |
-| `...user.ui.screen` | Decompose components & UI for Login (Email/Phone/Google) and Registration. |
+| `...user.ui.screen` | Decompose components & UI for Login (Email/Phone/Google), User Management, Sessions, Identifiers, Audit, and Settings. |
 | `...user.ui.component` | Reusable UI: [AuthProviderGrid], [AuthProviderButton], and [LegalFooter]. |
-| `...user.usecase` | Atomic logic: Management Auth, Session, User, and Config UseCases. |
+| `...user.usecase` | Atomic logic: Management Auth, Session, User, Audit, and Config UseCases. |
 | `...user.mock` | Mocks for tests: UseCase and Repository mocks for management context. |
 | `...user.utils` | Internal helpers including [FieldValidator] for input logic. |
 
@@ -125,3 +125,6 @@ Compose Multiplatform resources for this module are generated with `publicResCla
 [UserWebSocketMessageHandler]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/network/websocket/messagehandler/UserWebSocketMessageHandler.kt
 [AuthProviderGrid]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/component/auth/AuthProviderGrid.kt
 [LegalFooter]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/component/legal/LegalFooter.kt
+[ManagementRootComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/managementuser/ui/screen/management/root/ManagementRootComponent.kt
+[ManagementDeepLinkParser]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/managementuser/navigation/deeplink/ManagementDeepLinkParser.kt
+[ManagementUrlFormatter]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/managementuser/navigation/deeplink/ManagementUrlFormatter.kt

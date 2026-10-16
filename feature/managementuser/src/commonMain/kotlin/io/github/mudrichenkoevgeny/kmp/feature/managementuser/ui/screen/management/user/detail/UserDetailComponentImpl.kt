@@ -3,19 +3,33 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.backhandler.BackDispatcher
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.DeleteUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.user.detail.UserDetailParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
 import kotlinx.coroutines.launch
 
+/**
+ * Default [UserDetailComponent] implementation: manages single user account detail inspection and administrative updates.
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param params Screen destination parameters containing the target user ID.
+ * @param getUserUseCase Use case to fetch target user profile data.
+ * @param updateUserUseCase Use case to update target user account status and settings.
+ * @param deleteUserUseCase Use case to administratively delete target user account.
+ * @param managementDisableTotpUseCase Use case to administratively disable TOTP 2FA for target user.
+ * @param onNavigateToSessions Callback to navigate to the user's sessions list.
+ * @param onNavigateToIdentifiers Callback to navigate to the user's identifiers list.
+ * @param onNavigateToAuditEvents Callback to navigate to audit events filtered by the user's ID.
+ * @param onBack Pops this screen from the navigation stack.
+ */
 class UserDetailComponentImpl(
     componentContext: ComponentContext,
     private val params: UserDetailParams,
@@ -29,7 +43,7 @@ class UserDetailComponentImpl(
     private val onBack: () -> Unit
 ) : UserDetailComponent, ComponentContext by componentContext {
 
-    private val userId: UserId get() = params.userId
+    private val userId: UserId? get() = params.typedUserId
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue<UserDetailScreenState>(UserDetailScreenState.Loading)
@@ -40,109 +54,122 @@ class UserDetailComponentImpl(
     }
 
     override fun onAuthorityLevelChanged(value: String) {
-        val current = _state.value as? UserDetailScreenState.Content ?: return
-        if (value.isEmpty()) {
-            _state.value = current.copy(authorityLevelInput = value, saveError = null)
-            return
-        }
-        val level = value.toIntOrNull()
-        if (level != null && level in MIN_AUTHORITY_LEVEL..MAX_AUTHORITY_LEVEL) {
-            _state.value = current.copy(authorityLevelInput = value, saveError = null)
-        }
+        val currentContent = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = currentContent.copy(authorityLevelInput = value, saveError = null)
     }
 
     override fun onAccountStatusChanged(value: String) {
-        val current = _state.value as? UserDetailScreenState.Content ?: return
-        _state.value = current.copy(accountStatusInput = value, saveError = null)
+        val currentContent = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = currentContent.copy(accountStatusInput = value, saveError = null)
     }
 
     override fun onLockoutTypeChanged(value: String) {
-        val current = _state.value as? UserDetailScreenState.Content ?: return
-        _state.value = current.copy(lockoutTypeInput = value, saveError = null)
+        val currentContent = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = currentContent.copy(lockoutTypeInput = value, saveError = null)
     }
 
     override fun onTemporaryLockoutUntilChanged(value: String) {
-        val current = _state.value as? UserDetailScreenState.Content ?: return
-        _state.value = current.copy(temporaryLockoutUntilInput = value, saveError = null)
+        val currentContent = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = currentContent.copy(temporaryLockoutUntilInput = value, saveError = null)
     }
 
     override fun onUpdateClick() {
-        val current = _state.value as? UserDetailScreenState.Content ?: return
-        val authLevel = current.authorityLevelInput.toIntOrNull() ?: 0
-        val status = current.accountStatusInput.takeIf { it.isNotBlank() } ?: current.user.accountStatus.name
-        val lockoutType = AccountLockoutType.fromValueOrNull(current.lockoutTypeInput)?.value ?: current.user.lockoutType.value
-        val temporaryLockoutUntil = current.temporaryLockoutUntilInput.toLongOrNull() ?: current.user.temporaryLockoutUntil?.toEpochMilliseconds()
+        val targetId = userId ?: return
+        val currentContent = _state.value as? UserDetailScreenState.Content ?: return
+        if (currentContent.isSaving) {
+            return
+        }
 
-        _state.value = current.copy(isSaving = true, saveError = null)
+        _state.value = currentContent.copy(isSaving = true, saveError = null)
+
+        val authorityLevel = currentContent.authorityLevelInput.toIntOrNull()
+        val accountStatus = currentContent.accountStatusInput.takeIf { it.isNotBlank() }
+        val lockoutType = currentContent.lockoutTypeInput.takeIf { it.isNotBlank() }
+        val lockoutUntil = currentContent.temporaryLockoutUntilInput.toLongOrNull()
+
+        val request = UpdateUserRequest(
+            accountStatus = accountStatus,
+            authorityLevel = authorityLevel,
+            permissionCodes = null,
+            lockoutType = lockoutType,
+            temporaryLockoutUntil = lockoutUntil
+        )
 
         scope.launch {
-            updateUserUseCase(
-                userId = userId,
-                request = UpdateUserRequest(
-                    accountStatus = status,
-                    authorityLevel = authLevel,
-                    permissionCodes = null,
-                    lockoutType = lockoutType,
-                    temporaryLockoutUntil = temporaryLockoutUntil
-                )
-            ).onSuccess {
-                loadUser()
-            }.onError { error ->
-                _state.value = current.copy(isSaving = false, saveError = error)
-            }
+            updateUserUseCase(targetId, request)
+                .onSuccess {
+                    loadUser()
+                }
+                .onError { error ->
+                    val content = _state.value as? UserDetailScreenState.Content
+                    if (content != null) {
+                        _state.value = content.copy(isSaving = false, saveError = error)
+                    }
+                }
         }
     }
 
     override fun onDeleteClick() {
-        val current = _state.value as? UserDetailScreenState.Content ?: return
-        _state.value = current.copy(isDeleteConfirmationVisible = true, deleteError = null)
+        val currentContent = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = currentContent.copy(isDeleteConfirmationVisible = true)
     }
 
     override fun onConfirmDeleteClick() {
-        val current = _state.value as? UserDetailScreenState.Content ?: return
-        _state.value = current.copy(isDeleteConfirmationVisible = false, isDeleting = true, deleteError = null)
+        val targetId = userId ?: return
+        val currentContent = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = currentContent.copy(isDeleting = true, deleteError = null, isDeleteConfirmationVisible = false)
 
         scope.launch {
-            deleteUserUseCase(userId)
+            deleteUserUseCase(targetId)
                 .onSuccess {
                     onBack()
                 }
                 .onError { error ->
-                    _state.value = current.copy(isDeleting = false, deleteError = error)
+                    val content = _state.value as? UserDetailScreenState.Content
+                    if (content != null) {
+                        _state.value = content.copy(isDeleting = false, deleteError = error)
+                    }
                 }
         }
     }
 
     override fun onDismissDeleteDialog() {
-        val current = _state.value as? UserDetailScreenState.Content ?: return
-        _state.value = current.copy(isDeleteConfirmationVisible = false)
+        val currentContent = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = currentContent.copy(isDeleteConfirmationVisible = false)
     }
 
     override fun onDisableTotpClick() {
-        val current = _state.value as? UserDetailScreenState.Content ?: return
-        _state.value = current.copy(isDisablingTotp = true, disableTotpError = null)
+        val targetId = userId ?: return
+        val currentContent = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = currentContent.copy(isDisablingTotp = true, disableTotpError = null)
 
         scope.launch {
-            managementDisableTotpUseCase(userId)
+            managementDisableTotpUseCase(targetId)
                 .onSuccess {
                     loadUser()
                 }
                 .onError { error ->
-                    _state.value = current.copy(isDisablingTotp = false, disableTotpError = error)
+                    val content = _state.value as? UserDetailScreenState.Content
+                    if (content != null) {
+                        _state.value = content.copy(isDisablingTotp = false, disableTotpError = error)
+                    }
                 }
         }
     }
 
     override fun onSessionsClick() {
-        onNavigateToSessions(userId)
+        val targetId = userId ?: return
+        onNavigateToSessions(targetId)
     }
 
     override fun onIdentifiersClick() {
-        onNavigateToIdentifiers(userId)
+        val targetId = userId ?: return
+        onNavigateToIdentifiers(targetId)
     }
 
     override fun onAuditEventsClick() {
-        onNavigateToAuditEvents(userId)
+        val targetId = userId ?: return
+        onNavigateToAuditEvents(targetId)
     }
 
     override fun onRetry() {
@@ -150,15 +177,22 @@ class UserDetailComponentImpl(
     }
 
     override fun onBackClick() {
-        if ((backHandler as? BackDispatcher)?.back() != true) {
-            onBack()
-        }
+        onBack()
     }
 
     private fun loadUser() {
+        val targetId = userId
+        if (targetId == null) {
+            _state.value = UserDetailScreenState.Error(
+                CommonError.ContractViolation(throwable = IllegalStateException("Invalid userId in params"))
+            )
+            return
+        }
+
         _state.value = UserDetailScreenState.Loading
+
         scope.launch {
-            getUserUseCase(userId)
+            getUserUseCase(targetId)
                 .onSuccess { user ->
                     _state.value = UserDetailScreenState.Content(
                         user = user,
@@ -172,10 +206,5 @@ class UserDetailComponentImpl(
                     _state.value = UserDetailScreenState.Error(error)
                 }
         }
-    }
-
-    companion object {
-        private const val MIN_AUTHORITY_LEVEL = 0
-        private const val MAX_AUTHORITY_LEVEL = 100
     }
 }

@@ -11,6 +11,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.withUiMainDispatcher
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.mock.di.managementAppComponentMock
+import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.navigation.deeplink.ManagementAppDeepLinkRoute
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.management.ManagementMainNavigation
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -23,7 +25,7 @@ import kotlin.test.assertIs
 class ManagementMainScreenComponentImplTest {
 
     @Test
-    fun initialStackActiveChildIsHome() = withUiMainDispatcher {
+    fun initialStackActiveChildIsManagement() = withUiMainDispatcher {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
@@ -32,14 +34,14 @@ class ManagementMainScreenComponentImplTest {
         val main = ManagementMainScreenComponentImpl(componentContext = ctx, managementAppComponent = app)
 
         val active = main.stack.value.active
-        assertIs<MainScreenComponent.Config.Home>(active.configuration)
-        assertIs<MainScreenComponent.Child.HomeChild>(active.instance)
+        assertIs<MainScreenComponent.Config.Management>(active.configuration)
+        assertIs<MainScreenComponent.Child.ManagementChild>(active.instance)
 
         lifecycle.destroy()
     }
 
     @Test
-    fun onTabClickProfile_switchesActiveChildToProfile() = withUiMainDispatcher {
+    fun handleDeepLinkManagement_switchesActiveChildToManagement() = withUiMainDispatcher {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
@@ -47,11 +49,11 @@ class ManagementMainScreenComponentImplTest {
         val app = managementAppComponentMock(platformContext = context)
         val main = ManagementMainScreenComponentImpl(componentContext = ctx, managementAppComponent = app)
 
-        main.onTabClick(MainScreenComponent.Config.Profile)
+        main.handleDeepLink(ManagementAppDeepLinkRoute.Management(destination = ManagementMainNavigation.Main, requiresAuth = false))
 
         val active = main.stack.value.active
-        assertIs<MainScreenComponent.Config.Profile>(active.configuration)
-        assertIs<MainScreenComponent.Child.ProfileChild>(active.instance)
+        assertIs<MainScreenComponent.Config.Management>(active.configuration)
+        assertIs<MainScreenComponent.Child.ManagementChild>(active.instance)
 
         lifecycle.destroy()
     }

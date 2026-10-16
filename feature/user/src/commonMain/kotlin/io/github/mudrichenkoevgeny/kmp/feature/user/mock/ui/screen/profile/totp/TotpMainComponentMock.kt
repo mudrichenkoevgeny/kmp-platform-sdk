@@ -14,17 +14,18 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.
 
 @InternalApi
 class TotpMainComponentMock(
-    initialState: TotpMainScreenState = TotpMainScreenState(),
-    initialConfig: TotpStepConfig = TotpStepConfig.Status
+    initialState: TotpMainScreenState = TotpMainScreenState()
 ) : TotpMainComponent {
 
     override val stackNavigation = StackNavigation<TotpStepConfig>()
     override val dialogSlotNavigation = SlotNavigation<TotpDialogConfig>()
 
+    private val defaultStepConfig: TotpStepConfig = TotpStepConfig.Status
+
     private val _stack = MutableValue(
         ChildStack(
-            configuration = initialConfig,
-            instance = createChild(initialConfig)
+            configuration = defaultStepConfig,
+            instance = createChild(defaultStepConfig)
         )
     )
     override val stack: Value<ChildStack<TotpStepConfig, TotpMainComponent.Child>> = _stack

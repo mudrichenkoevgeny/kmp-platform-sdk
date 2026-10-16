@@ -11,10 +11,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.session.ManagementSessionRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteAllUserSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetUserSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.userlist.ManagementUserSessionListParams
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -37,7 +38,7 @@ class UserSessionListComponentImplTest {
     fun init_emitsErrorState_whenUseCaseFails() = runComponentTest {
         val repository = ManagementSessionRepositoryMock()
         val error = CommonError.Unknown()
-        repository.getSessionsResultProvider = { AppResult.Error(error) }
+        repository.getUserSessionsResultProvider = { AppResult.Error(error) }
         val context = createTestContext(repository = repository)
 
         advanceUntilIdle()
@@ -69,21 +70,21 @@ class UserSessionListComponentImplTest {
         repository: ManagementSessionRepositoryMock = ManagementSessionRepositoryMock()
     ): TestContext {
         if (sessions != null) {
-            repository.getSessionsResultProvider = { AppResult.Success(pagedResultMock(sessions)) }
+            repository.getUserSessionsResultProvider = { AppResult.Success(pagedResultMock(sessions)) }
         }
 
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
 
-        val useCase = ManagementGetSessionsUseCase(repository)
+        val useCase = ManagementGetUserSessionsUseCase(repository)
         val deleteSessionUseCase = ManagementDeleteSessionUseCase(repository)
         val deleteAllSessionsUseCase = ManagementDeleteAllUserSessionsUseCase(repository)
         val context = TestContext()
 
         context.component = UserSessionListComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
-            params = UserSessionListParams(userId.asHexDashString()),
-            managementGetSessionsUseCase = useCase,
+            params = ManagementUserSessionListParams(userId = userId.asHexDashString()),
+            managementGetUserSessionsUseCase = useCase,
             managementDeleteSessionUseCase = deleteSessionUseCase,
             managementDeleteAllUserSessionsUseCase = deleteAllSessionsUseCase,
             onBack = { context.onBackCalls++ }
