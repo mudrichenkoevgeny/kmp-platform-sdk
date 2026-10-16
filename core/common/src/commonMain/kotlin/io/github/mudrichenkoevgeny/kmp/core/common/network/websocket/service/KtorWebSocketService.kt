@@ -15,9 +15,13 @@ import io.ktor.http.HttpMethod
 import io.ktor.websocket.Frame
 import io.ktor.websocket.WebSocketSession
 import io.ktor.websocket.readText
+import io.ktor.websocket.close
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -114,10 +118,16 @@ class KtorWebSocketService(
         sendEvent(CommonWebSocketEventTypes.PING, payload = null, metadata)
     }
 
+    private val socketExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        if (isConnectionStarted) {
+            networkLogger.log("$LOGGER_SOCKET_PREFIX: Socket coroutine exception: ${throwable.message}")
+        }
+    }
+
     private fun startConnection() {
         connectionJob?.cancel()
 
-        connectionJob = scope.launch {
+        connectionJob = scope.launch(socketExceptionHandler) {
             var currentDelay = INITIAL_RECONNECT_DELAY_MS
 
             while (isActive && isConnectionStarted) {
@@ -145,27 +155,42 @@ class KtorWebSocketService(
                     ) {
                         networkLogger.log("$LOGGER_SOCKET_PREFIX: Connected to $socketHost$webSocketPath")
 
-                        sendInitializeFrame()
+                        try {
+                            sendInitializeFrame()
 
-                        val readJob = launch { handleIncomingFrames() }
-                        val writeJob = launch { handleOutgoingFrames() }
+                            val readJob = launch { handleIncomingFrames() }
+                            val writeJob = launch { handleOutgoingFrames() }
 
-                        readJob.join()
-                        writeJob.cancel()
+                            readJob.join()
+                            writeJob.cancel()
+                        } catch (e: Throwable) {
+                            if (e is CancellationException) {
+                                throw e
+                            }
+                            networkLogger.log("$LOGGER_SOCKET_PREFIX: Session error: ${e.message}")
+                        } finally {
+                            try {
+                                close()
+                            } catch (_: Throwable) {
+                            }
+                        }
 
                         val sessionDuration = Clock.System.now().toEpochMilliseconds() - connectedAt
                         if (sessionDuration >= MIN_SESSION_DURATION_MS) {
                             currentDelay = INITIAL_RECONNECT_DELAY_MS
                         }
                     }
-                } catch (e: Exception) {
+                } catch (e: Throwable) {
+                    if (e is CancellationException) {
+                        throw e
+                    }
                     if (isActive && isConnectionStarted) {
-                        networkLogger.log("Socket: Connection error: ${e.message}")
+                        networkLogger.log("$LOGGER_SOCKET_PREFIX: Connection error: ${e.message}")
                     }
                 }
 
                 if (isActive && isConnectionStarted) {
-                    networkLogger.log("Socket: Next retry in $currentDelay ms")
+                    networkLogger.log("$LOGGER_SOCKET_PREFIX: Next retry in $currentDelay ms")
                     delay(currentDelay.milliseconds)
                     currentDelay = (currentDelay * 2).coerceAtMost(MAX_RECONNECT_DELAY_MS)
                 }
@@ -197,7 +222,7 @@ class KtorWebSocketService(
                 }
             }
         } catch (e: Exception) {
-            if (e !is kotlinx.coroutines.channels.ClosedReceiveChannelException) {
+            if (e !is ClosedReceiveChannelException) {
                 networkLogger.log("$LOGGER_SOCKET_PREFIX: Receiving loop stopped: ${e.message}")
             }
         }
