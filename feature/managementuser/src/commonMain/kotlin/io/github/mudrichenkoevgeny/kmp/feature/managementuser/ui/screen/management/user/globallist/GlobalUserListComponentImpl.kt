@@ -19,6 +19,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toNext
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUsersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
@@ -28,6 +29,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.r
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.user.globallist.ManagementUserListParams
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 /**
@@ -36,6 +38,7 @@ import kotlinx.coroutines.launch
  * @param componentContext Decompose [ComponentContext].
  * @param params User list parameters.
  * @param getUsersUseCase Use case to fetch paginated users list.
+ * @param userRepository Optional user repository source for resolving self user ID.
  * @param onNavigateToUserDetail Callback to navigate to user detail screen.
  * @param onNavigateToCreateUser Callback to navigate to create user screen.
  * @param onBack Pops this screen from the navigation stack.
@@ -44,10 +47,11 @@ class GlobalUserListComponentImpl(
     componentContext: ComponentContext,
     private val params: ManagementUserListParams = ManagementUserListParams(),
     private val getUsersUseCase: GetUsersUseCase,
+    private val userRepository: UserRepository? = null,
     private val onNavigateToUserDetail: (UserId) -> Unit,
     private val onNavigateToCreateUser: () -> Unit,
     private val onBack: () -> Unit
-) : GlobalUserListComponent, ComponentContext by componentContext {
+) : GlobalUserListComponent, UserListOwner, ComponentContext by componentContext {
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue<GlobalUserListScreenState>(GlobalUserListScreenState.Loading)
@@ -59,6 +63,16 @@ class GlobalUserListComponentImpl(
 
     override fun onRefresh() {
         loadUsers()
+    }
+
+    override fun onUserDeleted(userId: UserId) {
+        val currentContent = _state.value as? GlobalUserListScreenState.Content ?: return
+        val updatedItems = currentContent.paging.items.filterNot { it.id == userId }
+        _state.value = currentContent.copy(paging = currentContent.paging.copy(items = updatedItems))
+    }
+
+    override fun onUserCreated() {
+        onRefresh()
     }
 
     override fun onUserClick(userId: UserId) {
@@ -174,7 +188,14 @@ class GlobalUserListComponentImpl(
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? GlobalUserListScreenState.Content
                     val newPaging = (currentContent?.paging ?: PaginationState<UserSummary>()).appendResult(pagedResult)
-                    _state.value = currentContent?.copy(paging = newPaging) ?: GlobalUserListScreenState.Content(paging = newPaging)
+                    val currentUserId = userRepository?.currentUser?.firstOrNull()?.id
+                    _state.value = currentContent?.copy(
+                        paging = newPaging,
+                        currentUserId = currentUserId
+                    ) ?: GlobalUserListScreenState.Content(
+                        paging = newPaging,
+                        currentUserId = currentUserId
+                    )
                 }
                 .onError { error ->
                     val currentContent = _state.value as? GlobalUserListScreenState.Content

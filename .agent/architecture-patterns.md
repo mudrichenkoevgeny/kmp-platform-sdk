@@ -79,7 +79,22 @@ All paged lists must use the standardized infrastructure from `core:common`:
 - **Screen Parameter Encapsulation (`*Params` Data Classes):** Decompose screen destinations with arguments encapsulate parameters inside dedicated, serializable data classes (e.g. `UserDetailParams`, `SessionDetailParams`, `IdentifierDetailParams`, `TotpMainParams`, `LoginByEmailParams`). Inner getters convert raw parameter values safely (`val userId: UserId get() = userIdValue.toUserIdOrThrow()`).
 - **Feature-Level Parsers & Formatters:** Modular navigation parsers (`*DeepLinkParser` / `*UrlFormatter`) reside in feature modules and parse/format directly into typed `shared-foundation` routes using `destination.toFullUrl(baseUrl)`.
 - **App-Specific Aggregators:** Root aggregators (`ManagementAppDeepLinkParser`, `ClientAppDeepLinkParser`) and sealed route models (`ManagementAppDeepLinkRoute`, `ClientAppDeepLinkRoute`) reside in application modules (`samplemanagement` / `sampleclient`) to maintain strict dependency graph isolation.
-- **Wasm Browser History Integration (`SetupBrowserHistory`):** On direct deep link entry, `getAncestorPaths()` seeds ancestor paths into native `window.history` so Browser Back and UI Back maintain consistent history state. `calculateActivePath` observes inner component stack states reactively to update URLs when step parameters change (`totp_step`, `login_by_totp_mode`, `unlock_method`).
+- **Wasm Browser History Integration (`SetupBrowserHistory`):** Expects `SetupBrowserHistory(mainComponent: MainScreenComponent, baseUrl: String)`. On direct deep link entry, `getAncestorPaths()` seeds ancestor paths into native `window.history` so Browser Back and UI Back maintain consistent history state. `calculateActivePath` observes inner component stack states reactively to update URLs when step parameters change (`totp_step`, `login_by_totp_mode`, `unlock_method`).
+
+## 10. Stack Navigation & Back Handling (`handleBack`)
+
+All root Decompose components (`*RootComponentImpl`) implement `handleBack(parentDestination)`:
+- **Stack Inspection:** `handleBack` checks whether `previousConfig` matches `parentDestination`.
+- **In-App Stack Pop:** If `previousConfig == parentDestination`, `navigation.pop()` pops the top item.
+- **Deep Link Navigation & Stack Replacement:** If `previousConfig != parentDestination` (e.g. on direct deep link entry), `handleBack` uses `navigation.navigate { currentStack -> val index = currentStack.indexOfLast { it == parentDestination || it::class == parentDestination::class }; if (index >= 0) currentStack.take(index + 1) else currentStack.dropLast(1) + parentDestination }`.
+- **Decompose Lifecycle Safety:** This replaces the top screen with `parentDestination`, popping and destroying the current screen via `onDestroy()` without creating duplicate configurations or memory leaks.
+
+## 11. Reactive List Mutation Synchronization (`ListOwner` Interfaces)
+
+All list components and stack `Child` wrappers implement `ListOwner` interfaces (`UserListOwner`, `SessionListOwner`, `IdentifierListOwner`):
+- **Delegation:** Root `Child` wrappers delegate interface implementation to components (`class GlobalUserList(...) : Child, UserListOwner by component`).
+- **Stack Extensions:** Extension functions (`notifyUserDeleted`, `notifyUserCreated`, `notifySessionRevoked`, `notifyIdentifierDeleted`) iterate over all `ListOwner` instances in `ChildStack.items` using `.forEach { ... }`.
+- **Immediate State Invalidation:** When a detail screen deletes or creates an item, calling `stack.value.notify*` instantly updates/refreshes the `paging.items` state of all list components in the backstack.
 
 ---
 *Refer to `AGENTS.md` for coding style rules (No FQN, No Comments).*

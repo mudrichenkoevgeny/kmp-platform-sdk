@@ -41,7 +41,7 @@ Base for all SDK modules: shared **Ktor HTTP client** bootstrap, **WebSocket** i
 
 ### 8. Navigation & Deep Linking Contracts
 - **[DeepLinkParser]:** Generic interface `DeepLinkParser<out Route : Any>` for parsing Ktor `Url` instances into typed navigation routes.
-- **[UrlFormatter]:** Generic interface `UrlFormatter<in T : Any>` for formatting typed screen destinations into canonical URL strings.
+- **[UrlFormatter]:** Generic interface `UrlFormatter<in T : Any>` for formatting typed screen destinations into canonical URL strings (requires explicit `baseHost` parameter).
 
 ### 8. Mocks & Testing
 - Extensive **@InternalApi** test doubles for deterministic previews and unit tests:

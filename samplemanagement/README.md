@@ -20,7 +20,7 @@ Administrative host applications that demonstrate how to wire **kmp-platform-sdk
     - **Primary Tab**: **Management** (`Config.Management`, path `/`) — Main administrative portal dashboard (`ManagementMainNavigation.Main`).
     - **Secondary Tab**: **User** (`Config.User`, path `/user`) — Staff self-service profile and security settings (`ClientUserNavigation.Main`).
 - **Universal Deep Linking**: Implements `ManagementAppDeepLinkParser` and `ManagementAppDeepLinkRoute` to handle cross-platform routing (`/users/*`, `/settings/*`, `/audit/*`, `/sessions/*`, `/identifiers/*`, `/user/*`) with authentication guards and tab selection.
-- **Wasm Browser History Integration**: `SetupBrowserHistory` automatically seeds parent path chains (`getAncestorPaths`) into native `window.history` on direct deep link entry, maintaining consistent behavior between the UI Back button and the Browser native Back button. Dynamically tracks state parameters (`totp_step`, `login_by_totp_mode`, `unlock_method`).
+- **Wasm Browser History Integration**: `SetupBrowserHistory(mainComponent, baseUrl)` automatically seeds parent path chains (`getAncestorPaths`) into native `window.history` on direct deep link entry, maintaining consistent behavior between the UI Back button and the Browser native Back button. Dynamically tracks state parameters (`totp_step`, `login_by_totp_mode`, `unlock_method`).
 
 ---
 

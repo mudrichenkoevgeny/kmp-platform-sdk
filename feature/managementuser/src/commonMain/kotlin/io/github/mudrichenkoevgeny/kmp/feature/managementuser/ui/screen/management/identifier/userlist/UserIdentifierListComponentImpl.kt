@@ -14,6 +14,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toNext
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetUserIdentifiersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
+import kotlinx.coroutines.flow.firstOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
@@ -34,6 +36,7 @@ class UserIdentifierListComponentImpl(
     componentContext: ComponentContext,
     private val params: ManagementUserIdentifierListParams,
     private val managementGetUserIdentifiersUseCase: ManagementGetUserIdentifiersUseCase,
+    private val userRepository: UserRepository? = null,
     private val onIdentifierSelect: ((String) -> Unit)? = null,
     private val onBack: () -> Unit
 ) : UserIdentifierListComponent, ComponentContext by componentContext {
@@ -112,7 +115,14 @@ class UserIdentifierListComponentImpl(
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? UserIdentifierListScreenState.Content
                     val newPaging = (currentContent?.paging ?: PaginationState<UserIdentifierSummary>()).appendResult(pagedResult)
-                    _state.value = UserIdentifierListScreenState.Content(paging = newPaging)
+                    val currentUserId = userRepository?.currentUser?.firstOrNull()?.id
+                    _state.value = currentContent?.copy(
+                        paging = newPaging,
+                        currentUserId = currentUserId
+                    ) ?: UserIdentifierListScreenState.Content(
+                        paging = newPaging,
+                        currentUserId = currentUserId
+                    )
                 }
                 .onError { error ->
                     val currentContent = _state.value as? UserIdentifierListScreenState.Content

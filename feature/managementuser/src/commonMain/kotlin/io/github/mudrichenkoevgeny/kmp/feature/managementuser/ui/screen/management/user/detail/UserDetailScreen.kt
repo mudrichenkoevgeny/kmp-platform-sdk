@@ -92,6 +92,11 @@ import org.jetbrains.compose.resources.stringResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res as UserRes
 
+/**
+ * Administrative user detail screen: displays user profile information and management action controls.
+ *
+ * @param component Component driving screen state and navigation callbacks.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserDetailScreen(component: UserDetailComponent) {
@@ -188,7 +193,7 @@ private fun Content(
                 text = stringResource(if (state.isDisablingTotp) Res.string.disabling_totp else Res.string.disable_totp),
                 onClick = onDisableTotpClick,
                 modifier = Modifier.testTag(UserDetailTestTags.DISABLE_TOTP_BUTTON),
-                enabled = !state.isSaving && !state.isDeleting && !state.isDisablingTotp
+                enabled = !state.isSaving && !state.isDeleting && !state.isDisablingTotp && !state.isSelf
             )
 
             state.disableTotpError?.let {
@@ -238,7 +243,7 @@ private fun Content(
         AccountStatusDropdown(
             selectedAccountStatus = state.accountStatusInput,
             onAccountStatusSelected = onAccountStatusChanged,
-            enabled = !state.isSaving && !state.isDeleting
+            enabled = !state.isSaving && !state.isDeleting && !state.isSelf
         )
 
         CoreOutlinedTextField(
@@ -248,13 +253,13 @@ private fun Content(
             placeholder = { CoreBodyText(stringResource(Res.string.authority_level)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.testTag(UserDetailTestTags.AUTHORITY_LEVEL_INPUT),
-            enabled = !state.isSaving && !state.isDeleting
+            enabled = !state.isSaving && !state.isDeleting && !state.isSelf
         )
 
         LockoutTypeDropdown(
             selectedLockoutType = state.lockoutTypeInput,
             onLockoutTypeSelected = onLockoutTypeChanged,
-            enabled = !state.isSaving && !state.isDeleting
+            enabled = !state.isSaving && !state.isDeleting && !state.isSelf
         )
 
         CoreOutlinedTextField(
@@ -264,14 +269,14 @@ private fun Content(
             placeholder = { CoreBodyText(stringResource(CommonRes.string.ui_common_lockout_until)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.testTag(UserDetailTestTags.TEMPORARY_LOCKOUT_UNTIL_INPUT),
-            enabled = !state.isSaving && !state.isDeleting
+            enabled = !state.isSaving && !state.isDeleting && !state.isSelf
         )
 
         CoreButton(
             text = stringResource(if (state.isSaving) Res.string.saving else Res.string.update_user),
             onClick = onUpdateClick,
             modifier = Modifier.testTag(UserDetailTestTags.UPDATE_BUTTON),
-            enabled = state.hasChanges && !state.isSaving && !state.isDeleting
+            enabled = state.hasChanges && !state.isSaving && !state.isDeleting && !state.isSelf
         )
 
         state.saveError?.let {
@@ -285,7 +290,7 @@ private fun Content(
             text = stringResource(Res.string.delete_user),
             onClick = onDeleteClick,
             modifier = Modifier.testTag(UserDetailTestTags.DELETE_BUTTON),
-            enabled = !state.isSaving && !state.isDeleting,
+            enabled = !state.isSaving && !state.isDeleting && !state.isSelf,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.error
             )
@@ -534,6 +539,9 @@ private fun FontScalePreview() {
     }
 }
 
+/**
+ * Test tags for UI nodes on [UserDetailScreen].
+ */
 object UserDetailTestTags {
     const val TITLE = "UserDetail_Title"
     const val BACK_BUTTON = "UserDetail_BackButton"

@@ -16,7 +16,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Persists user-scoped profile data (current user snapshot, identifiers, sessions) for offline/UI use.
+ * Persists user-scoped data (current user snapshot, identifiers, sessions) for offline/UI use.
  *
  * Implementations typically encrypt at rest via the `EncryptedSettings` abstraction from `core:common`.
  */

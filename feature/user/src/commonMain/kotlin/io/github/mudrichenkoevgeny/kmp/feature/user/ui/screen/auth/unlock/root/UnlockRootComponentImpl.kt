@@ -78,11 +78,16 @@ class UnlockRootComponentImpl(
         val items = stack.value.items
         val previousConfig = if (items.size >= 2) items[items.size - 2].configuration else null
 
-        if (previousConfig != null && (parentDestination == null || previousConfig == parentDestination)) {
+        if (previousConfig != null) {
             navigation.pop()
         } else if (parentDestination != null && parentDestination != stack.value.active.configuration) {
             navigation.navigate { currentStack ->
-                currentStack.dropLast(1) + parentDestination
+                val index = currentStack.indexOfLast { it == parentDestination || it::class == parentDestination::class }
+                if (index >= 0) {
+                    currentStack.take(index + 1)
+                } else {
+                    currentStack.dropLast(1) + parentDestination
+                }
             }
         } else {
             onFinished()
@@ -154,10 +159,15 @@ class UnlockRootComponentImpl(
                 onBack = { handleBack() }
             )
         )
-
-        is ClientAuthNavigation.UnlockSuccess -> UnlockRootComponent.Child.Success
-
-        else -> UnlockRootComponent.Child.Success
+        is ClientAuthNavigation.UnlockSuccess,
+        is ClientAuthNavigation.Auth,
+        is ClientAuthNavigation.Main,
+        is ClientAuthNavigation.LoginByEmail,
+        is ClientAuthNavigation.LoginByPhone,
+        is ClientAuthNavigation.LoginByTotp,
+        is ClientAuthNavigation.Registration,
+        is ClientAuthNavigation.ResetPassword,
+        is ClientAuthNavigation.PendingDeletion -> UnlockRootComponent.Child.Success
     }
 
     override fun onDismiss() {

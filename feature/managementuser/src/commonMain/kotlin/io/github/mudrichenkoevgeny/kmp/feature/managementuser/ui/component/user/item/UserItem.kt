@@ -31,18 +31,34 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userS
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserSummary
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * A list item card representing a single user summary in administrative user lists.
+ *
+ * @param user The [UserSummary] data to display.
+ * @param onClick Callback invoked when the user card is tapped.
+ * @param modifier Optional [Modifier] for layout adjustments.
+ * @param isSelf True if this card represents the current logged-in manager's account.
+ */
 @Composable
 fun UserItem(
     user: UserSummary,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isSelf: Boolean = false
 ) {
+    val cardColors = if (isSelf) {
+        CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+    } else {
+        CardDefaults.cardColors()
+    }
+
     Card(
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
             .testTag(GlobalUserListTestTags.USER_ITEM_PREFIX + user.id.value),
-        elevation = CardDefaults.cardElevation(defaultElevation = CoreTheme.dimens.elevationHeader)
+        elevation = CardDefaults.cardElevation(defaultElevation = CoreTheme.dimens.elevationHeader),
+        colors = cardColors
     ) {
         Column(modifier = Modifier.padding(CoreTheme.dimens.paddingMedium)) {
             CoreTitleText(

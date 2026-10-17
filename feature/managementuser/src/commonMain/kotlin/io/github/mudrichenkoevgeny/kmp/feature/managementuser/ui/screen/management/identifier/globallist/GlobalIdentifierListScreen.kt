@@ -207,7 +207,7 @@ private fun Content(
                         IdentifierItem(
                             identifier = identifier,
                             onClick = { component.onIdentifierClick(identifier.id.asHexDashString()) },
-                            isCurrentIdentifier = false
+                            isSelfIdentifier = state.currentUserId != null && identifier.userId == state.currentUserId
                         )
                     }
 
@@ -300,6 +300,9 @@ private fun FontScalePreview() {
     }
 }
 
+/**
+ * Test tags for UI nodes on [GlobalIdentifierListScreen].
+ */
 object GlobalIdentifierListTestTags {
     const val TITLE = "GlobalIdentifierList_Title"
     const val BACK_BUTTON = "GlobalIdentifierList_BackButton"

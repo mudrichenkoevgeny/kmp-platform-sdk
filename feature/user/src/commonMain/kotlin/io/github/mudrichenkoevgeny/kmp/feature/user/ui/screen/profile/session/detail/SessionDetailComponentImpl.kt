@@ -139,10 +139,10 @@ class SessionDetailComponentImpl(
 
     override fun onUserClick() {
         val current = _state.value as? SessionDetailScreenState.Content ?: return
-        if (current.isCurrentSession || (currentUserId != null && current.session.userId == currentUserId)) {
-            onNavigateToProfile()
+        if (onNavigateToUserDetail != null) {
+            onNavigateToUserDetail.invoke(current.session.userId)
         } else {
-            onNavigateToUserDetail?.invoke(current.session.userId)
+            onNavigateToProfile()
         }
     }
 
@@ -156,9 +156,11 @@ class SessionDetailComponentImpl(
                 _state.value = SessionDetailScreenState.Loading
                 fetchSession(targetId)
                     .onSuccess { loadedSession ->
+                        val isSelf = currentUserId != null && loadedSession.userId == currentUserId
                         _state.value = SessionDetailScreenState.Content(
                             session = loadedSession,
-                            isCurrentSession = resolvedIsCurrentSession
+                            isCurrentSession = resolvedIsCurrentSession,
+                            isSelfSession = isSelf
                         )
                     }
                     .onError { error ->

@@ -34,17 +34,19 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
  *
  * @param identifier The [UserIdentifierSummary] data to display.
  * @param onClick Callback invoked when the item card is tapped.
- * @param isCurrentIdentifier Indicates if this identifier is the active session's identifier.
  * @param modifier Optional [Modifier] for layout adjustments.
+ * @param isCurrentIdentifier Indicates if this identifier is the active session's identifier.
+ * @param isSelfIdentifier Indicates if this identifier belongs to the logged-in manager's own account.
  */
 @Composable
 fun IdentifierItem(
     identifier: UserIdentifierSummary,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     isCurrentIdentifier: Boolean = false,
-    modifier: Modifier = Modifier
+    isSelfIdentifier: Boolean = false
 ) {
-    val cardColors = if (isCurrentIdentifier) {
+    val cardColors = if (isCurrentIdentifier || isSelfIdentifier) {
         CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
     } else {
         CardDefaults.cardColors()

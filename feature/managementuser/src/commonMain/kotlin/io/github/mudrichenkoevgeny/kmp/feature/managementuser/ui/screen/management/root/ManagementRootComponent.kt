@@ -16,6 +16,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create.CreateUserComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.GlobalUserListComponent
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.UserListOwner
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.IdentifierListOwner
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailComponent
@@ -50,7 +51,7 @@ interface ManagementRootComponent {
         class EditSecuritySettings(val component: EditSecuritySettingsComponent) : Child
 
         /** All platform users screen. */
-        class GlobalUserList(val component: GlobalUserListComponent) : Child
+        class GlobalUserList(val component: GlobalUserListComponent) : Child, UserListOwner by component
 
         /** Create user screen. */
         class CreateUser(val component: CreateUserComponent) : Child

@@ -11,9 +11,19 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.Creat
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.create.CreateByEmailRequest
 import kotlinx.coroutines.launch
 
+/**
+ * Default [CreateUserComponent] implementation: manages user account creation form state and execution.
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param createUserUseCase Use case to administratively create a new user account.
+ * @param onUserCreated Optional callback invoked when user creation succeeds to refresh parent list state.
+ * @param onSuccess Callback invoked when user creation succeeds to dismiss/pop creation screen.
+ * @param onBack Pops this screen from the navigation stack.
+ */
 class CreateUserComponentImpl(
     componentContext: ComponentContext,
     private val createUserUseCase: CreateUserUseCase,
+    private val onUserCreated: (() -> Unit)? = null,
     private val onSuccess: () -> Unit,
     private val onBack: () -> Unit
 ) : CreateUserComponent, ComponentContext by componentContext {
@@ -58,6 +68,7 @@ class CreateUserComponentImpl(
                     permissionCodes = emptySet()
                 )
             ).onSuccess {
+                onUserCreated?.invoke()
                 onSuccess()
             }.onError { error ->
                 _state.value = current.copy(isLoading = false, error = error)

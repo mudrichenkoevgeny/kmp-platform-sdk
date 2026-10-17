@@ -199,10 +199,10 @@ class IdentifierDetailComponentImpl(
 
     override fun onUserClick() {
         val current = _state.value as? IdentifierDetailScreenState.Content ?: return
-        if (current.isCurrentIdentifier || (currentUserId != null && current.identifier.userId == currentUserId)) {
-            onNavigateToProfile()
+        if (onNavigateToUserDetail != null) {
+            onNavigateToUserDetail.invoke(current.identifier.userId)
         } else {
-            onNavigateToUserDetail?.invoke(current.identifier.userId)
+            onNavigateToProfile()
         }
     }
 
@@ -216,11 +216,13 @@ class IdentifierDetailComponentImpl(
                 _state.value = IdentifierDetailScreenState.Loading
                 fetchIdentifier(targetId)
                     .onSuccess { loaded ->
+                        val isSelf = currentUserId != null && loaded.userId == currentUserId
                         _state.value = IdentifierDetailScreenState.Content(
                             identifier = loaded,
                             isCurrentIdentifier = resolvedIsCurrent,
-                            canChangePassword = changePassword != null && loaded.userAuthProvider == UserAuthProvider.EMAIL,
-                            canDeletePassword = deletePassword != null && loaded.userAuthProvider == UserAuthProvider.EMAIL
+                            isSelfIdentifier = isSelf,
+                            canChangePassword = changePassword != null && loaded.userAuthProvider == UserAuthProvider.EMAIL && !isSelf,
+                            canDeletePassword = deletePassword != null && loaded.userAuthProvider == UserAuthProvider.EMAIL && !isSelf
                         )
                     }
                     .onError { error ->

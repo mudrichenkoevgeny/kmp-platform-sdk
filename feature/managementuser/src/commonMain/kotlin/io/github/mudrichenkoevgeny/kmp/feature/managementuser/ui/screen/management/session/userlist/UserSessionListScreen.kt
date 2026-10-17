@@ -59,6 +59,11 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
+/**
+ * Screen displaying active authenticated sessions for a specific target user in administrative context.
+ *
+ * @param component Component driving screen state and navigation callbacks.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserSessionListScreen(component: UserSessionListComponent) {
@@ -155,7 +160,7 @@ private fun Content(
                 )
             }
 
-            if (state.paging.items.size > 1) {
+            if (!state.isSelfUser && state.paging.items.size > 1) {
                 CoreButton(
                     text = stringResource(Res.string.revoke_all_sessions),
                     onClick = component::onDeleteAllSessionsClick,
@@ -178,10 +183,13 @@ private fun Content(
                 verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
             ) {
                 items(state.paging.items, key = { it.id.value }) { session ->
+                    val isCurrentSession = state.currentSessionId != null && session.id == state.currentSessionId
+                    val isSelfSession = state.currentUserId != null && session.userId == state.currentUserId
                     SessionItem(
                         session = session,
-                        onRevokeClick = { component.onDeleteSessionClick(session.id.asHexDashString()) },
                         enabled = !state.actionLoading,
+                        isCurrentSession = isCurrentSession,
+                        onRevokeClick = if (isCurrentSession || isSelfSession) null else { { component.onDeleteSessionClick(session.id.asHexDashString()) } },
                         onSessionClick = { component.onSessionClick(session) }
                     )
                 }
@@ -274,6 +282,9 @@ private fun FontScalePreview() {
     }
 }
 
+/**
+ * Test tags for UI nodes on [UserSessionListScreen].
+ */
 object UserSessionListTestTags {
     const val TITLE = "UserSessionList_Title"
     const val BACK_BUTTON = "UserSessionList_BackButton"

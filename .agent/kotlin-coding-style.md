@@ -42,7 +42,7 @@ This document defines the mandatory Kotlin syntax and formatting standards for t
 
 ### Outcome Variable Naming
 - **Domain Focus:** Use concrete names tied to the domain or operation (e.g., `authSessionResult`), not vague placeholders like `res` or `data`.
-- **Result Types:** When a variable holds the outcome of a step (especially `AppResult` or similar), include `Result` in the identifier when it improves clarity (e.g., `userProfileResult`).
+- **Result Types:** When a variable holds the outcome of a step (especially `AppResult` or similar), include `Result` in the identifier when it improves clarity.
 
 ### Resource IDs
 - Always match the naming conventions defined in `localization.md` (e.g., `error_user_invalid_password`).

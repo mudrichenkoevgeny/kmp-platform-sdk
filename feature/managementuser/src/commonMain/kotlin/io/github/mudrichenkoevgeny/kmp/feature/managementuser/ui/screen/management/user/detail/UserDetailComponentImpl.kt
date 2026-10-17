@@ -11,7 +11,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.secur
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.DeleteUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import kotlinx.coroutines.flow.firstOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.user.detail.UserDetailParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
 import kotlinx.coroutines.launch
@@ -28,6 +30,7 @@ import kotlinx.coroutines.launch
  * @param onNavigateToSessions Callback to navigate to the user's sessions list.
  * @param onNavigateToIdentifiers Callback to navigate to the user's identifiers list.
  * @param onNavigateToAuditEvents Callback to navigate to audit events filtered by the user's ID.
+ * @param onUserDeleted Callback invoked when the user account is deleted.
  * @param onBack Pops this screen from the navigation stack.
  */
 class UserDetailComponentImpl(
@@ -37,9 +40,12 @@ class UserDetailComponentImpl(
     private val updateUserUseCase: UpdateUserUseCase,
     private val deleteUserUseCase: DeleteUserUseCase,
     private val managementDisableTotpUseCase: ManagementDisableTotpUseCase,
+    private val userRepository: UserRepository? = null,
     private val onNavigateToSessions: (UserId) -> Unit,
     private val onNavigateToIdentifiers: (UserId) -> Unit,
     private val onNavigateToAuditEvents: (UserId) -> Unit,
+    private val onNavigateToProfile: (() -> Unit)? = null,
+    private val onUserDeleted: ((UserId) -> Unit)? = null,
     private val onBack: () -> Unit
 ) : UserDetailComponent, ComponentContext by componentContext {
 
@@ -122,6 +128,7 @@ class UserDetailComponentImpl(
         scope.launch {
             deleteUserUseCase(targetId)
                 .onSuccess {
+                    onUserDeleted?.invoke(targetId)
                     onBack()
                 }
                 .onError { error ->
@@ -192,14 +199,18 @@ class UserDetailComponentImpl(
         _state.value = UserDetailScreenState.Loading
 
         scope.launch {
+            val selfUserId = userRepository?.currentUser?.firstOrNull()?.id
+
             getUserUseCase(targetId)
                 .onSuccess { user ->
+                    val isSelfUser = selfUserId != null && user.id == selfUserId
                     _state.value = UserDetailScreenState.Content(
                         user = user,
                         authorityLevelInput = user.authorityLevel.toString(),
                         accountStatusInput = user.accountStatus.name,
                         lockoutTypeInput = user.lockoutType.name,
-                        temporaryLockoutUntilInput = user.temporaryLockoutUntil?.toEpochMilliseconds()?.toString() ?: ""
+                        temporaryLockoutUntilInput = user.temporaryLockoutUntil?.toEpochMilliseconds()?.toString() ?: "",
+                        isSelf = isSelfUser
                     )
                 }
                 .onError { error ->

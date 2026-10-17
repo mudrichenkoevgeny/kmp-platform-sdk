@@ -18,6 +18,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toNext
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
+import kotlinx.coroutines.flow.firstOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
@@ -40,6 +42,7 @@ class GlobalIdentifierListComponentImpl(
     componentContext: ComponentContext,
     private val params: ManagementGlobalIdentifierListParams = ManagementGlobalIdentifierListParams(),
     private val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase,
+    private val userRepository: UserRepository? = null,
     private val onIdentifierSelect: ((String) -> Unit)? = null,
     private val onBack: () -> Unit
 ) : GlobalIdentifierListComponent, ComponentContext by componentContext {
@@ -164,7 +167,14 @@ class GlobalIdentifierListComponentImpl(
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? GlobalIdentifierListScreenState.Content
                     val newPaging = (currentContent?.paging ?: PaginationState<UserIdentifierSummary>()).appendResult(pagedResult)
-                    _state.value = currentContent?.copy(paging = newPaging) ?: GlobalIdentifierListScreenState.Content(paging = newPaging)
+                    val currentUserId = userRepository?.currentUser?.firstOrNull()?.id
+                    _state.value = currentContent?.copy(
+                        paging = newPaging,
+                        currentUserId = currentUserId
+                    ) ?: GlobalIdentifierListScreenState.Content(
+                        paging = newPaging,
+                        currentUserId = currentUserId
+                    )
                 }
                 .onError { error ->
                     val currentContent = _state.value as? GlobalIdentifierListScreenState.Content

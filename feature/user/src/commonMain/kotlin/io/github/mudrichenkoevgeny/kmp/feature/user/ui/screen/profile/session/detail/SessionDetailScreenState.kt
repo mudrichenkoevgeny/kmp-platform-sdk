@@ -24,6 +24,7 @@ sealed interface SessionDetailScreenState {
     data class Content(
         val session: UserSessionPrivate,
         val isCurrentSession: Boolean = false,
+        val isSelfSession: Boolean = false,
         val actionLoading: Boolean = false,
         val actionError: AppError? = null
     ) : SessionDetailScreenState

@@ -42,9 +42,9 @@ sequenceDiagram
 
 ---
 
-## 3. Synchronized Token Refresh Flow (`AuthHttpClientConfigPlugin`)
+## 3. Synchronized Token Refresh & Dynamic Token Loading (`AuthHttpClientConfigPlugin`)
 
-When an HTTP API request fails with `401 Unauthorized`, `AuthHttpClientConfigPlugin` handles token renewal transparently without interrupting the user experience.
+`AuthHttpClientConfigPlugin` configures Ktor's `Auth` plugin with `cacheTokens = false` so that every HTTP request reads the current active credentials directly from `AuthStorage`. This prevents stale tokens from remaining cached in memory when switching user accounts or logging out. When an HTTP API request fails with `401 Unauthorized`, token renewal is handled transparently without interrupting the user experience.
 
 ```mermaid
 sequenceDiagram

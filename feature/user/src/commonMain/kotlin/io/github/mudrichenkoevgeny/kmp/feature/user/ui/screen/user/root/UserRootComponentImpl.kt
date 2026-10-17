@@ -7,7 +7,6 @@ import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.navigate
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
@@ -131,11 +130,16 @@ class UserRootComponentImpl(
         val items = stack.value.items
         val previousConfig = if (items.size >= 2) items[items.size - 2].configuration else null
 
-        if (previousConfig != null && (parentDestination == null || previousConfig == parentDestination)) {
+        if (previousConfig != null) {
             navigation.pop()
         } else if (parentDestination != null && parentDestination != stack.value.active.configuration) {
             navigation.navigate { currentStack ->
-                currentStack.dropLast(1) + parentDestination
+                val index = currentStack.indexOfLast { it == parentDestination || it::class == parentDestination::class }
+                if (index >= 0) {
+                    currentStack.take(index + 1)
+                } else {
+                    currentStack.dropLast(1) + parentDestination
+                }
             }
         }
     }
@@ -202,7 +206,7 @@ class UserRootComponentImpl(
                     navigation.bringToFront(ClientUserNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId.asHexDashString())))
                 },
                 onNavigateToProfile = {
-                    navigation.popTo(0)
+                    handleBack(ClientUserNavigation.Main)
                 },
                 onBack = { handleBack(ClientUserNavigation.SessionList()) }
             )
@@ -237,7 +241,7 @@ class UserRootComponentImpl(
                 authStorage = authStorage,
                 onIdentifierDeleted = { stack.value.notifyIdentifierDeleted(it) },
                 onNavigateToProfile = {
-                    navigation.popTo(0)
+                    handleBack(ClientUserNavigation.Main)
                 },
                 onBack = { handleBack(ClientUserNavigation.IdentifierList()) }
             )

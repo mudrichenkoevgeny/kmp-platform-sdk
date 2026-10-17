@@ -257,7 +257,7 @@ private fun Content(
             }
         }
 
-        if (!state.isCurrentSession) {
+        if (!state.isCurrentSession && !state.isSelfSession) {
             CoreButton(
                 text = stringResource(Res.string.session_revoke),
                 onClick = onRevokeClick,

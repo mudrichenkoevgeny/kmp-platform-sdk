@@ -178,6 +178,7 @@
     <string name="identifier_detail_id">ID идентификатора</string>
     <string name="identifier_detail_value">Значение идентификатора</string>
     <string name="identifier_detail_auth_provider">Провайдер аутентификации</string>
+    <string name="identifier_detail_external_email">Внешний Email</string>
     <string name="identifier_detail_created_at">Дата создания</string>
     <string name="identifier_detail_updated_at">Дата обновления</string>
     <string name="identifier_delete_button">Удалить идентификатор</string>

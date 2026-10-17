@@ -26,6 +26,16 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.rou
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.login.totp.LoginByTotpParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.methodselection.UnlockMethodSelectionParams
 
+/**
+ * Default [ClientLoginRootComponent] implementation: manages the client authentication navigation stack
+ * (welcome, email/phone login, registration, password reset, MFA/TOTP, unlock, pending deletion).
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param settingsComponent Core settings component providing global app settings use cases.
+ * @param securityComponent Core security component providing password policy validation.
+ * @param clientUserComponent Client user feature component providing authentication use cases and repositories.
+ * @param onFinished Invoked when the authentication flow succeeds or completes.
+ */
 class ClientLoginRootComponentImpl(
     componentContext: ComponentContext,
     private val settingsComponent: SettingsComponent,
@@ -56,11 +66,16 @@ class ClientLoginRootComponentImpl(
         val items = stack.value.items
         val previousConfig = if (items.size >= 2) items[items.size - 2].configuration else null
 
-        if (previousConfig != null && (parentDestination == null || previousConfig == parentDestination)) {
+        if (previousConfig != null) {
             navigation.pop()
         } else if (parentDestination != null && parentDestination != stack.value.active.configuration) {
             navigation.navigate { currentStack ->
-                currentStack.dropLast(1) + parentDestination
+                val index = currentStack.indexOfLast { it == parentDestination || it::class == parentDestination::class }
+                if (index >= 0) {
+                    currentStack.take(index + 1)
+                } else {
+                    currentStack.dropLast(1) + parentDestination
+                }
             }
         } else {
             onFinished()

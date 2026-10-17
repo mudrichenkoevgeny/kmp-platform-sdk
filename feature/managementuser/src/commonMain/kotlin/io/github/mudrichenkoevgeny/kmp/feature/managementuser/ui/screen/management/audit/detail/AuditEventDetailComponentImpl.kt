@@ -66,10 +66,10 @@ class AuditEventDetailComponentImpl(
         val currentContent = _state.value as? AuditEventDetailScreenState.Content ?: return
         val actorUserId = currentContent.event.actorId?.toUserIdOrNull() ?: return
 
-        if (actorUserId == currentUserId) {
-            onNavigateToProfile()
+        if (onNavigateToUserDetail != null) {
+            onNavigateToUserDetail.invoke(actorUserId)
         } else {
-            onNavigateToUserDetail?.invoke(actorUserId)
+            onNavigateToProfile()
         }
     }
 
@@ -82,10 +82,10 @@ class AuditEventDetailComponentImpl(
         when (resourceType) {
             UserAuditResourceType.USER -> {
                 val targetUserId = resourceId.toUserIdOrNull() ?: return
-                if (targetUserId == currentUserId) {
-                    onNavigateToProfile()
+                if (onNavigateToUserDetail != null) {
+                    onNavigateToUserDetail.invoke(targetUserId)
                 } else {
-                    onNavigateToUserDetail?.invoke(targetUserId)
+                    onNavigateToProfile()
                 }
             }
             UserAuditResourceType.SESSION -> {

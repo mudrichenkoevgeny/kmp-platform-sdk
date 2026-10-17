@@ -54,6 +54,8 @@ fun HttpClientConfig<*>.setupAuthConfig(
 ) {
     install(Auth) {
         bearer {
+            cacheTokens = false
+
             loadTokens {
                 val now = Clock.System.now().toEpochMilliseconds()
                 val expiresAt = authStorage.getExpiresAt()

@@ -204,10 +204,13 @@ private fun Content(
                     verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
                 ) {
                     items(state.paging.items, key = { it.id.value }) { session ->
+                        val isCurrentSession = state.currentSessionId != null && session.id == state.currentSessionId
+                        val isSelfSession = state.currentUserId != null && session.userId == state.currentUserId
                         SessionItem(
                             session = session,
                             enabled = !state.actionLoading,
-                            onRevokeClick = { component.onRevokeClick(session) },
+                            isCurrentSession = isCurrentSession,
+                            onRevokeClick = if (isCurrentSession || isSelfSession) null else { { component.onRevokeClick(session) } },
                             onSessionClick = { component.onSessionClick(session) }
                         )
                     }
@@ -301,6 +304,9 @@ private fun FontScalePreview() {
     }
 }
 
+/**
+ * Test tags for UI nodes on [GlobalSessionListScreen].
+ */
 object GlobalSessionListTestTags {
     const val TITLE = "GlobalSessionList_Title"
     const val BACK_BUTTON = "GlobalSessionList_BackButton"

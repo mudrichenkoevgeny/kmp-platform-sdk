@@ -55,6 +55,11 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
+/**
+ * Screen displaying a list of active identifiers for a specific user in administrative context.
+ *
+ * @param component Component driving screen state and navigation callbacks.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserIdentifierListScreen(component: UserIdentifierListComponent) {
@@ -163,7 +168,7 @@ private fun Content(
                     IdentifierItem(
                         identifier = identifier,
                         onClick = { component.onIdentifierClick(identifier.id.asHexDashString()) },
-                        isCurrentIdentifier = false
+                        isSelfIdentifier = state.currentUserId != null && identifier.userId == state.currentUserId
                     )
                 }
 
@@ -185,6 +190,9 @@ private fun Content(
     }
 }
 
+/**
+ * Test tags for UI nodes on [UserIdentifierListScreen].
+ */
 object UserIdentifierListTestTags {
     const val TITLE = "UserIdentifiers_Title"
     const val BACK_BUTTON = "UserIdentifiers_BackButton"

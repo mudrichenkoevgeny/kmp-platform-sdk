@@ -8,7 +8,7 @@ This document defines the core domain entities, access models, and state machine
 
 The SDK categorizes client applications into two distinct operational contexts:
 
-- **`CLIENT`**: Standard end-user applications (built via `feature:clientuser`). Focuses on public onboarding, multi-method login, self-service profile management, personal session control, and self security settings.
+- **`CLIENT`**: Standard end-user applications (built via `feature:clientuser`). Focuses on public onboarding, multi-method login, self-service user management, personal session control, and self security settings.
 - **`MANAGEMENT`**: Internal administrative portals (built via `feature:managementuser`). Focuses on privileged access, administrative user oversight, cross-account session revocation, resource inspection, and audit trail verification.
 
 ---

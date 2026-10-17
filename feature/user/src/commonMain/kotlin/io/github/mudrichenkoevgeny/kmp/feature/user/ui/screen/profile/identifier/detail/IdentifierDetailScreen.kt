@@ -65,6 +65,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_delete_button
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_delete_password_button
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_auth_provider
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_created_at
+import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_external_email
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_id
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_title
 import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_title_current
@@ -78,6 +79,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.old_password
 import io.github.mudrichenkoevgeny.kmp.feature.user.user_id
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Screen displaying detailed information and management actions for a specific user identifier.
+ *
+ * @param component Component driving screen state and navigation callbacks.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IdentifierDetailScreen(component: IdentifierDetailComponent) {
@@ -173,8 +179,8 @@ private fun Content(
                 DetailRow(
                     label = stringResource(Res.string.user_id, "").replace(":", "").replace("%1\$s", "").trim(),
                     value = identifier.userId.asHexDashString(),
-                    onClick = onUserClick,
-                    modifier = Modifier.testTag(IdentifierDetailTestTags.USER_ROW)
+                    modifier = Modifier.testTag(IdentifierDetailTestTags.USER_ROW),
+                    onClick = onUserClick
                 )
 
                 DetailRow(
@@ -193,7 +199,7 @@ private fun Content(
                 )
 
                 DetailRow(
-                    label = "External Email",
+                    label = stringResource(Res.string.identifier_detail_external_email),
                     value = identifier.externalProviderEmail ?: stringResource(Res.string.not_available)
                 )
 
@@ -247,7 +253,7 @@ private fun Content(
             )
         }
 
-        if (!state.isCurrentIdentifier) {
+        if (!state.isCurrentIdentifier && !state.isSelfIdentifier) {
             CoreButton(
                 text = stringResource(Res.string.identifier_delete_button),
                 onClick = onDeleteIdentifierRequested,
@@ -298,8 +304,8 @@ private fun Content(
 private fun DetailRow(
     label: String,
     value: String,
-    onClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null
 ) {
     Row(
         modifier = modifier
@@ -451,6 +457,9 @@ private fun IdentifierDetailFontScalePreview() {
     IdentifierDetailPreviewContent(state = defaultIdentifierDetailPreviewState)
 }
 
+/**
+ * Test tags for UI nodes on [IdentifierDetailScreen].
+ */
 object IdentifierDetailTestTags {
     const val TITLE = "identifier_detail_title"
     const val BACK_BUTTON = "identifier_detail_back_button"

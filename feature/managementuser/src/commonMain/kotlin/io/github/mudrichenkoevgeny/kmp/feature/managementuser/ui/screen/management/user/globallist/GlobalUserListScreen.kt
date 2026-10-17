@@ -213,6 +213,7 @@ private fun Content(
                     items(state.paging.items, key = { it.id.value }) { user ->
                         UserItem(
                             user = user,
+                            isSelf = state.currentUserId != null && user.id == state.currentUserId,
                             onClick = { onUserClick(user.id) }
                         )
                     }
@@ -324,6 +325,9 @@ private fun FontScalePreview() {
     }
 }
 
+/**
+ * Test tags for UI nodes on [GlobalUserListScreen].
+ */
 object GlobalUserListTestTags {
     const val TITLE = "GlobalUserList_Title"
     const val BACK_BUTTON = "GlobalUserList_BackButton"

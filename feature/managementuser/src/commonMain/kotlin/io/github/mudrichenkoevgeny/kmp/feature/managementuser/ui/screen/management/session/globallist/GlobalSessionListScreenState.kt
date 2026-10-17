@@ -4,7 +4,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 
 /**
  * UI state for global sessions list management screen.
@@ -29,6 +31,8 @@ sealed interface GlobalSessionListScreenState {
      */
     data class Content(
         val paging: PaginationState<UserSessionSummary>,
+        val currentSessionId: UserSessionId? = null,
+        val currentUserId: UserId? = null,
         val sortState: ListingSortState? = null,
         val filterStates: Map<String, ListingFilterState> = emptyMap(),
         val isFilterPanelExpanded: Boolean = false,

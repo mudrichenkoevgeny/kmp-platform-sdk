@@ -32,6 +32,16 @@ class GlobalUserListComponentMock(
         refreshCalls++
     }
 
+    override fun onUserDeleted(userId: UserId) {
+        val current = _state.value as? GlobalUserListScreenState.Content ?: return
+        val updatedItems = current.paging.items.filterNot { it.id == userId }
+        _state.value = current.copy(paging = current.paging.copy(items = updatedItems))
+    }
+
+    override fun onUserCreated() {
+        onRefresh()
+    }
+
     override fun onUserClick(userId: UserId) {
         lastUserClicked = userId
     }

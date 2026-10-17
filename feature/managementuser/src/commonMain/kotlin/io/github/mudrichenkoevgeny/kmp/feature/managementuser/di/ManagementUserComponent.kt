@@ -395,6 +395,9 @@ class ManagementUserComponent(
         ManagementRootComponentImpl(
             componentContext = componentContext,
             userRepository = userRepository,
+            authStorage = authStorage,
+            deleteSessionUseCase = deleteSessionUseCase,
+            deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
             getManagementAuthSettingsUseCase = getManagementAuthSettingsUseCase,
             saveRemoteAuthSettingsUseCase = saveRemoteAuthSettingsUseCase,
             resetRemoteAuthSettingsUseCase = resetRemoteAuthSettingsUseCase,

@@ -175,14 +175,14 @@ private fun Content(
                 DetailRow(
                     label = stringResource(Res.string.audit_event_resource),
                     value = resourceValue,
-                    onClick = if (isResourceClickable) onResourceClick else null,
-                    modifier = Modifier.testTag(AuditEventDetailTestTags.RESOURCE_ROW)
+                    modifier = Modifier.testTag(AuditEventDetailTestTags.RESOURCE_ROW),
+                    onClick = if (isResourceClickable) onResourceClick else null
                 )
                 DetailRow(
                     label = stringResource(Res.string.audit_event_actor),
                     value = subjectValue,
-                    onClick = if (isSubjectClickable) onSubjectClick else null,
-                    modifier = Modifier.testTag(AuditEventDetailTestTags.SUBJECT_ROW)
+                    modifier = Modifier.testTag(AuditEventDetailTestTags.SUBJECT_ROW),
+                    onClick = if (isSubjectClickable) onSubjectClick else null
                 )
                 event.message?.let { msg ->
                     DetailRow(
@@ -237,8 +237,8 @@ private fun Content(
 private fun DetailRow(
     label: String,
     value: String,
-    onClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null
 ) {
     Row(
         modifier = modifier

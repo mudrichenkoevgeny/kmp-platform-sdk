@@ -178,6 +178,7 @@
     <string name="identifier_detail_id">Identifier ID</string>
     <string name="identifier_detail_value">Identifier Value</string>
     <string name="identifier_detail_auth_provider">Auth Provider</string>
+    <string name="identifier_detail_external_email">External Email</string>
     <string name="identifier_detail_created_at">Created At</string>
     <string name="identifier_detail_updated_at">Updated At</string>
     <string name="identifier_delete_button">Delete Identifier</string>

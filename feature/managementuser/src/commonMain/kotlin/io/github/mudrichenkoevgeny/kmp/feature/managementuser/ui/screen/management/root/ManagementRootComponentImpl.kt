@@ -8,10 +8,11 @@ import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.navigate
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackDispatcher
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.toUserSessionIdOrNull
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.detail.AuditEventDetailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list.AuditEventListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.globallist.GlobalIdentifierListComponentImpl
@@ -26,6 +27,13 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create.CreateUserComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.GlobalUserListComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.notifyUserCreated
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.notifyUserDeleted
+import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.notifyIdentifierDeleted
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.notifySessionRevoked
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.DeleteUserIdentifierUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit.GetAuditEventUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit.GetAuditEventsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings.GetManagementAuthSettingsUseCase
@@ -62,6 +70,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.rout
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.management.ManagementMainNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.navigation.route.management.ManagementSecurityNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.navigation.route.management.ManagementSettingsNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientAuthNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientUserNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.management.ManagementAuthSettingsNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.management.ManagementUsersNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.detail.IdentifierDetailParams
@@ -77,6 +87,9 @@ import kotlinx.serialization.PolymorphicSerializer
 class ManagementRootComponentImpl(
     componentContext: ComponentContext,
     private val userRepository: UserRepository,
+    private val authStorage: AuthStorage? = null,
+    private val deleteSessionUseCase: DeleteSessionUseCase? = null,
+    private val deleteUserIdentifierUseCase: DeleteUserIdentifierUseCase? = null,
     private val getManagementAuthSettingsUseCase: GetManagementAuthSettingsUseCase,
     private val saveRemoteAuthSettingsUseCase: SaveRemoteAuthSettingsUseCase,
     private val resetRemoteAuthSettingsUseCase: ResetRemoteAuthSettingsUseCase,
@@ -128,11 +141,16 @@ class ManagementRootComponentImpl(
         val items = stack.value.items
         val previousConfig = if (items.size >= 2) items[items.size - 2].configuration else null
 
-        if (previousConfig != null && (parentDestination == null || previousConfig == parentDestination)) {
+        if (previousConfig != null) {
             navigation.pop()
         } else if (parentDestination != null && parentDestination != stack.value.active.configuration) {
             navigation.navigate { currentStack ->
-                currentStack.dropLast(1) + parentDestination
+                val index = currentStack.indexOfLast { it == parentDestination || it::class == parentDestination::class }
+                if (index >= 0) {
+                    currentStack.take(index + 1)
+                } else {
+                    currentStack.dropLast(1) + parentDestination
+                }
             }
         }
     }
@@ -142,7 +160,7 @@ class ManagementRootComponentImpl(
         config: NavigationRoute,
         context: ComponentContext
     ): ManagementRootComponent.Child = when (config) {
-        ManagementMainNavigation.Main -> ManagementRootComponent.Child.Main(
+        is ManagementMainNavigation.Main -> ManagementRootComponent.Child.Main(
             MainManagementComponentImpl(
                 componentContext = context,
                 onNavigateToGlobalUserList = { navigation.bringToFront(ManagementUsersNavigation.UserList()) },
@@ -152,7 +170,7 @@ class ManagementRootComponentImpl(
                 onNavigateToSettings = { navigation.bringToFront(ManagementSettingsNavigation.Main) }
             )
         )
-        ManagementSettingsNavigation.Main -> ManagementRootComponent.Child.SettingsMain(
+        is ManagementSettingsNavigation.Main -> ManagementRootComponent.Child.SettingsMain(
             SettingsMainComponentImpl(
                 componentContext = context,
                 onNavigateToEditAuthSettings = { navigation.bringToFront(ManagementAuthSettingsNavigation.AuthSettings) },
@@ -161,7 +179,7 @@ class ManagementRootComponentImpl(
                 onBack = { handleBack() }
             )
         )
-        ManagementAuthSettingsNavigation.AuthSettings -> ManagementRootComponent.Child.EditAuthSettings(
+        is ManagementAuthSettingsNavigation.AuthSettings -> ManagementRootComponent.Child.EditAuthSettings(
             EditAuthSettingsComponentImpl(
                 componentContext = context,
                 getManagementAuthSettingsUseCase = getManagementAuthSettingsUseCase,
@@ -170,7 +188,7 @@ class ManagementRootComponentImpl(
                 onBack = { handleBack(ManagementSettingsNavigation.Main) }
             )
         )
-        ManagementSettingsNavigation.GlobalSettings -> ManagementRootComponent.Child.EditGlobalSettings(
+        is ManagementSettingsNavigation.GlobalSettings -> ManagementRootComponent.Child.EditGlobalSettings(
             EditGlobalSettingsComponentImpl(
                 componentContext = context,
                 getManagementGlobalSettingsUseCase = getManagementGlobalSettingsUseCase,
@@ -179,7 +197,7 @@ class ManagementRootComponentImpl(
                 onBack = { handleBack(ManagementSettingsNavigation.Main) }
             )
         )
-        ManagementSecurityNavigation.SecuritySettings -> ManagementRootComponent.Child.EditSecuritySettings(
+        is ManagementSecurityNavigation.SecuritySettings -> ManagementRootComponent.Child.EditSecuritySettings(
             EditSecuritySettingsComponentImpl(
                 componentContext = context,
                 getManagementSecuritySettingsUseCase = getManagementSecuritySettingsUseCase,
@@ -193,6 +211,7 @@ class ManagementRootComponentImpl(
                 componentContext = context,
                 params = config.params,
                 getUsersUseCase = getUsersUseCase,
+                userRepository = userRepository,
                 onNavigateToUserDetail = { userId ->
                     navigation.bringToFront(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString())))
                 },
@@ -210,6 +229,7 @@ class ManagementRootComponentImpl(
                 updateUserUseCase = updateUserUseCase,
                 deleteUserUseCase = deleteUserUseCase,
                 managementDisableTotpUseCase = managementDisableTotpUseCase,
+                userRepository = userRepository,
                 onNavigateToSessions = { userId ->
                     navigation.bringToFront(ManagementUsersNavigation.UserSessionList(ManagementUserSessionListParams(userId = userId.asHexDashString())))
                 },
@@ -225,13 +245,16 @@ class ManagementRootComponentImpl(
                         )
                     )
                 },
+                onNavigateToProfile = onNavigateToProfile,
+                onUserDeleted = { userId -> stack.value.notifyUserDeleted(userId) },
                 onBack = { handleBack(ManagementUsersNavigation.UserList()) }
             )
         )
-        ManagementUsersNavigation.CreateUser -> ManagementRootComponent.Child.CreateUser(
+        is ManagementUsersNavigation.CreateUser -> ManagementRootComponent.Child.CreateUser(
             CreateUserComponentImpl(
                 componentContext = context,
                 createUserUseCase = createUserUseCase,
+                onUserCreated = { stack.value.notifyUserCreated() },
                 onSuccess = navigation::pop,
                 onBack = { handleBack(ManagementUsersNavigation.UserList()) }
             )
@@ -243,10 +266,26 @@ class ManagementRootComponentImpl(
                 managementGetUserSessionsUseCase = managementGetUserSessionsUseCase,
                 managementDeleteSessionUseCase = managementDeleteSessionUseCase,
                 managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase,
+                authStorage = authStorage,
+                userRepository = userRepository,
                 onNavigateToSessionDetail = { session ->
-                    navigation.bringToFront(ManagementUsersNavigation.SessionDetail(SessionDetailParams(sessionId = session.id.asHexDashString())))
+                    navigation.bringToFront(
+                        ManagementUsersNavigation.SessionDetail(
+                            SessionDetailParams(
+                                sessionId = session.id.asHexDashString(),
+                                userId = config.params.userId
+                            )
+                        )
+                    )
                 },
-                onBack = { handleBack(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = config.params.userId))) }
+                onBack = {
+                    val parent = if (config.params.userId.isNotBlank()) {
+                        ManagementUsersNavigation.UserDetail(UserDetailParams(userId = config.params.userId))
+                    } else {
+                        ManagementUsersNavigation.UserList()
+                    }
+                    handleBack(parent)
+                }
             )
         )
         is ManagementUsersNavigation.UserIdentifierList -> ManagementRootComponent.Child.UserIdentifierList(
@@ -254,10 +293,25 @@ class ManagementRootComponentImpl(
                 componentContext = context,
                 params = config.params,
                 managementGetUserIdentifiersUseCase = managementGetUserIdentifiersUseCase,
+                userRepository = userRepository,
                 onIdentifierSelect = { identifierId ->
-                    navigation.bringToFront(ManagementUsersNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId)))
+                    navigation.bringToFront(
+                        ManagementUsersNavigation.IdentifierDetail(
+                            IdentifierDetailParams(
+                                identifierId = identifierId,
+                                userId = config.params.userId
+                            )
+                        )
+                    )
                 },
-                onBack = { handleBack(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = config.params.userId))) }
+                onBack = {
+                    val parent = if (config.params.userId.isNotBlank()) {
+                        ManagementUsersNavigation.UserDetail(UserDetailParams(userId = config.params.userId))
+                    } else {
+                        ManagementUsersNavigation.UserList()
+                    }
+                    handleBack(parent)
+                }
             )
         )
         is ManagementAuditNavigation.AuditEventList -> ManagementRootComponent.Child.AuditEventList(
@@ -296,6 +350,8 @@ class ManagementRootComponentImpl(
                 params = config.params,
                 managementGetSessionsUseCase = managementGetSessionsUseCase,
                 managementDeleteSessionUseCase = managementDeleteSessionUseCase,
+                authStorage = authStorage,
+                userRepository = userRepository,
                 onNavigateToSessionDetail = { session ->
                     navigation.bringToFront(ManagementUsersNavigation.SessionDetail(SessionDetailParams(sessionId = session.id.asHexDashString())))
                 },
@@ -310,23 +366,38 @@ class ManagementRootComponentImpl(
                 fetchSession = managementGetSessionUseCase?.let { useCase ->
                     { targetId -> useCase(targetId.asHexDashString()) }
                 },
-                revokeSession = if (managementGetSessionUseCase != null) {
-                    { targetId ->
-                        when (val sessionRes = managementGetSessionUseCase.invoke(targetId.asHexDashString())) {
-                            is AppResult.Success -> managementDeleteSessionUseCase.invoke(sessionRes.data.userId, targetId.asHexDashString())
-                            is AppResult.Error -> sessionRes
+                revokeSession = { targetId ->
+                    val activeSessionId = authStorage?.getSessionId()?.toUserSessionIdOrNull()
+                    if (targetId == activeSessionId) {
+                        AppResult.Error(CommonError.ContractViolation(throwable = IllegalStateException("Cannot revoke current active session")))
+                    } else {
+                        val sessionRes = managementGetSessionUseCase?.invoke(targetId.asHexDashString())
+                        if (sessionRes is AppResult.Success) {
+                            managementDeleteSessionUseCase.invoke(sessionRes.data.userId, targetId.asHexDashString())
+                        } else if (deleteSessionUseCase != null) {
+                            deleteSessionUseCase.invoke(targetId)
+                        } else {
+                            AppResult.Error(CommonError.ContractViolation())
                         }
                     }
-                } else null,
-                onSessionRevoked = { },
+                },
+                authStorage = authStorage,
+                onSessionRevoked = { sessionId -> stack.value.notifySessionRevoked(sessionId) },
                 onNavigateToIdentifierDetail = { identifierId ->
                     navigation.bringToFront(ManagementUsersNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId.asHexDashString())))
                 },
                 onNavigateToUserDetail = { userId ->
                     navigation.bringToFront(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString())))
                 },
-                onNavigateToProfile = { navigation.popTo(0) },
-                onBack = { handleBack(ManagementUsersNavigation.GlobalSessionList()) }
+                onNavigateToProfile = onNavigateToProfile,
+                onBack = {
+                    val parent = if (!config.params.userId.isNullOrBlank()) {
+                        ManagementUsersNavigation.UserSessionList(ManagementUserSessionListParams(userId = config.params.userId!!))
+                    } else {
+                        ManagementUsersNavigation.GlobalSessionList()
+                    }
+                    handleBack(parent)
+                }
             )
         )
         is ManagementUsersNavigation.GlobalIdentifierList -> ManagementRootComponent.Child.GlobalIdentifierList(
@@ -348,20 +419,43 @@ class ManagementRootComponentImpl(
                 fetchIdentifier = managementGetIdentifierUseCase?.let { useCase ->
                     { targetId -> useCase(targetId.asHexDashString()) }
                 },
-                deleteIdentifier = if (managementGetIdentifierUseCase != null && managementDeleteIdentifierUseCase != null) {
-                    { targetId ->
-                        when (val idRes = managementGetIdentifierUseCase.invoke(targetId.asHexDashString())) {
-                            is AppResult.Success -> managementDeleteIdentifierUseCase.invoke(idRes.data.userId, targetId.asHexDashString())
-                            is AppResult.Error -> idRes
-                        }
+                deleteIdentifier = { targetId ->
+                    val idRes = managementGetIdentifierUseCase?.invoke(targetId.asHexDashString())
+                    if (idRes is AppResult.Success) {
+                        managementDeleteIdentifierUseCase?.invoke(idRes.data.userId, targetId.asHexDashString())
+                            ?: AppResult.Error(CommonError.ContractViolation())
+                    } else if (deleteUserIdentifierUseCase != null) {
+                        deleteUserIdentifierUseCase.invoke(targetId)
+                    } else {
+                        AppResult.Error(CommonError.ContractViolation())
                     }
-                } else null,
-                onIdentifierDeleted = { },
+                },
+                authStorage = authStorage,
+                onIdentifierDeleted = { identifierId -> stack.value.notifyIdentifierDeleted(identifierId) },
                 onNavigateToUserDetail = { userId ->
                     navigation.bringToFront(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString())))
                 },
-                onNavigateToProfile = { navigation.popTo(0) },
-                onBack = { handleBack(ManagementUsersNavigation.GlobalIdentifierList()) }
+                onNavigateToProfile = onNavigateToProfile,
+                onBack = {
+                    val parent = if (!config.params.userId.isNullOrBlank()) {
+                        ManagementUsersNavigation.UserIdentifierList(ManagementUserIdentifierListParams(userId = config.params.userId!!))
+                    } else {
+                        ManagementUsersNavigation.GlobalIdentifierList()
+                    }
+                    handleBack(parent)
+                }
+            )
+        )
+        is ManagementAuditNavigation.Main -> createChild(ManagementAuditNavigation.AuditEventList(), context)
+        is ClientAuthNavigation,
+        is ClientUserNavigation -> ManagementRootComponent.Child.Main(
+            MainManagementComponentImpl(
+                componentContext = context,
+                onNavigateToGlobalUserList = { navigation.bringToFront(ManagementUsersNavigation.UserList()) },
+                onNavigateToGlobalSessionList = { navigation.bringToFront(ManagementUsersNavigation.GlobalSessionList()) },
+                onNavigateToGlobalIdentifierList = { navigation.bringToFront(ManagementUsersNavigation.GlobalIdentifierList()) },
+                onNavigateToAuditEventList = { navigation.bringToFront(ManagementAuditNavigation.AuditEventList()) },
+                onNavigateToSettings = { navigation.bringToFront(ManagementSettingsNavigation.Main) }
             )
         )
         else -> ManagementRootComponent.Child.Main(

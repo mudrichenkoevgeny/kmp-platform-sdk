@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.Pagina
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 
 /**
  * UI state for global user identifiers list management screen.
@@ -29,6 +30,7 @@ sealed interface GlobalIdentifierListScreenState {
      */
     data class Content(
         val paging: PaginationState<UserIdentifierSummary>,
+        val currentUserId: UserId? = null,
         val sortState: ListingSortState? = null,
         val filterStates: Map<String, ListingFilterState> = emptyMap(),
         val isFilterPanelExpanded: Boolean = false,

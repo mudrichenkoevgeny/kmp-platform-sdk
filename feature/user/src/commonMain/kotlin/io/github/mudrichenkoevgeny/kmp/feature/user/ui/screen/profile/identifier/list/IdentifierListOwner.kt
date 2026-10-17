@@ -22,6 +22,5 @@ fun ChildStack<*, *>.notifyIdentifierDeleted(identifierId: UserIdentifierId) {
     items
         .map { it.instance }
         .filterIsInstance<IdentifierListOwner>()
-        .lastOrNull()
-        ?.onIdentifierDeleted(identifierId)
+        .forEach { it.onIdentifierDeleted(identifierId) }
 }

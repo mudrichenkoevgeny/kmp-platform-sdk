@@ -16,10 +16,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteAllUserSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetUserSessionsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.toUserSessionIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.userlist.ManagementUserSessionListParams
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 /**
@@ -39,6 +43,8 @@ class UserSessionListComponentImpl(
     private val managementGetUserSessionsUseCase: ManagementGetUserSessionsUseCase,
     private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase,
     private val managementDeleteAllUserSessionsUseCase: ManagementDeleteAllUserSessionsUseCase,
+    private val authStorage: AuthStorage? = null,
+    private val userRepository: UserRepository? = null,
     private val onNavigateToSessionDetail: ((UserSessionSummary) -> Unit)? = null,
     private val onBack: () -> Unit
 ) : UserSessionListComponent, ComponentContext by componentContext {
@@ -163,7 +169,20 @@ class UserSessionListComponentImpl(
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? UserSessionListScreenState.Content
                     val newPaging = (currentContent?.paging ?: PaginationState<UserSessionSummary>()).appendResult(pagedResult)
-                    _state.value = UserSessionListScreenState.Content(paging = newPaging)
+                    val activeSessionId = authStorage?.getSessionId()?.toUserSessionIdOrNull()
+                    val currentUserId = userRepository?.currentUser?.firstOrNull()?.id
+                    val isSelfUser = currentUserId != null && targetUserId == currentUserId
+                    _state.value = currentContent?.copy(
+                        paging = newPaging,
+                        currentSessionId = activeSessionId,
+                        currentUserId = currentUserId,
+                        isSelfUser = isSelfUser
+                    ) ?: UserSessionListScreenState.Content(
+                        paging = newPaging,
+                        currentSessionId = activeSessionId,
+                        currentUserId = currentUserId,
+                        isSelfUser = isSelfUser
+                    )
                 }
                 .onError { error ->
                     val currentContent = _state.value as? UserSessionListScreenState.Content

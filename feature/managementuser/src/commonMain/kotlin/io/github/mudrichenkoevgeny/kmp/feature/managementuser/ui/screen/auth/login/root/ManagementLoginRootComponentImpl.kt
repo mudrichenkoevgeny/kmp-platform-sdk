@@ -23,6 +23,16 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.rou
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.login.totp.LoginByTotpParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.methodselection.UnlockMethodSelectionParams
 
+/**
+ * Default [ManagementLoginRootComponent] implementation: manages the administrative staff login navigation stack
+ * (welcome, email login, password reset, MFA/TOTP, unlock, pending deletion).
+ *
+ * @param componentContext Decompose [ComponentContext].
+ * @param settingsComponent Core settings component providing global app settings.
+ * @param securityComponent Core security component providing password policy validation.
+ * @param managementUserComponent Management user feature component providing administrative auth use cases.
+ * @param onFinished Invoked when staff authentication succeeds or completes.
+ */
 class ManagementLoginRootComponentImpl(
     componentContext: ComponentContext,
     private val settingsComponent: SettingsComponent,
@@ -57,11 +67,16 @@ class ManagementLoginRootComponentImpl(
         val items = stack.value.items
         val previousConfig = if (items.size >= 2) items[items.size - 2].configuration else null
 
-        if (previousConfig != null && (parentDestination == null || previousConfig == parentDestination)) {
+        if (previousConfig != null) {
             navigation.pop()
         } else if (parentDestination != null && parentDestination != stack.value.active.configuration) {
             navigation.navigate { currentStack ->
-                currentStack.dropLast(1) + parentDestination
+                val index = currentStack.indexOfLast { it == parentDestination || it::class == parentDestination::class }
+                if (index >= 0) {
+                    currentStack.take(index + 1)
+                } else {
+                    currentStack.dropLast(1) + parentDestination
+                }
             }
         } else {
             onFinished()

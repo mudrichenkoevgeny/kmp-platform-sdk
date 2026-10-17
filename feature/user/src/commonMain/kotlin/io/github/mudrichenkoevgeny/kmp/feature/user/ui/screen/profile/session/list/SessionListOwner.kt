@@ -16,12 +16,13 @@ interface SessionListOwner {
 }
 
 /**
- * Finds the active or previous [SessionListOwner] in the [ChildStack] and notifies it of session revocation.
+ * Finds active or previous [SessionListOwner] instances in the [ChildStack] and notifies them of session revocation.
+ *
+ * @param sessionId The [UserSessionId] of the revoked session.
  */
 fun ChildStack<*, *>.notifySessionRevoked(sessionId: UserSessionId) {
     items
         .map { it.instance }
         .filterIsInstance<SessionListOwner>()
-        .lastOrNull()
-        ?.onSessionRevoked(sessionId)
+        .forEach { it.onSessionRevoked(sessionId) }
 }

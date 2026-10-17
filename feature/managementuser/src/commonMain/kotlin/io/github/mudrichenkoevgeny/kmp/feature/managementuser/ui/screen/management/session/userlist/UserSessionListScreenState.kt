@@ -2,7 +2,9 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 
 /**
  * UI state for a specific user's active sessions management screen.
@@ -24,6 +26,9 @@ sealed interface UserSessionListScreenState {
      */
     data class Content(
         val paging: PaginationState<UserSessionSummary>,
+        val currentSessionId: UserSessionId? = null,
+        val currentUserId: UserId? = null,
+        val isSelfUser: Boolean = false,
         val actionLoading: Boolean = false,
         val actionError: AppError? = null
     ) : UserSessionListScreenState

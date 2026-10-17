@@ -24,7 +24,7 @@ Reference host applications that demonstrate how to wire **kmp-platform-sdk** mo
     - `CompositionLocalProvider` for shared components (`LocalCommonComponent`, `LocalErrorParser`, `LocalClientAppComponent`).
     - Hosting for **[MainScreen]** or auth flows.
 - **Universal Deep Linking**: Implements `ClientAppDeepLinkParser` and `ClientAppDeepLinkRoute` for client application routing (`/user/*`, `/auth/*`) with authentication guards.
-- **Wasm Browser History Integration**: `SetupBrowserHistory` automatically seeds parent path chains (`getAncestorPaths`) into native `window.history` on direct deep link entry, maintaining consistent behavior between the UI Back button and the Browser native Back button. Dynamically tracks state parameters (`totp_step`, `login_by_totp_mode`, `unlock_method`).
+- **Wasm Browser History Integration**: `SetupBrowserHistory(mainComponent, baseUrl)` automatically seeds parent path chains (`getAncestorPaths`) into native `window.history` on direct deep link entry, maintaining consistent behavior between the UI Back button and the Browser native Back button. Dynamically tracks state parameters (`totp_step`, `login_by_totp_mode`, `unlock_method`).
 - **Platform Hosts**:
     - **Android**: **[AndroidApp]** initializes **[ClientAppComponent]** with `BuildConfig.BASE_URL`, **[AndroidDeviceInfoProvider]**, and **[AndroidUserAuthServices]**.
     - **Wasm**: **[main]** builds the component using **[WasmDeviceInfoProvider]** and **[WasmUserAuthServices]**, running the app in a browser viewport.

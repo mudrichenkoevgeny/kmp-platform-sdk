@@ -226,6 +226,61 @@ class HttpClientAuthConfigTest {
         assertFalse(sessionClearedInvoked)
     }
 
+    @Test
+    fun `token change after logout and re-login sends new token`() = runTest {
+        val storage = AuthStorageMock()
+        val expiresAt = Instant.fromEpochMilliseconds(
+            Clock.System.now().toEpochMilliseconds() + 1.hours.inWholeMilliseconds
+        )
+
+        val userAToken = SessionToken(
+            accessToken = AccessToken("user_A_token"),
+            refreshToken = RefreshToken(REFRESH_TOKEN_VALUE),
+            expiresAt = expiresAt,
+            sessionId = UserSessionId.generate(),
+            identifierId = UserIdentifierId.generate()
+        )
+        storage.updateTokens(userAToken)
+
+        var lastAuthHeader: String? = null
+        val engine = MockEngine { request ->
+            lastAuthHeader = request.headers[HttpHeaders.Authorization]
+            respond(
+                content = "{}",
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, "application/json")
+            )
+        }
+
+        val client = HttpClient(engine) {
+            setupAuthConfig(
+                baseUrl = API_ORIGIN,
+                networkLogger = SilentLogger,
+                authStorage = storage,
+                refreshTokenRoute = OpenRefreshTokenRoutes.REFRESH_TOKEN
+            )
+        }
+
+        client.get("$API_ORIGIN$RESOURCE_PATH")
+        assertEquals("Bearer user_A_token", lastAuthHeader)
+
+        storage.clearTokens()
+
+        val userBToken = SessionToken(
+            accessToken = AccessToken("user_B_token"),
+            refreshToken = RefreshToken(REFRESH_TOKEN_VALUE),
+            expiresAt = expiresAt,
+            sessionId = UserSessionId.generate(),
+            identifierId = UserIdentifierId.generate()
+        )
+        storage.updateTokens(userBToken)
+
+        client.get("$API_ORIGIN$RESOURCE_PATH")
+        assertEquals("Bearer user_B_token", lastAuthHeader)
+
+        client.close()
+    }
+
     private suspend fun captureAuthHeader(
         storage: AuthStorageMock,
         performRequest: suspend (HttpClient) -> Unit

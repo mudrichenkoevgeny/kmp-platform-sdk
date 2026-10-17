@@ -19,6 +19,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
@@ -27,7 +29,9 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.l
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.toUserSessionIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.globallist.ManagementGlobalSessionListParams
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 /**
@@ -45,6 +49,8 @@ class GlobalSessionListComponentImpl(
     private val params: ManagementGlobalSessionListParams = ManagementGlobalSessionListParams(),
     private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
     private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase? = null,
+    private val authStorage: AuthStorage? = null,
+    private val userRepository: UserRepository? = null,
     private val onNavigateToSessionDetail: ((UserSessionSummary) -> Unit)? = null,
     private val onBack: () -> Unit
 ) : GlobalSessionListComponent, ComponentContext by componentContext {
@@ -230,7 +236,17 @@ class GlobalSessionListComponentImpl(
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? GlobalSessionListScreenState.Content
                     val newPaging = (currentContent?.paging ?: PaginationState<UserSessionSummary>()).appendResult(pagedResult)
-                    _state.value = currentContent?.copy(paging = newPaging) ?: GlobalSessionListScreenState.Content(paging = newPaging)
+                    val activeSessionId = authStorage?.getSessionId()?.toUserSessionIdOrNull()
+                    val currentUserId = userRepository?.currentUser?.firstOrNull()?.id
+                    _state.value = currentContent?.copy(
+                        paging = newPaging,
+                        currentSessionId = activeSessionId,
+                        currentUserId = currentUserId
+                    ) ?: GlobalSessionListScreenState.Content(
+                        paging = newPaging,
+                        currentSessionId = activeSessionId,
+                        currentUserId = currentUserId
+                    )
                 }
                 .onError { error ->
                     val currentContent = _state.value as? GlobalSessionListScreenState.Content
