@@ -28,11 +28,11 @@ sealed interface ClientAppDeepLinkRoute {
     ) : ClientAppDeepLinkRoute
 
     /**
-     * Authenticated user profile and settings deep link route.
+     * Authenticated user main and settings deep link route.
      *
      * @param destination Specific client user navigation route.
      * @param tab Target main screen tab (defaults to [MainScreenComponent.Config.User]).
-     * @param requiresAuth Authenticated entry required for profile routes (defaults to `true`).
+     * @param requiresAuth Authenticated entry required for user routes (defaults to `true`).
      */
     data class User(
         val destination: ClientUserNavigation,

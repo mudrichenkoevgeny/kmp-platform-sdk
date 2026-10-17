@@ -1,6 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main
 
-import io.github.mudrichenkoevgeny.kmp.core.common.ic_profile
+import io.github.mudrichenkoevgeny.kmp.core.common.ic_user
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_settings
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.Res
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.nav_management
@@ -26,7 +26,7 @@ sealed interface MainScreenDestination {
     data object User : MainScreenDestination {
         override val config = MainScreenComponent.Config.User
         override val title = Res.string.nav_user
-        override val iconRes = CommonRes.drawable.ic_profile
+        override val iconRes = CommonRes.drawable.ic_user
     }
 
     companion object {

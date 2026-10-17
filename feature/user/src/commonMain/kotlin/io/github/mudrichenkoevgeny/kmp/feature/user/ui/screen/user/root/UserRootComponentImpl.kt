@@ -13,14 +13,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.SelfIdentifierListComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.notifyIdentifierDeleted
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SelfSessionListComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.notifySessionRevoked
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.main.TotpMainComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.totp.recovery.TotpRecoveryCodesComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.detail.IdentifierDetailComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.SelfIdentifierListComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.notifyIdentifierDeleted
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.detail.SessionDetailComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SelfSessionListComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.notifySessionRevoked
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpMainComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.recovery.TotpRecoveryCodesComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.main.MainUserComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierEmailUseCase
@@ -48,11 +48,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.session.detail.SessionDetailParams
 
 /**
- * Default [UserRootComponent] implementation: manages the user profile and settings navigation stack.
+ * Default [UserRootComponent] implementation: manages the user main and settings navigation stack.
  *
  * @param componentContext Decompose [ComponentContext].
- * @param appType Application context ([AppType.CLIENT] or [AppType.MANAGEMENT]) to customize profile flows.
- * @param userRepository Source of the current user profile state.
+ * @param appType Application context ([AppType.CLIENT] or [AppType.MANAGEMENT]) to customize user flows.
+ * @param userRepository Source of the current user state.
  * @param authStorage Encrypted token storage for session credentials.
  * @param identifierRepository Local repository tracking user identifiers.
  * @param logoutUseCase Ends the current session and clears local auth state.
@@ -201,12 +201,9 @@ class UserRootComponentImpl(
                 getSessionUseCase = getSessionUseCase,
                 deleteSessionUseCase = deleteSessionUseCase,
                 authStorage = authStorage,
-                onSessionRevoked = { stack.value.notifySessionRevoked(it) },
+                onSessionRevoked = { sessionId -> stack.value.notifySessionRevoked(sessionId) },
                 onNavigateToIdentifierDetail = { identifierId ->
                     navigation.bringToFront(ClientUserNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId.asHexDashString())))
-                },
-                onNavigateToProfile = {
-                    handleBack(ClientUserNavigation.Main)
                 },
                 onBack = { handleBack(ClientUserNavigation.SessionList()) }
             )
@@ -239,10 +236,7 @@ class UserRootComponentImpl(
                 deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
                 emailChangePasswordUseCase = emailChangePasswordUseCase,
                 authStorage = authStorage,
-                onIdentifierDeleted = { stack.value.notifyIdentifierDeleted(it) },
-                onNavigateToProfile = {
-                    handleBack(ClientUserNavigation.Main)
-                },
+                onIdentifierDeleted = { identifierId -> stack.value.notifyIdentifierDeleted(identifierId) },
                 onBack = { handleBack(ClientUserNavigation.IdentifierList()) }
             )
         )

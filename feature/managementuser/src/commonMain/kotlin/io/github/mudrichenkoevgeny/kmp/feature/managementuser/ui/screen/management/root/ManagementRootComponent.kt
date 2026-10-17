@@ -17,10 +17,10 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.GlobalUserListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.UserListOwner
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.IdentifierListOwner
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.SessionListOwner
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.detail.IdentifierDetailComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListOwner
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.detail.SessionDetailComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListOwner
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.NavigationRoute
 
 /**
@@ -60,10 +60,10 @@ interface ManagementRootComponent {
         class UserDetail(val component: UserDetailComponent) : Child
 
         /** User sessions screen. */
-        class UserSessionList(val component: UserSessionListComponent) : Child, SessionListOwner by component
+        class UserSessionList(val component: UserSessionListComponent) : Child, io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListOwner by component
 
         /** User identifiers screen. */
-        class UserIdentifierList(val component: UserIdentifierListComponent) : Child, IdentifierListOwner by component
+        class UserIdentifierList(val component: UserIdentifierListComponent) : Child, io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListOwner by component
 
         /** Audit logs list screen. */
         class AuditEventList(val component: AuditEventListComponent) : Child
@@ -72,15 +72,15 @@ interface ManagementRootComponent {
         class AuditEventDetail(val component: AuditEventDetailComponent) : Child
 
         /** All platform sessions screen. */
-        class GlobalSessionList(val component: GlobalSessionListComponent) : Child, SessionListOwner by component
+        class GlobalSessionList(val component: GlobalSessionListComponent) : Child, io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListOwner by component
 
         /** Session detail screen. */
-        class SessionDetail(val component: SessionDetailComponent) : Child
+        class SessionDetail(val component: io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.detail.SessionDetailComponent) : Child
 
         /** All platform identifiers screen. */
-        class GlobalIdentifierList(val component: GlobalIdentifierListComponent) : Child, IdentifierListOwner by component
+        class GlobalIdentifierList(val component: GlobalIdentifierListComponent) : Child, io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListOwner by component
 
         /** Identifier detail screen. */
-        class IdentifierDetail(val component: IdentifierDetailComponent) : Child
+        class IdentifierDetail(val component: io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.detail.IdentifierDetailComponent) : Child
     }
 }

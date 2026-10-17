@@ -6,7 +6,7 @@ This document describes connection management, ping/pong heartbeats, message han
 
 ## 1. Overview
 
-Real-time synchronization across client modules is powered by `WebSocketService` (`KtorWebSocketService`). The service maintains a active WebSocket connection to the backend, appending the current `AccessToken` as a query parameter. When events occur on the server (e.g. global settings updated, user session revoked, profile edited), frames are received and dispatched to registered `WebSocketMessageHandler` instances.
+Real-time synchronization across client modules is powered by `WebSocketService` (`KtorWebSocketService`). The service maintains a active WebSocket connection to the backend, appending the current `AccessToken` as a query parameter. When events occur on the server (e.g. global settings updated, user session revoked, user details edited), frames are received and dispatched to registered `WebSocketMessageHandler` instances.
 
 ---
 

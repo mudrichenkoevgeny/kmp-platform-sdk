@@ -58,7 +58,7 @@ The host app initializes `EncryptedSettingsComponent` with target-specific conte
 Feature components are constructed by passing `CommonComponent` dependencies:
 - `SettingsComponent`: Global application settings management.
 - `SecurityComponent`: Backend password policies and validation.
-- `ClientUserComponent` / `ManagementUserComponent`: Authentication, token persistence (`AuthStorage`), identity, and user profile management.
+- `ClientUserComponent` / `ManagementUserComponent`: Authentication, token persistence (`AuthStorage`), identity, and user management.
 
 ### Step 4: System Wiring (`init()` Phase)
 Before invoking any network operations or UI rendering:

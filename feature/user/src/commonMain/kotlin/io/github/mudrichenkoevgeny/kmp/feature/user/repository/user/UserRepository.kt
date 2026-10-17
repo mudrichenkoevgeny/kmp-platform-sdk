@@ -5,14 +5,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Access to the signed-in user snapshot and profile management operations.
+ * Access to the signed-in user snapshot and user account management operations.
  */
 interface UserRepository {
     /** [Flow] of the cached [UserPrivate], or `null` when none is stored. */
     val currentUser: Flow<UserPrivate?>
 
     /**
-     * Forces a network reload of the current user profile and updates local storage on success.
+     * Forces a network reload of the current user data and updates local storage on success.
      *
      * @return Fresh [UserPrivate] on success, or an error result when the request fails.
      */
@@ -29,7 +29,7 @@ interface UserRepository {
     suspend fun restoreUser(): AppResult<UserPrivate>
 
     /**
-     * Clears local user profile storage and authentication tokens.
+     * Clears local user storage and authentication tokens.
      */
     suspend fun clearSession()
 }

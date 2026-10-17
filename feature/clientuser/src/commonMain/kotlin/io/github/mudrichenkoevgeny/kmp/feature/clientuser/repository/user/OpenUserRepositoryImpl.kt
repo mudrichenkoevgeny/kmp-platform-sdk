@@ -29,7 +29,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
  *
  * @param userStorage Local source for the current user stream and persistence.
  * @param authStorage Auth storage for tokens.
- * @param openUserApi User HTTP API for profile and account management.
+ * @param openUserApi User HTTP API for user and account management.
  * @param webSocketService Source of push updates for user changes.
  * @param repositoryScope Scope used to collect WebSocket events throughout the repository's lifecycle.
  */

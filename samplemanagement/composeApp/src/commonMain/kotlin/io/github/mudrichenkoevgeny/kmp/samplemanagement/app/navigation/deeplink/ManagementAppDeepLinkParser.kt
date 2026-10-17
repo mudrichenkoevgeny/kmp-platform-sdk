@@ -10,7 +10,7 @@ import io.ktor.http.Url
  * to feature-specific parsers ([ManagementDeepLinkParser] and [UserDeepLinkParser]).
  *
  * @param managementParser Parser handling administrative management portal deep link paths.
- * @param userParser Parser handling staff user profile and settings deep link paths.
+ * @param userParser Parser handling staff user main and settings deep link paths.
  */
 class ManagementAppDeepLinkParser(
     private val managementParser: ManagementDeepLinkParser = ManagementDeepLinkParser(),

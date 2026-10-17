@@ -1,6 +1,6 @@
 # feature/user
 
-Kotlin Multiplatform feature module for user identity, authentication flows, session-oriented HTTP behavior, and related UI (Compose + Decompose). It depends on `core:common`, `core:settings`, and `core:security`. This module provides a complete identity solution, including multi-factor authentication (MFA), social login, and profile management.
+Kotlin Multiplatform feature module for user identity, authentication flows, session-oriented HTTP behavior, and related UI (Compose + Decompose). It depends on `core:common`, `core:settings`, and `core:security`. This module provides a complete identity solution, including multi-factor authentication (MFA), social login, and user management.
 
 ## What it provides
 
@@ -17,14 +17,14 @@ Kotlin Multiplatform feature module for user identity, authentication flows, ses
 - **Account Lifecycle:** [RestoreUserUseCase] and [ScheduleUserDeletionUseCase] for managing account status.
 - **Security API:** Dedicated [UserSecurityApi] for managing sensitive user security settings and verification.
 
-### 4. Profile & Account Management
-- **Profile Root:** [UserRootComponent] manages a dedicated navigation stack for user settings and account management.
+### 4. User & Account Management
+- **User Root:** [UserRootComponent] manages a dedicated navigation stack for user settings and account management.
 - **2FA/TOTP:** Full lifecycle for Time-based One-Time Passwords (`TotpMainComponent`), including QR code setup and recovery codes management (`TotpRecoveryCodesComponent`).
 - **Session Management:** [SelfSessionListComponent] for viewing and revoking active authenticated sessions.
 - **Identity Management:** [SelfIdentifierListComponent] for linking and verifying multiple email/phone identities.
 
 ### 5. Reactive Infrastructure
-- **WebSocket Integration:** [UserWebSocketMessageHandler] listens for real-time identity updates, such as profile changes or session invalidation.
+- **WebSocket Integration:** [UserWebSocketMessageHandler] listens for real-time identity updates, such as user changes or session invalidation.
 - **Single Source of Truth:** Repositories combine [EncryptedSettings] cache with remote API calls, exposing data via `StateFlow`.
 - **Throttling:** [ConfirmationRepository] manages client-side cooldowns for sending verification codes (SMS/Email) using [ConfirmationType].
 
@@ -77,14 +77,14 @@ fun init(clientUserComponent: ClientUserComponent) {
 | `...user.auth` | [UserAuthServices] and [GoogleAuthService] — platform actuals (Android/JS/iOS). |
 | `...user.di` | Dagger modules or factories wiring Network, Repositories, and Storage. |
 | `...user.error` | [UserError], [UserErrorParser], and [ClientUserErrorCodes] for typed handling. |
-| `...user.model` | Domain entities: Session, Profile, and [ConfirmationKey] / [ConfirmationType]. |
+| `...user.model` | Domain entities: Session, User, and [ConfirmationKey] / [ConfirmationType]. |
 | `...user.network.api` | Ktor implementations for Auth (Login/Reg), Session, and User Security APIs. |
 | `...user.network.auth` | Low-level configuration: [AuthAttributes] and client setup helpers. |
 | `...user.network.httpclient` | [AuthHttpClientConfigPlugin] — core bearer token & auto-refresh logic. |
-| `...user.network.websocket` | [UserWebSocketMessageHandler] for reactive profile and session updates. |
+| `...user.network.websocket` | [UserWebSocketMessageHandler] for reactive user and session updates. |
 | `...user.repository` | Repositories orchestrating APIs & storage (Login, Reg, ResetPassword, Session). |
-| `...user.storage` | [AuthStorage] (tokens) and [UserStorage] (profile) with encrypted persistence. |
-| `...user.ui.screen` | Decompose components & UI for Login, Registration, and **Account Management** (Profile, TOTP, Sessions, Identifiers). |
+| `...user.storage` | [AuthStorage] (tokens) and [UserStorage] (user data) with encrypted persistence. |
+| `...user.ui.screen` | Decompose components & UI for Login, Registration, and **Account Management** (User Main, TOTP, Sessions, Identifiers). |
 | `...user.ui.component` | Reusable UI: [AuthProviderGrid], [AuthProviderButton], and [LegalFooter]. |
 | `...user.usecase` | Atomic logic: Auth, Session, Identifier, and User Security UseCases. |
 | `...user.mock` | Mocks for tests: UseCase and Repository mocks, storage mocks. |
@@ -114,7 +114,7 @@ Compose Multiplatform resources for this module are generated with `publicResCla
 [AuthProviderGrid]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/component/auth/AuthProviderGrid.kt
 [LegalFooter]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/component/legal/LegalFooter.kt
 [UserRootComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/screen/user/root/UserRootComponent.kt
-[SelfSessionListComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/screen/profile/session/list/SelfSessionListComponent.kt
-[SelfIdentifierListComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/screen/profile/identifier/list/SelfIdentifierListComponent.kt
+[SelfSessionListComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/screen/user/session/list/SelfSessionListComponent.kt
+[SelfIdentifierListComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/screen/user/identifier/list/SelfIdentifierListComponent.kt
 [UserDeepLinkParser]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/navigation/deeplink/UserDeepLinkParser.kt
 [UserUrlFormatter]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/navigation/deeplink/UserUrlFormatter.kt

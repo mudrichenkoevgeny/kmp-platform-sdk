@@ -47,12 +47,12 @@ import kotlin.time.Clock
 
 /**
  * Coordinates user feature repositories: auth (login, registration, tokens, password, auth settings),
- * confirmation timing, and user profile loading against user storage and network APIs.
+ * confirmation timing, and user data loading against user storage and network APIs.
  *
  * @param networkModule Lazy Ktor API accessors.
  * @param authStorage Token persistence.
  * @param encryptedSettings Encrypted settings.
- * @param storageModule User profile storage.
+ * @param storageModule User storage.
  * @param webSocketService Used by auth-settings repository for reactive updates.
  * @param repositoryScope Coroutine scope for long-lived repository jobs.
  */
@@ -138,7 +138,7 @@ internal class ManagementUserRepositoryModule(
     }
 
     // User
-    /** Repository for current manager profile. */
+    /** Repository for current manager user data. */
     val selfManagementUserRepository: UserRepository by lazy {
         SelfManagementUserRepositoryImpl(
             userStorage = storageModule.userStorage,
@@ -148,7 +148,7 @@ internal class ManagementUserRepositoryModule(
             repositoryScope = repositoryScope
         )
     }
-    /** Administrative repository for any user profile data. */
+    /** Administrative repository for any user account data. */
     val managementUserRepository: ManagementUserRepository by lazy {
         ManagementUserRepositoryImpl(
             managementUserApi = networkModule.managementUserApi

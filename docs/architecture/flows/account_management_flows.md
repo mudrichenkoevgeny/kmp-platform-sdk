@@ -1,13 +1,13 @@
-# Account & Profile Management Flows
+# Account Management Flows
 
-This document describes profile updates, active session management, identifier (email/phone) linking, and account deletion and restoration workflows in `kmp-platform-sdk`.
+This document describes user account details, active session management, identifier (email/phone) linking, and account deletion and restoration workflows in `kmp-platform-sdk`.
 
 ---
 
-## 1. Profile Management Architecture
+## 1. Account Management Architecture
 
-Profile management is centralized in `ProfileRootComponent` (`feature/user`). The component uses Decompose stack navigation to host:
-- `MainProfileComponent`: Overview of profile details, account status, security settings, and legal links.
+Account management is centralized in `UserRootComponent` (`feature/user`). The component uses Decompose stack navigation to host:
+- `MainUserComponent`: Overview of user details, account status, security settings, and legal links.
 - `SelfSessionListComponent`: Active sessions list with remote revocation controls.
 - `SelfIdentifierListComponent`: Identifiers list (emails, phone numbers, social accounts) with add/remove capabilities.
 - `TotpMainComponent`: TOTP 2FA setup and recovery code management.
@@ -91,7 +91,7 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     actor User
-    participant UI as ProfileScreen / PendingDeletionComponent
+    participant UI as MainUserScreen / PendingDeletionComponent
     participant UC as ScheduleUserDeletionUseCase / RestoreUserUseCase
     participant Repo as UserRepository
     participant API as OpenUserApi

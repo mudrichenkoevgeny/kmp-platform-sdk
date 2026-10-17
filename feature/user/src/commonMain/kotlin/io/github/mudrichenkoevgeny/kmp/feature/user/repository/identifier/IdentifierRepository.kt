@@ -45,7 +45,7 @@ interface IdentifierRepository {
     ): AppResult<PagedResult<UserIdentifierSummary>>
 
     /**
-     * Removes an existing identifier from the user profile.
+     * Removes an existing identifier from the user account.
      *
      * @param identifierId Unique identifier id to delete.
      * @return Success unit, or a mapped failure.

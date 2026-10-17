@@ -6,7 +6,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
 
 /**
- * Updates profile details, status, or permissions for a specific user administratively.
+ * Updates user details, status, or permissions for a specific user administratively.
  *
  * @param managementUserRepository Administrative user management API.
  */

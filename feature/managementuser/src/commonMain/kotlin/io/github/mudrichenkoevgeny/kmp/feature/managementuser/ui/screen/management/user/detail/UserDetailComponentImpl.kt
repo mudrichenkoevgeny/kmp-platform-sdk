@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
  *
  * @param componentContext Decompose [ComponentContext].
  * @param params Screen destination parameters containing the target user ID.
- * @param getUserUseCase Use case to fetch target user profile data.
+ * @param getUserUseCase Use case to fetch target user data.
  * @param updateUserUseCase Use case to update target user account status and settings.
  * @param deleteUserUseCase Use case to administratively delete target user account.
  * @param managementDisableTotpUseCase Use case to administratively disable TOTP 2FA for target user.
@@ -44,7 +44,7 @@ class UserDetailComponentImpl(
     private val onNavigateToSessions: (UserId) -> Unit,
     private val onNavigateToIdentifiers: (UserId) -> Unit,
     private val onNavigateToAuditEvents: (UserId) -> Unit,
-    private val onNavigateToProfile: (() -> Unit)? = null,
+    private val onNavigateToUserMain: (() -> Unit)? = null,
     private val onUserDeleted: ((UserId) -> Unit)? = null,
     private val onBack: () -> Unit
 ) : UserDetailComponent, ComponentContext by componentContext {

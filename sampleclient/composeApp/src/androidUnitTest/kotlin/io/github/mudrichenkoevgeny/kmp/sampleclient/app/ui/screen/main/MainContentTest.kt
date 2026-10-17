@@ -37,11 +37,11 @@ class MainContentTest {
                 )
             }
         }
-        onNodeWithText(NAV_PROFILE).assertIsDisplayed()
+        onNodeWithText(NAV_USER).assertIsDisplayed()
     }
 
     private companion object {
-        const val NAV_PROFILE = "Profile"
+        const val NAV_USER = "User"
     }
 }
 

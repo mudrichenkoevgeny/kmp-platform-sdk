@@ -52,9 +52,9 @@ internal class ManagementUserNetworkModule(
     val managementSessionApi by lazy { KtorManagementSessionApi(httpClient) }
 
     // User
-    /** API for current manager profile. */
+    /** API for current manager user data. */
     val userApi by lazy { KtorSelfManagementUserApi(httpClient) }
-    /** Administrative API for managing any user profiles. */
+    /** Administrative API for managing any user accounts. */
     val managementUserApi by lazy { KtorManagementUserApi(httpClient) }
     /** API for current manager security settings. */
     val userSecurityApi by lazy { KtorUserSelfManagementUserSecurityApi(httpClient) }

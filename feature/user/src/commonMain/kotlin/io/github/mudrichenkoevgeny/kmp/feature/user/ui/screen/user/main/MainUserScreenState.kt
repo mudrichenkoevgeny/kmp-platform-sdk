@@ -5,13 +5,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 
 /** Screen state representation for [MainUserComponent]. */
 sealed interface MainUserScreenState {
-    /** Loading state when user profile is being fetched. */
+    /** Loading state when user data is being fetched. */
     object Loading : MainUserScreenState
 
     /** Shown when user is not authorized. */
     data class Unauthorized(val actionError: AppError? = null) : MainUserScreenState
 
-    /** Content state displaying active user profile and actions. */
+    /** Content state displaying active user data and actions. */
     data class Content(
         val user: UserPrivate,
         val isDeleteConfirmationVisible: Boolean = false,
@@ -19,6 +19,6 @@ sealed interface MainUserScreenState {
         val actionError: AppError? = null
     ) : MainUserScreenState
 
-    /** Error state when loading user profile fails. */
+    /** Error state when loading user data fails. */
     data class Error(val error: AppError) : MainUserScreenState
 }

@@ -93,7 +93,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res as UserRes
 
 /**
- * Administrative user detail screen: displays user profile information and management action controls.
+ * Administrative user detail screen: displays user details and management action controls.
  *
  * @param component Component driving screen state and navigation callbacks.
  */

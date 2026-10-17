@@ -231,7 +231,7 @@ class ClientAppComponent(
     /**
      * @param componentContext Decompose context for the tab stack and dialog slot.
      * @param initialRoute Optional initial deep link route.
-     * @return [MainScreenComponent] hosting home and profile destinations.
+     * @return [MainScreenComponent] hosting home and user destinations.
      */
     fun createMainScreenComponent(
         componentContext: ComponentContext,

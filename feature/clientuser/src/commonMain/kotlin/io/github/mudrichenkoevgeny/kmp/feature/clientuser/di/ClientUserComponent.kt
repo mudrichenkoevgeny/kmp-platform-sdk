@@ -47,7 +47,7 @@ class ClientUserComponent(
     private val storageModule = UserStorageModule(commonComponent.encryptedSettings)
 
     /**
-     * DataStore-backed storage for user profile and session metadata.
+     * DataStore-backed storage for user and session metadata.
      */
     val userStorage get() = storageModule.userStorage
 
@@ -70,7 +70,7 @@ class ClientUserComponent(
     /** Repository for new user registration. */
     val registrationRepository get() = clientUserRepositoryModule.registrationRepository
 
-    /** Repository for current user profile data and real-time updates. */
+    /** Repository for current user data and real-time updates. */
     val userRepository get() = clientUserRepositoryModule.userRepository
 
     /** Repository for password recovery and change operations. */

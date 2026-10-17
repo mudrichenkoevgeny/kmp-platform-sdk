@@ -15,7 +15,7 @@ class GetUserUseCase(
 ) {
     /**
      * @param userId Unique account identifier.
-     * @return Detailed profile information of the target user domain model, or a mapped failure.
+     * @return Detailed information of the target user domain model, or a mapped failure.
      */
     suspend operator fun invoke(userId: UserId): AppResult<UserPrivate> {
         return managementUserRepository.getUser(userId)

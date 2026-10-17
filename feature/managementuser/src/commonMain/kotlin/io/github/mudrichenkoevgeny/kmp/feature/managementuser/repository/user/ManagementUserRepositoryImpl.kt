@@ -22,7 +22,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
 /**
  * Implements [ManagementUserRepository] by forwarding all administrative requests to [ManagementUserApi].
  *
- * @param managementUserApi Administrative HTTP endpoints for system-wide user profile configurations.
+ * @param managementUserApi Administrative HTTP endpoints for system-wide user configurations.
  */
 class ManagementUserRepositoryImpl(
     private val managementUserApi: ManagementUserApi

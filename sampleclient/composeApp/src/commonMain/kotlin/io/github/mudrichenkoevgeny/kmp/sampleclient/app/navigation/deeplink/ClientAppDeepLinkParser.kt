@@ -10,7 +10,7 @@ import io.ktor.http.Url
  * to feature-specific parsers ([ClientUserDeepLinkParser] and [UserDeepLinkParser]).
  *
  * @param clientUserParser Parser handling authentication and authorization deep link paths.
- * @param userParser Parser handling user profile and settings deep link paths.
+ * @param userParser Parser handling user main and settings deep link paths.
  */
 class ClientAppDeepLinkParser(
     private val clientUserParser: ClientUserDeepLinkParser = ClientUserDeepLinkParser(),

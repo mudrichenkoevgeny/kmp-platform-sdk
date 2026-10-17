@@ -26,7 +26,7 @@ class ManagementAppDeepLinkParserTest {
     }
 
     @Test
-    fun `test valid profile route parsing`() {
+    fun `test valid user route parsing`() {
         val url = Url("https://kmp-platform.internal/user/totp")
         val route = parser.parse(url)
 

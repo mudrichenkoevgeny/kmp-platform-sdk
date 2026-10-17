@@ -8,7 +8,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
  */
 sealed interface UserDetailScreenState {
 
-    /** Initial loading of user profile data. */
+    /** Initial loading of user data. */
     object Loading : UserDetailScreenState
 
     /** Critical error during state initialization. */
@@ -17,7 +17,7 @@ sealed interface UserDetailScreenState {
     /**
      * User details and account management input form state.
      *
-     * @param user The target user's private profile entity.
+     * @param user The target user entity.
      * @param authorityLevelInput Current authority level text field value.
      * @param accountStatusInput Current account status dropdown selection.
      * @param lockoutTypeInput Current lockout type dropdown selection.

@@ -14,7 +14,7 @@ class ClientAppDeepLinkParserTest {
     private val parser = ClientAppDeepLinkParser()
 
     @Test
-    fun `test valid profile route parsing`() {
+    fun `test valid user route parsing`() {
         val sessionId = UserSessionId.generate().asHexDashString()
         val url = Url("https://kmp-platform.internal/user/sessions/$sessionId")
         val route = parser.parse(url)

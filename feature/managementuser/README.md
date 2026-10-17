@@ -18,7 +18,7 @@ Kotlin Multiplatform feature module for administrative user identity, authentica
 - **Security API:** Dedicated [UserSecurityApi] for managing sensitive user security settings and verification.
 
 ### 3. Reactive Infrastructure
-- **WebSocket Integration:** [UserWebSocketMessageHandler] listens for real-time identity updates, such as profile changes or session invalidation.
+- **WebSocket Integration:** [UserWebSocketMessageHandler] listens for real-time identity updates, such as user changes or session invalidation.
 - **Single Source of Truth:** Repositories combine [EncryptedSettings] cache with remote API calls, exposing data via `StateFlow`.
 - **Throttling:** [ConfirmationRepository] manages client-side cooldowns for sending verification codes (SMS/Email) using [ConfirmationType].
 
@@ -88,13 +88,13 @@ val loginRoot = managementUserComponent.createLoginRootDialogComponent(
 | `...user.auth` | [UserAuthServices] and [GoogleAuthService] — platform actuals (Android/JS/iOS). |
 | `...user.di` | [ManagementUserComponent] and modules wiring Network, Repositories, and Storage. |
 | `...user.error` | [UserError], [UserErrorParser], and [ClientUserErrorCodes] for typed handling. |
-| `...user.model` | Domain entities: Session, Profile, and [ConfirmationKey] / [ConfirmationType]. |
+| `...user.model` | Domain entities: Session, User, and [ConfirmationKey] / [ConfirmationType]. |
 | `...user.network.api` | Ktor implementations for Auth (Login/Reg), Session, and User Security APIs. |
 | `...user.network.auth` | Low-level configuration: [AuthAttributes] and client setup helpers. |
 | `...user.network.httpclient` | [AuthHttpClientConfigPlugin] — core bearer token & auto-refresh logic. |
-| `...user.network.websocket` | [UserWebSocketMessageHandler] for reactive profile and session updates. |
+| `...user.network.websocket` | [UserWebSocketMessageHandler] for reactive user and session updates. |
 | `...user.repository` | Repositories orchestrating APIs & storage (Login, Reg, ResetPassword, Session). |
-| `...user.storage` | [AuthStorage] (tokens) and [UserStorage] (profile) with encrypted persistence. |
+| `...user.storage` | [AuthStorage] (tokens) and [UserStorage] (user data) with encrypted persistence. |
 | `...user.ui.screen` | Decompose components & UI for Login (Email/Phone/Google), User Management, Sessions, Identifiers, Audit, and Settings. |
 | `...user.ui.component` | Reusable UI: [AuthProviderGrid], [AuthProviderButton], and [LegalFooter]. |
 | `...user.usecase` | Atomic logic: Management Auth, Session, User, Audit, and Config UseCases. |

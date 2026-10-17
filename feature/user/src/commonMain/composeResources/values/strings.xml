@@ -64,7 +64,7 @@
     <string name="use_totp">Use TOTP</string>
     <string name="password">Password</string>
 
-    <string name="profile">Profile</string>
+    <string name="user">User</string>
     <string name="logout">Logout</string>
     <string name="totp_main">TOTP</string>
     <string name="sessions">Sessions</string>

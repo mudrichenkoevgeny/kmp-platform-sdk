@@ -96,7 +96,7 @@ class ManagementUserComponent(
     /** Repository for self-management account unlock operations. */
     val unlockRepository get() = repositoryModule.selfManagementUnlockRepository
 
-    /** Repository for current management user profile. */
+    /** Repository for current management user data. */
     val userRepository get() = repositoryModule.selfManagementUserRepository
 
     /** Repository for password recovery in management context. */
@@ -385,12 +385,12 @@ class ManagementUserComponent(
      * Creates the root Decompose component for management flow.
      *
      * @param componentContext Decompose context for the component.
-     * @param onNavigateToProfile Callback to navigate to the current user's profile screen.
+     * @param onNavigateToUserMain Callback to navigate to the current user's main screen.
      * @return A new instance of [ManagementRootComponent].
      */
     fun createManagementComponent(
         componentContext: ComponentContext,
-        onNavigateToProfile: () -> Unit = {}
+        onNavigateToUserMain: () -> Unit = {}
     ): ManagementRootComponent =
         ManagementRootComponentImpl(
             componentContext = componentContext,
@@ -424,6 +424,6 @@ class ManagementUserComponent(
             managementDeleteIdentifierUseCase = useCaseModule.managementDeleteIdentifierUseCase,
             getAuditEventsUseCase = getAuditEventsUseCase,
             getAuditEventUseCase = getAuditEventUseCase,
-            onNavigateToProfile = onNavigateToProfile
+            onNavigateToUserMain = onNavigateToUserMain
         )
 }

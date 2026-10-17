@@ -30,8 +30,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.notifyUserCreated
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.notifyUserDeleted
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.notifyIdentifierDeleted
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.list.notifySessionRevoked
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.notifyIdentifierDeleted
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.notifySessionRevoked
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.DeleteUserIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit.GetAuditEventUseCase
@@ -61,8 +61,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUs
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.detail.IdentifierDetailComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.session.detail.SessionDetailComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.detail.IdentifierDetailComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.detail.SessionDetailComponentImpl
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.route.management.ManagementAuditNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.screen.management.audit.detail.ManagementAuditEventDetailParams
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.screen.management.audit.list.ManagementAuditEventListParams
@@ -116,7 +116,7 @@ class ManagementRootComponentImpl(
     private val managementGetSessionUseCase: ManagementGetSessionUseCase? = null,
     private val managementGetIdentifierUseCase: ManagementGetIdentifierUseCase? = null,
     private val managementDeleteIdentifierUseCase: ManagementDeleteIdentifierUseCase? = null,
-    private val onNavigateToProfile: () -> Unit = {}
+    private val onNavigateToUserMain: () -> Unit = {}
 ) : ManagementRootComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<NavigationRoute>()
@@ -245,7 +245,7 @@ class ManagementRootComponentImpl(
                         )
                     )
                 },
-                onNavigateToProfile = onNavigateToProfile,
+                onNavigateToUserMain = onNavigateToUserMain,
                 onUserDeleted = { userId -> stack.value.notifyUserDeleted(userId) },
                 onBack = { handleBack(ManagementUsersNavigation.UserList()) }
             )
@@ -340,7 +340,6 @@ class ManagementRootComponentImpl(
                 onNavigateToIdentifierDetail = { identifierId ->
                     navigation.bringToFront(ManagementUsersNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId.asHexDashString())))
                 },
-                onNavigateToProfile = onNavigateToProfile,
                 onBack = { handleBack(ManagementAuditNavigation.AuditEventList()) }
             )
         )
@@ -389,7 +388,6 @@ class ManagementRootComponentImpl(
                 onNavigateToUserDetail = { userId ->
                     navigation.bringToFront(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString())))
                 },
-                onNavigateToProfile = onNavigateToProfile,
                 onBack = {
                     val parent = if (!config.params.userId.isNullOrBlank()) {
                         ManagementUsersNavigation.UserSessionList(ManagementUserSessionListParams(userId = config.params.userId!!))
@@ -435,7 +433,6 @@ class ManagementRootComponentImpl(
                 onNavigateToUserDetail = { userId ->
                     navigation.bringToFront(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString())))
                 },
-                onNavigateToProfile = onNavigateToProfile,
                 onBack = {
                     val parent = if (!config.params.userId.isNullOrBlank()) {
                         ManagementUsersNavigation.UserIdentifierList(ManagementUserIdentifierListParams(userId = config.params.userId!!))

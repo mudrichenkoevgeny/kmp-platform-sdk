@@ -57,7 +57,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.SetupT
 /**
  * Wires user-facing use cases from repositories, [AuthStorage], [UserAuthServices], and cross-cutting settings APIs.
  *
- * @param clientUserRepositoryModule User repositories for auth and profile.
+ * @param clientUserRepositoryModule User repositories for auth and user data.
  * @param authStorage Token and cached auth settings.
  * @param storageModule User-scoped storage for post-login data.
  * @param authServices Platform auth helpers; missing Google service falls back to [DisabledGoogleAuthService].

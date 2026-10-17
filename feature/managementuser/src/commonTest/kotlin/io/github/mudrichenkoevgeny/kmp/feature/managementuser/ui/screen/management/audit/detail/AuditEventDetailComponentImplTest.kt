@@ -45,7 +45,6 @@ class AuditEventDetailComponentImplTest {
             getAuditEventUseCase = useCase,
             onNavigateToUserDetail = {},
             onNavigateToSessionDetail = {},
-            onNavigateToProfile = {},
             onBack = {}
         )
 
@@ -73,7 +72,6 @@ class AuditEventDetailComponentImplTest {
             getAuditEventUseCase = useCase,
             onNavigateToUserDetail = {},
             onNavigateToSessionDetail = {},
-            onNavigateToProfile = {},
             onBack = {}
         )
 
@@ -105,7 +103,6 @@ class AuditEventDetailComponentImplTest {
             getAuditEventUseCase = useCase,
             onNavigateToUserDetail = { navigatedUserId = it },
             onNavigateToSessionDetail = {},
-            onNavigateToProfile = {},
             onBack = {}
         )
 
@@ -138,7 +135,6 @@ class AuditEventDetailComponentImplTest {
             getAuditEventUseCase = useCase,
             onNavigateToUserDetail = { navigatedUserId = it },
             onNavigateToSessionDetail = {},
-            onNavigateToProfile = {},
             onBack = {}
         )
 
@@ -171,7 +167,6 @@ class AuditEventDetailComponentImplTest {
             getAuditEventUseCase = useCase,
             onNavigateToUserDetail = {},
             onNavigateToSessionDetail = { navigatedSessionId = it },
-            onNavigateToProfile = {},
             onBack = {}
         )
 
@@ -199,7 +194,6 @@ class AuditEventDetailComponentImplTest {
             getAuditEventUseCase = useCase,
             onNavigateToUserDetail = {},
             onNavigateToSessionDetail = {},
-            onNavigateToProfile = {},
             onBack = { onBackCalled = true }
         )
 

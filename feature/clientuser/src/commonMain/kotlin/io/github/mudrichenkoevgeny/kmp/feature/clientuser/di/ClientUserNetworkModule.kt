@@ -44,7 +44,7 @@ internal class ClientUserNetworkModule(
     val sessionApi by lazy { KtorOpenSessionApi(httpClient) }
 
     // User
-    /** API for fetching user profile data. */
+    /** API for fetching user data. */
     val userApi by lazy { KtorOpenUserApi(httpClient) }
     /** API for managing user security settings (TOTP). */
     val userSecurityApi by lazy { KtorOpenUserUserSecurityApi(httpClient) }

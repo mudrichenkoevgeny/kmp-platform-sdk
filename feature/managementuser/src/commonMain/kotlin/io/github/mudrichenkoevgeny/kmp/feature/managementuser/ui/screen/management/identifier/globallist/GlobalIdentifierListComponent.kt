@@ -3,12 +3,13 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.IdentifierListOwner
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListOwner
 
 /**
  * Manages all user identifiers globally: listing with filters/sort and navigation to detail screen.
  */
-interface GlobalIdentifierListComponent : IdentifierListOwner {
+interface GlobalIdentifierListComponent :
+    io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListOwner {
     /** Reactive UI state. */
     val state: Value<GlobalIdentifierListScreenState>
 

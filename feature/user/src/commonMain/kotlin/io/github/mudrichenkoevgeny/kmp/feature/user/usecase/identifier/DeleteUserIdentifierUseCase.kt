@@ -5,7 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.Identi
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 
 /**
- * Removes an existing identifier from the current user profile.
+ * Removes an existing identifier from the current user account.
  *
  * @param identifierRepository Remote identifier management API.
  */

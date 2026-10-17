@@ -26,12 +26,11 @@ import kotlinx.coroutines.launch
  *
  * @param componentContext Decompose [ComponentContext].
  * @param params Audit event detail parameters.
- * @param userRepository Source of the current user profile state.
+ * @param userRepository Source of the current user state.
  * @param getAuditEventUseCase Fetches audit event details.
  * @param onNavigateToUserDetail Navigates to user detail screen.
  * @param onNavigateToSessionDetail Navigates to session detail screen.
  * @param onNavigateToIdentifierDetail Navigates to identifier detail screen.
- * @param onNavigateToProfile Navigates to main profile screen.
  * @param onBack Pops this screen from the navigation stack.
  */
 class AuditEventDetailComponentImpl(
@@ -42,7 +41,6 @@ class AuditEventDetailComponentImpl(
     private val onNavigateToUserDetail: ((UserId) -> Unit)? = null,
     private val onNavigateToSessionDetail: ((UserSessionId) -> Unit)? = null,
     private val onNavigateToIdentifierDetail: ((UserIdentifierId) -> Unit)? = null,
-    private val onNavigateToProfile: () -> Unit = {},
     private val onBack: () -> Unit
 ) : AuditEventDetailComponent, ComponentContext by componentContext {
 
@@ -65,12 +63,7 @@ class AuditEventDetailComponentImpl(
     override fun onSubjectClick() {
         val currentContent = _state.value as? AuditEventDetailScreenState.Content ?: return
         val actorUserId = currentContent.event.actorId?.toUserIdOrNull() ?: return
-
-        if (onNavigateToUserDetail != null) {
-            onNavigateToUserDetail.invoke(actorUserId)
-        } else {
-            onNavigateToProfile()
-        }
+        onNavigateToUserDetail?.invoke(actorUserId)
     }
 
     override fun onResourceClick() {
@@ -82,11 +75,7 @@ class AuditEventDetailComponentImpl(
         when (resourceType) {
             UserAuditResourceType.USER -> {
                 val targetUserId = resourceId.toUserIdOrNull() ?: return
-                if (onNavigateToUserDetail != null) {
-                    onNavigateToUserDetail.invoke(targetUserId)
-                } else {
-                    onNavigateToProfile()
-                }
+                onNavigateToUserDetail?.invoke(targetUserId)
             }
             UserAuditResourceType.SESSION -> {
                 val targetSessionId = resourceId.toUserSessionIdOrNull() ?: return

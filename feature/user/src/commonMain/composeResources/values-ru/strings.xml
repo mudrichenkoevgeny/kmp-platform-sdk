@@ -64,7 +64,7 @@
     <string name="use_totp">Использовать TOTP</string>
     <string name="password">Пароль</string>
 
-    <string name="profile">Профиль</string>
+    <string name="user">Пользователь</string>
     <string name="logout">Выйти</string>
     <string name="totp_main">TOTP</string>
     <string name="sessions">Сеансы</string>

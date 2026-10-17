@@ -61,12 +61,12 @@ interface ManagementUserApi {
      * Retrieves full management-level details of a specific user.
      *
      * @param userId Unique account identifier.
-     * @return Detailed profile information of the target user, or a mapped failure.
+     * @return Detailed information of the target user, or a mapped failure.
      */
     suspend fun getUser(userId: UserId): AppResult<UserPrivatePayload>
 
     /**
-     * Updates profile details, status, or permissions for a specific user.
+     * Updates user details, status, or permissions for a specific user.
      *
      * @param userId Unique account identifier to update.
      * @param request Patch payload containing fields to change.

@@ -93,7 +93,7 @@ class ManagementMainScreenComponentImpl(
                 MainScreenComponent.Child.ManagementChild(
                     managementAppComponent.managementUserComponent.createManagementComponent(
                         componentContext = context,
-                        onNavigateToProfile = {
+                        onNavigateToUserMain = {
                             navigation.bringToFront(MainScreenComponent.Config.User)
                         }
                     )

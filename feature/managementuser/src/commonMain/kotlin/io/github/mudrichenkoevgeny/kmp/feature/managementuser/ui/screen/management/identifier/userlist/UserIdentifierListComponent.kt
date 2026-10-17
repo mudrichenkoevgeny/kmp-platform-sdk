@@ -1,12 +1,13 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist
 
 import com.arkivanov.decompose.value.Value
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.profile.identifier.list.IdentifierListOwner
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListOwner
 
 /**
  * Manages a specific user's identifiers: listing and navigation to detail screen.
  */
-interface UserIdentifierListComponent : IdentifierListOwner {
+interface UserIdentifierListComponent :
+    io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListOwner {
     /** Reactive UI state. */
     val state: Value<UserIdentifierListScreenState>
 

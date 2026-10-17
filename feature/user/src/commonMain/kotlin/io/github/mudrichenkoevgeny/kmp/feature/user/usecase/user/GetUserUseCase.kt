@@ -5,7 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserReposito
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
 
 /**
- * Retrieves and refreshes current authenticated user profile.
+ * Retrieves and refreshes current authenticated user data.
  */
 class GetUserUseCase(
     private val userRepository: UserRepository
