@@ -20,12 +20,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePrevi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.and
-import io.github.mudrichenkoevgeny.kmp.feature.user.legal_agreement_prefix
-import io.github.mudrichenkoevgeny.kmp.feature.user.privacy_policy
-import io.github.mudrichenkoevgeny.kmp.feature.user.terms_of_service
-import org.jetbrains.compose.resources.stringResource
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 
 /**
  * Footer block for legal links (privacy policy and/or terms of service).
@@ -49,10 +44,11 @@ fun LegalFooter(
         return
     }
 
-    val privacyText = stringResource(Res.string.privacy_policy)
-    val termsText = stringResource(Res.string.terms_of_service)
-    val andText = " ${stringResource(Res.string.and)} "
-    val prefixText = stringResource(Res.string.legal_agreement_prefix)
+    val userUi = LocalUserStrings.current.ui
+    val privacyText = userUi.privacyPolicy
+    val termsText = userUi.termsOfService
+    val andText = " ${userUi.and} "
+    val prefixText = userUi.legalAgreementPrefix
 
     val bodySmall = MaterialTheme.typography.bodySmall
     val mutedColor = MaterialTheme.colorScheme.onSurfaceVariant

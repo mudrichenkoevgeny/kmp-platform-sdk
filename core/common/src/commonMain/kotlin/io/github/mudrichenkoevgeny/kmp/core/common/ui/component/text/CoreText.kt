@@ -9,14 +9,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_message
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Standard body text component styled with [MaterialTheme.typography].
@@ -120,7 +118,7 @@ fun CoreTitleText(
 private fun CoreBodyTextComponentSizePreview() {
     CoreTheme {
         Surface {
-            CoreBodyText(text = stringResource(Res.string.ui_common_message))
+            CoreBodyText(text = LocalCommonStrings.current.ui.message)
         }
     }
 }
@@ -131,7 +129,7 @@ private fun CoreBodyTextComponentSizePreview() {
 private fun CoreBodyTextThemePreview() {
     CoreTheme {
         Surface {
-            CoreBodyText(text = stringResource(Res.string.ui_common_message))
+            CoreBodyText(text = LocalCommonStrings.current.ui.message)
         }
     }
 }
@@ -142,7 +140,7 @@ private fun CoreBodyTextThemePreview() {
 private fun CoreBodyTextFontScalePreview() {
     CoreTheme {
         Surface {
-            CoreBodyText(text = stringResource(Res.string.ui_common_message))
+            CoreBodyText(text = LocalCommonStrings.current.ui.message)
         }
     }
 }

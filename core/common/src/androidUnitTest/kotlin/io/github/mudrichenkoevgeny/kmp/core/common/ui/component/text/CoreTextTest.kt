@@ -5,12 +5,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_message
-import org.jetbrains.compose.resources.stringResource
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -26,7 +24,7 @@ class CoreTextTest {
         setContent {
             ComponentTestHarness {
                 CoreBodyText(
-                    text = stringResource(Res.string.ui_common_message),
+                    text = LocalCommonStrings.current.ui.message,
                     modifier = Modifier.testTag(TEST_TAG)
                 )
             }
@@ -40,7 +38,7 @@ class CoreTextTest {
         setContent {
             ComponentTestHarness {
                 CoreSmallText(
-                    text = stringResource(Res.string.ui_common_message),
+                    text = LocalCommonStrings.current.ui.message,
                     modifier = Modifier.testTag(TEST_TAG)
                 )
             }
@@ -54,7 +52,7 @@ class CoreTextTest {
         setContent {
             ComponentTestHarness {
                 CoreTitleText(
-                    text = stringResource(Res.string.ui_common_message),
+                    text = LocalCommonStrings.current.ui.message,
                     modifier = Modifier.testTag(TEST_TAG)
                 )
             }

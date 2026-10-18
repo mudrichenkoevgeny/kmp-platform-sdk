@@ -16,17 +16,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
-import io.github.mudrichenkoevgeny.kmp.core.common.retry
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * A combined footer for paginated lists.
@@ -91,7 +89,7 @@ fun PagingErrorFooter(
         if (error.isRetryable) {
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
             TextButton(onClick = onRetry) {
-                Text(text = stringResource(Res.string.retry))
+                Text(text = LocalCommonStrings.current.ui.retry)
             }
         }
     }

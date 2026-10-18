@@ -54,14 +54,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.main.GlobalUserListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.component.user.item.UserItem
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.users_management_title
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userSummaryMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
 /**
@@ -73,13 +71,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 @Composable
 fun GlobalUserListScreen(component: GlobalUserListComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(Res.string.users_management_title),
+                        text = userUi.usersManagementTitle,
                         modifier = Modifier.testTag(GlobalUserListTestTags.TITLE)
                     )
                 },

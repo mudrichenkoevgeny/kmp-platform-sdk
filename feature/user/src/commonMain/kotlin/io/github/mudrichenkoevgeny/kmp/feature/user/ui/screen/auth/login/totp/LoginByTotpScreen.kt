@@ -47,20 +47,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.login
-import io.github.mudrichenkoevgeny.kmp.feature.user.login_by_recovery_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.login_by_recovery_code_desc
-import io.github.mudrichenkoevgeny.kmp.feature.user.login_by_totp
-import io.github.mudrichenkoevgeny.kmp.feature.user.login_by_totp_desc
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.totp.LoginByTotpComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.recovery_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.totp_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.use_recovery_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.use_totp
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.login.totp.LoginByTotpMode
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * MFA login form: handles TOTP code entry and switching to recovery code mode.
@@ -100,6 +90,7 @@ private fun LoginByTotpContent(
     onSubmitClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
+    val userUi = LocalUserStrings.current.ui
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -119,13 +110,13 @@ private fun LoginByTotpContent(
                     enabled = !state.actionLoading
                 )
 
-                val titleRes = when (state.mode) {
-                    LoginByTotpMode.TOTP -> Res.string.login_by_totp
-                    LoginByTotpMode.RECOVERY_CODE -> Res.string.login_by_recovery_code
+                val titleText = when (state.mode) {
+                    LoginByTotpMode.TOTP -> userUi.loginByTotp
+                    LoginByTotpMode.RECOVERY_CODE -> userUi.loginByRecoveryCode
                 }
 
                 CoreScreenTitleText(
-                    text = stringResource(titleRes),
+                    text = titleText,
                     modifier = Modifier.testTag(LoginByTotpTestTags.TITLE)
                 )
             }
@@ -138,13 +129,8 @@ private fun LoginByTotpContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val descriptionText = when (state.mode) {
-                    LoginByTotpMode.TOTP -> stringResource(
-                        Res.string.login_by_totp_desc,
-                        FieldValidator.TOTP_CODE_LENGTH
-                    )
-                    LoginByTotpMode.RECOVERY_CODE -> stringResource(
-                        Res.string.login_by_recovery_code_desc
-                    )
+                    LoginByTotpMode.TOTP -> userUi.loginByTotpDesc(FieldValidator.TOTP_CODE_LENGTH)
+                    LoginByTotpMode.RECOVERY_CODE -> userUi.loginByRecoveryCodeDesc
                 }
 
                 CoreBodyText(
@@ -156,9 +142,9 @@ private fun LoginByTotpContent(
                         .testTag(LoginByTotpTestTags.DESCRIPTION)
                 )
 
-                val labelRes = when (state.mode) {
-                    LoginByTotpMode.TOTP -> Res.string.totp_code
-                    LoginByTotpMode.RECOVERY_CODE -> Res.string.recovery_code
+                val labelText = when (state.mode) {
+                    LoginByTotpMode.TOTP -> userUi.totpCode
+                    LoginByTotpMode.RECOVERY_CODE -> userUi.recoveryCode
                 }
 
                 val keyboardType = when (state.mode) {
@@ -171,7 +157,7 @@ private fun LoginByTotpContent(
                     onValueChange = onCodeChanged,
                     modifier = Modifier
                         .testTag(LoginByTotpTestTags.CODE_INPUT),
-                    label = { CoreBodyText(stringResource(labelRes)) },
+                    label = { CoreBodyText(labelText) },
                     isError = state.actionError != null,
                     enabled = !state.actionLoading,
                     keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
@@ -182,7 +168,7 @@ private fun LoginByTotpContent(
             }
 
             CoreButton(
-                text = stringResource(Res.string.login),
+                text = userUi.login,
                 onClick = onSubmitClick,
                 modifier = Modifier.testTag(LoginByTotpTestTags.SUBMIT_BUTTON),
                 enabled = state.canSubmit
@@ -190,13 +176,13 @@ private fun LoginByTotpContent(
 
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
-            val toggleTextRes = when (state.mode) {
-                LoginByTotpMode.TOTP -> Res.string.use_recovery_code
-                LoginByTotpMode.RECOVERY_CODE -> Res.string.use_totp
+            val toggleText = when (state.mode) {
+                LoginByTotpMode.TOTP -> userUi.useRecoveryCode
+                LoginByTotpMode.RECOVERY_CODE -> userUi.useTotp
             }
 
             CoreTextButton(
-                text = stringResource(toggleTextRes),
+                text = toggleText,
                 onClick = onToggleModeClick,
                 modifier = Modifier.testTag(LoginByTotpTestTags.TOGGLE_MODE_BUTTON),
                 enabled = !state.actionLoading

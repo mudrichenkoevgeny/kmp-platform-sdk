@@ -16,20 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.GlobalUserListTestTags
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_account_status
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_id
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_role
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userSummaryMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserSummary
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * A list item card representing a single user summary in administrative user lists.
@@ -51,6 +48,8 @@ fun UserItem(
     } else {
         CardDefaults.cardColors()
     }
+    val commonUi = LocalCommonStrings.current.ui
+    val userUi = LocalUserStrings.current.ui
 
     Card(
         modifier = modifier
@@ -62,16 +61,16 @@ fun UserItem(
     ) {
         Column(modifier = Modifier.padding(CoreTheme.dimens.paddingMedium)) {
             CoreTitleText(
-                text = "${stringResource(Res.string.user_id)}: ${user.id.value}",
+                text = "${commonUi.userId}: ${user.id.value}",
                 style = MaterialTheme.typography.titleSmall
             )
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
             CoreBodyText(
-                text = "${stringResource(Res.string.user_role)}: ${user.role.name}",
+                text = "${userUi.userRole}: ${user.role.name}",
                 style = MaterialTheme.typography.bodySmall
             )
             CoreBodyText(
-                text = "${stringResource(Res.string.user_account_status)}: ${user.accountStatus.name}",
+                text = "${userUi.userAccountStatus}: ${user.accountStatus.name}",
                 style = MaterialTheme.typography.bodySmall
             )
         }

@@ -1,12 +1,10 @@
 package io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main
 
-import io.github.mudrichenkoevgeny.kmp.core.common.ic_user
+import androidx.compose.runtime.Composable
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_settings
-import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.Res
-import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.nav_management
-import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.nav_user
+import io.github.mudrichenkoevgeny.kmp.core.common.ic_user
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.StringResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
 /**
@@ -14,18 +12,18 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
  */
 sealed interface MainScreenDestination {
     val config: MainScreenComponent.Config
-    val title: StringResource
+    @Composable fun title(): String
     val iconRes: DrawableResource
 
     data object Management : MainScreenDestination {
         override val config = MainScreenComponent.Config.Management
-        override val title = Res.string.nav_management
+        @Composable override fun title(): String = LocalUserStrings.current.ui.usersManagementTitle
         override val iconRes = CommonRes.drawable.ic_settings
     }
 
     data object User : MainScreenDestination {
         override val config = MainScreenComponent.Config.User
-        override val title = Res.string.nav_user
+        @Composable override fun title(): String = LocalUserStrings.current.ui.user
         override val iconRes = CommonRes.drawable.ic_user
     }
 

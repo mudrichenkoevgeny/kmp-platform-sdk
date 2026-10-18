@@ -45,15 +45,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.email
-import io.github.mudrichenkoevgeny.kmp.feature.user.forgot_password
-import io.github.mudrichenkoevgeny.kmp.feature.user.login
-import io.github.mudrichenkoevgeny.kmp.feature.user.login_by_email
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.email.LoginByEmailComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.no_account_register
-import io.github.mudrichenkoevgeny.kmp.feature.user.password
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Email login form with back navigation, forgot-password and registration links, and loading overlay on submit.
@@ -99,6 +92,7 @@ private fun LoginByEmailContent(
     onRegistrationClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
+    val userUi = LocalUserStrings.current.ui
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -119,7 +113,7 @@ private fun LoginByEmailContent(
                 )
 
                 CoreScreenTitleText(
-                    text = stringResource(Res.string.login_by_email),
+                    text = userUi.loginByEmail,
                     modifier = Modifier.testTag(LoginByEmailTestTags.TITLE)
                 )
             }
@@ -134,8 +128,8 @@ private fun LoginByEmailContent(
                 CoreEmailTextField(
                     value = state.email,
                     onValueChange = onEmailChanged,
-                    label = { CoreBodyText(stringResource(Res.string.email)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.email)) },
+                    label = { CoreBodyText(userUi.email) },
+                    placeholder = { CoreBodyText(userUi.email) },
                     modifier = Modifier.testTag(LoginByEmailTestTags.EMAIL_INPUT),
                     isError = state.actionError != null
                 )
@@ -147,8 +141,8 @@ private fun LoginByEmailContent(
                     onValueChange = onPasswordChanged,
                     isPasswordVisible = state.isPasswordVisible,
                     onTogglePasswordVisibility = onTogglePasswordVisibility,
-                    label = { CoreBodyText(stringResource(Res.string.password)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.password)) },
+                    label = { CoreBodyText(userUi.password) },
+                    placeholder = { CoreBodyText(userUi.password) },
                     modifier = Modifier.testTag(LoginByEmailTestTags.PASSWORD_INPUT),
                     isError = state.actionError != null,
                     toggleModifier = Modifier.testTag(LoginByEmailTestTags.TOGGLE_PASSWORD_VISIBILITY_BUTTON)
@@ -157,7 +151,7 @@ private fun LoginByEmailContent(
                 ErrorText(state.actionError)
 
                 CoreTextButton(
-                    text = stringResource(Res.string.forgot_password),
+                    text = userUi.forgotPassword,
                     onClick = onForgotPasswordClick,
                     modifier = Modifier
                         .align(Alignment.End)
@@ -167,7 +161,7 @@ private fun LoginByEmailContent(
             }
 
             CoreButton(
-                text = stringResource(Res.string.login),
+                text = userUi.login,
                 onClick = onLoginClick,
                 modifier = Modifier.testTag(LoginByEmailTestTags.LOGIN_BUTTON),
                 enabled = state.canLogin
@@ -177,7 +171,7 @@ private fun LoginByEmailContent(
                 Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
                 CoreTextButton(
-                    text = stringResource(Res.string.no_account_register),
+                    text = userUi.noAccountRegister,
                     onClick = onRegistrationClick,
                     modifier = Modifier.testTag(LoginByEmailTestTags.REGISTRATION_BUTTON),
                     enabled = !state.actionLoading

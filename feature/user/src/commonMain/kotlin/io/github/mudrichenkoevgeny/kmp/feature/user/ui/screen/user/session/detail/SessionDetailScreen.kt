@@ -37,6 +37,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.time.formatInstantToDateTime
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
@@ -59,43 +60,28 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_apple
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_email
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_google
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_phone
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.session.detail.SessionDetailComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.not_available
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_app_version
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_client_type
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_created_at_label
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_client_device_info
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_client_device_name
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_ip_address_label
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_language
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_last_accessed_label
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_os_version
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_title_current_session
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_detail_title_session
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_revoke
-import io.github.mudrichenkoevgeny.kmp.feature.user.user_id
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionDetailScreen(component: SessionDetailComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    val currentContent = state as? SessionDetailScreenState.Content
-                    val titleRes = if (currentContent?.isCurrentSession == true) {
-                        Res.string.session_detail_title_current_session
-                    } else {
-                        Res.string.session_detail_title_session
-                    }
                     CoreScreenTitleText(
-                        text = stringResource(titleRes),
+                        text = if ((state as? SessionDetailScreenState.Content)?.isCurrentSession == true) {
+                            userUi.sessionDetailTitleCurrentSession
+                        } else {
+                            userUi.sessionDetailTitleSession
+                        },
                         modifier = Modifier.testTag(SessionDetailTestTags.TITLE)
                     )
                 },
@@ -142,7 +128,9 @@ private fun Content(
     onUserClick: () -> Unit
 ) {
     val session = state.session
-    val notAvailableText = stringResource(Res.string.not_available)
+    val userUi = LocalUserStrings.current.ui
+    val commonUi = LocalCommonStrings.current.ui
+    val notAvailableText = commonUi.lockoutNone
 
     CoreScrollableScreenContent {
         Card(
@@ -164,7 +152,7 @@ private fun Content(
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = stringResource(Res.string.user_id, session.userId.asHexDashString()),
+                            text = "${commonUi.userId}: ${session.userId.asHexDashString()}",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.testTag(SessionDetailTestTags.USER_ID)
@@ -210,48 +198,48 @@ private fun Content(
                 HorizontalDivider()
 
                 CoreTitleText(
-                    text = stringResource(Res.string.session_detail_client_device_info),
+                    text = userUi.sessionDetailDeviceInfo,
                     style = MaterialTheme.typography.titleSmall
                 )
                 CoreBodyText(
-                    text = "${stringResource(Res.string.session_detail_client_device_name)}: ${session.clientDeviceInfo.deviceName ?: session.userAgent ?: notAvailableText}",
+                    text = "${userUi.sessionDetailDeviceName}: ${session.clientDeviceInfo.deviceName ?: session.userAgent ?: notAvailableText}",
                     modifier = Modifier.testTag(SessionDetailTestTags.DEVICE_NAME)
                 )
                 CoreBodyText(
-                    text = "${stringResource(Res.string.session_detail_client_type)}: ${session.clientDeviceInfo.clientType?.name ?: notAvailableText}",
+                    text = "${userUi.sessionDetailClientType}: ${session.clientDeviceInfo.clientType?.name ?: notAvailableText}",
                     modifier = Modifier.testTag(SessionDetailTestTags.CLIENT_TYPE)
                 )
                 CoreBodyText(
-                    text = "${stringResource(Res.string.session_detail_language)}: ${session.clientDeviceInfo.language ?: notAvailableText}",
+                    text = "${userUi.sessionDetailLanguage}: ${session.clientDeviceInfo.language ?: notAvailableText}",
                     modifier = Modifier.testTag(SessionDetailTestTags.LANGUAGE)
                 )
                 CoreBodyText(
-                    text = "${stringResource(Res.string.session_detail_app_version)}: ${session.clientDeviceInfo.appVersion ?: notAvailableText}",
+                    text = "${userUi.sessionDetailAppVersion}: ${session.clientDeviceInfo.appVersion ?: notAvailableText}",
                     modifier = Modifier.testTag(SessionDetailTestTags.APP_VERSION)
                 )
                 CoreBodyText(
-                    text = "${stringResource(Res.string.session_detail_os_version)}: ${session.clientDeviceInfo.operationSystemVersion ?: notAvailableText}",
+                    text = "${userUi.sessionDetailOsVersion}: ${session.clientDeviceInfo.operationSystemVersion ?: notAvailableText}",
                     modifier = Modifier.testTag(SessionDetailTestTags.OS_VERSION)
                 )
 
                 HorizontalDivider()
 
                 CoreBodyText(
-                    text = "${stringResource(Res.string.session_detail_ip_address_label)}: ${session.ipAddress ?: notAvailableText}",
+                    text = "${userUi.sessionDetailIpAddressLabel}: ${session.ipAddress ?: notAvailableText}",
                     modifier = Modifier.testTag(SessionDetailTestTags.IP_ADDRESS)
                 )
 
                 val lastAccessedFormatted = formatInstantToDateTime(session.lastAccessedAt)
                     ?: session.lastAccessedAt.toString()
                 CoreBodyText(
-                    text = "${stringResource(Res.string.session_detail_last_accessed_label)}: $lastAccessedFormatted",
+                    text = "${userUi.sessionDetailLastAccessedLabel}: $lastAccessedFormatted",
                     modifier = Modifier.testTag(SessionDetailTestTags.LAST_ACCESSED_AT)
                 )
 
                 val createdAtFormatted = formatInstantToDateTime(session.createdAt)
                     ?: session.createdAt.toString()
                 CoreBodyText(
-                    text = "${stringResource(Res.string.session_detail_created_at_label)}: $createdAtFormatted",
+                    text = "${userUi.sessionDetailCreatedAtLabel}: $createdAtFormatted",
                     modifier = Modifier.testTag(SessionDetailTestTags.CREATED_AT)
                 )
             }
@@ -259,7 +247,7 @@ private fun Content(
 
         if (!state.isCurrentSession && !state.isSelfSession) {
             CoreButton(
-                text = stringResource(Res.string.session_revoke),
+                text = userUi.sessionRevoke,
                 onClick = onRevokeClick,
                 modifier = Modifier
                     .fillMaxWidth()

@@ -33,6 +33,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.time.formatInstantToDateTime
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
@@ -50,47 +51,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_active
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_banned
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_lockout_indefinite
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_lockout_none
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_lockout_temporary
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_lockout_type
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_lockout_until
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_pending_deletion
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_read_only
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_security_hold
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.authority_level
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.created_at_label
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.delete_user
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.delete_user_confirmation_desc
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.disable_totp
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.disabling_totp
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.last_active_at_label
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.last_login_at_label
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.detail.UserDetailComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.not_available
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.saving
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.scheduled_deletion_at_label
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.totp_enabled_label
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.update_user
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_account_status
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_detail_audit_events
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_details_title
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_id
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_identifiers
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_role
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_sessions
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_cancel
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm_title
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
-import org.jetbrains.compose.resources.stringResource
-import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res as UserRes
 
 /**
  * Administrative user detail screen: displays user details and management action controls.
@@ -101,13 +66,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.Res as UserRes
 @Composable
 fun UserDetailScreen(component: UserDetailComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(Res.string.user_details_title),
+                        text = userUi.userDetailsTitle,
                         modifier = Modifier.testTag(UserDetailTestTags.TITLE)
                     )
                 },
@@ -171,26 +137,28 @@ private fun Content(
     onIdentifiersClick: () -> Unit,
     onAuditEventsClick: () -> Unit
 ) {
-    val notAvailableText = stringResource(Res.string.not_available)
+    val userUi = LocalUserStrings.current.ui
+    val commonUi = LocalCommonStrings.current.ui
+    val notAvailableText = commonUi.denied
     val createdAtText = formatInstantToDateTime(state.user.createdAt) ?: state.user.createdAt.toString()
     val lastLoginText = state.user.lastLoginAt?.let { formatInstantToDateTime(it) } ?: notAvailableText
     val lastActiveText = state.user.lastActiveAt?.let { formatInstantToDateTime(it) } ?: notAvailableText
 
     CoreScrollableScreenContent {
         CoreTitleText(
-            text = "${stringResource(Res.string.user_id)}: ${state.user.id.value}",
+            text = "${commonUi.userId}: ${state.user.id.value}",
             style = MaterialTheme.typography.titleMedium
         )
         CoreBodyText(
-            text = "${stringResource(Res.string.user_role)}: ${state.user.role.name}"
+            text = "${userUi.userRole}: ${state.user.role.name}"
         )
         CoreBodyText(
-            text = stringResource(Res.string.totp_enabled_label, state.user.isTotpEnabled)
+            text = userUi.totpEnabledLabel(state.user.isTotpEnabled.toString())
         )
 
         if (state.user.isTotpEnabled) {
             CoreButton(
-                text = stringResource(if (state.isDisablingTotp) Res.string.disabling_totp else Res.string.disable_totp),
+                text = if (state.isDisablingTotp) userUi.disablingTotp else userUi.disableTotp,
                 onClick = onDisableTotpClick,
                 modifier = Modifier.testTag(UserDetailTestTags.DISABLE_TOTP_BUTTON),
                 enabled = !state.isSaving && !state.isDeleting && !state.isDisablingTotp && !state.isSelf
@@ -204,37 +172,37 @@ private fun Content(
             }
         }
         CoreBodyText(
-            text = stringResource(Res.string.created_at_label, createdAtText)
+            text = userUi.createdAtLabel(createdAtText)
         )
         CoreBodyText(
-            text = stringResource(Res.string.last_login_at_label, lastLoginText)
+            text = userUi.lastLoginAtLabel(lastLoginText)
         )
         CoreBodyText(
-            text = stringResource(Res.string.last_active_at_label, lastActiveText)
+            text = userUi.lastActiveAtLabel(lastActiveText)
         )
 
         if (state.user.accountStatus == UserAccountStatus.PENDING_DELETION && state.user.scheduledPermanentDeletionAt != null) {
             val scheduledDeletionText = formatInstantToDateTime(state.user.scheduledPermanentDeletionAt)
                 ?: state.user.scheduledPermanentDeletionAt.toString()
             CoreErrorText(
-                text = stringResource(Res.string.scheduled_deletion_at_label, scheduledDeletionText)
+                text = userUi.scheduledDeletionAtLabel(scheduledDeletionText)
             )
         }
 
         CoreButton(
-            text = stringResource(Res.string.user_sessions),
+            text = userUi.userSessions,
             onClick = onSessionsClick,
             modifier = Modifier.testTag(UserDetailTestTags.SESSIONS_BUTTON)
         )
 
         CoreButton(
-            text = stringResource(Res.string.user_identifiers),
+            text = userUi.userIdentifiers,
             onClick = onIdentifiersClick,
             modifier = Modifier.testTag(UserDetailTestTags.IDENTIFIERS_BUTTON)
         )
 
         CoreButton(
-            text = stringResource(Res.string.user_detail_audit_events),
+            text = userUi.userDetailAuditEvents,
             onClick = onAuditEventsClick,
             modifier = Modifier.testTag(UserDetailTestTags.AUDIT_EVENTS_BUTTON),
             enabled = !state.isSaving && !state.isDeleting
@@ -249,8 +217,8 @@ private fun Content(
         CoreOutlinedTextField(
             value = state.authorityLevelInput,
             onValueChange = onAuthorityLevelChanged,
-            label = { CoreBodyText(stringResource(Res.string.authority_level)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.authority_level)) },
+            label = { CoreBodyText(userUi.authorityLevel) },
+            placeholder = { CoreBodyText(userUi.authorityLevel) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.testTag(UserDetailTestTags.AUTHORITY_LEVEL_INPUT),
             enabled = !state.isSaving && !state.isDeleting && !state.isSelf
@@ -265,15 +233,15 @@ private fun Content(
         CoreOutlinedTextField(
             value = state.temporaryLockoutUntilInput,
             onValueChange = onTemporaryLockoutUntilChanged,
-            label = { CoreBodyText(stringResource(CommonRes.string.ui_common_lockout_until)) },
-            placeholder = { CoreBodyText(stringResource(CommonRes.string.ui_common_lockout_until)) },
+            label = { CoreBodyText(commonUi.lockoutUntil) },
+            placeholder = { CoreBodyText(commonUi.lockoutUntil) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.testTag(UserDetailTestTags.TEMPORARY_LOCKOUT_UNTIL_INPUT),
             enabled = !state.isSaving && !state.isDeleting && !state.isSelf
         )
 
         CoreButton(
-            text = stringResource(if (state.isSaving) Res.string.saving else Res.string.update_user),
+            text = if (state.isSaving) userUi.saving else userUi.updateUser,
             onClick = onUpdateClick,
             modifier = Modifier.testTag(UserDetailTestTags.UPDATE_BUTTON),
             enabled = state.hasChanges && !state.isSaving && !state.isDeleting && !state.isSelf
@@ -287,7 +255,7 @@ private fun Content(
         }
 
         CoreButton(
-            text = stringResource(Res.string.delete_user),
+            text = userUi.deleteUser,
             onClick = onDeleteClick,
             modifier = Modifier.testTag(UserDetailTestTags.DELETE_BUTTON),
             enabled = !state.isSaving && !state.isDeleting && !state.isSelf,
@@ -307,18 +275,18 @@ private fun Content(
     if (state.isDeleteConfirmationVisible) {
         AlertDialog(
             onDismissRequest = onDismissDeleteDialog,
-            title = { CoreTitleText(stringResource(UserRes.string.dialog_confirm_title)) },
-            text = { CoreBodyText(stringResource(Res.string.delete_user_confirmation_desc)) },
+            title = { CoreTitleText(userUi.dialogConfirmTitle) },
+            text = { CoreBodyText(userUi.deleteUserConfirmationDesc) },
             confirmButton = {
                 CoreTextButton(
-                    text = stringResource(UserRes.string.dialog_confirm),
+                    text = userUi.dialogConfirm,
                     onClick = onConfirmDeleteClick,
                     enabled = !state.isDeleting
                 )
             },
             dismissButton = {
                 CoreTextButton(
-                    text = stringResource(UserRes.string.dialog_cancel),
+                    text = userUi.dialogCancel,
                     onClick = onDismissDeleteDialog,
                     enabled = !state.isDeleting
                 )
@@ -336,13 +304,15 @@ private fun AccountStatusDropdown(
     modifier: Modifier = Modifier
 ) {
     var isExpanded by remember { mutableStateOf(false) }
+    val commonUi = LocalCommonStrings.current.ui
+    val userUi = LocalUserStrings.current.ui
 
     val options = listOf(
-        UserAccountStatus.ACTIVE to stringResource(CommonRes.string.ui_common_active),
-        UserAccountStatus.READ_ONLY to stringResource(CommonRes.string.ui_common_read_only),
-        UserAccountStatus.BANNED to stringResource(CommonRes.string.ui_common_banned),
-        UserAccountStatus.SECURITY_HOLD to stringResource(CommonRes.string.ui_common_security_hold),
-        UserAccountStatus.PENDING_DELETION to stringResource(CommonRes.string.ui_common_pending_deletion)
+        UserAccountStatus.ACTIVE to commonUi.active,
+        UserAccountStatus.READ_ONLY to commonUi.readOnly,
+        UserAccountStatus.BANNED to commonUi.banned,
+        UserAccountStatus.SECURITY_HOLD to commonUi.securityHold,
+        UserAccountStatus.PENDING_DELETION to commonUi.pendingDeletion
     )
 
     val currentDisplayText = options.firstOrNull { it.first.name.equals(selectedAccountStatus, ignoreCase = true) }?.second
@@ -360,7 +330,7 @@ private fun AccountStatusDropdown(
         CoreOutlinedTextField(
             value = currentDisplayText,
             onValueChange = {},
-            label = { CoreBodyText(stringResource(Res.string.user_account_status)) },
+            label = { CoreBodyText(userUi.userAccountStatus) },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
             },
@@ -397,11 +367,12 @@ private fun LockoutTypeDropdown(
     modifier: Modifier = Modifier
 ) {
     var isExpanded by remember { mutableStateOf(false) }
+    val commonUi = LocalCommonStrings.current.ui
 
     val options = listOf(
-        AccountLockoutType.NONE to stringResource(CommonRes.string.ui_common_lockout_none),
-        AccountLockoutType.INDEFINITE to stringResource(CommonRes.string.ui_common_lockout_indefinite),
-        AccountLockoutType.TEMPORARY to stringResource(CommonRes.string.ui_common_lockout_temporary)
+        AccountLockoutType.NONE to commonUi.lockoutNone,
+        AccountLockoutType.INDEFINITE to commonUi.lockoutIndefinite,
+        AccountLockoutType.TEMPORARY to commonUi.lockoutTemporary
     )
 
     val resolvedType = AccountLockoutType.fromValueOrNull(selectedLockoutType)
@@ -420,7 +391,7 @@ private fun LockoutTypeDropdown(
         CoreOutlinedTextField(
             value = currentDisplayText,
             onValueChange = {},
-            label = { CoreBodyText(stringResource(CommonRes.string.ui_common_lockout_type)) },
+            label = { CoreBodyText(commonUi.lockoutType) },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
             },

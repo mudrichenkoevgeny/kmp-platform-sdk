@@ -11,6 +11,7 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.UserRootComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.main.MainUserComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.root.UserRootComponent
@@ -26,7 +27,9 @@ class MainContentTest {
 
     @Test
     fun mobile_showsBottomNavLabels() = runComposeUiTest {
+        var userText = ""
         setContent {
+            userText = LocalUserStrings.current.ui.user
             MaterialTheme {
                 MainContent(
                     isMobile = true,
@@ -37,11 +40,7 @@ class MainContentTest {
                 )
             }
         }
-        onNodeWithText(NAV_USER).assertIsDisplayed()
-    }
-
-    private companion object {
-        const val NAV_USER = "User"
+        onNodeWithText(userText).assertIsDisplayed()
     }
 }
 

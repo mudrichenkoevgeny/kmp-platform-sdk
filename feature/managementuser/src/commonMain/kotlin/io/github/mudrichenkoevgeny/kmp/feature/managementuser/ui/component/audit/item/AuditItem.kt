@@ -22,13 +22,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePrevi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_id
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_status
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list.AuditEventListTestTags
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventSummary
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * A list item representing a single audit event record.
@@ -43,6 +40,7 @@ fun AuditItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val userUi = LocalUserStrings.current.ui
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -52,13 +50,13 @@ fun AuditItem(
     ) {
         Column(modifier = Modifier.padding(CoreTheme.dimens.paddingMedium)) {
             Text(
-                text = "${stringResource(Res.string.audit_event_id)}: ${event.id.value}",
+                text = "${userUi.auditEventId}: ${event.id.value}",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
             Text(
-                text = "${stringResource(Res.string.audit_event_status)}: ${event.status}",
+                text = "${userUi.auditEventStatus}: ${event.status}",
                 style = MaterialTheme.typography.bodySmall
             )
         }

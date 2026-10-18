@@ -6,12 +6,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_action
-import org.jetbrains.compose.resources.stringResource
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -29,7 +27,7 @@ class CoreScrollableScreenContentTest {
                 CoreScrollableScreenContent(
                     modifier = Modifier.testTag(TEST_TAG)
                 ) {
-                    Text(stringResource(Res.string.ui_common_action))
+                    Text(LocalCommonStrings.current.ui.action)
                 }
             }
         }

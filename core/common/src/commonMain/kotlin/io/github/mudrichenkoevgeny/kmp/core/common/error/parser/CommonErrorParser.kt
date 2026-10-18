@@ -1,125 +1,112 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.error.parser
 
-import androidx.compose.runtime.Composable
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.naming.ClientCommonErrorCodes
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_blank_field
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_blank_field_args
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_empty_field
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_empty_field_args
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_internal
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_invalid_field
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_invalid_field_args
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_invalid_parameter
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_invalid_parameter_args
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_missing_field
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_missing_field_args
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_missing_parameter
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_missing_parameter_args
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_network
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_no_internet
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_not_found
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_not_found_args
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_service_unavailable
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_too_many_requests
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_too_many_requests_args
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_unknown
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.CommonErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.CommonErrorCodes
-import org.jetbrains.compose.resources.stringResource
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.localization.CommonModuleStrings
 
 /**
- * Fallback [AppErrorParser] for common error codes.
- *
- * This parser handles standard system-wide error codes defined in [CommonErrorCodes]
- * and client-specific codes from [ClientCommonErrorCodes].
- *
- * It automatically resolves localized messages with dynamic arguments (e.g., field names,
- * retry intervals) if they are present in the error context. If an expected argument
- * is missing, it falls back to a generic version of the message to ensure a clean UI.
+ * Fallback [AppErrorParser] for common error codes using `shared-foundation` localization.
  */
-object CommonErrorParser : AppErrorParser {
+open class CommonErrorParser(
+    private val localeProvider: () -> String = { KmpLocalization.currentLocale }
+) : AppErrorParser {
 
-    @Composable
+    companion object : CommonErrorParser()
+
     override fun parse(appError: AppError): String {
         val args = appError.args ?: emptyMap()
+        val strings = CommonModuleStrings(KmpLocalization.resolver, localeProvider())
 
         return when (appError.code) {
-            CommonErrorCodes.NOT_FOUND -> resolveLocalizedString(
-                args = args,
-                key = CommonErrorArgs.RESOURCE,
-                withArgsRes = Res.string.error_common_not_found_args,
-                fallbackRes = Res.string.error_common_not_found
-            )
+            CommonErrorCodes.NOT_FOUND -> {
+                val resource = args[CommonErrorArgs.RESOURCE]
+                if (!resource.isNullOrBlank()) {
+                    strings.errors.notFound(resource)
+                } else {
+                    strings.errors.notFoundWithoutArgs
+                }
+            }
 
-            CommonErrorCodes.MISSING_REQUIRED_PARAMETER -> resolveLocalizedString(
-                args = args,
-                key = CommonErrorArgs.PARAMETER_NAME,
-                withArgsRes = Res.string.error_common_missing_parameter_args,
-                fallbackRes = Res.string.error_common_missing_parameter
-            )
+            CommonErrorCodes.MISSING_REQUIRED_PARAMETER -> {
+                val param = args[CommonErrorArgs.PARAMETER_NAME]
+                if (!param.isNullOrBlank()) {
+                    strings.errors.missingParameter(param)
+                } else {
+                    strings.errors.missingParameterWithoutArgs
+                }
+            }
 
-            CommonErrorCodes.INVALID_PARAMETER_VALUE -> resolveLocalizedString(
-                args = args,
-                key = CommonErrorArgs.PARAMETER_NAME,
-                withArgsRes = Res.string.error_common_invalid_parameter_args,
-                fallbackRes = Res.string.error_common_invalid_parameter
-            )
+            CommonErrorCodes.INVALID_PARAMETER_VALUE -> {
+                val param = args[CommonErrorArgs.PARAMETER_NAME]
+                if (!param.isNullOrBlank()) {
+                    strings.errors.invalidParameter(param)
+                } else {
+                    strings.errors.invalidParameterWithoutArgs
+                }
+            }
 
-            CommonErrorCodes.MISSING_REQUIRED_FIELD -> resolveLocalizedString(
-                args = args,
-                key = CommonErrorArgs.FIELD_NAME,
-                withArgsRes = Res.string.error_common_missing_field_args,
-                fallbackRes = Res.string.error_common_missing_field
-            )
+            CommonErrorCodes.MISSING_REQUIRED_FIELD -> {
+                val field = args[CommonErrorArgs.FIELD_NAME]
+                if (!field.isNullOrBlank()) {
+                    strings.errors.missingField(field)
+                } else {
+                    strings.errors.missingFieldWithoutArgs
+                }
+            }
 
-            CommonErrorCodes.BLANK_STRING_FIELD -> resolveLocalizedString(
-                args = args,
-                key = CommonErrorArgs.FIELD_NAME,
-                withArgsRes = Res.string.error_common_blank_field_args,
-                fallbackRes = Res.string.error_common_blank_field
-            )
+            CommonErrorCodes.BLANK_STRING_FIELD -> {
+                val field = args[CommonErrorArgs.FIELD_NAME]
+                if (!field.isNullOrBlank()) {
+                    strings.errors.blankField(field)
+                } else {
+                    strings.errors.blankFieldWithoutArgs
+                }
+            }
 
-            CommonErrorCodes.EMPTY_COLLECTION_FIELD -> resolveLocalizedString(
-                args = args,
-                key = CommonErrorArgs.FIELD_NAME,
-                withArgsRes = Res.string.error_common_empty_field_args,
-                fallbackRes = Res.string.error_common_empty_field
-            )
+            CommonErrorCodes.EMPTY_COLLECTION_FIELD -> {
+                val field = args[CommonErrorArgs.FIELD_NAME]
+                if (!field.isNullOrBlank()) {
+                    strings.errors.emptyCollectionField(field)
+                } else {
+                    strings.errors.emptyCollectionFieldWithoutArgs
+                }
+            }
 
-            CommonErrorCodes.INVALID_FIELD_VALUE -> resolveLocalizedString(
-                args = args,
-                key = CommonErrorArgs.FIELD_NAME,
-                withArgsRes = Res.string.error_common_invalid_field_args,
-                fallbackRes = Res.string.error_common_invalid_field
-            )
+            CommonErrorCodes.INVALID_FIELD_VALUE -> {
+                val field = args[CommonErrorArgs.FIELD_NAME]
+                if (!field.isNullOrBlank()) {
+                    strings.errors.invalidField(field)
+                } else {
+                    strings.errors.invalidFieldWithoutArgs
+                }
+            }
 
-            CommonErrorCodes.TOO_MANY_REQUESTS -> resolveLocalizedString(
-                args = args,
-                key = CommonErrorArgs.RETRY_AFTER_SECONDS,
-                withArgsRes = Res.string.error_common_too_many_requests_args,
-                fallbackRes = Res.string.error_common_too_many_requests
-            )
+            CommonErrorCodes.TOO_MANY_REQUESTS -> {
+                val retry = args[CommonErrorArgs.RETRY_AFTER_SECONDS]
+                if (!retry.isNullOrBlank()) {
+                    strings.errors.tooManyRequests(retry)
+                } else {
+                    strings.errors.tooManyRequestsWithoutArgs
+                }
+            }
 
-            CommonErrorCodes.SERVICE_UNAVAILABLE ->
-                stringResource(Res.string.error_common_service_unavailable)
+            CommonErrorCodes.SERVICE_UNAVAILABLE -> strings.errors.serviceUnavailable
 
-            ClientCommonErrorCodes.NO_INTERNET_CONNECTION ->
-                stringResource(Res.string.error_common_no_internet)
+            ClientCommonErrorCodes.NO_INTERNET_CONNECTION -> strings.errors.noInternet
 
-            ClientCommonErrorCodes.NETWORK ->
-                stringResource(Res.string.error_common_network)
+            ClientCommonErrorCodes.NETWORK -> strings.errors.network
 
             CommonErrorCodes.INTERNAL,
             CommonErrorCodes.BAD_REQUEST,
             CommonErrorCodes.INVALID_JSON_BODY,
             CommonErrorCodes.UNKNOWN,
             ClientCommonErrorCodes.CONTRACT_VIOLATION,
-            ClientCommonErrorCodes.LIFECYCLE_ERROR ->
-                stringResource(Res.string.error_common_internal)
+            ClientCommonErrorCodes.LIFECYCLE_ERROR -> strings.errors.internal
 
-            else -> stringResource(Res.string.error_common_unknown)
+            else -> strings.errors.unknown
         }
     }
 }

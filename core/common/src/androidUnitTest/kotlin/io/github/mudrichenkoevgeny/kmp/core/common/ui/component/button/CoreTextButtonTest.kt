@@ -8,12 +8,10 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_action
-import org.jetbrains.compose.resources.stringResource
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -32,7 +30,7 @@ class CoreTextButtonTest {
         setContent {
             ComponentTestHarness {
                 CoreTextButton(
-                    text = stringResource(Res.string.ui_common_action),
+                    text = LocalCommonStrings.current.ui.action,
                     onClick = { clicked = true },
                     modifier = Modifier.testTag(TEST_TAG)
                 )
@@ -50,7 +48,7 @@ class CoreTextButtonTest {
         setContent {
             ComponentTestHarness {
                 CoreTextButton(
-                    text = stringResource(Res.string.ui_common_action),
+                    text = LocalCommonStrings.current.ui.action,
                     onClick = { clicked = true },
                     enabled = false,
                     modifier = Modifier.testTag(TEST_TAG)

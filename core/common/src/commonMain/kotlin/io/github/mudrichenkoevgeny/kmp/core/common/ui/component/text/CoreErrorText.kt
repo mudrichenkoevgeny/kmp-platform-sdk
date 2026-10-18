@@ -8,14 +8,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_unknown
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Standardized error message text component styled with error color palette.
@@ -50,7 +48,7 @@ private fun CoreErrorTextComponentSizePreview() {
     CoreTheme {
         Surface {
             CoreErrorText(
-                text = stringResource(Res.string.error_common_unknown)
+                text = LocalCommonStrings.current.errors.unknown
             )
         }
     }
@@ -63,7 +61,7 @@ private fun CoreErrorTextThemePreview() {
     CoreTheme {
         Surface {
             CoreErrorText(
-                text = stringResource(Res.string.error_common_unknown)
+                text = LocalCommonStrings.current.errors.unknown
             )
         }
     }
@@ -76,7 +74,7 @@ private fun CoreErrorTextFontScalePreview() {
     CoreTheme {
         Surface {
             CoreErrorText(
-                text = stringResource(Res.string.error_common_unknown)
+                text = LocalCommonStrings.current.errors.unknown
             )
         }
     }

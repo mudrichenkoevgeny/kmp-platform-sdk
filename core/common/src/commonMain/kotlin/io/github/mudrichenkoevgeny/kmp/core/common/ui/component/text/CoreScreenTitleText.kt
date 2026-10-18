@@ -7,14 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_status
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Standardized screen title text component for top app bars and header layouts.
@@ -49,7 +47,7 @@ private fun CoreScreenTitleTextComponentSizePreview() {
     CoreTheme {
         Surface {
             CoreScreenTitleText(
-                text = stringResource(Res.string.ui_common_status)
+                text = LocalCommonStrings.current.ui.status
             )
         }
     }
@@ -62,7 +60,7 @@ private fun CoreScreenTitleTextThemePreview() {
     CoreTheme {
         Surface {
             CoreScreenTitleText(
-                text = stringResource(Res.string.ui_common_status)
+                text = LocalCommonStrings.current.ui.status
             )
         }
     }
@@ -75,7 +73,7 @@ private fun CoreScreenTitleTextFontScalePreview() {
     CoreTheme {
         Surface {
             CoreScreenTitleText(
-                text = stringResource(Res.string.ui_common_status)
+                text = LocalCommonStrings.current.ui.status
             )
         }
     }

@@ -26,14 +26,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm
-import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_success_desc
-import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_success_title
-import org.jetbrains.compose.resources.stringResource
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 
 @Composable
 fun UnlockSuccessScreen(onFinished: () -> Unit) {
+    val userUi = LocalUserStrings.current.ui
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -42,14 +40,14 @@ fun UnlockSuccessScreen(onFinished: () -> Unit) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = stringResource(Res.string.unlock_success_title),
+            text = userUi.unlockSuccessTitle,
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center,
             modifier = Modifier.testTag(UnlockSuccessTestTags.TITLE)
         )
         Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
         Text(
-            text = stringResource(Res.string.unlock_success_desc),
+            text = userUi.unlockSuccessDesc,
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.testTag(UnlockSuccessTestTags.DESC)
@@ -61,7 +59,7 @@ fun UnlockSuccessScreen(onFinished: () -> Unit) {
                 .fillMaxWidth()
                 .testTag(UnlockSuccessTestTags.FINISH_BUTTON)
         ) {
-            Text(text = stringResource(Res.string.dialog_confirm))
+            Text(text = userUi.dialogConfirm)
         }
     }
 }

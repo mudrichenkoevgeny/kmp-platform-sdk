@@ -16,10 +16,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_back
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
@@ -28,14 +28,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.back
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.edit_auth_settings
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.edit_global_settings
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.edit_security_settings
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.management_settings_title
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
 object SettingsMainTestTags {
     const val TITLE = "SettingsMain_Title"
@@ -48,12 +43,15 @@ object SettingsMainTestTags {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsMainScreen(component: SettingsMainComponent) {
+    val userUi = LocalUserStrings.current.ui
+    val commonUi = LocalCommonStrings.current.ui
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(Res.string.management_settings_title),
+                        text = userUi.managementSettingsTitle,
                         modifier = Modifier.testTag(SettingsMainTestTags.TITLE)
                     )
                 },
@@ -64,7 +62,7 @@ fun SettingsMainScreen(component: SettingsMainComponent) {
                     ) {
                         Icon(
                             painter = painterResource(CommonRes.drawable.ic_back),
-                            contentDescription = stringResource(Res.string.back)
+                            contentDescription = commonUi.back
                         )
                     }
                 }
@@ -80,19 +78,19 @@ fun SettingsMainScreen(component: SettingsMainComponent) {
             verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
         ) {
             CoreButton(
-                text = stringResource(Res.string.edit_auth_settings),
+                text = userUi.editAuthSettings,
                 onClick = component::onEditAuthSettingsClick,
                 modifier = Modifier.testTag(SettingsMainTestTags.EDIT_AUTH_SETTINGS_BUTTON)
             )
 
             CoreButton(
-                text = stringResource(Res.string.edit_global_settings),
+                text = userUi.editGlobalSettings,
                 onClick = component::onEditGlobalSettingsClick,
                 modifier = Modifier.testTag(SettingsMainTestTags.EDIT_GLOBAL_SETTINGS_BUTTON)
             )
 
             CoreButton(
-                text = stringResource(Res.string.edit_security_settings),
+                text = userUi.editSecuritySettings,
                 onClick = component::onEditSecuritySettingsClick,
                 modifier = Modifier.testTag(SettingsMainTestTags.EDIT_SECURITY_SETTINGS_BUTTON)
             )

@@ -5,13 +5,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.runComposeUiTest
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.captureAppScreen
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_apply
-import org.jetbrains.compose.resources.stringResource
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -37,7 +35,7 @@ class CoreButtonScreenshotTest(
             ComponentTestHarness {
                 Surface {
                     CoreButton(
-                        text = stringResource(Res.string.ui_common_apply),
+                        text = LocalCommonStrings.current.ui.apply,
                         onClick = {},
                         enabled = enabled
                     )

@@ -1,191 +1,109 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.error.parser
 
-import androidx.compose.runtime.Composable
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.AppErrorParser
-import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.resolveLocalizedString
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
 import io.github.mudrichenkoevgeny.kmp.core.common.time.formatEpochMillisToDateTime
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.naming.ClientUserErrorCodes
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_access_token_expired
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_banned
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_can_not_create_identifier
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_can_not_delete_identifier
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_email_not_allowed
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_external_linkage_failed
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_forbidden
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_identifier_limit_reached
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_identifier_limit_reached_args
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_identifier_password_not_set
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_identifier_password_not_supported
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_illegal_status
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_insufficient_authority
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_invalid_access_token
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_invalid_credentials
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_invalid_refresh_token
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_invalid_session
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_locked
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_locked_until
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_missing_permissions
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_not_found
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_password_setup_required
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_pending_deletion
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_read_only
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_registration_disabled
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_role_not_allowed
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_security_hold
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_self_service_unlock_disabled
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_total_identifiers_limit_reached
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_total_identifiers_limit_reached_args
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_wrong_confirmation_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_wrong_password
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes
-import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.stringResource
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.UserModuleStrings
 
 /**
- * [AppErrorParser] for user-related error codes.
- *
- * Handles authentication tokens, session states, account status restrictions,
- * permissions, and identifier management (limits for auth providers).
+ * [AppErrorParser] for user-related error codes using `shared-foundation` localization.
  */
-object UserErrorParser : AppErrorParser {
+open class UserErrorParser(
+    private val localeProvider: () -> String = { KmpLocalization.currentLocale }
+) : AppErrorParser {
 
-    @Composable
+    companion object : UserErrorParser()
+
     override fun parse(appError: AppError): String? {
         val args = appError.args ?: emptyMap()
+        val strings = UserModuleStrings(KmpLocalization.resolver, localeProvider())
 
         return when (appError.code) {
-            UserErrorCodes.INVALID_ACCESS_TOKEN ->
-                stringResource(Res.string.error_user_invalid_access_token)
+            UserErrorCodes.INVALID_ACCESS_TOKEN -> strings.errors.invalidAccessToken
 
-            UserErrorCodes.ACCESS_TOKEN_EXPIRED ->
-                stringResource(Res.string.error_user_access_token_expired)
+            UserErrorCodes.ACCESS_TOKEN_EXPIRED -> strings.errors.accessTokenExpired
 
-            UserErrorCodes.INVALID_REFRESH_TOKEN ->
-                stringResource(Res.string.error_user_invalid_refresh_token)
+            UserErrorCodes.INVALID_REFRESH_TOKEN -> strings.errors.invalidRefreshToken
 
-            UserErrorCodes.INVALID_SESSION ->
-                stringResource(Res.string.error_user_invalid_session)
+            UserErrorCodes.INVALID_SESSION -> strings.errors.invalidSession
 
-            UserErrorCodes.USER_BANNED ->
-                stringResource(Res.string.error_user_banned)
+            UserErrorCodes.USER_BANNED -> strings.errors.banned
 
             UserErrorCodes.USER_LOCKED -> {
                 val formattedUntil = formatEpochMillisToDateTime(args[UserErrorArgs.TEMPORARY_LOCKOUT_UNTIL])
                 if (formattedUntil != null) {
-                    stringResource(Res.string.error_user_locked_until, formattedUntil)
+                    strings.errors.locked(formattedUntil)
                 } else {
-                    stringResource(Res.string.error_user_locked)
+                    strings.errors.lockedWithoutArgs
                 }
             }
 
-            UserErrorCodes.SELF_SERVICE_UNLOCK_DISABLED ->
-                stringResource(Res.string.error_user_self_service_unlock_disabled)
+            UserErrorCodes.SELF_SERVICE_UNLOCK_DISABLED -> strings.errors.selfServiceUnlockDisabled
 
-            UserErrorCodes.USER_READ_ONLY ->
-                stringResource(Res.string.error_user_read_only)
+            UserErrorCodes.USER_READ_ONLY -> strings.errors.readOnly
 
-            UserErrorCodes.USER_SECURITY_HOLD ->
-                stringResource(Res.string.error_user_security_hold)
+            UserErrorCodes.USER_SECURITY_HOLD -> strings.errors.securityHold
 
-            UserErrorCodes.USER_PENDING_DELETION ->
-                stringResource(Res.string.error_user_pending_deletion)
+            UserErrorCodes.USER_PENDING_DELETION -> strings.errors.pendingDeletion
 
-            UserErrorCodes.USER_FORBIDDEN ->
-                stringResource(Res.string.error_user_forbidden)
+            UserErrorCodes.USER_FORBIDDEN -> strings.errors.forbidden
 
-            UserErrorCodes.USER_ROLE_NOT_ALLOWED ->
-                stringResource(Res.string.error_user_role_not_allowed)
+            UserErrorCodes.USER_ROLE_NOT_ALLOWED -> strings.errors.roleNotAllowed
 
-            UserErrorCodes.USER_MISSING_PERMISSIONS ->
-                stringResource(Res.string.error_user_missing_permissions)
+            UserErrorCodes.USER_MISSING_PERMISSIONS -> strings.errors.missingPermissions
 
-            UserErrorCodes.USER_ILLEGAL_ACCOUNT_STATUS ->
-                stringResource(Res.string.error_user_illegal_status)
+            UserErrorCodes.USER_ILLEGAL_ACCOUNT_STATUS -> strings.errors.illegalStatus
 
-            UserErrorCodes.USER_INSUFFICIENT_AUTHORITY_LEVEL ->
-                stringResource(Res.string.error_user_insufficient_authority)
+            UserErrorCodes.USER_INSUFFICIENT_AUTHORITY_LEVEL -> strings.errors.insufficientAuthority
 
-            UserErrorCodes.USER_NOT_FOUND ->
-                stringResource(Res.string.error_user_not_found)
+            UserErrorCodes.USER_NOT_FOUND -> strings.errors.notFound
 
-            UserErrorCodes.INVALID_CREDENTIALS ->
-                stringResource(Res.string.error_user_invalid_credentials)
+            UserErrorCodes.INVALID_CREDENTIALS -> strings.errors.invalidCredentials
 
-            UserErrorCodes.WRONG_PASSWORD ->
-                stringResource(Res.string.error_user_wrong_password)
+            UserErrorCodes.WRONG_PASSWORD -> strings.errors.wrongPassword
 
-            UserErrorCodes.PASSWORD_SETUP_REQUIRED ->
-                stringResource(Res.string.error_user_password_setup_required)
+            UserErrorCodes.PASSWORD_SETUP_REQUIRED -> strings.errors.passwordSetupRequired
 
-            UserErrorCodes.USER_IDENTIFIER_PASSWORD_NOT_SUPPORTED ->
-                stringResource(Res.string.error_user_identifier_password_not_supported)
+            UserErrorCodes.USER_IDENTIFIER_PASSWORD_NOT_SUPPORTED -> strings.errors.identifierPasswordNotSupported
 
-            UserErrorCodes.USER_IDENTIFIER_PASSWORD_NOT_SET ->
-                stringResource(Res.string.error_user_identifier_password_not_set)
+            UserErrorCodes.USER_IDENTIFIER_PASSWORD_NOT_SET -> strings.errors.identifierPasswordNotSet
 
-            UserErrorCodes.WRONG_CONFIRMATION_CODE ->
-                stringResource(Res.string.error_user_wrong_confirmation_code)
+            UserErrorCodes.WRONG_CONFIRMATION_CODE -> strings.errors.wrongConfirmationCode
 
-            UserErrorCodes.EXTERNAL_IDENTIFIER_LINKAGE_FAILED ->
-                stringResource(Res.string.error_user_external_linkage_failed)
+            UserErrorCodes.EXTERNAL_IDENTIFIER_LINKAGE_FAILED -> strings.errors.externalLinkageFailed
 
-            UserErrorCodes.CAN_NOT_DELETE_USER_IDENTIFIER ->
-                stringResource(Res.string.error_user_can_not_delete_identifier)
+            UserErrorCodes.CAN_NOT_DELETE_USER_IDENTIFIER -> strings.errors.canNotDeleteIdentifier
 
-            UserErrorCodes.CAN_NOT_CREATE_USER_IDENTIFIER ->
-                stringResource(Res.string.error_user_can_not_create_identifier)
+            UserErrorCodes.CAN_NOT_CREATE_USER_IDENTIFIER -> strings.errors.canNotCreateIdentifier
 
-            UserErrorCodes.EMAIL_NOT_ALLOWED ->
-                stringResource(Res.string.error_user_email_not_allowed)
+            UserErrorCodes.EMAIL_NOT_ALLOWED -> strings.errors.emailNotAllowed
 
-            UserErrorCodes.USER_IDENTIFIER_LIMIT_REACHED -> resolveLimit(
-                args = args,
-                providerKey = UserErrorArgs.USER_AUTH_PROVIDER,
-                limitKey = UserErrorArgs.MAX_NUMBER_OF_IDENTIFIERS,
-                withArgsRes = Res.string.error_user_identifier_limit_reached_args,
-                fallbackRes = Res.string.error_user_identifier_limit_reached
-            )
+            UserErrorCodes.USER_IDENTIFIER_LIMIT_REACHED -> {
+                val provider = args[UserErrorArgs.USER_AUTH_PROVIDER]
+                val limit = args[UserErrorArgs.MAX_NUMBER_OF_IDENTIFIERS]
+                if (!provider.isNullOrBlank() && !limit.isNullOrBlank()) {
+                    strings.errors.identifierLimitReached(limit, provider)
+                } else {
+                    strings.errors.identifierLimitReachedWithoutArgs
+                }
+            }
 
-            UserErrorCodes.TOTAL_USER_IDENTIFIERS_LIMIT_REACHED -> resolveLocalizedString(
-                args = args,
-                key = UserErrorArgs.MAX_NUMBER_OF_IDENTIFIERS,
-                withArgsRes = Res.string.error_user_total_identifiers_limit_reached_args,
-                fallbackRes = Res.string.error_user_total_identifiers_limit_reached
-            )
+            UserErrorCodes.TOTAL_USER_IDENTIFIERS_LIMIT_REACHED -> {
+                val limit = args[UserErrorArgs.MAX_NUMBER_OF_IDENTIFIERS]
+                if (!limit.isNullOrBlank()) {
+                    strings.errors.totalIdentifiersLimitReached(limit)
+                } else {
+                    strings.errors.totalIdentifiersLimitReachedWithoutArgs
+                }
+            }
 
-            ClientUserErrorCodes.REGISTRATION_DISABLED ->
-                stringResource(Res.string.error_user_registration_disabled)
+            ClientUserErrorCodes.REGISTRATION_DISABLED -> strings.errors.registrationDisabled
 
             else -> null
-        }
-    }
-
-    /**
-     * Resolves a localized limit error message that requires both a provider name and a limit value.
-     *
-     * @param args Error arguments.
-     * @param providerKey Key for the auth provider name (e.g. "GOOGLE").
-     * @param limitKey Key for the numeric limit value.
-     * @param withArgsRes Resource to use when both arguments are present.
-     * @param fallbackRes Resource to use when arguments are missing.
-     */
-    @Composable
-    private fun resolveLimit(
-        args: Map<String, String>,
-        providerKey: String,
-        limitKey: String,
-        withArgsRes: StringResource,
-        fallbackRes: StringResource
-    ): String {
-        val provider = args[providerKey]
-        val limit = args[limitKey]
-        return if (!provider.isNullOrBlank() && !limit.isNullOrBlank()) {
-            stringResource(withArgsRes, limit, provider)
-        } else {
-            stringResource(fallbackRes)
         }
     }
 }

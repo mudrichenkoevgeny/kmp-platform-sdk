@@ -46,31 +46,20 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.ui.screen.auth.login.phone.LoginByPhoneComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.change_phone_number
-import io.github.mudrichenkoevgeny.kmp.feature.user.code_sent_to
-import io.github.mudrichenkoevgeny.kmp.feature.user.confirm
-import io.github.mudrichenkoevgeny.kmp.feature.user.confirmation_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.enter_confirmation_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.enter_phone_number
-import io.github.mudrichenkoevgeny.kmp.feature.user.phone_number
-import io.github.mudrichenkoevgeny.kmp.feature.user.resend_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.resend_code_timer
-import io.github.mudrichenkoevgeny.kmp.feature.user.send_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.sign_in_with_phone
-import org.jetbrains.compose.resources.stringResource
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(Res.string.sign_in_with_phone)
+                        text = userUi.signInWithPhone
                     )
                 },
                 navigationIcon = {
@@ -127,6 +116,7 @@ private fun PhoneInputContent(
     onPhoneChanged: (String) -> Unit,
     onSendCodeClick: () -> Unit
 ) {
+    val userUi = LocalUserStrings.current.ui
     Column(
         modifier = Modifier
             .padding(CoreTheme.dimens.paddingLarge)
@@ -141,7 +131,7 @@ private fun PhoneInputContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CoreTitleText(
-                text = stringResource(Res.string.enter_phone_number),
+                text = userUi.enterPhoneNumber,
                 modifier = Modifier.testTag(LoginByPhoneTestTags.PHONE_STEP_TITLE)
             )
 
@@ -150,8 +140,8 @@ private fun PhoneInputContent(
             CoreOutlinedTextField(
                 value = state.phoneNumber,
                 onValueChange = onPhoneChanged,
-                label = { CoreBodyText(stringResource(Res.string.phone_number)) },
-                placeholder = { CoreBodyText(stringResource(Res.string.phone_number)) },
+                label = { CoreBodyText(userUi.phoneNumber) },
+                placeholder = { CoreBodyText(userUi.phoneNumber) },
                 modifier = Modifier.testTag(LoginByPhoneTestTags.PHONE_INPUT),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 singleLine = true,
@@ -169,7 +159,7 @@ private fun PhoneInputContent(
         }
 
         CoreButton(
-            text = stringResource(Res.string.send_code),
+            text = userUi.sendCode,
             onClick = onSendCodeClick,
             modifier = Modifier.testTag(LoginByPhoneTestTags.SEND_CODE_BUTTON),
             enabled = state.canSendCode
@@ -186,6 +176,7 @@ private fun CodeInputContent(
     onResendClick: () -> Unit,
     onChangePhoneClick: () -> Unit
 ) {
+    val userUi = LocalUserStrings.current.ui
     Column(
         modifier = Modifier
             .padding(CoreTheme.dimens.paddingLarge)
@@ -193,12 +184,12 @@ private fun CodeInputContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CoreTitleText(
-            text = stringResource(Res.string.enter_confirmation_code),
+            text = userUi.enterConfirmationCode,
             modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_STEP_TITLE)
         )
 
         CoreBodyText(
-            text = stringResource(Res.string.code_sent_to, phone),
+            text = userUi.codeSentTo(phone),
             modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_SENT_INFO_TEXT)
         )
 
@@ -212,8 +203,8 @@ private fun CodeInputContent(
             CoreCodeTextField(
                 value = state.code,
                 onValueChange = onCodeChanged,
-                label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
-                placeholder = { CoreBodyText(stringResource(Res.string.enter_confirmation_code)) },
+                label = { CoreBodyText(userUi.confirmationCode) },
+                placeholder = { CoreBodyText(userUi.enterConfirmationCode) },
                 modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_INPUT),
                 isError = state.actionError != null,
                 enabled = !state.actionLoading
@@ -231,12 +222,12 @@ private fun CodeInputContent(
 
             if (state.resendTimerSeconds > 0) {
                 CoreSmallText(
-                    text = stringResource(Res.string.resend_code_timer, state.resendTimerSeconds),
+                    text = userUi.resendCodeTimer(state.resendTimerSeconds),
                     modifier = Modifier.testTag(LoginByPhoneTestTags.RESEND_TIMER_TEXT)
                 )
             } else {
                 CoreTextButton(
-                    text = stringResource(Res.string.resend_code),
+                    text = userUi.resendCode,
                     onClick = onResendClick,
                     modifier = Modifier.testTag(LoginByPhoneTestTags.RESEND_CODE_BUTTON),
                     enabled = state.canResendCode
@@ -245,7 +236,7 @@ private fun CodeInputContent(
         }
 
         CoreButton(
-            text = stringResource(Res.string.confirm),
+            text = userUi.confirm,
             onClick = onConfirmClick,
             modifier = Modifier.testTag(LoginByPhoneTestTags.CONFIRM_BUTTON),
             enabled = state.canConfirmCode
@@ -254,7 +245,7 @@ private fun CodeInputContent(
         Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
         CoreTextButton(
-            text = stringResource(Res.string.change_phone_number),
+            text = userUi.changePhoneNumber,
             onClick = onChangePhoneClick,
             modifier = Modifier.testTag(LoginByPhoneTestTags.CHANGE_PHONE_BUTTON),
             enabled = !state.actionLoading

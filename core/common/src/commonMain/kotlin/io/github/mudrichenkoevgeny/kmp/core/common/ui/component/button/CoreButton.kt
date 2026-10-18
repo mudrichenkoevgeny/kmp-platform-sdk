@@ -16,14 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_apply
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Custom SDK button component accepting a text string.
@@ -115,7 +113,7 @@ private fun CoreButtonComponentSizePreview() {
     CoreTheme {
         Surface {
             CoreButton(
-                text = stringResource(Res.string.ui_common_apply),
+                text = LocalCommonStrings.current.ui.apply,
                 onClick = {}
             )
         }
@@ -129,7 +127,7 @@ private fun CoreButtonThemePreview() {
     CoreTheme {
         Surface {
             CoreButton(
-                text = stringResource(Res.string.ui_common_apply),
+                text = LocalCommonStrings.current.ui.apply,
                 onClick = {}
             )
         }
@@ -143,7 +141,7 @@ private fun CoreButtonFontScalePreview() {
     CoreTheme {
         Surface {
             CoreButton(
-                text = stringResource(Res.string.ui_common_apply),
+                text = LocalCommonStrings.current.ui.apply,
                 onClick = {}
             )
         }

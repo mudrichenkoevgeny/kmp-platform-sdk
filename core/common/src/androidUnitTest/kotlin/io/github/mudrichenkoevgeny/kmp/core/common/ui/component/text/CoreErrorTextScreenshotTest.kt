@@ -5,13 +5,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.runComposeUiTest
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
-import io.github.mudrichenkoevgeny.kmp.core.common.error_common_unknown
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.captureAppScreen
-import org.jetbrains.compose.resources.stringResource
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -36,7 +34,7 @@ class CoreErrorTextScreenshotTest(
             ComponentTestHarness {
                 Surface {
                     CoreErrorText(
-                        text = stringResource(Res.string.error_common_unknown)
+                        text = LocalCommonStrings.current.errors.unknown
                     )
                 }
             }

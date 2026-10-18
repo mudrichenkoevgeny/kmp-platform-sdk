@@ -51,31 +51,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.reset_to_defaults
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogChild
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res as UserRes
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_cancel
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm_title
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.contact_support_email
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.edit_global_settings_title
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.is_metrics_enabled
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.is_tracing_enabled
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.is_verbose_logging_enabled
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.min_supported_app_versions
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.min_version_android
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.min_version_desktop
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.min_version_ios
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.min_version_web
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.settings.global.EditGlobalSettingsComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.privacy_policy_url
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.reset_to_defaults
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.save
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.saving
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.telemetry_and_logging
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.terms_of_service_url
-import org.jetbrains.compose.resources.stringResource
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogChild
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 
 /**
  * Screen for editing global settings.
@@ -86,13 +64,14 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun EditGlobalSettingsScreen(component: EditGlobalSettingsComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(Res.string.edit_global_settings_title),
+                        text = userUi.editGlobalSettingsTitle,
                         modifier = Modifier.testTag(EditGlobalSettingsTestTags.TITLE)
                     )
                 },
@@ -148,17 +127,17 @@ fun EditGlobalSettingsScreen(component: EditGlobalSettingsComponent) {
                         is SettingsDialogChild.ConfirmReset -> {
                             AlertDialog(
                                 onDismissRequest = component::onDismissDialog,
-                                title = { CoreTitleText(text = stringResource(UserRes.string.dialog_confirm_title)) },
-                                text = { CoreBodyText(text = stringResource(Res.string.reset_to_defaults)) },
+                                title = { CoreTitleText(text = userUi.dialogConfirmTitle) },
+                                text = { CoreBodyText(text = userUi.resetToDefaults) },
                                 confirmButton = {
                                     CoreTextButton(
-                                        text = stringResource(UserRes.string.dialog_confirm),
+                                        text = userUi.dialogConfirm,
                                         onClick = component::onConfirmReset
                                     )
                                 },
                                 dismissButton = {
                                     CoreTextButton(
-                                        text = stringResource(UserRes.string.dialog_cancel),
+                                        text = userUi.dialogCancel,
                                         onClick = component::onDismissDialog
                                     )
                                 }
@@ -188,6 +167,8 @@ private fun EditGlobalSettingsForm(
     onResetClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val userUi = LocalUserStrings.current.ui
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
@@ -195,56 +176,56 @@ private fun EditGlobalSettingsForm(
         CoreOutlinedTextField(
             value = state.privacyPolicyUrl,
             onValueChange = onPrivacyPolicyUrlChanged,
-            label = { CoreBodyText(stringResource(Res.string.privacy_policy_url)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.privacy_policy_url)) },
+            label = { CoreBodyText(userUi.privacyPolicyUrl) },
+            placeholder = { CoreBodyText(userUi.privacyPolicyUrl) },
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.PRIVACY_POLICY_URL_INPUT)
         )
 
         CoreOutlinedTextField(
             value = state.termsOfServiceUrl,
             onValueChange = onTermsOfServiceUrlChanged,
-            label = { CoreBodyText(stringResource(Res.string.terms_of_service_url)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.terms_of_service_url)) },
+            label = { CoreBodyText(userUi.termsOfServiceUrl) },
+            placeholder = { CoreBodyText(userUi.termsOfServiceUrl) },
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.TERMS_OF_SERVICE_URL_INPUT)
         )
 
         CoreOutlinedTextField(
             value = state.contactSupportEmail,
             onValueChange = onContactSupportEmailChanged,
-            label = { CoreBodyText(stringResource(Res.string.contact_support_email)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.contact_support_email)) },
+            label = { CoreBodyText(userUi.contactSupportEmail) },
+            placeholder = { CoreBodyText(userUi.contactSupportEmail) },
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.CONTACT_SUPPORT_EMAIL_INPUT)
         )
 
         CoreTitleText(
-            text = stringResource(Res.string.telemetry_and_logging),
+            text = userUi.telemetryAndLogging,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.SECTION_TELEMETRY_TITLE)
         )
 
         ToggleRow(
-            label = stringResource(Res.string.is_tracing_enabled),
+            label = userUi.isTracingEnabled,
             checked = state.isTracingEnabled,
             onCheckedChange = onTracingEnabledToggled,
             testTag = EditGlobalSettingsTestTags.IS_TRACING_ENABLED_CHECKBOX
         )
 
         ToggleRow(
-            label = stringResource(Res.string.is_metrics_enabled),
+            label = userUi.isMetricsEnabled,
             checked = state.isMetricsEnabled,
             onCheckedChange = onMetricsEnabledToggled,
             testTag = EditGlobalSettingsTestTags.IS_METRICS_ENABLED_CHECKBOX
         )
 
         ToggleRow(
-            label = stringResource(Res.string.is_verbose_logging_enabled),
+            label = userUi.isVerboseLoggingEnabled,
             checked = state.isVerboseLoggingEnabled,
             onCheckedChange = onVerboseLoggingEnabledToggled,
             testTag = EditGlobalSettingsTestTags.IS_VERBOSE_LOGGING_ENABLED_CHECKBOX
         )
 
         CoreTitleText(
-            text = stringResource(Res.string.min_supported_app_versions),
+            text = userUi.minSupportedAppVersions,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.SECTION_MIN_VERSIONS_TITLE)
         )
@@ -252,32 +233,32 @@ private fun EditGlobalSettingsForm(
         CoreOutlinedTextField(
             value = state.minVersionAndroid,
             onValueChange = onMinVersionAndroidChanged,
-            label = { CoreBodyText(stringResource(Res.string.min_version_android)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.min_version_android)) },
+            label = { CoreBodyText(userUi.minVersionAndroid) },
+            placeholder = { CoreBodyText(userUi.minVersionAndroid) },
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.MIN_VERSION_ANDROID_INPUT)
         )
 
         CoreOutlinedTextField(
             value = state.minVersionIos,
             onValueChange = onMinVersionIosChanged,
-            label = { CoreBodyText(stringResource(Res.string.min_version_ios)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.min_version_ios)) },
+            label = { CoreBodyText(userUi.minVersionIos) },
+            placeholder = { CoreBodyText(userUi.minVersionIos) },
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.MIN_VERSION_IOS_INPUT)
         )
 
         CoreOutlinedTextField(
             value = state.minVersionWeb,
             onValueChange = onMinVersionWebChanged,
-            label = { CoreBodyText(stringResource(Res.string.min_version_web)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.min_version_web)) },
+            label = { CoreBodyText(userUi.minVersionWeb) },
+            placeholder = { CoreBodyText(userUi.minVersionWeb) },
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.MIN_VERSION_WEB_INPUT)
         )
 
         CoreOutlinedTextField(
             value = state.minVersionDesktop,
             onValueChange = onMinVersionDesktopChanged,
-            label = { CoreBodyText(stringResource(Res.string.min_version_desktop)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.min_version_desktop)) },
+            label = { CoreBodyText(userUi.minVersionDesktop) },
+            placeholder = { CoreBodyText(userUi.minVersionDesktop) },
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.MIN_VERSION_DESKTOP_INPUT)
         )
 
@@ -287,14 +268,14 @@ private fun EditGlobalSettingsForm(
         )
 
         CoreButton(
-            text = stringResource(if (state.isSaving) Res.string.saving else Res.string.save),
+            text = if (state.isSaving) userUi.saving else userUi.save,
             onClick = onSaveClick,
             enabled = !state.isSaving,
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.SAVE_BUTTON)
         )
 
         CoreTextButton(
-            text = stringResource(Res.string.reset_to_defaults),
+            text = userUi.resetToDefaults,
             onClick = onResetClick,
             enabled = !state.isSaving,
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.RESET_BUTTON)

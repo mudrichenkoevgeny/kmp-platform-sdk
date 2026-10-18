@@ -44,34 +44,24 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_action
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_actor
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_details_title
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_id
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_message
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_metadata
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_resource
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_status
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_timestamp
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_event_updated_at
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.audit.detail.AuditEventDetailComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
-import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuditEventDetailScreen(component: AuditEventDetailComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(Res.string.audit_event_details_title),
+                        text = userUi.auditEventDetailsTitle,
                         modifier = Modifier.testTag(AuditEventDetailTestTags.TITLE)
                     )
                 },
@@ -116,6 +106,7 @@ private fun Content(
     onSubjectClick: () -> Unit
 ) {
     val event = state.event
+    val userUi = LocalUserStrings.current.ui
 
     val resourceName = event.resource.value
     val isResourceClickable = event.resourceId != null && (
@@ -152,7 +143,7 @@ private fun Content(
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
         CoreTitleText(
-            text = "${stringResource(Res.string.audit_event_id)}: ${event.id.value}",
+            text = "${userUi.auditEventId}: ${event.id.value}",
             style = MaterialTheme.typography.titleMedium
         )
 
@@ -165,40 +156,40 @@ private fun Content(
                 verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
             ) {
                 DetailRow(
-                    label = stringResource(Res.string.audit_event_action),
+                    label = userUi.auditEventAction,
                     value = event.action.value
                 )
                 DetailRow(
-                    label = stringResource(Res.string.audit_event_status),
+                    label = userUi.auditEventStatus,
                     value = event.status.value
                 )
                 DetailRow(
-                    label = stringResource(Res.string.audit_event_resource),
+                    label = userUi.auditEventResource,
                     value = resourceValue,
                     modifier = Modifier.testTag(AuditEventDetailTestTags.RESOURCE_ROW),
                     onClick = if (isResourceClickable) onResourceClick else null
                 )
                 DetailRow(
-                    label = stringResource(Res.string.audit_event_actor),
+                    label = userUi.auditEventActor,
                     value = subjectValue,
                     modifier = Modifier.testTag(AuditEventDetailTestTags.SUBJECT_ROW),
                     onClick = if (isSubjectClickable) onSubjectClick else null
                 )
                 event.message?.let { msg ->
                     DetailRow(
-                        label = stringResource(Res.string.audit_event_message),
+                        label = userUi.auditEventMessage,
                         value = msg
                     )
                 }
                 val timestampFormatted = formatInstantToDateTime(event.createdAt) ?: event.createdAt.toString()
                 DetailRow(
-                    label = stringResource(Res.string.audit_event_timestamp),
+                    label = userUi.auditEventTimestamp,
                     value = timestampFormatted
                 )
                 event.updatedAt?.let { updatedAt ->
                     val updatedAtFormatted = formatInstantToDateTime(updatedAt) ?: updatedAt.toString()
                     DetailRow(
-                        label = stringResource(Res.string.audit_event_updated_at),
+                        label = userUi.auditEventUpdatedAt,
                         value = updatedAtFormatted
                     )
                 }
@@ -215,7 +206,7 @@ private fun Content(
                     verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
                 ) {
                     CoreTitleText(
-                        text = stringResource(Res.string.audit_event_metadata),
+                        text = userUi.auditEventMetadata,
                         style = MaterialTheme.typography.titleSmall
                     )
 

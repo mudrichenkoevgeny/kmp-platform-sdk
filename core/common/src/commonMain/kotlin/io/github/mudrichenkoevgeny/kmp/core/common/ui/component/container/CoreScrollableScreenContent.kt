@@ -18,15 +18,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.scrollbar.CoreVerticalScrollbar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_action
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Core container for screen body content supporting vertical scrolling.
@@ -78,7 +76,7 @@ private fun CoreScrollableScreenContentComponentSizePreview() {
     CoreTheme {
         Surface {
             CoreScrollableScreenContent {
-                Text(stringResource(Res.string.ui_common_action))
+                Text(LocalCommonStrings.current.ui.action)
             }
         }
     }
@@ -91,7 +89,7 @@ private fun CoreScrollableScreenContentThemePreview() {
     CoreTheme {
         Surface {
             CoreScrollableScreenContent {
-                Text(stringResource(Res.string.ui_common_action))
+                Text(LocalCommonStrings.current.ui.action)
             }
         }
     }
@@ -104,7 +102,7 @@ private fun CoreScrollableScreenContentFontScalePreview() {
     CoreTheme {
         Surface {
             CoreScrollableScreenContent {
-                Text(stringResource(Res.string.ui_common_action))
+                Text(LocalCommonStrings.current.ui.action)
             }
         }
     }

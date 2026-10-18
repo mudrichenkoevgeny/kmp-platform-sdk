@@ -24,14 +24,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.audit_logs
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.identifiers
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.management_settings_title
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.main.MainManagementComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.sessions
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.users_management
-import org.jetbrains.compose.resources.stringResource
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 
 object MainManagementTestTags {
     const val TITLE = "MainManagement_Title"
@@ -45,12 +39,14 @@ object MainManagementTestTags {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainManagementScreen(component: MainManagementComponent) {
+    val userUi = LocalUserStrings.current.ui
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(Res.string.users_management),
+                        text = userUi.usersManagement,
                         modifier = Modifier.testTag(MainManagementTestTags.TITLE)
                     )
                 }
@@ -66,31 +62,31 @@ fun MainManagementScreen(component: MainManagementComponent) {
             verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
         ) {
             CoreButton(
-                text = stringResource(Res.string.users_management),
+                text = userUi.usersManagement,
                 onClick = component::onGlobalUserListClick,
                 modifier = Modifier.testTag(MainManagementTestTags.GLOBAL_USER_LIST_BUTTON)
             )
 
             CoreButton(
-                text = stringResource(Res.string.sessions),
+                text = userUi.sessions,
                 onClick = component::onGlobalSessionListClick,
                 modifier = Modifier.testTag(MainManagementTestTags.SESSIONS_BUTTON)
             )
 
             CoreButton(
-                text = stringResource(Res.string.identifiers),
+                text = userUi.identifiers,
                 onClick = component::onGlobalIdentifierListClick,
                 modifier = Modifier.testTag(MainManagementTestTags.IDENTIFIERS_BUTTON)
             )
 
             CoreButton(
-                text = stringResource(Res.string.audit_logs),
+                text = userUi.auditLogs,
                 onClick = component::onAuditEventListClick,
                 modifier = Modifier.testTag(MainManagementTestTags.AUDIT_EVENT_LIST_BUTTON)
             )
 
             CoreButton(
-                text = stringResource(Res.string.management_settings_title),
+                text = userUi.managementSettingsTitle,
                 onClick = component::onSettingsClick,
                 modifier = Modifier.testTag(MainManagementTestTags.SETTINGS_BUTTON)
             )

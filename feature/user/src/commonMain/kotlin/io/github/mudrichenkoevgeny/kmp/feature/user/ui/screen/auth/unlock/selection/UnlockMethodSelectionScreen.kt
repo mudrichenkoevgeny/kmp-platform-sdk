@@ -45,31 +45,25 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_locked
-import io.github.mudrichenkoevgeny.kmp.feature.user.error_user_locked_until
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.unlock.selection.UnlockMethodSelectionComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_by_apple
-import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_by_email
-import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_by_google
-import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_by_phone
-import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_choose_method
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UnlockMethodSelectionScreen(component: UnlockMethodSelectionComponent) {
     val state by component.state.subscribeAsState()
+    val userStrings = LocalUserStrings.current
+    val userUi = userStrings.ui
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(Res.string.unlock_choose_method),
+                        text = userUi.unlockChooseMethod,
                         modifier = Modifier.testTag(UnlockMethodSelectionTestTags.TITLE)
                     )
                 },
@@ -104,13 +98,13 @@ fun UnlockMethodSelectionScreen(component: UnlockMethodSelectionComponent) {
                         state.lockoutType == AccountLockoutType.TEMPORARY && state.lockoutUntil != null -> {
                             val formattedDateTime = formatEpochMillisToDateTime(state.lockoutUntil)
                             if (formattedDateTime != null) {
-                                stringResource(Res.string.error_user_locked_until, formattedDateTime)
+                                userStrings.errors.locked(formattedDateTime)
                             } else {
-                                stringResource(Res.string.error_user_locked)
+                                userStrings.errors.lockedWithoutArgs
                             }
                         }
                         state.lockoutType != null && state.lockoutType != AccountLockoutType.NONE -> {
-                            stringResource(Res.string.error_user_locked)
+                            userStrings.errors.lockedWithoutArgs
                         }
                         else -> null
                     }
@@ -127,7 +121,7 @@ fun UnlockMethodSelectionScreen(component: UnlockMethodSelectionComponent) {
 
                     if (state.isEmailAvailable) {
                         CoreButton(
-                            text = stringResource(Res.string.unlock_by_email),
+                            text = userUi.unlockByEmail,
                             onClick = component::onSelectEmailUnlock,
                             modifier = Modifier.testTag(UnlockMethodSelectionTestTags.UNLOCK_EMAIL_BUTTON),
                             enabled = !state.actionLoading
@@ -138,7 +132,7 @@ fun UnlockMethodSelectionScreen(component: UnlockMethodSelectionComponent) {
 
                     if (state.isPhoneAvailable) {
                         CoreButton(
-                            text = stringResource(Res.string.unlock_by_phone),
+                            text = userUi.unlockByPhone,
                             onClick = component::onSelectPhoneUnlock,
                             modifier = Modifier.testTag(UnlockMethodSelectionTestTags.UNLOCK_PHONE_BUTTON),
                             enabled = !state.actionLoading
@@ -149,7 +143,7 @@ fun UnlockMethodSelectionScreen(component: UnlockMethodSelectionComponent) {
 
                     if (state.isGoogleAvailable) {
                         CoreButton(
-                            text = stringResource(Res.string.unlock_by_google),
+                            text = userUi.unlockByGoogle,
                             onClick = component::onSelectGoogleUnlock,
                             modifier = Modifier.testTag(UnlockMethodSelectionTestTags.UNLOCK_GOOGLE_BUTTON),
                             enabled = !state.actionLoading
@@ -160,7 +154,7 @@ fun UnlockMethodSelectionScreen(component: UnlockMethodSelectionComponent) {
 
                     if (state.isAppleAvailable) {
                         CoreButton(
-                            text = stringResource(Res.string.unlock_by_apple),
+                            text = userUi.unlockByApple,
                             onClick = component::onSelectAppleUnlock,
                             modifier = Modifier.testTag(UnlockMethodSelectionTestTags.UNLOCK_APPLE_BUTTON),
                             enabled = !state.actionLoading

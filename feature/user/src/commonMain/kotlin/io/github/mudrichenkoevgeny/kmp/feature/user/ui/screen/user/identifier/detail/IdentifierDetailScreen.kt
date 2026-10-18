@@ -35,6 +35,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.time.formatInstantToDateTime
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
@@ -54,30 +55,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.cancel
-import io.github.mudrichenkoevgeny.kmp.feature.user.change_password
-import io.github.mudrichenkoevgeny.kmp.feature.user.confirm
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_cancel
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm_title
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_delete_button
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_delete_password_button
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_auth_provider
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_created_at
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_external_email
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_id
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_title
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_title_current
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_updated_at
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_detail_value
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.identifier.detail.IdentifierDetailComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.new_password
-import io.github.mudrichenkoevgeny.kmp.feature.user.not_available
-import io.github.mudrichenkoevgeny.kmp.feature.user.old_password
-import io.github.mudrichenkoevgeny.kmp.feature.user.user_id
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Screen displaying detailed information and management actions for a specific user identifier.
@@ -88,19 +68,20 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun IdentifierDetailScreen(component: IdentifierDetailComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     val currentContent = state as? IdentifierDetailScreenState.Content
-                    val titleRes = if (currentContent?.isCurrentIdentifier == true) {
-                        Res.string.identifier_detail_title_current
+                    val titleText = if (currentContent?.isCurrentIdentifier == true) {
+                        userUi.identifierDetailTitleCurrent
                     } else {
-                        Res.string.identifier_detail_title
+                        userUi.identifierDetailTitle
                     }
                     CoreScreenTitleText(
-                        text = stringResource(titleRes),
+                        text = titleText,
                         modifier = Modifier.testTag(IdentifierDetailTestTags.TITLE)
                     )
                 },
@@ -157,6 +138,8 @@ private fun Content(
     onUserClick: () -> Unit
 ) {
     val identifier = state.identifier
+    val userUi = LocalUserStrings.current.ui
+    val commonUi = LocalCommonStrings.current.ui
 
     CoreScrollableScreenContent {
         Card(
@@ -177,44 +160,44 @@ private fun Content(
                 HorizontalDivider()
 
                 DetailRow(
-                    label = stringResource(Res.string.user_id, "").replace(":", "").replace("%1\$s", "").trim(),
+                    label = commonUi.userId,
                     value = identifier.userId.asHexDashString(),
                     modifier = Modifier.testTag(IdentifierDetailTestTags.USER_ROW),
                     onClick = onUserClick
                 )
 
                 DetailRow(
-                    label = stringResource(Res.string.identifier_detail_value),
+                    label = userUi.identifierDetailValue,
                     value = identifier.identifier
                 )
 
                 DetailRow(
-                    label = stringResource(Res.string.identifier_detail_id),
+                    label = userUi.identifierDetailId,
                     value = identifier.id.asHexDashString()
                 )
 
                 DetailRow(
-                    label = stringResource(Res.string.identifier_detail_auth_provider),
+                    label = userUi.identifierDetailAuthProvider,
                     value = identifier.userAuthProvider.name
                 )
 
                 DetailRow(
-                    label = stringResource(Res.string.identifier_detail_external_email),
-                    value = identifier.externalProviderEmail ?: stringResource(Res.string.not_available)
+                    label = userUi.identifierDetailExternalEmail,
+                    value = identifier.externalProviderEmail ?: commonUi.denied
                 )
 
                 val createdAtFormatted = formatInstantToDateTime(identifier.createdAt)
                     ?: identifier.createdAt.toString()
                 DetailRow(
-                    label = stringResource(Res.string.identifier_detail_created_at),
+                    label = userUi.identifierDetailCreatedAt,
                     value = createdAtFormatted
                 )
 
                 val updatedAtFormatted = identifier.updatedAt?.let { updatedAt ->
                     formatInstantToDateTime(updatedAt) ?: updatedAt.toString()
-                } ?: stringResource(Res.string.not_available)
+                } ?: commonUi.denied
                 DetailRow(
-                    label = stringResource(Res.string.identifier_detail_updated_at),
+                    label = userUi.identifierDetailUpdatedAt,
                     value = updatedAtFormatted
                 )
             }
@@ -229,7 +212,7 @@ private fun Content(
 
         if (state.canChangePassword) {
             CoreButton(
-                text = stringResource(Res.string.change_password),
+                text = userUi.changePassword,
                 onClick = onChangePasswordClick,
                 enabled = !state.actionLoading,
                 modifier = Modifier
@@ -240,7 +223,7 @@ private fun Content(
 
         if (state.canDeletePassword) {
             CoreButton(
-                text = stringResource(Res.string.identifier_delete_password_button),
+                text = userUi.identifierDeletePasswordButton,
                 onClick = onDeletePasswordClick,
                 enabled = !state.actionLoading,
                 colors = ButtonDefaults.buttonColors(
@@ -255,7 +238,7 @@ private fun Content(
 
         if (!state.isCurrentIdentifier && !state.isSelfIdentifier) {
             CoreButton(
-                text = stringResource(Res.string.identifier_delete_button),
+                text = userUi.identifierDeleteButton,
                 onClick = onDeleteIdentifierRequested,
                 enabled = !state.actionLoading,
                 colors = ButtonDefaults.buttonColors(
@@ -281,17 +264,17 @@ private fun Content(
     if (state.isDeleteConfirmationVisible) {
         AlertDialog(
             onDismissRequest = onDismissDeleteIdentifierDialog,
-            title = { CoreTitleText(stringResource(Res.string.dialog_confirm_title)) },
+            title = { CoreTitleText(userUi.dialogConfirmTitle) },
             confirmButton = {
                 CoreTextButton(
-                    text = stringResource(Res.string.dialog_confirm),
+                    text = userUi.dialogConfirm,
                     onClick = onDeleteIdentifierConfirm,
                     enabled = !state.actionLoading
                 )
             },
             dismissButton = {
                 CoreTextButton(
-                    text = stringResource(Res.string.dialog_cancel),
+                    text = userUi.dialogCancel,
                     onClick = onDismissDeleteIdentifierDialog,
                     enabled = !state.actionLoading
                 )
@@ -335,10 +318,11 @@ private fun ChangePasswordDialog(
     var newPassword by remember { mutableStateOf("") }
     var isOldPasswordVisible by remember { mutableStateOf(false) }
     var isNewPasswordVisible by remember { mutableStateOf(false) }
+    val userUi = LocalUserStrings.current.ui
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { CoreTitleText(text = stringResource(Res.string.change_password)) },
+        title = { CoreTitleText(text = userUi.changePassword) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)) {
                 CorePasswordTextField(
@@ -346,8 +330,8 @@ private fun ChangePasswordDialog(
                     onValueChange = { oldPassword = it },
                     isPasswordVisible = isOldPasswordVisible,
                     onTogglePasswordVisibility = { isOldPasswordVisible = !isOldPasswordVisible },
-                    label = { CoreBodyText(stringResource(Res.string.old_password)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.old_password)) },
+                    label = { CoreBodyText(userUi.oldPassword) },
+                    placeholder = { CoreBodyText(userUi.oldPassword) },
                     enabled = !loading,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -356,8 +340,8 @@ private fun ChangePasswordDialog(
                     onValueChange = { newPassword = it },
                     isPasswordVisible = isNewPasswordVisible,
                     onTogglePasswordVisibility = { isNewPasswordVisible = !isNewPasswordVisible },
-                    label = { CoreBodyText(stringResource(Res.string.new_password)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.new_password)) },
+                    label = { CoreBodyText(userUi.newPassword) },
+                    placeholder = { CoreBodyText(userUi.newPassword) },
                     enabled = !loading,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -372,14 +356,14 @@ private fun ChangePasswordDialog(
         },
         confirmButton = {
             CoreTextButton(
-                text = stringResource(Res.string.confirm),
+                text = userUi.confirm,
                 onClick = { onConfirm(oldPassword, newPassword) },
                 enabled = !loading && oldPassword.isNotBlank() && newPassword.isNotBlank()
             )
         },
         dismissButton = {
             CoreTextButton(
-                text = stringResource(Res.string.cancel),
+                text = userUi.cancel,
                 onClick = onDismiss,
                 enabled = !loading
             )

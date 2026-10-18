@@ -60,42 +60,29 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.add_identifier
-import io.github.mudrichenkoevgeny.kmp.feature.user.cancel
-import io.github.mudrichenkoevgeny.kmp.feature.user.change_email
-import io.github.mudrichenkoevgeny.kmp.feature.user.change_phone_number
-import io.github.mudrichenkoevgeny.kmp.feature.user.code_sent_to
-import io.github.mudrichenkoevgeny.kmp.feature.user.confirmation_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.enter_confirmation_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifiers
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.identifier.SelfIdentifierListComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.password
-import io.github.mudrichenkoevgeny.kmp.feature.user.phone_number
-import io.github.mudrichenkoevgeny.kmp.feature.user.resend_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.resend_code_timer
-import io.github.mudrichenkoevgeny.kmp.feature.user.send_code
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth.AuthProviderButton
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth.AuthProviderButtonMode
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth.AuthProviderGrid
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.identifier.item.IdentifierItem
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelfIdentifierListScreen(component: SelfIdentifierListComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(Res.string.identifiers),
+                        text = userUi.identifiers,
                         modifier = Modifier.testTag(IdentifierListTestTags.TITLE)
                     )
                 },
@@ -128,7 +115,7 @@ fun SelfIdentifierListScreen(component: SelfIdentifierListComponent) {
                         .padding(CoreTheme.dimens.paddingMedium)
                 ) {
                     CoreButton(
-                        text = stringResource(Res.string.add_identifier),
+                        text = userUi.addIdentifier,
                         onClick = component::onAddIdentifierClick,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -184,11 +171,12 @@ private fun AddIdentifierDialog(
     dialogChild: SelfIdentifierListComponent.AddIdentifierDialogChild,
     component: SelfIdentifierListComponent
 ) {
+    val userUi = LocalUserStrings.current.ui
     AlertDialog(
         onDismissRequest = component::onAddIdentifierDialogDismiss,
         title = {
             CoreTitleText(
-                text = stringResource(Res.string.add_identifier),
+                text = userUi.addIdentifier,
                 modifier = Modifier.testTag(IdentifierListTestTags.ADD_IDENTIFIER_DIALOG_TITLE)
             )
         },
@@ -229,20 +217,20 @@ private fun AddIdentifierDialog(
                             )
 
                             CoreButton(
-                                text = stringResource(Res.string.send_code),
+                                text = userUi.sendCode,
                                 onClick = component::onAddIdentifierSendCode,
                                 enabled = contentState.isAddEmailValid && !contentState.actionLoading,
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
                         is SelfIdentifierListComponent.AddIdentifierDialogChild.EmailConfirm -> {
-                            CoreBodyText(stringResource(Res.string.code_sent_to, dialogChild.email))
+                            CoreBodyText(userUi.codeSentTo(dialogChild.email))
 
                             CoreCodeTextField(
                                 value = contentState.addCode,
                                 onValueChange = component::onAddIdentifierCodeChanged,
-                                label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
-                                placeholder = { CoreBodyText(stringResource(Res.string.enter_confirmation_code)) },
+                                label = { CoreBodyText(userUi.confirmationCode) },
+                                placeholder = { CoreBodyText(userUi.enterConfirmationCode) },
                                 modifier = Modifier.fillMaxWidth()
                             )
 
@@ -251,30 +239,30 @@ private fun AddIdentifierDialog(
                             CoreOutlinedTextField(
                                 value = contentState.addPassword,
                                 onValueChange = component::onAddIdentifierPasswordChanged,
-                                label = { CoreBodyText(stringResource(Res.string.password)) },
-                                placeholder = { CoreBodyText(stringResource(Res.string.password)) },
+                                label = { CoreBodyText(userUi.password) },
+                                placeholder = { CoreBodyText(userUi.password) },
                                 modifier = Modifier.fillMaxWidth()
                             )
 
                             if (contentState.addResendTimerSeconds > 0) {
-                                CoreSmallText(stringResource(Res.string.resend_code_timer, contentState.addResendTimerSeconds))
+                                CoreSmallText(userUi.resendCodeTimer(contentState.addResendTimerSeconds))
                             } else {
                                 CoreTextButton(
-                                    text = stringResource(Res.string.resend_code),
+                                    text = userUi.resendCode,
                                     onClick = component::onAddIdentifierSendCode,
                                     enabled = contentState.canResendCode
                                 )
                             }
 
                             CoreButton(
-                                text = stringResource(Res.string.add_identifier),
+                                text = userUi.addIdentifier,
                                 onClick = component::onAddIdentifierSubmit,
                                 enabled = contentState.canSubmitAddEmail,
                                 modifier = Modifier.fillMaxWidth()
                             )
 
                             CoreTextButton(
-                                text = stringResource(Res.string.change_email),
+                                text = userUi.changeEmail,
                                 onClick = component::onAddIdentifierDialogBack
                             )
                         }
@@ -282,50 +270,50 @@ private fun AddIdentifierDialog(
                             CoreOutlinedTextField(
                                 value = contentState.addPhone,
                                 onValueChange = component::onAddIdentifierPhoneChanged,
-                                label = { CoreBodyText(stringResource(Res.string.phone_number)) },
-                                placeholder = { CoreBodyText(stringResource(Res.string.phone_number)) },
+                                label = { CoreBodyText(userUi.phoneNumber) },
+                                placeholder = { CoreBodyText(userUi.phoneNumber) },
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                                 singleLine = true,
                                 modifier = Modifier.fillMaxWidth()
                             )
 
                             CoreButton(
-                                text = stringResource(Res.string.send_code),
+                                text = userUi.sendCode,
                                 onClick = component::onAddIdentifierSendCode,
                                 enabled = contentState.isAddPhoneValid && !contentState.actionLoading,
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
                         is SelfIdentifierListComponent.AddIdentifierDialogChild.PhoneConfirm -> {
-                            CoreBodyText(stringResource(Res.string.code_sent_to, dialogChild.phone))
+                            CoreBodyText(userUi.codeSentTo(dialogChild.phone))
 
                             CoreCodeTextField(
                                 value = contentState.addCode,
                                 onValueChange = component::onAddIdentifierCodeChanged,
-                                label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
-                                placeholder = { CoreBodyText(stringResource(Res.string.enter_confirmation_code)) },
+                                label = { CoreBodyText(userUi.confirmationCode) },
+                                placeholder = { CoreBodyText(userUi.enterConfirmationCode) },
                                 modifier = Modifier.fillMaxWidth()
                             )
 
                             if (contentState.addResendTimerSeconds > 0) {
-                                CoreSmallText(stringResource(Res.string.resend_code_timer, contentState.addResendTimerSeconds))
+                                CoreSmallText(userUi.resendCodeTimer(contentState.addResendTimerSeconds))
                             } else {
                                 CoreTextButton(
-                                    text = stringResource(Res.string.resend_code),
+                                    text = userUi.resendCode,
                                     onClick = component::onAddIdentifierSendCode,
                                     enabled = contentState.canResendCode
                                 )
                             }
 
                             CoreButton(
-                                text = stringResource(Res.string.add_identifier),
+                                text = userUi.addIdentifier,
                                 onClick = component::onAddIdentifierSubmit,
                                 enabled = contentState.canSubmitAddPhone,
                                 modifier = Modifier.fillMaxWidth()
                             )
 
                             CoreTextButton(
-                                text = stringResource(Res.string.change_phone_number),
+                                text = userUi.changePhoneNumber,
                                 onClick = component::onAddIdentifierDialogBack
                             )
                         }
@@ -347,7 +335,7 @@ private fun AddIdentifierDialog(
         },
         confirmButton = {
             CoreTextButton(
-                text = stringResource(Res.string.cancel),
+                text = userUi.cancel,
                 onClick = component::onAddIdentifierDialogDismiss
             )
         }

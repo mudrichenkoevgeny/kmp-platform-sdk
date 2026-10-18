@@ -24,19 +24,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ChoiceListingFilterDefinition
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterChoiceOption
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_all
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_clear_all
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_search_placeholder
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_select_all
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_selected_count
-import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,11 +43,12 @@ fun ListingChoiceDropdown(
     var isExpanded by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
 
+    val commonUi = LocalCommonStrings.current.ui
     val selectedOptions = filter.options.filter { selectedIds.contains(it.id) }
     val displayValue = when {
-        selectedOptions.isEmpty() -> stringResource(Res.string.ui_common_all)
+        selectedOptions.isEmpty() -> commonUi.all
         selectedOptions.size <= 2 -> selectedOptions.joinToString(", ") { it.title }
-        else -> stringResource(Res.string.ui_common_selected_count, selectedOptions.size)
+        else -> commonUi.selectedCount(selectedOptions.size)
     }
 
     val filteredOptions = if (searchQuery.isBlank()) {
@@ -93,7 +88,7 @@ fun ListingChoiceDropdown(
                     OutlinedTextField(
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
-                        placeholder = { Text(text = stringResource(Res.string.ui_common_search_placeholder)) },
+                        placeholder = { Text(text = commonUi.searchPlaceholder) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = CoreTheme.dimens.paddingMedium)
@@ -114,7 +109,7 @@ fun ListingChoiceDropdown(
                             }
                         ) {
                             Text(
-                                text = stringResource(Res.string.ui_common_select_all),
+                                text = commonUi.selectAll,
                                 style = MaterialTheme.typography.labelMedium
                             )
                         }
@@ -124,7 +119,7 @@ fun ListingChoiceDropdown(
                             }
                         ) {
                             Text(
-                                text = stringResource(Res.string.ui_common_clear_all),
+                                text = commonUi.clearAll,
                                 style = MaterialTheme.typography.labelMedium
                             )
                         }

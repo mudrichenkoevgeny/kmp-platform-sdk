@@ -39,13 +39,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_apple
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_email
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_google
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_phone
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_last_accessed
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_revoke
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * A list item representing an active authenticated user session.
@@ -66,6 +64,7 @@ fun SessionItem(
     isCurrentSession: Boolean = false,
     onSessionClick: (() -> Unit)? = null
 ) {
+    val userUi = LocalUserStrings.current.ui
     val cardColors = if (isCurrentSession) {
         CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
     } else {
@@ -118,7 +117,7 @@ fun SessionItem(
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
             val formattedDate = formatInstantToDateTime(session.lastAccessedAt) ?: session.lastAccessedAt.toString()
             Text(
-                text = stringResource(Res.string.session_last_accessed, formattedDate),
+                text = userUi.sessionLastAccessed(formattedDate),
                 style = MaterialTheme.typography.bodySmall
             )
 
@@ -135,7 +134,7 @@ fun SessionItem(
                         contentColor = MaterialTheme.colorScheme.onErrorContainer
                     )
                 ) {
-                    Text(stringResource(Res.string.session_revoke))
+                    Text(userUi.sessionRevoke)
                 }
             }
         }

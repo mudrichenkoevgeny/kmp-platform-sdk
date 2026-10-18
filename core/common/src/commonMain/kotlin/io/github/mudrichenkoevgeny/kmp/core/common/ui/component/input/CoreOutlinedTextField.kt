@@ -10,14 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.VisualTransformation
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_message
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Custom SDK outlined text field component styled with [CoreTheme] defaults.
@@ -80,7 +78,7 @@ private fun CoreOutlinedTextFieldComponentSizePreview() {
             CoreOutlinedTextField(
                 value = "",
                 onValueChange = {},
-                placeholder = { Text(stringResource(Res.string.ui_common_message)) }
+                placeholder = { Text(LocalCommonStrings.current.ui.message) }
             )
         }
     }
@@ -95,7 +93,7 @@ private fun CoreOutlinedTextFieldThemePreview() {
             CoreOutlinedTextField(
                 value = "",
                 onValueChange = {},
-                placeholder = { Text(stringResource(Res.string.ui_common_message)) }
+                placeholder = { Text(LocalCommonStrings.current.ui.message) }
             )
         }
     }
@@ -110,7 +108,7 @@ private fun CoreOutlinedTextFieldFontScalePreview() {
             CoreOutlinedTextField(
                 value = "",
                 onValueChange = {},
-                placeholder = { Text(stringResource(Res.string.ui_common_message)) }
+                placeholder = { Text(LocalCommonStrings.current.ui.message) }
             )
         }
     }

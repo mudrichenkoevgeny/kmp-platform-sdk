@@ -47,7 +47,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.root.UserRoot
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.LocalClientAppComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.mock.di.clientAppComponentMock
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Sample shell with navigation, Decompose stack for tabs, and an optional login dialog slot.
@@ -160,7 +159,7 @@ private fun MobileLayout(
                                 modifier = Modifier.size(CoreTheme.dimens.progressIndicatorSizeSmall)
                             )
                         },
-                        label = { Text(stringResource(dest.title)) }
+                        label = { Text(dest.title()) }
                     )
                 }
             }
@@ -193,11 +192,11 @@ private fun WebLayout(
                     icon = {
                         Icon(
                             painter = painterResource(dest.iconRes),
-                            contentDescription = stringResource(dest.title),
+                            contentDescription = dest.title(),
                             modifier = Modifier.size(CoreTheme.dimens.progressIndicatorSizeSmall)
                         )
                     },
-                    label = { Text(stringResource(dest.title)) }
+                    label = { Text(dest.title()) }
                 )
             }
         }

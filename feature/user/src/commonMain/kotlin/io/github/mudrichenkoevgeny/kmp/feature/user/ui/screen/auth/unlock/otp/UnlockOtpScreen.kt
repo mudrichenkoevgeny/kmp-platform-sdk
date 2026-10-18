@@ -45,27 +45,22 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.confirmation_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.enter_confirmation_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.unlock.otp.UnlockOtpComponentMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.UnlockMethod
-import io.github.mudrichenkoevgeny.kmp.feature.user.resend_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.resend_code_timer
-import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_account
-import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UnlockOtpScreen(component: UnlockOtpComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(Res.string.unlock_account),
+                        text = userUi.unlockAccount,
                         modifier = Modifier.testTag(UnlockOtpTestTags.TITLE)
                     )
                 },
@@ -98,15 +93,15 @@ fun UnlockOtpScreen(component: UnlockOtpComponent) {
                 CoreCodeTextField(
                     value = state.codeInput,
                     onValueChange = component::onCodeChanged,
-                    label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.enter_confirmation_code)) },
+                    label = { CoreBodyText(userUi.confirmationCode) },
+                    placeholder = { CoreBodyText(userUi.enterConfirmationCode) },
                     modifier = Modifier.testTag(UnlockOtpTestTags.CODE_INPUT),
                     isError = state.actionError != null,
                     enabled = !state.actionLoading
                 )
 
                 CoreButton(
-                    text = stringResource(Res.string.unlock_account),
+                    text = userUi.unlockAccount,
                     onClick = component::onUnlockClick,
                     modifier = Modifier.testTag(UnlockOtpTestTags.UNLOCK_BUTTON),
                     enabled = !state.actionLoading && state.codeInput.isNotBlank()
@@ -114,13 +109,13 @@ fun UnlockOtpScreen(component: UnlockOtpComponent) {
 
                 if (state.remainingDelaySeconds > 0) {
                     CoreBodyText(
-                        text = stringResource(Res.string.resend_code_timer, state.remainingDelaySeconds),
+                        text = userUi.resendCodeTimer(state.remainingDelaySeconds),
                         color = MaterialTheme.colorScheme.outline,
                         modifier = Modifier.testTag(UnlockOtpTestTags.RESEND_TIMER_TEXT)
                     )
                 } else {
                     CoreTextButton(
-                        text = stringResource(Res.string.resend_code),
+                        text = userUi.resendCode,
                         onClick = component::onResendCodeClick,
                         modifier = Modifier.testTag(UnlockOtpTestTags.RESEND_BUTTON),
                         enabled = !state.actionLoading

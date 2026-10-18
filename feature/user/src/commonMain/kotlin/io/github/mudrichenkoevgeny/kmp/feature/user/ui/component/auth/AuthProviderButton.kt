@@ -27,17 +27,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_apple
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_email
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_google
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_phone
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_add_apple
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_add_email
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_add_google
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifier_add_phone
-import io.github.mudrichenkoevgeny.kmp.feature.user.sign_in_with_apple
-import io.github.mudrichenkoevgeny.kmp.feature.user.sign_in_with_email
-import io.github.mudrichenkoevgeny.kmp.feature.user.sign_in_with_google
-import io.github.mudrichenkoevgeny.kmp.feature.user.sign_in_with_phone
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Full-width button for a single [UserAuthProvider] (icon + localized label), styled with [CoreButton].
@@ -56,6 +48,7 @@ fun AuthProviderButton(
     enabled: Boolean = true,
     mode: AuthProviderButtonMode = AuthProviderButtonMode.SIGN_IN
 ) {
+    val userUi = LocalUserStrings.current.ui
     CoreButton(
         onClick = onClick,
         modifier = modifier,
@@ -85,16 +78,16 @@ fun AuthProviderButton(
 
         val authProviderText = when (mode) {
             AuthProviderButtonMode.SIGN_IN -> when (authProvider) {
-                UserAuthProvider.EMAIL -> stringResource(Res.string.sign_in_with_email)
-                UserAuthProvider.PHONE -> stringResource(Res.string.sign_in_with_phone)
-                UserAuthProvider.GOOGLE -> stringResource(Res.string.sign_in_with_google)
-                UserAuthProvider.APPLE -> stringResource(Res.string.sign_in_with_apple)
+                UserAuthProvider.EMAIL -> userUi.signInWithEmail
+                UserAuthProvider.PHONE -> userUi.signInWithPhone
+                UserAuthProvider.GOOGLE -> userUi.signInWithGoogle
+                UserAuthProvider.APPLE -> userUi.signInWithApple
             }
             AuthProviderButtonMode.ADD -> when (authProvider) {
-                UserAuthProvider.EMAIL -> stringResource(Res.string.identifier_add_email)
-                UserAuthProvider.PHONE -> stringResource(Res.string.identifier_add_phone)
-                UserAuthProvider.GOOGLE -> stringResource(Res.string.identifier_add_google)
-                UserAuthProvider.APPLE -> stringResource(Res.string.identifier_add_apple)
+                UserAuthProvider.EMAIL -> userUi.identifierAddEmail
+                UserAuthProvider.PHONE -> userUi.identifierAddPhone
+                UserAuthProvider.GOOGLE -> userUi.identifierAddGoogle
+                UserAuthProvider.APPLE -> userUi.identifierAddApple
             }
         }
 

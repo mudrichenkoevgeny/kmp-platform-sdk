@@ -33,29 +33,21 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.authority_level
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.create_user
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.create_user_title
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.email
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.create.CreateUserComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.password
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.saving
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_account_status
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.user_role
-import org.jetbrains.compose.resources.stringResource
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateUserScreen(component: CreateUserComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(Res.string.create_user_title),
+                        text = userUi.createUserTitle,
                         modifier = Modifier.testTag(CreateUserTestTags.TITLE)
                     )
                 },
@@ -94,14 +86,16 @@ private fun CreateUserForm(
     onAuthorityLevelChanged: (String) -> Unit,
     onCreateClick: () -> Unit
 ) {
+    val userUi = LocalUserStrings.current.ui
+
     Column(
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
         CoreEmailTextField(
             value = state.email,
             onValueChange = onEmailChanged,
-            label = { CoreBodyText(stringResource(Res.string.email)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.email)) },
+            label = { CoreBodyText(userUi.email) },
+            placeholder = { CoreBodyText(userUi.email) },
             modifier = Modifier.testTag(CreateUserTestTags.EMAIL_INPUT),
             enabled = !state.isLoading
         )
@@ -109,8 +103,8 @@ private fun CreateUserForm(
         CoreOutlinedTextField(
             value = state.password,
             onValueChange = onPasswordChanged,
-            label = { CoreBodyText(stringResource(Res.string.password)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.password)) },
+            label = { CoreBodyText(userUi.password) },
+            placeholder = { CoreBodyText(userUi.password) },
             modifier = Modifier.testTag(CreateUserTestTags.PASSWORD_INPUT),
             enabled = !state.isLoading
         )
@@ -118,8 +112,8 @@ private fun CreateUserForm(
         CoreOutlinedTextField(
             value = state.role,
             onValueChange = onRoleChanged,
-            label = { CoreBodyText(stringResource(Res.string.user_role)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.user_role)) },
+            label = { CoreBodyText(userUi.userRole) },
+            placeholder = { CoreBodyText(userUi.userRole) },
             modifier = Modifier.testTag(CreateUserTestTags.ROLE_INPUT),
             enabled = !state.isLoading
         )
@@ -127,8 +121,8 @@ private fun CreateUserForm(
         CoreOutlinedTextField(
             value = state.status,
             onValueChange = onStatusChanged,
-            label = { CoreBodyText(stringResource(Res.string.user_account_status)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.user_account_status)) },
+            label = { CoreBodyText(userUi.userAccountStatus) },
+            placeholder = { CoreBodyText(userUi.userAccountStatus) },
             modifier = Modifier.testTag(CreateUserTestTags.STATUS_INPUT),
             enabled = !state.isLoading
         )
@@ -136,14 +130,14 @@ private fun CreateUserForm(
         CoreOutlinedTextField(
             value = state.authorityLevel,
             onValueChange = onAuthorityLevelChanged,
-            label = { CoreBodyText(stringResource(Res.string.authority_level)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.authority_level)) },
+            label = { CoreBodyText(userUi.authorityLevel) },
+            placeholder = { CoreBodyText(userUi.authorityLevel) },
             modifier = Modifier.testTag(CreateUserTestTags.AUTHORITY_LEVEL_INPUT),
             enabled = !state.isLoading
         )
 
         CoreButton(
-            text = stringResource(if (state.isLoading) Res.string.saving else Res.string.create_user),
+            text = if (state.isLoading) userUi.saving else userUi.createUser,
             onClick = onCreateClick,
             modifier = Modifier.testTag(CreateUserTestTags.CREATE_BUTTON),
             enabled = !state.isLoading

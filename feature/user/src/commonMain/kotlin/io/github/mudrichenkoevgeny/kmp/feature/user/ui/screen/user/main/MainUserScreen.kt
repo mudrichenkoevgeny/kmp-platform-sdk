@@ -36,8 +36,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_refresh
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
-import io.github.mudrichenkoevgeny.kmp.core.common.retry
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
@@ -50,21 +50,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.delete_account
-import io.github.mudrichenkoevgeny.kmp.feature.user.delete_account_confirm_msg
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_cancel
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm_title
-import io.github.mudrichenkoevgeny.kmp.feature.user.identifiers
-import io.github.mudrichenkoevgeny.kmp.feature.user.logout
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.main.MainUserComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.sessions
-import io.github.mudrichenkoevgeny.kmp.feature.user.sign_in
-import io.github.mudrichenkoevgeny.kmp.feature.user.totp_main
-import io.github.mudrichenkoevgeny.kmp.feature.user.user_id
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
 object MainUserTestTags {
@@ -79,6 +67,8 @@ object MainUserTestTags {
 @Composable
 fun MainUserScreen(component: MainUserComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
+    val commonUi = LocalCommonStrings.current.ui
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -95,7 +85,7 @@ fun MainUserScreen(component: MainUserComponent) {
                         ) {
                             Icon(
                                 painter = painterResource(CommonRes.drawable.ic_refresh),
-                                contentDescription = stringResource(CommonRes.string.retry),
+                                contentDescription = commonUi.retry,
                                 modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
                             )
                         }
@@ -129,17 +119,17 @@ fun MainUserScreen(component: MainUserComponent) {
                         if (current.isDeleteConfirmationVisible) {
                             AlertDialog(
                                 onDismissRequest = component::onDismissDeleteUserDialog,
-                                title = { CoreTitleText(text = stringResource(Res.string.dialog_confirm_title)) },
-                                text = { CoreBodyText(text = stringResource(Res.string.delete_account_confirm_msg)) },
+                                title = { CoreTitleText(text = userUi.dialogConfirmTitle) },
+                                text = { CoreBodyText(text = userUi.deleteAccountConfirmMsg) },
                                 confirmButton = {
                                     CoreButton(
-                                        text = stringResource(Res.string.dialog_confirm),
+                                        text = userUi.dialogConfirm,
                                         onClick = component::onConfirmDeleteUserClick
                                     )
                                 },
                                 dismissButton = {
                                     CoreTextButton(
-                                        text = stringResource(Res.string.dialog_cancel),
+                                        text = userUi.dialogCancel,
                                         onClick = component::onDismissDeleteUserDialog
                                     )
                                 }
@@ -172,6 +162,7 @@ private fun UnauthorizedUserContent(
     actionError: AppError?,
     onLoginClick: () -> Unit
 ) {
+    val userUi = LocalUserStrings.current.ui
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -188,7 +179,7 @@ private fun UnauthorizedUserContent(
         }
 
         CoreButton(
-            text = stringResource(Res.string.sign_in),
+            text = userUi.signIn,
             onClick = onLoginClick,
             modifier = Modifier.testTag(MainUserTestTags.LOGIN_BUTTON)
         )
@@ -205,6 +196,8 @@ private fun MainUserContent(
     onLogoutClick: () -> Unit
 ) {
     val scrollState = rememberScrollState()
+    val userUi = LocalUserStrings.current.ui
+    val commonUi = LocalCommonStrings.current.ui
 
     Column(
         modifier = Modifier
@@ -229,14 +222,14 @@ private fun MainUserContent(
         }
 
         CoreBodyText(
-            text = "${stringResource(Res.string.user_id)}: ${state.user.id.asHexDashString()}",
+            text = "${commonUi.userId}: ${state.user.id.asHexDashString()}",
             modifier = Modifier.testTag(MainUserTestTags.USER_ID_TEXT)
         )
 
         Spacer(modifier = Modifier.height(CoreTheme.dimens.paddingLarge))
 
         CoreButton(
-            text = stringResource(Res.string.totp_main),
+            text = userUi.totpMain,
             onClick = onTotpMainClick,
             modifier = Modifier.fillMaxWidth()
         )
@@ -244,7 +237,7 @@ private fun MainUserContent(
         Spacer(modifier = Modifier.height(CoreTheme.dimens.paddingSmall))
 
         CoreButton(
-            text = stringResource(Res.string.sessions),
+            text = userUi.sessions,
             onClick = onSessionsClick,
             modifier = Modifier.fillMaxWidth()
         )
@@ -252,7 +245,7 @@ private fun MainUserContent(
         Spacer(modifier = Modifier.height(CoreTheme.dimens.paddingSmall))
 
         CoreButton(
-            text = stringResource(Res.string.identifiers),
+            text = userUi.identifiers,
             onClick = onIdentifiersClick,
             modifier = Modifier.fillMaxWidth()
         )
@@ -260,7 +253,7 @@ private fun MainUserContent(
         Spacer(modifier = Modifier.height(CoreTheme.dimens.paddingLarge))
 
         CoreButton(
-            text = stringResource(Res.string.delete_account),
+            text = userUi.deleteAccount,
             onClick = onDeleteAccountClick,
             modifier = Modifier.fillMaxWidth()
         )
@@ -268,7 +261,7 @@ private fun MainUserContent(
         Spacer(modifier = Modifier.height(CoreTheme.dimens.paddingSmall))
 
         CoreButton(
-            text = stringResource(Res.string.logout),
+            text = userUi.logout,
             onClick = onLogoutClick,
             modifier = Modifier
                 .fillMaxWidth()

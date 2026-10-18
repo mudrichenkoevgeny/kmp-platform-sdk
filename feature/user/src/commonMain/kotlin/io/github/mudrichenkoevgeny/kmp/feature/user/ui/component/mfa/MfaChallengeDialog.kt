@@ -26,15 +26,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.cancel
-import io.github.mudrichenkoevgeny.kmp.feature.user.confirm
-import io.github.mudrichenkoevgeny.kmp.feature.user.mfa_step_up_desc
-import io.github.mudrichenkoevgeny.kmp.feature.user.mfa_step_up_title
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.mfa.MfaChallengeRequest
-import io.github.mudrichenkoevgeny.kmp.feature.user.totp_code
 import kotlinx.coroutines.CompletableDeferred
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Renders a step-up authentication dialog prompting the user for a TOTP code.
@@ -51,20 +45,21 @@ fun MfaChallengeDialog(
     onCancel: () -> Unit
 ) {
     var codeInput by remember(request.mfaToken) { mutableStateOf("") }
+    val userUi = LocalUserStrings.current.ui
 
     AlertDialog(
         onDismissRequest = onCancel,
         properties = DialogProperties(usePlatformDefaultWidth = false),
         title = {
             CoreTitleText(
-                text = stringResource(Res.string.mfa_step_up_title),
+                text = userUi.mfaStepUpTitle,
                 modifier = Modifier.testTag(MfaChallengeDialogTestTags.TITLE)
             )
         },
         text = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 CoreBodyText(
-                    text = stringResource(Res.string.mfa_step_up_desc),
+                    text = userUi.mfaStepUpDesc,
                     modifier = Modifier.testTag(MfaChallengeDialogTestTags.DESC)
                 )
 
@@ -73,8 +68,8 @@ fun MfaChallengeDialog(
                 CoreOutlinedTextField(
                     value = codeInput,
                     onValueChange = { codeInput = it },
-                    label = { CoreBodyText(stringResource(Res.string.totp_code)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.totp_code)) },
+                    label = { CoreBodyText(userUi.totpCode) },
+                    placeholder = { CoreBodyText(userUi.totpCode) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -84,7 +79,7 @@ fun MfaChallengeDialog(
         },
         confirmButton = {
             CoreTextButton(
-                text = stringResource(Res.string.confirm),
+                text = userUi.confirm,
                 onClick = { onConfirm(codeInput) },
                 enabled = codeInput.isNotBlank(),
                 modifier = Modifier.testTag(MfaChallengeDialogTestTags.CONFIRM_BUTTON)
@@ -92,7 +87,7 @@ fun MfaChallengeDialog(
         },
         dismissButton = {
             CoreTextButton(
-                text = stringResource(Res.string.cancel),
+                text = userUi.cancel,
                 onClick = onCancel,
                 modifier = Modifier.testTag(MfaChallengeDialogTestTags.CANCEL_BUTTON)
             )

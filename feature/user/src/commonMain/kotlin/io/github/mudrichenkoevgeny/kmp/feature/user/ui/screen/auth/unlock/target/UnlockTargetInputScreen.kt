@@ -48,31 +48,24 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.enter_phone_number
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.unlock.target.UnlockTargetInputComponentMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.UnlockMethod
-import io.github.mudrichenkoevgeny.kmp.feature.user.phone_number
-import io.github.mudrichenkoevgeny.kmp.feature.user.send_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_by_email
-import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_by_phone
-import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_email_input_desc
-import io.github.mudrichenkoevgeny.kmp.feature.user.unlock_phone_input_desc
-import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UnlockTargetInputScreen(component: UnlockTargetInputComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
 
-    val titleRes = when (state.method) {
-        UnlockMethod.EMAIL -> Res.string.unlock_by_email
-        UnlockMethod.PHONE -> Res.string.unlock_by_phone
+    val titleText = when (state.method) {
+        UnlockMethod.EMAIL -> userUi.unlockByEmail
+        UnlockMethod.PHONE -> userUi.unlockByPhone
     }
 
-    val descRes = when (state.method) {
-        UnlockMethod.EMAIL -> Res.string.unlock_email_input_desc
-        UnlockMethod.PHONE -> Res.string.unlock_phone_input_desc
+    val descText = when (state.method) {
+        UnlockMethod.EMAIL -> userUi.unlockEmailInputDesc
+        UnlockMethod.PHONE -> userUi.unlockPhoneInputDesc
     }
 
     Scaffold(
@@ -80,7 +73,7 @@ fun UnlockTargetInputScreen(component: UnlockTargetInputComponent) {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(titleRes),
+                        text = titleText,
                         modifier = Modifier.testTag(UnlockTargetInputTestTags.TITLE)
                     )
                 },
@@ -112,7 +105,7 @@ fun UnlockTargetInputScreen(component: UnlockTargetInputComponent) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     CoreBodyText(
-                        text = stringResource(descRes),
+                        text = descText,
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
@@ -134,8 +127,8 @@ fun UnlockTargetInputScreen(component: UnlockTargetInputComponent) {
                             CoreOutlinedTextField(
                                 value = state.input,
                                 onValueChange = component::onInputChanged,
-                                label = { CoreBodyText(stringResource(Res.string.phone_number)) },
-                                placeholder = { CoreBodyText(stringResource(Res.string.enter_phone_number)) },
+                                label = { CoreBodyText(userUi.phoneNumber) },
+                                placeholder = { CoreBodyText(userUi.enterPhoneNumber) },
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                                 modifier = Modifier.testTag(UnlockTargetInputTestTags.INPUT),
                                 isError = state.actionError != null,
@@ -148,7 +141,7 @@ fun UnlockTargetInputScreen(component: UnlockTargetInputComponent) {
                 }
 
                 CoreButton(
-                    text = stringResource(Res.string.send_code),
+                    text = userUi.sendCode,
                     onClick = component::onSendCodeClick,
                     modifier = Modifier.testTag(UnlockTargetInputTestTags.SUBMIT_BUTTON),
                     enabled = state.canSendCode

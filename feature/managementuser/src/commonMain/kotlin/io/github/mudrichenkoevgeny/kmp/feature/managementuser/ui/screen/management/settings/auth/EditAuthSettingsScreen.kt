@@ -53,39 +53,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.Res
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.reset_to_defaults
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogChild
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res as UserRes
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_cancel
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm_title
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.access_token_expiration_seconds
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.account_deletion_check_interval_seconds
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.account_deletion_delay_seconds
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.blacklist_enabled
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.edit_auth_settings_title
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.email_blacklist_placeholder
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.email_whitelist_placeholder
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.enabled_auth_providers
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.is_registration_enabled
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.limits_and_expirations
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.management_email_restriction_policy
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.max_active_sessions_management
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.max_active_sessions_open
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.max_email_identifiers
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.max_identifiers_per_external_provider
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.max_phone_identifiers
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.max_total_identifiers
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.settings.auth.EditAuthSettingsComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.open_email_restriction_policy
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.refresh_token_expiration_seconds
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.reset_to_defaults
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.save
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.saving
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.whitelist_enabled
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogChild
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Screen for editing authentication settings.
@@ -96,13 +67,14 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun EditAuthSettingsScreen(component: EditAuthSettingsComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(Res.string.edit_auth_settings_title),
+                        text = userUi.editAuthSettingsTitle,
                         modifier = Modifier.testTag(EditAuthSettingsTestTags.TITLE)
                     )
                 },
@@ -168,17 +140,17 @@ fun EditAuthSettingsScreen(component: EditAuthSettingsComponent) {
                         is SettingsDialogChild.ConfirmReset -> {
                             AlertDialog(
                                 onDismissRequest = component::onDismissDialog,
-                                title = { CoreTitleText(text = stringResource(UserRes.string.dialog_confirm_title)) },
-                                text = { CoreBodyText(text = stringResource(Res.string.reset_to_defaults)) },
+                                title = { CoreTitleText(text = userUi.dialogConfirmTitle) },
+                                text = { CoreBodyText(text = userUi.resetToDefaults) },
                                 confirmButton = {
                                     CoreTextButton(
-                                        text = stringResource(UserRes.string.dialog_confirm),
+                                        text = userUi.dialogConfirm,
                                         onClick = component::onConfirmReset
                                     )
                                 },
                                 dismissButton = {
                                     CoreTextButton(
-                                        text = stringResource(UserRes.string.dialog_cancel),
+                                        text = userUi.dialogCancel,
                                         onClick = component::onDismissDialog
                                     )
                                 }
@@ -218,12 +190,14 @@ private fun EditAuthSettingsForm(
     onResetClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val userUi = LocalUserStrings.current.ui
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
         CoreTitleText(
-            text = stringResource(Res.string.enabled_auth_providers),
+            text = userUi.enabledAuthProviders,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.testTag(EditAuthSettingsTestTags.SECTION_PROVIDERS_TITLE)
         )
@@ -257,13 +231,13 @@ private fun EditAuthSettingsForm(
                 modifier = Modifier.testTag(EditAuthSettingsTestTags.IS_REGISTRATION_ENABLED_CHECKBOX)
             )
             CoreBodyText(
-                text = stringResource(Res.string.is_registration_enabled),
+                text = userUi.isRegistrationEnabled,
                 modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
             )
         }
 
         CoreTitleText(
-            text = stringResource(Res.string.limits_and_expirations),
+            text = userUi.limitsAndExpirations,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.testTag(EditAuthSettingsTestTags.SECTION_LIMITS_TITLE)
         )
@@ -271,8 +245,8 @@ private fun EditAuthSettingsForm(
         CoreOutlinedTextField(
             value = state.maxTotalIdentifiers,
             onValueChange = onMaxTotalIdentifiersChanged,
-            label = { CoreBodyText(stringResource(Res.string.max_total_identifiers)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.max_total_identifiers)) },
+            label = { CoreBodyText(userUi.maxTotalIdentifiers) },
+            placeholder = { CoreBodyText(userUi.maxTotalIdentifiers) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_TOTAL_IDENTIFIERS_INPUT)
         )
@@ -280,8 +254,8 @@ private fun EditAuthSettingsForm(
         CoreOutlinedTextField(
             value = state.maxEmailIdentifiers,
             onValueChange = onMaxEmailIdentifiersChanged,
-            label = { CoreBodyText(stringResource(Res.string.max_email_identifiers)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.max_email_identifiers)) },
+            label = { CoreBodyText(userUi.maxEmailIdentifiers) },
+            placeholder = { CoreBodyText(userUi.maxEmailIdentifiers) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_EMAIL_IDENTIFIERS_INPUT)
         )
@@ -289,8 +263,8 @@ private fun EditAuthSettingsForm(
         CoreOutlinedTextField(
             value = state.maxPhoneIdentifiers,
             onValueChange = onMaxPhoneIdentifiersChanged,
-            label = { CoreBodyText(stringResource(Res.string.max_phone_identifiers)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.max_phone_identifiers)) },
+            label = { CoreBodyText(userUi.maxPhoneIdentifiers) },
+            placeholder = { CoreBodyText(userUi.maxPhoneIdentifiers) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_PHONE_IDENTIFIERS_INPUT)
         )
@@ -298,8 +272,8 @@ private fun EditAuthSettingsForm(
         CoreOutlinedTextField(
             value = state.maxIdentifiersPerExternalProvider,
             onValueChange = onMaxIdentifiersPerExternalProviderChanged,
-            label = { CoreBodyText(stringResource(Res.string.max_identifiers_per_external_provider)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.max_identifiers_per_external_provider)) },
+            label = { CoreBodyText(userUi.maxIdentifiersPerExternalProvider) },
+            placeholder = { CoreBodyText(userUi.maxIdentifiersPerExternalProvider) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_IDENTIFIERS_PER_EXTERNAL_PROVIDER_INPUT)
         )
@@ -307,8 +281,8 @@ private fun EditAuthSettingsForm(
         CoreOutlinedTextField(
             value = state.maxActiveSessionsForOpenUser,
             onValueChange = onMaxActiveSessionsForOpenUserChanged,
-            label = { CoreBodyText(stringResource(Res.string.max_active_sessions_open)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.max_active_sessions_open)) },
+            label = { CoreBodyText(userUi.maxActiveSessionsOpen) },
+            placeholder = { CoreBodyText(userUi.maxActiveSessionsOpen) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_ACTIVE_SESSIONS_OPEN_INPUT)
         )
@@ -316,8 +290,8 @@ private fun EditAuthSettingsForm(
         CoreOutlinedTextField(
             value = state.maxActiveSessionsForManagementUser,
             onValueChange = onMaxActiveSessionsForManagementUserChanged,
-            label = { CoreBodyText(stringResource(Res.string.max_active_sessions_management)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.max_active_sessions_management)) },
+            label = { CoreBodyText(userUi.maxActiveSessionsManagement) },
+            placeholder = { CoreBodyText(userUi.maxActiveSessionsManagement) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_ACTIVE_SESSIONS_MANAGEMENT_INPUT)
         )
@@ -325,8 +299,8 @@ private fun EditAuthSettingsForm(
         CoreOutlinedTextField(
             value = state.accessTokenExpirationSeconds,
             onValueChange = onAccessTokenExpirationSecondsChanged,
-            label = { CoreBodyText(stringResource(Res.string.access_token_expiration_seconds)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.access_token_expiration_seconds)) },
+            label = { CoreBodyText(userUi.accessTokenExpirationSeconds) },
+            placeholder = { CoreBodyText(userUi.accessTokenExpirationSeconds) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.testTag(EditAuthSettingsTestTags.ACCESS_TOKEN_EXPIRATION_INPUT)
         )
@@ -334,8 +308,8 @@ private fun EditAuthSettingsForm(
         CoreOutlinedTextField(
             value = state.refreshTokenExpirationSeconds,
             onValueChange = onRefreshTokenExpirationSecondsChanged,
-            label = { CoreBodyText(stringResource(Res.string.refresh_token_expiration_seconds)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.refresh_token_expiration_seconds)) },
+            label = { CoreBodyText(userUi.refreshTokenExpirationSeconds) },
+            placeholder = { CoreBodyText(userUi.refreshTokenExpirationSeconds) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.testTag(EditAuthSettingsTestTags.REFRESH_TOKEN_EXPIRATION_INPUT)
         )
@@ -343,8 +317,8 @@ private fun EditAuthSettingsForm(
         CoreOutlinedTextField(
             value = state.accountDeletionGracePeriodSeconds,
             onValueChange = onAccountDeletionGracePeriodSecondsChanged,
-            label = { CoreBodyText(stringResource(Res.string.account_deletion_delay_seconds)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.account_deletion_delay_seconds)) },
+            label = { CoreBodyText(userUi.accountDeletionDelaySeconds) },
+            placeholder = { CoreBodyText(userUi.accountDeletionDelaySeconds) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.testTag(EditAuthSettingsTestTags.ACCOUNT_DELETION_DELAY_INPUT)
         )
@@ -352,14 +326,14 @@ private fun EditAuthSettingsForm(
         CoreOutlinedTextField(
             value = state.accountDeletionCheckIntervalSeconds,
             onValueChange = onAccountDeletionCheckIntervalSecondsChanged,
-            label = { CoreBodyText(stringResource(Res.string.account_deletion_check_interval_seconds)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.account_deletion_check_interval_seconds)) },
+            label = { CoreBodyText(userUi.accountDeletionCheckIntervalSeconds) },
+            placeholder = { CoreBodyText(userUi.accountDeletionCheckIntervalSeconds) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.testTag(EditAuthSettingsTestTags.ACCOUNT_DELETION_CHECK_INTERVAL_INPUT)
         )
 
         CoreTitleText(
-            text = stringResource(Res.string.open_email_restriction_policy),
+            text = userUi.openEmailRestrictionPolicy,
             style = MaterialTheme.typography.titleMedium
         )
 
@@ -371,14 +345,14 @@ private fun EditAuthSettingsForm(
                 checked = state.openEmailBlacklistEnabled,
                 onCheckedChange = onOpenEmailBlacklistEnabledToggled
             )
-            CoreBodyText(text = stringResource(Res.string.blacklist_enabled), modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
+            CoreBodyText(text = userUi.blacklistEnabled, modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
         }
 
         CoreOutlinedTextField(
             value = state.openEmailBlacklist,
             onValueChange = onOpenEmailBlacklistChanged,
-            label = { CoreBodyText(stringResource(Res.string.email_blacklist_placeholder)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.email_blacklist_placeholder)) }
+            label = { CoreBodyText(userUi.emailBlacklistPlaceholder) },
+            placeholder = { CoreBodyText(userUi.emailBlacklistPlaceholder) }
         )
 
         Row(
@@ -389,18 +363,18 @@ private fun EditAuthSettingsForm(
                 checked = state.openEmailWhitelistEnabled,
                 onCheckedChange = onOpenEmailWhitelistEnabledToggled
             )
-            CoreBodyText(text = stringResource(Res.string.whitelist_enabled), modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
+            CoreBodyText(text = userUi.whitelistEnabled, modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
         }
 
         CoreOutlinedTextField(
             value = state.openEmailWhitelist,
             onValueChange = onOpenEmailWhitelistChanged,
-            label = { CoreBodyText(stringResource(Res.string.email_whitelist_placeholder)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.email_whitelist_placeholder)) }
+            label = { CoreBodyText(userUi.emailWhitelistPlaceholder) },
+            placeholder = { CoreBodyText(userUi.emailWhitelistPlaceholder) }
         )
 
         CoreTitleText(
-            text = stringResource(Res.string.management_email_restriction_policy),
+            text = userUi.managementEmailRestrictionPolicy,
             style = MaterialTheme.typography.titleMedium
         )
 
@@ -412,14 +386,14 @@ private fun EditAuthSettingsForm(
                 checked = state.managementEmailBlacklistEnabled,
                 onCheckedChange = onManagementEmailBlacklistEnabledToggled
             )
-            CoreBodyText(text = stringResource(Res.string.blacklist_enabled), modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
+            CoreBodyText(text = userUi.blacklistEnabled, modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
         }
 
         CoreOutlinedTextField(
             value = state.managementEmailBlacklist,
             onValueChange = onManagementEmailBlacklistChanged,
-            label = { CoreBodyText(stringResource(Res.string.email_blacklist_placeholder)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.email_blacklist_placeholder)) }
+            label = { CoreBodyText(userUi.emailBlacklistPlaceholder) },
+            placeholder = { CoreBodyText(userUi.emailBlacklistPlaceholder) }
         )
 
         Row(
@@ -430,14 +404,14 @@ private fun EditAuthSettingsForm(
                 checked = state.managementEmailWhitelistEnabled,
                 onCheckedChange = onManagementEmailWhitelistEnabledToggled
             )
-            CoreBodyText(text = stringResource(Res.string.whitelist_enabled), modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
+            CoreBodyText(text = userUi.whitelistEnabled, modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
         }
 
         CoreOutlinedTextField(
             value = state.managementEmailWhitelist,
             onValueChange = onManagementEmailWhitelistChanged,
-            label = { CoreBodyText(stringResource(Res.string.email_whitelist_placeholder)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.email_whitelist_placeholder)) }
+            label = { CoreBodyText(userUi.emailWhitelistPlaceholder) },
+            placeholder = { CoreBodyText(userUi.emailWhitelistPlaceholder) }
         )
 
         ErrorText(
@@ -446,14 +420,14 @@ private fun EditAuthSettingsForm(
         )
 
         CoreButton(
-            text = stringResource(if (state.isSaving) Res.string.saving else Res.string.save),
+            text = if (state.isSaving) userUi.saving else userUi.save,
             onClick = onSaveClick,
             enabled = !state.isSaving,
             modifier = Modifier.testTag(EditAuthSettingsTestTags.SAVE_BUTTON)
         )
 
         CoreTextButton(
-            text = stringResource(Res.string.reset_to_defaults),
+            text = userUi.resetToDefaults,
             onClick = onResetClick,
             enabled = !state.isSaving,
             modifier = Modifier.testTag(EditAuthSettingsTestTags.RESET_BUTTON)

@@ -40,16 +40,13 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.welcome.LoginWelcomeComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.or_sign_in_with
-import io.github.mudrichenkoevgeny.kmp.feature.user.sign_in
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth.AuthProviderButton
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth.AuthProviderGrid
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.legal.LegalFooter
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.AvailableAuthProviders
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Welcome UI: loading, fullscreen init error with retry, or provider list with legal footer and action feedback.
@@ -93,6 +90,7 @@ private fun LoginWelcomeContent(
     onPrivacyPolicyClick: () -> Unit,
     onTermsOfServiceClick: () -> Unit
 ) {
+    val userUi = LocalUserStrings.current.ui
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -101,7 +99,7 @@ private fun LoginWelcomeContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CoreScreenTitleText(
-                text = stringResource(Res.string.sign_in),
+                text = userUi.signIn,
                 modifier = Modifier.testTag(LoginWelcomeTestTags.TITLE)
             )
 
@@ -126,7 +124,7 @@ private fun LoginWelcomeContent(
                     state.availableAuthProviders.secondary.isNotEmpty()) {
 
                     CoreBodyText(
-                        text = stringResource(Res.string.or_sign_in_with),
+                        text = userUi.orSignInWith,
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.outline,
                         modifier = Modifier

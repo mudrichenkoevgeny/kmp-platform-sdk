@@ -9,9 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -36,7 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardType
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
+import androidx.compose.ui.unit.dp
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.BooleanListingFilterDefinition
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.BooleanListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ChoiceFilterPresentationStyle
@@ -51,16 +50,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.option.ListingOptionsConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortDefinition
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_apply
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_clear_all
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_no
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_sort_asc
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_sort_desc
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_yes
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -109,7 +103,7 @@ fun ListingOptionsPanel(
                 onClick = onApplyClick,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(stringResource(Res.string.ui_common_apply))
+                Text(LocalCommonStrings.current.ui.apply)
             }
         }
     }
@@ -183,7 +177,7 @@ private fun ListingSortSection(
                     )
                 )
             },
-            label = { Text(text = stringResource(Res.string.ui_common_sort_asc)) }
+            label = { Text(text = LocalCommonStrings.current.ui.sortAsc) }
         )
         FilterChip(
             selected = !isAscending,
@@ -195,7 +189,7 @@ private fun ListingSortSection(
                     )
                 )
             },
-            label = { Text(text = stringResource(Res.string.ui_common_sort_desc)) }
+            label = { Text(text = LocalCommonStrings.current.ui.sortDesc) }
         )
     }
 }
@@ -254,7 +248,7 @@ private fun ListingFilterItem(
                     onClick = { onFilterChanged(null) }
                 ) {
                     Text(
-                        text = stringResource(Res.string.ui_common_clear_all),
+                        text = LocalCommonStrings.current.ui.clearAll,
                         style = MaterialTheme.typography.labelMedium
                     )
                 }
@@ -331,12 +325,12 @@ private fun ListingFilterItem(
                 val trueLabel = if (filter.trueLabelRes != null) {
                     stringResource(filter.trueLabelRes)
                 } else {
-                    stringResource(Res.string.ui_common_yes)
+                    LocalCommonStrings.current.ui.yes
                 }
                 val falseLabel = if (filter.falseLabelRes != null) {
                     stringResource(filter.falseLabelRes)
                 } else {
-                    stringResource(Res.string.ui_common_no)
+                    LocalCommonStrings.current.ui.no
                 }
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)

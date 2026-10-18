@@ -54,23 +54,15 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.copy_all
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_cancel
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm_title
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.totp.recovery.TotpRecoveryCodesComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.recovery_codes_desc
-import io.github.mudrichenkoevgeny.kmp.feature.user.recovery_codes_title
-import io.github.mudrichenkoevgeny.kmp.feature.user.regenerate_codes_confirm_msg
-import io.github.mudrichenkoevgeny.kmp.feature.user.regenerate_recovery_codes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totprecoverycodes.TotpRecoveryCodes
-import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TotpRecoveryCodesScreen(component: TotpRecoveryCodesComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -81,7 +73,7 @@ fun TotpRecoveryCodesScreen(component: TotpRecoveryCodesComponent) {
                 TopAppBar(
                     title = {
                         CoreScreenTitleText(
-                            text = stringResource(Res.string.recovery_codes_title),
+                            text = userUi.recoveryCodesTitle,
                             modifier = Modifier.testTag(TotpRecoveryCodesTestTags.TITLE)
                         )
                     },
@@ -129,6 +121,7 @@ private fun Content(
     onDismissDialogs: () -> Unit
 ) {
     val clipboardManager = LocalClipboardManager.current
+    val userUi = LocalUserStrings.current.ui
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -139,12 +132,12 @@ private fun Content(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CoreTitleText(
-                text = stringResource(Res.string.recovery_codes_title),
+                text = userUi.recoveryCodesTitle,
                 style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.testTag(TotpRecoveryCodesTestTags.RECOVERY_CODES_TITLE)
             )
             CoreBodyText(
-                text = stringResource(Res.string.recovery_codes_desc),
+                text = userUi.recoveryCodesDesc,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.testTag(TotpRecoveryCodesTestTags.RECOVERY_CODES_DESC)
             )
@@ -168,7 +161,7 @@ private fun Content(
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
             CoreTextButton(
-                text = stringResource(Res.string.copy_all),
+                text = userUi.copyAll,
                 onClick = {
                     val allCodes = state.recoveryCodes.codes.joinToString("\n")
                     clipboardManager.setText(AnnotatedString(allCodes))
@@ -179,7 +172,7 @@ private fun Content(
             Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             CoreButton(
-                text = stringResource(Res.string.regenerate_recovery_codes),
+                text = userUi.regenerateRecoveryCodes,
                 onClick = onRegenerateClick,
                 modifier = Modifier.testTag(TotpRecoveryCodesTestTags.REGENERATE_RECOVERY_CODES_BUTTON),
                 enabled = !state.actionLoading
@@ -194,17 +187,17 @@ private fun Content(
         if (state.showRegenerateConfirmation) {
             AlertDialog(
                 onDismissRequest = onDismissDialogs,
-                title = { CoreTitleText(text = stringResource(Res.string.dialog_confirm_title)) },
-                text = { CoreBodyText(text = stringResource(Res.string.regenerate_codes_confirm_msg)) },
+                title = { CoreTitleText(text = userUi.dialogConfirmTitle) },
+                text = { CoreBodyText(text = userUi.regenerateCodesConfirmMsg) },
                 confirmButton = {
                     CoreTextButton(
-                        text = stringResource(Res.string.dialog_confirm),
+                        text = userUi.dialogConfirm,
                         onClick = onConfirmRegenerate
                     )
                 },
                 dismissButton = {
                     CoreTextButton(
-                        text = stringResource(Res.string.dialog_cancel),
+                        text = userUi.dialogCancel,
                         onClick = onDismissDialogs
                     )
                 }

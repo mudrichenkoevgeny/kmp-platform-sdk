@@ -17,17 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_page_info
-import io.github.mudrichenkoevgeny.kmp.core.common.ui_common_total_count
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Top bar displaying current page and total count info for a paginated list.
@@ -70,13 +67,13 @@ fun ListingHeaderBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(Res.string.ui_common_total_count, state.totalCount),
+            text = LocalCommonStrings.current.ui.totalCount(state.totalCount),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         if (totalPages > 0) {
             Text(
-                text = stringResource(Res.string.ui_common_page_info, currentPageState.value, totalPages),
+                text = LocalCommonStrings.current.ui.pageInfo(currentPageState.value, totalPages),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

@@ -55,29 +55,27 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.session.SelfSessionListComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.session_revoke_all_others
-import io.github.mudrichenkoevgeny.kmp.feature.user.sessions
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.session.item.SessionItem
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.session.item.SessionItemTestTags
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelfSessionListScreen(component: SelfSessionListComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(Res.string.sessions),
+                        text = userUi.sessions,
                         modifier = Modifier.testTag(SelfSessionListTestTags.TITLE)
                     )
                 },
@@ -104,8 +102,8 @@ fun SelfSessionListScreen(component: SelfSessionListComponent) {
     ) { padding ->
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
+                .padding(padding)
+                .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             when (val currentState = state) {
@@ -143,6 +141,7 @@ private fun Content(
     onLoadNextPage: () -> Unit
 ) {
     val listState = rememberLazyListState()
+    val userUi = LocalUserStrings.current.ui
 
     listState.OnBottomReached {
         onLoadNextPage()
@@ -190,7 +189,7 @@ private fun Content(
 
         if (state.paging.items.size > 1) {
             CoreButton(
-                text = stringResource(Res.string.session_revoke_all_others),
+                text = userUi.sessionRevokeAllOthers,
                 onClick = onRevokeAllOthers,
                 modifier = Modifier
                     .padding(CoreTheme.dimens.paddingMedium)

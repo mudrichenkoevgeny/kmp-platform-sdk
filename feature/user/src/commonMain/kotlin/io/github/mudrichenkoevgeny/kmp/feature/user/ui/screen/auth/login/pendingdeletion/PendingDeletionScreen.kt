@@ -48,25 +48,21 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.account_pending_deletion_desc
-import io.github.mudrichenkoevgeny.kmp.feature.user.account_pending_deletion_title
-import io.github.mudrichenkoevgeny.kmp.feature.user.logout
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.pendingdeletion.PendingDeletionComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.restore_account
-import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PendingDeletionScreen(component: PendingDeletionComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = stringResource(Res.string.account_pending_deletion_title),
+                        text = userUi.accountPendingDeletionTitle,
                         modifier = Modifier.testTag(PendingDeletionTestTags.TITLE)
                     )
                 }
@@ -106,14 +102,14 @@ fun PendingDeletionScreen(component: PendingDeletionComponent) {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             CoreTitleText(
-                                text = stringResource(Res.string.account_pending_deletion_title),
+                                text = userUi.accountPendingDeletionTitle,
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.testTag(PendingDeletionTestTags.CARD_TITLE)
                             )
                             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
                             CoreBodyText(
-                                text = stringResource(Res.string.account_pending_deletion_desc),
+                                text = userUi.accountPendingDeletionDesc,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.testTag(PendingDeletionTestTags.CARD_DESC)
                             )
@@ -127,7 +123,7 @@ fun PendingDeletionScreen(component: PendingDeletionComponent) {
                 }
 
                 CoreButton(
-                    text = stringResource(Res.string.restore_account),
+                    text = userUi.restoreAccount,
                     onClick = component::onRestoreAccountClick,
                     modifier = Modifier.testTag(PendingDeletionTestTags.RESTORE_BUTTON),
                     enabled = !state.actionLoading
@@ -136,7 +132,7 @@ fun PendingDeletionScreen(component: PendingDeletionComponent) {
                 Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
                 CoreTextButton(
-                    text = stringResource(Res.string.logout),
+                    text = userUi.logout,
                     onClick = component::onSignOutClick,
                     modifier = Modifier.testTag(PendingDeletionTestTags.SIGN_OUT_BUTTON),
                     enabled = !state.actionLoading

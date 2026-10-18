@@ -1,10 +1,9 @@
 package io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main
 
+import androidx.compose.runtime.Composable
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_user
-import io.github.mudrichenkoevgeny.kmp.sampleclient.app.Res
-import io.github.mudrichenkoevgeny.kmp.sampleclient.app.nav_user
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.StringResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
 /**
@@ -12,12 +11,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
  */
 sealed interface MainScreenDestination {
     val config: MainScreenComponent.Config
-    val title: StringResource
+    @Composable fun title(): String
     val iconRes: DrawableResource
 
     data object User : MainScreenDestination {
         override val config = MainScreenComponent.Config.User
-        override val title = Res.string.nav_user
+        @Composable override fun title(): String = LocalUserStrings.current.ui.user
         override val iconRes = CommonRes.drawable.ic_user
     }
 

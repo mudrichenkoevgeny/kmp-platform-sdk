@@ -41,7 +41,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextB
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreCodeTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreEmailTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenOverlayLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
@@ -51,20 +50,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.change_email
-import io.github.mudrichenkoevgeny.kmp.feature.user.code_sent_to
-import io.github.mudrichenkoevgeny.kmp.feature.user.confirm
-import io.github.mudrichenkoevgeny.kmp.feature.user.confirmation_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.email
-import io.github.mudrichenkoevgeny.kmp.feature.user.enter_confirmation_code
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.resetpassword.ResetEmailPasswordComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.new_password
-import io.github.mudrichenkoevgeny.kmp.feature.user.resend_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.resend_code_timer
-import io.github.mudrichenkoevgeny.kmp.feature.user.reset_password
-import io.github.mudrichenkoevgeny.kmp.feature.user.send_code
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Password reset UI: email + send code, then code + new password with resend timer and change-email action.
@@ -116,6 +103,7 @@ private fun EmailInputContent(
     onSendCodeClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
+    val userUi = LocalUserStrings.current.ui
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -136,7 +124,7 @@ private fun EmailInputContent(
                 )
 
                 CoreScreenTitleText(
-                    text = stringResource(Res.string.reset_password),
+                    text = userUi.resetPassword,
                     modifier = Modifier.testTag(ResetEmailPasswordTestTags.EMAIL_STEP_TITLE)
                 )
             }
@@ -151,8 +139,8 @@ private fun EmailInputContent(
                 CoreEmailTextField(
                     value = state.email,
                     onValueChange = onEmailChanged,
-                    label = { CoreBodyText(stringResource(Res.string.email)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.email)) },
+                    label = { CoreBodyText(userUi.email) },
+                    placeholder = { CoreBodyText(userUi.email) },
                     modifier = Modifier.testTag(ResetEmailPasswordTestTags.EMAIL_INPUT),
                     isError = state.actionError != null,
                     enabled = !state.actionLoading
@@ -162,7 +150,7 @@ private fun EmailInputContent(
             }
 
             CoreButton(
-                text = stringResource(Res.string.send_code),
+                text = userUi.sendCode,
                 onClick = onSendCodeClick,
                 modifier = Modifier.testTag(ResetEmailPasswordTestTags.SEND_CODE_BUTTON),
                 enabled = state.isEmailValid && !state.actionLoading
@@ -183,6 +171,7 @@ private fun ResetInputContent(
     onResetEmailClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
+    val userUi = LocalUserStrings.current.ui
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -203,13 +192,13 @@ private fun ResetInputContent(
                 )
 
                 CoreScreenTitleText(
-                    text = stringResource(Res.string.enter_confirmation_code),
+                    text = userUi.enterConfirmationCode,
                     modifier = Modifier.testTag(ResetEmailPasswordTestTags.RESET_STEP_TITLE)
                 )
             }
 
             CoreBodyText(
-                text = stringResource(Res.string.code_sent_to, email),
+                text = userUi.codeSentTo(email),
                 color = MaterialTheme.colorScheme.outline,
                 modifier = Modifier
                     .padding(top = CoreTheme.dimens.paddingSmall)
@@ -226,8 +215,8 @@ private fun ResetInputContent(
                 CoreCodeTextField(
                     value = state.code,
                     onValueChange = onCodeChanged,
-                    label = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.confirmation_code)) },
+                    label = { CoreBodyText(userUi.confirmationCode) },
+                    placeholder = { CoreBodyText(userUi.confirmationCode) },
                     modifier = Modifier.testTag(ResetEmailPasswordTestTags.CODE_INPUT),
                     isError = state.actionError != null
                 )
@@ -238,8 +227,8 @@ private fun ResetInputContent(
                     value = state.newPassword,
                     onValueChange = onPasswordChanged,
                     modifier = Modifier.testTag(ResetEmailPasswordTestTags.NEW_PASSWORD_INPUT),
-                    label = { CoreBodyText(stringResource(Res.string.new_password)) },
-                    placeholder = { CoreBodyText(stringResource(Res.string.new_password)) },
+                    label = { CoreBodyText(userUi.newPassword) },
+                    placeholder = { CoreBodyText(userUi.newPassword) },
                     enabled = !state.actionLoading,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
@@ -251,13 +240,13 @@ private fun ResetInputContent(
 
                 if (!state.canResendCode) {
                     CoreBodyText(
-                        text = stringResource(Res.string.resend_code_timer, state.resendTimerSeconds),
+                        text = userUi.resendCodeTimer(state.resendTimerSeconds),
                         color = MaterialTheme.colorScheme.outline,
                         modifier = Modifier.testTag(ResetEmailPasswordTestTags.RESEND_TIMER_TEXT)
                     )
                 } else {
                     CoreTextButton(
-                        text = stringResource(Res.string.resend_code),
+                        text = userUi.resendCode,
                         onClick = onResendCodeClick,
                         modifier = Modifier.testTag(ResetEmailPasswordTestTags.RESEND_CODE_BUTTON)
                     )
@@ -265,7 +254,7 @@ private fun ResetInputContent(
             }
 
             CoreButton(
-                text = stringResource(Res.string.confirm),
+                text = userUi.confirm,
                 onClick = onConfirmResetClick,
                 modifier = Modifier.testTag(ResetEmailPasswordTestTags.CONFIRM_BUTTON),
                 enabled = state.canConfirm
@@ -274,7 +263,7 @@ private fun ResetInputContent(
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
             CoreTextButton(
-                text = stringResource(Res.string.change_email),
+                text = userUi.changeEmail,
                 onClick = onResetEmailClick,
                 modifier = Modifier.testTag(ResetEmailPasswordTestTags.CHANGE_EMAIL_BUTTON)
             )

@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">Sample app</string>
-    <string name="nav_home">Home</string>
-    <string name="nav_user">User</string>
-    <string name="btn_back_to_home">Back to home</string>
-    <string name="home_screen_title">Home Screen</string>
-</resources>

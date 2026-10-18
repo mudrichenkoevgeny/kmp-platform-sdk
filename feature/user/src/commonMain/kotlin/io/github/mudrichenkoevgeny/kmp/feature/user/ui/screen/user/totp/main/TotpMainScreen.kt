@@ -63,34 +63,16 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.Res
-import io.github.mudrichenkoevgeny.kmp.feature.user.confirm
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_cancel
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm
-import io.github.mudrichenkoevgeny.kmp.feature.user.dialog_confirm_title
-import io.github.mudrichenkoevgeny.kmp.feature.user.disable_totp
-import io.github.mudrichenkoevgeny.kmp.feature.user.disable_totp_confirm_msg
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.totp.TotpMainComponentMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.recovery_codes_title
-import io.github.mudrichenkoevgeny.kmp.feature.user.setup_totp
-import io.github.mudrichenkoevgeny.kmp.feature.user.totp_code
-import io.github.mudrichenkoevgeny.kmp.feature.user.totp_disabled_desc
-import io.github.mudrichenkoevgeny.kmp.feature.user.totp_enabled_desc
-import io.github.mudrichenkoevgeny.kmp.feature.user.totp_enabled_title
-import io.github.mudrichenkoevgeny.kmp.feature.user.totp_main
-import io.github.mudrichenkoevgeny.kmp.feature.user.totp_manual_key
-import io.github.mudrichenkoevgeny.kmp.feature.user.totp_setup_step1
-import io.github.mudrichenkoevgeny.kmp.feature.user.totp_setup_step1_desc
-import io.github.mudrichenkoevgeny.kmp.feature.user.totp_setup_step2
-import io.github.mudrichenkoevgeny.kmp.feature.user.totp_setup_step2_desc
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TotpMainScreen(component: TotpMainComponent) {
     val state by component.state.subscribeAsState()
+    val userUi = LocalUserStrings.current.ui
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -101,7 +83,7 @@ fun TotpMainScreen(component: TotpMainComponent) {
                 TopAppBar(
                     title = {
                         CoreScreenTitleText(
-                            text = stringResource(Res.string.totp_main),
+                            text = userUi.totpMain,
                             modifier = Modifier.testTag(TotpMainTestTags.TITLE)
                         )
                     },
@@ -167,17 +149,17 @@ fun TotpMainScreen(component: TotpMainComponent) {
                         is TotpMainComponent.DialogChild.ConfirmDisable -> {
                             AlertDialog(
                                 onDismissRequest = component::onDismissDialogs,
-                                title = { CoreTitleText(text = stringResource(Res.string.dialog_confirm_title)) },
-                                text = { CoreBodyText(text = stringResource(Res.string.disable_totp_confirm_msg)) },
+                                title = { CoreTitleText(text = userUi.dialogConfirmTitle) },
+                                text = { CoreBodyText(text = userUi.disableTotpConfirmMsg) },
                                 confirmButton = {
                                     CoreTextButton(
-                                        text = stringResource(Res.string.dialog_confirm),
+                                        text = userUi.dialogConfirm,
                                         onClick = component::onConfirmDisable
                                     )
                                 },
                                 dismissButton = {
                                     CoreTextButton(
-                                        text = stringResource(Res.string.dialog_cancel),
+                                        text = userUi.dialogCancel,
                                         onClick = component::onDismissDialogs
                                     )
                                 }
@@ -195,6 +177,7 @@ private fun DisabledContent(
     state: TotpMainScreenState,
     onSetupClick: () -> Unit
 ) {
+    val userUi = LocalUserStrings.current.ui
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -202,13 +185,13 @@ private fun DisabledContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CoreBodyText(
-            text = stringResource(Res.string.totp_disabled_desc),
+            text = userUi.totpDisabledDesc,
             textAlign = TextAlign.Center,
             modifier = Modifier.testTag(TotpMainTestTags.DISABLED_DESC_TEXT)
         )
         Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
         CoreButton(
-            text = stringResource(Res.string.setup_totp),
+            text = userUi.setupTotp,
             onClick = onSetupClick,
             modifier = Modifier.testTag(TotpMainTestTags.SETUP_TOTP_BUTTON),
             enabled = !state.actionLoading
@@ -228,6 +211,7 @@ private fun SetupInProgressContent(
     onConfirmClick: () -> Unit
 ) {
     val clipboardManager = LocalClipboardManager.current
+    val userUi = LocalUserStrings.current.ui
 
     Column(
         modifier = Modifier
@@ -237,12 +221,12 @@ private fun SetupInProgressContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CoreTitleText(
-            text = stringResource(Res.string.totp_setup_step1),
+            text = userUi.totpSetupStep1,
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.testTag(TotpMainTestTags.STEP1_TITLE)
         )
         CoreBodyText(
-            text = stringResource(Res.string.totp_setup_step1_desc),
+            text = userUi.totpSetupStep1Desc,
             textAlign = TextAlign.Center,
             modifier = Modifier.testTag(TotpMainTestTags.STEP1_DESC)
         )
@@ -266,7 +250,7 @@ private fun SetupInProgressContent(
         Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
 
         CoreBodyText(
-            text = stringResource(Res.string.totp_manual_key),
+            text = userUi.totpManualKey,
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.testTag(TotpMainTestTags.MANUAL_KEY_LABEL)
         )
@@ -297,12 +281,12 @@ private fun SetupInProgressContent(
         Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
         CoreTitleText(
-            text = stringResource(Res.string.totp_setup_step2),
+            text = userUi.totpSetupStep2,
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.testTag(TotpMainTestTags.STEP2_TITLE)
         )
         CoreBodyText(
-            text = stringResource(Res.string.totp_setup_step2_desc),
+            text = userUi.totpSetupStep2Desc,
             textAlign = TextAlign.Center,
             modifier = Modifier.testTag(TotpMainTestTags.STEP2_DESC)
         )
@@ -312,8 +296,8 @@ private fun SetupInProgressContent(
         CoreCodeTextField(
             value = state.code,
             onValueChange = onCodeChanged,
-            label = { CoreBodyText(stringResource(Res.string.totp_code)) },
-            placeholder = { CoreBodyText(stringResource(Res.string.totp_code)) },
+            label = { CoreBodyText(userUi.totpCode) },
+            placeholder = { CoreBodyText(userUi.totpCode) },
             enabled = !state.actionLoading,
             isError = state.actionError != null,
             modifier = Modifier.testTag(TotpMainTestTags.CODE_INPUT)
@@ -327,7 +311,7 @@ private fun SetupInProgressContent(
         Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
         CoreButton(
-            text = stringResource(Res.string.confirm),
+            text = userUi.confirm,
             onClick = onConfirmClick,
             modifier = Modifier.testTag(TotpMainTestTags.CONFIRM_SETUP_BUTTON),
             enabled = state.canConfirm
@@ -341,6 +325,7 @@ private fun EnabledContent(
     onRecoveryCodesClick: () -> Unit,
     onDisableClick: () -> Unit
 ) {
+    val userUi = LocalUserStrings.current.ui
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -350,7 +335,7 @@ private fun EnabledContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CoreTitleText(
-                text = stringResource(Res.string.totp_enabled_title),
+                text = userUi.totpEnabledTitle,
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
@@ -361,7 +346,7 @@ private fun EnabledContent(
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
             CoreBodyText(
-                text = stringResource(Res.string.totp_enabled_desc),
+                text = userUi.totpEnabledDesc,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.testTag(TotpMainTestTags.ENABLED_DESC)
             )
@@ -369,7 +354,7 @@ private fun EnabledContent(
             Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
 
             CoreButton(
-                text = stringResource(Res.string.recovery_codes_title),
+                text = userUi.recoveryCodesTitle,
                 onClick = onRecoveryCodesClick,
                 modifier = Modifier.testTag(TotpMainTestTags.RECOVERY_CODES_BUTTON),
                 enabled = !state.actionLoading
@@ -378,7 +363,7 @@ private fun EnabledContent(
             Spacer(Modifier.height(CoreTheme.dimens.paddingMedium))
 
             CoreButton(
-                text = stringResource(Res.string.disable_totp),
+                text = userUi.disableTotp,
                 onClick = onDisableClick,
                 modifier = Modifier.testTag(TotpMainTestTags.DISABLE_TOTP_BUTTON),
                 enabled = !state.actionLoading,
