@@ -42,6 +42,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.setti
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.GetManagementGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.ResetRemoteGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings.SaveRemoteGlobalSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierPasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementDeleteIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifierUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
@@ -90,6 +91,7 @@ class ManagementRootComponentImpl(
     private val authStorage: AuthStorage? = null,
     private val deleteSessionUseCase: DeleteSessionUseCase? = null,
     private val deleteUserIdentifierUseCase: DeleteUserIdentifierUseCase? = null,
+    private val deleteIdentifierPasswordUseCase: ManagementDeleteIdentifierPasswordUseCase? = null,
     private val getManagementAuthSettingsUseCase: GetManagementAuthSettingsUseCase,
     private val saveRemoteAuthSettingsUseCase: SaveRemoteAuthSettingsUseCase,
     private val resetRemoteAuthSettingsUseCase: ResetRemoteAuthSettingsUseCase,
@@ -424,6 +426,15 @@ class ManagementRootComponentImpl(
                             ?: AppResult.Error(CommonError.ContractViolation())
                     } else if (deleteUserIdentifierUseCase != null) {
                         deleteUserIdentifierUseCase.invoke(targetId)
+                    } else {
+                        AppResult.Error(CommonError.ContractViolation())
+                    }
+                },
+                deletePassword = { targetId ->
+                    val idRes = managementGetIdentifierUseCase?.invoke(targetId.asHexDashString())
+                    if (idRes is AppResult.Success) {
+                        deleteIdentifierPasswordUseCase?.invoke(idRes.data.userId, targetId.asHexDashString())
+                            ?: AppResult.Error(CommonError.ContractViolation())
                     } else {
                         AppResult.Error(CommonError.ContractViolation())
                     }

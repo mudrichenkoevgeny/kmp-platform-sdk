@@ -202,6 +202,9 @@ class ManagementUserComponent(
     /** Revokes specific manager session. */
     val deleteSessionUseCase get() = useCaseModule.deleteSessionUseCase
 
+    /** Removes a user identifier password administratively. */
+    val deleteIdentifierPasswordUseCase get() = useCaseModule.managementDeleteIdentifierPasswordUseCase
+
     /** Revokes all other manager sessions. */
     val deleteAllOtherSessionsUseCase get() = useCaseModule.deleteAllOtherSessionsUseCase
 
@@ -422,6 +425,7 @@ class ManagementUserComponent(
             managementDeleteSessionUseCase = managementDeleteSessionUseCase,
             managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase,
             managementDeleteIdentifierUseCase = useCaseModule.managementDeleteIdentifierUseCase,
+            deleteIdentifierPasswordUseCase = useCaseModule.managementDeleteIdentifierPasswordUseCase,
             getAuditEventsUseCase = getAuditEventsUseCase,
             getAuditEventUseCase = getAuditEventUseCase,
             onNavigateToUserMain = onNavigateToUserMain
