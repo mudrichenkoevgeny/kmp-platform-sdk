@@ -40,9 +40,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_email
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_google
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_phone
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
 import org.jetbrains.compose.resources.painterResource
 
 /**
@@ -151,15 +151,15 @@ private data class SessionItemPreviewState(
 private class SessionItemPreviewProvider : PreviewParameterProvider<SessionItemPreviewState> {
     private val items: List<Pair<String, SessionItemPreviewState>> = listOf(
         "Default" to SessionItemPreviewState(
-            session = userSessionMock(),
+            session = createTestUserSessionSummary(),
             enabled = true
         ),
         "Disabled Action" to SessionItemPreviewState(
-            session = userSessionMock(),
+            session = createTestUserSessionSummary(),
             enabled = false
         ),
         "Current Session" to SessionItemPreviewState(
-            session = userSessionMock(),
+            session = createTestUserSessionSummary(),
             enabled = true,
             isCurrentSession = true
         )
@@ -189,7 +189,7 @@ private fun SessionItemPreviewContent(state: SessionItemPreviewState) {
 
 @InternalApi
 private val defaultSessionItemPreviewState = SessionItemPreviewState(
-    session = userSessionMock(),
+    session = createTestUserSessionSummary(),
     enabled = true
 )
 

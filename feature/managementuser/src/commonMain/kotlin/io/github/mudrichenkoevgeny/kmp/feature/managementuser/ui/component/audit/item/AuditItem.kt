@@ -22,10 +22,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePrevi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventSummaryMock
+
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list.AuditEventListTestTags
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventSummary
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventSummary
 
 /**
  * A list item representing a single audit event record.
@@ -79,7 +80,7 @@ private fun AuditItemPreviewContent(event: AuditEventSummary) {
 }
 
 @InternalApi
-private val defaultAuditItemPreviewState = auditEventSummaryMock()
+private val defaultAuditItemPreviewState = createTestAuditEventSummary()
 
 @InternalApi
 @Preview(showBackground = true, group = "States")

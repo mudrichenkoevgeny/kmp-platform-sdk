@@ -1,13 +1,13 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.auth.settings
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.model.websocket.socketFrameMock
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.websocket.service.WebSocketServiceMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.network.api.auth.settings.ManagementAuthSettingsApiMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.storage.auth.settings.ManagementAuthSettingsStorageMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.auth.settings.managementAuthSettingsMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.settings.managementAuthSettingsPayloadMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.network.model.websocket.createTestSocketFrame
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.auth.settings.createTestManagementAuthSettings
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.auth.settings.createTestManagementAuthSettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.ManagementAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.settings.toManagementAuthSettings
@@ -44,9 +44,9 @@ class ManagementAuthSettingsRepositoryImplTest {
 
     @Test
     fun getManagementAuthSettings_returnsMemoryWithoutApi_whenPreloadedFromStorage() = runTest {
-        val persisted = managementAuthSettingsMock()
+        val persisted = createTestManagementAuthSettings()
         storage.updateManagementAuthSettings(persisted)
-        api.getResultProvider = { AppResult.Success(managementAuthSettingsPayloadMock()) }
+        api.getResultProvider = { AppResult.Success(createTestManagementAuthSettingsPayload()) }
 
         val repo = createRepository(this)
         runCurrent()
@@ -58,7 +58,7 @@ class ManagementAuthSettingsRepositoryImplTest {
 
     @Test
     fun getManagementAuthSettings_fetchesFromApi_whenNothingInStorage() = runTest {
-        val wire = managementAuthSettingsPayloadMock()
+        val wire = createTestManagementAuthSettingsPayload()
         api.getResultProvider = { AppResult.Success(wire) }
 
         val repo = createRepository(this)
@@ -73,8 +73,8 @@ class ManagementAuthSettingsRepositoryImplTest {
 
     @Test
     fun refreshManagementAuthSettings_alwaysCallsApi() = runTest {
-        storage.updateManagementAuthSettings(managementAuthSettingsMock())
-        val fresh = managementAuthSettingsPayloadMock()
+        storage.updateManagementAuthSettings(createTestManagementAuthSettings())
+        val fresh = createTestManagementAuthSettingsPayload()
         api.getResultProvider = { AppResult.Success(fresh) }
 
         val repo = createRepository(this)
@@ -88,14 +88,14 @@ class ManagementAuthSettingsRepositoryImplTest {
 
     @Test
     fun authSettingsUpdatedWebSocketEvent_persistsAndUpdatesObservableState() = runTest {
-        val initialWire = managementAuthSettingsPayloadMock()
+        val initialWire = createTestManagementAuthSettingsPayload()
         api.getResultProvider = { AppResult.Success(initialWire) }
 
         val repo = createRepository(this)
         runCurrent()
 
-        val pushed = managementAuthSettingsPayloadMock(maxTotalIdentifiers = 999)
-        val frame = socketFrameMock(
+        val pushed = createTestManagementAuthSettingsPayload(maxTotalIdentifiers = 999)
+        val frame = createTestSocketFrame(
             type = UserWebSocketEventTypes.MANAGEMENT_AUTH_SETTINGS_UPDATED,
             payload = FoundationJson.encodeToJsonElement(
                 ManagementAuthSettingsPayload.serializer(), pushed

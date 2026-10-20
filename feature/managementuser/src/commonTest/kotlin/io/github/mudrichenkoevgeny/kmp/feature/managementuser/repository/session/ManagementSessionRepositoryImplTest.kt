@@ -2,17 +2,17 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.sessio
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.network.api.session.ManagementSessionApiMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.session.userSessionPrivatePayloadMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.session.userSessionSummaryPayloadMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionSummaryPayloadList
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -34,8 +34,8 @@ class ManagementSessionRepositoryImplTest {
 
     @Test
     fun `getSessions forwards request and maps paged result`() = runTest {
-        val payload = userSessionSummaryPayloadMock()
-        val wire = pagedResultMock(items = listOf(payload), totalCount = 1)
+        val payloadList = createTestUserSessionSummaryPayloadList()
+        val wire = createTestPagedResult(items = payloadList, totalCount = payloadList.size.toLong())
         api.getSessionsResult = AppResult.Success(wire)
 
         val result = repo.getSessions(
@@ -59,13 +59,13 @@ class ManagementSessionRepositoryImplTest {
         )
 
         val success = assertIs<AppResult.Success<PagedResult<UserSessionSummary>>>(result)
-        assertEquals(1, success.data.items.size)
-        assertEquals(payload.toUserSessionSummary(), success.data.items.first())
+        assertEquals(payloadList.size, success.data.items.size)
+        assertEquals(payloadList.first().toUserSessionSummary(), success.data.items.first())
     }
 
     @Test
     fun `getSession forwards request and maps result`() = runTest {
-        val payload = userSessionPrivatePayloadMock()
+        val payload = createTestUserSessionPrivatePayload()
         api.getSessionResult = AppResult.Success(payload)
 
         val result = repo.getSession("session-1")

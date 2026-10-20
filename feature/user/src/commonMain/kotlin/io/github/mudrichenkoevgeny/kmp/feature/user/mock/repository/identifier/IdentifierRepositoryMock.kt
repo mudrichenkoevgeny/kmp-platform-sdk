@@ -1,11 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.identifier
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.otpConfirmationMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierPrivateMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
@@ -15,26 +11,30 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.otpconfirmation.createTestOtpConfirmation
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 
 @InternalApi
 open class IdentifierRepositoryMock : IdentifierRepository {
 
     var getUserIdentifierResultProvider: (UserIdentifierId) -> AppResult<UserIdentifierPrivate> = {
-        AppResult.Success(userIdentifierPrivateMock())
+        AppResult.Success(createTestUserIdentifierPrivate())
     }
 
     var getUserIdentifiersResultProvider: () -> AppResult<PagedResult<UserIdentifierSummary>> = {
-        AppResult.Success(pagedResultMock(listOf(userIdentifierSummaryMock())))
+        AppResult.Success(createTestPagedResult(listOf(createTestUserIdentifierSummary())))
     }
 
     var deleteUserIdentifierResultProvider: (UserIdentifierId) -> AppResult<Unit> = { _ -> AppResult.Success(Unit) }
 
     var addUserIdentifierResultProvider: () -> AppResult<UserIdentifierPrivate> = {
-        AppResult.Success(userIdentifierPrivateMock())
+        AppResult.Success(createTestUserIdentifierPrivate())
     }
 
     var otpConfirmationResultProvider: () -> AppResult<OtpConfirmation> = {
-        AppResult.Success(otpConfirmationMock())
+        AppResult.Success(createTestOtpConfirmation())
     }
 
     var emailChangePasswordResultProvider: () -> AppResult<Unit> = { AppResult.Success(Unit) }

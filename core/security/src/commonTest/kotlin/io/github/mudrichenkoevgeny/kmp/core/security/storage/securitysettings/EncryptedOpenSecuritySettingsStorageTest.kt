@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.core.security.storage.securitysettings
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.storage.EncryptedSettingsMock
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.openSecuritySettingsMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.securitysettings.createTestOpenSecuritySettings
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -21,7 +21,7 @@ class EncryptedOpenSecuritySettingsStorageTest {
     @Test
     fun updateOpenSecuritySettings_persistsAndGetOpenSecuritySettingsReturnsSameValues() = runTest {
         val storage = EncryptedOpenSecuritySettingsStorage(EncryptedSettingsMock())
-        val settings = openSecuritySettingsMock()
+        val settings = createTestOpenSecuritySettings()
 
         storage.updateOpenSecuritySettings(settings)
 
@@ -31,7 +31,7 @@ class EncryptedOpenSecuritySettingsStorageTest {
     @Test
     fun clearOpenSecuritySettings_removesSnapshot() = runTest {
         val storage = EncryptedOpenSecuritySettingsStorage(EncryptedSettingsMock())
-        val settings = openSecuritySettingsMock()
+        val settings = createTestOpenSecuritySettings()
 
         storage.updateOpenSecuritySettings(settings)
         storage.clearOpenSecuritySettings()

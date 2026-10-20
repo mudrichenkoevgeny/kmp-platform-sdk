@@ -1,11 +1,11 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.storage.user
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.storage.EncryptedSettingsMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
@@ -36,7 +36,7 @@ class EncryptedUserStorageTest {
     @Test
     fun currentUser_roundTripsThroughStorage() = runTest {
         val storage = EncryptedUserStorage(EncryptedSettingsMock())
-        val expectedUser = fixTime(userPrivateMock())
+        val expectedUser = fixTime(createTestUserPrivate())
 
         storage.updateCurrentUser(expectedUser)
         val actualUser = storage.getCurrentUser()
@@ -47,7 +47,7 @@ class EncryptedUserStorageTest {
     @Test
     fun observeCurrentUser_emitsNullThenValue() = runTest {
         val storage = EncryptedUserStorage(EncryptedSettingsMock())
-        val expectedUser = fixTime(userPrivateMock())
+        val expectedUser = fixTime(createTestUserPrivate())
 
         val firstValue = storage.observeCurrentUser().first()
         assertNull(firstValue)
@@ -61,8 +61,8 @@ class EncryptedUserStorageTest {
     @Test
     fun userIdentifiers_roundTrip() = runTest {
         val storage = EncryptedUserStorage(EncryptedSettingsMock())
-        val identifier = userIdentifierSummaryMock()
-        val inputPagedResult = pagedResultMock(items = listOf(identifier))
+        val identifier = createTestUserIdentifierSummary()
+        val inputPagedResult = createTestPagedResult(items = listOf(identifier))
         val expectedPagedResult = inputPagedResult.copy(pageSize = 1)
 
         storage.updateUserIdentifiersList(inputPagedResult)
@@ -74,8 +74,8 @@ class EncryptedUserStorageTest {
     @Test
     fun userSessions_roundTrip() = runTest {
         val storage = EncryptedUserStorage(EncryptedSettingsMock())
-        val session = fixSessionTime(userSessionSummaryMock())
-        val inputPagedResult = pagedResultMock(items = listOf(session))
+        val session = fixSessionTime(createTestUserSessionSummary())
+        val inputPagedResult = createTestPagedResult(items = listOf(session))
         val expectedPagedResult = inputPagedResult.copy(pageSize = 1)
 
         storage.updateUserSessionsList(inputPagedResult)
@@ -88,9 +88,9 @@ class EncryptedUserStorageTest {
     fun clear_removesAllSlices() = runTest {
         val storage = EncryptedUserStorage(EncryptedSettingsMock())
 
-        storage.updateCurrentUser(userPrivateMock())
-        storage.updateUserIdentifiersList(pagedResultMock(items = listOf(userIdentifierSummaryMock())))
-        storage.updateUserSessionsList(pagedResultMock(items = listOf(userSessionSummaryMock())))
+        storage.updateCurrentUser(createTestUserPrivate())
+        storage.updateUserIdentifiersList(createTestPagedResult(items = listOf(createTestUserIdentifierSummary())))
+        storage.updateUserSessionsList(createTestPagedResult(items = listOf(createTestUserSessionSummary())))
 
         storage.clear()
 

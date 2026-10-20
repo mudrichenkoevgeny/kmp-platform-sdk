@@ -1,8 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.auth.settings.openAuthSettingsMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.settings.OpenAuthSettingsRepositoryMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.auth.settings.createTestOpenAuthSettings
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -16,7 +16,7 @@ class ObserveAuthSettingsUseCaseTest {
     fun `should observe settings from repository`() = runTest {
         val repository = OpenAuthSettingsRepositoryMock()
         val useCase = ObserveAuthSettingsUseCase(repository)
-        val authSettings = openAuthSettingsMock()
+        val authSettings = createTestOpenAuthSettings()
 
         assertNull(useCase().first())
 

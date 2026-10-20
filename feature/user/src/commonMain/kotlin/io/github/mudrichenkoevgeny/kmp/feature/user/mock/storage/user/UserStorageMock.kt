@@ -1,7 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
@@ -18,6 +17,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identif
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -26,8 +26,8 @@ import kotlinx.coroutines.flow.update
 class UserStorageMock : UserStorage {
 
     private val currentUserFlow = MutableStateFlow<UserPrivate?>(null)
-    private val identifiersFlow = MutableStateFlow(pagedResultMock<UserIdentifierSummary>())
-    private val sessionsFlow = MutableStateFlow(pagedResultMock<UserSessionSummary>())
+    private val identifiersFlow = MutableStateFlow(createTestPagedResult<UserIdentifierSummary>())
+    private val sessionsFlow = MutableStateFlow(createTestPagedResult<UserSessionSummary>())
 
     var isCleared = false
         private set
@@ -74,7 +74,7 @@ class UserStorageMock : UserStorage {
     override suspend fun updateUserIdentifiersPayloadList(userIdentifiersList: PagedResult<UserIdentifierSummaryPayload>) {
         lastUpdatedIdentifiersPayload = userIdentifiersList
         val mapped = userIdentifiersList.items.map { it.toUserIdentifierSummary() }
-        identifiersFlow.value = pagedResultMock(
+        identifiersFlow.value = createTestPagedResult(
             items = mapped,
             totalCount = userIdentifiersList.totalCount,
             pageNumber = userIdentifiersList.pageNumber,
@@ -151,7 +151,7 @@ class UserStorageMock : UserStorage {
     override suspend fun updateUserSessionsPayloadList(userSessionsList: PagedResult<UserSessionSummaryPayload>) {
         lastUpdatedSessionsPayload = userSessionsList
         val mapped = userSessionsList.items.map { it.toUserSessionSummary() }
-        sessionsFlow.value = pagedResultMock(
+        sessionsFlow.value = createTestPagedResult(
             items = mapped,
             totalCount = userSessionsList.totalCount,
             pageNumber = userSessionsList.pageNumber,
@@ -189,8 +189,8 @@ class UserStorageMock : UserStorage {
 
     override suspend fun clear() {
         currentUserFlow.value = null
-        identifiersFlow.value = pagedResultMock()
-        sessionsFlow.value = pagedResultMock()
+        identifiersFlow.value = createTestPagedResult()
+        sessionsFlow.value = createTestPagedResult()
         isCleared = true
     }
 }

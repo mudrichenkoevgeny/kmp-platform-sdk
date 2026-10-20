@@ -2,16 +2,16 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.g
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.core.settings.mock.domain.model.globalsettings.managementGlobalSettingsMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.globalsettings.ManagementGlobalSettingsRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.model.globalsettings.ManagementGlobalSettings
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.settings.domain.model.globalsettings.createTestManagementGlobalSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 @InternalApi
 class ManagementGlobalSettingsRepositoryMock(
-    initialSettings: ManagementGlobalSettings? = managementGlobalSettingsMock()
+    initialSettings: ManagementGlobalSettings? = createTestManagementGlobalSettings()
 ) : ManagementGlobalSettingsRepository {
 
     private val _settings = MutableStateFlow(initialSettings)
@@ -30,7 +30,7 @@ class ManagementGlobalSettingsRepositoryMock(
         return if (current != null) {
             AppResult.Success(current)
         } else {
-            val fresh = managementGlobalSettingsMock()
+            val fresh = createTestManagementGlobalSettings()
             _settings.value = fresh
             AppResult.Success(fresh)
         }

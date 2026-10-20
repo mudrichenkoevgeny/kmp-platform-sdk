@@ -3,7 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.l
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -19,7 +19,7 @@ class SelfIdentifierListScreenStateTest {
 
     @Test
     fun content_holdsIdentifiersAndStates() {
-        val identifiers = listOf(userIdentifierSummaryMock())
+        val identifiers = listOf(createTestUserIdentifierSummary())
         val currentIdentifierId = UserIdentifierId.generate()
         val paging = PaginationState(items = identifiers)
         val error = CommonError.Unknown()

@@ -8,15 +8,16 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.auth.settings.openAuthSettingsMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.auth.settings.createTestOpenAuthSettings
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.settings.OpenAuthSettingsRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.GetUserIdentifiersUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummaryList
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -28,18 +29,10 @@ class SelfIdentifierListComponentImplTest {
 
     @Test
     fun init_loadsIdentifiersSuccessfully() = runComponentTest {
-        val identifiers = listOf(userIdentifierSummaryMock())
+        val identifiers = createTestUserIdentifierSummaryList()
         val getUserIdentifiersUseCase = GetUserIdentifiersUseCaseMock().apply {
             resultProvider = { _, _ ->
-                AppResult.Success(
-                    PagedResult(
-                        items = identifiers,
-                        totalCount = identifiers.size.toLong(),
-                        pageNumber = 1,
-                        pageSize = 10,
-                        totalPages = 1
-                    )
-                )
+                AppResult.Success(createTestPagedResult(items = identifiers))
             }
         }
         val context = createTestContext(getUserIdentifiersUseCase = getUserIdentifiersUseCase)
@@ -68,7 +61,7 @@ class SelfIdentifierListComponentImplTest {
     @Test
     fun onAddIdentifierClick_showsProviderSelectionDialog() = runComponentTest {
         val authSettingsRepo = OpenAuthSettingsRepositoryMock().apply {
-            emit(openAuthSettingsMock())
+            emit(createTestOpenAuthSettings())
         }
         val getAvailableUserAuthProvidersUseCase = GetAvailableUserAuthProvidersUseCase(
             appType = AppType.CLIENT,
@@ -105,19 +98,12 @@ class SelfIdentifierListComponentImplTest {
 
     @Test
     fun onIdentifierDeleted_removesItemFromPaging() = runComponentTest {
-        val item1 = userIdentifierSummaryMock()
-        val item2 = userIdentifierSummaryMock()
+        val item1 = createTestUserIdentifierSummary(id = UserIdentifierId.generate())
+        val item2 = createTestUserIdentifierSummary(id = UserIdentifierId.generate())
+        val identifiers = listOf(item1, item2)
         val getUserIdentifiersUseCase = GetUserIdentifiersUseCaseMock().apply {
             resultProvider = { _, _ ->
-                AppResult.Success(
-                    PagedResult(
-                        items = listOf(item1, item2),
-                        totalCount = 2,
-                        pageNumber = 1,
-                        pageSize = 10,
-                        totalPages = 1
-                    )
-                )
+                AppResult.Success(createTestPagedResult(items = identifiers))
             }
         }
         val context = createTestContext(getUserIdentifiersUseCase = getUserIdentifiersUseCase)
@@ -133,20 +119,12 @@ class SelfIdentifierListComponentImplTest {
 
     @Test
     fun onLoadNextPage_success_appendsIdentifiers() = runComponentTest {
-        val initialIdentifiers = listOf(userIdentifierSummaryMock())
-        val nextIdentifiers = listOf(userIdentifierSummaryMock())
+        val initialIdentifiers = listOf(createTestUserIdentifierSummary(id = UserIdentifierId.generate()))
+        val nextIdentifiers = listOf(createTestUserIdentifierSummary(id = UserIdentifierId.generate()))
         val getUserIdentifiersUseCase = GetUserIdentifiersUseCaseMock().apply {
             resultProvider = { page, _ ->
                 val items = if (page == ListingConstants.INITIAL_PAGE_NUMBER) initialIdentifiers else nextIdentifiers
-                AppResult.Success(
-                    PagedResult(
-                        items = items,
-                        totalCount = 2,
-                        pageNumber = page ?: 1,
-                        pageSize = 1,
-                        totalPages = 2
-                    )
-                )
+                AppResult.Success(createTestPagedResult(items = items))
             }
         }
         val context = createTestContext(getUserIdentifiersUseCase = getUserIdentifiersUseCase)

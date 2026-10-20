@@ -8,7 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionPrivateMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionPrivate
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.DeleteSessionUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.GetSessionUseCaseMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
@@ -26,7 +26,7 @@ class SessionDetailComponentImplTest {
 
     @Test
     fun init_withProvidedSession_setsContentStateImmediately() = runComponentTest {
-        val mockSession = userSessionPrivateMock()
+        val mockSession = createTestUserSessionPrivate()
         val context = createSessionDetailComponentTestContext(
             session = mockSession
         )
@@ -42,7 +42,7 @@ class SessionDetailComponentImplTest {
 
     @Test
     fun init_withSessionId_fetchesFromUseCase() = runComponentTest {
-        val mockSession = userSessionPrivateMock()
+        val mockSession = createTestUserSessionPrivate()
         val getSessionUseCase = GetSessionUseCaseMock().apply {
             resultProvider = { AppResult.Success(mockSession) }
         }
@@ -87,7 +87,7 @@ class SessionDetailComponentImplTest {
     @Test
     fun onRevokeSessionClick_executesUseCase_andTriggersOnBack() = runComponentTest {
         var onBackCalls = 0
-        val mockSession = userSessionPrivateMock()
+        val mockSession = createTestUserSessionPrivate()
         val deleteSessionUseCase = DeleteSessionUseCaseMock().apply {
             resultProvider = { AppResult.Success(Unit) }
         }
@@ -112,7 +112,7 @@ class SessionDetailComponentImplTest {
     @Test
     fun onUserClick_triggersNavigateToUserDetail() = runComponentTest {
         var navigatedUserId: UserId? = null
-        val mockSession = userSessionPrivateMock()
+        val mockSession = createTestUserSessionPrivate()
 
         val context = createSessionDetailComponentTestContext(
             session = mockSession,
@@ -155,7 +155,7 @@ private class SessionDetailComponentTestContext(
 
 @InternalApi
 private fun createSessionDetailComponentTestContext(
-    session: UserSessionPrivate? = userSessionPrivateMock(),
+    session: UserSessionPrivate? = createTestUserSessionPrivate(),
     sessionId: UserSessionId? = session?.id,
     getSessionUseCase: GetSessionUseCaseMock? = null,
     deleteSessionUseCase: DeleteSessionUseCaseMock? = null,

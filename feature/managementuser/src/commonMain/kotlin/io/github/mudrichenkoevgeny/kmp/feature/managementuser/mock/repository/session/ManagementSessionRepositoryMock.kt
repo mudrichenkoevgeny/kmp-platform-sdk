@@ -1,11 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.session
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.session.ManagementSessionRepository
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionPrivateMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
@@ -15,20 +12,23 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.r
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
 
 @InternalApi
 open class ManagementSessionRepositoryMock : ManagementSessionRepository {
 
     var getSessionsResultProvider: () -> AppResult<PagedResult<UserSessionSummary>> = {
-        AppResult.Success(pagedResultMock(listOf(userSessionSummaryMock())))
+        AppResult.Success(createTestPagedResult(listOf(createTestUserSessionSummary())))
     }
 
     var getUserSessionsResultProvider: (UserId) -> AppResult<PagedResult<UserSessionSummary>> = { _ ->
-        AppResult.Success(pagedResultMock(listOf(userSessionSummaryMock())))
+        AppResult.Success(createTestPagedResult(listOf(createTestUserSessionSummary())))
     }
 
     var getSessionResultProvider: (String) -> AppResult<UserSessionPrivate> = {
-        AppResult.Success(userSessionPrivateMock())
+        AppResult.Success(createTestUserSessionPrivate())
     }
 
     var deleteSessionResultProvider: (UserId, String) -> AppResult<Unit> = { _, _ -> AppResult.Success(Unit) }

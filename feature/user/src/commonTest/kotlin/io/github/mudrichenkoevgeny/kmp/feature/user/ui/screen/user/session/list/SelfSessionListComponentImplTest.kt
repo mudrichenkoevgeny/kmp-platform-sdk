@@ -9,11 +9,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.DeleteAllOtherSessionsUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.DeleteSessionUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.GetSessionsUseCaseMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummaryList
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -26,18 +29,10 @@ class SelfSessionListComponentImplTest {
 
     @Test
     fun init_loadsSessionsSuccessfully() = runComponentTest {
-        val sessions = listOf(userSessionMock())
+        val sessions = createTestUserSessionSummaryList()
         val getSessionsUseCase = GetSessionsUseCaseMock().apply {
             resultProvider = { _, _ ->
-                AppResult.Success(
-                    PagedResult(
-                        items = sessions,
-                        totalCount = sessions.size.toLong(),
-                        pageNumber = 1,
-                        pageSize = 10,
-                        totalPages = 1
-                    )
-                )
+                AppResult.Success(createTestPagedResult(items = sessions))
             }
         }
         val context = createSessionListComponentTestContext(getSessionsUseCase = getSessionsUseCase)
@@ -84,19 +79,11 @@ class SelfSessionListComponentImplTest {
 
     @Test
     fun onRevokeSessionClick_success_reloadsSessions() = runComponentTest {
-        val sessions = listOf(userSessionMock())
+        val sessions = createTestUserSessionSummaryList()
         val sessionId = sessions.first().id
         val getSessionsUseCase = GetSessionsUseCaseMock().apply {
             resultProvider = { _, _ ->
-                AppResult.Success(
-                    PagedResult(
-                        items = sessions,
-                        totalCount = sessions.size.toLong(),
-                        pageNumber = 1,
-                        pageSize = 10,
-                        totalPages = 1
-                    )
-                )
+                AppResult.Success(createTestPagedResult(items = sessions))
             }
         }
         val deleteSessionUseCase = DeleteSessionUseCaseMock().apply {
@@ -122,19 +109,11 @@ class SelfSessionListComponentImplTest {
 
     @Test
     fun onRevokeSessionClick_error_keepsContentWithActionError() = runComponentTest {
-        val sessions = listOf(userSessionMock())
+        val sessions = createTestUserSessionSummaryList()
         val sessionId = sessions.first().id
         val getSessionsUseCase = GetSessionsUseCaseMock().apply {
             resultProvider = { _, _ ->
-                AppResult.Success(
-                    PagedResult(
-                        items = sessions,
-                        totalCount = sessions.size.toLong(),
-                        pageNumber = 1,
-                        pageSize = 10,
-                        totalPages = 1
-                    )
-                )
+                AppResult.Success(createTestPagedResult(items = sessions))
             }
         }
         val deleteSessionUseCase = DeleteSessionUseCaseMock().apply {
@@ -160,18 +139,10 @@ class SelfSessionListComponentImplTest {
 
     @Test
     fun onRevokeAllOtherSessionsClick_success_reloadsSessions() = runComponentTest {
-        val sessions = listOf(userSessionMock(), userSessionMock())
+        val sessions = createTestUserSessionSummaryList()
         val getSessionsUseCase = GetSessionsUseCaseMock().apply {
             resultProvider = { _, _ ->
-                AppResult.Success(
-                    PagedResult(
-                        items = sessions,
-                        totalCount = sessions.size.toLong(),
-                        pageNumber = 1,
-                        pageSize = 10,
-                        totalPages = 1
-                    )
-                )
+                AppResult.Success(createTestPagedResult(items = sessions))
             }
         }
         val deleteAllOtherSessionsUseCase = DeleteAllOtherSessionsUseCaseMock().apply {
@@ -197,13 +168,13 @@ class SelfSessionListComponentImplTest {
 
     @Test
     fun onLoadNextPage_success_appendsSessions() = runComponentTest {
-        val initialSessions = listOf(userSessionMock())
-        val nextSessions = listOf(userSessionMock())
+        val initialSessions = listOf(createTestUserSessionSummary(id = UserSessionId.generate()))
+        val nextSessions = listOf(createTestUserSessionSummary(id = UserSessionId.generate()))
         val getSessionsUseCase = GetSessionsUseCaseMock().apply {
             resultProvider = { page, _ ->
                 val items = if (page == ListingConstants.INITIAL_PAGE_NUMBER) initialSessions else nextSessions
                 AppResult.Success(
-                    PagedResult(
+                    createTestPagedResult(
                         items = items,
                         totalCount = 2,
                         pageNumber = page ?: 1,

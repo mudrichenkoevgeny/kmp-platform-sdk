@@ -50,11 +50,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventSummaryMock
+
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.audit.list.AuditEventListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.component.audit.item.AuditItem
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventId
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventSummary
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
@@ -217,7 +218,7 @@ internal class AuditEventListPreviewProvider : PreviewParameterProvider<AuditEve
     private val items: List<Pair<String, AuditEventListScreenState>> = listOf(
         "Content" to AuditEventListScreenState.Content(
             paging = PaginationState(
-                items = listOf(auditEventSummaryMock(), auditEventSummaryMock())
+                items = listOf(createTestAuditEventSummary(), createTestAuditEventSummary())
             )
         ),
         "Error" to AuditEventListScreenState.Error(error = CommonError.Unknown()),
@@ -241,7 +242,7 @@ private fun AuditEventListScreenPreviewContent(state: AuditEventListScreenState)
 
 @InternalApi
 private val defaultAuditEventListPreviewState = AuditEventListScreenState.Content(
-    paging = PaginationState(items = listOf(auditEventSummaryMock(), auditEventSummaryMock()))
+    paging = PaginationState(items = listOf(createTestAuditEventSummary(), createTestAuditEventSummary()))
 )
 
 @InternalApi

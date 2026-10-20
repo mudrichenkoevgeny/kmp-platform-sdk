@@ -2,10 +2,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.session
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.api.session.SessionApiMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.session.userSessionPrivatePayloadMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.session.userSessionSummaryPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
@@ -13,7 +11,9 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.DeletedSessionsPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionSummaryPayloadList
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,18 +23,10 @@ import kotlin.test.assertTrue
 @InternalApi
 class OpenSessionRepositoryImplTest {
 
-    private fun pagedPayload(items: List<UserSessionSummaryPayload>) = PagedResult(
-        items = items,
-        totalCount = items.size.toLong(),
-        pageNumber = 1,
-        pageSize = 20,
-        totalPages = 1
-    )
-
     @Test
     fun `getSessions should update storage on success`() = runTest {
-        val payload = userSessionSummaryPayloadMock()
-        val paged = pagedPayload(listOf(payload))
+        val payloadList = createTestUserSessionSummaryPayloadList()
+        val paged = createTestPagedResult(payloadList)
         val api = SessionApiMock().apply {
             getSessionsResult = AppResult.Success(paged)
         }
@@ -50,7 +42,7 @@ class OpenSessionRepositoryImplTest {
 
     @Test
     fun `getSession should add to storage on success`() = runTest {
-        val payload = userSessionPrivatePayloadMock()
+        val payload = createTestUserSessionPrivatePayload()
         val api = SessionApiMock().apply {
             getSessionResult = AppResult.Success(payload)
         }
@@ -105,7 +97,7 @@ class OpenSessionRepositoryImplTest {
         }
         val storage = UserStorageMock()
         val authStorage = AuthStorageMock()
-        storage.addUserSession(userSessionSummaryMock().copy(id = id1))
+        storage.addUserSession(createTestUserSessionSummary(id = id1))
         val repository = OpenSessionRepositoryImpl(api, storage, authStorage)
 
         val result = repository.deleteAllOtherSessions()

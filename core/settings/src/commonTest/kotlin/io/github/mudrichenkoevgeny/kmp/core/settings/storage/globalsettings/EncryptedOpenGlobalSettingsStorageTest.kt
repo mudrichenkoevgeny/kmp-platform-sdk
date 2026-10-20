@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.core.settings.storage.globalsettings
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.storage.EncryptedSettingsMock
-import io.github.mudrichenkoevgeny.kmp.core.settings.mock.domain.model.globalsettings.openGlobalSettingsMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.settings.domain.model.globalsettings.createTestOpenGlobalSettings
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -21,11 +21,7 @@ class EncryptedOpenGlobalSettingsStorageTest {
     @Test
     fun updateOpenGlobalSettings_persistsAndGetOpenGlobalSettingsReturnsSameValues() = runTest {
         val storage = EncryptedOpenGlobalSettingsStorage(EncryptedSettingsMock())
-        val settings = openGlobalSettingsMock(
-            privacy = "https://privacy.example",
-            terms = "https://terms.example",
-            email = "support@example.com"
-        )
+        val settings = createTestOpenGlobalSettings()
 
         storage.updateOpenGlobalSettings(settings)
 
@@ -35,11 +31,7 @@ class EncryptedOpenGlobalSettingsStorageTest {
     @Test
     fun clearOpenGlobalSettings_removesSnapshot() = runTest {
         val storage = EncryptedOpenGlobalSettingsStorage(EncryptedSettingsMock())
-        val settings = openGlobalSettingsMock(
-            privacy = "u",
-            terms = null,
-            email = null
-        )
+        val settings = createTestOpenGlobalSettings()
 
         storage.updateOpenGlobalSettings(settings)
         storage.clearOpenGlobalSettings()

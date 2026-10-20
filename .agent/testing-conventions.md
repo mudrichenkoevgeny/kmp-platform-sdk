@@ -26,7 +26,7 @@ This document defines the testing methodology for the `kmp-platform-sdk`. These 
 - **Mocking Strategy:**
   - Use MockK for JVM-based tests.
   - For `commonTest`, prefer **Hand-written Fakes/Stubs** or test doubles to avoid JVM-only library constraints.
-  - **No Inline Dummy Objects:** Never create local `dummyPayload`, `dummyUser`, or test fixtures directly inside test classes. Instead, create reusable mock factory functions (e.g. `auditEventPayloadMock(...)`) annotated with `@InternalApi` in the corresponding module `mock` package structure (e.g., `io.github.mudrichenkoevgeny.kmp.<module>.mock.network.model...`).
+  - **No Inline Dummy Objects:** Never create local `dummyPayload`, `dummyUser`, or test fixtures directly inside test classes. Instead, use factory functions from `shared-foundation-testing` (e.g., `createTestUserPrivate()`, `createTestAuditEventSummary()`).
 - **Coroutines:** Use `runTest` from `kotlinx-coroutines-test` for all suspending logic.
 
 ## 4. Organization & Naming
@@ -49,16 +49,16 @@ This document defines the testing methodology for the `kmp-platform-sdk`. These 
 - **Observable Behavior:** Focus on public APIs, Decompose components, Repositories, and Use Cases.
 - **Mandatory UI Testing:** Every created UI screen (`*Screen.kt`) and reusable UI component (`Core*` or custom composable) must have:
   1. A Compose UI unit test (`*Test.kt`).
-  2. A Roborazzi screenshot test (`*ScreenshotTest.kt` in `src/androidUnitTest`).
+  2. A Roborazzi screenshot test (`*ScreenshotTest.kt` in `src/androidHostTest`).
 - **Serialization:** Ensure `core/common` serialization logic is tested for all DTOs and WebSocket messages.
 - **Platform Logic:** For components with platform-specific implementations (e.g., `EncryptedSettings`), verify behavior in both `androidMain` and `commonMain` where possible.
 - **Exclusions:** No UI/Unit tests for Preview-only helpers (`PreviewParameterProvider`, etc.).
 
 ## 7. Screenshot Testing (Roborazzi)
-- **Tooling:** Use Roborazzi with Robolectric and `captureAppScreen` utility from `:core:common` (`androidMain`).
-- **Baseline Storage:** Golden reference images must be stored in source control under `src/androidUnitTest/snapshots/images/...` and committed to Git.
-- **Verification:** Run `./gradlew verifyRoborazziDebug` to compare UI against baselines.
-- **Recording:** Run `./gradlew recordRoborazziDebug` to update reference images.
+- **Tooling:** Use Roborazzi with Robolectric and `captureAppScreen` utility from `:core:testing` (`androidMain`).
+- **Baseline Storage:** Golden reference images must be stored in source control under `src/androidHostTest/snapshots/images/...` and committed to Git.
+- **Verification:** Run `./gradlew verifyRoborazzi` to compare UI against baselines.
+- **Recording:** Run `./gradlew recordRoborazzi` to update reference images.
 
 ---
 *Refer to `AGENTS.md` for the full list of project standards.*

@@ -8,7 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierPrivateMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierPrivate
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.DeleteUserIdentifierUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.GetUserIdentifierUseCaseMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
@@ -27,7 +27,7 @@ class IdentifierDetailComponentImplTest {
 
     @Test
     fun state_initWithIdentifier_emitsContent() = runComponentTest {
-        val identifier = userIdentifierPrivateMock()
+        val identifier = createTestUserIdentifierPrivate()
         val testContext = createTestContext(identifier = identifier)
         try {
             advanceTimeBy(100.milliseconds)
@@ -41,7 +41,7 @@ class IdentifierDetailComponentImplTest {
 
     @Test
     fun state_initWithIdAndSuccessUseCase_emitsContent() = runComponentTest {
-        val identifier = userIdentifierPrivateMock()
+        val identifier = createTestUserIdentifierPrivate()
         val getUserIdentifierUseCase = GetUserIdentifierUseCaseMock().apply {
             resultProvider = { AppResult.Success(identifier) }
         }
@@ -62,7 +62,7 @@ class IdentifierDetailComponentImplTest {
 
     @Test
     fun state_initWithIdAndFailureUseCase_emitsError() = runComponentTest {
-        val identifierId = userIdentifierPrivateMock().id
+        val identifierId = createTestUserIdentifierPrivate().id
         val getUserIdentifierUseCase = GetUserIdentifierUseCaseMock().apply {
             resultProvider = { AppResult.Error(CommonError.Unknown()) }
         }
@@ -82,7 +82,7 @@ class IdentifierDetailComponentImplTest {
 
     @Test
     fun onDeleteClick_showsConfirmationDialog() = runComponentTest {
-        val identifier = userIdentifierPrivateMock()
+        val identifier = createTestUserIdentifierPrivate()
         val testContext = createTestContext(identifier = identifier)
         try {
             advanceTimeBy(100.milliseconds)
@@ -98,7 +98,7 @@ class IdentifierDetailComponentImplTest {
     @Test
     fun onConfirmDelete_success_invokesOnBack() = runComponentTest {
         var onBackCalls = 0
-        val identifier = userIdentifierPrivateMock()
+        val identifier = createTestUserIdentifierPrivate()
         val deleteUserIdentifierUseCase = DeleteUserIdentifierUseCaseMock().apply {
             resultProvider = { AppResult.Success(Unit) }
         }
@@ -121,7 +121,7 @@ class IdentifierDetailComponentImplTest {
     @Test
     fun onUserClick_invokesNavigateToUserDetail() = runComponentTest {
         var navigatedUserId: UserId? = null
-        val identifier = userIdentifierPrivateMock()
+        val identifier = createTestUserIdentifierPrivate()
         val testContext = createTestContext(
             identifier = identifier,
             onNavigateToUserDetail = { navigatedUserId = it }
@@ -138,7 +138,7 @@ class IdentifierDetailComponentImplTest {
     @Test
     fun onBackClick_invokesOnBack() = runComponentTest {
         var onBackCalls = 0
-        val identifier = userIdentifierPrivateMock()
+        val identifier = createTestUserIdentifierPrivate()
         val testContext = createTestContext(
             identifier = identifier,
             onBack = { onBackCalls++ }
@@ -165,7 +165,7 @@ private class TestContext(
 
 @InternalApi
 private fun createTestContext(
-    identifier: UserIdentifierPrivate? = userIdentifierPrivateMock(),
+    identifier: UserIdentifierPrivate? = createTestUserIdentifierPrivate(),
     identifierId: UserIdentifierId? = identifier?.id,
     getUserIdentifierUseCase: GetUserIdentifierUseCaseMock? = null,
     deleteUserIdentifierUseCase: DeleteUserIdentifierUseCaseMock? = null,

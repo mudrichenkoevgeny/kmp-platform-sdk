@@ -2,11 +2,11 @@ package io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.user.secur
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.api.user.security.UserSecurityApiMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totprecoverycodes.TotpRecoveryCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.totprecoverycodes.TotpRecoveryCodesPayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -22,7 +22,7 @@ class OpenUserSecurityRepositoryImplTest {
             enableTotpResult = AppResult.Success(recoveryCodesPayload(recoveryCodes))
         }
         val storage = UserStorageMock().apply {
-            updateCurrentUser(userPrivateMock().copy(isTotpEnabled = false))
+            updateCurrentUser(createTestUserPrivate(isTotpEnabled = false))
         }
         val repository = OpenUserSecurityRepositoryImpl(api, storage)
 
@@ -39,7 +39,7 @@ class OpenUserSecurityRepositoryImplTest {
             disableTotpResult = AppResult.Success(Unit)
         }
         val storage = UserStorageMock().apply {
-            updateCurrentUser(userPrivateMock().copy(isTotpEnabled = true))
+            updateCurrentUser(createTestUserPrivate(isTotpEnabled = true))
         }
         val repository = OpenUserSecurityRepositoryImpl(api, storage)
 

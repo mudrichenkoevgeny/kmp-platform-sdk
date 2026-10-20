@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -104,7 +104,7 @@ class PaginationStateTest {
     @Test
     fun appendResult_appendsItemsAndUpdatesPagination() {
         val initialState = PaginationState(items = listOf("item1"), pageNumber = 1, totalPages = 2)
-        val pagedResult = pagedResultMock(listOf("item2"), pageNumber = 2, totalPages = 2)
+        val pagedResult = createTestPagedResult(listOf("item2"), pageNumber = 2, totalPages = 2)
 
         val resultState = initialState.appendResult(pagedResult)
 

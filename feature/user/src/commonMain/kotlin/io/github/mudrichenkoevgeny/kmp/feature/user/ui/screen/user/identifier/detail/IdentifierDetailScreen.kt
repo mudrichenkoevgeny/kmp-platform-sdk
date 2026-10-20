@@ -56,8 +56,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.identifier.detail.IdentifierDetailComponentMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierPrivate
 
 /**
  * Screen displaying detailed information and management actions for a specific user identifier.
@@ -377,13 +377,13 @@ private class IdentifierDetailPreviewProvider : PreviewParameterProvider<Identif
         IdentifierDetailScreenState.Loading,
         IdentifierDetailScreenState.Error(CommonError.Unknown()),
         IdentifierDetailScreenState.Content(
-            identifier = userIdentifierPrivateMock(),
+            identifier = createTestUserIdentifierPrivate(),
             isCurrentIdentifier = true,
             canChangePassword = true,
             canDeletePassword = false
         ),
         IdentifierDetailScreenState.Content(
-            identifier = userIdentifierPrivateMock(),
+            identifier = createTestUserIdentifierPrivate(),
             isCurrentIdentifier = false,
             canChangePassword = false,
             canDeletePassword = true
@@ -405,7 +405,7 @@ private fun IdentifierDetailPreviewContent(state: IdentifierDetailScreenState) {
 
 @InternalApi
 private val defaultIdentifierDetailPreviewState = IdentifierDetailScreenState.Content(
-    identifier = userIdentifierPrivateMock(),
+    identifier = createTestUserIdentifierPrivate(),
     isCurrentIdentifier = false,
     canChangePassword = true,
     canDeletePassword = false

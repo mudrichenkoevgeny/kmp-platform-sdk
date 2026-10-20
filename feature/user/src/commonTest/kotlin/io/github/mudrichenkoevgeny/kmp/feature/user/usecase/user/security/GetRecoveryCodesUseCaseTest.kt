@@ -3,9 +3,9 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.totpRecoveryCodesMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.security.UserSecurityRepositoryMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totprecoverycodes.TotpRecoveryCodes
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.totprecoverycodes.createTestTotpRecoveryCodes
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -16,7 +16,7 @@ class GetRecoveryCodesUseCaseTest {
 
     @Test
     fun invoke_returnsRecoveryCodes_whenRepositorySucceeds() = runTest {
-        val expectedCodes = totpRecoveryCodesMock()
+        val expectedCodes = createTestTotpRecoveryCodes()
         val repository = UserSecurityRepositoryMock().apply {
             recoveryCodesResultProvider = { AppResult.Success(expectedCodes) }
         }

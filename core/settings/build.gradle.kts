@@ -1,13 +1,6 @@
 plugins {
     alias(libs.plugins.multiplatform)
-    // TODO: [KMP_ANDROID]
-    // Trigger: "Full support for Android Kotlin Multiplatform plugin"
-    // Action:
-    // 1. Remove id("com.android.library")
-    // 2. Add alias(libs.plugins.android.kotlin.multiplatform.library)
-    // 3. Uncomment androidLibrary block
-    // 4. Remove android block
-     id("com.android.library")
+    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose)
@@ -15,15 +8,15 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(libs.versions.jvmToolchain.get().toInt())
+    android {
+        namespace = "io.github.mudrichenkoevgeny.kmp.core.settings"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
-    androidTarget()
-
-//    androidLibrary {
-//        namespace = "io.github.mudrichenkoevgeny.kmp.core.settings"
-//        compileSdk = libs.versions.android.compileSdk.get().toInt()
-//        minSdk = libs.versions.android.minSdk.get().toInt()
-//    }
+        withHostTestBuilder {}.configure {
+            isIncludeAndroidResources = true
+        }
+    }
 
     // TODO: [IOS] Uncomment when starting iOS development
 //    listOf(
@@ -77,6 +70,7 @@ kotlin {
 
             // Testing
             implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.shared.foundation.testing)
         }
 
         commonTest.dependencies {
@@ -84,7 +78,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
         }
 
-        androidUnitTest.dependencies {
+        getByName("androidHostTest").dependencies {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
         }
@@ -112,14 +106,6 @@ kotlin {
 //            // Storage
 //            implementation(libs.androidx.datastorePreferences)
 //        }
-    }
-}
-
-android {
-    namespace = "io.github.mudrichenkoevgeny.kmp.core.settings"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
     }
 }
 

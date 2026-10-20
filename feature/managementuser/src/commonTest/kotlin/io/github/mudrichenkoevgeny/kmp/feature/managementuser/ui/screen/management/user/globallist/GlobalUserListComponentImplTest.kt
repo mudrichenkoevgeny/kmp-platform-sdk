@@ -5,12 +5,12 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.arkivanov.essenty.lifecycle.resume
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.user.ManagementUserRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUsersUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userSummaryMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserSummary
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -23,7 +23,7 @@ class GlobalUserListComponentImplTest {
 
     @Test
     fun init_loadsUsersSuccessfully() = runComponentTest {
-        val user = userSummaryMock()
+        val user = createTestUserSummary()
         val context = createTestContext(users = listOf(user))
 
         advanceUntilIdle()
@@ -45,7 +45,7 @@ class GlobalUserListComponentImplTest {
 
     @Test
     fun onUserClick_invokesCallback() = runComponentTest {
-        val user = userSummaryMock()
+        val user = createTestUserSummary()
         val context = createTestContext(users = listOf(user))
         advanceUntilIdle()
 
@@ -83,7 +83,7 @@ class GlobalUserListComponentImplTest {
         repository: ManagementUserRepositoryMock = ManagementUserRepositoryMock()
     ): TestContext {
         if (users != null) {
-            repository.getUsersResultProvider = { AppResult.Success(pagedResultMock(users)) }
+            repository.getUsersResultProvider = { AppResult.Success(createTestPagedResult(users)) }
         }
 
         val lifecycle = LifecycleRegistry()

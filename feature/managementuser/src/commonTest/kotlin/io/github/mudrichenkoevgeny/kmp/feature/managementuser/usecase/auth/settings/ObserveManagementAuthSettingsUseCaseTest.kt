@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.sett
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.auth.settings.ManagementAuthSettingsRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.auth.settings.managementAuthSettingsMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.auth.settings.createTestManagementAuthSettings
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -13,7 +13,7 @@ class ObserveManagementAuthSettingsUseCaseTest {
 
     @Test
     fun `should observe settings from repository`() = runTest {
-        val authSettings = managementAuthSettingsMock()
+        val authSettings = createTestManagementAuthSettings()
         val repository = ManagementAuthSettingsRepositoryMock()
         val useCase = ObserveManagementAuthSettingsUseCase(repository)
 

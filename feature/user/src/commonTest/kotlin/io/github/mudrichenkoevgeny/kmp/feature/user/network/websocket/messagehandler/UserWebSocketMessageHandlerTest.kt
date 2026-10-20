@@ -1,9 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.network.websocket.messagehandler
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.model.websocket.socketFrameMock
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandlerResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.user.userDetailsPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.refreshtoken.RefreshTokenRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.UserRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
@@ -11,6 +9,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorag
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.refreshtoken.RefreshTokenUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserWebSocketEventTypes
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.network.model.websocket.createTestSocketFrame
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.user.createTestUserPrivatePayload
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.encodeToJsonElement
@@ -41,12 +41,12 @@ class UserWebSocketMessageHandlerTest {
         val handler = createHandler(this)
 
         val frames = listOf(
-            socketFrameMock(type = UserWebSocketEventTypes.UNAUTHORIZED),
-            socketFrameMock(
+            createTestSocketFrame(type = UserWebSocketEventTypes.UNAUTHORIZED),
+            createTestSocketFrame(
                 type = UserWebSocketEventTypes.USER_UPDATED,
-                payload = FoundationJson.encodeToJsonElement(userDetailsPayloadMock())
+                payload = FoundationJson.encodeToJsonElement(createTestUserPrivatePayload())
             ),
-            socketFrameMock(type = UserWebSocketEventTypes.SESSION_DELETED)
+            createTestSocketFrame(type = UserWebSocketEventTypes.SESSION_DELETED)
         )
 
         for (f in frames) {
@@ -64,7 +64,7 @@ class UserWebSocketMessageHandlerTest {
         val handler = createHandler(this)
         assertSame(
             expected = WebSocketMessageHandlerResult.NotHandled,
-            actual = handler.handle(socketFrameMock(type = UserWebSocketEventTypes.OPEN_AUTH_SETTINGS_UPDATED))
+            actual = handler.handle(createTestSocketFrame(type = UserWebSocketEventTypes.OPEN_AUTH_SETTINGS_UPDATED))
         )
     }
 
@@ -73,7 +73,7 @@ class UserWebSocketMessageHandlerTest {
         val handler = createHandler(this)
         assertSame(
             expected = WebSocketMessageHandlerResult.NotHandled,
-            actual = handler.handle(socketFrameMock(type = "UNKNOWN_USER_WS_TYPE"))
+            actual = handler.handle(createTestSocketFrame(type = "UNKNOWN_USER_WS_TYPE"))
         )
     }
 }

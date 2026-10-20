@@ -2,19 +2,19 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.resetp
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.otpConfirmationMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpassword.ResetPasswordRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.otpconfirmation.createTestOtpConfirmation
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierPrivate
 
 @InternalApi
 class ResetPasswordRepositoryMock : ResetPasswordRepository {
     var remainingDelaySeconds: Int = 10
     var sendResult: AppResult<OtpConfirmation> =
-        AppResult.Success(otpConfirmationMock(retryAfterSeconds = remainingDelaySeconds))
+        AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = remainingDelaySeconds))
     var resetResult: AppResult<UserIdentifierPrivate> =
-        AppResult.Success(userIdentifierPrivateMock())
+        AppResult.Success(createTestUserIdentifierPrivate())
 
     var lastSendEmail: String? = null
     var lastResetEmail: String? = null

@@ -24,9 +24,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.GlobalUserListTestTags
+
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userSummaryMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserSummary
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserSummary
 
 /**
  * A list item card representing a single user summary in administrative user lists.
@@ -93,7 +94,7 @@ private fun UserItemPreviewContent(user: UserSummary) {
 }
 
 @InternalApi
-private val defaultUserItemPreviewState = userSummaryMock()
+private val defaultUserItemPreviewState = createTestUserSummary()
 
 @InternalApi
 @Preview(showBackground = true, group = "States")

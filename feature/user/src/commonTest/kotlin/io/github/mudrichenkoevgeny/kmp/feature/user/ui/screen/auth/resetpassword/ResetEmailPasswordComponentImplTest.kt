@@ -8,10 +8,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.otpConfirmationMock
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.usecase.ValidatePasswordUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.identifier.userIdentifierPrivatePayloadMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.otpconfirmation.createTestOtpConfirmation
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.identifier.createTestUserIdentifierPrivatePayload
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.resetpassword.ResetPasswordRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.resetpassword.ResetEmailPasswordUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.resetpassword.SendResetPasswordConfirmationToEmailUseCaseMock
@@ -66,7 +66,7 @@ class ResetEmailPasswordComponentImplTest {
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = ZERO_RETRY
         val sendUseCase = SendResetPasswordConfirmationToEmailUseCaseMock().apply {
-            resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = RETRY_AFTER_SEND_SUCCESS)) }
+            resultProvider = { AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = RETRY_AFTER_SEND_SUCCESS)) }
         }
         val context = createResetEmailPasswordComponentTestContext(repo, sendResetPasswordConfirmationToEmailUseCase = sendUseCase)
         try {
@@ -130,7 +130,7 @@ class ResetEmailPasswordComponentImplTest {
         val context = createResetEmailPasswordComponentTestContext(repo)
         try {
             context.component.onEmailChanged(VALID_EMAIL)
-            context.sendResetPasswordConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.sendResetPasswordConfirmationToEmailUseCase.resultProvider = { AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = ZERO_RETRY)) }
             context.component.onSendCodeClick()
             advanceTimeBy(100.milliseconds)
             
@@ -146,7 +146,7 @@ class ResetEmailPasswordComponentImplTest {
 
     @Test
     fun onConfirmResetClick_success_callsOnFinished() = runComponentTest {
-        val userId = userIdentifierPrivatePayloadMock(identifier = VALID_EMAIL).toUserIdentifierPrivate()
+        val userId = createTestUserIdentifierPrivatePayload(identifier = VALID_EMAIL).toUserIdentifierPrivate()
         val repo = ResetPasswordRepositoryMock()
         repo.remainingDelaySeconds = ZERO_RETRY
         val resetUseCase = ResetEmailPasswordUseCaseMock().apply {
@@ -155,7 +155,7 @@ class ResetEmailPasswordComponentImplTest {
         val context = createResetEmailPasswordComponentTestContext(repo, resetEmailPasswordUseCase = resetUseCase)
         try {
             context.component.onEmailChanged(VALID_EMAIL)
-            context.sendResetPasswordConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.sendResetPasswordConfirmationToEmailUseCase.resultProvider = { AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = ZERO_RETRY)) }
             context.component.onSendCodeClick()
             advanceTimeBy(100.milliseconds)
             context.component.onCodeChanged(FULL_CODE)
@@ -179,7 +179,7 @@ class ResetEmailPasswordComponentImplTest {
         val context = createResetEmailPasswordComponentTestContext(repo, resetEmailPasswordUseCase = resetUseCase)
         try {
             context.component.onEmailChanged(VALID_EMAIL)
-            context.sendResetPasswordConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.sendResetPasswordConfirmationToEmailUseCase.resultProvider = { AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = ZERO_RETRY)) }
             context.component.onSendCodeClick()
             advanceTimeBy(100.milliseconds)
             context.component.onCodeChanged(FULL_CODE)

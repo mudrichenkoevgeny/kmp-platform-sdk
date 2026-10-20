@@ -2,22 +2,25 @@
 
 ## Build Environments & Configuration
 
-To build the project with a specific environment, pass the `app.env` property in your terminal:
+To build the sample applications with a specific environment, pass the `app.env` property in your terminal:
 
 * **Build for Development:**
   ```bash
-  ./gradlew :sample:composeApp:assembleDebug -Papp.env=dev
-   ```
-  
+  ./gradlew :sampleclient:androidApp:assembleDebug -Papp.env=dev
+  ./gradlew :samplemanagement:androidApp:assembleDebug -Papp.env=dev
+  ```
+
 * **Build for Testing:**
   ```bash
-  ./gradlew :sample:composeApp:assembleDebug -Papp.env=test
-   ```
-  
+  ./gradlew :sampleclient:androidApp:assembleDebug -Papp.env=test
+  ./gradlew :samplemanagement:androidApp:assembleDebug -Papp.env=test
+  ```
+
 * **Build for Production:**
   ```bash
-  ./gradlew :sample:composeApp:assembleDebug -Papp.env=prod
-   ```
+  ./gradlew :sampleclient:androidApp:assembleDebug -Papp.env=prod
+  ./gradlew :samplemanagement:androidApp:assembleDebug -Papp.env=prod
+  ```
 
 ## Dependency Analysis
 
@@ -81,23 +84,22 @@ The project uses Roborazzi for Compose UI screenshot regression testing.
 When you create new screenshot tests or intentionally update UI designs, record or update the baseline reference images:
 
 ```bash
-./gradlew recordRoborazziDebug
+./gradlew recordRoborazzi
 ```
 Or for a specific module:
 ```bash
-./gradlew :feature:clientuser:recordRoborazziDebug
+./gradlew :feature:clientuser:recordRoborazzi
 ```
-Baseline reference images are stored in version control under `src/androidUnitTest/snapshots/images/...`.
+Baseline reference images are stored in version control under `src/androidHostTest/snapshots/images/...`.
 
 ### 2. Verifying Screenshots
 To run screenshot tests in verification mode (comparing current UI against committed baselines and failing on any discrepancy):
 
 ```bash
-./gradlew verifyRoborazziDebug
+./gradlew verifyRoborazzi
 ```
 Or for a specific module:
 ```bash
-./gradlew :feature:clientuser:verifyRoborazziDebug
+./gradlew :feature:clientuser:verifyRoborazzi
 ```
 When verification fails, diff images and HTML reports are generated under `build/outputs/roborazzi/` and `build/reports/roborazzi/index.html`.
-

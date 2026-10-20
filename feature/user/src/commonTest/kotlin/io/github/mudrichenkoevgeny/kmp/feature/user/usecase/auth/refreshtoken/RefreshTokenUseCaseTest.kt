@@ -3,7 +3,6 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.refreshtoken
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.token.sessionTokenPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.refreshtoken.RefreshTokenRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
@@ -12,6 +11,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.t
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.token.toSessionToken
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.token.createTestSessionTokenPayload
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -45,7 +45,7 @@ class RefreshTokenUseCaseTest {
             identifierId = UserIdentifierId.generate()
         )
         authStorage.updateTokens(oldToken)
-        val wire = sessionTokenPayloadMock(
+        val wire = createTestSessionTokenPayload(
             accessToken = NEW_ACCESS_TOKEN,
             refreshToken = NEW_REFRESH_TOKEN,
             expiresAt = EXPIRES_AT_AFTER_REFRESH,

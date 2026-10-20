@@ -2,8 +2,6 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.reposi
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventPrivateMock
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.audit.ManagementAuditRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventPrivate
@@ -13,13 +11,16 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.sta
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventSummary
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 
 @InternalApi
 open class ManagementAuditRepositoryMock(
     var getAuditEventsResult: AppResult<PagedResult<AuditEventSummary>> = AppResult.Success(
-        PagedResult(listOf(auditEventSummaryMock()), 1L, 1, 20, 1L)
+        createTestPagedResult(listOf(createTestAuditEventSummary()))
     ),
-    var getAuditEventResult: AppResult<AuditEventPrivate> = AppResult.Success(auditEventPrivateMock())
+    var getAuditEventResult: AppResult<AuditEventPrivate> = AppResult.Success(createTestAuditEventPrivate())
 ) : ManagementAuditRepository {
 
     override suspend fun getAuditEvents(

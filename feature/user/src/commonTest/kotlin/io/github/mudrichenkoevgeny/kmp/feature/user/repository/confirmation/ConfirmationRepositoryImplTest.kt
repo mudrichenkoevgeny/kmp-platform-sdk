@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.testsupport.MutableEpochTestC
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.ConfirmationType
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.otpconfirmation.createTestOtpConfirmation
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -15,12 +16,6 @@ import kotlin.test.assertTrue
 
 @InternalApi
 class ConfirmationRepositoryImplTest {
-
-    private fun otpConfirmationMock(retryAfterSeconds: Int) = OtpConfirmation(
-        retryAfterSeconds = retryAfterSeconds,
-        numberOfSymbols = 6,
-        expirationSeconds = 60
-    )
 
     @Test
     fun getRemainingDelay_returnsZero_whenNeverBlocked() {
@@ -54,7 +49,7 @@ class ConfirmationRepositoryImplTest {
         val repo = ConfirmationRepositoryImpl(clock)
 
         val first = repo.executeWithTimer(ConfirmationType.PASSWORD_RESET_EMAIL, IDENTIFIER_A) {
-            AppResult.Success(otpConfirmationMock(retryAfterSeconds = COOLDOWN_SEC))
+            AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = COOLDOWN_SEC))
         }
         assertIs<AppResult.Success<*>>(first)
 
@@ -67,7 +62,7 @@ class ConfirmationRepositoryImplTest {
         val repo = ConfirmationRepositoryImpl(clock)
 
         repo.executeWithTimer(ConfirmationType.REGISTRATION_EMAIL, IDENTIFIER_A) {
-            AppResult.Success(otpConfirmationMock(retryAfterSeconds = COOLDOWN_SEC))
+            AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = COOLDOWN_SEC))
         }
 
         clock.advanceMilliseconds(2_500L)
@@ -81,7 +76,7 @@ class ConfirmationRepositoryImplTest {
         val repo = ConfirmationRepositoryImpl(clock)
 
         repo.executeWithTimer(ConfirmationType.ADD_EMAIL, IDENTIFIER_A) {
-            AppResult.Success(otpConfirmationMock(retryAfterSeconds = COOLDOWN_SEC))
+            AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = COOLDOWN_SEC))
         }
 
         var secondInvocation = false
@@ -136,7 +131,7 @@ class ConfirmationRepositoryImplTest {
         val repo = ConfirmationRepositoryImpl(clock)
 
         repo.executeWithTimer(ConfirmationType.REGISTRATION_EMAIL, IDENTIFIER_A) {
-            AppResult.Success(otpConfirmationMock(retryAfterSeconds = COOLDOWN_SEC))
+            AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = COOLDOWN_SEC))
         }
 
         var otherRan = false
@@ -162,7 +157,7 @@ class ConfirmationRepositoryImplTest {
         val repo = ConfirmationRepositoryImpl(clock)
 
         repo.executeWithTimer(ConfirmationType.LOGIN_PHONE, IDENTIFIER_A) {
-            AppResult.Success(otpConfirmationMock(retryAfterSeconds = 2))
+            AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = 2))
         }
         assertEquals(2, repo.getRemainingDelay(ConfirmationType.LOGIN_PHONE, IDENTIFIER_A))
 

@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventPrivateMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventPrivate
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.repository.ManagementAuditRepositoryMock
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -14,7 +14,7 @@ class GetAuditEventUseCaseTest {
 
     @Test
     fun invoke_returnsEvent_whenRepositorySucceeds() = runTest {
-        val event = auditEventPrivateMock()
+        val event = createTestAuditEventPrivate()
         val repository = ManagementAuditRepositoryMock(getAuditEventResult = AppResult.Success(event))
         val useCase = GetAuditEventUseCase(repository)
 

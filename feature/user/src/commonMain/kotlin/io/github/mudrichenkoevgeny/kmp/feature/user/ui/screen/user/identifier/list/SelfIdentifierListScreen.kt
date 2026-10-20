@@ -61,13 +61,13 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.identifier.SelfIdentifierListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth.AuthProviderButton
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth.AuthProviderButtonMode
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.auth.AuthProviderGrid
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.identifier.item.IdentifierItem
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
@@ -406,12 +406,12 @@ internal class SelfIdentifierListPreviewProvider : PreviewParameterProvider<Self
     private val items: List<Pair<String, SelfIdentifierListScreenState>> = listOf(
         "Content List" to SelfIdentifierListScreenState.Content(
             paging = PaginationState(
-                items = listOf(userIdentifierSummaryMock())
+                items = listOf(createTestUserIdentifierSummary())
             ),
             isAddIdentifierSupported = true
         ),
         "Action Loading" to SelfIdentifierListScreenState.Content(
-            paging = PaginationState(items = listOf(userIdentifierSummaryMock())),
+            paging = PaginationState(items = listOf(createTestUserIdentifierSummary())),
             isAddIdentifierSupported = true,
             actionLoading = true
         ),
@@ -436,7 +436,7 @@ private fun SelfIdentifierListScreenPreviewContent(state: SelfIdentifierListScre
 
 @InternalApi
 private val defaultSelfIdentifierListPreviewState = SelfIdentifierListScreenState.Content(
-    paging = PaginationState(items = listOf(userIdentifierSummaryMock())),
+    paging = PaginationState(items = listOf(createTestUserIdentifierSummary())),
     isAddIdentifierSupported = true
 )
 

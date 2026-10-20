@@ -1,17 +1,17 @@
 package io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.settings
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.model.websocket.socketFrameMock
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.websocket.service.WebSocketServiceMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.network.api.auth.settings.OpenAuthSettingsApiMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.settings.openAuthSettingsPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.settings.OpenAuthSettingsStorageMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.OpenAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.settings.toOpenAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserWebSocketEventTypes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.settings.OpenAuthSettingsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.network.model.websocket.createTestSocketFrame
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.auth.settings.createTestOpenAuthSettingsPayload
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
@@ -37,9 +37,9 @@ class OpenAuthSettingsRepositoryImplTest {
 
     @Test
     fun getOpenAuthSettings_returnsMemoryWithoutApi_whenPreloadedFromStorage() = runTest {
-        val persisted = openAuthSettingsPayloadMock().toOpenAuthSettings()
+        val persisted = createTestOpenAuthSettingsPayload().toOpenAuthSettings()
         storage.updateOpenAuthSettings(persisted)
-        api.result = AppResult.Success(openAuthSettingsPayloadMock())
+        api.result = AppResult.Success(createTestOpenAuthSettingsPayload())
 
         val repo = createRepository(this)
         advanceUntilIdle()
@@ -52,7 +52,7 @@ class OpenAuthSettingsRepositoryImplTest {
 
     @Test
     fun getOpenAuthSettings_fetchesFromApi_whenNothingInStorage() = runTest {
-        val wire = openAuthSettingsPayloadMock()
+        val wire = createTestOpenAuthSettingsPayload()
         api.result = AppResult.Success(wire)
 
         val repo = createRepository(this)
@@ -68,8 +68,8 @@ class OpenAuthSettingsRepositoryImplTest {
 
     @Test
     fun refreshOpenAuthSettings_alwaysCallsApi() = runTest {
-        storage.updateOpenAuthSettings(openAuthSettingsPayloadMock().toOpenAuthSettings())
-        val fresh = openAuthSettingsPayloadMock()
+        storage.updateOpenAuthSettings(createTestOpenAuthSettingsPayload().toOpenAuthSettings())
+        val fresh = createTestOpenAuthSettingsPayload()
         api.result = AppResult.Success(fresh)
 
         val repo = createRepository(this)
@@ -84,7 +84,7 @@ class OpenAuthSettingsRepositoryImplTest {
 
     @Test
     fun openAuthSettingsUpdatedWebSocketEvent_persistsAndUpdatesObservableState() = runTest {
-        val initialWire = openAuthSettingsPayloadMock()
+        val initialWire = createTestOpenAuthSettingsPayload()
         api.result = AppResult.Success(initialWire)
 
         val repo = createRepository(this)
@@ -93,8 +93,8 @@ class OpenAuthSettingsRepositoryImplTest {
         assertIs<AppResult.Success<OpenAuthSettings>>(repo.getOpenAuthSettings())
         assertEquals(initialWire.toOpenAuthSettings(), storage.getOpenAuthSettings())
 
-        val pushed = openAuthSettingsPayloadMock()
-        val frame = socketFrameMock(
+        val pushed = createTestOpenAuthSettingsPayload()
+        val frame = createTestSocketFrame(
             type = UserWebSocketEventTypes.OPEN_AUTH_SETTINGS_UPDATED,
             payload = FoundationJson.encodeToJsonElement(
                 OpenAuthSettingsPayload.serializer(), pushed

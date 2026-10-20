@@ -7,12 +7,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.TextListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.identifier.ManagementIdentifierRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
@@ -28,7 +28,7 @@ class GlobalIdentifierListComponentImplTest {
 
     @Test
     fun init_loadsIdentifiersSuccessfully() = runComponentTest {
-        val identifier = userIdentifierSummaryMock()
+        val identifier = createTestUserIdentifierSummary()
         val context = createTestContext(identifiers = listOf(identifier))
 
         advanceUntilIdle()
@@ -50,7 +50,7 @@ class GlobalIdentifierListComponentImplTest {
 
     @Test
     fun onToggleFilterPanel_togglesIsFilterPanelExpanded() = runComponentTest {
-        val context = createTestContext(identifiers = listOf(userIdentifierSummaryMock()))
+        val context = createTestContext(identifiers = listOf(createTestUserIdentifierSummary()))
         advanceUntilIdle()
 
         var state = assertIs<GlobalIdentifierListScreenState.Content>(context.component.state.value)
@@ -64,7 +64,7 @@ class GlobalIdentifierListComponentImplTest {
     @Test
     fun onApplyFilters_appliesFiltersAndReloads() = runComponentTest {
         val repository = ManagementIdentifierRepositoryMock()
-        val context = createTestContext(repository = repository, identifiers = listOf(userIdentifierSummaryMock()))
+        val context = createTestContext(repository = repository, identifiers = listOf(createTestUserIdentifierSummary()))
         advanceUntilIdle()
 
         context.component.onFilterChanged(
@@ -80,7 +80,7 @@ class GlobalIdentifierListComponentImplTest {
     @Test
     fun onSortChanged_appliesSortAndReloads() = runComponentTest {
         val repository = ManagementIdentifierRepositoryMock()
-        val context = createTestContext(repository = repository, identifiers = listOf(userIdentifierSummaryMock()))
+        val context = createTestContext(repository = repository, identifiers = listOf(createTestUserIdentifierSummary()))
         advanceUntilIdle()
 
         context.component.onSortChanged(ListingSortState(optionId = UserSortValues.UserIdentifierSortBy.CREATED_AT.value, isAscending = false))
@@ -91,7 +91,7 @@ class GlobalIdentifierListComponentImplTest {
 
     @Test
     fun onRefresh_reloadsIdentifiers() = runComponentTest {
-        val context = createTestContext(identifiers = listOf(userIdentifierSummaryMock()))
+        val context = createTestContext(identifiers = listOf(createTestUserIdentifierSummary()))
         advanceUntilIdle()
 
         context.component.onRefresh()
@@ -112,7 +112,7 @@ class GlobalIdentifierListComponentImplTest {
         repository: ManagementIdentifierRepositoryMock = ManagementIdentifierRepositoryMock()
     ): TestContext {
         if (identifiers != null) {
-            repository.getIdentifiersResultProvider = { AppResult.Success(pagedResultMock(identifiers)) }
+            repository.getIdentifiersResultProvider = { AppResult.Success(createTestPagedResult(identifiers)) }
         }
 
         val lifecycle = LifecycleRegistry()

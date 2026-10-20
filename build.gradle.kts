@@ -1,14 +1,11 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.multiplatform).apply(false)
-    // TODO: [KMP_ANDROID]
-    // Trigger: "Full support for Android Kotlin Multiplatform plugin"
-    // Action:
-    // 1. Remove id("com.android.library")
-    // 2. Add alias(libs.plugins.android.kotlin.multiplatform.library).apply(false)
-    id("com.android.library") version "9.0.0" apply false
+    alias(libs.plugins.android.kotlin.multiplatform.library).apply(false)
     alias(libs.plugins.kotlinx.serialization).apply(false)
     alias(libs.plugins.compose.compiler).apply(false)
     alias(libs.plugins.compose).apply(false)
@@ -20,6 +17,18 @@ plugins {
     alias(libs.plugins.roborazzi).apply(false)
 }
 
+val daemonJvmVersion: Int = run {
+    val daemonFile = rootProject.file("gradle/gradle-daemon-jvm.properties")
+    if (daemonFile.exists()) {
+        val properties = Properties().apply {
+            daemonFile.inputStream().use { load(it) }
+        }
+        properties.getProperty("toolchainVersion")?.toIntOrNull()
+    } else {
+        null
+    }
+} ?: libs.versions.jvmToolchain.get().toInt()
+
 subprojects {
     val isBom = project.name == "bom"
     val isModule = project.projectDir.resolve("src").exists() || isBom
@@ -27,6 +36,18 @@ subprojects {
     if (!isModule) return@subprojects
 
     pluginManager.apply("com.autonomousapps.dependency-analysis")
+
+    plugins.withId("org.jetbrains.kotlin.multiplatform") {
+        extensions.configure<KotlinMultiplatformExtension>("kotlin") {
+            jvmToolchain(daemonJvmVersion)
+        }
+    }
+
+    plugins.withId("org.jetbrains.kotlin.jvm") {
+        extensions.configure<KotlinJvmProjectExtension>("kotlin") {
+            jvmToolchain(daemonJvmVersion)
+        }
+    }
 
     tasks.withType<KotlinCompilationTask<*>>().configureEach {
         compilerOptions {

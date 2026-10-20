@@ -3,14 +3,14 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.user
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.network.api.user.ManagementUserApiMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.user.userPrivatePayloadMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.user.userSummaryPayloadMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.toUserIdOrThrow
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.create.CreateByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.user.createTestUserPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.user.createTestUserSummaryPayloadList
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -26,7 +26,7 @@ class ManagementUserRepositoryImplTest {
 
     @Test
     fun createUser_mapsPayloadToDomainModel_onSuccess() = runTest {
-        val payload = userPrivatePayloadMock()
+        val payload = createTestUserPrivatePayload()
         api.createUserResult = AppResult.Success(payload)
 
         val request = CreateByEmailRequest(
@@ -46,10 +46,10 @@ class ManagementUserRepositoryImplTest {
 
     @Test
     fun getUsers_mapsPagedPayloadToDomainModel_onSuccess() = runTest {
-        val payload = userSummaryPayloadMock()
+        val payloadList = createTestUserSummaryPayloadList()
         val pagedPayload = PagedResult(
-            items = listOf(payload),
-            totalCount = 1L,
+            items = payloadList,
+            totalCount = payloadList.size.toLong(),
             pageNumber = 1,
             pageSize = 20,
             totalPages = 1L
@@ -60,13 +60,13 @@ class ManagementUserRepositoryImplTest {
 
         assertIs<AppResult.Success<*>>(result)
         val data = (result as AppResult.Success).data
-        assertEquals(1, data.items.size)
-        assertEquals(payload.toUserSummary(), data.items.first())
+        assertEquals(payloadList.size, data.items.size)
+        assertEquals(payloadList.first().toUserSummary(), data.items.first())
     }
 
     @Test
     fun getUser_mapsPayloadToDomainModel_onSuccess() = runTest {
-        val payload = userPrivatePayloadMock()
+        val payload = createTestUserPrivatePayload()
         api.getUserResult = AppResult.Success(payload)
 
         val result = repository.getUser(testUserId)

@@ -12,7 +12,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.Delet
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.user.detail.UserDetailParams
 import kotlinx.coroutines.test.advanceTimeBy
@@ -28,7 +28,7 @@ class UserDetailComponentImplTest {
 
     @Test
     fun init_loadsUserSuccessfully() = runComponentTest {
-        val user = userPrivateMock()
+        val user = createTestUserPrivate()
         val testContext = createTestContext(user = user)
 
         advanceTimeBy(100.milliseconds)
@@ -39,7 +39,7 @@ class UserDetailComponentImplTest {
 
     @Test
     fun onSessionsClick_invokesCallbackWithUserId() = runComponentTest {
-        val user = userPrivateMock()
+        val user = createTestUserPrivate()
         val testContext = createTestContext(user = user)
         advanceTimeBy(100.milliseconds)
 
@@ -50,7 +50,7 @@ class UserDetailComponentImplTest {
 
     @Test
     fun onIdentifiersClick_invokesCallbackWithUserId() = runComponentTest {
-        val user = userPrivateMock()
+        val user = createTestUserPrivate()
         val testContext = createTestContext(user = user)
         advanceTimeBy(100.milliseconds)
 
@@ -61,7 +61,7 @@ class UserDetailComponentImplTest {
 
     @Test
     fun onAuditEventsClick_invokesCallbackWithUserId() = runComponentTest {
-        val user = userPrivateMock()
+        val user = createTestUserPrivate()
         val testContext = createTestContext(user = user)
         advanceTimeBy(100.milliseconds)
 
@@ -72,7 +72,7 @@ class UserDetailComponentImplTest {
 
     @Test
     fun onDeleteClick_showsDeleteConfirmationDialog() = runComponentTest {
-        val user = userPrivateMock()
+        val user = createTestUserPrivate()
         val testContext = createTestContext(user = user)
         advanceTimeBy(100.milliseconds)
 
@@ -84,7 +84,7 @@ class UserDetailComponentImplTest {
 
     @Test
     fun onDismissDeleteDialog_hidesDeleteConfirmationDialog() = runComponentTest {
-        val user = userPrivateMock()
+        val user = createTestUserPrivate()
         val testContext = createTestContext(user = user)
         advanceTimeBy(100.milliseconds)
 
@@ -97,7 +97,7 @@ class UserDetailComponentImplTest {
 
     @Test
     fun onBackClick_invokesCallback() = runComponentTest {
-        val user = userPrivateMock()
+        val user = createTestUserPrivate()
         val testContext = createTestContext(user = user)
         testContext.component.onBackClick()
 
@@ -105,7 +105,7 @@ class UserDetailComponentImplTest {
     }
 
     private fun createTestContext(
-        user: UserPrivate = userPrivateMock(),
+        user: UserPrivate = createTestUserPrivate(),
         repository: ManagementUserRepositoryMock = ManagementUserRepositoryMock().apply {
             getUserResultProvider = { AppResult.Success(user) }
         }

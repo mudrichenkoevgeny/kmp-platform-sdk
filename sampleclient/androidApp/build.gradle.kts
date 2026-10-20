@@ -1,6 +1,6 @@
 plugins {
     id("com.android.application")
-    kotlin("android")
+    alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
 }
 
@@ -17,13 +17,9 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.jvmToolchain.get())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.jvmToolchain.get())
     }
-}
-
-kotlin {
-    jvmToolchain(libs.versions.jvmToolchain.get().toInt())
 }
 
 dependencies {

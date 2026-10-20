@@ -3,9 +3,9 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.totpSetupMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.security.UserSecurityRepositoryMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totpsetup.TotpSetup
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.totpsetup.createTestTotpSetup
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -16,7 +16,7 @@ class SetupTotpUseCaseTest {
 
     @Test
     fun invoke_returnsTotpSetup_whenRepositorySucceeds() = runTest {
-        val expectedTotpSetup = totpSetupMock()
+        val expectedTotpSetup = createTestTotpSetup()
         val repository = UserSecurityRepositoryMock().apply {
             totpSetupResultProvider = { AppResult.Success(expectedTotpSetup) }
         }

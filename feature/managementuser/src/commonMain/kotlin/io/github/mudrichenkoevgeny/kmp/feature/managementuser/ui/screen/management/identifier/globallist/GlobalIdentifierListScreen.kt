@@ -53,8 +53,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.identifiers.GlobalIdentifierListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
+
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.identifier.item.IdentifierItem
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
@@ -234,7 +235,7 @@ internal class GlobalIdentifierListPreviewProvider : PreviewParameterProvider<Gl
     private val items: List<Pair<String, GlobalIdentifierListScreenState>> = listOf(
         "Content" to GlobalIdentifierListScreenState.Content(
             paging = PaginationState(
-                items = listOf(userIdentifierSummaryMock(), userIdentifierSummaryMock())
+                items = listOf(createTestUserIdentifierSummary(), createTestUserIdentifierSummary())
             )
         ),
         "Error" to GlobalIdentifierListScreenState.Error(error = CommonError.Unknown()),
@@ -258,7 +259,7 @@ private fun GlobalIdentifierListScreenPreviewContent(state: GlobalIdentifierList
 
 @InternalApi
 private val defaultGlobalIdentifierListPreviewState = GlobalIdentifierListScreenState.Content(
-    paging = PaginationState(items = listOf(userIdentifierSummaryMock(), userIdentifierSummaryMock()))
+    paging = PaginationState(items = listOf(createTestUserIdentifierSummary(), createTestUserIdentifierSummary()))
 )
 
 @InternalApi

@@ -7,12 +7,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.TextListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.session.ManagementSessionRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
@@ -28,7 +28,7 @@ class GlobalSessionListComponentImplTest {
 
     @Test
     fun init_loadsSessionsSuccessfully() = runComponentTest {
-        val session = userSessionSummaryMock()
+        val session = createTestUserSessionSummary()
         val context = createTestContext(sessions = listOf(session))
 
         advanceUntilIdle()
@@ -50,7 +50,7 @@ class GlobalSessionListComponentImplTest {
 
     @Test
     fun onToggleFilterPanel_togglesIsFilterPanelExpanded() = runComponentTest {
-        val context = createTestContext(sessions = listOf(userSessionSummaryMock()))
+        val context = createTestContext(sessions = listOf(createTestUserSessionSummary()))
         advanceUntilIdle()
 
         var state = assertIs<GlobalSessionListScreenState.Content>(context.component.state.value)
@@ -64,7 +64,7 @@ class GlobalSessionListComponentImplTest {
     @Test
     fun onApplyFilters_appliesFiltersAndReloads() = runComponentTest {
         val repository = ManagementSessionRepositoryMock()
-        val context = createTestContext(repository = repository, sessions = listOf(userSessionSummaryMock()))
+        val context = createTestContext(repository = repository, sessions = listOf(createTestUserSessionSummary()))
         advanceUntilIdle()
 
         context.component.onFilterChanged(
@@ -80,7 +80,7 @@ class GlobalSessionListComponentImplTest {
     @Test
     fun onSortChanged_appliesSortAndReloads() = runComponentTest {
         val repository = ManagementSessionRepositoryMock()
-        val context = createTestContext(repository = repository, sessions = listOf(userSessionSummaryMock()))
+        val context = createTestContext(repository = repository, sessions = listOf(createTestUserSessionSummary()))
         advanceUntilIdle()
 
         context.component.onSortChanged(ListingSortState(optionId = UserSortValues.UserSessionSortBy.CREATED_AT.value, isAscending = false))
@@ -91,7 +91,7 @@ class GlobalSessionListComponentImplTest {
 
     @Test
     fun onRefresh_reloadsSessions() = runComponentTest {
-        val context = createTestContext(sessions = listOf(userSessionSummaryMock()))
+        val context = createTestContext(sessions = listOf(createTestUserSessionSummary()))
         advanceUntilIdle()
 
         context.component.onRefresh()
@@ -112,7 +112,7 @@ class GlobalSessionListComponentImplTest {
         repository: ManagementSessionRepositoryMock = ManagementSessionRepositoryMock()
     ): TestContext {
         if (sessions != null) {
-            repository.getSessionsResultProvider = { AppResult.Success(pagedResultMock(sessions)) }
+            repository.getSessionsResultProvider = { AppResult.Success(createTestPagedResult(sessions)) }
         }
 
         val lifecycle = LifecycleRegistry()

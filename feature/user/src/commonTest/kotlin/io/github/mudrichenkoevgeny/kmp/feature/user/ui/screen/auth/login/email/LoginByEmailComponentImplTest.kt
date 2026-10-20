@@ -8,10 +8,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.data.authDataPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.login.LoginByEmailUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.auth.data.createTestAuthDataPayload
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -66,7 +66,7 @@ class LoginByEmailComponentImplTest {
     @Test
     fun onLoginClick_success_callsOnFinished() = runComponentTest {
         val loginUseCase = LoginByEmailUseCaseMock().apply {
-            resultProvider = { _, _ -> AppResult.Success(authDataPayloadMock().toAuthData()) }
+            resultProvider = { _, _ -> AppResult.Success(createTestAuthDataPayload().toAuthData()) }
         }
 
         val context = createLoginByEmailComponentTestContext(loginByEmailUseCase = loginUseCase)
@@ -184,7 +184,7 @@ class LoginByEmailComponentImplTest {
     private fun createLoginByEmailComponentTestContext(
         loginByEmailUseCase: LoginByEmailUseCaseMock = LoginByEmailUseCaseMock().apply {
             resultProvider = { _, _ ->
-                AppResult.Success(authDataPayloadMock().toAuthData())
+                AppResult.Success(createTestAuthDataPayload().toAuthData())
             }
         }
     ): LoginByEmailComponentTestContext {

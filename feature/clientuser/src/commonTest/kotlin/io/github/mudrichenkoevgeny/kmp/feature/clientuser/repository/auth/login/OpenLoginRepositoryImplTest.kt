@@ -2,10 +2,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.login
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.network.model.otpconfirmation.otpConfirmationPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.network.api.auth.login.OpenLoginApiMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.data.authDataPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.confirmation.ConfirmationRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.ConfirmationType
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
@@ -17,6 +15,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByExternalAuthProviderRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByPhoneRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToPhoneRequest
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.network.model.otpconfirmation.createTestOtpConfirmationPayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.auth.data.createTestAuthDataPayload
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -27,7 +27,7 @@ class OpenLoginRepositoryImplTest {
 
     @Test
     fun loginByEmail_forwardsRequest_andMapsAuthData() = runTest {
-        val wire = authDataPayloadMock()
+        val wire = createTestAuthDataPayload()
         val api = OpenLoginApiMock().apply { loginByEmailResult = AppResult.Success(wire) }
         val repo = OpenLoginRepositoryImpl(api, ConfirmationRepositoryMock())
 
@@ -40,7 +40,7 @@ class OpenLoginRepositoryImplTest {
 
     @Test
     fun loginByPhone_forwardsRequest_andMapsAuthData() = runTest {
-        val wire = authDataPayloadMock()
+        val wire = createTestAuthDataPayload()
         val api = OpenLoginApiMock().apply { loginByPhoneResult = AppResult.Success(wire) }
         val repo = OpenLoginRepositoryImpl(api, ConfirmationRepositoryMock())
 
@@ -53,7 +53,7 @@ class OpenLoginRepositoryImplTest {
 
     @Test
     fun loginByExternalAuthProvider_forwardsSerialName_andMapsAuthData() = runTest {
-        val wire = authDataPayloadMock()
+        val wire = createTestAuthDataPayload()
         val api = OpenLoginApiMock().apply { loginByExternalAuthProviderResult = AppResult.Success(wire) }
         val repo = OpenLoginRepositoryImpl(api, ConfirmationRepositoryMock())
 
@@ -69,7 +69,7 @@ class OpenLoginRepositoryImplTest {
 
     @Test
     fun sendLoginConfirmationToPhone_usesLoginPhoneTimer_andMapsResponse() = runTest {
-        val wire = otpConfirmationPayloadMock(retryAfterSeconds = CONFIRMATION_RETRY_AFTER_SECONDS)
+        val wire = createTestOtpConfirmationPayload(retryAfterSeconds = CONFIRMATION_RETRY_AFTER_SECONDS)
         val api = OpenLoginApiMock().apply { sendLoginConfirmationToPhoneResult = AppResult.Success(wire) }
         val confirmationMock = ConfirmationRepositoryMock()
         val repo = OpenLoginRepositoryImpl(api, confirmationMock)

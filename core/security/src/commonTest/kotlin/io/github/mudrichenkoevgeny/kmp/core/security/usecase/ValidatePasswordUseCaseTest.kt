@@ -4,13 +4,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.security.error.model.SecurityError
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.managementPasswordPolicyMock
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.openPasswordPolicyMock
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.openSecuritySettingsMock
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.passwordpolicy.validator.PasswordPolicyValidatorMock
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.repository.OpenSecuritySettingsRepositoryMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.PasswordPolicyFailReason
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.PasswordPolicyValidatorResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.passwordpolicy.createTestManagementPasswordPolicy
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.passwordpolicy.createTestOpenPasswordPolicy
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.securitysettings.createTestOpenSecuritySettings
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.passwordpolicy.validator.FakePasswordPolicyValidator
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertTrue
@@ -20,13 +19,8 @@ class ValidatePasswordUseCaseTest {
 
     @Test
     fun `should return success when validation passes`() = runTest {
-        val policy = openPasswordPolicyMock()
-        val repository = OpenSecuritySettingsRepositoryMock(
-            initialSettings = openSecuritySettingsMock(passwordPolicy = policy)
-        )
-        val validator = PasswordPolicyValidatorMock().apply {
-            validateResult = PasswordPolicyValidatorResult.Success
-        }
+        val repository = OpenSecuritySettingsRepositoryMock()
+        val validator = FakePasswordPolicyValidator()
         val useCase = ValidatePasswordUseCase(repository, validator)
 
         val result = useCase("valid_password")
@@ -39,9 +33,7 @@ class ValidatePasswordUseCaseTest {
         val repository = OpenSecuritySettingsRepositoryMock(initialSettings = null).apply {
             getSecuritySettingsResult = AppResult.Error(CommonError.Unknown())
         }
-        val validator = PasswordPolicyValidatorMock().apply {
-            validateResult = PasswordPolicyValidatorResult.Success
-        }
+        val validator = FakePasswordPolicyValidator()
         val useCase = ValidatePasswordUseCase(repository, validator)
 
         val result = useCase("any_password")
@@ -51,11 +43,7 @@ class ValidatePasswordUseCaseTest {
 
     @Test
     fun `should return correct error when validation fails`() = runTest {
-        val policy = openPasswordPolicyMock()
-        val managementPolicy = managementPasswordPolicyMock()
-        val repository = OpenSecuritySettingsRepositoryMock(
-            initialSettings = openSecuritySettingsMock(passwordPolicy = policy)
-        )
+        val repository = OpenSecuritySettingsRepositoryMock()
 
         val failScenarios = mapOf(
             PasswordPolicyFailReason.TOO_SHORT to SecurityError.PasswordTooShort::class,
@@ -68,9 +56,7 @@ class ValidatePasswordUseCaseTest {
         )
 
         failScenarios.forEach { (reason, expectedClass) ->
-            val validator = PasswordPolicyValidatorMock().apply {
-                validateResult = PasswordPolicyValidatorResult.Fail(listOf(reason), managementPolicy)
-            }
+            val validator = FakePasswordPolicyValidator(failReasons = listOf(reason))
             val useCase = ValidatePasswordUseCase(repository, validator)
 
             val result = useCase("invalid_password")

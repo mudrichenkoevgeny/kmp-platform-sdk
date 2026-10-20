@@ -2,10 +2,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.regis
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.network.model.otpconfirmation.otpConfirmationPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.network.api.auth.registration.OpenRegistrationApiMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.data.authDataPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.confirmation.ConfirmationRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.ConfirmationType
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
@@ -14,6 +12,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.registration.RegistrationByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.network.model.otpconfirmation.createTestOtpConfirmationPayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.auth.data.createTestAuthDataPayload
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -24,7 +24,7 @@ class OpenRegistrationRepositoryImplTest {
 
     @Test
     fun registerByEmail_forwardsRequest_andMapsAuthData() = runTest {
-        val wire = authDataPayloadMock()
+        val wire = createTestAuthDataPayload()
         val api = OpenRegistrationApiMock().apply { registerByEmailResult = AppResult.Success(wire) }
         val repo = OpenRegistrationRepositoryImpl(api, ConfirmationRepositoryMock())
 
@@ -37,7 +37,7 @@ class OpenRegistrationRepositoryImplTest {
 
     @Test
     fun sendRegistrationConfirmationToEmail_usesRegistrationEmailTimer() = runTest {
-        val wire = otpConfirmationPayloadMock(retryAfterSeconds = CONFIRMATION_RETRY_AFTER_SECONDS)
+        val wire = createTestOtpConfirmationPayload(retryAfterSeconds = CONFIRMATION_RETRY_AFTER_SECONDS)
         val api = OpenRegistrationApiMock().apply { sendRegistrationConfirmationToEmailResult = AppResult.Success(wire) }
         val confirmationMock = ConfirmationRepositoryMock()
         val repo = OpenRegistrationRepositoryImpl(api, confirmationMock)

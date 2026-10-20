@@ -2,13 +2,13 @@ package io.github.mudrichenkoevgeny.kmp.core.settings.mock.network.globalsetting
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.core.settings.mock.network.model.globalsettings.openGlobalSettingsPayloadMock
 import io.github.mudrichenkoevgeny.kmp.core.settings.network.globalsettings.OpenGlobalSettingsApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.model.globalsettings.OpenGlobalSettingsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.settings.network.model.globalsettings.createTestOpenGlobalSettingsPayload
 
 @InternalApi
 class OpenGlobalSettingsApiMock(
-    var result: AppResult<OpenGlobalSettingsPayload> = AppResult.Success(openGlobalSettingsPayloadMock())
+    var result: AppResult<OpenGlobalSettingsPayload> = AppResult.Success(createTestOpenGlobalSettingsPayload())
 ) : OpenGlobalSettingsApi {
     var getGlobalSettingsCallCount = 0
 

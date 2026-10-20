@@ -1,0 +1,135 @@
+package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.detail
+
+import android.app.Application
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.runComposeUiTest
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionPrivate
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.session.detail.SessionDetailComponentMock
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+@InternalApi
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [ROBOLECTRIC_SDK], application = Application::class)
+class SessionDetailScreenTest {
+
+    @Test
+    fun displaysSessionDetails_andInvokesRevoke() = runComposeUiTest {
+        val session = createTestUserSessionPrivate()
+        val component = SessionDetailComponentMock(
+            initialState = SessionDetailScreenState.Content(
+                session = session,
+                isCurrentSession = false
+            )
+        )
+
+        setContent {
+            ComponentTestHarness {
+                SessionDetailScreen(component)
+            }
+        }
+
+        onNodeWithTag(SessionDetailTestTags.TITLE).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.BACK_BUTTON).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.SESSION_CARD).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.USER_ROW, useUnmergedTree = true).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.USER_ID, useUnmergedTree = true).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.IDENTIFIER_DISPLAY_NAME, useUnmergedTree = true).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.AUTH_PROVIDER, useUnmergedTree = true).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.DEVICE_NAME).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.CLIENT_TYPE).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.LANGUAGE).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.APP_VERSION).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.OS_VERSION).assertIsDisplayed()
+        onNodeWithTag(SessionDetailTestTags.IP_ADDRESS).assertExists()
+        onNodeWithTag(SessionDetailTestTags.LAST_ACCESSED_AT).assertExists()
+        onNodeWithTag(SessionDetailTestTags.CREATED_AT).assertExists()
+        onNodeWithTag(SessionDetailTestTags.REVOKE_BUTTON).performScrollTo().performClick()
+
+        assertEquals(1, component.revokeSessionCalls)
+    }
+
+    @Test
+    fun currentSession_hidesRevokeButton() = runComposeUiTest {
+        val session = createTestUserSessionPrivate()
+        val component = SessionDetailComponentMock(
+            initialState = SessionDetailScreenState.Content(
+                session = session,
+                isCurrentSession = true
+            )
+        )
+
+        setContent {
+            ComponentTestHarness {
+                SessionDetailScreen(component)
+            }
+        }
+
+        onNodeWithTag(SessionDetailTestTags.REVOKE_BUTTON).assertDoesNotExist()
+    }
+
+    @Test
+    fun error_showsGlobalErrorTextNode() = runComposeUiTest {
+        val component = SessionDetailComponentMock(
+            initialState = SessionDetailScreenState.Error(error = CommonError.Unknown())
+        )
+
+        setContent {
+            ComponentTestHarness {
+                SessionDetailScreen(component)
+            }
+        }
+
+        onNodeWithTag(SessionDetailTestTags.GLOBAL_ERROR).assertIsDisplayed()
+    }
+
+    @Test
+    fun backButton_invokesOnBackClick() = runComposeUiTest {
+        val component = SessionDetailComponentMock(
+            initialState = SessionDetailScreenState.Content(
+                session = createTestUserSessionPrivate(),
+                isCurrentSession = false
+            )
+        )
+
+        setContent {
+            ComponentTestHarness {
+                SessionDetailScreen(component)
+            }
+        }
+
+        onNodeWithTag(SessionDetailTestTags.BACK_BUTTON).performClick()
+
+        assertEquals(1, component.backCalls)
+    }
+
+    @Test
+    fun userRow_invokesOnUserClick() = runComposeUiTest {
+        val component = SessionDetailComponentMock(
+            initialState = SessionDetailScreenState.Content(
+                session = createTestUserSessionPrivate(),
+                isCurrentSession = false
+            )
+        )
+
+        setContent {
+            ComponentTestHarness {
+                SessionDetailScreen(component)
+            }
+        }
+
+        onNodeWithTag(SessionDetailTestTags.USER_ROW).performClick()
+
+        assertEquals(1, component.userClickCalls)
+    }
+}

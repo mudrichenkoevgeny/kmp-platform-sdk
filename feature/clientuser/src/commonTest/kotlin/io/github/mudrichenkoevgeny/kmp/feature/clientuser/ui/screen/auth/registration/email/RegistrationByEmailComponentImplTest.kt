@@ -9,10 +9,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.core.security.error.model.SecurityError
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.otpConfirmationMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.otpconfirmation.createTestOtpConfirmation
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.usecase.ValidatePasswordUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.data.authDataPayloadMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.auth.data.createTestAuthDataPayload
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.registration.RegistrationRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.registration.RegistrationByEmailUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.registration.SendRegistrationConfirmationToEmailUseCaseMock
@@ -64,7 +64,7 @@ class RegistrationByEmailComponentImplTest {
     @Test
     fun onSendCodeClick_success_movesToRegistrationInput() = runComponentTest {
         val sendUseCase = SendRegistrationConfirmationToEmailUseCaseMock().apply {
-            resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = RETRY_AFTER_SEND_SUCCESS)) }
+            resultProvider = { AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = RETRY_AFTER_SEND_SUCCESS)) }
         }
         val context = createRegistrationByEmailComponentTestContext(sendRegistrationConfirmationToEmailUseCase = sendUseCase)
         try {
@@ -121,7 +121,7 @@ class RegistrationByEmailComponentImplTest {
         val context = createRegistrationByEmailComponentTestContext()
         try {
             context.component.onEmailChanged(VALID_EMAIL)
-            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = ZERO_RETRY)) }
             context.component.onSendCodeClick()
             advanceUntilIdle()
 
@@ -143,14 +143,14 @@ class RegistrationByEmailComponentImplTest {
 
     @Test
     fun onRegisterClick_success_callsOnFinished() = runComponentTest {
-        val authData = authDataPayloadMock().toAuthData()
+        val authData = createTestAuthDataPayload().toAuthData()
         val registerUseCase = RegistrationByEmailUseCaseMock().apply {
             resultProvider = { _, _, _ -> AppResult.Success(authData) }
         }
         val context = createRegistrationByEmailComponentTestContext(registrationByEmailUseCase = registerUseCase)
         try {
             context.component.onEmailChanged(VALID_EMAIL)
-            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = ZERO_RETRY)) }
             context.component.onSendCodeClick()
             advanceUntilIdle()
             context.component.onCodeChanged(FULL_CODE)
@@ -172,7 +172,7 @@ class RegistrationByEmailComponentImplTest {
         val context = createRegistrationByEmailComponentTestContext(registrationByEmailUseCase = registerUseCase)
         try {
             context.component.onEmailChanged(VALID_EMAIL)
-            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = ZERO_RETRY)) }
             context.component.onSendCodeClick()
             advanceUntilIdle()
             context.component.onCodeChanged(FULL_CODE)
@@ -192,7 +192,7 @@ class RegistrationByEmailComponentImplTest {
         val context = createRegistrationByEmailComponentTestContext()
         try {
             context.component.onEmailChanged(VALID_EMAIL)
-            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = ZERO_RETRY)) }
             context.component.onSendCodeClick()
             advanceUntilIdle()
             context.component.onBackClick()
@@ -222,7 +222,7 @@ class RegistrationByEmailComponentImplTest {
         val context = createRegistrationByEmailComponentTestContext()
         try {
             context.component.onEmailChanged(VALID_EMAIL)
-            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = ZERO_RETRY)) }
             context.component.onSendCodeClick()
             advanceUntilIdle()
             context.component.onTogglePasswordVisibility()
@@ -241,7 +241,7 @@ class RegistrationByEmailComponentImplTest {
         val context = createRegistrationByEmailComponentTestContext()
         try {
             context.component.onEmailChanged(VALID_EMAIL)
-            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.sendRegistrationConfirmationToEmailUseCase.resultProvider = { AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = ZERO_RETRY)) }
             context.component.onSendCodeClick()
             advanceUntilIdle()
             context.component.onCodeChanged(FULL_CODE)

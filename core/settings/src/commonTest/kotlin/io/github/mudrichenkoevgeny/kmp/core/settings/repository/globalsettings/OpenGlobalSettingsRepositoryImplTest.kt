@@ -1,12 +1,12 @@
 package io.github.mudrichenkoevgeny.kmp.core.settings.repository.globalsettings
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.model.websocket.socketFrameMock
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.websocket.service.WebSocketServiceMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.core.settings.mock.domain.model.globalsettings.openGlobalSettingsMock
 import io.github.mudrichenkoevgeny.kmp.core.settings.mock.network.globalsettings.OpenGlobalSettingsApiMock
-import io.github.mudrichenkoevgeny.kmp.core.settings.mock.network.model.globalsettings.openGlobalSettingsPayloadMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.network.model.websocket.createTestSocketFrame
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.settings.domain.model.globalsettings.createTestOpenGlobalSettings
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.settings.network.model.globalsettings.createTestOpenGlobalSettingsPayload
 import io.github.mudrichenkoevgeny.kmp.core.settings.mock.storage.globalsettings.OpenGlobalSettingsStorageMock
 import io.github.mudrichenkoevgeny.kmp.core.settings.repository.OpenGlobalSettingsRepositoryImpl
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
@@ -39,9 +39,9 @@ class OpenGlobalSettingsRepositoryImplTest {
 
     @Test
     fun getGlobalSettings_returnsMemoryWithoutApi_whenPreloadedFromStorage() = runTest {
-        val persisted = openGlobalSettingsMock()
+        val persisted = createTestOpenGlobalSettings()
         storage.stored = persisted
-        api.result = AppResult.Success(openGlobalSettingsPayloadMock())
+        api.result = AppResult.Success(createTestOpenGlobalSettingsPayload())
 
         val repo = createRepository(this)
         advanceUntilIdle()
@@ -54,7 +54,7 @@ class OpenGlobalSettingsRepositoryImplTest {
 
     @Test
     fun getGlobalSettings_fetchesFromApi_whenNothingInStorage() = runTest {
-        val response = openGlobalSettingsPayloadMock()
+        val response = createTestOpenGlobalSettingsPayload()
         api.result = AppResult.Success(response)
 
         val repo = createRepository(this)
@@ -69,8 +69,8 @@ class OpenGlobalSettingsRepositoryImplTest {
 
     @Test
     fun refreshGlobalSettings_alwaysCallsApi() = runTest {
-        storage.stored = openGlobalSettingsMock()
-        val fresh = openGlobalSettingsPayloadMock()
+        storage.stored = createTestOpenGlobalSettings()
+        val fresh = createTestOpenGlobalSettingsPayload()
         api.result = AppResult.Success(fresh)
 
         val repo = createRepository(this)
@@ -85,7 +85,7 @@ class OpenGlobalSettingsRepositoryImplTest {
 
     @Test
     fun globalSettingsUpdatedWebSocketEvent_persistsAndUpdatesFlow() = runTest {
-        val initialWire = openGlobalSettingsPayloadMock(privacy = "first")
+        val initialWire = createTestOpenGlobalSettingsPayload(privacyPolicyUrl = "first")
         api.result = AppResult.Success(initialWire)
 
         val repo = createRepository(this)
@@ -95,8 +95,8 @@ class OpenGlobalSettingsRepositoryImplTest {
         repo.getOpenGlobalSettings()
         assertEquals(initialWire.toOpenGlobalSettings(), storage.stored)
 
-        val pushed = openGlobalSettingsPayloadMock(privacy = "ws-p", terms = "ws-t", email = "ws@e")
-        val frame = socketFrameMock(
+        val pushed = createTestOpenGlobalSettingsPayload(privacyPolicyUrl = "ws-p", termsOfServiceUrl = "ws-t", contactSupportEmail = "ws@e")
+        val frame = createTestSocketFrame(
             type = SettingsWebSocketEventTypes.OPEN_GLOBAL_SETTINGS_UPDATED,
             payload = FoundationJson.encodeToJsonElement(
                 OpenGlobalSettingsPayload.serializer(),

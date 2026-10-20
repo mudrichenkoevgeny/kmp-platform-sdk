@@ -2,11 +2,12 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.sessio
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.network.api.session.SelfManagementSessionApiMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.session.userSessionPrivatePayloadMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.session.userSessionSummaryPayloadMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionSummaryPayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionSummaryPayloadList
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
@@ -40,8 +41,8 @@ class SelfManagementSessionRepositoryImplTest {
 
     @Test
     fun `getSessions fetches from network and updates cache`() = runTest {
-        val payload = userSessionSummaryPayloadMock()
-        val wire = pagedResultMock(items = listOf(payload), totalCount = 1)
+        val payloadList = createTestUserSessionSummaryPayloadList()
+        val wire = createTestPagedResult(items = payloadList, totalCount = payloadList.size.toLong())
         api.getSessionsResult = AppResult.Success(wire)
 
         val result = repo.getSessions(
@@ -53,14 +54,14 @@ class SelfManagementSessionRepositoryImplTest {
         )
 
         val success = assertIs<AppResult.Success<PagedResult<UserSessionSummary>>>(result)
-        assertEquals(payload.toUserSessionSummary(), success.data.items.first())
-        assertEquals(1, storage.getUserSessionsList().items.size)
+        assertEquals(payloadList.first().toUserSessionSummary(), success.data.items.first())
+        assertEquals(payloadList.size, storage.getUserSessionsList().items.size)
     }
 
     @Test
     fun `getSessions returns cache when network fails`() = runTest {
-        val session = userSessionSummaryPayloadMock().toUserSessionSummary()
-        storage.updateUserSessionsList(pagedResultMock(items = listOf(session)))
+        val session = createTestUserSessionSummaryPayload().toUserSessionSummary()
+        storage.updateUserSessionsList(createTestPagedResult(items = listOf(session)))
         api.getSessionsResult = AppResult.Error(CommonError.Unknown())
 
         val result = repo.getSessions(
@@ -88,7 +89,7 @@ class SelfManagementSessionRepositoryImplTest {
     @Test
     fun `logout clears storage on success`() = runTest {
         api.logoutResult = AppResult.Success(Unit)
-        storage.addUserSession(userSessionSummaryPayloadMock().toUserSessionSummary())
+        storage.addUserSession(createTestUserSessionSummaryPayload().toUserSessionSummary())
 
         val result = repo.logout()
 
@@ -108,7 +109,7 @@ class SelfManagementSessionRepositoryImplTest {
 
     @Test
     fun `getSession fetches from network and updates cache`() = runTest {
-        val payload = userSessionPrivatePayloadMock()
+        val payload = createTestUserSessionPrivatePayload()
         api.getSessionResult = AppResult.Success(payload)
         val sessionId = UserSessionId(Uuid.random())
 
@@ -126,7 +127,7 @@ class SelfManagementSessionRepositoryImplTest {
             io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.DeletedSessionsPayload(deletedIds)
         )
         
-        storage.addUserSession(userSessionSummaryPayloadMock().toUserSessionSummary().copy(id = id1))
+        storage.addUserSession(createTestUserSessionSummaryPayload().toUserSessionSummary().copy(id = id1))
         assertEquals(1, storage.getUserSessionsList().items.size)
 
         val result = repo.deleteAllOtherSessions()

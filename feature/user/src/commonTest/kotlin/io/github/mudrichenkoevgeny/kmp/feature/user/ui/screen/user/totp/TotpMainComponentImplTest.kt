@@ -8,7 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.UserRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.security.DisableTotpUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.security.EnableTotpUseCaseMock
@@ -49,7 +49,7 @@ class TotpMainComponentImplTest {
 
     @Test
     fun init_whenTotpDisabled_emitsDisabled() = runComponentTest {
-        val user = userPrivateMock(isTotpEnabled = false)
+        val user = createTestUserPrivate(isTotpEnabled = false)
         val userRepository = UserRepositoryMock()
         val context = createTotpMainComponentTestContext(userRepository = userRepository)
         try {
@@ -65,7 +65,7 @@ class TotpMainComponentImplTest {
 
     @Test
     fun init_whenTotpEnabled_emitsEnabled() = runComponentTest {
-        val user = userPrivateMock(isTotpEnabled = true)
+        val user = createTestUserPrivate(isTotpEnabled = true)
         val userRepository = UserRepositoryMock()
         val context = createTotpMainComponentTestContext(
             userRepository = userRepository
@@ -83,7 +83,7 @@ class TotpMainComponentImplTest {
 
     @Test
     fun onSetupClick_success_movesToSetupInProgress() = runComponentTest {
-        val user = userPrivateMock(isTotpEnabled = false)
+        val user = createTestUserPrivate(isTotpEnabled = false)
         val userRepository = UserRepositoryMock()
         val totpSetup = TotpSetup(secretKey = SECRET_KEY, otpAuthUrl = OTP_AUTH_URL, mfaToken = MFA_TOKEN)
         val setupTotpUseCase = SetupTotpUseCaseMock().apply {
@@ -109,7 +109,7 @@ class TotpMainComponentImplTest {
 
     @Test
     fun onSetupClick_error_keepsDisabledWithActionError() = runComponentTest {
-        val user = userPrivateMock(isTotpEnabled = false)
+        val user = createTestUserPrivate(isTotpEnabled = false)
         val userRepository = UserRepositoryMock()
         val setupTotpUseCase = SetupTotpUseCaseMock().apply {
             resultProvider = { AppResult.Error(CommonError.Unknown()) }
@@ -134,7 +134,7 @@ class TotpMainComponentImplTest {
 
     @Test
     fun onCodeChanged_updatesCodeAndClearsActionError() = runComponentTest {
-        val user = userPrivateMock(isTotpEnabled = false)
+        val user = createTestUserPrivate(isTotpEnabled = false)
         val userRepository = UserRepositoryMock()
         val totpSetup = TotpSetup(secretKey = SECRET_KEY, otpAuthUrl = OTP_AUTH_URL, mfaToken = MFA_TOKEN)
         val setupTotpUseCase = SetupTotpUseCaseMock().apply {
@@ -161,7 +161,7 @@ class TotpMainComponentImplTest {
 
     @Test
     fun onConfirmSetupClick_success_movesToEnabledAndNavigatesToRecoveryCodes() = runComponentTest {
-        val user = userPrivateMock(isTotpEnabled = false)
+        val user = createTestUserPrivate(isTotpEnabled = false)
         val enabledUser = user.copy(isTotpEnabled = true)
         val userRepository = UserRepositoryMock().apply {
             resultProvider = { AppResult.Success(enabledUser) }
@@ -201,7 +201,7 @@ class TotpMainComponentImplTest {
 
     @Test
     fun onDisableClick_showsConfirmationDialog() = runComponentTest {
-        val user = userPrivateMock(isTotpEnabled = true)
+        val user = createTestUserPrivate(isTotpEnabled = true)
         val userRepository = UserRepositoryMock()
         val context = createTotpMainComponentTestContext(
             userRepository = userRepository
@@ -221,7 +221,7 @@ class TotpMainComponentImplTest {
 
     @Test
     fun onConfirmDisable_success_movesToDisabledAndRefreshesUser() = runComponentTest {
-        val user = userPrivateMock(isTotpEnabled = true)
+        val user = createTestUserPrivate(isTotpEnabled = true)
         val disabledUser = user.copy(isTotpEnabled = false)
         val userRepository = UserRepositoryMock().apply {
             resultProvider = { AppResult.Success(disabledUser) }
@@ -252,7 +252,7 @@ class TotpMainComponentImplTest {
 
     @Test
     fun onDismissDialog_hidesDisableConfirmation() = runComponentTest {
-        val user = userPrivateMock(isTotpEnabled = true)
+        val user = createTestUserPrivate(isTotpEnabled = true)
         val context = createTotpMainComponentTestContext()
         try {
             context.userRepository.emit(user)
@@ -272,7 +272,7 @@ class TotpMainComponentImplTest {
 
     @Test
     fun onRecoveryCodesClick_navigatesToRecoveryCodes() = runComponentTest {
-        val user = userPrivateMock(isTotpEnabled = true)
+        val user = createTestUserPrivate(isTotpEnabled = true)
         val userRepository = UserRepositoryMock()
         val context = createTotpMainComponentTestContext(
             userRepository = userRepository

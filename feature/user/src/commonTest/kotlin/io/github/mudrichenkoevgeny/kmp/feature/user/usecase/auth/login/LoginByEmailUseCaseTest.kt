@@ -3,12 +3,12 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.data.authDataPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.login.LoginRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.auth.data.createTestAuthDataPayload
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -20,7 +20,7 @@ class LoginByEmailUseCaseTest {
 
     @Test
     fun execute_persistsTokensAndUser_whenLoginSucceeds() = runTest {
-        val authData = authDataPayloadMock().toAuthData()
+        val authData = createTestAuthDataPayload().toAuthData()
         val loginRepository = LoginRepositoryMock().apply {
             authDataResultProvider = { AppResult.Success(authData) }
         }

@@ -2,11 +2,9 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.user
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.model.websocket.socketFrameMock
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.websocket.service.WebSocketServiceMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.network.api.user.SelfManagementUserApiMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.user.userPrivatePayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
@@ -19,6 +17,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserWebSocketEventTypes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.network.model.websocket.createTestSocketFrame
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.user.createTestUserPrivatePayload
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
@@ -56,7 +56,7 @@ class SelfManagementUserRepositoryImplTest {
 
     @Test
     fun `refreshCurrentUser fetches from api and updates storage`() = runTest {
-        val wire = userPrivatePayloadMock()
+        val wire = createTestUserPrivatePayload()
         userApi.userResult = AppResult.Success(wire)
         val repo = createRepository(this)
 
@@ -89,8 +89,8 @@ class SelfManagementUserRepositoryImplTest {
         createRepository(this)
         runCurrent()
 
-        val pushed = userPrivatePayloadMock()
-        val frame = socketFrameMock(
+        val pushed = createTestUserPrivatePayload()
+        val frame = createTestSocketFrame(
             type = UserWebSocketEventTypes.USER_UPDATED,
             payload = FoundationJson.encodeToJsonElement<UserPrivatePayload>(pushed)
         )
@@ -110,7 +110,7 @@ class SelfManagementUserRepositoryImplTest {
         createRepository(this)
         runCurrent()
 
-        userStorage.updateCurrentUser(userPrivatePayloadMock().toUserPrivate())
+        userStorage.updateCurrentUser(createTestUserPrivatePayload().toUserPrivate())
         val token = SessionToken(
             accessToken = AccessToken("at"),
             refreshToken = RefreshToken("rt"),
@@ -120,7 +120,7 @@ class SelfManagementUserRepositoryImplTest {
         )
         authStorage.updateTokens(token)
 
-        val frame = socketFrameMock(type = UserWebSocketEventTypes.SESSION_DELETED)
+        val frame = createTestSocketFrame(type = UserWebSocketEventTypes.SESSION_DELETED)
 
         webSocketService.emit(frame)
         runCurrent()

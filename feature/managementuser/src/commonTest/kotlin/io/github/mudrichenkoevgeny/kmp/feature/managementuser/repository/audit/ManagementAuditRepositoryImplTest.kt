@@ -2,8 +2,6 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.audit
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.network.model.event.auditEventPrivatePayloadMock
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.network.model.event.auditEventSummaryPayloadMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.audit.ManagementAuditApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.action.CompositeAuditActionTypeParser
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
@@ -20,6 +18,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.action.UserAuditActionType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.network.model.event.createTestAuditEventPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.network.model.event.createTestAuditEventSummaryPayloadList
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -32,11 +32,13 @@ class ManagementAuditRepositoryImplTest {
     private val resourceParser = CompositeAuditResourceTypeParser(setOf(UserAuditResourceType.USER))
     private val metadataParser = CompositeAuditMetadataKeyParser(emptySet())
 
+    private val eventSummaryPayloadList = createTestAuditEventSummaryPayloadList()
+
     private val api = object : ManagementAuditApi {
         var getAuditEventsResult: AppResult<PagedResult<AuditEventSummaryPayload>> = AppResult.Success(
-            PagedResult(listOf(auditEventSummaryPayloadMock()), 1L, 1, 20, 1L)
+            PagedResult(eventSummaryPayloadList, eventSummaryPayloadList.size.toLong(), 1, 20, 1L)
         )
-        var getAuditEventResult: AppResult<AuditEventPrivatePayload> = AppResult.Success(auditEventPrivatePayloadMock())
+        var getAuditEventResult: AppResult<AuditEventPrivatePayload> = AppResult.Success(createTestAuditEventPrivatePayload())
 
         override suspend fun getAuditEvents(
             pageNumber: Int?,
@@ -69,8 +71,8 @@ class ManagementAuditRepositoryImplTest {
 
         assertIs<AppResult.Success<*>>(result)
         val data = (result as AppResult.Success).data
-        assertEquals(1, data.items.size)
-        assertEquals(auditEventSummaryPayloadMock().toAuditEventSummary(actionParser, resourceParser), data.items.first())
+        assertEquals(eventSummaryPayloadList.size, data.items.size)
+        assertEquals(eventSummaryPayloadList.first().toAuditEventSummary(actionParser, resourceParser), data.items.first())
     }
 
     @Test
@@ -79,7 +81,7 @@ class ManagementAuditRepositoryImplTest {
 
         assertIs<AppResult.Success<*>>(result)
         assertEquals(
-            auditEventPrivatePayloadMock().toAuditEventPrivate(actionParser, resourceParser, metadataParser),
+            createTestAuditEventPrivatePayload().toAuditEventPrivate(actionParser, resourceParser, metadataParser),
             (result as AppResult.Success).data
         )
     }

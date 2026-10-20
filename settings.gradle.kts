@@ -30,7 +30,8 @@ fun registerModules(parentDir: String, modules: List<String>) {
 val coreModules = listOf(
     "common",
     "security",
-    "settings"
+    "settings",
+    "testing"
 )
 registerModules("core", coreModules)
 

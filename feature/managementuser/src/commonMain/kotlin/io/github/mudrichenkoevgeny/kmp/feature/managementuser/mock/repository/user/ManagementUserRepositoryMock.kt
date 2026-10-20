@@ -1,11 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.user
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.user.ManagementUserRepository
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userSummaryMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.permission.PermissionCode
@@ -18,20 +15,23 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.create.CreateByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserSummary
 
 @InternalApi
 open class ManagementUserRepositoryMock : ManagementUserRepository {
 
     var createUserResultProvider: (CreateByEmailRequest) -> AppResult<UserPrivate> = {
-        AppResult.Success(userPrivateMock())
+        AppResult.Success(createTestUserPrivate())
     }
 
     var getUsersResultProvider: () -> AppResult<PagedResult<UserSummary>> = {
-        AppResult.Success(pagedResultMock(listOf(userSummaryMock())))
+        AppResult.Success(createTestPagedResult(listOf(createTestUserSummary())))
     }
 
     var getUserResultProvider: (UserId) -> AppResult<UserPrivate> = {
-        AppResult.Success(userPrivateMock())
+        AppResult.Success(createTestUserPrivate())
     }
 
     var updateUserResultProvider: (UserId, UpdateUserRequest) -> AppResult<Unit> = { _, _ ->

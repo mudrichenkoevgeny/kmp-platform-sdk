@@ -8,9 +8,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.otpConfirmationMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.auth.data.authDataPayloadMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.otpconfirmation.createTestOtpConfirmation
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.auth.data.createTestAuthDataPayload
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.login.LoginRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.login.LoginByPhoneUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.login.SendLoginConfirmationToPhoneUseCaseMock
@@ -59,7 +59,7 @@ class LoginByPhoneComponentImplTest {
     fun onSendCodeClick_success_movesToCodeInput() = runComponentTest {
         val sendUseCase = SendLoginConfirmationToPhoneUseCaseMock().apply {
             resultProvider = {
-                AppResult.Success(otpConfirmationMock(retryAfterSeconds = RETRY_AFTER_SEND))
+                AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = RETRY_AFTER_SEND))
             }
         }
         val context = createLoginByPhoneComponentTestContext(sendLoginConfirmationToPhoneUseCase = sendUseCase)
@@ -119,14 +119,14 @@ class LoginByPhoneComponentImplTest {
 
     @Test
     fun onCodeChanged_fullCode_triggersLogin_andOnFinished() = runComponentTest {
-        val authData = authDataPayloadMock().toAuthData()
+        val authData = createTestAuthDataPayload().toAuthData()
         val loginUseCase = LoginByPhoneUseCaseMock().apply {
             resultProvider = { _, _ -> AppResult.Success(authData) }
         }
         val context = createLoginByPhoneComponentTestContext(loginByPhoneUseCase = loginUseCase)
         try {
             context.component.onPhoneChanged(VALID_PHONE)
-            context.sendLoginConfirmationToPhoneUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.sendLoginConfirmationToPhoneUseCase.resultProvider = { AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = ZERO_RETRY)) }
             context.component.onSendCodeClick()
             advanceUntilIdle()
             context.component.onCodeChanged(FULL_CODE)
@@ -145,7 +145,7 @@ class LoginByPhoneComponentImplTest {
         val context = createLoginByPhoneComponentTestContext(loginByPhoneUseCase = loginUseCase)
         try {
             context.component.onPhoneChanged(VALID_PHONE)
-            context.sendLoginConfirmationToPhoneUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.sendLoginConfirmationToPhoneUseCase.resultProvider = { AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = ZERO_RETRY)) }
             context.component.onSendCodeClick()
             advanceUntilIdle()
             context.component.onCodeChanged(FULL_CODE)
@@ -164,7 +164,7 @@ class LoginByPhoneComponentImplTest {
         val context = createLoginByPhoneComponentTestContext()
         try {
             context.component.onPhoneChanged(VALID_PHONE)
-            context.sendLoginConfirmationToPhoneUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.sendLoginConfirmationToPhoneUseCase.resultProvider = { AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = ZERO_RETRY)) }
             context.component.onSendCodeClick()
             runCurrent()
             context.component.onConfirmCodeClick()
@@ -180,7 +180,7 @@ class LoginByPhoneComponentImplTest {
         val context = createLoginByPhoneComponentTestContext()
         try {
             context.component.onPhoneChanged(VALID_PHONE)
-            context.sendLoginConfirmationToPhoneUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.sendLoginConfirmationToPhoneUseCase.resultProvider = { AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = ZERO_RETRY)) }
             context.component.onSendCodeClick()
             runCurrent()
             assertIs<LoginByPhoneComponent.Child.CodeInput>(context.component.stack.value.active.instance)
@@ -198,7 +198,7 @@ class LoginByPhoneComponentImplTest {
         val context = createLoginByPhoneComponentTestContext()
         try {
             context.component.onPhoneChanged(VALID_PHONE)
-            context.sendLoginConfirmationToPhoneUseCase.resultProvider = { AppResult.Success(otpConfirmationMock(retryAfterSeconds = ZERO_RETRY)) }
+            context.sendLoginConfirmationToPhoneUseCase.resultProvider = { AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = ZERO_RETRY)) }
             context.component.onSendCodeClick()
             runCurrent()
             context.component.onBackClick()

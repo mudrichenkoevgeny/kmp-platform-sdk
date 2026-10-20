@@ -7,7 +7,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventPrivateMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventPrivate
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.repository.ManagementAuditRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit.GetAuditEventUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.UserRepositoryMock
@@ -30,7 +30,7 @@ class AuditEventDetailComponentImplTest {
 
     @Test
     fun init_loadsEventSuccessfully() = runComponentTest {
-        val event = auditEventPrivateMock()
+        val event = createTestAuditEventPrivate()
         val repository = ManagementAuditRepositoryMock(getAuditEventResult = AppResult.Success(event))
         val useCase = GetAuditEventUseCase(repository)
 
@@ -84,7 +84,7 @@ class AuditEventDetailComponentImplTest {
     @Test
     fun onSubjectClick_whenSubjectIsUser_invokesNavigateToUserDetail() = runComponentTest {
         val userId = UserId.generate()
-        val event = auditEventPrivateMock(
+        val event = createTestAuditEventPrivate(
             actorType = AuditActorType.USER,
             actorId = userId.value.toHexDashString()
         )
@@ -116,7 +116,7 @@ class AuditEventDetailComponentImplTest {
     @Test
     fun onResourceClick_whenResourceIsUser_invokesNavigateToUserDetail() = runComponentTest {
         val userId = UserId.generate()
-        val event = auditEventPrivateMock(
+        val event = createTestAuditEventPrivate(
             resource = UserAuditResourceType.USER,
             resourceId = userId.value.toHexDashString()
         )
@@ -148,7 +148,7 @@ class AuditEventDetailComponentImplTest {
     @Test
     fun onResourceClick_whenResourceIsSession_invokesNavigateToSessionDetail() = runComponentTest {
         val sessionId = UserSessionId.generate()
-        val event = auditEventPrivateMock(
+        val event = createTestAuditEventPrivate(
             resource = UserAuditResourceType.SESSION,
             resourceId = sessionId.value.toHexDashString()
         )

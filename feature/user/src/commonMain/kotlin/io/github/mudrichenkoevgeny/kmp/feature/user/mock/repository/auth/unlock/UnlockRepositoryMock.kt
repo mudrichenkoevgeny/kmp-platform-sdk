@@ -2,18 +2,18 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.unlock
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.otpConfirmationMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.unlock.UnlockRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.otpconfirmation.createTestOtpConfirmation
 
 @InternalApi
 class UnlockRepositoryMock : UnlockRepository {
 
-    var sendUnlockEmailConfirmationResult: AppResult<OtpConfirmation> = AppResult.Success(otpConfirmationMock())
+    var sendUnlockEmailConfirmationResult: AppResult<OtpConfirmation> = AppResult.Success(createTestOtpConfirmation())
     var remainingEmailDelaySeconds: Int = 0
     var unlockByEmailResult: AppResult<Unit> = AppResult.Success(Unit)
 
-    var sendUnlockPhoneConfirmationResult: AppResult<OtpConfirmation> = AppResult.Success(otpConfirmationMock())
+    var sendUnlockPhoneConfirmationResult: AppResult<OtpConfirmation> = AppResult.Success(createTestOtpConfirmation())
     var remainingPhoneDelaySeconds: Int = 0
     var unlockByPhoneResult: AppResult<Unit> = AppResult.Success(Unit)
 

@@ -5,14 +5,14 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.arkivanov.essenty.lifecycle.resume
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.session.ManagementSessionRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteAllUserSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetUserSessionsUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionSummaryMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.userlist.ManagementUserSessionListParams
@@ -26,7 +26,7 @@ class UserSessionListComponentImplTest {
 
     @Test
     fun init_loadsSessionsSuccessfully() = runComponentTest {
-        val session = userSessionSummaryMock()
+        val session = createTestUserSessionSummary()
         val context = createTestContext(sessions = listOf(session))
 
         advanceUntilIdle()
@@ -70,7 +70,7 @@ class UserSessionListComponentImplTest {
         repository: ManagementSessionRepositoryMock = ManagementSessionRepositoryMock()
     ): TestContext {
         if (sessions != null) {
-            repository.getUserSessionsResultProvider = { AppResult.Success(pagedResultMock(sessions)) }
+            repository.getUserSessionsResultProvider = { AppResult.Success(createTestPagedResult(sessions)) }
         }
 
         val lifecycle = LifecycleRegistry()

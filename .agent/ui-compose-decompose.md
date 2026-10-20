@@ -20,7 +20,7 @@ This document defines standards for UI components, screens, preview tooling, and
 ## 3. Mandatory Companion Tests
 - **Screen & Component Coverage:** Every created UI screen (`*Screen.kt`) or UI component must be accompanied by both:
   1. **Compose UI / Unit Test (`*Test.kt`):** Verifies interactive behavior, clicks, states, and semantics.
-  2. **Screenshot Test (`*ScreenshotTest.kt`):** Uses Roborazzi with Robolectric in `src/androidUnitTest` to capture visual regression baselines.
+  2. **Screenshot Test (`*ScreenshotTest.kt`):** Uses Roborazzi with Robolectric in `src/androidHostTest` to capture visual regression baselines.
 
 ## 4. Scope Restriction for Preview Tooling
 - **No UI Tests for Preview Tooling:** **Do not** add UI tests for types that exist **strictly** to support IDE previews (e.g. `PreviewParameterProvider` classes).

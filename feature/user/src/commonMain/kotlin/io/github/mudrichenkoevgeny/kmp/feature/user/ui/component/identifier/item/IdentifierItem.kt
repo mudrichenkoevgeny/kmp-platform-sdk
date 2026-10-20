@@ -24,10 +24,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePrevi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.identifier.userIdentifierSummaryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListTestTags
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 
 /**
  * A list item representing a single user identifier (e.g., email or phone number).
@@ -88,11 +88,11 @@ private data class IdentifierItemPreviewState(
 private class IdentifierItemPreviewProvider : PreviewParameterProvider<IdentifierItemPreviewState> {
     private val items = listOf(
         IdentifierItemPreviewState(
-            identifier = userIdentifierSummaryMock(),
+            identifier = createTestUserIdentifierSummary(),
             isCurrentIdentifier = true
         ),
         IdentifierItemPreviewState(
-            identifier = userIdentifierSummaryMock().copy(
+            identifier = createTestUserIdentifierSummary(
                 userAuthProvider = UserAuthProvider.PHONE,
                 identifier = "+1234567890",
                 displayName = "+1234567890"
@@ -122,7 +122,7 @@ private fun IdentifierItemPreviewContent(state: IdentifierItemPreviewState) {
 
 @InternalApi
 private val defaultIdentifierItemPreviewState = IdentifierItemPreviewState(
-    identifier = userIdentifierSummaryMock(),
+    identifier = createTestUserIdentifierSummary(),
     isCurrentIdentifier = false
 )
 

@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpMainScreenState
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totpsetup.TotpSetup
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.totpsetup.createTestTotpSetup
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
@@ -76,7 +77,7 @@ class TotpMainScreenStateTest {
         const val CODE_ONE = "1111-2222"
         const val CODE_TWO = "3333-4444"
 
-        fun createMockTotpSetup() = TotpSetup(
+        fun createMockTotpSetup() = createTestTotpSetup(
             secretKey = SECRET_KEY,
             otpAuthUrl = OTP_AUTH_URL,
             mfaToken = MFA_TOKEN

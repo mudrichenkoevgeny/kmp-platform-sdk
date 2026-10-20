@@ -2,16 +2,16 @@ package io.github.mudrichenkoevgeny.kmp.core.security.mock.repository
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.openSecuritySettingsMock
 import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySettingsRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.securitysettings.OpenSecuritySettings
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.securitysettings.createTestOpenSecuritySettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 @InternalApi
 class OpenSecuritySettingsRepositoryMock(
-    initialSettings: OpenSecuritySettings? = openSecuritySettingsMock()
+    initialSettings: OpenSecuritySettings? = createTestOpenSecuritySettings()
 ) : OpenSecuritySettingsRepository {
 
     private val _settings = MutableStateFlow(initialSettings)
@@ -28,7 +28,7 @@ class OpenSecuritySettingsRepositoryMock(
         return if (current != null) {
             AppResult.Success(current)
         } else {
-            val fresh = openSecuritySettingsMock()
+            val fresh = createTestOpenSecuritySettings()
             _settings.value = fresh
             AppResult.Success(fresh)
         }
@@ -39,7 +39,7 @@ class OpenSecuritySettingsRepositoryMock(
         if (customResult != null) {
             return customResult
         }
-        val fresh = openSecuritySettingsMock()
+        val fresh = createTestOpenSecuritySettings()
         _settings.value = fresh
         return AppResult.Success(fresh)
     }

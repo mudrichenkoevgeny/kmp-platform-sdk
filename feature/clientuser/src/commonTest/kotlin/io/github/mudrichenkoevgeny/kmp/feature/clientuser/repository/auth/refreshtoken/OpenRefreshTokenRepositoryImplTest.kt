@@ -4,10 +4,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.api.auth.refreshtoken.RefreshTokenApiMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.model.token.sessionTokenPayloadMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.token.createTestSessionTokenPayload
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -19,7 +19,7 @@ class OpenRefreshTokenRepositoryImplTest {
 
     @Test
     fun refreshToken_forwardsWrappedRequest_andMapsSuccess() = runTest {
-        val wire = sessionTokenPayloadMock(
+        val wire = createTestSessionTokenPayload(
             accessToken = ACCESS_TOKEN,
             refreshToken = REFRESH_TOKEN,
             expiresAt = EXPIRES_AT_MS,

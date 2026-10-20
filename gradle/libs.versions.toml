@@ -1,32 +1,32 @@
 [versions]
 # @keep
-jvmToolchain = "21"
-android-compileSdk = "36"
+jvmToolchain = "25"
+android-compileSdk = "37"
 android-minSdk = "24"
-android-targetSdk = "36"
+android-targetSdk = "37"
 
 # Plugins & Core
-kotlin = "2.3.20"
-agp = "9.0.1"
-compose = "1.10.3"
-sqlDelight = "2.3.2"
-buildConfig = "6.0.9"
-maven-publish = "0.36.0"
-dependency-analysis = "3.11.0"
+kotlin = "2.4.21"
+agp = "9.4.1"
+compose = "1.12.2"
+sqlDelight = "2.4.1"
+buildConfig = "6.1.2"
+maven-publish = "0.37.0"
+dependency-analysis = "3.19.2"
 
 # Shared Foundation
-shared-foundation = "0.0.72"
+shared-foundation = "0.0.74"
 
 # Kotlin
-kotlinx-serialization = "1.10.0"
-kotlinx-coroutines = "1.10.2"
-kotlinx-datetime = "0.7.1"
+kotlinx-serialization = "1.11.0"
+kotlinx-coroutines = "1.11.0"
+kotlinx-datetime = "0.8.0"
 
 # Compose
 compose-material3 = "1.9.0"
 
 # Ktor
-ktor = "3.4.1"
+ktor = "3.6.0"
 
 # Lifecycle
 jetbrains-lifecycle = "2.9.6"
@@ -34,28 +34,28 @@ androidx-lifecycle = "2.10.0"
 decompose = "3.5.0"
 
 # Storage
-androidx-datastorePreferences = "1.3.0-alpha07"
+androidx-datastorePreferences = "1.3.0-rc01"
 
 # Logging
-kermit = "2.1.0"
+kermit = "2.2.0"
 
 # QR Code
-qrose = "1.0.1"
+qrose = "1.3.1"
 
 # Android
 androidx-activityCompose = "1.13.0"
-crypto-tink = "1.20.0"
-jetbrainsKotlinJvm = "2.3.20"
+crypto-tink = "1.24.0"
+jetbrainsKotlinJvm = "2.4.21"
 
 # OAuth
-androidx-credentials = "1.5.0"
-googleid = "1.2.0"
+androidx-credentials = "1.6.0"
+googleid = "1.2.1"
 
 # Testing (Android JVM / Robolectric)
 androidx-test-core = "1.7.0"
-robolectric = "4.16.1"
-androidx-compose-ui = "1.10.5"
-roborazzi = "1.74.0"
+robolectric = "4.17"
+androidx-compose-ui = "1.12.1"
+roborazzi = "1.76.0"
 
 [libraries]
 # Shared Foundation
@@ -64,6 +64,7 @@ shared-foundation-core-settings = { group = "io.github.mudrichenkoevgeny", name 
 shared-foundation-core-security = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-security", version.ref = "shared-foundation" }
 shared-foundation-core-audit = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-audit", version.ref = "shared-foundation" }
 shared-foundation-feature-user = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-feature-user", version.ref = "shared-foundation" }
+shared-foundation-testing = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-testing", version.ref = "shared-foundation" }
 
 # Kotlin
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }

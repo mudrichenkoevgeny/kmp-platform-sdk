@@ -53,9 +53,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.detail.UserDetailComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userPrivateMock
+
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 
 /**
  * Administrative user detail screen: displays user details and management action controls.
@@ -423,21 +424,21 @@ private fun LockoutTypeDropdown(
 internal class UserDetailPreviewProvider : PreviewParameterProvider<UserDetailScreenState> {
     private val items: List<Pair<String, UserDetailScreenState>> = listOf(
         "Content" to UserDetailScreenState.Content(
-            user = userPrivateMock(),
+            user = createTestUserPrivate(),
             authorityLevelInput = "0",
             accountStatusInput = "ACTIVE",
             lockoutTypeInput = "NONE",
             temporaryLockoutUntilInput = ""
         ),
         "Pending Deletion" to UserDetailScreenState.Content(
-            user = userPrivateMock(accountStatus = UserAccountStatus.PENDING_DELETION),
+            user = createTestUserPrivate().copy(accountStatus = UserAccountStatus.PENDING_DELETION),
             authorityLevelInput = "0",
             accountStatusInput = "PENDING_DELETION",
             lockoutTypeInput = "NONE",
             temporaryLockoutUntilInput = ""
         ),
         "Saving" to UserDetailScreenState.Content(
-            user = userPrivateMock(),
+            user = createTestUserPrivate(),
             authorityLevelInput = "0",
             accountStatusInput = "ACTIVE",
             lockoutTypeInput = "NONE",
@@ -465,7 +466,7 @@ private fun UserDetailScreenPreviewContent(state: UserDetailScreenState) {
 
 @InternalApi
 private val defaultUserDetailPreviewState = UserDetailScreenState.Content(
-    user = userPrivateMock(),
+    user = createTestUserPrivate(),
     authorityLevelInput = "0",
     accountStatusInput = "ACTIVE",
     lockoutTypeInput = "NONE",

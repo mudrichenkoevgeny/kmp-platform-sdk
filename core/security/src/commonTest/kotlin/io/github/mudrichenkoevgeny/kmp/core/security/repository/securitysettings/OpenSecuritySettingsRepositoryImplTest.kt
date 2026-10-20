@@ -1,12 +1,12 @@
 package io.github.mudrichenkoevgeny.kmp.core.security.repository.securitysettings
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.model.websocket.socketFrameMock
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.websocket.service.WebSocketServiceMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.openSecuritySettingsMock
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.network.model.passwordpolicy.openPasswordPolicyPayloadMock
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.network.model.securitysettings.openSecuritySettingsPayloadMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.network.model.websocket.createTestSocketFrame
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.securitysettings.createTestOpenSecuritySettings
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.network.model.passwordpolicy.createTestOpenPasswordPolicyPayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.network.model.securitysettings.createTestOpenSecuritySettingsPayload
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.network.securitysettings.OpenSecuritySettingsApiMock
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.storage.securitysettings.OpenSecuritySettingsStorageMock
 import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySettingsRepositoryImpl
@@ -41,9 +41,9 @@ class OpenSecuritySettingsRepositoryImplTest {
     @Test
     fun getSecuritySettings_returnsMemoryWithoutApi_whenPreloadedFromStorage() =
         runTest {
-            val persisted = openSecuritySettingsMock()
+            val persisted = createTestOpenSecuritySettings()
             storage.stored = persisted
-            api.result = AppResult.Success(openSecuritySettingsPayloadMock())
+            api.result = AppResult.Success(createTestOpenSecuritySettingsPayload())
 
             val repo = createRepository(this)
             advanceUntilIdle()
@@ -56,8 +56,8 @@ class OpenSecuritySettingsRepositoryImplTest {
 
     @Test
     fun getSecuritySettings_fetchesFromApi_whenNothingInStorage() = runTest {
-        val response = openSecuritySettingsPayloadMock(
-            passwordPolicy = openPasswordPolicyPayloadMock(minLength = 10)
+        val response = createTestOpenSecuritySettingsPayload(
+            passwordPolicy = createTestOpenPasswordPolicyPayload(minLength = 10)
         )
         api.result = AppResult.Success(response)
 
@@ -73,9 +73,9 @@ class OpenSecuritySettingsRepositoryImplTest {
 
     @Test
     fun refreshSecuritySettings_alwaysCallsApi() = runTest {
-        storage.stored = openSecuritySettingsMock()
-        val fresh = openSecuritySettingsPayloadMock(
-            passwordPolicy = openPasswordPolicyPayloadMock(minLength = 99)
+        storage.stored = createTestOpenSecuritySettings()
+        val fresh = createTestOpenSecuritySettingsPayload(
+            passwordPolicy = createTestOpenPasswordPolicyPayload(minLength = 99)
         )
         api.result = AppResult.Success(fresh)
 
@@ -91,8 +91,8 @@ class OpenSecuritySettingsRepositoryImplTest {
 
     @Test
     fun securitySettingsUpdatedWebSocketEvent_persistsAndUpdatesState() = runTest {
-        val initialWire = openSecuritySettingsPayloadMock(
-            passwordPolicy = openPasswordPolicyPayloadMock(minLength = 1)
+        val initialWire = createTestOpenSecuritySettingsPayload(
+            passwordPolicy = createTestOpenPasswordPolicyPayload(minLength = 1)
         )
         api.result = AppResult.Success(initialWire)
 
@@ -102,10 +102,10 @@ class OpenSecuritySettingsRepositoryImplTest {
 
         repo.getOpenSecuritySettings()
 
-        val pushed = openSecuritySettingsPayloadMock(
-            passwordPolicy = openPasswordPolicyPayloadMock(minLength = 77)
+        val pushed = createTestOpenSecuritySettingsPayload(
+            passwordPolicy = createTestOpenPasswordPolicyPayload(minLength = 77)
         )
-        val frame = socketFrameMock(
+        val frame = createTestSocketFrame(
             type = SecurityWebSocketEventTypes.OPEN_SECURITY_SETTINGS_UPDATED,
             payload = FoundationJson.encodeToJsonElement(
                 OpenSecuritySettingsPayload.serializer(),

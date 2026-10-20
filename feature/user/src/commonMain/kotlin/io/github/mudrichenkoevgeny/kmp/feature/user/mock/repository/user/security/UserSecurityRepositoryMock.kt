@@ -2,24 +2,24 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.securi
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.totpRecoveryCodesMock
-import io.github.mudrichenkoevgeny.kmp.core.security.mock.domain.model.totpSetupMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.security.UserSecurityRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totprecoverycodes.TotpRecoveryCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totpsetup.TotpSetup
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.totprecoverycodes.createTestTotpRecoveryCodes
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.totpsetup.createTestTotpSetup
 
 @InternalApi
 open class UserSecurityRepositoryMock : UserSecurityRepository {
 
     var totpSetupResultProvider: () -> AppResult<TotpSetup> = {
         AppResult.Success(
-            totpSetupMock()
+            createTestTotpSetup()
         )
     }
 
     var enableTotpResultProvider: (mfaToken: String, code: String) -> AppResult<TotpRecoveryCodes> = { _, _ ->
         AppResult.Success(
-            totpRecoveryCodesMock()
+            createTestTotpRecoveryCodes()
         )
     }
 
@@ -27,13 +27,13 @@ open class UserSecurityRepositoryMock : UserSecurityRepository {
 
     var recoveryCodesResultProvider: () -> AppResult<TotpRecoveryCodes> = {
         AppResult.Success(
-            totpRecoveryCodesMock()
+            createTestTotpRecoveryCodes()
         )
     }
 
     var regenerateRecoveryCodesResultProvider: () -> AppResult<TotpRecoveryCodes> = {
         AppResult.Success(
-            totpRecoveryCodesMock()
+            createTestTotpRecoveryCodes()
         )
     }
 

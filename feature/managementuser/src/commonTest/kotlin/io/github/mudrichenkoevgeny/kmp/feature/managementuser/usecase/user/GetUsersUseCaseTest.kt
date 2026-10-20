@@ -2,12 +2,12 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.mock.domain.model.listing.pagedResultMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.user.ManagementUserRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.user.userSummaryMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserSummary
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserSummary
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -18,7 +18,7 @@ class GetUsersUseCaseTest {
 
     @Test
     fun invoke_returnsPagedResult_whenRepositorySucceeds() = runTest {
-        val expectedResult = pagedResultMock(listOf(userSummaryMock()))
+        val expectedResult = createTestPagedResult(listOf(createTestUserSummary()))
         val repository = ManagementUserRepositoryMock().apply {
             getUsersResultProvider = { AppResult.Success(expectedResult) }
         }

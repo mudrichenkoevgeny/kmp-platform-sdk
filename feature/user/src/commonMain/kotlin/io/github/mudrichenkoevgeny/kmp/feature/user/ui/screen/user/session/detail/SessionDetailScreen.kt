@@ -61,8 +61,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_email
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_google
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_phone
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.domain.model.session.userSessionPrivateMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.session.detail.SessionDetailComponentMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.jetbrains.compose.resources.painterResource
 
@@ -274,20 +274,20 @@ private fun Content(
 internal class SessionDetailPreviewProvider : PreviewParameterProvider<SessionDetailScreenState> {
     private val items: List<Pair<String, SessionDetailScreenState>> = listOf(
         "Other Session Content" to SessionDetailScreenState.Content(
-            session = userSessionPrivateMock(),
+            session = createTestUserSessionPrivate(),
             isCurrentSession = false
         ),
         "Current Session Content" to SessionDetailScreenState.Content(
-            session = userSessionPrivateMock(),
+            session = createTestUserSessionPrivate(),
             isCurrentSession = true
         ),
         "Action Loading" to SessionDetailScreenState.Content(
-            session = userSessionPrivateMock(),
+            session = createTestUserSessionPrivate(),
             isCurrentSession = false,
             actionLoading = true
         ),
         "Action Error" to SessionDetailScreenState.Content(
-            session = userSessionPrivateMock(),
+            session = createTestUserSessionPrivate(),
             isCurrentSession = false,
             actionError = CommonError.Unknown()
         ),
@@ -312,7 +312,7 @@ private fun SessionDetailScreenPreviewContent(state: SessionDetailScreenState) {
 
 @InternalApi
 private val defaultSessionDetailPreviewState = SessionDetailScreenState.Content(
-    session = userSessionPrivateMock(),
+    session = createTestUserSessionPrivate(),
     isCurrentSession = false
 )
 

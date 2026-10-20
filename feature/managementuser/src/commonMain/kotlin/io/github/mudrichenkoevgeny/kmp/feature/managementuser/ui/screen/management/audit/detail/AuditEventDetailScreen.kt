@@ -44,11 +44,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.domain.model.event.auditEventPrivateMock
+
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.audit.detail.AuditEventDetailComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventPrivate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -255,7 +256,7 @@ private fun DetailRow(
 internal class AuditEventDetailPreviewProvider : PreviewParameterProvider<AuditEventDetailScreenState> {
     @InternalApi
     private val items: List<Pair<String, AuditEventDetailScreenState>> = listOf(
-        "Content" to AuditEventDetailScreenState.Content(event = auditEventPrivateMock()),
+        "Content" to AuditEventDetailScreenState.Content(event = createTestAuditEventPrivate()),
         "Error" to AuditEventDetailScreenState.Error(error = CommonError.Unknown()),
         "Loading" to AuditEventDetailScreenState.Loading
     )
@@ -277,7 +278,7 @@ private fun AuditEventDetailScreenPreviewContent(state: AuditEventDetailScreenSt
 
 @InternalApi
 private val defaultAuditEventDetailPreviewState = AuditEventDetailScreenState.Content(
-    event = auditEventPrivateMock()
+    event = createTestAuditEventPrivate()
 )
 
 @InternalApi
