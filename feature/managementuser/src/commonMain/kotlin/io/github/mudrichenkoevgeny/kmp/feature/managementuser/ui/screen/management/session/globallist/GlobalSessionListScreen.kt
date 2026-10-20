@@ -56,6 +56,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserString
 
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.session.item.SessionItem
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummaryList
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
@@ -239,7 +240,7 @@ internal class GlobalSessionListPreviewProvider : PreviewParameterProvider<Globa
     private val items: List<Pair<String, GlobalSessionListScreenState>> = listOf(
         "Content" to GlobalSessionListScreenState.Content(
             paging = PaginationState(
-                items = listOf(createTestUserSessionSummary(), createTestUserSessionSummary())
+                items = createTestUserSessionSummaryList(count = 2)
             )
         ),
         "Error" to GlobalSessionListScreenState.Error(error = CommonError.Unknown()),
@@ -263,7 +264,7 @@ private fun GlobalSessionListScreenPreviewContent(state: GlobalSessionListScreen
 
 @InternalApi
 private val defaultGlobalSessionListPreviewState = GlobalSessionListScreenState.Content(
-    paging = PaginationState(items = listOf(createTestUserSessionSummary(), createTestUserSessionSummary()))
+    paging = PaginationState(items = createTestUserSessionSummaryList(count = 2))
 )
 
 @InternalApi

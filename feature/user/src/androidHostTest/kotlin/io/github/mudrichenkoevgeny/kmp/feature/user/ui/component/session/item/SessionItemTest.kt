@@ -12,6 +12,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.TEST_EMAIL
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -27,7 +28,7 @@ class SessionItemTest {
     @Test
     fun rendersSessionDataAndTriggersRevoke() = runComposeUiTest {
         var revokeClicks = 0
-        val baseSession = createTestUserSessionSummary(identifierDisplayName = "user@example.com")
+        val baseSession = createTestUserSessionSummary(identifierDisplayName = TEST_EMAIL)
         val session = baseSession.copy(
             clientDeviceInfo = baseSession.clientDeviceInfo.copy(deviceName = "Mock Device")
         )
@@ -46,7 +47,7 @@ class SessionItemTest {
             }
         }
 
-        onNodeWithText("test.user@example.com").assertIsDisplayed()
+        onNodeWithText(TEST_EMAIL).assertIsDisplayed()
 
         onNodeWithText("Revoke").performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, revokeClicks)

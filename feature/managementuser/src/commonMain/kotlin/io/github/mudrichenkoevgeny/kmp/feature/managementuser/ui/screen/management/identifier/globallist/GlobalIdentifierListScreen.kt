@@ -56,6 +56,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserString
 
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.identifier.item.IdentifierItem
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummaryList
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
@@ -235,7 +236,7 @@ internal class GlobalIdentifierListPreviewProvider : PreviewParameterProvider<Gl
     private val items: List<Pair<String, GlobalIdentifierListScreenState>> = listOf(
         "Content" to GlobalIdentifierListScreenState.Content(
             paging = PaginationState(
-                items = listOf(createTestUserIdentifierSummary(), createTestUserIdentifierSummary())
+                items = createTestUserIdentifierSummaryList(count = 2)
             )
         ),
         "Error" to GlobalIdentifierListScreenState.Error(error = CommonError.Unknown()),
@@ -259,7 +260,7 @@ private fun GlobalIdentifierListScreenPreviewContent(state: GlobalIdentifierList
 
 @InternalApi
 private val defaultGlobalIdentifierListPreviewState = GlobalIdentifierListScreenState.Content(
-    paging = PaginationState(items = listOf(createTestUserIdentifierSummary(), createTestUserIdentifierSummary()))
+    paging = PaginationState(items = createTestUserIdentifierSummaryList(count = 2))
 )
 
 @InternalApi

@@ -61,6 +61,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.session.item.Se
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.session.item.SessionItemTestTags
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummaryList
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
@@ -231,28 +232,29 @@ private fun ErrorText(error: AppError?, testTag: String) {
 
 @InternalApi
 internal class SelfSessionListPreviewProvider : PreviewParameterProvider<SelfSessionListScreenState> {
-    private val session1 = createTestUserSessionSummary()
-    private val session2 = createTestUserSessionSummary()
+    private val defaultSessions = createTestUserSessionSummaryList(count = 2)
+    private val currentSession = defaultSessions.first()
+
     private val items: List<Pair<String, SelfSessionListScreenState>> = listOf(
         "Current and Other Sessions" to SelfSessionListScreenState.Content(
             paging = PaginationState(
-                items = listOf(session1, session2)
+                items = defaultSessions
             ),
-            currentSessionId = session1.id
+            currentSessionId = currentSession.id
         ),
         "Multiple Sessions" to SelfSessionListScreenState.Content(
             paging = PaginationState(
-                items = listOf(createTestUserSessionSummary(), createTestUserSessionSummary())
+                items = createTestUserSessionSummaryList(count = 2)
             )
         ),
         "Single Session" to SelfSessionListScreenState.Content(
             paging = PaginationState(
-                items = listOf(createTestUserSessionSummary())
+                items = listOf(currentSession)
             )
         ),
         "Action Loading" to SelfSessionListScreenState.Content(
             paging = PaginationState(
-                items = listOf(createTestUserSessionSummary())
+                items = listOf(currentSession)
             ),
             actionLoading = true
         ),

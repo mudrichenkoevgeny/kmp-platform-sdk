@@ -62,14 +62,34 @@ To generate a complete, searchable text report of all dependencies in a specific
 
 The project utilizes the `com.vanniktech.maven.publish` plugin for artifact management.
 
-### 1. Remote Staging
+### 1. Local Maven Deployment (`mavenLocal`)
+
+1. **Publish artifacts to local Maven repository:**
+   Uploads all published library Maven artifacts to your machine's local Maven cache (`~/.m2/repository/`):
+   ```bash
+   ./gradlew publishToMavenLocal
+   ```
+
+2. **Connect in your consumer project:**
+   Add `mavenLocal()` to your consumer project's `settings.gradle.kts` (or root `build.gradle.kts`):
+   ```kotlin
+   dependencyResolutionManagement {
+       repositories {
+           mavenLocal() // Must be at the top to take priority over remote repositories
+           mavenCentral()
+           google()
+       }
+   }
+   ```
+
+### 2. Remote Staging
 Uploads all publications to the remote staging repository (Maven Central) without performing a final release. Use this for manual verification in the repository manager:
 
 ```bash
 ./gradlew publishAllPublicationsToMavenCentralRepository
 ```
 
-### 2. Full Release Cycle
+### 3. Full Release Cycle
 Performs a complete deployment workflow, including uploading, closing the staging repository, and releasing artifacts to Maven Central:
 
 ```bash

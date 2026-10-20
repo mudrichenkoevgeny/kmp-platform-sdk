@@ -60,6 +60,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserString
 
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserSummary
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserSummaryList
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
@@ -260,7 +261,7 @@ internal class GlobalUserListPreviewProvider : PreviewParameterProvider<GlobalUs
     private val items: List<Pair<String, GlobalUserListScreenState>> = listOf(
         "Content" to GlobalUserListScreenState.Content(
             paging = PaginationState(
-                items = listOf(createTestUserSummary(), createTestUserSummary())
+                items = createTestUserSummaryList(count = 2)
             )
         ),
         "Error" to GlobalUserListScreenState.Error(error = CommonError.Unknown()),
@@ -284,7 +285,7 @@ private fun GlobalUserListScreenPreviewContent(state: GlobalUserListScreenState)
 
 @InternalApi
 private val defaultGlobalUserListPreviewState = GlobalUserListScreenState.Content(
-    paging = PaginationState(items = listOf(createTestUserSummary(), createTestUserSummary()))
+    paging = PaginationState(items = createTestUserSummaryList(count = 2))
 )
 
 @InternalApi

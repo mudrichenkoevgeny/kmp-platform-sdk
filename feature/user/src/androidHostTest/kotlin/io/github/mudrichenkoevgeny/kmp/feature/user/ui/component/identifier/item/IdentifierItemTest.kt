@@ -12,6 +12,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.TEST_EMAIL
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListTestTags
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
@@ -29,7 +30,7 @@ class IdentifierItemTest {
     @Test
     fun rendersIdentifierDataAndTriggersClick() = runComposeUiTest {
         var clicks = 0
-        val identifier = createTestUserIdentifierSummary(displayName = "user@example.com")
+        val identifier = createTestUserIdentifierSummary(displayName = TEST_EMAIL)
 
         setContent {
             CoreTheme {
@@ -45,7 +46,7 @@ class IdentifierItemTest {
             }
         }
 
-        onNodeWithText("test.user@example.com").assertIsDisplayed()
+        onNodeWithText(TEST_EMAIL).assertIsDisplayed()
         onNodeWithText("EMAIL").assertIsDisplayed()
 
         onNodeWithTag(IdentifierListTestTags.IDENTIFIER_ITEM_PREFIX + identifier.id.value).performClick()

@@ -15,7 +15,9 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.model.ev
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.model.event.AuditEventSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.metadata.CommonAuditMetadataKey
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.action.UserAuditActionType
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.metadata.UserAuditMetadataKey
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.network.model.event.createTestAuditEventPrivatePayload
@@ -28,9 +30,15 @@ import kotlin.test.assertIs
 @InternalApi
 class ManagementAuditRepositoryImplTest {
 
-    private val actionParser = CompositeAuditActionTypeParser(setOf(UserAuditActionType.MANAGEMENT_UPDATE_USER))
-    private val resourceParser = CompositeAuditResourceTypeParser(setOf(UserAuditResourceType.USER))
-    private val metadataParser = CompositeAuditMetadataKeyParser(emptySet())
+    private val actionParser = CompositeAuditActionTypeParser(
+        setOf(UserAuditActionType.MANAGEMENT_UPDATE_USER)
+    )
+    private val resourceParser = CompositeAuditResourceTypeParser(
+        setOf(UserAuditResourceType.USER)
+    )
+    private val metadataParser = CompositeAuditMetadataKeyParser(
+        setOf(CommonAuditMetadataKey.IP_ADDRESS) + UserAuditMetadataKey.entries.toSet()
+    )
 
     private val eventSummaryPayload = createTestAuditEventSummaryPayload(
         action = UserAuditActionType.MANAGEMENT_UPDATE_USER.value,
