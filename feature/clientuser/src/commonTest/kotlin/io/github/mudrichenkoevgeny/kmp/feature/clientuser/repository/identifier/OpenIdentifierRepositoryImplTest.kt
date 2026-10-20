@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.identifier.createTestUserIdentifierSummaryPayloadList
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.identifier.createTestUserIdentifierSummaryPayload
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -20,8 +20,8 @@ class OpenIdentifierRepositoryImplTest {
 
     @Test
     fun `getUserIdentifiers should update storage on success`() = runTest {
-        val payloadList = createTestUserIdentifierSummaryPayloadList()
-        val paged = createTestPagedResult(payloadList)
+        val payload = createTestUserIdentifierSummaryPayload()
+        val paged = createTestPagedResult(listOf(payload))
         val api = OpenIdentifiersApiMock().apply {
             getUserIdentifiersResult = AppResult.Success(paged)
         }
@@ -31,8 +31,8 @@ class OpenIdentifierRepositoryImplTest {
         val result = repository.getUserIdentifiers(null, null, null, null, null, null)
 
         assertIs<AppResult.Success<PagedResult<UserIdentifierSummary>>>(result)
-        assertEquals(payloadList.size, result.data.items.size)
-        assertEquals(payloadList.first().identifier, result.data.items.first().identifier)
+        assertEquals(1, result.data.items.size)
+        assertEquals(payload.identifier, result.data.items.first().identifier)
     }
 
     @Test

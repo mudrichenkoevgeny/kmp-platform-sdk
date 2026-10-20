@@ -27,7 +27,7 @@ class SessionItemTest {
     @Test
     fun rendersSessionDataAndTriggersRevoke() = runComposeUiTest {
         var revokeClicks = 0
-        val baseSession = createTestUserSessionSummary()
+        val baseSession = createTestUserSessionSummary(identifierDisplayName = "user@example.com")
         val session = baseSession.copy(
             clientDeviceInfo = baseSession.clientDeviceInfo.copy(deviceName = "Mock Device")
         )

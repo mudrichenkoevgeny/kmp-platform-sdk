@@ -17,7 +17,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummaryList
-import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -37,7 +37,7 @@ class SelfSessionListComponentImplTest {
         }
         val context = createSessionListComponentTestContext(getSessionsUseCase = getSessionsUseCase)
         try {
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
             val state = assertIs<SelfSessionListScreenState.Content>(context.component.state.value)
             assertEquals(sessions, state.paging.items)
         } finally {
@@ -52,7 +52,7 @@ class SelfSessionListComponentImplTest {
         }
         val context = createSessionListComponentTestContext(getSessionsUseCase = getSessionsUseCase)
         try {
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
             val state = assertIs<SelfSessionListScreenState.Error>(context.component.state.value)
             assertIs<CommonError.Unknown>(state.error)
         } finally {
@@ -65,11 +65,11 @@ class SelfSessionListComponentImplTest {
         val getSessionsUseCase = GetSessionsUseCaseMock()
         val context = createSessionListComponentTestContext(getSessionsUseCase = getSessionsUseCase)
         try {
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
             val initialCalls = getSessionsUseCase.executeCalls
 
             context.component.onRefresh()
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
 
             assertEquals(initialCalls + 1, getSessionsUseCase.executeCalls)
         } finally {
@@ -94,11 +94,11 @@ class SelfSessionListComponentImplTest {
             deleteSessionUseCase = deleteSessionUseCase
         )
         try {
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
             val initialLoadCalls = getSessionsUseCase.executeCalls
 
             context.component.onRevokeSessionClick(sessionId)
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
 
             assertEquals(1, deleteSessionUseCase.executeCalls)
             assertEquals(initialLoadCalls + 1, getSessionsUseCase.executeCalls)
@@ -124,10 +124,10 @@ class SelfSessionListComponentImplTest {
             deleteSessionUseCase = deleteSessionUseCase
         )
         try {
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
 
             context.component.onRevokeSessionClick(sessionId)
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
 
             val state = assertIs<SelfSessionListScreenState.Content>(context.component.state.value)
             assertFalse(state.actionLoading)
@@ -153,11 +153,11 @@ class SelfSessionListComponentImplTest {
             deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase
         )
         try {
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
             val initialLoadCalls = getSessionsUseCase.executeCalls
 
             context.component.onRevokeAllOtherSessionsClick()
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
 
             assertEquals(1, deleteAllOtherSessionsUseCase.executeCalls)
             assertEquals(initialLoadCalls + 1, getSessionsUseCase.executeCalls)
@@ -186,12 +186,12 @@ class SelfSessionListComponentImplTest {
         }
         val context = createSessionListComponentTestContext(getSessionsUseCase = getSessionsUseCase)
         try {
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
             val state1 = assertIs<SelfSessionListScreenState.Content>(context.component.state.value)
             assertEquals(initialSessions, state1.paging.items)
 
             context.component.onLoadNextPage()
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
 
             val state2 = assertIs<SelfSessionListScreenState.Content>(context.component.state.value)
             assertEquals(initialSessions + nextSessions, state2.paging.items)

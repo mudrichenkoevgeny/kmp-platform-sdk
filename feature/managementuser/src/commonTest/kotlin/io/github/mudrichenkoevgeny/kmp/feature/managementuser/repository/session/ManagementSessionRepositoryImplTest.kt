@@ -12,7 +12,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionPrivatePayload
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionSummaryPayloadList
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionSummaryPayload
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -34,8 +34,8 @@ class ManagementSessionRepositoryImplTest {
 
     @Test
     fun `getSessions forwards request and maps paged result`() = runTest {
-        val payloadList = createTestUserSessionSummaryPayloadList()
-        val wire = createTestPagedResult(items = payloadList, totalCount = payloadList.size.toLong())
+        val payload = createTestUserSessionSummaryPayload()
+        val wire = createTestPagedResult(items = listOf(payload), totalCount = 1)
         api.getSessionsResult = AppResult.Success(wire)
 
         val result = repo.getSessions(
@@ -59,8 +59,8 @@ class ManagementSessionRepositoryImplTest {
         )
 
         val success = assertIs<AppResult.Success<PagedResult<UserSessionSummary>>>(result)
-        assertEquals(payloadList.size, success.data.items.size)
-        assertEquals(payloadList.first().toUserSessionSummary(), success.data.items.first())
+        assertEquals(1, success.data.items.size)
+        assertEquals(payload.toUserSessionSummary(), success.data.items.first())
     }
 
     @Test

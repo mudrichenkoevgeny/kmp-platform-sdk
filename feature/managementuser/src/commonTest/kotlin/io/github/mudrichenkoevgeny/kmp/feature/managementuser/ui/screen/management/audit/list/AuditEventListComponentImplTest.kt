@@ -10,11 +10,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.repository.ManagementAuditRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit.GetAuditEventsUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventSummaryList
-import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
-import kotlin.time.Duration.Companion.milliseconds
 
 @InternalApi
 class AuditEventListComponentImplTest {
@@ -37,7 +36,7 @@ class AuditEventListComponentImplTest {
             onBack = {}
         )
 
-        advanceTimeBy(100.milliseconds)
+        advanceUntilIdle()
         val state = assertIs<AuditEventListScreenState.Content>(component.state.value)
         assertEquals(events, state.paging.items)
     }

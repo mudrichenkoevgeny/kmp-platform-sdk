@@ -29,7 +29,7 @@ class IdentifierItemTest {
     @Test
     fun rendersIdentifierDataAndTriggersClick() = runComposeUiTest {
         var clicks = 0
-        val identifier = createTestUserIdentifierSummary()
+        val identifier = createTestUserIdentifierSummary(displayName = "user@example.com")
 
         setContent {
             CoreTheme {

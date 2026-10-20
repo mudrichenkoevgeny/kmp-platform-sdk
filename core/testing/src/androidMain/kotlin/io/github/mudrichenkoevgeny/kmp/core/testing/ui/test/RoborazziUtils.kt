@@ -11,7 +11,7 @@ fun SemanticsNodeInteraction.captureAppScreen(
     val className = testInstance::class.java.simpleName
     val safeStateName = stateName.replace(Regex("[^A-Za-z0-9]"), "_")
 
-    val filePath = "src/androidUnitTest/snapshots/images/$packagePath/$className/$safeStateName.png"
+    val filePath = "src/androidHostTest/snapshots/images/$packagePath/$className/$safeStateName.png"
 
     captureRoboImage(filePath)
 }

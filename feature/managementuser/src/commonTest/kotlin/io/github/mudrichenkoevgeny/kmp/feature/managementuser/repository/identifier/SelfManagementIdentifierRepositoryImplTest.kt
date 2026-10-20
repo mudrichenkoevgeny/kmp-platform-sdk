@@ -12,7 +12,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identif
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.identifier.createTestUserIdentifierPrivatePayload
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.identifier.createTestUserIdentifierSummaryPayloadList
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.identifier.createTestUserIdentifierSummaryPayload
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -39,8 +39,8 @@ class SelfManagementIdentifierRepositoryImplTest {
 
     @Test
     fun `getUserIdentifiers forwards request and maps paged result`() = runTest {
-        val payloadList = createTestUserIdentifierSummaryPayloadList()
-        val wire = createTestPagedResult(items = payloadList, totalCount = payloadList.size.toLong())
+        val payload = createTestUserIdentifierSummaryPayload()
+        val wire = createTestPagedResult(items = listOf(payload), totalCount = 1)
         api.getUserIdentifiersResult = AppResult.Success(wire)
 
         val result = repo.getUserIdentifiers(
@@ -53,8 +53,8 @@ class SelfManagementIdentifierRepositoryImplTest {
         )
 
         val success = assertIs<AppResult.Success<PagedResult<UserIdentifierSummary>>>(result)
-        assertEquals(payloadList.size, success.data.items.size)
-        assertEquals(payloadList.first().toUserIdentifierSummary(), success.data.items.first())
+        assertEquals(1, success.data.items.size)
+        assertEquals(payload.toUserIdentifierSummary(), success.data.items.first())
     }
 
     @Test

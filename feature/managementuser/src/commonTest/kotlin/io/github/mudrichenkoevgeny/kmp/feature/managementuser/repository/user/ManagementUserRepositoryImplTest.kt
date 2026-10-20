@@ -10,7 +10,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.to
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.create.CreateByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.user.createTestUserPrivatePayload
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.user.createTestUserSummaryPayloadList
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.user.createTestUserSummaryPayload
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -46,10 +46,10 @@ class ManagementUserRepositoryImplTest {
 
     @Test
     fun getUsers_mapsPagedPayloadToDomainModel_onSuccess() = runTest {
-        val payloadList = createTestUserSummaryPayloadList()
+        val payload = createTestUserSummaryPayload()
         val pagedPayload = PagedResult(
-            items = payloadList,
-            totalCount = payloadList.size.toLong(),
+            items = listOf(payload),
+            totalCount = 1L,
             pageNumber = 1,
             pageSize = 20,
             totalPages = 1L
@@ -60,8 +60,8 @@ class ManagementUserRepositoryImplTest {
 
         assertIs<AppResult.Success<*>>(result)
         val data = (result as AppResult.Success).data
-        assertEquals(payloadList.size, data.items.size)
-        assertEquals(payloadList.first().toUserSummary(), data.items.first())
+        assertEquals(1, data.items.size)
+        assertEquals(payload.toUserSummary(), data.items.first())
     }
 
     @Test

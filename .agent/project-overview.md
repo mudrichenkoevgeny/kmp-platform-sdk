@@ -12,10 +12,10 @@ alwaysApply: true
 - **BOM:** Located at `:bom` for consistent version alignment across all consumer modules.
 
 ## Tech stack
-- **Kotlin:** 2.x, Coroutines, Kotlinx Serialization.
+- **Kotlin:** Coroutines, Kotlinx Serialization.
 - **UI:** Compose Multiplatform (including `composeResources` + generated `Res`).
 - **Navigation:** Decompose (Component-based architecture).
-- **Networking:** Ktor Client 3.x (HTTP + WebSockets).
+- **Networking:** Ktor Client (HTTP + WebSockets).
 - **Security & Storage:** Android DataStore (encrypted), Google Tink, and platform-specific `EncryptedSettings` abstractions.
 - **Logging:** Kermit.
 - **Platforms:** Android and WasmJs are the primary targets.

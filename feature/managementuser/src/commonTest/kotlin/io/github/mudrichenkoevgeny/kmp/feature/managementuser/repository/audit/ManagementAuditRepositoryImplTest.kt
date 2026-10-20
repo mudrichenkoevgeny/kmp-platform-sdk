@@ -19,7 +19,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.network.model.event.createTestAuditEventPrivatePayload
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.network.model.event.createTestAuditEventSummaryPayloadList
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.network.model.event.createTestAuditEventSummaryPayload
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -32,13 +32,20 @@ class ManagementAuditRepositoryImplTest {
     private val resourceParser = CompositeAuditResourceTypeParser(setOf(UserAuditResourceType.USER))
     private val metadataParser = CompositeAuditMetadataKeyParser(emptySet())
 
-    private val eventSummaryPayloadList = createTestAuditEventSummaryPayloadList()
+    private val eventSummaryPayload = createTestAuditEventSummaryPayload(
+        action = UserAuditActionType.MANAGEMENT_UPDATE_USER.value,
+        resource = UserAuditResourceType.USER.value
+    )
+    private val eventPrivatePayload = createTestAuditEventPrivatePayload(
+        action = UserAuditActionType.MANAGEMENT_UPDATE_USER.value,
+        resource = UserAuditResourceType.USER.value
+    )
 
     private val api = object : ManagementAuditApi {
         var getAuditEventsResult: AppResult<PagedResult<AuditEventSummaryPayload>> = AppResult.Success(
-            PagedResult(eventSummaryPayloadList, eventSummaryPayloadList.size.toLong(), 1, 20, 1L)
+            PagedResult(listOf(eventSummaryPayload), 1L, 1, 20, 1L)
         )
-        var getAuditEventResult: AppResult<AuditEventPrivatePayload> = AppResult.Success(createTestAuditEventPrivatePayload())
+        var getAuditEventResult: AppResult<AuditEventPrivatePayload> = AppResult.Success(eventPrivatePayload)
 
         override suspend fun getAuditEvents(
             pageNumber: Int?,
@@ -71,8 +78,8 @@ class ManagementAuditRepositoryImplTest {
 
         assertIs<AppResult.Success<*>>(result)
         val data = (result as AppResult.Success).data
-        assertEquals(eventSummaryPayloadList.size, data.items.size)
-        assertEquals(eventSummaryPayloadList.first().toAuditEventSummary(actionParser, resourceParser), data.items.first())
+        assertEquals(1, data.items.size)
+        assertEquals(eventSummaryPayload.toAuditEventSummary(actionParser, resourceParser), data.items.first())
     }
 
     @Test
@@ -81,7 +88,7 @@ class ManagementAuditRepositoryImplTest {
 
         assertIs<AppResult.Success<*>>(result)
         assertEquals(
-            createTestAuditEventPrivatePayload().toAuditEventPrivate(actionParser, resourceParser, metadataParser),
+            eventPrivatePayload.toAuditEventPrivate(actionParser, resourceParser, metadataParser),
             (result as AppResult.Success).data
         )
     }

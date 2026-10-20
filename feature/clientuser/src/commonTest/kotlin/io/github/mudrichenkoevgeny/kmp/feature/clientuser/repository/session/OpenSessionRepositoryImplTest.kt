@@ -13,7 +13,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.DeletedSessionsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionPrivatePayload
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionSummaryPayloadList
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionSummaryPayload
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -25,8 +25,8 @@ class OpenSessionRepositoryImplTest {
 
     @Test
     fun `getSessions should update storage on success`() = runTest {
-        val payloadList = createTestUserSessionSummaryPayloadList()
-        val paged = createTestPagedResult(payloadList)
+        val payload = createTestUserSessionSummaryPayload()
+        val paged = createTestPagedResult(listOf(payload))
         val api = SessionApiMock().apply {
             getSessionsResult = AppResult.Success(paged)
         }

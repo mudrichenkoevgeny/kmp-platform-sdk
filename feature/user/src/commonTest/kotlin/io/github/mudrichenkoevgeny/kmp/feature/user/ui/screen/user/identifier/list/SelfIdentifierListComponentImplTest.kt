@@ -18,11 +18,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummaryList
-import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
-import kotlin.time.Duration.Companion.milliseconds
 
 @InternalApi
 class SelfIdentifierListComponentImplTest {
@@ -37,7 +36,7 @@ class SelfIdentifierListComponentImplTest {
         }
         val context = createTestContext(getUserIdentifiersUseCase = getUserIdentifiersUseCase)
         try {
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
             val state = assertIs<SelfIdentifierListScreenState.Content>(context.component.state.value)
             assertEquals(identifiers, state.paging.items)
         } finally {
@@ -71,9 +70,9 @@ class SelfIdentifierListComponentImplTest {
             getAvailableUserAuthProvidersUseCase = getAvailableUserAuthProvidersUseCase
         )
         try {
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
             context.component.onAddIdentifierClick()
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
 
             assertIs<SelfIdentifierListComponent.AddIdentifierDialogChild.ProviderSelection>(context.component.addIdentifierDialogSlot.value.child?.instance)
         } finally {
@@ -85,9 +84,9 @@ class SelfIdentifierListComponentImplTest {
     fun onAddIdentifierSelectProvider_email_showsEmailFlow() = runComponentTest {
         val context = createTestContext()
         try {
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
             context.component.onAddIdentifierClick()
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
 
             context.component.onAddIdentifierSelectProvider(UserAuthProvider.EMAIL)
             assertIs<SelfIdentifierListComponent.AddIdentifierDialogChild.EmailInput>(context.component.addIdentifierDialogSlot.value.child?.instance)
@@ -108,7 +107,7 @@ class SelfIdentifierListComponentImplTest {
         }
         val context = createTestContext(getUserIdentifiersUseCase = getUserIdentifiersUseCase)
         try {
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
             context.component.onIdentifierDeleted(item1.id)
             val state = assertIs<SelfIdentifierListScreenState.Content>(context.component.state.value)
             assertEquals(listOf(item2), state.paging.items)
@@ -124,14 +123,14 @@ class SelfIdentifierListComponentImplTest {
         val getUserIdentifiersUseCase = GetUserIdentifiersUseCaseMock().apply {
             resultProvider = { page, _ ->
                 val items = if (page == ListingConstants.INITIAL_PAGE_NUMBER) initialIdentifiers else nextIdentifiers
-                AppResult.Success(createTestPagedResult(items = items))
+                AppResult.Success(createTestPagedResult(items = items, totalCount = 2, totalPages = 2))
             }
         }
         val context = createTestContext(getUserIdentifiersUseCase = getUserIdentifiersUseCase)
         try {
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
             context.component.onLoadNextPage()
-            advanceTimeBy(100.milliseconds)
+            advanceUntilIdle()
 
             val state = assertIs<SelfIdentifierListScreenState.Content>(context.component.state.value)
             assertEquals(initialIdentifiers + nextIdentifiers, state.paging.items)
