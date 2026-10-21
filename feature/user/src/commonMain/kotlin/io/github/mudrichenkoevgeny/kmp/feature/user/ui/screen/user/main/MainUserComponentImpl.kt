@@ -81,9 +81,21 @@ class MainUserComponentImpl(
     }
 
     override fun onLogoutClick() {
+        val current = _state.value as? MainUserScreenState.Content ?: return
+        _state.value = current.copy(isLogoutConfirmationVisible = true, actionError = null)
+    }
+
+    override fun onConfirmLogoutClick() {
+        val current = _state.value as? MainUserScreenState.Content ?: return
+        _state.value = current.copy(isLogoutConfirmationVisible = false)
         scope.launch {
             logoutUseCase()
         }
+    }
+
+    override fun onDismissLogoutDialog() {
+        val current = _state.value as? MainUserScreenState.Content ?: return
+        _state.value = current.copy(isLogoutConfirmationVisible = false)
     }
 
     override fun onLoginClick() {

@@ -15,6 +15,7 @@ sealed interface MainUserScreenState {
     data class Content(
         val user: UserPrivate,
         val isDeleteConfirmationVisible: Boolean = false,
+        val isLogoutConfirmationVisible: Boolean = false,
         val actionLoading: Boolean = false,
         val actionError: AppError? = null
     ) : MainUserScreenState

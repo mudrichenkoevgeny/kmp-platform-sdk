@@ -66,28 +66,43 @@ fun MainScreen(screenComponent: MainScreenComponent) {
         MainScreenDestination.getDestinations(isAuthorized)
     }
 
-    Box(Modifier.fillMaxSize()) {
-        MainContent(
-            isMobile = appComponent.commonComponent.platformRepository.getClientDeviceInfo().isMobileClient(),
-            screenStack = screenComponent.stack,
-            currentDestination = currentNavigation,
-            destinations = destinations,
-            onDestinationChange = { navItem ->
-                screenComponent.onTabClick(navItem.config)
-            }
+    val loginChild = loginDialogSlot.child
+    val isStrictLogin = loginChild != null && !isAuthorized
+
+    if (isStrictLogin) {
+        ManagementLoginRootScreen(
+            component = loginChild.instance,
+            isDismissible = false,
+            isFullScreen = true
         )
-
-        loginDialogSlot.child?.let { child ->
-            val isDismissible = (child.configuration as? MainScreenComponent.DialogConfig.Login)?.isDismissible ?: true
-            ManagementLoginRootScreen(component = child.instance, isDismissible = isDismissible)
-        }
-
-        mfaChallengeRequest?.let { request ->
-            MfaChallengeDialog(
-                request = request,
-                onConfirm = appComponent.mfaChallengeHandler::onConfirm,
-                onCancel = appComponent.mfaChallengeHandler::onCancel
+    } else {
+        Box(Modifier.fillMaxSize()) {
+            MainContent(
+                isMobile = appComponent.commonComponent.platformRepository.getClientDeviceInfo().isMobileClient(),
+                screenStack = screenComponent.stack,
+                currentDestination = currentNavigation,
+                destinations = destinations,
+                onDestinationChange = { navItem ->
+                    screenComponent.onTabClick(navItem.config)
+                }
             )
+
+            loginChild?.let { child ->
+                val isDismissible = (child.configuration as? MainScreenComponent.DialogConfig.Login)?.isDismissible ?: true
+                ManagementLoginRootScreen(
+                    component = child.instance,
+                    isDismissible = isDismissible,
+                    isFullScreen = false
+                )
+            }
+
+            mfaChallengeRequest?.let { request ->
+                MfaChallengeDialog(
+                    request = request,
+                    onConfirm = appComponent.mfaChallengeHandler::onConfirm,
+                    onCancel = appComponent.mfaChallengeHandler::onCancel
+                )
+            }
         }
     }
 }

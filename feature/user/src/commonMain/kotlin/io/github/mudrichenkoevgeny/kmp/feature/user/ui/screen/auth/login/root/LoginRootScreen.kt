@@ -1,5 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.root
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -8,6 +9,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
@@ -26,13 +28,30 @@ fun <C : Any, T : Any> LoginRootContainer(
     stack: Value<ChildStack<C, T>>,
     onDismiss: () -> Unit,
     isDismissible: Boolean = true,
+    isFullScreen: Boolean = false,
     content: @Composable (T) -> Unit
 ) {
     val commonComponent = LocalCommonComponent.current
     val handleDismiss = if (isDismissible) onDismiss else { {} }
 
-    if (commonComponent.platformRepository.getClientDeviceInfo().isMobileClient()) {
-        ModalBottomSheet(onDismissRequest = handleDismiss) {
+    if (isFullScreen) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.surface
+        ) {
+            Children(
+                stack = stack,
+                animation = stackAnimation(fade())
+            ) { child ->
+                content(child.instance)
+            }
+        }
+    } else if (commonComponent.platformRepository.getClientDeviceInfo().isMobileClient()) {
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        ModalBottomSheet(
+            onDismissRequest = handleDismiss,
+            sheetState = sheetState
+        ) {
             LoginDialogSurface(stack = stack, content = content)
         }
     } else {

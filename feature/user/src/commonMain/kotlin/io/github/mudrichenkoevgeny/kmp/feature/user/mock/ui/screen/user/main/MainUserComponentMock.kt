@@ -22,6 +22,8 @@ open class MainUserComponentMock(
     var confirmDeleteUserCalls = 0
     var dismissDeleteUserDialogCalls = 0
     var logoutCalls = 0
+    var confirmLogoutCalls = 0
+    var dismissLogoutDialogCalls = 0
     var loginCalls = 0
 
     fun setState(newState: MainUserScreenState) {
@@ -58,6 +60,14 @@ open class MainUserComponentMock(
 
     override fun onLogoutClick() {
         logoutCalls++
+    }
+
+    override fun onConfirmLogoutClick() {
+        confirmLogoutCalls++
+    }
+
+    override fun onDismissLogoutDialog() {
+        dismissLogoutDialogCalls++
     }
 
     override fun onLoginClick() {

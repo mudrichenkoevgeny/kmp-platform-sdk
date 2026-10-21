@@ -136,6 +136,26 @@ fun MainUserScreen(component: MainUserComponent) {
                             )
                         }
 
+                        if (current.isLogoutConfirmationVisible) {
+                            AlertDialog(
+                                onDismissRequest = component::onDismissLogoutDialog,
+                                title = { CoreTitleText(text = userUi.dialogConfirmTitle) },
+                                text = { CoreBodyText(text = userUi.logoutConfirmMsg) },
+                                confirmButton = {
+                                    CoreButton(
+                                        text = userUi.dialogConfirm,
+                                        onClick = component::onConfirmLogoutClick
+                                    )
+                                },
+                                dismissButton = {
+                                    CoreTextButton(
+                                        text = userUi.dialogCancel,
+                                        onClick = component::onDismissLogoutDialog
+                                    )
+                                }
+                            )
+                        }
+
                         if (current.actionLoading) {
                             FullscreenOverlayLoading()
                         }

@@ -98,26 +98,31 @@ actual fun SetupBrowserHistory(
     }
 
     var isProcessingPopState by remember { mutableStateOf(false) }
+    var isIgnoringNextPopState by remember { mutableStateOf(false) }
 
     DisposableEffect(Unit) {
         val listener: (Event) -> Unit = {
-            isProcessingPopState = true
-            try {
-                val currentPath = window.location.pathname + window.location.search
-                val route = parser.parse(Url(window.location.origin + currentPath))
-                if (route != null) {
-                    mainComponent.handleDeepLink(route)
-                } else {
-                    mainComponent.onTabClick(MainScreenComponent.Config.Management)
-                }
+            if (isIgnoringNextPopState) {
+                isIgnoringNextPopState = false
+            } else {
+                isProcessingPopState = true
+                try {
+                    val currentPath = window.location.pathname + window.location.search
+                    val route = parser.parse(Url(window.location.origin + currentPath))
+                    if (route != null) {
+                        mainComponent.handleDeepLink(route)
+                    } else {
+                        mainComponent.onTabClick(MainScreenComponent.Config.Management)
+                    }
 
-                if (historyStack.size >= 2 && currentPath == historyStack[historyStack.lastIndex - 1]) {
-                    historyStack.removeAt(historyStack.lastIndex)
-                } else if (historyStack.lastOrNull() != currentPath) {
-                    historyStack.add(currentPath)
+                    if (historyStack.size >= 2 && currentPath == historyStack[historyStack.lastIndex - 1]) {
+                        historyStack.removeAt(historyStack.lastIndex)
+                    } else if (historyStack.lastOrNull() != currentPath) {
+                        historyStack.add(currentPath)
+                    }
+                } finally {
+                    isProcessingPopState = false
                 }
-            } finally {
-                isProcessingPopState = false
             }
         }
         window.addEventListener(EVENT_POPSTATE, listener)
@@ -137,6 +142,7 @@ actual fun SetupBrowserHistory(
 
         if (historyStack.size >= 2 && activePath == historyStack[historyStack.lastIndex - 1]) {
             historyStack.removeAt(historyStack.lastIndex)
+            isIgnoringNextPopState = true
             window.history.back()
         } else if (historyStack.size == 1 && historyStack[0] == activePath) {
             window.history.replaceState(null, "", activePath)

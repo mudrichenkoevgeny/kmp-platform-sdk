@@ -30,8 +30,14 @@ interface MainUserComponent {
     /** Dismisses scheduled deletion confirmation dialog. */
     fun onDismissDeleteUserDialog()
 
-    /** Triggers user logout. */
+    /** Triggers user logout confirmation dialog. */
     fun onLogoutClick()
+
+    /** Confirms user logout. */
+    fun onConfirmLogoutClick()
+
+    /** Dismisses logout confirmation dialog. */
+    fun onDismissLogoutDialog()
 
     /** Action to show login flow when unauthorized. */
     fun onLoginClick()
