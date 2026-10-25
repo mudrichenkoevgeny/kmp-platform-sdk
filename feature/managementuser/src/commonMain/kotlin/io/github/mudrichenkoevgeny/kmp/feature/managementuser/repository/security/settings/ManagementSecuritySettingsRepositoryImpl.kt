@@ -75,23 +75,23 @@ class ManagementSecuritySettingsRepositoryImpl(
         }
     }
 
-    override suspend fun saveRemoteManagementSecuritySettings(securitySettings: ManagementSecuritySettings): AppResult<Unit> {
+    override suspend fun saveRemoteManagementSecuritySettings(securitySettings: ManagementSecuritySettings): AppResult<ManagementSecuritySettings> {
         val payload = securitySettings.toManagementSecuritySettingsPayload()
         return managementSecuritySettingsApi.updateManagementSecuritySettings(payload)
-            .mapSuccess {
-                updateManagementSecuritySettings(securitySettings)
+            .mapSuccess { response ->
+                val updatedSettings = response.toManagementSecuritySettings()
+                updateManagementSecuritySettings(updatedSettings)
+                updatedSettings
             }
     }
 
     override suspend fun resetRemoteManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
-        return updateMutex.withLock {
-            managementSecuritySettingsApi.resetManagementSecuritySettings()
-                .mapSuccess { response ->
-                    val settings = response.toManagementSecuritySettings()
-                    applySettingsUpdate(settings)
-                    settings
-                }
-        }
+        return managementSecuritySettingsApi.resetManagementSecuritySettings()
+            .mapSuccess { response ->
+                val settings = response.toManagementSecuritySettings()
+                updateManagementSecuritySettings(settings)
+                settings
+            }
     }
 
     override suspend fun refreshManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {

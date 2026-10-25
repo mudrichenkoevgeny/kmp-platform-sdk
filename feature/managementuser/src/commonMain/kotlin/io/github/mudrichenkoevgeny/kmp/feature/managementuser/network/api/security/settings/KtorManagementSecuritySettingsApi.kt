@@ -2,7 +2,9 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.secur
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.utils.callResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.auth.markAsPublic
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.securitysettings.ManagementSecuritySettingsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.securitysettings.OpenSecuritySettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.route.management.security.settings.ManagementSecuritySettingsRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
@@ -24,9 +26,16 @@ class KtorManagementSecuritySettingsApi(
             get(ManagementSecuritySettingsRoutes.GET_MANAGEMENT_SECURITY_SETTINGS)
         }
 
+    override suspend fun getOpenSecuritySettings(): AppResult<OpenSecuritySettingsPayload> =
+        client.callResult {
+            get(ManagementSecuritySettingsRoutes.GET_OPEN_SECURITY_SETTINGS) {
+                markAsPublic()
+            }
+        }
+
     override suspend fun updateManagementSecuritySettings(
         request: ManagementSecuritySettingsPayload
-    ): AppResult<Unit> =
+    ): AppResult<ManagementSecuritySettingsPayload> =
         client.callResult {
             put(ManagementSecuritySettingsRoutes.UPDATE_MANAGEMENT_SECURITY_SETTINGS) {
                 setBody(request)

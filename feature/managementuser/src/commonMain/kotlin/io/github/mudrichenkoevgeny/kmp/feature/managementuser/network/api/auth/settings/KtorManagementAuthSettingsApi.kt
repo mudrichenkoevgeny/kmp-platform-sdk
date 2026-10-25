@@ -2,7 +2,9 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.auth.
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.utils.callResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.auth.markAsPublic
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.settings.ManagementAuthSettingsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.settings.OpenAuthSettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.auth.settings.ManagementAuthSettingsRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
@@ -20,9 +22,16 @@ class KtorManagementAuthSettingsApi(
             get(ManagementAuthSettingsRoutes.GET_MANAGEMENT_AUTH_SETTINGS)
         }
 
+    override suspend fun getOpenAuthSettings(): AppResult<OpenAuthSettingsPayload> =
+        client.callResult {
+            get(ManagementAuthSettingsRoutes.GET_OPEN_AUTH_SETTINGS) {
+                markAsPublic()
+            }
+        }
+
     override suspend fun updateManagementAuthSettings(
         request: ManagementAuthSettingsPayload
-    ): AppResult<Unit> =
+    ): AppResult<ManagementAuthSettingsPayload> =
         client.callResult {
             put(ManagementAuthSettingsRoutes.UPDATE_MANAGEMENT_AUTH_SETTINGS) {
                 setBody(request)

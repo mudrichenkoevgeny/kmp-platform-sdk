@@ -19,9 +19,9 @@ interface ManagementGlobalSettingsRepository {
      * Pushes [globalSettings] to the remote server and updates local state on success.
      *
      * @param globalSettings New global configuration payload to apply.
-     * @return Empty success indicator, or an error result when update fails.
+     * @return Updated [ManagementGlobalSettings] on success, or an error result when update fails.
      */
-    suspend fun saveRemoteManagementGlobalSettings(globalSettings: ManagementGlobalSettings): AppResult<Unit>
+    suspend fun saveRemoteManagementGlobalSettings(globalSettings: ManagementGlobalSettings): AppResult<ManagementGlobalSettings>
 
     /**
      * Resets global settings on the remote server to default values and updates local state.

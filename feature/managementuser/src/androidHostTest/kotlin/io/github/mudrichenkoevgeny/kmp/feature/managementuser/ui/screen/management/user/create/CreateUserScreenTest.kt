@@ -38,6 +38,9 @@ class CreateUserScreenTest {
         onNodeWithTag(CreateUserTestTags.ROLE_INPUT).assertIsDisplayed()
         onNodeWithTag(CreateUserTestTags.STATUS_INPUT).performScrollTo().assertIsDisplayed()
         onNodeWithTag(CreateUserTestTags.AUTHORITY_LEVEL_INPUT).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(CreateUserTestTags.QUOTA_BYTES_INPUT).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(CreateUserTestTags.MAX_UPLOAD_SIZE_BYTES_INPUT).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(CreateUserTestTags.MAX_PENDING_UPLOADS_INPUT).performScrollTo().assertIsDisplayed()
         onNodeWithTag(CreateUserTestTags.CREATE_BUTTON).performScrollTo().assertIsDisplayed()
     }
 
@@ -51,6 +54,24 @@ class CreateUserScreenTest {
         }
         onNodeWithTag(CreateUserTestTags.EMAIL_INPUT).performTextInput("newuser@example.com")
         assertEquals("newuser@example.com", component.lastEmailChanged)
+    }
+
+    @Test
+    fun content_typeStorageConfiguration_updatesComponent() = runComposeUiTest {
+        val component = CreateUserComponentMock()
+        setContent {
+            ComponentTestHarness {
+                CreateUserScreen(component)
+            }
+        }
+        onNodeWithTag(CreateUserTestTags.QUOTA_BYTES_INPUT).performScrollTo().performTextInput("10737418240")
+        assertEquals("10737418240", component.lastQuotaBytesChanged)
+
+        onNodeWithTag(CreateUserTestTags.MAX_UPLOAD_SIZE_BYTES_INPUT).performScrollTo().performTextInput("104857600")
+        assertEquals("104857600", component.lastMaxUploadSizeBytesChanged)
+
+        onNodeWithTag(CreateUserTestTags.MAX_PENDING_UPLOADS_INPUT).performScrollTo().performTextInput("5")
+        assertEquals("5", component.lastMaxPendingUploadsChanged)
     }
 
     @Test

@@ -75,23 +75,23 @@ class ManagementGlobalSettingsRepositoryImpl(
         }
     }
 
-    override suspend fun saveRemoteManagementGlobalSettings(globalSettings: ManagementGlobalSettings): AppResult<Unit> {
+    override suspend fun saveRemoteManagementGlobalSettings(globalSettings: ManagementGlobalSettings): AppResult<ManagementGlobalSettings> {
         val payload = globalSettings.toManagementGlobalSettingsPayload()
         return managementGlobalSettingsApi.updateManagementGlobalSettings(payload)
-            .mapSuccess {
-                updateManagementGlobalSettings(globalSettings)
+            .mapSuccess { response ->
+                val updatedSettings = response.toManagementGlobalSettings()
+                updateManagementGlobalSettings(updatedSettings)
+                updatedSettings
             }
     }
 
     override suspend fun resetRemoteManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
-        return updateMutex.withLock {
-            managementGlobalSettingsApi.resetManagementGlobalSettings()
-                .mapSuccess { response ->
-                    val settings = response.toManagementGlobalSettings()
-                    applySettingsUpdate(settings)
-                    settings
-                }
-        }
+        return managementGlobalSettingsApi.resetManagementGlobalSettings()
+            .mapSuccess { response ->
+                val settings = response.toManagementGlobalSettings()
+                updateManagementGlobalSettings(settings)
+                settings
+            }
     }
 
     override suspend fun refreshManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {

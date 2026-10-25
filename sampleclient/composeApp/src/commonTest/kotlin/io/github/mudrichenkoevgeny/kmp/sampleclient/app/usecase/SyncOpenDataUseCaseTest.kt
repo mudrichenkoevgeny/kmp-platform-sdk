@@ -7,7 +7,7 @@ import io.github.mudrichenkoevgeny.kmp.core.security.mock.repository.OpenSecurit
 import io.github.mudrichenkoevgeny.kmp.core.security.usecase.RefreshOpenSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.core.settings.mock.repository.OpenGlobalSettingsRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.RefreshOpenGlobalSettingsUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.usecase.auth.settings.RefreshOpenAuthSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.RefreshOpenAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.settings.OpenAuthSettingsRepositoryMock
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test

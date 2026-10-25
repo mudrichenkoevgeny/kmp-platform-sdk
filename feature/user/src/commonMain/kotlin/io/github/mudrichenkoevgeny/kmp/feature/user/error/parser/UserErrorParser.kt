@@ -5,9 +5,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.AppErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
 import io.github.mudrichenkoevgeny.kmp.core.common.time.formatEpochMillisToDateTime
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.naming.ClientUserErrorCodes
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.localization.CommonModuleStrings
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.UserModuleStrings
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.resolveTotalUserIdentifiersLimitReachedMessage
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.resolveUserIdentifierLimitReachedMessage
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.resolveUserLockedMessage
 
 /**
  * [AppErrorParser] for user-related error codes using `shared-foundation` localization.
@@ -23,23 +28,21 @@ open class UserErrorParser(
         val strings = UserModuleStrings(KmpLocalization.resolver, localeProvider())
 
         return when (appError.code) {
-            UserErrorCodes.INVALID_ACCESS_TOKEN -> strings.errors.invalidAccessToken
-
-            UserErrorCodes.ACCESS_TOKEN_EXPIRED -> strings.errors.accessTokenExpired
-
-            UserErrorCodes.INVALID_REFRESH_TOKEN -> strings.errors.invalidRefreshToken
-
+            UserErrorCodes.INVALID_ACCESS_TOKEN,
+            UserErrorCodes.ACCESS_TOKEN_EXPIRED,
+            UserErrorCodes.INVALID_REFRESH_TOKEN,
             UserErrorCodes.INVALID_SESSION -> strings.errors.invalidSession
 
             UserErrorCodes.USER_BANNED -> strings.errors.banned
 
             UserErrorCodes.USER_LOCKED -> {
+                val rawType = args[UserErrorArgs.ACCOUNT_LOCKOUT_TYPE]
+                val lockoutType = if (rawType != null) AccountLockoutType.fromValueOrNull(rawType) else null
                 val formattedUntil = formatEpochMillisToDateTime(args[UserErrorArgs.TEMPORARY_LOCKOUT_UNTIL])
-                if (formattedUntil != null) {
-                    strings.errors.locked(formattedUntil)
-                } else {
-                    strings.errors.lockedWithoutArgs
-                }
+                strings.resolveUserLockedMessage(
+                    lockoutType = lockoutType,
+                    formattedUntil = formattedUntil
+                )
             }
 
             UserErrorCodes.SELF_SERVICE_UNLOCK_DISABLED -> strings.errors.selfServiceUnlockDisabled
@@ -50,15 +53,12 @@ open class UserErrorParser(
 
             UserErrorCodes.USER_PENDING_DELETION -> strings.errors.pendingDeletion
 
-            UserErrorCodes.USER_FORBIDDEN -> strings.errors.forbidden
+            UserErrorCodes.USER_FORBIDDEN,
+            UserErrorCodes.USER_ROLE_NOT_ALLOWED,
+            UserErrorCodes.USER_ILLEGAL_ACCOUNT_STATUS -> strings.errors.forbidden
 
-            UserErrorCodes.USER_ROLE_NOT_ALLOWED -> strings.errors.roleNotAllowed
-
-            UserErrorCodes.USER_MISSING_PERMISSIONS -> strings.errors.missingPermissions
-
-            UserErrorCodes.USER_ILLEGAL_ACCOUNT_STATUS -> strings.errors.illegalStatus
-
-            UserErrorCodes.USER_INSUFFICIENT_AUTHORITY_LEVEL -> strings.errors.insufficientAuthority
+            UserErrorCodes.USER_MISSING_PERMISSIONS,
+            UserErrorCodes.USER_INSUFFICIENT_AUTHORITY_LEVEL -> strings.errors.missingPermissions
 
             UserErrorCodes.USER_NOT_FOUND -> strings.errors.notFound
 
@@ -83,22 +83,21 @@ open class UserErrorParser(
             UserErrorCodes.EMAIL_NOT_ALLOWED -> strings.errors.emailNotAllowed
 
             UserErrorCodes.USER_IDENTIFIER_LIMIT_REACHED -> {
-                val provider = args[UserErrorArgs.USER_AUTH_PROVIDER]
+                val commonStrings = CommonModuleStrings(KmpLocalization.resolver, localeProvider())
                 val limit = args[UserErrorArgs.MAX_NUMBER_OF_IDENTIFIERS]
-                if (!provider.isNullOrBlank() && !limit.isNullOrBlank()) {
-                    strings.errors.identifierLimitReached(limit, provider)
-                } else {
-                    strings.errors.identifierLimitReachedWithoutArgs
-                }
+                val providerRaw = args[UserErrorArgs.USER_AUTH_PROVIDER]
+                strings.resolveUserIdentifierLimitReachedMessage(
+                    commonStrings = commonStrings,
+                    limit = limit,
+                    providerRaw = providerRaw
+                )
             }
 
             UserErrorCodes.TOTAL_USER_IDENTIFIERS_LIMIT_REACHED -> {
                 val limit = args[UserErrorArgs.MAX_NUMBER_OF_IDENTIFIERS]
-                if (!limit.isNullOrBlank()) {
-                    strings.errors.totalIdentifiersLimitReached(limit)
-                } else {
-                    strings.errors.totalIdentifiersLimitReachedWithoutArgs
-                }
+                strings.resolveTotalUserIdentifiersLimitReachedMessage(
+                    limit = limit
+                )
             }
 
             ClientUserErrorCodes.REGISTRATION_DISABLED -> strings.errors.registrationDisabled

@@ -39,6 +39,7 @@ class RefreshClientUserConfigurationUseCase(
             openGlobalSettingsRepository.updateOpenGlobalSettings(userConfiguration.openGlobalSettings)
             openSecuritySettingsRepository.updateOpenSecuritySettings(userConfiguration.openSecuritySettings)
             openAuthSettingsRepository.updateOpenAuthSettings(userConfiguration.openAuthSettings)
+            /* todo wait for shared update: openStorageSettingsRepository.updateOpenStorageSettings(userConfiguration.openStorageSettings) */
         }
 
         return userConfigurationResult

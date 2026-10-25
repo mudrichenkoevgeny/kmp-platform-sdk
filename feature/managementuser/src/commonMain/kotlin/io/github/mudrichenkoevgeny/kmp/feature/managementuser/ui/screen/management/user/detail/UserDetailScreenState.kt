@@ -22,6 +22,9 @@ sealed interface UserDetailScreenState {
      * @param accountStatusInput Current account status dropdown selection.
      * @param lockoutTypeInput Current lockout type dropdown selection.
      * @param temporaryLockoutUntilInput Current temporary lockout expiry timestamp text value.
+     * @param quotaBytesInput Current custom storage quota bytes text field value.
+     * @param maxUploadSizeBytesInput Current custom max upload size bytes text field value.
+     * @param maxPendingUploadsInput Current custom max pending uploads count text field value.
      * @param isSelf True if this detail screen belongs to the logged-in manager's own account.
      * @param isSaving True while update changes request is in progress.
      * @param saveError Server error from the last update attempt.
@@ -37,6 +40,9 @@ sealed interface UserDetailScreenState {
         val accountStatusInput: String,
         val lockoutTypeInput: String = "NONE",
         val temporaryLockoutUntilInput: String = "",
+        val quotaBytesInput: String = "",
+        val maxUploadSizeBytesInput: String = "",
+        val maxPendingUploadsInput: String = "",
         val isSelf: Boolean = false,
         val isSaving: Boolean = false,
         val saveError: AppError? = null,
@@ -53,12 +59,18 @@ sealed interface UserDetailScreenState {
                 val initialAccountStatus = user.accountStatus.name
                 val initialLockoutType = user.lockoutType.name
                 val initialTempLockout = user.temporaryLockoutUntil?.toEpochMilliseconds()?.toString() ?: ""
+                val initialQuotaBytes = user.storageConfiguration?.quotaBytes?.toString() ?: ""
+                val initialMaxUploadSizeBytes = user.storageConfiguration?.maxUploadSizeBytes?.toString() ?: ""
+                val initialMaxPendingUploads = user.storageConfiguration?.maxPendingUploads?.toString() ?: ""
 
                 return currentAuthLevel != initialAuthLevel ||
                     !accountStatusInput.equals(initialAccountStatus, ignoreCase = true) ||
                     (!lockoutTypeInput.equals(initialLockoutType, ignoreCase = true) &&
                         !lockoutTypeInput.equals(user.lockoutType.value, ignoreCase = true)) ||
-                    temporaryLockoutUntilInput != initialTempLockout
+                    temporaryLockoutUntilInput != initialTempLockout ||
+                    quotaBytesInput != initialQuotaBytes ||
+                    maxUploadSizeBytesInput != initialMaxUploadSizeBytes ||
+                    maxPendingUploadsInput != initialMaxPendingUploads
             }
     }
 }

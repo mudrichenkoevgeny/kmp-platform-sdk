@@ -8,6 +8,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.Co
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.localization.SecurityModuleStrings
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.localization.resolvePasswordTooWeakReasons
 
 /**
  * [AppErrorParser] for security-related error codes using `shared-foundation` localization.
@@ -23,14 +24,7 @@ open class SecurityErrorParser(
         val strings = SecurityModuleStrings(KmpLocalization.resolver, localeProvider())
 
         return when (appError.code) {
-            SecurityErrorCodes.MFA_CONFIRMATION_REQUIRED -> {
-                val token = args[SecurityErrorArgs.MFA_TOKEN]
-                if (!token.isNullOrBlank()) {
-                    strings.errors.mfaConfirmationRequired(token)
-                } else {
-                    strings.errors.mfaConfirmationRequiredWithoutArgs
-                }
-            }
+            SecurityErrorCodes.MFA_CONFIRMATION_REQUIRED -> strings.errors.mfaConfirmationRequired
 
             SecurityErrorCodes.OTP_RETRY_TOO_SOON -> {
                 val retry = args[CommonErrorArgs.RETRY_AFTER_SECONDS]
@@ -42,33 +36,19 @@ open class SecurityErrorParser(
             }
 
             SecurityErrorCodes.PASSWORD_TOO_WEAK -> {
-                if (args.isEmpty()) {
-                    strings.errors.passwordTooWeakWithoutArgs
-                } else {
-                    strings.errors.passwordTooWeak(
-                        passwordTooShort = args[SecurityErrorArgs.PASSWORD_FAIL_TOO_SHORT] ?: "false",
-                        passwordMinLength = args[SecurityErrorArgs.PASSWORD_MIN_LENGTH] ?: "0",
-                        passwordNoLetter = args[SecurityErrorArgs.PASSWORD_FAIL_NO_LETTER] ?: "false",
-                        passwordNoUpperCase = args[SecurityErrorArgs.PASSWORD_FAIL_NO_UPPERCASE] ?: "false",
-                        passwordNoLowerCase = args[SecurityErrorArgs.PASSWORD_FAIL_NO_LOWERCASE] ?: "false",
-                        passwordNoDigit = args[SecurityErrorArgs.PASSWORD_FAIL_NO_DIGIT] ?: "false",
-                        passwordNoSpecialChar = args[SecurityErrorArgs.PASSWORD_FAIL_NO_SPECIAL_CHAR] ?: "false",
-                        passwordTooCommon = args[SecurityErrorArgs.PASSWORD_FAIL_TOO_COMMON] ?: "false"
-                    )
-                }
+                strings.resolvePasswordTooWeakReasons(args).joinToString("\n")
             }
 
             SecurityErrorCodes.TOTP_ALREADY_ENABLED -> strings.errors.totpAlreadyEnabled
 
             SecurityErrorCodes.TOTP_NOT_ENABLED -> strings.errors.totpNotEnabled
 
-            SecurityErrorCodes.MFA_TOKEN_EXPIRED -> strings.errors.mfaTokenExpired
+            SecurityErrorCodes.MFA_TOKEN_EXPIRED,
+            SecurityErrorCodes.INVALID_MFA_TOKEN -> strings.errors.mfaTokenExpired
 
             SecurityErrorCodes.RECOVERY_CODE_ALREADY_USED -> strings.errors.recoveryCodeAlreadyUsed
 
             SecurityErrorCodes.INVALID_TOTP_CODE -> strings.errors.invalidTotpCode
-
-            SecurityErrorCodes.INVALID_MFA_TOKEN -> strings.errors.invalidMfaToken
 
             SecurityErrorCodes.IP_NOT_ALLOWED -> strings.errors.ipNotAllowed
 

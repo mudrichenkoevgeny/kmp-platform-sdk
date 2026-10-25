@@ -10,6 +10,9 @@ interface CreateUserComponent {
     fun onRoleChanged(value: String)
     fun onStatusChanged(value: String)
     fun onAuthorityLevelChanged(value: String)
+    fun onQuotaBytesChanged(value: String)
+    fun onMaxUploadSizeBytesChanged(value: String)
+    fun onMaxPendingUploadsChanged(value: String)
     fun onCreateClick()
     fun onBackClick()
 }

@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.settings
+package io.github.mudrichenkoevgeny.kmp.feature.user.network.api.auth.settings
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.utils.callResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult

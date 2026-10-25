@@ -33,6 +33,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.time.formatInstantToDateTime
@@ -53,8 +54,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.detail.UserDetailComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
-
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.localization.StorageModuleStrings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 
@@ -107,6 +108,9 @@ fun UserDetailScreen(component: UserDetailComponent) {
                         onAccountStatusChanged = component::onAccountStatusChanged,
                         onLockoutTypeChanged = component::onLockoutTypeChanged,
                         onTemporaryLockoutUntilChanged = component::onTemporaryLockoutUntilChanged,
+                        onQuotaBytesChanged = component::onQuotaBytesChanged,
+                        onMaxUploadSizeBytesChanged = component::onMaxUploadSizeBytesChanged,
+                        onMaxPendingUploadsChanged = component::onMaxPendingUploadsChanged,
                         onUpdateClick = component::onUpdateClick,
                         onDeleteClick = component::onDeleteClick,
                         onConfirmDeleteClick = component::onConfirmDeleteClick,
@@ -129,6 +133,9 @@ private fun Content(
     onAccountStatusChanged: (String) -> Unit,
     onLockoutTypeChanged: (String) -> Unit,
     onTemporaryLockoutUntilChanged: (String) -> Unit,
+    onQuotaBytesChanged: (String) -> Unit,
+    onMaxUploadSizeBytesChanged: (String) -> Unit,
+    onMaxPendingUploadsChanged: (String) -> Unit,
     onUpdateClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onConfirmDeleteClick: () -> Unit,
@@ -140,6 +147,7 @@ private fun Content(
 ) {
     val userUi = LocalUserStrings.current.ui
     val commonUi = LocalCommonStrings.current.ui
+    val storageUi = remember { StorageModuleStrings(KmpLocalization.resolver, KmpLocalization.currentLocale).ui }
     val notAvailableText = commonUi.denied
     val createdAtText = formatInstantToDateTime(state.user.createdAt) ?: state.user.createdAt.toString()
     val lastLoginText = state.user.lastLoginAt?.let { formatInstantToDateTime(it) } ?: notAvailableText
@@ -238,6 +246,41 @@ private fun Content(
             placeholder = { CoreBodyText(commonUi.lockoutUntil) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.testTag(UserDetailTestTags.TEMPORARY_LOCKOUT_UNTIL_INPUT),
+            enabled = !state.isSaving && !state.isDeleting && !state.isSelf
+        )
+
+        CoreTitleText(
+            text = userUi.customStorageConfiguration,
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        CoreOutlinedTextField(
+            value = state.quotaBytesInput,
+            onValueChange = onQuotaBytesChanged,
+            label = { CoreBodyText(storageUi.storageQuotaBytes) },
+            placeholder = { CoreBodyText(storageUi.defaultNull) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(UserDetailTestTags.QUOTA_BYTES_INPUT),
+            enabled = !state.isSaving && !state.isDeleting && !state.isSelf
+        )
+
+        CoreOutlinedTextField(
+            value = state.maxUploadSizeBytesInput,
+            onValueChange = onMaxUploadSizeBytesChanged,
+            label = { CoreBodyText(storageUi.storageMaxUploadSizeBytes) },
+            placeholder = { CoreBodyText(storageUi.defaultNull) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(UserDetailTestTags.MAX_UPLOAD_SIZE_BYTES_INPUT),
+            enabled = !state.isSaving && !state.isDeleting && !state.isSelf
+        )
+
+        CoreOutlinedTextField(
+            value = state.maxPendingUploadsInput,
+            onValueChange = onMaxPendingUploadsChanged,
+            label = { CoreBodyText(storageUi.storageMaxPendingUploads) },
+            placeholder = { CoreBodyText(storageUi.defaultNull) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(UserDetailTestTags.MAX_PENDING_UPLOADS_INPUT),
             enabled = !state.isSaving && !state.isDeleting && !state.isSelf
         )
 
@@ -522,9 +565,12 @@ object UserDetailTestTags {
     const val AUTHORITY_LEVEL_INPUT = "UserDetail_AuthorityLevelInput"
     const val LOCKOUT_TYPE_INPUT = "UserDetail_LockoutTypeInput"
     const val TEMPORARY_LOCKOUT_UNTIL_INPUT = "UserDetail_TemporaryLockoutUntilInput"
+    const val QUOTA_BYTES_INPUT = "UserDetail_QuotaBytesInput"
+    const val MAX_UPLOAD_SIZE_BYTES_INPUT = "UserDetail_MaxUploadSizeBytesInput"
+    const val MAX_PENDING_UPLOADS_INPUT = "UserDetail_MaxPendingUploadsInput"
     const val UPDATE_BUTTON = "UserDetail_UpdateButton"
     const val DELETE_BUTTON = "UserDetail_DeleteButton"
-    const val DISABLE_TOTP_BUTTON = "UserDetail_DisableTotpButton"
+    const val DISABLE_TOTP_BUTTON = "UserDetail_DisableTotpErrorText"
     const val DISABLE_TOTP_ERROR_TEXT = "UserDetail_DisableTotpErrorText"
     const val SESSIONS_BUTTON = "UserDetail_SessionsButton"
     const val IDENTIFIERS_BUTTON = "UserDetail_IdentifiersButton"

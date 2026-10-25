@@ -3,14 +3,18 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -19,6 +23,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
@@ -28,6 +33,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlin
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
@@ -35,6 +41,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.create.CreateUserComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.ui.UiValues
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.localization.StorageModuleStrings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,6 +78,9 @@ fun CreateUserScreen(component: CreateUserComponent) {
                 onRoleChanged = component::onRoleChanged,
                 onStatusChanged = component::onStatusChanged,
                 onAuthorityLevelChanged = component::onAuthorityLevelChanged,
+                onQuotaBytesChanged = component::onQuotaBytesChanged,
+                onMaxUploadSizeBytesChanged = component::onMaxUploadSizeBytesChanged,
+                onMaxPendingUploadsChanged = component::onMaxPendingUploadsChanged,
                 onCreateClick = component::onCreateClick
             )
         }
@@ -84,9 +95,13 @@ private fun CreateUserForm(
     onRoleChanged: (String) -> Unit,
     onStatusChanged: (String) -> Unit,
     onAuthorityLevelChanged: (String) -> Unit,
+    onQuotaBytesChanged: (String) -> Unit,
+    onMaxUploadSizeBytesChanged: (String) -> Unit,
+    onMaxPendingUploadsChanged: (String) -> Unit,
     onCreateClick: () -> Unit
 ) {
     val userUi = LocalUserStrings.current.ui
+    val storageUi = remember { StorageModuleStrings(KmpLocalization.resolver, KmpLocalization.currentLocale).ui }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
@@ -95,7 +110,7 @@ private fun CreateUserForm(
             value = state.email,
             onValueChange = onEmailChanged,
             label = { CoreBodyText(userUi.email) },
-            placeholder = { CoreBodyText(userUi.email) },
+            placeholder = { CoreBodyText(UiValues.Placeholder.EMAIL) },
             modifier = Modifier.testTag(CreateUserTestTags.EMAIL_INPUT),
             enabled = !state.isLoading
         )
@@ -136,6 +151,41 @@ private fun CreateUserForm(
             enabled = !state.isLoading
         )
 
+        CoreTitleText(
+            text = userUi.customStorageConfiguration,
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        CoreOutlinedTextField(
+            value = state.quotaBytes,
+            onValueChange = onQuotaBytesChanged,
+            label = { CoreBodyText(storageUi.storageQuotaBytes) },
+            placeholder = { CoreBodyText(storageUi.defaultNull) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(CreateUserTestTags.QUOTA_BYTES_INPUT),
+            enabled = !state.isLoading
+        )
+
+        CoreOutlinedTextField(
+            value = state.maxUploadSizeBytes,
+            onValueChange = onMaxUploadSizeBytesChanged,
+            label = { CoreBodyText(storageUi.storageMaxUploadSizeBytes) },
+            placeholder = { CoreBodyText(storageUi.defaultNull) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(CreateUserTestTags.MAX_UPLOAD_SIZE_BYTES_INPUT),
+            enabled = !state.isLoading
+        )
+
+        CoreOutlinedTextField(
+            value = state.maxPendingUploads,
+            onValueChange = onMaxPendingUploadsChanged,
+            label = { CoreBodyText(storageUi.storageMaxPendingUploads) },
+            placeholder = { CoreBodyText(storageUi.defaultNull) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(CreateUserTestTags.MAX_PENDING_UPLOADS_INPUT),
+            enabled = !state.isLoading
+        )
+
         CoreButton(
             text = if (state.isLoading) userUi.saving else userUi.createUser,
             onClick = onCreateClick,
@@ -161,7 +211,10 @@ internal class CreateUserPreviewProvider : PreviewParameterProvider<CreateUserSc
             password = "SecretPassword123!",
             role = "USER",
             status = "ACTIVE",
-            authorityLevel = "0"
+            authorityLevel = "0",
+            quotaBytes = "10737418240",
+            maxUploadSizeBytes = "104857600",
+            maxPendingUploads = "5"
         ),
         "Loading" to CreateUserScreenState(
             email = "user@example.com",
@@ -238,6 +291,9 @@ object CreateUserTestTags {
     const val ROLE_INPUT = "CreateUser_RoleInput"
     const val STATUS_INPUT = "CreateUser_StatusInput"
     const val AUTHORITY_LEVEL_INPUT = "CreateUser_AuthorityLevelInput"
+    const val QUOTA_BYTES_INPUT = "CreateUser_QuotaBytesInput"
+    const val MAX_UPLOAD_SIZE_BYTES_INPUT = "CreateUser_MaxUploadSizeBytesInput"
+    const val MAX_PENDING_UPLOADS_INPUT = "CreateUser_MaxPendingUploadsInput"
     const val CREATE_BUTTON = "CreateUser_CreateButton"
     const val ERROR_TEXT = "CreateUser_ErrorText"
 }

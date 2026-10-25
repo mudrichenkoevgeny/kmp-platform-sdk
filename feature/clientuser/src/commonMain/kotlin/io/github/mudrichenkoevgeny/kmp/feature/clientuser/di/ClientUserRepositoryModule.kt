@@ -6,8 +6,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.login.
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.refreshtoken.OpenRefreshTokenRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.registration.OpenRegistrationRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.resetpassword.OpenResetPasswordRepositoryImpl
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.settings.OpenAuthSettingsRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.unlock.OpenUnlockRepositoryImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.identifier.OpenIdentifierRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.session.OpenSessionRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.user.OpenUserRepositoryImpl

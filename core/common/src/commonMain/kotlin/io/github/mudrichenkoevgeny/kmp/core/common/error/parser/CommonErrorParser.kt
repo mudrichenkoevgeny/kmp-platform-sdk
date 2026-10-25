@@ -33,22 +33,23 @@ open class CommonErrorParser(
             CommonErrorCodes.MISSING_REQUIRED_PARAMETER -> {
                 val param = args[CommonErrorArgs.PARAMETER_NAME]
                 if (!param.isNullOrBlank()) {
-                    strings.errors.missingParameter(param)
+                    strings.errors.missingField(param)
                 } else {
-                    strings.errors.missingParameterWithoutArgs
+                    strings.errors.missingFieldWithoutArgs
                 }
             }
 
             CommonErrorCodes.INVALID_PARAMETER_VALUE -> {
                 val param = args[CommonErrorArgs.PARAMETER_NAME]
                 if (!param.isNullOrBlank()) {
-                    strings.errors.invalidParameter(param)
+                    strings.errors.invalidField(param)
                 } else {
-                    strings.errors.invalidParameterWithoutArgs
+                    strings.errors.invalidFieldWithoutArgs
                 }
             }
 
-            CommonErrorCodes.MISSING_REQUIRED_FIELD -> {
+            CommonErrorCodes.MISSING_REQUIRED_FIELD,
+            CommonErrorCodes.EMPTY_COLLECTION_FIELD -> {
                 val field = args[CommonErrorArgs.FIELD_NAME]
                 if (!field.isNullOrBlank()) {
                     strings.errors.missingField(field)
@@ -63,15 +64,6 @@ open class CommonErrorParser(
                     strings.errors.blankField(field)
                 } else {
                     strings.errors.blankFieldWithoutArgs
-                }
-            }
-
-            CommonErrorCodes.EMPTY_COLLECTION_FIELD -> {
-                val field = args[CommonErrorArgs.FIELD_NAME]
-                if (!field.isNullOrBlank()) {
-                    strings.errors.emptyCollectionField(field)
-                } else {
-                    strings.errors.emptyCollectionFieldWithoutArgs
                 }
             }
 

@@ -1,11 +1,10 @@
-package io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.settings
+package io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings
 
 import co.touchlab.kermit.Logger
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.settings.OpenAuthSettingsApi
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.auth.settings.OpenAuthSettingsApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.settings.OpenAuthSettingsStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.OpenAuthSettings
@@ -26,9 +25,6 @@ import kotlinx.serialization.json.decodeFromJsonElement
  * Implements [OpenAuthSettingsRepository] with a mutex-guarded in-memory [MutableStateFlow], persistence
  * via [OpenAuthSettingsStorage], HTTP via [OpenAuthSettingsApi], and live updates from [WebSocketService] for
  * `OPEN_AUTH_SETTINGS_UPDATED` events.
- *
- * On construction, loads cached settings from storage into the flow and subscribes to WebSocket
- * frames in [repositoryScope]; invalid payloads are logged and ignored.
  *
  * @param openAuthSettingsApi Remote read endpoint for auth settings.
  * @param openAuthSettingsStorage Encrypted or local persistence for settings snapshots.

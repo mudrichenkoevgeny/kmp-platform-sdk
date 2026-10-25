@@ -3,7 +3,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.setti
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.websocket.service.WebSocketServiceMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.network.api.auth.settings.OpenAuthSettingsApiMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.api.auth.settings.OpenAuthSettingsApiMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.settings.OpenAuthSettingsStorageMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.OpenAuthSettings

@@ -19,9 +19,9 @@ interface ManagementSecuritySettingsRepository {
      * Pushes [securitySettings] to the remote server and updates local state on success.
      *
      * @param securitySettings New security configuration payload to apply.
-     * @return Empty success indicator, or an error result when update fails.
+     * @return Updated [ManagementSecuritySettings] on success, or an error result when update fails.
      */
-    suspend fun saveRemoteManagementSecuritySettings(securitySettings: ManagementSecuritySettings): AppResult<Unit>
+    suspend fun saveRemoteManagementSecuritySettings(securitySettings: ManagementSecuritySettings): AppResult<ManagementSecuritySettings>
 
     /**
      * Resets security settings on the remote server to default values and updates local state.

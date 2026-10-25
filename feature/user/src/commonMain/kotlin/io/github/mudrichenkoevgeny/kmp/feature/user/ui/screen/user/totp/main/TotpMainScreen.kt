@@ -65,6 +65,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.totp.TotpMainComponentMock
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.ui.UiValues
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
@@ -297,7 +298,7 @@ private fun SetupInProgressContent(
             value = state.code,
             onValueChange = onCodeChanged,
             label = { CoreBodyText(userUi.totpCode) },
-            placeholder = { CoreBodyText(userUi.totpCode) },
+            placeholder = { CoreBodyText(UiValues.Placeholder.TOTP_CODE) },
             enabled = !state.actionLoading,
             isError = state.actionError != null,
             modifier = Modifier.testTag(TotpMainTestTags.CODE_INPUT)

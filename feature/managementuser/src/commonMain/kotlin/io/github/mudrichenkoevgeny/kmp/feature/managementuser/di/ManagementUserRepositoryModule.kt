@@ -1,6 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.di
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
+import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.auth.login.SelfManagementLoginRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.auth.refreshtoken.SelfManagementRefreshTokenRepositoryImpl
@@ -31,9 +32,12 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.storage.globalsett
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.storage.security.settings.EncryptedManagementSecuritySettingsStorage
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.storage.security.settings.ManagementSecuritySettingsStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserStorageModule
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.auth.settings.OpenAuthSettingsApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.refreshtoken.RefreshTokenRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpassword.ResetPasswordRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.unlock.UnlockRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepositoryImpl
@@ -42,6 +46,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.session.SessionRe
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.security.UserSecurityRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
+import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.settings.EncryptedOpenAuthSettingsStorage
+import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.settings.OpenAuthSettingsStorage
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.settings.OpenAuthSettingsPayload
 import kotlinx.coroutines.CoroutineScope
 import kotlin.time.Clock
 
@@ -102,6 +109,24 @@ internal class ManagementUserRepositoryModule(
         ManagementAuthSettingsRepositoryImpl(
             managementAuthSettingsApi = networkModule.authSettingsApi,
             managementAuthSettingsStorage = managementAuthSettingsStorage,
+            webSocketService = webSocketService,
+            repositoryScope = repositoryScope
+        )
+    }
+
+    /** Storage for open auth settings. */
+    val openAuthSettingsStorage: OpenAuthSettingsStorage by lazy {
+        EncryptedOpenAuthSettingsStorage(encryptedSettings)
+    }
+    /** Repository for open auth settings. */
+    val openAuthSettingsRepository: OpenAuthSettingsRepository by lazy {
+        OpenAuthSettingsRepositoryImpl(
+            openAuthSettingsApi = object : OpenAuthSettingsApi {
+                override suspend fun getAuthSettings(): AppResult<OpenAuthSettingsPayload> {
+                    return networkModule.authSettingsApi.getOpenAuthSettings()
+                }
+            },
+            openAuthSettingsStorage = openAuthSettingsStorage,
             webSocketService = webSocketService,
             repositoryScope = repositoryScope
         )

@@ -16,7 +16,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user.K
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user.KtorSelfManagementUserApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user.security.KtorManagementUserSecurityApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user.security.KtorUserSelfManagementUserSecurityApi
-import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration.KtorOpenUserConfigurationApi
 import io.ktor.client.HttpClient
 
 /**
@@ -62,8 +61,6 @@ internal class ManagementUserNetworkModule(
     val managementUserSecurityApi by lazy { KtorManagementUserSecurityApi(httpClient) }
 
     // Configuration
-    /** API for open user configuration. */
-    val openUserConfigurationApi by lazy { KtorOpenUserConfigurationApi(httpClient) }
     /** API for management user configuration. */
     val managementUserConfigurationApi by lazy { KtorManagementUserConfigurationApi(httpClient) }
 

@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.feature.clientuser.usecase.auth.settings
+package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository

@@ -2,6 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.di
 
 import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySettingsRepository
 import io.github.mudrichenkoevgeny.kmp.core.settings.repository.OpenGlobalSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.configuration.ManagementUserConfigurationApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.auth.settings.ManagementAuthSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.globalsettings.ManagementGlobalSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.security.settings.ManagementSecuritySettingsRepository
@@ -38,7 +39,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.google.DisabledGoogleAuthService
 import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserStorageModule
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
-import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration.OpenUserConfigurationApi
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByTotpRecoveryCodeUseCase
@@ -83,9 +84,10 @@ internal class ManagementUserUseCaseModule(
     private val authStorage: AuthStorage,
     private val storageModule: UserStorageModule,
     private val authServices: UserAuthServices,
-    private val openUserConfigurationApi: OpenUserConfigurationApi,
+    private val managementUserConfigurationApi: ManagementUserConfigurationApi,
     private val openGlobalSettingsRepository: OpenGlobalSettingsRepository,
     private val openSecuritySettingsRepository: OpenSecuritySettingsRepository,
+    private val openAuthSettingsRepository: OpenAuthSettingsRepository,
     private val managementAuthSettingsRepository: ManagementAuthSettingsRepository,
     private val managementGlobalSettingsRepository: ManagementGlobalSettingsRepository,
     private val managementSecuritySettingsRepository: ManagementSecuritySettingsRepository
@@ -208,9 +210,10 @@ internal class ManagementUserUseCaseModule(
     /** Refreshes full configuration for the management user. */
     val refreshUserConfigurationUseCase by lazy {
         RefreshManagementUserConfigurationUseCase(
-            openUserConfigurationApi = openUserConfigurationApi,
+            managementUserConfigurationApi = managementUserConfigurationApi,
             openGlobalSettingsRepository = openGlobalSettingsRepository,
-            openSecuritySettingsRepository = openSecuritySettingsRepository
+            openSecuritySettingsRepository = openSecuritySettingsRepository,
+            openAuthSettingsRepository = openAuthSettingsRepository
         )
     }
 

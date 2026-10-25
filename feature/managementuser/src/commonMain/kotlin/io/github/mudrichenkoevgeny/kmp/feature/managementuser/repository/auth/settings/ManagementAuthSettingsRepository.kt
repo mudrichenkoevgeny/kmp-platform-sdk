@@ -20,9 +20,9 @@ interface ManagementAuthSettingsRepository {
      * Pushes [authSettings] to the remote server and updates the local storage and state flow on success.
      *
      * @param authSettings New configuration payload to apply.
-     * @return Empty success indicator, or an error result when the remote update fails.
+     * @return Updated [ManagementAuthSettings] on success, or an error result when the remote update fails.
      */
-    suspend fun saveRemoteManagementAuthSettings(authSettings: ManagementAuthSettings): AppResult<Unit>
+    suspend fun saveRemoteManagementAuthSettings(authSettings: ManagementAuthSettings): AppResult<ManagementAuthSettings>
 
     /**
      * Resets auth settings on the remote server to default values and updates local state.

@@ -69,23 +69,23 @@ class ManagementUserComponent(
     private val auditApiComponent = AuditApiComponent(
         httpClient = commonComponent.httpClient,
         compositeAuditActionTypeParser = CompositeAuditActionTypeParser(
-            setOf(
-                UserAuditActionType.entries.first(),
-                SecurityAuditActionType.entries.first(),
-                SettingsAuditActionType.entries.first()
+            listOf(
+                UserAuditActionType::fromValueOrNull,
+                SecurityAuditActionType::fromValueOrNull,
+                SettingsAuditActionType::fromValueOrNull
             )
         ),
         compositeAuditResourceTypeParser = CompositeAuditResourceTypeParser(
-            setOf(
-                UserAuditResourceType.entries.first(),
-                SecurityAuditResourceType.entries.first(),
-                SettingsAuditResourceType.entries.first()
+            listOf(
+                UserAuditResourceType::fromValueOrNull,
+                SecurityAuditResourceType::fromValueOrNull,
+                SettingsAuditResourceType::fromValueOrNull
             )
         ),
         compositeAuditMetadataKeyParser = CompositeAuditMetadataKeyParser(
-            setOf(
-                CommonAuditMetadataKey.entries.first(),
-                UserAuditMetadataKey.entries.first()
+            listOf(
+                CommonAuditMetadataKey::fromValueOrNull,
+                UserAuditMetadataKey::fromValueOrNull
             )
         )
     )
@@ -113,9 +113,10 @@ class ManagementUserComponent(
         authStorage = authStorage,
         storageModule = storageModule,
         authServices = authServices,
-        openUserConfigurationApi = networkModule.openUserConfigurationApi,
+        managementUserConfigurationApi = networkModule.managementUserConfigurationApi,
         openGlobalSettingsRepository = settingsComponent.globalSettingsRepository,
         openSecuritySettingsRepository = securityComponent.securitySettingsRepository,
+        openAuthSettingsRepository = repositoryModule.openAuthSettingsRepository,
         managementAuthSettingsRepository = repositoryModule.managementAuthSettingsRepository,
         managementGlobalSettingsRepository = repositoryModule.managementGlobalSettingsRepository,
         managementSecuritySettingsRepository = repositoryModule.managementSecuritySettingsRepository

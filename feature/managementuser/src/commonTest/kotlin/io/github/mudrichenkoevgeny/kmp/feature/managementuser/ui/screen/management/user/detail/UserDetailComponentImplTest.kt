@@ -104,6 +104,64 @@ class UserDetailComponentImplTest {
         assertEquals(1, testContext.onBackCalls)
     }
 
+    @Test
+    fun onQuotaBytesChanged_updatesStateAndClearsError() = runComponentTest {
+        val user = createTestUserPrivate()
+        val testContext = createTestContext(user = user)
+        advanceTimeBy(100.milliseconds)
+
+        testContext.component.onQuotaBytesChanged("10737418240")
+
+        val state = assertIs<UserDetailScreenState.Content>(testContext.component.state.value)
+        assertEquals("10737418240", state.quotaBytesInput)
+    }
+
+    @Test
+    fun onMaxUploadSizeBytesChanged_updatesStateAndClearsError() = runComponentTest {
+        val user = createTestUserPrivate()
+        val testContext = createTestContext(user = user)
+        advanceTimeBy(100.milliseconds)
+
+        testContext.component.onMaxUploadSizeBytesChanged("104857600")
+
+        val state = assertIs<UserDetailScreenState.Content>(testContext.component.state.value)
+        assertEquals("104857600", state.maxUploadSizeBytesInput)
+    }
+
+    @Test
+    fun onMaxPendingUploadsChanged_updatesStateAndClearsError() = runComponentTest {
+        val user = createTestUserPrivate()
+        val testContext = createTestContext(user = user)
+        advanceTimeBy(100.milliseconds)
+
+        testContext.component.onMaxPendingUploadsChanged("5")
+
+        val state = assertIs<UserDetailScreenState.Content>(testContext.component.state.value)
+        assertEquals("5", state.maxPendingUploadsInput)
+    }
+
+    @Test
+    fun onUpdateClick_passesStorageConfiguration_whenStorageFieldsAreProvided() = runComponentTest {
+        val user = createTestUserPrivate()
+        val repository = ManagementUserRepositoryMock().apply {
+            getUserResultProvider = { AppResult.Success(user) }
+            updateUserResultProvider = { _, _ -> AppResult.Success(Unit) }
+        }
+        val testContext = createTestContext(user = user, repository = repository)
+        advanceTimeBy(100.milliseconds)
+
+        testContext.component.onQuotaBytesChanged("10737418240")
+        testContext.component.onMaxUploadSizeBytesChanged("104857600")
+        testContext.component.onMaxPendingUploadsChanged("5")
+        testContext.component.onUpdateClick()
+
+        advanceTimeBy(100.milliseconds)
+        val storageConfig = repository.lastUpdateRequest?.storageConfiguration
+        assertEquals(10737418240L, storageConfig?.quotaBytes)
+        assertEquals(104857600L, storageConfig?.maxUploadSizeBytes)
+        assertEquals(5, storageConfig?.maxPendingUploads)
+    }
+
     private fun createTestContext(
         user: UserPrivate = createTestUserPrivate(),
         repository: ManagementUserRepositoryMock = ManagementUserRepositoryMock().apply {

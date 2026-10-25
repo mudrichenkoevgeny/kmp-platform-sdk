@@ -7,6 +7,7 @@ import androidx.compose.ui.test.hasProgressBarRangeInfo
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
@@ -60,8 +61,36 @@ class UserDetailScreenTest {
         onNodeWithTag(UserDetailTestTags.IDENTIFIERS_BUTTON).performScrollTo().assertIsDisplayed()
         onNodeWithTag(UserDetailTestTags.ACCOUNT_STATUS_INPUT).performScrollTo().assertIsDisplayed()
         onNodeWithTag(UserDetailTestTags.AUTHORITY_LEVEL_INPUT).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(UserDetailTestTags.QUOTA_BYTES_INPUT).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(UserDetailTestTags.MAX_UPLOAD_SIZE_BYTES_INPUT).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(UserDetailTestTags.MAX_PENDING_UPLOADS_INPUT).performScrollTo().assertIsDisplayed()
         onNodeWithTag(UserDetailTestTags.UPDATE_BUTTON).performScrollTo().assertIsDisplayed()
         onNodeWithTag(UserDetailTestTags.DELETE_BUTTON).performScrollTo().assertIsDisplayed()
+    }
+
+    @Test
+    fun content_typeStorageConfiguration_updatesComponent() = runComposeUiTest {
+        val user = createTestUserPrivate()
+        val component = UserDetailComponentMock(
+            UserDetailScreenState.Content(
+                user = user,
+                authorityLevelInput = "0",
+                accountStatusInput = "ACTIVE"
+            )
+        )
+        setContent {
+            ComponentTestHarness {
+                UserDetailScreen(component)
+            }
+        }
+        onNodeWithTag(UserDetailTestTags.QUOTA_BYTES_INPUT).performScrollTo().performTextInput("10737418240")
+        assertEquals("10737418240", component.lastQuotaBytesChanged)
+
+        onNodeWithTag(UserDetailTestTags.MAX_UPLOAD_SIZE_BYTES_INPUT).performScrollTo().performTextInput("104857600")
+        assertEquals("104857600", component.lastMaxUploadSizeBytesChanged)
+
+        onNodeWithTag(UserDetailTestTags.MAX_PENDING_UPLOADS_INPUT).performScrollTo().performTextInput("5")
+        assertEquals("5", component.lastMaxPendingUploadsChanged)
     }
 
     @Test

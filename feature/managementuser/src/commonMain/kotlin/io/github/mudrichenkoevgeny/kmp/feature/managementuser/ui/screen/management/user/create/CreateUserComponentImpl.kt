@@ -8,6 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCorou
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.CreateUserUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserStorageConfigurationPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.create.CreateByEmailRequest
 import kotlinx.coroutines.launch
 
@@ -52,9 +53,33 @@ class CreateUserComponentImpl(
         _state.value = _state.value.copy(authorityLevel = value, error = null)
     }
 
+    override fun onQuotaBytesChanged(value: String) {
+        _state.value = _state.value.copy(quotaBytes = value, error = null)
+    }
+
+    override fun onMaxUploadSizeBytesChanged(value: String) {
+        _state.value = _state.value.copy(maxUploadSizeBytes = value, error = null)
+    }
+
+    override fun onMaxPendingUploadsChanged(value: String) {
+        _state.value = _state.value.copy(maxPendingUploads = value, error = null)
+    }
+
     override fun onCreateClick() {
         val current = _state.value
         val authLevel = current.authorityLevel.toIntOrNull() ?: 0
+        val quotaBytes = current.quotaBytes.toLongOrNull()
+        val maxUploadSizeBytes = current.maxUploadSizeBytes.toLongOrNull()
+        val maxPendingUploads = current.maxPendingUploads.toIntOrNull()
+        val storageConfiguration = if (quotaBytes != null || maxUploadSizeBytes != null || maxPendingUploads != null) {
+            UserStorageConfigurationPayload(
+                quotaBytes = quotaBytes,
+                maxUploadSizeBytes = maxUploadSizeBytes,
+                maxPendingUploads = maxPendingUploads
+            )
+        } else {
+            null
+        }
 
         _state.value = current.copy(isLoading = true, error = null)
         scope.launch {
@@ -65,7 +90,8 @@ class CreateUserComponentImpl(
                     role = current.role,
                     status = current.status,
                     authorityLevel = authLevel,
-                    permissionCodes = emptySet()
+                    permissionCodes = emptySet(),
+                    storageConfiguration = storageConfiguration
                 )
             ).onSuccess {
                 onUserCreated?.invoke()

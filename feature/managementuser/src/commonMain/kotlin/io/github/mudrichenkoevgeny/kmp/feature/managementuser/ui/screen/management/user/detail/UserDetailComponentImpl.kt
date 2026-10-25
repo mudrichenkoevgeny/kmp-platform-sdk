@@ -15,6 +15,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserReposito
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import kotlinx.coroutines.flow.firstOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.user.detail.UserDetailParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserStorageConfigurationPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
 import kotlinx.coroutines.launch
 
@@ -79,6 +80,21 @@ class UserDetailComponentImpl(
         _state.value = currentContent.copy(temporaryLockoutUntilInput = value, saveError = null)
     }
 
+    override fun onQuotaBytesChanged(value: String) {
+        val currentContent = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = currentContent.copy(quotaBytesInput = value, saveError = null)
+    }
+
+    override fun onMaxUploadSizeBytesChanged(value: String) {
+        val currentContent = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = currentContent.copy(maxUploadSizeBytesInput = value, saveError = null)
+    }
+
+    override fun onMaxPendingUploadsChanged(value: String) {
+        val currentContent = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = currentContent.copy(maxPendingUploadsInput = value, saveError = null)
+    }
+
     override fun onUpdateClick() {
         val targetId = userId ?: return
         val currentContent = _state.value as? UserDetailScreenState.Content ?: return
@@ -93,12 +109,23 @@ class UserDetailComponentImpl(
         val lockoutType = currentContent.lockoutTypeInput.takeIf { it.isNotBlank() }
         val lockoutUntil = currentContent.temporaryLockoutUntilInput.toLongOrNull()
 
+        val quotaBytes = currentContent.quotaBytesInput.toLongOrNull()
+        val maxUploadSizeBytes = currentContent.maxUploadSizeBytesInput.toLongOrNull()
+        val maxPendingUploads = currentContent.maxPendingUploadsInput.toIntOrNull()
+
+        val storageConfiguration = UserStorageConfigurationPayload(
+            quotaBytes = quotaBytes,
+            maxUploadSizeBytes = maxUploadSizeBytes,
+            maxPendingUploads = maxPendingUploads
+        )
+
         val request = UpdateUserRequest(
             accountStatus = accountStatus,
             authorityLevel = authorityLevel,
             permissionCodes = null,
             lockoutType = lockoutType,
-            temporaryLockoutUntil = lockoutUntil
+            temporaryLockoutUntil = lockoutUntil,
+            storageConfiguration = storageConfiguration
         )
 
         scope.launch {
@@ -210,6 +237,9 @@ class UserDetailComponentImpl(
                         accountStatusInput = user.accountStatus.name,
                         lockoutTypeInput = user.lockoutType.name,
                         temporaryLockoutUntilInput = user.temporaryLockoutUntil?.toEpochMilliseconds()?.toString() ?: "",
+                        quotaBytesInput = user.storageConfiguration?.quotaBytes?.toString() ?: "",
+                        maxUploadSizeBytesInput = user.storageConfiguration?.maxUploadSizeBytes?.toString() ?: "",
+                        maxPendingUploadsInput = user.storageConfiguration?.maxPendingUploads?.toString() ?: "",
                         isSelf = isSelfUser
                     )
                 }

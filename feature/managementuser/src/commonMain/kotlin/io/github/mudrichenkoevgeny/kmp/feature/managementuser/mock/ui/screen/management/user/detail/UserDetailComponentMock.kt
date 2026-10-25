@@ -28,6 +28,9 @@ class UserDetailComponentMock(
     var lastAccountStatusChanged: String? = null
     var lastLockoutTypeChanged: String? = null
     var lastTemporaryLockoutUntilChanged: String? = null
+    var lastQuotaBytesChanged: String? = null
+    var lastMaxUploadSizeBytesChanged: String? = null
+    var lastMaxPendingUploadsChanged: String? = null
 
     override fun onAuthorityLevelChanged(value: String) {
         lastAuthorityLevelChanged = value
@@ -43,6 +46,18 @@ class UserDetailComponentMock(
 
     override fun onTemporaryLockoutUntilChanged(value: String) {
         lastTemporaryLockoutUntilChanged = value
+    }
+
+    override fun onQuotaBytesChanged(value: String) {
+        lastQuotaBytesChanged = value
+    }
+
+    override fun onMaxUploadSizeBytesChanged(value: String) {
+        lastMaxUploadSizeBytesChanged = value
+    }
+
+    override fun onMaxPendingUploadsChanged(value: String) {
+        lastMaxPendingUploadsChanged = value
     }
 
     override fun onUpdateClick() {

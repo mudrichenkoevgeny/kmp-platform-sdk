@@ -54,6 +54,27 @@ class CreateUserComponentImplTest {
     }
 
     @Test
+    fun onQuotaBytesChanged_updatesStateAndClearsError() = runComponentTest {
+        val context = createTestContext()
+        context.component.onQuotaBytesChanged("10737418240")
+        assertEquals("10737418240", context.component.state.value.quotaBytes)
+    }
+
+    @Test
+    fun onMaxUploadSizeBytesChanged_updatesStateAndClearsError() = runComponentTest {
+        val context = createTestContext()
+        context.component.onMaxUploadSizeBytesChanged("104857600")
+        assertEquals("104857600", context.component.state.value.maxUploadSizeBytes)
+    }
+
+    @Test
+    fun onMaxPendingUploadsChanged_updatesStateAndClearsError() = runComponentTest {
+        val context = createTestContext()
+        context.component.onMaxPendingUploadsChanged("5")
+        assertEquals("5", context.component.state.value.maxPendingUploads)
+    }
+
+    @Test
     fun onCreateClick_invokesUseCaseAndOnSuccess_whenUseCaseSucceeds() = runComponentTest {
         val repository = ManagementUserRepositoryMock()
         repository.createUserResultProvider = { AppResult.Success(createTestUserPrivate()) }
@@ -82,6 +103,26 @@ class CreateUserComponentImplTest {
         advanceTimeBy(100.milliseconds)
         assertEquals(1, context.onSuccessCalls)
         assertEquals(null, repository.lastCreateRequest?.password)
+    }
+
+    @Test
+    fun onCreateClick_passesStorageConfiguration_whenStorageFieldsAreProvided() = runComponentTest {
+        val repository = ManagementUserRepositoryMock()
+        repository.createUserResultProvider = { AppResult.Success(createTestUserPrivate()) }
+        val context = createTestContext(repository = repository)
+
+        context.component.onEmailChanged("user@example.com")
+        context.component.onQuotaBytesChanged("10737418240")
+        context.component.onMaxUploadSizeBytesChanged("104857600")
+        context.component.onMaxPendingUploadsChanged("5")
+        context.component.onCreateClick()
+
+        advanceTimeBy(100.milliseconds)
+        assertEquals(1, context.onSuccessCalls)
+        val storageConfig = repository.lastCreateRequest?.storageConfiguration
+        assertEquals(10737418240L, storageConfig?.quotaBytes)
+        assertEquals(104857600L, storageConfig?.maxUploadSizeBytes)
+        assertEquals(5, storageConfig?.maxPendingUploads)
     }
 
     @Test
