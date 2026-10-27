@@ -2,15 +2,15 @@ package io.github.mudrichenkoevgeny.kmp.core.security.error.model
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.ErrorId
-import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.ClientSecurityErrorCodes
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.PasswordPolicyFailReason
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.client.naming.ClientSecurityErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorArgs
 
 /**
  * Security-domain [AppError] variants for password policy and related flows.
  *
- * Each instance carries a stable [code] aligned with [ClientSecurityErrorCodes] (or shared foundation codes
- * where applicable for parsing). [args] is unused for these variants except [PasswordTooShort] when length context is provided.
- * [isRetryable] is `true` only for [PasswordPolicyUnavailable] (settings fetch may succeed on retry).
+ * Each instance carries a stable [code] aligned with [ClientSecurityErrorCodes] or [PasswordPolicyFailReason]
+ * (or shared foundation codes where applicable for parsing).
  */
 sealed class SecurityError(
     override val id: ErrorId,
@@ -37,7 +37,7 @@ sealed class SecurityError(
         minLength: Int? = null
     ) : SecurityError(
         id = ErrorId.generate(),
-        code = ClientSecurityErrorCodes.PASSWORD_TOO_SHORT,
+        code = PasswordPolicyFailReason.TOO_SHORT.name,
         args = minLength?.let { mapOf(SecurityErrorArgs.PASSWORD_MIN_LENGTH to it.toString()) },
         isRetryable = false
     )
@@ -45,42 +45,42 @@ sealed class SecurityError(
     /** Password does not contain a letter. */
     class PasswordNoLetter : SecurityError(
         id = ErrorId.generate(),
-        code = ClientSecurityErrorCodes.PASSWORD_NO_LETTER,
+        code = PasswordPolicyFailReason.NO_LETTER.name,
         isRetryable = false
     )
 
     /** Password does not contain an uppercase letter. */
     class PasswordNoUpperCase : SecurityError(
         id = ErrorId.generate(),
-        code = ClientSecurityErrorCodes.PASSWORD_NO_UPPERCASE,
+        code = PasswordPolicyFailReason.NO_UPPERCASE.name,
         isRetryable = false
     )
 
     /** Password does not contain a lowercase letter. */
     class PasswordNoLowerCase : SecurityError(
         id = ErrorId.generate(),
-        code = ClientSecurityErrorCodes.PASSWORD_NO_LOWERCASE,
+        code = PasswordPolicyFailReason.NO_LOWERCASE.name,
         isRetryable = false
     )
 
     /** Password does not contain a digit. */
     class PasswordNoDigit : SecurityError(
         id = ErrorId.generate(),
-        code = ClientSecurityErrorCodes.PASSWORD_NO_DIGIT,
+        code = PasswordPolicyFailReason.NO_DIGIT.name,
         isRetryable = false
     )
 
     /** Password does not contain a special character. */
     class PasswordNoSpecialChar : SecurityError(
         id = ErrorId.generate(),
-        code = ClientSecurityErrorCodes.PASSWORD_NO_SPECIAL_CHAR,
+        code = PasswordPolicyFailReason.NO_SPECIAL_CHAR.name,
         isRetryable = false
     )
 
     /** Password matches a blocked common-password list. */
     class PasswordTooCommon : SecurityError(
         id = ErrorId.generate(),
-        code = ClientSecurityErrorCodes.PASSWORD_TOO_COMMON,
+        code = PasswordPolicyFailReason.TOO_COMMON.name,
         isRetryable = false
     )
 }

@@ -47,6 +47,7 @@ kotlin {
             implementation(project(":core:common"))
             implementation(project(":core:settings"))
             implementation(project(":core:security"))
+            implementation(project(":core:storage"))
             implementation(project(":feature:user"))
             implementation(project(":feature:clientuser"))
 
@@ -54,6 +55,7 @@ kotlin {
             implementation(libs.shared.foundation.core.common)
             implementation(libs.shared.foundation.core.settings)
             implementation(libs.shared.foundation.core.security)
+            implementation(libs.shared.foundation.core.storage)
             implementation(libs.shared.foundation.feature.user)
 
             // Kotlin

@@ -4,6 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
 import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySettingsRepository
 import io.github.mudrichenkoevgeny.kmp.core.settings.repository.OpenGlobalSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.core.storage.repository.settings.OpenStorageSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration.OpenUserConfigurationApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.configuration.OpenUserConfiguration
@@ -11,17 +12,19 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.configu
 
 /**
  * Fetches the combined user configuration bundle and, when the network call succeeds, writes each
- * slice into the matching core repositories (global, security, and auth settings).
+ * slice into the matching core repositories (global, security, storage, and auth settings).
  *
  * @param openUserConfigurationApi Remote source for the bundled configuration DTO.
  * @param openGlobalSettingsRepository Persists global settings from the bundle.
  * @param openSecuritySettingsRepository Persists security settings from the bundle.
+ * @param openStorageSettingsRepository Persists storage settings from the bundle.
  * @param openAuthSettingsRepository Persists auth settings from the bundle.
  */
 class RefreshClientUserConfigurationUseCase(
     private val openUserConfigurationApi: OpenUserConfigurationApi,
     private val openGlobalSettingsRepository: OpenGlobalSettingsRepository,
     private val openSecuritySettingsRepository: OpenSecuritySettingsRepository,
+    private val openStorageSettingsRepository: OpenStorageSettingsRepository,
     private val openAuthSettingsRepository: OpenAuthSettingsRepository
 ) {
     /**
@@ -38,8 +41,8 @@ class RefreshClientUserConfigurationUseCase(
             val userConfiguration = userConfigurationResult.data
             openGlobalSettingsRepository.updateOpenGlobalSettings(userConfiguration.openGlobalSettings)
             openSecuritySettingsRepository.updateOpenSecuritySettings(userConfiguration.openSecuritySettings)
+            openStorageSettingsRepository.updateOpenStorageSettings(userConfiguration.openStorageSettings)
             openAuthSettingsRepository.updateOpenAuthSettings(userConfiguration.openAuthSettings)
-            /* todo wait for shared update: openStorageSettingsRepository.updateOpenStorageSettings(userConfiguration.openStorageSettings) */
         }
 
         return userConfigurationResult

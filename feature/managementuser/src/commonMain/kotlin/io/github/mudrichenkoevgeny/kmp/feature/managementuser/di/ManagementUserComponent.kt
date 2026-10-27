@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import io.github.mudrichenkoevgeny.kmp.core.common.di.CommonComponent
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
+import io.github.mudrichenkoevgeny.kmp.core.storage.di.StorageComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.di.audit.AuditApiComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponentImpl
@@ -42,6 +43,7 @@ import kotlinx.coroutines.SupervisorJob
  * @param commonComponent Shared infrastructure from `core:common`.
  * @param settingsComponent Global settings repository access from `core:settings`.
  * @param securityComponent Security settings and validators from `core:security`.
+ * @param storageComponent Storage repositories and use cases from `core:storage`.
  * @param authStorage Token and auth-settings persistence implementing [AuthStorage].
  * @param authServices Optional platform services (e.g. Google Sign-In); may provide a null Google delegate.
  * @param parentScope Optional coroutine scope for repository-driven work; if null, an internal supervisor scope is used.
@@ -50,11 +52,14 @@ class ManagementUserComponent(
     val commonComponent: CommonComponent,
     val settingsComponent: SettingsComponent,
     val securityComponent: SecurityComponent,
+    val storageComponent: StorageComponent,
     val authStorage: AuthStorage,
     val authServices: UserAuthServices,
     parentScope: CoroutineScope? = null
 ) {
-    private val componentScope = parentScope ?: CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private val componentScope = parentScope
+        ?: CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
     private val storageModule = UserStorageModule(commonComponent.encryptedSettings)
     private val networkModule = ManagementUserNetworkModule(httpClient = commonComponent.httpClient)
     private val repositoryModule = ManagementUserRepositoryModule(
@@ -116,6 +121,7 @@ class ManagementUserComponent(
         managementUserConfigurationApi = networkModule.managementUserConfigurationApi,
         openGlobalSettingsRepository = settingsComponent.globalSettingsRepository,
         openSecuritySettingsRepository = securityComponent.securitySettingsRepository,
+        openStorageSettingsRepository = storageComponent.storageSettingsRepository,
         openAuthSettingsRepository = repositoryModule.openAuthSettingsRepository,
         managementAuthSettingsRepository = repositoryModule.managementAuthSettingsRepository,
         managementGlobalSettingsRepository = repositoryModule.managementGlobalSettingsRepository,

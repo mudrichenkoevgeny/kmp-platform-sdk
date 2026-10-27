@@ -14,7 +14,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.core.common.time.resendCountdown
-import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.ClientSecurityErrorCodes
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.PasswordPolicyFailReason
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.client.naming.ClientSecurityErrorCodes
 import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ValidatePasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpassword.ResetPasswordRepository
@@ -131,7 +132,7 @@ class ResetEmailPasswordComponentImpl(
 
             val isPasswordValid = when (result) {
                 is AppResult.Success -> true
-                is AppResult.Error -> result.error.code != ClientSecurityErrorCodes.PASSWORD_TOO_SHORT &&
+                is AppResult.Error -> result.error.code != PasswordPolicyFailReason.TOO_SHORT.name &&
                         result.error.code != ClientSecurityErrorCodes.PASSWORD_POLICY_UNAVAILABLE
             }
 

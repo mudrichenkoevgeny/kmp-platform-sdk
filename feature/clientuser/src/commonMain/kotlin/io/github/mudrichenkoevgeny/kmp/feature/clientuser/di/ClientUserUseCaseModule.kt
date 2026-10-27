@@ -2,6 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.clientuser.di
 
 import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySettingsRepository
 import io.github.mudrichenkoevgeny.kmp.core.settings.repository.OpenGlobalSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.core.storage.repository.settings.OpenStorageSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.RefreshOpenAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.usecase.configuration.RefreshClientUserConfigurationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
@@ -72,7 +73,8 @@ internal class ClientUserUseCaseModule(
     private val openUserConfigurationApi: OpenUserConfigurationApi,
     private val openAuthSettingsRepository: OpenAuthSettingsRepository,
     private val openGlobalSettingsRepository: OpenGlobalSettingsRepository,
-    private val openSecuritySettingsRepository: OpenSecuritySettingsRepository
+    private val openSecuritySettingsRepository: OpenSecuritySettingsRepository,
+    private val openStorageSettingsRepository: OpenStorageSettingsRepository
 ) {
 
     // Auth
@@ -245,6 +247,7 @@ internal class ClientUserUseCaseModule(
             openUserConfigurationApi = openUserConfigurationApi,
             openGlobalSettingsRepository = openGlobalSettingsRepository,
             openSecuritySettingsRepository = openSecuritySettingsRepository,
+            openStorageSettingsRepository = openStorageSettingsRepository,
             openAuthSettingsRepository = openAuthSettingsRepository
         )
     }

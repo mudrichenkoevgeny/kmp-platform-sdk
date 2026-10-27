@@ -1,6 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.core.security.di
 
 import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySettingsRepository
+import io.github.mudrichenkoevgeny.kmp.core.security.usecase.GetOpenSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.core.security.usecase.RefreshOpenSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ValidatePasswordUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator.PasswordPolicyValidator
@@ -8,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolic
 /**
  * Internal use-case wiring for `core/security`.
  *
- * Exposes refresh and password validation entry points built on [OpenSecuritySettingsRepository] and
+ * Exposes refresh, read, and password validation entry points built on [OpenSecuritySettingsRepository] and
  * [PasswordPolicyValidator].
  */
 internal class SecurityUseCaseModule(
@@ -20,6 +21,15 @@ internal class SecurityUseCaseModule(
      */
     val refreshOpenSecuritySettingsUseCase by lazy {
         RefreshOpenSecuritySettingsUseCase(
+            openSecuritySettingsRepository
+        )
+    }
+
+    /**
+     * Retrieves stored or remote open security settings.
+     */
+    val getOpenSecuritySettingsUseCase by lazy {
+        GetOpenSecuritySettingsUseCase(
             openSecuritySettingsRepository
         )
     }

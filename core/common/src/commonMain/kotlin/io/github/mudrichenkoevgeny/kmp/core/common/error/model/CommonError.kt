@@ -1,6 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.error.model
 
-import io.github.mudrichenkoevgeny.kmp.core.common.error.naming.ClientCommonErrorCodes
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.client.naming.ClientCommonErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.CommonErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.CommonErrorCodes
 

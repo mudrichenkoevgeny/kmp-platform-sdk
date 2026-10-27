@@ -15,7 +15,7 @@ maven-publish = "0.37.0"
 dependency-analysis = "3.19.2"
 
 # Shared Foundation
-shared-foundation = "0.0.90"
+shared-foundation = "0.0.94"
 
 # Kotlin
 kotlinx-serialization = "1.12.0"
@@ -62,6 +62,7 @@ roborazzi = "1.77.0"
 shared-foundation-core-common = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-common", version.ref = "shared-foundation" }
 shared-foundation-core-settings = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-settings", version.ref = "shared-foundation" }
 shared-foundation-core-security = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-security", version.ref = "shared-foundation" }
+shared-foundation-core-storage = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-storage", version.ref = "shared-foundation" }
 shared-foundation-core-audit = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-audit", version.ref = "shared-foundation" }
 shared-foundation-feature-user = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-feature-user", version.ref = "shared-foundation" }
 shared-foundation-testing = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-testing", version.ref = "shared-foundation" }

@@ -4,9 +4,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.AppErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
 import io.github.mudrichenkoevgeny.kmp.core.common.time.formatEpochMillisToDateTime
-import io.github.mudrichenkoevgeny.kmp.feature.user.error.naming.ClientUserErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.localization.CommonModuleStrings
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.client.naming.ClientUserErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.UserModuleStrings
@@ -100,7 +100,13 @@ open class UserErrorParser(
                 )
             }
 
-            ClientUserErrorCodes.REGISTRATION_DISABLED -> strings.errors.registrationDisabled
+            UserErrorCodes.REGISTRATION_DISABLED -> strings.errors.registrationDisabled
+
+            ClientUserErrorCodes.EXTERNAL_AUTH_CANCELLED -> strings.errors.externalAuthCancelled
+
+            ClientUserErrorCodes.EXTERNAL_AUTH_FAILED -> strings.errors.externalAuthFailed
+
+            ClientUserErrorCodes.TOO_MANY_CONFIRMATION_REQUESTS -> strings.errors.tooManyConfirmationRequests
 
             else -> null
         }

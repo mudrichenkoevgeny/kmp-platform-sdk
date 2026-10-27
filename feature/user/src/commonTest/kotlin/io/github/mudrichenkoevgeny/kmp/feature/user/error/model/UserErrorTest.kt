@@ -1,6 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.error.model
 
-import io.github.mudrichenkoevgeny.kmp.feature.user.error.naming.ClientUserErrorCodes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.client.naming.ClientUserErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes
 import kotlin.test.Test
 import kotlin.test.assertEquals

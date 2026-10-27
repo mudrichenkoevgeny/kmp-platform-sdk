@@ -8,6 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.platform.model.clientDev
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.security.error.parser.SecurityErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
+import io.github.mudrichenkoevgeny.kmp.core.storage.di.StorageComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.di.ManagementUserComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.parser.UserErrorParser
@@ -171,6 +172,18 @@ class ManagementAppComponent(
         )
     }
 
+    private var mockStorageComponent: StorageComponent? = null
+
+    /** Domain logic for storage settings and files. */
+    val storageComponent: StorageComponent by lazy {
+        mockStorageComponent ?: StorageComponent(
+            httpClient = commonComponent.httpClient,
+            encryptedSettings = encryptedSettings,
+            webSocketService = commonComponent.webSocketService,
+            parentScope = appScope
+        )
+    }
+
     private var mockManagementUserComponent: ManagementUserComponent? = null
 
     /** Root component for management-specific logic and UI. */
@@ -179,6 +192,7 @@ class ManagementAppComponent(
             commonComponent = commonComponent,
             settingsComponent = settingsComponent,
             securityComponent = securityComponent,
+            storageComponent = storageComponent,
             authStorage = authStorage,
             authServices = authServices,
             parentScope = appScope

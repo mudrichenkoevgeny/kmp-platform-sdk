@@ -3,8 +3,9 @@ package io.github.mudrichenkoevgeny.kmp.core.security.error.parser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.AppErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
-import io.github.mudrichenkoevgeny.kmp.core.security.error.naming.ClientSecurityErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.CommonErrorArgs
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.PasswordPolicyFailReason
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.client.naming.ClientSecurityErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.localization.SecurityModuleStrings
@@ -36,7 +37,12 @@ open class SecurityErrorParser(
             }
 
             SecurityErrorCodes.PASSWORD_TOO_WEAK -> {
-                strings.resolvePasswordTooWeakReasons(args).joinToString("\n")
+                val reasons = strings.resolvePasswordTooWeakReasons(args)
+                if (reasons.isNotEmpty()) {
+                    reasons.joinToString("\n")
+                } else {
+                    strings.errors.passwordTooWeak
+                }
             }
 
             SecurityErrorCodes.TOTP_ALREADY_ENABLED -> strings.errors.totpAlreadyEnabled
@@ -54,7 +60,7 @@ open class SecurityErrorParser(
 
             ClientSecurityErrorCodes.PASSWORD_POLICY_UNAVAILABLE -> strings.errors.passwordPolicyUnavailable
 
-            ClientSecurityErrorCodes.PASSWORD_TOO_SHORT -> {
+            PasswordPolicyFailReason.TOO_SHORT.name -> {
                 val minLength = args[SecurityErrorArgs.PASSWORD_MIN_LENGTH]
                 if (!minLength.isNullOrBlank()) {
                     strings.errors.passwordTooShort(minLength)
@@ -63,17 +69,17 @@ open class SecurityErrorParser(
                 }
             }
 
-            ClientSecurityErrorCodes.PASSWORD_NO_LETTER -> strings.errors.passwordNoLetter
+            PasswordPolicyFailReason.NO_LETTER.name -> strings.errors.passwordNoLetter
 
-            ClientSecurityErrorCodes.PASSWORD_NO_UPPERCASE -> strings.errors.passwordNoUppercase
+            PasswordPolicyFailReason.NO_UPPERCASE.name -> strings.errors.passwordNoUppercase
 
-            ClientSecurityErrorCodes.PASSWORD_NO_LOWERCASE -> strings.errors.passwordNoLowercase
+            PasswordPolicyFailReason.NO_LOWERCASE.name -> strings.errors.passwordNoLowercase
 
-            ClientSecurityErrorCodes.PASSWORD_NO_DIGIT -> strings.errors.passwordNoDigit
+            PasswordPolicyFailReason.NO_DIGIT.name -> strings.errors.passwordNoDigit
 
-            ClientSecurityErrorCodes.PASSWORD_NO_SPECIAL_CHAR -> strings.errors.passwordNoSpecialChar
+            PasswordPolicyFailReason.NO_SPECIAL_CHAR.name -> strings.errors.passwordNoSpecialChar
 
-            ClientSecurityErrorCodes.PASSWORD_TOO_COMMON -> strings.errors.passwordTooCommon
+            PasswordPolicyFailReason.TOO_COMMON.name -> strings.errors.passwordTooCommon
 
             else -> null
         }

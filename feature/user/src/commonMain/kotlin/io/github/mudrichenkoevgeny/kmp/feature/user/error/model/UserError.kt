@@ -2,14 +2,13 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.error.model
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.ErrorId
-import io.github.mudrichenkoevgeny.kmp.feature.user.error.naming.ClientUserErrorCodes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.client.naming.ClientUserErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes
 
 /**
  * User-feature [AppError] variants for client-detected failures and stable server-aligned codes.
  *
- * [code] values follow shared `UserErrorCodes` or [ClientUserErrorCodes]. [args] is unused today except
- * where individual subclasses expose structured fields (e.g. retry delay). [isRetryable] is set per case.
+ * [code] values follow shared [UserErrorCodes] or [ClientUserErrorCodes].
  */
 sealed class UserError(
     override val id: ErrorId,
@@ -67,7 +66,7 @@ sealed class UserError(
     /** Registration is disabled by administrator in auth settings. */
     class RegistrationDisabled : UserError(
         id = ErrorId.generate(),
-        code = ClientUserErrorCodes.REGISTRATION_DISABLED,
+        code = UserErrorCodes.REGISTRATION_DISABLED,
         isRetryable = false
     )
 }
