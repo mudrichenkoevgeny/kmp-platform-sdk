@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.di
 
 import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySettingsRepository
 import io.github.mudrichenkoevgeny.kmp.core.settings.repository.OpenGlobalSettingsRepository
-import io.github.mudrichenkoevgeny.kmp.core.storage.repository.settings.OpenStorageSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.core.storage.repository.open.OpenStorageSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.configuration.ManagementUserConfigurationApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.auth.settings.ManagementAuthSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.globalsettings.ManagementGlobalSettingsRepository
@@ -80,6 +80,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.SetupT
 /**
  * Internal dependency wiring for management use cases.
  */
+
 internal class ManagementUserUseCaseModule(
     private val managementUserRepositoryModule: ManagementUserRepositoryModule,
     private val authStorage: AuthStorage,

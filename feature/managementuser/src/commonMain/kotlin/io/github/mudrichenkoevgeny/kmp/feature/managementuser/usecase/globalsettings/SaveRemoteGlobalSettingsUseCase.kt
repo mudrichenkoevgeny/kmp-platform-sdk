@@ -12,7 +12,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.model.
 class SaveRemoteGlobalSettingsUseCase(
     private val managementGlobalSettingsRepository: ManagementGlobalSettingsRepository
 ) {
-    suspend operator fun invoke(globalSettings: ManagementGlobalSettings): AppResult<Unit> {
+    suspend operator fun invoke(globalSettings: ManagementGlobalSettings): AppResult<ManagementGlobalSettings> {
         return managementGlobalSettingsRepository.saveRemoteManagementGlobalSettings(globalSettings)
     }
 }

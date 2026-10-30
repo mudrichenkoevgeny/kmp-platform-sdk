@@ -28,7 +28,8 @@ class CreateUserUseCaseTest {
             role = "USER",
             status = "ACTIVE",
             authorityLevel = 0,
-            permissionCodes = emptySet<String>()
+            permissionCodes = emptySet<String>(),
+            storageConfiguration = null
         )
 
         val result = useCase(request)
@@ -51,7 +52,8 @@ class CreateUserUseCaseTest {
             role = "USER",
             status = "ACTIVE",
             authorityLevel = 0,
-            permissionCodes = emptySet<String>()
+            permissionCodes = emptySet<String>(),
+            storageConfiguration = null
         )
 
         val result = useCase(request)

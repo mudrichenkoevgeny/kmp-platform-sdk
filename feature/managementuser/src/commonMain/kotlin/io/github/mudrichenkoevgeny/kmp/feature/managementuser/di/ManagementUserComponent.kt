@@ -121,7 +121,7 @@ class ManagementUserComponent(
         managementUserConfigurationApi = networkModule.managementUserConfigurationApi,
         openGlobalSettingsRepository = settingsComponent.globalSettingsRepository,
         openSecuritySettingsRepository = securityComponent.securitySettingsRepository,
-        openStorageSettingsRepository = storageComponent.storageSettingsRepository,
+        openStorageSettingsRepository = storageComponent.openStorageSettingsRepository,
         openAuthSettingsRepository = repositoryModule.openAuthSettingsRepository,
         managementAuthSettingsRepository = repositoryModule.managementAuthSettingsRepository,
         managementGlobalSettingsRepository = repositoryModule.managementGlobalSettingsRepository,
@@ -299,6 +299,7 @@ class ManagementUserComponent(
      */
     fun createUserComponent(
         componentContext: ComponentContext,
+        onNavigateToSelfStorageFiles: (() -> Unit)? = null,
         onNavigateToLogin: () -> Unit
     ): UserRootComponent = UserRootComponentImpl(
         componentContext = componentContext,
@@ -317,6 +318,8 @@ class ManagementUserComponent(
         addUserIdentifierGoogleUseCase = useCaseModule.addUserIdentifierGoogleUseCase,
         getSessionsUseCase = getSessionsUseCase,
         deleteSessionUseCase = deleteSessionUseCase,
+        openStorageDependencies = storageComponent.createStorageDependencies(storageComponent.selfManagementStorageRepository),
+        onNavigateToClientStorageFiles = onNavigateToSelfStorageFiles,
         deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase,
         setupTotpUseCase = setupTotpUseCase,
         enableTotpUseCase = enableTotpUseCase,
@@ -391,6 +394,36 @@ class ManagementUserComponent(
     /** Resets remote security settings. */
     val resetRemoteSecuritySettingsUseCase get() = useCaseModule.resetRemoteSecuritySettingsUseCase
 
+    /** Administrative storage file listing. */
+    val managementGetFilesUseCase get() = storageComponent.managementGetFilesUseCase
+
+    /** Administrative storage file detail. */
+    val managementGetFileDetailUseCase get() = storageComponent.managementGetFileDetailUseCase
+
+    /** Administrative storage file deletion. */
+    val managementDeleteFileUseCase get() = storageComponent.managementDeleteFileUseCase
+
+    /** Administrative storage file batch deletion. */
+    val managementDeleteFilesBatchUseCase get() = storageComponent.managementDeleteFilesBatchUseCase
+
+    /** Bundles management storage dependencies. */
+    val managementStorageDependencies get() = storageComponent.managementStorageDependencies
+
+    /** Returns management storage settings. */
+    val getManagementStorageSettingsUseCase get() = storageComponent.getManagementStorageSettingsUseCase
+
+    /** Refreshes management storage settings. */
+    val refreshManagementStorageSettingsUseCase get() = storageComponent.refreshManagementStorageSettingsUseCase
+
+    /** Updates remote management storage settings. */
+    val updateManagementStorageSettingsUseCase get() = storageComponent.updateManagementStorageSettingsUseCase
+
+    /** Resets remote management storage settings. */
+    val resetRemoteManagementStorageSettingsUseCase get() = storageComponent.resetRemoteManagementStorageSettingsUseCase
+
+    /** Observes management storage settings flow. */
+    val observeManagementStorageSettingsUseCase get() = storageComponent.observeManagementStorageSettingsUseCase
+
     /**
      * Creates the root Decompose component for management flow.
      *
@@ -417,6 +450,9 @@ class ManagementUserComponent(
             getManagementSecuritySettingsUseCase = getManagementSecuritySettingsUseCase,
             saveRemoteSecuritySettingsUseCase = saveRemoteSecuritySettingsUseCase,
             resetRemoteSecuritySettingsUseCase = resetRemoteSecuritySettingsUseCase,
+            getManagementStorageSettingsUseCase = getManagementStorageSettingsUseCase,
+            updateManagementStorageSettingsUseCase = updateManagementStorageSettingsUseCase,
+            resetRemoteManagementStorageSettingsUseCase = resetRemoteManagementStorageSettingsUseCase,
             getUsersUseCase = getUsersUseCase,
             getUserUseCase = getUserUseCase,
             createUserUseCase = createUserUseCase,
@@ -435,6 +471,7 @@ class ManagementUserComponent(
             deleteIdentifierPasswordUseCase = useCaseModule.managementDeleteIdentifierPasswordUseCase,
             getAuditEventsUseCase = getAuditEventsUseCase,
             getAuditEventUseCase = getAuditEventUseCase,
+            storageDependencies = managementStorageDependencies,
             onNavigateToUserMain = onNavigateToUserMain
         )
 }

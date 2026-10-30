@@ -2,6 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.core.settings.di
 
 import io.github.mudrichenkoevgeny.kmp.core.settings.repository.OpenGlobalSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.GetOpenGlobalSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.ObserveOpenGlobalSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.RefreshOpenGlobalSettingsUseCase
 
 /**
@@ -26,6 +27,15 @@ internal class SettingsUseCaseModule(
      */
     val getOpenGlobalSettingsUseCase by lazy {
         GetOpenGlobalSettingsUseCase(
+            openGlobalSettingsRepository
+        )
+    }
+
+    /**
+     * Observes live global settings updates.
+     */
+    val observeOpenGlobalSettingsUseCase by lazy {
+        ObserveOpenGlobalSettingsUseCase(
             openGlobalSettingsRepository
         )
     }

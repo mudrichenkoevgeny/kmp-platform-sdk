@@ -13,6 +13,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail.StorageFileDetailScreen
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.StorageFileListScreen
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.upload.StorageFileUploadScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.root.ManagementRootComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.detail.AuditEventDetailScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list.AuditEventListScreen
@@ -25,6 +28,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.global.EditGlobalSettingsScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.main.SettingsMainScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.security.EditSecuritySettingsScreen
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.settings.EditStorageSettingsScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create.CreateUserScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.GlobalUserListScreen
@@ -48,6 +52,7 @@ fun ManagementRootScreen(component: ManagementRootComponent) {
             is ManagementRootComponent.Child.EditAuthSettings -> EditAuthSettingsScreen(instance.component)
             is ManagementRootComponent.Child.EditGlobalSettings -> EditGlobalSettingsScreen(instance.component)
             is ManagementRootComponent.Child.EditSecuritySettings -> EditSecuritySettingsScreen(instance.component)
+            is ManagementRootComponent.Child.EditStorageSettings -> EditStorageSettingsScreen(instance.component)
             is ManagementRootComponent.Child.GlobalUserList -> GlobalUserListScreen(instance.component)
             is ManagementRootComponent.Child.CreateUser -> CreateUserScreen(instance.component)
             is ManagementRootComponent.Child.UserDetail -> UserDetailScreen(instance.component)
@@ -59,6 +64,10 @@ fun ManagementRootScreen(component: ManagementRootComponent) {
             is ManagementRootComponent.Child.SessionDetail -> SessionDetailScreen(instance.component)
             is ManagementRootComponent.Child.GlobalIdentifierList -> GlobalIdentifierListScreen(instance.component)
             is ManagementRootComponent.Child.IdentifierDetail -> IdentifierDetailScreen(instance.component)
+            is ManagementRootComponent.Child.GlobalStorageFileList -> StorageFileListScreen(instance.component)
+            is ManagementRootComponent.Child.SelfStorageFileList -> StorageFileListScreen(instance.component)
+            is ManagementRootComponent.Child.GlobalStorageFileDetail -> StorageFileDetailScreen(instance.component)
+            is ManagementRootComponent.Child.GlobalStorageFileUpload -> StorageFileUploadScreen(instance.component)
         }
     }
 }

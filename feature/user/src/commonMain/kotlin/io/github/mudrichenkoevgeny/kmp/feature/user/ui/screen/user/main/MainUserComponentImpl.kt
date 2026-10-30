@@ -22,7 +22,8 @@ class MainUserComponentImpl(
     private val onNavigateToLogin: () -> Unit,
     private val onNavigateToTotp: () -> Unit,
     private val onNavigateToSessions: () -> Unit,
-    private val onNavigateToIdentifiers: () -> Unit
+    private val onNavigateToIdentifiers: () -> Unit,
+    private val onNavigateToFilesList: () -> Unit = {}
 ) : MainUserComponent, ComponentContext by componentContext {
 
     private val scope = componentCoroutineScope()
@@ -47,6 +48,10 @@ class MainUserComponentImpl(
 
     override fun onIdentifiersClick() {
         onNavigateToIdentifiers()
+    }
+
+    override fun onFilesListClick() {
+        onNavigateToFilesList()
     }
 
     override fun onDeleteUserClick() {

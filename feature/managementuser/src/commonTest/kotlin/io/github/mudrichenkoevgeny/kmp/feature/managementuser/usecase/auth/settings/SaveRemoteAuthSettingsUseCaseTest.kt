@@ -21,7 +21,7 @@ class SaveRemoteAuthSettingsUseCaseTest {
 
         val result = useCase(authSettings)
 
-        assertIs<AppResult.Success<Unit>>(result)
+        assertIs<AppResult.Success<*>>(result)
         val getResult = repository.getManagementAuthSettings()
         assertIs<AppResult.Success<*>>(getResult)
         assertEquals(authSettings, getResult.data)
@@ -32,7 +32,7 @@ class SaveRemoteAuthSettingsUseCaseTest {
         val authSettings = createTestManagementAuthSettings()
         val error = CommonError.Network(Exception("api_fail"))
         val repository = ManagementAuthSettingsRepositoryMock().apply {
-            saveResultProvider = { AppResult.Error(error) }
+            saveResultProvider = { _ -> AppResult.Error(error) }
         }
         val useCase = SaveRemoteAuthSettingsUseCase(repository)
 

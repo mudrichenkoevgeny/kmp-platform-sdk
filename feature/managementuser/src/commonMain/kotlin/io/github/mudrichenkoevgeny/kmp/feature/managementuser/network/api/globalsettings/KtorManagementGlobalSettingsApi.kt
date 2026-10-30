@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.globa
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.utils.callResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.network.auth.markAsPublic
+import io.github.mudrichenkoevgeny.kmp.core.common.network.httprequest.markAsPublic
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.model.globalsettings.ManagementGlobalSettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.model.globalsettings.OpenGlobalSettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.route.management.globalsettings.ManagementGlobalSettingsRoutes

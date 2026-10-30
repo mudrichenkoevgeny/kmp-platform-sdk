@@ -96,5 +96,28 @@ All list components and stack `Child` wrappers implement `ListOwner` interfaces 
 - **Stack Extensions:** Extension functions (`notifyUserDeleted`, `notifyUserCreated`, `notifySessionRevoked`, `notifyIdentifierDeleted`) iterate over all `ListOwner` instances in `ChildStack.items` using `.forEach { ... }`.
 - **Immediate State Invalidation:** When a detail screen deletes or creates an item, calling `stack.value.notify*` instantly updates/refreshes the `paging.items` state of all list components in the backstack.
 
+## 12. Decompose Slot Navigation & Dialog Architecture
+
+Modal dialogs and bottom sheets managed via Decompose `childSlot` follow a structured, multi-tier pattern:
+
+- **Package Isolation:** All slot-navigation artifacts for a screen must reside in a dedicated `dialog/` subpackage under the screen's UI package (e.g. `[module].ui.screen.[screen].dialog`).
+- **One Declaration Per File:** In compliance with the SDK file structure standard, `<ScreenName>DialogConfig.kt` and `<ScreenName>DialogChild.kt` must be placed in separate files.
+- **Sealed Class Type Hierarchy:** Both `Config` and `Child` base types must be declared as `sealed class` (not `sealed interface`). All `Config` classes must be annotated with `@Serializable` for state preservation via Decompose `StateKeeper`:
+  ```kotlin
+  @Serializable
+  sealed class <ScreenName>DialogConfig {
+      @Serializable
+      data object <DialogName> : <ScreenName>DialogConfig()
+  }
+
+  sealed class <ScreenName>DialogChild {
+      /** KDoc required for every public member. */
+      data object <DialogName> : <ScreenName>DialogChild()
+  }
+  ```
+- **Stateless Dialogs (Confirmation Prompts):** Simple prompts require no separate controller; the `Child` variant is a `data object`.
+- **Stateful Dialogs (With DI / Business Logic):** Dialogs requiring data fetching or state handling reside in a subpackage (e.g. `dialog/<dialogname>/`) containing `<DialogName>DialogComponent` and its implementation. The corresponding `Child` variant holds the component instance (`data class <DialogName>(val component: <DialogName>DialogComponent) : <ScreenName>DialogChild()`).
+- **KDoc Compliance:** All public `Config` and `Child` classes and their nested variants/properties must have English KDoc documentation.
+
 ---
 *Refer to `AGENTS.md` for coding style rules (No FQN, No Comments).*

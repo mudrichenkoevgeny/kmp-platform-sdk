@@ -13,6 +13,6 @@ class KtorOpenUserConfigurationApi(
 ) : OpenUserConfigurationApi {
 
     override suspend fun getOpenUserConfiguration(): AppResult<OpenUserConfigurationPayload> = client.callResult {
-        get(OpenUserConfigurationRoutes.GET_CONFIGURATION)
+        get(OpenUserConfigurationRoutes.GET_OPEN_USER_CONFIGURATION)
     }
 }

@@ -9,6 +9,7 @@ import com.arkivanov.decompose.ComponentContext
  * @param onNavigateToEditAuthSettings Callback to navigate to edit auth settings.
  * @param onNavigateToEditGlobalSettings Callback to navigate to edit global settings.
  * @param onNavigateToEditSecuritySettings Callback to navigate to edit security settings.
+ * @param onNavigateToEditStorageSettings Callback to navigate to edit storage settings.
  * @param onBack Pops this screen from the navigation stack.
  */
 class SettingsMainComponentImpl(
@@ -16,6 +17,7 @@ class SettingsMainComponentImpl(
     private val onNavigateToEditAuthSettings: () -> Unit,
     private val onNavigateToEditGlobalSettings: () -> Unit,
     private val onNavigateToEditSecuritySettings: () -> Unit,
+    private val onNavigateToEditStorageSettings: () -> Unit,
     private val onBack: () -> Unit
 ) : SettingsMainComponent, ComponentContext by componentContext {
 
@@ -29,6 +31,10 @@ class SettingsMainComponentImpl(
 
     override fun onEditSecuritySettingsClick() {
         onNavigateToEditSecuritySettings()
+    }
+
+    override fun onEditStorageSettingsClick() {
+        onNavigateToEditStorageSettings()
     }
 
     override fun onBackClick() {

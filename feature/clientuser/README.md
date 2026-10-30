@@ -127,4 +127,4 @@ Compose Multiplatform resources for this module are generated with `publicResCla
 [LegalFooter]: ../user/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/user/ui/component/legal/LegalFooter.kt
 [ClientLoginRootComponent]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/ui/screen/auth/login/root/ClientLoginRootComponent.kt
 [ClientUserDeepLinkParser]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/navigation/deeplink/ClientUserDeepLinkParser.kt
-[ClientUserUrlFormatter]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/navigation/deeplink/ClientUserUrlFormatter.kt
+[ClientUserUrlFormatter]: src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/feature/clientuser/navigation/deeplink/ClientUrlFormatter.kt

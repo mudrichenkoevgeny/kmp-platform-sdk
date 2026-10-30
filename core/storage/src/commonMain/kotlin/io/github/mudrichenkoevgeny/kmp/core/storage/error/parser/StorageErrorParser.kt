@@ -99,14 +99,15 @@ open class StorageErrorParser(
 
             StorageErrorCodes.PRESIGNED_URL_EXPIRED -> strings.errors.presignedUrlExpired
 
+            StorageErrorCodes.INVALID_UPLOAD_TOKEN,
+            StorageErrorCodes.STORAGE_ERROR -> strings.errors.storageError
+
             StorageErrorCodes.UPLOAD_ALREADY_COMPLETED -> strings.errors.uploadAlreadyCompleted
 
             StorageErrorCodes.STORAGE_UPLOAD_FAILED,
             ClientStorageErrorCodes.S3_UPLOAD_FAILED -> strings.errors.storageUploadFailed
 
             ClientStorageErrorCodes.DIRECT_UPLOAD_CANCELLED -> strings.errors.uploadCancelled
-
-            StorageErrorCodes.STORAGE_ERROR -> strings.errors.storageError
 
             StorageErrorCodes.FILE_NOT_FOUND -> strings.errors.fileNotFound
 

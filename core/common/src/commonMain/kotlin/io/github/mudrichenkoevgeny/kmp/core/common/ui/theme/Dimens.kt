@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.core.common.ui.theme
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.tokens.GeneratedDesignTokens
 
 /**
@@ -15,6 +16,10 @@ data class CoreDimens(
     val paddingMedium: Dp = GeneratedDesignTokens.Spacing.medium,
     val paddingLarge: Dp = GeneratedDesignTokens.Spacing.large,
     val headerHeight: Dp = GeneratedDesignTokens.Sizing.headerHeight,
+    val iconSizeSmall: Dp = 14.dp,
+    val iconSizeMedium: Dp = 20.dp,
+    val iconSizeLarge: Dp = 24.dp,
+    val iconSizeXLarge: Dp = 36.dp,
     val iconSizeHeader: Dp = GeneratedDesignTokens.Sizing.iconSizeHeader,
     val iconButtonSize: Dp = GeneratedDesignTokens.Sizing.iconButtonSize,
     val actionButtonHeight: Dp = GeneratedDesignTokens.Sizing.actionButtonHeight,
@@ -23,6 +28,9 @@ data class CoreDimens(
     val roundedCornerShape: Dp = GeneratedDesignTokens.Radius.small,
     val shadowElevation: Dp = GeneratedDesignTokens.Elevation.shadow,
     val rowHeight: Dp = GeneratedDesignTokens.Sizing.rowHeight,
+    val borderWidthThin: Dp = 1.dp,
+    val borderWidthThick: Dp = 2.dp,
+    val previewThumbnailSize: Dp = 48.dp,
     val progressIndicatorStrokeWidth: Dp = GeneratedDesignTokens.Sizing.progressIndicatorStrokeWidth,
     val progressIndicatorStrokeWidthSmall: Dp = GeneratedDesignTokens.Sizing.progressIndicatorStrokeWidthSmall,
     val progressIndicatorSizeSmall: Dp = GeneratedDesignTokens.Sizing.progressIndicatorSizeSmall,

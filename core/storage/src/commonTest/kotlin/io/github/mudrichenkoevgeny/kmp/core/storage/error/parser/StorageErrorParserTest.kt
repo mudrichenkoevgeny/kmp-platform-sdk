@@ -90,6 +90,7 @@ class StorageErrorParserTest {
             StorageErrorCodes.UNSUPPORTED_MIME_TYPE,
             StorageErrorCodes.UNSUPPORTED_STORAGE_CATEGORY,
             StorageErrorCodes.PRESIGNED_URL_EXPIRED,
+            StorageErrorCodes.INVALID_UPLOAD_TOKEN,
             StorageErrorCodes.UPLOAD_ALREADY_COMPLETED,
             StorageErrorCodes.STORAGE_UPLOAD_FAILED,
             ClientStorageErrorCodes.S3_UPLOAD_FAILED,

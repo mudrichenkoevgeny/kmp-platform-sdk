@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.network.auth.markAsPublic
+import io.github.mudrichenkoevgeny.kmp.core.common.network.httprequest.markAsPublic
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.model.ApiErrorResponse
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId

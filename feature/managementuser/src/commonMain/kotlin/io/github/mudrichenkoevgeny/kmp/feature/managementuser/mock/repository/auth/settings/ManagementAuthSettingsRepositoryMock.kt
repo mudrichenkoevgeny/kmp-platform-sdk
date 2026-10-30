@@ -23,8 +23,8 @@ class ManagementAuthSettingsRepositoryMock : ManagementAuthSettingsRepository {
             )
     }
 
-    var saveResultProvider: () -> AppResult<Unit> = {
-        AppResult.Success(Unit)
+    var saveResultProvider: (ManagementAuthSettings) -> AppResult<ManagementAuthSettings> = {
+        AppResult.Success(it)
     }
 
     var resetResultProvider: () -> AppResult<ManagementAuthSettings> = { resultProvider() }
@@ -41,10 +41,10 @@ class ManagementAuthSettingsRepositoryMock : ManagementAuthSettingsRepository {
         return result
     }
 
-    override suspend fun saveRemoteManagementAuthSettings(authSettings: ManagementAuthSettings): AppResult<Unit> {
-        val result = saveResultProvider()
+    override suspend fun saveRemoteManagementAuthSettings(authSettings: ManagementAuthSettings): AppResult<ManagementAuthSettings> {
+        val result = saveResultProvider(authSettings)
         if (result is AppResult.Success) {
-            authSettingsFlow.value = authSettings
+            authSettingsFlow.value = result.data
         }
         return result
     }

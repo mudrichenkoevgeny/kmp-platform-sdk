@@ -12,7 +12,7 @@ import kotlin.test.assertNull
 class ClientUserDeepLinkParserTest {
 
     private val parser = ClientUserDeepLinkParser()
-    private val formatter = ClientUserUrlFormatter("https://kmp-platform.internal")
+    private val formatter = ClientUrlFormatter("https://kmp-platform.internal")
 
     @Test
     fun parse_returnsMain_forLoginWelcomeRoute() {

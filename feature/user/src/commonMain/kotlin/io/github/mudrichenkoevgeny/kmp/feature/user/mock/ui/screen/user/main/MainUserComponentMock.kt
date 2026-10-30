@@ -18,6 +18,7 @@ open class MainUserComponentMock(
     var totpMainCalls = 0
     var sessionsCalls = 0
     var identifiersCalls = 0
+    var filesCalls = 0
     var deleteUserCalls = 0
     var confirmDeleteUserCalls = 0
     var dismissDeleteUserDialogCalls = 0
@@ -44,6 +45,10 @@ open class MainUserComponentMock(
 
     override fun onIdentifiersClick() {
         identifiersCalls++
+    }
+
+    override fun onFilesListClick() {
+        filesCalls++
     }
 
     override fun onDeleteUserClick() {

@@ -66,7 +66,7 @@ class MainContentTest {
     }
 }
 
-@OptIn(InternalApi::class)
+@InternalApi
 private fun userOnlyStack(): Value<ChildStack<MainScreenComponent.Config, MainScreenComponent.Child>> =
     MutableValue(
         ChildStack(

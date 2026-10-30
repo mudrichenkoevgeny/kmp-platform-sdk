@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.secur
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.utils.callResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.feature.user.network.auth.markAsPublic
+import io.github.mudrichenkoevgeny.kmp.core.common.network.httprequest.markAsPublic
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.securitysettings.ManagementSecuritySettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.securitysettings.OpenSecuritySettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.route.management.security.settings.ManagementSecuritySettingsRoutes

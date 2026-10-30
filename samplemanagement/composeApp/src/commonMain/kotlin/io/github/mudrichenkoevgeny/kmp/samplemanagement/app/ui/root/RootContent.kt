@@ -12,6 +12,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.security.localization.LocalSecurityStrings
+import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di.LocalManagementAppComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di.ManagementAppComponent
@@ -20,6 +21,7 @@ import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main.MainS
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.splash.SplashScreen
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.localization.CommonModuleStrings
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.localization.SecurityModuleStrings
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.localization.StorageModuleStrings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.UserModuleStrings
 
 /**
@@ -38,11 +40,13 @@ fun RootContent(
     val activeLocale = remember { KmpLocalization.currentLocale }
     val commonStrings = remember(activeLocale) { CommonModuleStrings(KmpLocalization.resolver, activeLocale) }
     val securityStrings = remember(activeLocale) { SecurityModuleStrings(KmpLocalization.resolver, activeLocale) }
+    val storageStrings = remember(activeLocale) { StorageModuleStrings(KmpLocalization.resolver, activeLocale) }
     val userStrings = remember(activeLocale) { UserModuleStrings(KmpLocalization.resolver, activeLocale) }
 
     CompositionLocalProvider(
         LocalCommonStrings provides commonStrings,
         LocalSecurityStrings provides securityStrings,
+        LocalStorageStrings provides storageStrings,
         LocalUserStrings provides userStrings
     ) {
         CoreTheme {

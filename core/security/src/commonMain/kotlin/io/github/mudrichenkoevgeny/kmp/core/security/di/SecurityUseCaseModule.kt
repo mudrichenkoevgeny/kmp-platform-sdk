@@ -2,6 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.core.security.di
 
 import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySettingsRepository
 import io.github.mudrichenkoevgeny.kmp.core.security.usecase.GetOpenSecuritySettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ObserveOpenSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.core.security.usecase.RefreshOpenSecuritySettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ValidatePasswordUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator.PasswordPolicyValidator
@@ -30,6 +31,15 @@ internal class SecurityUseCaseModule(
      */
     val getOpenSecuritySettingsUseCase by lazy {
         GetOpenSecuritySettingsUseCase(
+            openSecuritySettingsRepository
+        )
+    }
+
+    /**
+     * Observes live security settings updates.
+     */
+    val observeOpenSecuritySettingsUseCase by lazy {
+        ObserveOpenSecuritySettingsUseCase(
             openSecuritySettingsRepository
         )
     }

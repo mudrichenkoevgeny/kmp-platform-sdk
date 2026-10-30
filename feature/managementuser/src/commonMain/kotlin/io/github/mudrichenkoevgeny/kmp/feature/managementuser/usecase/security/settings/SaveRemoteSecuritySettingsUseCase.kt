@@ -12,7 +12,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
 class SaveRemoteSecuritySettingsUseCase(
     private val managementSecuritySettingsRepository: ManagementSecuritySettingsRepository
 ) {
-    suspend operator fun invoke(securitySettings: ManagementSecuritySettings): AppResult<Unit> {
+    suspend operator fun invoke(securitySettings: ManagementSecuritySettings): AppResult<ManagementSecuritySettings> {
         return managementSecuritySettingsRepository.saveRemoteManagementSecuritySettings(securitySettings)
     }
 }

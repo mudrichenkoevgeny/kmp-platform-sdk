@@ -50,6 +50,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.main.MainUserComponentMock
 import org.jetbrains.compose.resources.painterResource
@@ -58,6 +59,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 object MainUserTestTags {
     const val REFRESH_BUTTON = "MainUser_RefreshButton"
     const val USER_ID_TEXT = "MainUser_UserIdText"
+    const val FILES_BUTTON = "MainUser_FilesButton"
     const val LOGOUT_BUTTON = "MainUser_LogoutButton"
     const val LOGIN_BUTTON = "MainUser_LoginButton"
     const val GLOBAL_ERROR_TEXT = "MainUser_GlobalErrorText"
@@ -112,6 +114,7 @@ fun MainUserScreen(component: MainUserComponent) {
                             onTotpMainClick = component::onTotpMainClick,
                             onSessionsClick = component::onSessionsClick,
                             onIdentifiersClick = component::onIdentifiersClick,
+                            onFilesClick = component::onFilesListClick,
                             onDeleteAccountClick = component::onDeleteUserClick,
                             onLogoutClick = component::onLogoutClick
                         )
@@ -212,11 +215,13 @@ private fun MainUserContent(
     onTotpMainClick: () -> Unit,
     onSessionsClick: () -> Unit,
     onIdentifiersClick: () -> Unit,
+    onFilesClick: () -> Unit,
     onDeleteAccountClick: () -> Unit,
     onLogoutClick: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val userUi = LocalUserStrings.current.ui
+    val storageUi = LocalStorageStrings.current.ui
     val commonUi = LocalCommonStrings.current.ui
 
     Column(
@@ -268,6 +273,16 @@ private fun MainUserContent(
             text = userUi.identifiers,
             onClick = onIdentifiersClick,
             modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(CoreTheme.dimens.paddingSmall))
+
+        CoreButton(
+            text = storageUi.storageFileListTitle,
+            onClick = onFilesClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(MainUserTestTags.FILES_BUTTON)
         )
 
         Spacer(modifier = Modifier.height(CoreTheme.dimens.paddingLarge))

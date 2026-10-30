@@ -65,6 +65,7 @@ class SecurityComponent(
     }
     val refreshSecuritySettingsUseCase get() = useCaseModule.refreshOpenSecuritySettingsUseCase
     val getOpenSecuritySettingsUseCase get() = useCaseModule.getOpenSecuritySettingsUseCase
+    val observeSecuritySettingsUseCase get() = useCaseModule.observeOpenSecuritySettingsUseCase
     val validatePasswordUseCase get() = useCaseModule.validatePasswordUseCase
 
     private val webSocketsModule by lazy {

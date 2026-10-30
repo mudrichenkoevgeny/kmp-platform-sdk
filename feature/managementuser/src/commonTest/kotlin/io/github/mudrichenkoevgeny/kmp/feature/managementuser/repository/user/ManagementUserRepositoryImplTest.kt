@@ -35,7 +35,8 @@ class ManagementUserRepositoryImplTest {
             role = "ADMIN",
             status = "ACTIVE",
             authorityLevel = 10,
-            permissionCodes = setOf("READ", "WRITE")
+            permissionCodes = setOf("READ", "WRITE"),
+            storageConfiguration = null
         )
 
         val result = repository.createUser(request)
@@ -86,7 +87,8 @@ class ManagementUserRepositoryImplTest {
                 authorityLevel = null,
                 permissionCodes = null,
                 lockoutType = null,
-                temporaryLockoutUntil = null
+                temporaryLockoutUntil = null,
+                storageConfiguration = null
             )
         )
 

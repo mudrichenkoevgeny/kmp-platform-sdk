@@ -21,6 +21,7 @@ class UserDetailComponentMock(
     var disableTotpCalls = 0
     var sessionsCalls = 0
     var identifiersCalls = 0
+    var filesCalls = 0
     var auditEventsCalls = 0
     var retryCalls = 0
     var backCalls = 0
@@ -86,6 +87,10 @@ class UserDetailComponentMock(
 
     override fun onIdentifiersClick() {
         identifiersCalls++
+    }
+
+    override fun onFilesClick() {
+        filesCalls++
     }
 
     override fun onAuditEventsClick() {

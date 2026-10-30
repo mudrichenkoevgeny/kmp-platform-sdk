@@ -3,7 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.refr
 import io.github.mudrichenkoevgeny.kmp.core.common.network.utils.callResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.auth.refreshtoken.RefreshTokenApi
-import io.github.mudrichenkoevgeny.kmp.feature.user.network.auth.markAsPublic
+import io.github.mudrichenkoevgeny.kmp.core.common.network.httprequest.markAsPublic
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.RefreshTokenPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.SessionTokenPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.open.auth.refreshtoken.OpenRefreshTokenRoutes

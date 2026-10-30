@@ -14,6 +14,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail.StorageFileDetailScreen
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.StorageFileListScreen
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.upload.StorageFileUploadScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.UserRootComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.detail.IdentifierDetailScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.SelfIdentifierListScreen
@@ -47,6 +50,9 @@ fun UserRootScreen(
             is UserRootComponent.Child.SessionDetail -> SessionDetailScreen(instance.component)
             is UserRootComponent.Child.Identifiers -> SelfIdentifierListScreen(instance.component)
             is UserRootComponent.Child.IdentifierDetail -> IdentifierDetailScreen(instance.component)
+            is UserRootComponent.Child.StorageFileList -> StorageFileListScreen(instance.component)
+            is UserRootComponent.Child.StorageFileDetail -> StorageFileDetailScreen(instance.component)
+            is UserRootComponent.Child.StorageFileUpload -> StorageFileUploadScreen(instance.component)
         }
     }
 }

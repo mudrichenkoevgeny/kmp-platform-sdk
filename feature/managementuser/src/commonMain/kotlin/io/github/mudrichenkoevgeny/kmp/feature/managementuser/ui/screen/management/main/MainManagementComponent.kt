@@ -18,4 +18,7 @@ interface MainManagementComponent {
 
     /** Navigates to system settings hub. */
     fun onSettingsClick()
+
+    /** Navigates to all platform storage files screen. */
+    fun onGlobalStorageFileListClick()
 }

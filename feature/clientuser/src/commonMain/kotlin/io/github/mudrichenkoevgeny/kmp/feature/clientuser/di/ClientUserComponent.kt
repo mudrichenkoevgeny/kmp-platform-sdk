@@ -97,7 +97,7 @@ class ClientUserComponent(
         openAuthSettingsRepository = clientUserRepositoryModule.openAuthSettingsRepository,
         openGlobalSettingsRepository = settingsComponent.globalSettingsRepository,
         openSecuritySettingsRepository = securityComponent.securitySettingsRepository,
-        openStorageSettingsRepository = storageComponent.storageSettingsRepository
+        openStorageSettingsRepository = storageComponent.openStorageSettingsRepository
     )
 
     /** Refreshes the session using the stored refresh token. */
@@ -229,16 +229,21 @@ class ClientUserComponent(
     /** Observes public auth settings updates. */
     val observeAuthSettingsUseCase get() = useCaseModule.observeAuthSettingsUseCase
 
+    /** Repository for open storage file operations. */
+    val openStorageRepository get() = storageComponent.openStorageRepository
+
     /**
      * Creates the root Decompose component for the user management flow.
      *
      * @param componentContext Decompose context for the new component.
      * @param onNavigateToLogin Invoked when the user needs to sign in.
+     * @param onNavigateToClientStorageFiles Optional callback to navigate to self-service storage files screen.
      * @return A new instance of [UserRootComponent].
      */
     fun createUserComponent(
         componentContext: ComponentContext,
-        onNavigateToLogin: () -> Unit
+        onNavigateToLogin: () -> Unit,
+        onNavigateToClientStorageFiles: (() -> Unit)? = null
     ): UserRootComponent = UserRootComponentImpl(
         componentContext = componentContext,
         appType = AppType.CLIENT,
@@ -266,6 +271,8 @@ class ClientUserComponent(
         getUserIdentifierUseCase = getUserIdentifierUseCase,
         deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
         emailChangePasswordUseCase = emailChangePasswordUseCase,
+        openStorageDependencies = storageComponent.createStorageDependencies(storageComponent.openStorageRepository),
+        onNavigateToClientStorageFiles = onNavigateToClientStorageFiles,
         onNavigateToLogin = onNavigateToLogin
     )
 

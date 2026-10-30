@@ -26,7 +26,8 @@ class UpdateUserUseCaseTest {
             authorityLevel = null,
             permissionCodes = null,
             lockoutType = null,
-            temporaryLockoutUntil = null
+            temporaryLockoutUntil = null,
+            storageConfiguration = null
         )
 
         val result = useCase(userId, request)
@@ -49,7 +50,8 @@ class UpdateUserUseCaseTest {
             authorityLevel = null,
             permissionCodes = null,
             lockoutType = null,
-            temporaryLockoutUntil = null
+            temporaryLockoutUntil = null,
+            storageConfiguration = null
         )
 
         val result = useCase(userId, request)

@@ -41,8 +41,8 @@ kotlin {
             implementation(project(":core:common"))
 
             // Shared Foundation
-            implementation(libs.shared.foundation.core.common)
-            implementation(libs.shared.foundation.core.storage)
+            api(libs.shared.foundation.core.common)
+            api(libs.shared.foundation.core.storage)
 
             // Kotlin
             implementation(libs.kotlinx.serialization.json)
@@ -56,6 +56,10 @@ kotlin {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.compose.material3)
 
+            // Coil
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor3)
+
             // Ktor
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
@@ -65,6 +69,7 @@ kotlin {
 
             // Infrastructure
             implementation(libs.decompose)
+            implementation(libs.decompose.compose)
 
             // Logging
             implementation(libs.kermit)
@@ -84,6 +89,8 @@ kotlin {
             implementation(project(":core:testing"))
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.shared.foundation.core.storage)
+            implementation(libs.shared.foundation.testing)
             implementation(libs.compose.ui.test)
             implementation(libs.androidx.compose.ui.test.junit4)
             implementation(libs.androidx.compose.ui.test.manifest)

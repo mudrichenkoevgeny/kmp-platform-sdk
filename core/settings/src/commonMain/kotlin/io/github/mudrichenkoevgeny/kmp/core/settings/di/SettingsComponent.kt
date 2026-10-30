@@ -63,4 +63,5 @@ class SettingsComponent(
     }
     val refreshGlobalSettingsUseCase get() = useCaseModule.refreshOpenGlobalSettingsUseCase
     val getGlobalSettingsUseCase get() = useCaseModule.getOpenGlobalSettingsUseCase
+    val observeGlobalSettingsUseCase get() = useCaseModule.observeOpenGlobalSettingsUseCase
 }

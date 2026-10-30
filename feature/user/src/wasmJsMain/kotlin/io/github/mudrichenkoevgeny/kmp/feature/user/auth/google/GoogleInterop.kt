@@ -1,4 +1,8 @@
+@file:OptIn(ExperimentalWasmJsInterop::class)
+
 package io.github.mudrichenkoevgeny.kmp.feature.user.auth.google
+
+import kotlin.js.ExperimentalWasmJsInterop
 
 /**
  * External declarations for the **Google Identity Services** (GSI) JavaScript library.
@@ -8,7 +12,6 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.auth.google
  *
  * @see <a href="https://developers.google.com/identity/gsi/web/reference/js-reference">Google Identity Services Reference</a>
  */
-@OptIn(ExperimentalWasmJsInterop::class)
 external object google {
     object accounts {
         object id {
@@ -37,7 +40,6 @@ external object google {
 /**
  * JavaScript interface representing the status of the Google Sign-In prompt.
  */
-@OptIn(ExperimentalWasmJsInterop::class)
 external interface PromptMomentNotification : JsAny {
     /** @return true if the prompt was not displayed to the user. */
     fun isNotDisplayed(): Boolean

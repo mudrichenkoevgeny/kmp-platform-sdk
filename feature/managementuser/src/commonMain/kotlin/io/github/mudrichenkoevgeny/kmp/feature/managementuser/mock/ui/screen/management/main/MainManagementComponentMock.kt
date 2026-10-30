@@ -10,4 +10,5 @@ open class MainManagementComponentMock : MainManagementComponent {
     override fun onGlobalIdentifierListClick() {}
     override fun onAuditEventListClick() {}
     override fun onSettingsClick() {}
+    override fun onGlobalStorageFileListClick() {}
 }

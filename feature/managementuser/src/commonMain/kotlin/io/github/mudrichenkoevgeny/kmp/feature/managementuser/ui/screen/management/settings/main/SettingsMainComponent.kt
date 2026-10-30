@@ -13,6 +13,9 @@ interface SettingsMainComponent {
     /** Navigates to edit security settings. */
     fun onEditSecuritySettingsClick()
 
+    /** Navigates to edit storage settings. */
+    fun onEditStorageSettingsClick()
+
     /** Navigates back. */
     fun onBackClick()
 }

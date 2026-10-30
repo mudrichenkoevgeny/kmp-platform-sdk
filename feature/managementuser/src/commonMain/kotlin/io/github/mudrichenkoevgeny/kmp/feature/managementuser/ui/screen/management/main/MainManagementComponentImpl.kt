@@ -10,6 +10,7 @@ class MainManagementComponentImpl(
     private val onNavigateToGlobalUserList: () -> Unit,
     private val onNavigateToGlobalSessionList: () -> Unit,
     private val onNavigateToGlobalIdentifierList: () -> Unit,
+    private val onNavigateToGlobalStorageFileList: () -> Unit,
     private val onNavigateToAuditEventList: () -> Unit,
     private val onNavigateToSettings: () -> Unit
 ) : MainManagementComponent, ComponentContext by componentContext {
@@ -24,6 +25,10 @@ class MainManagementComponentImpl(
 
     override fun onGlobalIdentifierListClick() {
         onNavigateToGlobalIdentifierList()
+    }
+
+    override fun onGlobalStorageFileListClick() {
+        onNavigateToGlobalStorageFileList()
     }
 
     override fun onAuditEventListClick() {

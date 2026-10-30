@@ -31,13 +31,13 @@ import kotlin.test.assertIs
 class ManagementAuditRepositoryImplTest {
 
     private val actionParser = CompositeAuditActionTypeParser(
-        setOf(UserAuditActionType.MANAGEMENT_UPDATE_USER)
+        listOf(UserAuditActionType::fromValueOrNull)
     )
     private val resourceParser = CompositeAuditResourceTypeParser(
-        setOf(UserAuditResourceType.USER)
+        listOf(UserAuditResourceType::fromValueOrNull)
     )
     private val metadataParser = CompositeAuditMetadataKeyParser(
-        setOf(CommonAuditMetadataKey.IP_ADDRESS) + UserAuditMetadataKey.entries.toSet()
+        listOf(CommonAuditMetadataKey::fromValueOrNull, UserAuditMetadataKey::fromValueOrNull)
     )
 
     private val eventSummaryPayload = createTestAuditEventSummaryPayload(

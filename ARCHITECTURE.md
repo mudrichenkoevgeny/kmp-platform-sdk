@@ -156,7 +156,7 @@ All 11 navigation objects across the ecosystem implement sealed interfaces (`@Se
 
 ### Deep Link Architecture
 1. **Contracts (`core:common`):** Generic interfaces `DeepLinkParser<out Route : Any>` and `UrlFormatter<in T : Any>`.
-2. **Feature Parsers & Formatters (`feature/*`):** Feature-specific parsers (`ManagementDeepLinkParser`, `UserDeepLinkParser`, `ClientUserDeepLinkParser`) and formatters (`ManagementUrlFormatter`, `UserUrlFormatter`, `ClientUserUrlFormatter`) parse raw URLs directly into typed `shared-foundation` `NavigationRoute` objects and format destinations via `destination.toFullUrl(baseUrl)`.
+2. **Feature Parsers & Formatters (`feature/*`):** Feature-specific parsers (`ManagementUserDeepLinkParser`, `UserDeepLinkParser`, `ClientUserDeepLinkParser`) and formatters (`ManagementUrlFormatter`, `UserUrlFormatter`, `ClientUrlFormatter`) parse raw URLs directly into typed `shared-foundation` `NavigationRoute` objects and format destinations via `destination.toFullUrl(baseUrl)`.
 3. **App-Specific Aggregators (`samplemanagement` / `sampleclient`):** Application-level route models (`ManagementAppDeepLinkRoute`, `ClientAppDeepLinkRoute`) and aggregators (`ManagementAppDeepLinkParser`, `ClientAppDeepLinkParser`) maintain strict dependency graph isolation.
 4. **Wasm Browser History Integration (`SetupBrowserHistory`):**
    - **Parent History Seeding:** On direct deep link entry (e.g., `/identifiers/123`), `getAncestorPaths()` decomposes URL segments and seeds ancestor paths (`/`, `/identifiers`) into native `window.history`. Expects `SetupBrowserHistory(mainComponent, baseUrl)`. This aligns history behavior between UI navigation controls and browser native history controls.

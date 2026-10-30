@@ -28,6 +28,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
@@ -38,12 +39,14 @@ object SettingsMainTestTags {
     const val EDIT_AUTH_SETTINGS_BUTTON = "SettingsMain_EditAuthSettingsButton"
     const val EDIT_GLOBAL_SETTINGS_BUTTON = "SettingsMain_EditGlobalSettingsButton"
     const val EDIT_SECURITY_SETTINGS_BUTTON = "SettingsMain_EditSecuritySettingsButton"
+    const val EDIT_STORAGE_SETTINGS_BUTTON = "SettingsMain_EditStorageSettingsButton"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsMainScreen(component: SettingsMainComponent) {
     val userUi = LocalUserStrings.current.ui
+    val storageUi = LocalStorageStrings.current.ui
     val commonUi = LocalCommonStrings.current.ui
 
     Scaffold(
@@ -94,6 +97,12 @@ fun SettingsMainScreen(component: SettingsMainComponent) {
                 onClick = component::onEditSecuritySettingsClick,
                 modifier = Modifier.testTag(SettingsMainTestTags.EDIT_SECURITY_SETTINGS_BUTTON)
             )
+
+            CoreButton(
+                text = storageUi.storageSettingsTitle,
+                onClick = component::onEditStorageSettingsClick,
+                modifier = Modifier.testTag(SettingsMainTestTags.EDIT_STORAGE_SETTINGS_BUTTON)
+            )
         }
     }
 }
@@ -107,6 +116,7 @@ private fun SettingsMainScreenPreviewContent() {
                 override fun onEditAuthSettingsClick() {}
                 override fun onEditGlobalSettingsClick() {}
                 override fun onEditSecuritySettingsClick() {}
+                override fun onEditStorageSettingsClick() {}
                 override fun onBackClick() {}
             }
         )

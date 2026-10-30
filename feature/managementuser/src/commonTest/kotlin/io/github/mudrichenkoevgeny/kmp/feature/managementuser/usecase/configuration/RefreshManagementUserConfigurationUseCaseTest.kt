@@ -5,7 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.repository.OpenSecuritySettingsRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.core.settings.mock.repository.OpenGlobalSettingsRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.core.storage.mock.repository.OpenStorageSettingsRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.core.storage.mock.repository.open.OpenStorageSettingsRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.network.api.configuration.ManagementUserConfigurationApiMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.settings.OpenAuthSettingsRepositoryMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.configuration.OpenUserConfiguration

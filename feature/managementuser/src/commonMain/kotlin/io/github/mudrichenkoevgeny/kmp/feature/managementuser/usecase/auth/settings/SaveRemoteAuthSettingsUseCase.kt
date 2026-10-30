@@ -14,9 +14,9 @@ class SaveRemoteAuthSettingsUseCase(
 ) {
     /**
      * @param authSettings New configuration payload to apply.
-     * @return Empty success indicator, or an error result when the remote update fails.
+     * @return Updated [ManagementAuthSettings] on success, or an error result when the remote update fails.
      */
-    suspend operator fun invoke(authSettings: ManagementAuthSettings): AppResult<Unit> {
+    suspend operator fun invoke(authSettings: ManagementAuthSettings): AppResult<ManagementAuthSettings> {
         return managementAuthSettingsRepository.saveRemoteManagementAuthSettings(authSettings)
     }
 }

@@ -1,7 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
@@ -24,8 +23,25 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.global.EditGlobalSettingsComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.main.SettingsMainComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.security.EditSecuritySettingsComponentImpl
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.settings.EditStorageSettingsComponentImpl
+import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.GetManagementStorageSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.ResetRemoteManagementStorageSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.UpdateManagementStorageSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create.CreateUserComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailComponentImpl
+import io.github.mudrichenkoevgeny.kmp.core.storage.di.ManagementStorageDependencies
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail.StorageFileDetailComponentImpl
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail.datasource.StorageFileDetailDataSource
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.StorageFileListComponent
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.factory.createManagementGlobalStorageFileListComponent
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.factory.createStaffSelfStorageFileListComponent
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.upload.StorageFileUploadScreenComponentImpl
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.screen.base.detail.StorageFileDetailParams
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.ui.component.fileupload.StorageFileUploadUiConfig
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.route.management.ManagementSelfStorageNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.route.management.ManagementStorageNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.route.management.ManagementStorageSettingsNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.screen.management.list.ManagementStorageFileListParams
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.GlobalUserListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.notifyUserCreated
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.notifyUserDeleted
@@ -62,6 +78,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUs
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
+import kotlinx.coroutines.flow.firstOrNull
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.detail.IdentifierDetailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.detail.SessionDetailComponentImpl
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.route.management.ManagementAuditNavigation
@@ -71,8 +88,6 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.rout
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.management.ManagementMainNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.navigation.route.management.ManagementSecurityNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.navigation.route.management.ManagementSettingsNavigation
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientAuthNavigation
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientUserNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.management.ManagementAuthSettingsNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.management.ManagementUsersNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.detail.IdentifierDetailParams
@@ -101,6 +116,9 @@ class ManagementRootComponentImpl(
     private val getManagementSecuritySettingsUseCase: GetManagementSecuritySettingsUseCase,
     private val saveRemoteSecuritySettingsUseCase: SaveRemoteSecuritySettingsUseCase,
     private val resetRemoteSecuritySettingsUseCase: ResetRemoteSecuritySettingsUseCase,
+    private val getManagementStorageSettingsUseCase: GetManagementStorageSettingsUseCase,
+    private val updateManagementStorageSettingsUseCase: UpdateManagementStorageSettingsUseCase,
+    private val resetRemoteManagementStorageSettingsUseCase: ResetRemoteManagementStorageSettingsUseCase,
     private val getUsersUseCase: GetUsersUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val createUserUseCase: CreateUserUseCase,
@@ -118,10 +136,12 @@ class ManagementRootComponentImpl(
     private val managementGetSessionUseCase: ManagementGetSessionUseCase? = null,
     private val managementGetIdentifierUseCase: ManagementGetIdentifierUseCase? = null,
     private val managementDeleteIdentifierUseCase: ManagementDeleteIdentifierUseCase? = null,
-    private val onNavigateToUserMain: () -> Unit = {}
+    private val storageDependencies: ManagementStorageDependencies? = null,
+    private val onNavigateToUserMain: (() -> Unit)? = null
 ) : ManagementRootComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<NavigationRoute>()
+    private var selfStorageFileListComponent: StorageFileListComponent? = null
 
     override val stack: Value<ChildStack<NavigationRoute, ManagementRootComponent.Child>> =
         childStack(
@@ -157,7 +177,6 @@ class ManagementRootComponentImpl(
         }
     }
 
-    @OptIn(DelicateDecomposeApi::class)
     private fun createChild(
         config: NavigationRoute,
         context: ComponentContext
@@ -169,7 +188,8 @@ class ManagementRootComponentImpl(
                 onNavigateToGlobalSessionList = { navigation.bringToFront(ManagementUsersNavigation.GlobalSessionList()) },
                 onNavigateToGlobalIdentifierList = { navigation.bringToFront(ManagementUsersNavigation.GlobalIdentifierList()) },
                 onNavigateToAuditEventList = { navigation.bringToFront(ManagementAuditNavigation.AuditEventList()) },
-                onNavigateToSettings = { navigation.bringToFront(ManagementSettingsNavigation.Main) }
+                onNavigateToSettings = { navigation.bringToFront(ManagementSettingsNavigation.Main) },
+                onNavigateToGlobalStorageFileList = { navigation.bringToFront(ManagementStorageNavigation.Main) }
             )
         )
         is ManagementSettingsNavigation.Main -> ManagementRootComponent.Child.SettingsMain(
@@ -178,6 +198,7 @@ class ManagementRootComponentImpl(
                 onNavigateToEditAuthSettings = { navigation.bringToFront(ManagementAuthSettingsNavigation.AuthSettings) },
                 onNavigateToEditGlobalSettings = { navigation.bringToFront(ManagementSettingsNavigation.GlobalSettings) },
                 onNavigateToEditSecuritySettings = { navigation.bringToFront(ManagementSecurityNavigation.SecuritySettings) },
+                onNavigateToEditStorageSettings = { navigation.bringToFront(ManagementStorageSettingsNavigation.StorageSettings) },
                 onBack = { handleBack() }
             )
         )
@@ -205,6 +226,15 @@ class ManagementRootComponentImpl(
                 getManagementSecuritySettingsUseCase = getManagementSecuritySettingsUseCase,
                 saveRemoteSecuritySettingsUseCase = saveRemoteSecuritySettingsUseCase,
                 resetRemoteSecuritySettingsUseCase = resetRemoteSecuritySettingsUseCase,
+                onBack = { handleBack(ManagementSettingsNavigation.Main) }
+            )
+        )
+        is ManagementStorageSettingsNavigation.StorageSettings -> ManagementRootComponent.Child.EditStorageSettings(
+            EditStorageSettingsComponentImpl(
+                componentContext = context,
+                getSettingsUseCase = getManagementStorageSettingsUseCase,
+                updateSettingsUseCase = updateManagementStorageSettingsUseCase,
+                resetSettingsUseCase = resetRemoteManagementStorageSettingsUseCase,
                 onBack = { handleBack(ManagementSettingsNavigation.Main) }
             )
         )
@@ -237,6 +267,11 @@ class ManagementRootComponentImpl(
                 },
                 onNavigateToIdentifiers = { userId ->
                     navigation.bringToFront(ManagementUsersNavigation.UserIdentifierList(ManagementUserIdentifierListParams(userId = userId.asHexDashString())))
+                },
+                onNavigateToFilesList = { userId ->
+                    navigation.bringToFront(ManagementStorageNavigation.FileList(
+                        params = ManagementStorageFileListParams(ownerUserIds = listOf(userId.asHexDashString()))
+                    ))
                 },
                 onNavigateToAuditEvents = { userId ->
                     navigation.bringToFront(
@@ -372,9 +407,9 @@ class ManagementRootComponentImpl(
                     if (targetId == activeSessionId) {
                         AppResult.Error(CommonError.ContractViolation(throwable = IllegalStateException("Cannot revoke current active session")))
                     } else {
-                        val sessionRes = managementGetSessionUseCase?.invoke(targetId.asHexDashString())
-                        if (sessionRes is AppResult.Success) {
-                            managementDeleteSessionUseCase.invoke(sessionRes.data.userId, targetId.asHexDashString())
+                        val sessionResult = managementGetSessionUseCase?.invoke(targetId.asHexDashString())
+                        if (sessionResult is AppResult.Success) {
+                            managementDeleteSessionUseCase.invoke(sessionResult.data.userId, targetId.asHexDashString())
                         } else if (deleteSessionUseCase != null) {
                             deleteSessionUseCase.invoke(targetId)
                         } else {
@@ -391,8 +426,11 @@ class ManagementRootComponentImpl(
                     navigation.bringToFront(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString())))
                 },
                 onBack = {
-                    val parent = if (!config.params.userId.isNullOrBlank()) {
-                        ManagementUsersNavigation.UserSessionList(ManagementUserSessionListParams(userId = config.params.userId!!))
+                    val userId = config.params.userId
+                    val parent = if (!userId.isNullOrBlank()) {
+                        ManagementUsersNavigation.UserSessionList(
+                            ManagementUserSessionListParams(userId = userId)
+                        )
                     } else {
                         ManagementUsersNavigation.GlobalSessionList()
                     }
@@ -420,9 +458,9 @@ class ManagementRootComponentImpl(
                     { targetId -> useCase(targetId.asHexDashString()) }
                 },
                 deleteIdentifier = { targetId ->
-                    val idRes = managementGetIdentifierUseCase?.invoke(targetId.asHexDashString())
-                    if (idRes is AppResult.Success) {
-                        managementDeleteIdentifierUseCase?.invoke(idRes.data.userId, targetId.asHexDashString())
+                    val identifierResult = managementGetIdentifierUseCase?.invoke(targetId.asHexDashString())
+                    if (identifierResult is AppResult.Success) {
+                        managementDeleteIdentifierUseCase?.invoke(identifierResult.data.userId, targetId.asHexDashString())
                             ?: AppResult.Error(CommonError.ContractViolation())
                     } else if (deleteUserIdentifierUseCase != null) {
                         deleteUserIdentifierUseCase.invoke(targetId)
@@ -431,9 +469,9 @@ class ManagementRootComponentImpl(
                     }
                 },
                 deletePassword = { targetId ->
-                    val idRes = managementGetIdentifierUseCase?.invoke(targetId.asHexDashString())
-                    if (idRes is AppResult.Success) {
-                        deleteIdentifierPasswordUseCase?.invoke(idRes.data.userId, targetId.asHexDashString())
+                    val identifierResult = managementGetIdentifierUseCase?.invoke(targetId.asHexDashString())
+                    if (identifierResult is AppResult.Success) {
+                        deleteIdentifierPasswordUseCase?.invoke(identifierResult.data.userId, targetId.asHexDashString())
                             ?: AppResult.Error(CommonError.ContractViolation())
                     } else {
                         AppResult.Error(CommonError.ContractViolation())
@@ -445,8 +483,11 @@ class ManagementRootComponentImpl(
                     navigation.bringToFront(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString())))
                 },
                 onBack = {
-                    val parent = if (!config.params.userId.isNullOrBlank()) {
-                        ManagementUsersNavigation.UserIdentifierList(ManagementUserIdentifierListParams(userId = config.params.userId!!))
+                    val userId = config.params.userId
+                    val parent = if (!userId.isNullOrBlank()) {
+                        ManagementUsersNavigation.UserIdentifierList(
+                            ManagementUserIdentifierListParams(userId = userId)
+                        )
                     } else {
                         ManagementUsersNavigation.GlobalIdentifierList()
                     }
@@ -454,24 +495,169 @@ class ManagementRootComponentImpl(
                 }
             )
         )
+        is ManagementStorageNavigation.FileList -> {
+            val dependencies = storageDependencies
+            if (dependencies != null) {
+                ManagementRootComponent.Child.GlobalStorageFileList(
+                    createManagementGlobalStorageFileListComponent(
+                        componentContext = context,
+                        getFilesUseCase = dependencies.getFilesUseCase,
+                        deleteFileUseCase = dependencies.deleteFileUseCase,
+                        deleteFilesBatchUseCase = dependencies.deleteFilesBatchUseCase,
+                        ownerUserId = config.params.ownerUserIds.firstOrNull(),
+                        isSelfView = false,
+                        onNavigateToUpload = null,
+                        onNavigateToFileDetail = { fileId ->
+                            navigation.bringToFront(ManagementStorageNavigation.FileDetail(StorageFileDetailParams(fileId = fileId)))
+                        },
+                        onNavigateBack = { handleBack() }
+                    )
+                )
+            } else {
+                createChild(ManagementMainNavigation.Main, context)
+            }
+        }
+        is ManagementStorageNavigation.FileDetail -> {
+            val dependencies = storageDependencies
+            if (dependencies != null) {
+                ManagementRootComponent.Child.GlobalStorageFileDetail(
+                    StorageFileDetailComponentImpl(
+                        componentContext = context,
+                        params = config.params,
+                        dataSource = object : StorageFileDetailDataSource {
+                            override val isDeleteAvailable: Boolean = true
+                            override suspend fun getFileDetail(fileId: String) = dependencies.getFileDetailUseCase(fileId)
+                            override suspend fun deleteFile(fileId: String) = dependencies.deleteFileUseCase(fileId)
+                        },
+                        onNavigateToUserDetail = { userId ->
+                            navigation.bringToFront(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId)))
+                        },
+                        onNavigateBack = { handleBack(ManagementStorageNavigation.FileList()) }
+                    )
+                )
+            } else {
+                createChild(ManagementMainNavigation.Main, context)
+            }
+        }
+        is ManagementSelfStorageNavigation.FileList -> {
+            val dependencies = storageDependencies
+            if (dependencies != null) {
+                val listComponent = selfStorageFileListComponent ?: createStaffSelfStorageFileListComponent(
+                    componentContext = context,
+                    getFilesUseCase = dependencies.getFilesUseCase,
+                    deleteFileUseCase = dependencies.deleteFileUseCase,
+                    deleteFilesBatchUseCase = dependencies.deleteFilesBatchUseCase,
+                    initialUserIdProvider = { userRepository.currentUser.firstOrNull()?.id?.asHexDashString() },
+                    onNavigateToUpload = {
+                        navigation.bringToFront(ManagementSelfStorageNavigation.FileUpload())
+                    },
+                    onNavigateToFileDetail = { fileId ->
+                        navigation.bringToFront(ManagementSelfStorageNavigation.FileDetail(StorageFileDetailParams(fileId = fileId)))
+                    },
+                    onNavigateBack = { handleBack() }
+                ).also { selfStorageFileListComponent = it }
+                ManagementRootComponent.Child.SelfStorageFileList(listComponent)
+            } else {
+                createChild(ManagementMainNavigation.Main, context)
+            }
+        }
+        is ManagementSelfStorageNavigation.FileDetail -> {
+            val dependencies = storageDependencies
+            if (dependencies != null) {
+                ManagementRootComponent.Child.GlobalStorageFileDetail(
+                    StorageFileDetailComponentImpl(
+                        componentContext = context,
+                        params = config.params,
+                        dataSource = object : StorageFileDetailDataSource {
+                            override val isDeleteAvailable: Boolean = true
+                            override suspend fun getFileDetail(fileId: String) = dependencies.getFileDetailUseCase(fileId)
+                            override suspend fun deleteFile(fileId: String) = dependencies.deleteFileUseCase(fileId)
+                        },
+                        onNavigateToUserDetail = { userId ->
+                            navigation.bringToFront(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId)))
+                        },
+                        onNavigateBack = { handleBack(ManagementSelfStorageNavigation.FileList()) }
+                    )
+                )
+            } else {
+                createChild(ManagementMainNavigation.Main, context)
+            }
+        }
+        is ManagementSelfStorageNavigation.FileUpload -> {
+            val dependencies = storageDependencies
+            if (dependencies != null) {
+                ManagementRootComponent.Child.GlobalStorageFileUpload(
+                    StorageFileUploadScreenComponentImpl(
+                        componentContext = context,
+                        config = StorageFileUploadUiConfig(),
+                        uploadFileUseCase = dependencies.uploadFileUseCase,
+                        onUploaded = {
+                            selfStorageFileListComponent?.onRefresh()
+                        },
+                        onNavigateBack = { handleBack(ManagementSelfStorageNavigation.FileList()) }
+                    )
+                )
+            } else {
+                createChild(ManagementMainNavigation.Main, context)
+            }
+        }
+        is ManagementStorageNavigation.Main -> {
+            val dependencies = storageDependencies
+            if (dependencies != null) {
+                ManagementRootComponent.Child.GlobalStorageFileList(
+                    createManagementGlobalStorageFileListComponent(
+                        componentContext = context,
+                        getFilesUseCase = dependencies.getFilesUseCase,
+                        deleteFileUseCase = dependencies.deleteFileUseCase,
+                        deleteFilesBatchUseCase = dependencies.deleteFilesBatchUseCase,
+                        ownerUserId = null,
+                        isSelfView = false,
+                        onNavigateToUpload = null,
+                        onNavigateToFileDetail = { fileId ->
+                            navigation.bringToFront(ManagementStorageNavigation.FileDetail(StorageFileDetailParams(fileId = fileId)))
+                        },
+                        onNavigateBack = { handleBack() }
+                    )
+                )
+            } else {
+                createChild(ManagementMainNavigation.Main, context)
+            }
+        }
+        is ManagementSelfStorageNavigation.Main -> {
+            val dependencies = storageDependencies
+            if (dependencies != null) {
+                ManagementRootComponent.Child.SelfStorageFileList(
+                    createStaffSelfStorageFileListComponent(
+                        componentContext = context,
+                        getFilesUseCase = dependencies.getFilesUseCase,
+                        deleteFileUseCase = dependencies.deleteFileUseCase,
+                        deleteFilesBatchUseCase = dependencies.deleteFilesBatchUseCase,
+                        initialUserIdProvider = { userRepository.currentUser.firstOrNull()?.id?.asHexDashString() },
+                        onNavigateToUpload = {
+                            navigation.bringToFront(ManagementSelfStorageNavigation.FileUpload())
+                        },
+                        onNavigateToFileDetail = { fileId ->
+                            navigation.bringToFront(ManagementSelfStorageNavigation.FileDetail(StorageFileDetailParams(fileId = fileId)))
+                        },
+                        onNavigateBack = { handleBack() }
+                    )
+                )
+            } else {
+                createChild(ManagementMainNavigation.Main, context)
+            }
+        }
         is ManagementAuditNavigation.Main -> createChild(ManagementAuditNavigation.AuditEventList(), context)
-        is ClientAuthNavigation,
-        is ClientUserNavigation -> ManagementRootComponent.Child.Main(
+        else -> createMainChild(context)
+    }
+
+    private fun createMainChild(context: ComponentContext): ManagementRootComponent.Child.Main {
+        return ManagementRootComponent.Child.Main(
             MainManagementComponentImpl(
                 componentContext = context,
                 onNavigateToGlobalUserList = { navigation.bringToFront(ManagementUsersNavigation.UserList()) },
                 onNavigateToGlobalSessionList = { navigation.bringToFront(ManagementUsersNavigation.GlobalSessionList()) },
                 onNavigateToGlobalIdentifierList = { navigation.bringToFront(ManagementUsersNavigation.GlobalIdentifierList()) },
-                onNavigateToAuditEventList = { navigation.bringToFront(ManagementAuditNavigation.AuditEventList()) },
-                onNavigateToSettings = { navigation.bringToFront(ManagementSettingsNavigation.Main) }
-            )
-        )
-        else -> ManagementRootComponent.Child.Main(
-            MainManagementComponentImpl(
-                componentContext = context,
-                onNavigateToGlobalUserList = { navigation.bringToFront(ManagementUsersNavigation.UserList()) },
-                onNavigateToGlobalSessionList = { navigation.bringToFront(ManagementUsersNavigation.GlobalSessionList()) },
-                onNavigateToGlobalIdentifierList = { navigation.bringToFront(ManagementUsersNavigation.GlobalIdentifierList()) },
+                onNavigateToGlobalStorageFileList = { navigation.bringToFront(ManagementStorageNavigation.FileList()) },
                 onNavigateToAuditEventList = { navigation.bringToFront(ManagementAuditNavigation.AuditEventList()) },
                 onNavigateToSettings = { navigation.bringToFront(ManagementSettingsNavigation.Main) }
             )

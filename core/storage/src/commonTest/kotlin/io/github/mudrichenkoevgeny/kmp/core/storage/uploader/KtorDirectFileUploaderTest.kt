@@ -6,7 +6,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.content.OutgoingContent
+import io.ktor.utils.io.ByteReadChannel
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -17,12 +17,9 @@ class KtorDirectFileUploaderTest {
 
     @Test
     fun uploadFile_returnsSuccess_whenResponseIs200() = runTest {
-        var recordedBody: ByteArray? = null
+        var recordedContentLength: Long? = null
         val mockEngine = MockEngine { request ->
-            val bodyContent = request.body
-            if (bodyContent is OutgoingContent.ByteArrayContent) {
-                recordedBody = bodyContent.bytes()
-            }
+            recordedContentLength = request.body.contentLength
             respond("OK", HttpStatusCode.OK)
         }
         val client = HttpClient(mockEngine)
@@ -32,13 +29,14 @@ class KtorDirectFileUploaderTest {
         var progressReported = 0
         val result = uploader.uploadFile(
             uploadUrl = "https://s3.example.com/presigned-upload",
-            bytes = testBytes,
+            contentLength = testBytes.size.toLong(),
+            openReadChannel = { ByteReadChannel(testBytes) },
             mimeType = "image/png",
             onProgress = { percent -> progressReported = percent }
         )
 
         assertIs<AppResult.Success<Unit>>(result)
-        assertEquals(testBytes.size, recordedBody?.size)
+        assertEquals(testBytes.size.toLong(), recordedContentLength)
         assertEquals(100, progressReported)
     }
 
@@ -52,7 +50,8 @@ class KtorDirectFileUploaderTest {
 
         val result = uploader.uploadFile(
             uploadUrl = "https://s3.example.com/presigned-upload",
-            bytes = byteArrayOf(1, 2, 3)
+            contentLength = 3L,
+            openReadChannel = { ByteReadChannel(byteArrayOf(1, 2, 3)) }
         )
 
         assertIs<AppResult.Error>(result)

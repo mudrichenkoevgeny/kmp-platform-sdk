@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.ApiException
-import io.github.mudrichenkoevgeny.kmp.feature.user.network.auth.IsPublicApi
+import io.github.mudrichenkoevgeny.kmp.core.common.network.httprequest.IsPublicApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.model.ApiErrorResponse
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes

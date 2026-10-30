@@ -24,6 +24,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.main.MainManagementComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 
@@ -34,12 +35,14 @@ object MainManagementTestTags {
     const val IDENTIFIERS_BUTTON = "MainManagement_IdentifiersButton"
     const val AUDIT_EVENT_LIST_BUTTON = "MainManagement_AuditEventListButton"
     const val SETTINGS_BUTTON = "MainManagement_SettingsButton"
+    const val GLOBAL_STORAGE_FILE_LIST_BUTTON = "MainManagement_GlobalStorageFileListButton"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainManagementScreen(component: MainManagementComponent) {
     val userUi = LocalUserStrings.current.ui
+    val storageUi = LocalStorageStrings.current.ui
 
     Scaffold(
         topBar = {
@@ -77,6 +80,12 @@ fun MainManagementScreen(component: MainManagementComponent) {
                 text = userUi.identifiers,
                 onClick = component::onGlobalIdentifierListClick,
                 modifier = Modifier.testTag(MainManagementTestTags.IDENTIFIERS_BUTTON)
+            )
+
+            CoreButton(
+                text = storageUi.storageFileListTitle,
+                onClick = component::onGlobalStorageFileListClick,
+                modifier = Modifier.testTag(MainManagementTestTags.GLOBAL_STORAGE_FILE_LIST_BUTTON)
             )
 
             CoreButton(

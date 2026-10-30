@@ -21,6 +21,9 @@ interface MainUserComponent {
     /** Action to open credentials/identifiers management. */
     fun onIdentifiersClick()
 
+    /** Action to open personal storage files list. */
+    fun onFilesListClick()
+
     /** Action to schedule user deletion. */
     fun onDeleteUserClick()
 

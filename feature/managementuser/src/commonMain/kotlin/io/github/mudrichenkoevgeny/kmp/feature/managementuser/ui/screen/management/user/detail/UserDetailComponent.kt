@@ -19,6 +19,7 @@ interface UserDetailComponent {
     fun onDisableTotpClick()
     fun onSessionsClick()
     fun onIdentifiersClick()
+    fun onFilesClick()
     fun onAuditEventsClick()
     fun onRetry()
     fun onBackClick()

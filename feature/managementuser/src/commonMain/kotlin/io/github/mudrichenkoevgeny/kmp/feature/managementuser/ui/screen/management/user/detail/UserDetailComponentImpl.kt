@@ -44,6 +44,7 @@ class UserDetailComponentImpl(
     private val userRepository: UserRepository? = null,
     private val onNavigateToSessions: (UserId) -> Unit,
     private val onNavigateToIdentifiers: (UserId) -> Unit,
+    private val onNavigateToFilesList: ((UserId) -> Unit)? = null,
     private val onNavigateToAuditEvents: (UserId) -> Unit,
     private val onNavigateToUserMain: (() -> Unit)? = null,
     private val onUserDeleted: ((UserId) -> Unit)? = null,
@@ -199,6 +200,11 @@ class UserDetailComponentImpl(
     override fun onIdentifiersClick() {
         val targetId = userId ?: return
         onNavigateToIdentifiers(targetId)
+    }
+
+    override fun onFilesClick() {
+        val targetId = userId ?: return
+        onNavigateToFilesList?.invoke(targetId)
     }
 
     override fun onAuditEventsClick() {

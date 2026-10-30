@@ -118,6 +118,7 @@ fun UserDetailScreen(component: UserDetailComponent) {
                         onDisableTotpClick = component::onDisableTotpClick,
                         onSessionsClick = component::onSessionsClick,
                         onIdentifiersClick = component::onIdentifiersClick,
+                        onFilesClick = component::onFilesClick,
                         onAuditEventsClick = component::onAuditEventsClick
                     )
                 }
@@ -143,6 +144,7 @@ private fun Content(
     onDisableTotpClick: () -> Unit,
     onSessionsClick: () -> Unit,
     onIdentifiersClick: () -> Unit,
+    onFilesClick: () -> Unit,
     onAuditEventsClick: () -> Unit
 ) {
     val userUi = LocalUserStrings.current.ui
@@ -208,6 +210,12 @@ private fun Content(
             text = userUi.userIdentifiers,
             onClick = onIdentifiersClick,
             modifier = Modifier.testTag(UserDetailTestTags.IDENTIFIERS_BUTTON)
+        )
+
+        CoreButton(
+            text = storageUi.storageFileListTitle,
+            onClick = onFilesClick,
+            modifier = Modifier.testTag(UserDetailTestTags.FILES_BUTTON)
         )
 
         CoreButton(
@@ -574,6 +582,7 @@ object UserDetailTestTags {
     const val DISABLE_TOTP_ERROR_TEXT = "UserDetail_DisableTotpErrorText"
     const val SESSIONS_BUTTON = "UserDetail_SessionsButton"
     const val IDENTIFIERS_BUTTON = "UserDetail_IdentifiersButton"
+    const val FILES_BUTTON = "UserDetail_FilesButton"
     const val AUDIT_EVENTS_BUTTON = "UserDetail_AuditEventsButton"
     const val SAVE_ERROR_TEXT = "UserDetail_SaveErrorText"
     const val DELETE_ERROR_TEXT = "UserDetail_DeleteErrorText"

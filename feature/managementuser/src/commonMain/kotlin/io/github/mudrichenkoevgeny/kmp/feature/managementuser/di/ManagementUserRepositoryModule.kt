@@ -221,4 +221,5 @@ internal class ManagementUserRepositoryModule(
             repositoryScope = repositoryScope
         )
     }
+
 }
