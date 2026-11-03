@@ -5,9 +5,9 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.appendResult
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.BooleanListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ChoiceListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.TextListingFilterState
@@ -24,8 +24,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserIdentifierFilterValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserIdentifierSortBy
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.globallist.ManagementGlobalIdentifierListParams
 import kotlinx.coroutines.launch
 
@@ -145,24 +145,58 @@ class GlobalIdentifierListComponentImpl(
         filterStates: Map<String, ListingFilterState>?
     ) {
         val sortOrder = if (sortState?.isAscending == true) SortOrder.ASC else SortOrder.DESC
-        val sortBy = sortState?.optionId?.let { UserSortValues.UserIdentifierSortBy.fromValueOrNull(it) } ?: params.sortBy
+        val sortBy = sortState?.optionId?.let { UserIdentifierSortBy.fromValueOrNull(it) } ?: params.sortBy
 
-        val userIds = (filterStates?.get(UserFilterValues.UserIdentifierFilterValues.USER_ID) as? TextListingFilterState)
+        val identifierIds = (filterStates?.get(UserIdentifierFilterValues.IDENTIFIER_ID) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.identifierIds.ifEmpty { null }
+        val userIds = (filterStates?.get(UserIdentifierFilterValues.USER_ID) as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.userIds.ifEmpty { null }
-        val userAuthProviders = (filterStates?.get(UserFilterValues.UserIdentifierFilterValues.USER_AUTH_PROVIDER) as? ChoiceListingFilterState)
+        val userAuthProviders = (filterStates?.get(UserIdentifierFilterValues.USER_AUTH_PROVIDER) as? ChoiceListingFilterState)
             ?.selectedIds?.mapNotNull { UserAuthProvider.fromValueOrNull(it) } ?: params.userAuthProviders.ifEmpty { null }
-        val identifiers = (filterStates?.get(UserFilterValues.UserIdentifierFilterValues.IDENTIFIER) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.identifiers.ifEmpty { null }
+        val excludeUserAuthProviders = (filterStates?.get(UserIdentifierFilterValues.EXCLUDE_USER_AUTH_PROVIDER) as? ChoiceListingFilterState)
+            ?.selectedIds?.mapNotNull { UserAuthProvider.fromValueOrNull(it) } ?: params.excludeUserAuthProviders.ifEmpty { null }
+        val identifiers = (filterStates?.get(UserIdentifierFilterValues.IDENTIFIER) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.identifier?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+        val displayName = (filterStates?.get(UserIdentifierFilterValues.DISPLAY_NAME) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.displayName
+        val externalProviderEmail = (filterStates?.get(UserIdentifierFilterValues.EXTERNAL_PROVIDER_EMAIL) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.externalProviderEmail
+        val isExternalProviderEmailSet = (filterStates?.get(UserIdentifierFilterValues.IS_EXTERNAL_PROVIDER_EMAIL_SET) as? BooleanListingFilterState)
+            ?.value ?: params.isExternalProviderEmailSet
+        val createdAtFrom = (filterStates?.get(UserIdentifierFilterValues.CREATED_AT_FROM) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.createdAtFrom
+        val createdAtTo = (filterStates?.get(UserIdentifierFilterValues.CREATED_AT_TO) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.createdAtTo
+        val updatedAtFrom = (filterStates?.get(UserIdentifierFilterValues.UPDATED_AT_FROM) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.updatedAtFrom
+        val updatedAtTo = (filterStates?.get(UserIdentifierFilterValues.UPDATED_AT_TO) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.updatedAtTo
+        val isUpdatedAtSet = (filterStates?.get(UserIdentifierFilterValues.IS_UPDATED_AT_SET) as? BooleanListingFilterState)
+            ?.value ?: params.isUpdatedAtSet
+        val searchQuery = (filterStates?.get(UserIdentifierFilterValues.SEARCH_QUERY) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.searchQuery?.takeIf { it.isNotBlank() }
 
         scope.launch {
             managementGetIdentifiersUseCase(
-                pageNumber = pageNumber,
-                pageSize = ListingConstants.DEFAULT_PAGE_SIZE,
-                sortBy = sortBy,
-                sortOrder = sortOrder,
-                userIds = userIds,
-                userAuthProviders = userAuthProviders,
-                identifiers = identifiers
+                params = ManagementGlobalIdentifierListParams(
+                    pageNumber = pageNumber,
+                    sortBy = sortBy,
+                    sortOrder = sortOrder,
+                    identifierIds = identifierIds ?: emptyList(),
+                    userIds = userIds ?: emptyList(),
+                    userAuthProviders = userAuthProviders ?: emptyList(),
+                    excludeUserAuthProviders = excludeUserAuthProviders ?: emptyList(),
+                    identifier = identifiers?.firstOrNull() ?: "",
+                    displayName = displayName ?: "",
+                    externalProviderEmail = externalProviderEmail ?: "",
+                    isExternalProviderEmailSet = isExternalProviderEmailSet,
+                    createdAtFrom = createdAtFrom ?: "",
+                    createdAtTo = createdAtTo ?: "",
+                    updatedAtFrom = updatedAtFrom ?: "",
+                    updatedAtTo = updatedAtTo ?: "",
+                    isUpdatedAtSet = isUpdatedAtSet,
+                    searchQuery = searchQuery ?: ""
+                )
             )
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? GlobalIdentifierListScreenState.Content

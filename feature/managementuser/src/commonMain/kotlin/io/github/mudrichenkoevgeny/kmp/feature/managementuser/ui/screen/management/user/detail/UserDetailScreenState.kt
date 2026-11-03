@@ -1,6 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.SelectedFilePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
 
 /**
@@ -18,6 +19,12 @@ sealed interface UserDetailScreenState {
      * User details and account management input form state.
      *
      * @param user The target user entity.
+     * @param nicknameInput Current nickname handle text field value.
+     * @param displayNameInput Current display name text field value.
+     * @param avatarFileIdInput Current avatar file ID text field value.
+     * @param avatarUrl Current avatar URL string.
+     * @param selectedAvatarPayload Picked local avatar file payload.
+     * @param birthdateInput Current birthdate epoch millis text value.
      * @param authorityLevelInput Current authority level text field value.
      * @param accountStatusInput Current account status dropdown selection.
      * @param lockoutTypeInput Current lockout type dropdown selection.
@@ -36,8 +43,14 @@ sealed interface UserDetailScreenState {
      */
     data class Content(
         val user: UserPrivate,
-        val authorityLevelInput: String,
-        val accountStatusInput: String,
+        val nicknameInput: String = "",
+        val displayNameInput: String = "",
+        val avatarFileIdInput: String = "",
+        val avatarUrl: String? = null,
+        val selectedAvatarPayload: SelectedFilePayload? = null,
+        val birthdateInput: String = "",
+        val authorityLevelInput: String = "0",
+        val accountStatusInput: String = "ACTIVE",
         val lockoutTypeInput: String = "NONE",
         val temporaryLockoutUntilInput: String = "",
         val quotaBytesInput: String = "",
@@ -62,6 +75,10 @@ sealed interface UserDetailScreenState {
                 val initialQuotaBytes = user.storageConfiguration?.quotaBytes?.toString() ?: ""
                 val initialMaxUploadSizeBytes = user.storageConfiguration?.maxUploadSizeBytes?.toString() ?: ""
                 val initialMaxPendingUploads = user.storageConfiguration?.maxPendingUploads?.toString() ?: ""
+                val initialNickname = user.nickname ?: ""
+                val initialDisplayName = user.displayName ?: ""
+                val initialAvatarFileId = user.avatarFileId?.value?.toHexDashString() ?: ""
+                val initialBirthdate = user.birthdate?.toEpochMilliseconds()?.toString() ?: ""
 
                 return currentAuthLevel != initialAuthLevel ||
                     !accountStatusInput.equals(initialAccountStatus, ignoreCase = true) ||
@@ -70,7 +87,12 @@ sealed interface UserDetailScreenState {
                     temporaryLockoutUntilInput != initialTempLockout ||
                     quotaBytesInput != initialQuotaBytes ||
                     maxUploadSizeBytesInput != initialMaxUploadSizeBytes ||
-                    maxPendingUploadsInput != initialMaxPendingUploads
+                    maxPendingUploadsInput != initialMaxPendingUploads ||
+                    nicknameInput != initialNickname ||
+                    displayNameInput != initialDisplayName ||
+                    avatarFileIdInput != initialAvatarFileId ||
+                    selectedAvatarPayload != null ||
+                    birthdateInput != initialBirthdate
             }
     }
 }

@@ -68,7 +68,7 @@ The SDK uses a localized, machine-readable error handling system:
 
 All paged lists must use the standardized infrastructure from `core:common`:
 
-- **Infrastructure:** Use `PaginationState<T>` from `io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing` to manage cumulative items, loading flags, and error states. Use `INITIAL_PAGE_NUMBER` and `DEFAULT_PAGE_SIZE` constants from `ListingConstants`.
+- **Infrastructure:** Use `PaginationState<T>` from `io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing` to manage cumulative items, loading flags, and error states. Use `INITIAL_PAGE_NUMBER` constant from `ListingConstants` and `ListingDefaultValues.Pagination.PAGE_SIZE` from `shared-foundation`.
 - **State Updates:** Utilize extension functions like `appendResult()`, `toNextPageLoading()`, and `toError()` to transition the list state.
 - **UI Trigger:** Monitor scroll position using the `LazyListState.OnBottomReached` extension from `io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing` to trigger next-page loads.
 - **UI Feedback:** Always include `PagingFooter` as the last item in the `LazyColumn` to show infinite loading indicators or retry actions for failed pages.

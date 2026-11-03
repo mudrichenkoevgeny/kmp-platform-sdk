@@ -39,6 +39,8 @@ class UserDeepLinkParser : DeepLinkParser<ClientUserNavigation> {
         return when {
             path == ClientUserNavigation.BASE_USER_ROUTE || path == ClientUserNavigation.Main.route ->
                 ClientUserNavigation.Main
+            path == ClientUserNavigation.UserEdit.route ->
+                ClientUserNavigation.UserEdit
             path == ClientUserNavigation.BASE_TOTP_ROUTE || path == ClientUserNavigation.TotpMain.ROUTE ->
                 ClientUserNavigation.TotpMain(TotpMainParams.parse(queryMap))
             path == ClientUserNavigation.TotpRecoveryCodes.route ->

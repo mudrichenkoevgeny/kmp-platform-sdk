@@ -69,7 +69,7 @@ class ManagementUserDeepLinkParserTest {
     }
 
     @Test
-    fun `test staff self-service user profile parsing`() {
+    fun `test staff self-service user parsing`() {
         val selfUrl = "https://kmp-platform.internal/user"
         val selfParsed = parser.parse(Url(selfUrl))
         assertIs<ManagementSelfUserNavigation.Main>(selfParsed)

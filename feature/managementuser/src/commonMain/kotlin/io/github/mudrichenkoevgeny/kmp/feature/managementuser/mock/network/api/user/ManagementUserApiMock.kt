@@ -5,17 +5,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user.ManagementUserApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.permission.PermissionCode
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.user.globallist.ManagementUserListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.create.CreateByEmailRequest
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.ManagementUpdateUserRequest
 
 @InternalApi
 class ManagementUserApiMock : ManagementUserApi {
@@ -29,15 +24,12 @@ class ManagementUserApiMock : ManagementUserApi {
     override suspend fun createUser(request: CreateByEmailRequest) = createUserResult
 
     override suspend fun getUsers(
-        pageNumber: Int?, pageSize: Int?, sortBy: UserSortValues.UserSortBy?,
-        sortOrder: SortOrder?, roles: List<UserRole>?, accountStatuses: List<UserAccountStatus>?,
-        accountStatusesBeforeDeletion: List<UserAccountStatus>?, accountLockoutTypes: List<AccountLockoutType>?, authorityLevelFrom: Int?,
-        authorityLevelTo: Int?, isTotpEnabled: Boolean?, permissionCodes: List<PermissionCode>?
+        params: ManagementUserListParams?
     ) = getUsersResult
 
     override suspend fun getUser(userId: UserId) = getUserResult
 
-    override suspend fun updateUser(userId: UserId, request: UpdateUserRequest) = updateUserResult
+    override suspend fun updateUser(userId: UserId, request: ManagementUpdateUserRequest) = updateUserResult
 
     override suspend fun deleteUser(userId: UserId) = deleteUserResult
 }

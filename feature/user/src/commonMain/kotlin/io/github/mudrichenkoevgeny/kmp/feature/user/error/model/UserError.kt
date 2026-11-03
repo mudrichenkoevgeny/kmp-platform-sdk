@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.error.model
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.ErrorId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.client.naming.ClientUserErrorCodes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes
 
 /**
@@ -67,6 +68,67 @@ sealed class UserError(
     class RegistrationDisabled : UserError(
         id = ErrorId.generate(),
         code = UserErrorCodes.REGISTRATION_DISABLED,
+        isRetryable = false
+    )
+
+    /** Emitted when attempting to change a nickname when changes are disabled by policy. */
+    class NicknameChangeDisabled : UserError(
+        id = ErrorId.generate(),
+        code = UserErrorCodes.NICKNAME_CHANGE_DISABLED,
+        isRetryable = false
+    )
+
+    /** Emitted when nickname length is below the configured minimum. */
+    class NicknameTooShort(
+        val minLength: Int
+    ) : UserError(
+        id = ErrorId.generate(),
+        code = UserErrorCodes.NICKNAME_TOO_SHORT,
+        args = mapOf(UserErrorArgs.NICKNAME_MIN_LENGTH to minLength.toString()),
+        isRetryable = false
+    )
+
+    /** Emitted when nickname length is above the configured maximum. */
+    class NicknameTooLong(
+        val maxLength: Int
+    ) : UserError(
+        id = ErrorId.generate(),
+        code = UserErrorCodes.NICKNAME_TOO_LONG,
+        args = mapOf(UserErrorArgs.NICKNAME_MAX_LENGTH to maxLength.toString()),
+        isRetryable = false
+    )
+
+    /** Emitted when nickname contains forbidden characters. */
+    class InvalidNicknameCharacters : UserError(
+        id = ErrorId.generate(),
+        code = UserErrorCodes.INVALID_NICKNAME_CHARACTERS,
+        isRetryable = false
+    )
+
+    /** Emitted when display name length is below the configured minimum. */
+    class DisplayNameTooShort(
+        val minLength: Int
+    ) : UserError(
+        id = ErrorId.generate(),
+        code = UserErrorCodes.DISPLAY_NAME_TOO_SHORT,
+        args = mapOf(UserErrorArgs.DISPLAY_NAME_MIN_LENGTH to minLength.toString()),
+        isRetryable = false
+    )
+
+    /** Emitted when display name length is above the configured maximum. */
+    class DisplayNameTooLong(
+        val maxLength: Int
+    ) : UserError(
+        id = ErrorId.generate(),
+        code = UserErrorCodes.DISPLAY_NAME_TOO_LONG,
+        args = mapOf(UserErrorArgs.DISPLAY_NAME_MAX_LENGTH to maxLength.toString()),
+        isRetryable = false
+    )
+
+    /** Emitted when display name contains forbidden characters. */
+    class InvalidDisplayNameCharacters : UserError(
+        id = ErrorId.generate(),
+        code = UserErrorCodes.INVALID_DISPLAY_NAME_CHARACTERS,
         isRetryable = false
     )
 }

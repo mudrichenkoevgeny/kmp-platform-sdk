@@ -1,12 +1,18 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.SelectedFilePayload
 
 /**
  * UI state for administrative user creation form.
  *
  * @param email Current email text field value.
  * @param password Current initial password text field value.
+ * @param nickname Optional handle nickname.
+ * @param displayName Optional display name.
+ * @param avatarFileId Optional avatar file ID.
+ * @param selectedAvatarPayload Picked avatar image file payload.
+ * @param birthdate Optional birthdate epoch millis.
  * @param role Selected user role.
  * @param status Selected initial account status.
  * @param authorityLevel Current authority level text field value.
@@ -19,6 +25,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 data class CreateUserScreenState(
     val email: String = "",
     val password: String = "",
+    val nickname: String = "",
+    val displayName: String = "",
+    val avatarFileId: String = "",
+    val selectedAvatarPayload: SelectedFilePayload? = null,
+    val birthdate: String = "",
     val role: String = "USER",
     val status: String = "ACTIVE",
     val authorityLevel: String = "0",

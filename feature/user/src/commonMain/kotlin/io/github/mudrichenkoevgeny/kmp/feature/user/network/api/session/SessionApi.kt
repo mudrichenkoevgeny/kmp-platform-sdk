@@ -1,13 +1,10 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.network.api.session
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.verifytotp.VerifyTotpPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.session.list.SelfSessionListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.DeletedSessionsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
@@ -17,24 +14,11 @@ interface SessionApi {
 
     /**
      * Returns a paginated and filtered list of active sessions for the current authenticated account.
+     *
+     * @param params Query and filter parameters DTO.
+     * @return [AppResult.Success] containing a [PagedResult] of [UserSessionSummaryPayload] or [AppResult.Error].
      */
-    suspend fun getSessions(
-        pageNumber: Int? = null,
-        pageSize: Int? = null,
-        sortBy: UserSortValues.UserSessionSortBy? = null,
-        sortOrder: SortOrder? = null,
-        identifiers: List<String>? = null,
-        identifierIds: List<String>? = null,
-        userAuthProviders: List<UserAuthProvider>? = null,
-        clientTypes: List<ClientType>? = null,
-        userAgents: List<String>? = null,
-        ipAddresses: List<String>? = null,
-        languages: List<String>? = null,
-        deviceIds: List<String>? = null,
-        deviceNames: List<String>? = null,
-        appVersions: List<String>? = null,
-        operationSystemVersions: List<String>? = null
-    ): AppResult<PagedResult<UserSessionSummaryPayload>>
+    suspend fun getSessions(params: SelfSessionListParams? = null): AppResult<PagedResult<UserSessionSummaryPayload>>
 
     /**
      * Returns details of a specific session owned by the current management account.

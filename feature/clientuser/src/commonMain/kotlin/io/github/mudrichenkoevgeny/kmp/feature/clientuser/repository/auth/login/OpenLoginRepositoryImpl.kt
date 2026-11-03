@@ -50,14 +50,12 @@ class OpenLoginRepositoryImpl(
     }
 
     override suspend fun loginByExternalAuthProvider(
-        authProvider: UserAuthProvider,
-        externalProviderToken: String
+        loginByExternalAuthProviderRequest: LoginByExternalAuthProviderRequest
     ): AppResult<AuthData> {
-        return openLoginApi.loginByExternalAuthProvider(
-            LoginByExternalAuthProviderRequest(authProvider.value, externalProviderToken)
-        ).mapSuccess { authDataPayload ->
-            authDataPayload.toAuthData()
-        }
+        return openLoginApi.loginByExternalAuthProvider(loginByExternalAuthProviderRequest)
+            .mapSuccess { authDataPayload ->
+                authDataPayload.toAuthData()
+            }
     }
 
     override suspend fun loginByTotp(mfaToken: String, code: String): AppResult<AuthData> {

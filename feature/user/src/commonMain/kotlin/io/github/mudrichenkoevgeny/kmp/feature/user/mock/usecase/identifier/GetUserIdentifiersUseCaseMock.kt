@@ -6,10 +6,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.identifier.I
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.GetUserIdentifiersUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.list.SelfIdentifierListParams
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 
@@ -19,19 +17,14 @@ class GetUserIdentifiersUseCaseMock(
 ) : GetUserIdentifiersUseCase(identifierRepository) {
 
     var executeCalls = 0
-    var resultProvider: (page: Int?, size: Int?) -> AppResult<PagedResult<UserIdentifierSummary>> = { _, _ ->
+    var resultProvider: (params: SelfIdentifierListParams?) -> AppResult<PagedResult<UserIdentifierSummary>> = { _ ->
         AppResult.Success(createTestPagedResult(listOf(createTestUserIdentifierSummary())))
     }
 
     override suspend fun invoke(
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserIdentifierSortBy?,
-        sortOrder: SortOrder?,
-        userAuthProviders: List<UserAuthProvider>?,
-        identifiers: List<String>?
+        params: SelfIdentifierListParams?
     ): AppResult<PagedResult<UserIdentifierSummary>> {
         executeCalls++
-        return resultProvider(pageNumber, pageSize)
+        return resultProvider(params)
     }
 }

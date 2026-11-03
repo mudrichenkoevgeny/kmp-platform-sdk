@@ -72,10 +72,10 @@ class EditAuthSettingsComponentImpl(
     private fun loadSettings() {
         scope.launch {
             _state.value = EditAuthSettingsScreenState.Loading
-            val result = getManagementAuthSettingsUseCase()
-            val nextState = when (result) {
+            val settingsResult = getManagementAuthSettingsUseCase()
+            val nextState = when (settingsResult) {
                 is AppResult.Success -> {
-                    val settings = result.data
+                    val settings = settingsResult.data
                     val enabled = (settings.availableAuthProviders.primary + settings.availableAuthProviders.secondary).toSet()
                     EditAuthSettingsScreenState.Content(
                         enabledProviders = enabled,
@@ -83,6 +83,11 @@ class EditAuthSettingsComponentImpl(
                         maxEmailIdentifiers = settings.maxEmailIdentifiers.toString(),
                         maxPhoneIdentifiers = settings.maxPhoneIdentifiers.toString(),
                         maxIdentifiersPerExternalProvider = settings.maxIdentifiersPerExternalProvider.toString(),
+                        userNicknameMinLength = settings.userNicknameMinLength.toString(),
+                        userNicknameMaxLength = settings.userNicknameMaxLength.toString(),
+                        userDisplayNameMinLength = settings.userDisplayNameMinLength.toString(),
+                        userDisplayNameMaxLength = settings.userDisplayNameMaxLength.toString(),
+                        isUserNicknameChangeAllowed = settings.isUserNicknameChangeAllowed,
                         maxActiveSessionsForOpenUser = settings.maxActiveSessionsForOpenUser.toString(),
                         maxActiveSessionsForManagementUser = settings.maxActiveSessionsForManagementUser.toString(),
                         accessTokenExpirationSeconds = settings.accessTokenExpirationSeconds.toString(),
@@ -100,7 +105,7 @@ class EditAuthSettingsComponentImpl(
                         managementEmailWhitelist = settings.managementEmailRestrictionPolicy.whitelist.joinToString(",")
                     )
                 }
-                is AppResult.Error -> EditAuthSettingsScreenState.Error(result.error)
+                is AppResult.Error -> EditAuthSettingsScreenState.Error(settingsResult.error)
             }
             _state.value = nextState
         }
@@ -130,6 +135,26 @@ class EditAuthSettingsComponentImpl(
 
     override fun onMaxIdentifiersPerExternalProviderChanged(value: String) {
         updateContent { copy(maxIdentifiersPerExternalProvider = value, saveError = null) }
+    }
+
+    override fun onUserNicknameMinLengthChanged(value: String) {
+        updateContent { copy(userNicknameMinLength = value, saveError = null) }
+    }
+
+    override fun onUserNicknameMaxLengthChanged(value: String) {
+        updateContent { copy(userNicknameMaxLength = value, saveError = null) }
+    }
+
+    override fun onUserDisplayNameMinLengthChanged(value: String) {
+        updateContent { copy(userDisplayNameMinLength = value, saveError = null) }
+    }
+
+    override fun onUserDisplayNameMaxLengthChanged(value: String) {
+        updateContent { copy(userDisplayNameMaxLength = value, saveError = null) }
+    }
+
+    override fun onIsUserNicknameChangeAllowedToggled(enabled: Boolean) {
+        updateContent { copy(isUserNicknameChangeAllowed = enabled, saveError = null) }
     }
 
     override fun onMaxActiveSessionsForOpenUserChanged(value: String) {
@@ -214,6 +239,11 @@ class EditAuthSettingsComponentImpl(
                 maxEmailIdentifiers = current.maxEmailIdentifiers.toIntOrNull() ?: 5,
                 maxPhoneIdentifiers = current.maxPhoneIdentifiers.toIntOrNull() ?: 5,
                 maxIdentifiersPerExternalProvider = current.maxIdentifiersPerExternalProvider.toIntOrNull() ?: 2,
+                userNicknameMinLength = current.userNicknameMinLength.toIntOrNull() ?: 3,
+                userNicknameMaxLength = current.userNicknameMaxLength.toIntOrNull() ?: 30,
+                userDisplayNameMinLength = current.userDisplayNameMinLength.toIntOrNull() ?: 1,
+                userDisplayNameMaxLength = current.userDisplayNameMaxLength.toIntOrNull() ?: 50,
+                isUserNicknameChangeAllowed = current.isUserNicknameChangeAllowed,
                 maxActiveSessionsForOpenUser = current.maxActiveSessionsForOpenUser.toIntOrNull() ?: 3,
                 maxActiveSessionsForManagementUser = current.maxActiveSessionsForManagementUser.toIntOrNull() ?: 5,
                 accessTokenExpirationSeconds = current.accessTokenExpirationSeconds.toIntOrNull() ?: 3600,
@@ -256,13 +286,13 @@ class EditAuthSettingsComponentImpl(
         val current = _state.value as? EditAuthSettingsScreenState.Content ?: return
         scope.launch {
             _state.value = current.copy(isSaving = true, saveError = null)
-            val result = resetRemoteAuthSettingsUseCase()
-            val nextState = when (result) {
+            val resetResult = resetRemoteAuthSettingsUseCase()
+            val nextState = when (resetResult) {
                 is AppResult.Success -> {
                     onBack()
                     current.copy(isSaving = false)
                 }
-                is AppResult.Error -> current.copy(isSaving = false, saveError = result.error)
+                is AppResult.Error -> current.copy(isSaving = false, saveError = resetResult.error)
             }
             _state.value = nextState
         }

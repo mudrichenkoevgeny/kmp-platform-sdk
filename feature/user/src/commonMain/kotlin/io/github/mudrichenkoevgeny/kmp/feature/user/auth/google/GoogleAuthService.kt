@@ -2,6 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.auth.google
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByExternalAuthProviderRequest
 
 /**
  * Cross-platform contract for Google Sign-In used by user login flows.
@@ -14,7 +15,7 @@ interface GoogleAuthService {
      *
      * @return Success with the token, or [AppResult.Error] wrapping [UserError.ExternalAuthCancelled] / [UserError.ExternalAuthFailed].
      */
-    suspend fun signIn(): AppResult<String>
+    suspend fun signIn(): AppResult<LoginByExternalAuthProviderRequest>
 
     /**
      * Clears the on-device Google session or credential state where the platform API supports it.

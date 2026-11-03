@@ -96,8 +96,7 @@ internal class ClientUserRepositoryModule(
     val identifierRepository: IdentifierRepository by lazy {
         OpenIdentifierRepositoryImpl(
             openIdentifiersApi = networkModule.identifiersApi,
-            confirmationRepository = confirmationRepository,
-            userStorage = storageModule.userStorage
+            confirmationRepository = confirmationRepository
         )
     }
 

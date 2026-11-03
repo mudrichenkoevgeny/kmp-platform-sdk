@@ -6,10 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.security.error.model.SecurityError
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.repository.OpenSecuritySettingsRepositoryMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.PasswordPolicyFailReason
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.passwordpolicy.createTestManagementPasswordPolicy
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.passwordpolicy.createTestOpenPasswordPolicy
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.securitysettings.createTestOpenSecuritySettings
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.passwordpolicy.validator.FakePasswordPolicyValidator
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.passwordpolicy.validator.PasswordPolicyValidatorMock
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertTrue
@@ -20,7 +17,7 @@ class ValidatePasswordUseCaseTest {
     @Test
     fun `should return success when validation passes`() = runTest {
         val repository = OpenSecuritySettingsRepositoryMock()
-        val validator = FakePasswordPolicyValidator()
+        val validator = PasswordPolicyValidatorMock()
         val useCase = ValidatePasswordUseCase(repository, validator)
 
         val result = useCase("valid_password")
@@ -33,7 +30,7 @@ class ValidatePasswordUseCaseTest {
         val repository = OpenSecuritySettingsRepositoryMock(initialSettings = null).apply {
             getSecuritySettingsResult = AppResult.Error(CommonError.Unknown())
         }
-        val validator = FakePasswordPolicyValidator()
+        val validator = PasswordPolicyValidatorMock()
         val useCase = ValidatePasswordUseCase(repository, validator)
 
         val result = useCase("any_password")
@@ -56,7 +53,7 @@ class ValidatePasswordUseCaseTest {
         )
 
         failScenarios.forEach { (reason, expectedClass) ->
-            val validator = FakePasswordPolicyValidator(failReasons = listOf(reason))
+            val validator = PasswordPolicyValidatorMock(failReasons = listOf(reason))
             val useCase = ValidatePasswordUseCase(repository, validator)
 
             val result = useCase("invalid_password")

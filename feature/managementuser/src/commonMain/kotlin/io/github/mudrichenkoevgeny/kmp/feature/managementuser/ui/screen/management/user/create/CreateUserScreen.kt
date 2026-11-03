@@ -1,27 +1,39 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
+import io.github.mudrichenkoevgeny.kmp.core.common.ic_back
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
@@ -39,16 +51,29 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewConta
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.preview.StorageFileImagePreview
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.rememberFilePickerLauncher
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.create.CreateUserComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.ui.UiValues
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.category.StorageCategory
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.localization.StorageModuleStrings
+import org.jetbrains.compose.resources.painterResource
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateUserScreen(component: CreateUserComponent) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
+
+    val filePickerLauncher = rememberFilePickerLauncher { selectedFiles ->
+        val localUri = selectedFiles.firstOrNull()?.localUri
+        if (localUri != null) {
+            val firstFile = selectedFiles.first()
+            component.onAvatarFileSelected(firstFile)
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -75,6 +100,10 @@ fun CreateUserScreen(component: CreateUserComponent) {
                 state = state,
                 onEmailChanged = component::onEmailChanged,
                 onPasswordChanged = component::onPasswordChanged,
+                onNicknameChanged = component::onNicknameChanged,
+                onDisplayNameChanged = component::onDisplayNameChanged,
+                onBirthdateChanged = component::onBirthdateChanged,
+                onChangeAvatarClick = { filePickerLauncher.launch() },
                 onRoleChanged = component::onRoleChanged,
                 onStatusChanged = component::onStatusChanged,
                 onAuthorityLevelChanged = component::onAuthorityLevelChanged,
@@ -92,6 +121,10 @@ private fun CreateUserForm(
     state: CreateUserScreenState,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
+    onNicknameChanged: (String) -> Unit,
+    onDisplayNameChanged: (String) -> Unit,
+    onBirthdateChanged: (String) -> Unit,
+    onChangeAvatarClick: () -> Unit,
     onRoleChanged: (String) -> Unit,
     onStatusChanged: (String) -> Unit,
     onAuthorityLevelChanged: (String) -> Unit,
@@ -106,6 +139,57 @@ private fun CreateUserForm(
     Column(
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
+        // Circular Avatar Container
+        val avatarSourceUrl = state.selectedAvatarPayload?.localUri
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Surface(
+                modifier = Modifier
+                    .size(CoreTheme.dimens.previewContainerHeight)
+                    .clip(CircleShape)
+                    .border(
+                        width = CoreTheme.dimens.borderWidthThick,
+                        color = MaterialTheme.colorScheme.outlineVariant,
+                        shape = CircleShape
+                    ),
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                shape = CircleShape
+            ) {
+                if (!avatarSourceUrl.isNullOrBlank()) {
+                    StorageFileImagePreview(
+                        imageUrl = avatarSourceUrl,
+                        category = StorageCategory.IMAGE,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(CircleShape)
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(CommonRes.drawable.ic_back),
+                            contentDescription = null,
+                            modifier = Modifier.size(CoreTheme.dimens.iconSizeXLarge),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
+
+        CoreButton(
+            text = "${userUi.editProfileTitle} (${userUi.avatar})",
+            onClick = onChangeAvatarClick,
+            enabled = !state.isLoading,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(CreateUserTestTags.AVATAR_CHANGE_BUTTON)
+        )
+
         CoreEmailTextField(
             value = state.email,
             onValueChange = onEmailChanged,
@@ -121,6 +205,34 @@ private fun CreateUserForm(
             label = { CoreBodyText(userUi.password) },
             placeholder = { CoreBodyText(userUi.password) },
             modifier = Modifier.testTag(CreateUserTestTags.PASSWORD_INPUT),
+            enabled = !state.isLoading
+        )
+
+        CoreOutlinedTextField(
+            value = state.nickname,
+            onValueChange = onNicknameChanged,
+            label = { CoreBodyText(userUi.userLabel) },
+            placeholder = { CoreBodyText(userUi.userLabel) },
+            modifier = Modifier.testTag(CreateUserTestTags.NICKNAME_INPUT),
+            enabled = !state.isLoading
+        )
+
+        CoreOutlinedTextField(
+            value = state.displayName,
+            onValueChange = onDisplayNameChanged,
+            label = { CoreBodyText(userUi.user) },
+            placeholder = { CoreBodyText(userUi.user) },
+            modifier = Modifier.testTag(CreateUserTestTags.DISPLAY_NAME_INPUT),
+            enabled = !state.isLoading
+        )
+
+        CoreOutlinedTextField(
+            value = state.birthdate,
+            onValueChange = onBirthdateChanged,
+            label = { CoreBodyText(userUi.birthdate) },
+            placeholder = { CoreBodyText(userUi.birthdate) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(CreateUserTestTags.BIRTHDATE_INPUT),
             enabled = !state.isLoading
         )
 
@@ -241,14 +353,10 @@ private fun CreateUserScreenPreviewContent(state: CreateUserScreenState) {
     }
 }
 
-private val defaultCreateUserPreviewState = CreateUserScreenState(
-    email = "user@example.com"
-)
-
 @InternalApi
-@Preview(showBackground = true, group = "States")
+@ScreenSizePreviews
 @Composable
-private fun StatesPreview(
+private fun ScreenSizePreview(
     @PreviewParameter(CreateUserPreviewProvider::class) state: CreateUserScreenState
 ) {
     ScreenPreviewContainer {
@@ -257,29 +365,24 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
-@Composable
-private fun ScreenSizePreview() {
-    ScreenPreviewContainer {
-        CreateUserScreenPreviewContent(state = defaultCreateUserPreviewState)
-    }
-}
-
-@InternalApi
 @ThemePreviews
 @Composable
-private fun ThemePreview() {
+private fun ThemePreview(
+    @PreviewParameter(CreateUserPreviewProvider::class) state: CreateUserScreenState
+) {
     ScreenPreviewContainer {
-        CreateUserScreenPreviewContent(state = defaultCreateUserPreviewState)
+        CreateUserScreenPreviewContent(state = state)
     }
 }
 
 @InternalApi
 @FontScalePreviews
 @Composable
-private fun FontScalePreview() {
+private fun FontScalePreview(
+    @PreviewParameter(CreateUserPreviewProvider::class) state: CreateUserScreenState
+) {
     ScreenPreviewContainer {
-        CreateUserScreenPreviewContent(state = defaultCreateUserPreviewState)
+        CreateUserScreenPreviewContent(state = state)
     }
 }
 
@@ -288,6 +391,10 @@ object CreateUserTestTags {
     const val BACK_BUTTON = "CreateUser_BackButton"
     const val EMAIL_INPUT = "CreateUser_EmailInput"
     const val PASSWORD_INPUT = "CreateUser_PasswordInput"
+    const val NICKNAME_INPUT = "CreateUser_NicknameInput"
+    const val DISPLAY_NAME_INPUT = "CreateUser_DisplayNameInput"
+    const val AVATAR_CHANGE_BUTTON = "CreateUser_AvatarChangeButton"
+    const val BIRTHDATE_INPUT = "CreateUser_BirthdateInput"
     const val ROLE_INPUT = "CreateUser_RoleInput"
     const val STATUS_INPUT = "CreateUser_StatusInput"
     const val AUTHORITY_LEVEL_INPUT = "CreateUser_AuthorityLevelInput"

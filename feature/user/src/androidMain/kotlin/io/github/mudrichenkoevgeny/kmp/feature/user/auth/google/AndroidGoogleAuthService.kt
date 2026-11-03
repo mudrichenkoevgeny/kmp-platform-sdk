@@ -11,6 +11,8 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByExternalAuthProviderRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -31,7 +33,7 @@ class AndroidGoogleAuthService(
 
     private val credentialManager = CredentialManager.create(context)
 
-    override suspend fun signIn(): AppResult<String> = withContext(Dispatchers.Main) {
+    override suspend fun signIn(): AppResult<LoginByExternalAuthProviderRequest> = withContext(Dispatchers.Main) {
         try {
             val googleIdOption = GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(false)
@@ -54,7 +56,13 @@ class AndroidGoogleAuthService(
                 credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
             ) {
                 val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-                AppResult.Success(googleIdTokenCredential.idToken)
+                AppResult.Success(
+                    LoginByExternalAuthProviderRequest(
+                        authProvider = UserAuthProvider.GOOGLE.value,
+                        externalProviderToken = googleIdTokenCredential.idToken,
+                        displayName = googleIdTokenCredential.displayName
+                    )
+                )
             } else {
                 AppResult.Error(
                     UserError.ExternalAuthFailed(

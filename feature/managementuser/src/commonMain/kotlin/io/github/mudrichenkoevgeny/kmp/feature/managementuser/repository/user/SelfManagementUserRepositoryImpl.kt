@@ -15,6 +15,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserWebSocketEventTypes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserPrivatePayload
+import io.github.mudrichenkoevgeny.kmp.feature.user.domain.model.user.UpdateUserParams
+import io.github.mudrichenkoevgeny.kmp.feature.user.mapper.user.toSelfUpdateUserRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -73,6 +75,18 @@ class SelfManagementUserRepositoryImpl(
 
     override suspend fun restoreUser(): AppResult<UserPrivate> {
         return methodNotSupported()
+    }
+
+    override suspend fun selfUpdateUser(
+        params: UpdateUserParams
+    ): AppResult<UserPrivate> {
+        return mutex.withLock {
+            selfManagementUserApi.selfUpdateUser(params.toSelfUpdateUserRequest()).mapSuccess { userPrivatePayload ->
+                val userPrivate = userPrivatePayload.toUserPrivate()
+                userStorage.updateCurrentUser(userPrivate)
+                userPrivate
+            }
+        }
     }
 
     private suspend fun handleUserUpdated(payload: JsonElement?): WebSocketMessageHandlerResult {

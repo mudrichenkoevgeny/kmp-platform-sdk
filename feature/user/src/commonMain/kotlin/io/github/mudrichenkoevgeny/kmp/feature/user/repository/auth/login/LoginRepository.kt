@@ -4,6 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByExternalAuthProviderRequest
 
 /**
  * Unified sign-in entry points for both client and management applications.
@@ -31,15 +32,13 @@ interface LoginRepository {
     suspend fun loginByPhone(phoneNumber: String, confirmationCode: String): AppResult<AuthData>
 
     /**
-     * Signs in via an external [authProvider] using an identity [externalProviderToken].
+     * Signs in via an external authentication provider using the provided request payload.
      *
-     * @param authProvider OAuth/OIDC/social backend integration.
-     * @param externalProviderToken Provider-issued credential.
+     * @param loginByExternalAuthProviderRequest Payload containing the auth provider, external token, and optional display name.
      * @return [AuthData] on success, or an error result.
      */
     suspend fun loginByExternalAuthProvider(
-        authProvider: UserAuthProvider,
-        externalProviderToken: String
+        loginByExternalAuthProviderRequest: LoginByExternalAuthProviderRequest
     ): AppResult<AuthData>
 
     /**

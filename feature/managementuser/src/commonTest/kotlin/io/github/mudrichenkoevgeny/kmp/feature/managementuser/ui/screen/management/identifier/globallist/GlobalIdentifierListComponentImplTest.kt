@@ -14,8 +14,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserIdentifierFilterValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserIdentifierSortBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -68,7 +68,7 @@ class GlobalIdentifierListComponentImplTest {
         advanceUntilIdle()
 
         context.component.onFilterChanged(
-            UserFilterValues.UserIdentifierFilterValues.IDENTIFIER,
+            UserIdentifierFilterValues.IDENTIFIER,
             TextListingFilterState(value = "test@example.com")
         )
         context.component.onApplyFilters()
@@ -83,10 +83,10 @@ class GlobalIdentifierListComponentImplTest {
         val context = createTestContext(repository = repository, identifiers = listOf(createTestUserIdentifierSummary()))
         advanceUntilIdle()
 
-        context.component.onSortChanged(ListingSortState(optionId = UserSortValues.UserIdentifierSortBy.CREATED_AT.value, isAscending = false))
+        context.component.onSortChanged(ListingSortState(optionId = UserIdentifierSortBy.CREATED_AT.value, isAscending = false))
         advanceUntilIdle()
 
-        assertEquals(UserSortValues.UserIdentifierSortBy.CREATED_AT, repository.lastSortBy)
+        assertEquals(UserIdentifierSortBy.CREATED_AT, repository.lastSortBy)
     }
 
     @Test

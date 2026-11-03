@@ -2,13 +2,11 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.list.SelfIdentifierListParams
 
 /**
  * Manages user identity identifiers, facilitating retrieval, pagination,
@@ -27,33 +25,28 @@ interface IdentifierRepository {
     /**
      * Returns a paginated and filtered list of identifiers.
      *
-     * @param pageNumber One-based page index.
-     * @param pageSize Maximum items returned per page.
-     * @param sortBy Field to sort by.
-     * @param sortOrder Sorting direction.
-     * @param userAuthProviders Filters by specific provider types.
-     * @param identifiers Filters by substring patterns of identifier values.
+     * @param params Query and filter parameters DTO.
      * @return Paginated result containing matching user identifier models, or a mapped failure.
      */
     suspend fun getUserIdentifiers(
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserIdentifierSortBy?,
-        sortOrder: SortOrder? = null,
-        userAuthProviders: List<UserAuthProvider>?,
-        identifiers: List<String>?
+        params: SelfIdentifierListParams? = null
     ): AppResult<PagedResult<UserIdentifierSummary>>
 
     /**
-     * Removes an existing identifier from the user account.
+     * Removes an identifier from the account.
      *
-     * @param identifierId Unique identifier id to delete.
-     * @return Success unit, or a mapped failure.
+     * @param identifierId Server identifier of the user-identifier row to delete.
+     * @return Success or a mapped failure.
      */
     suspend fun deleteUserIdentifier(identifierId: UserIdentifierId): AppResult<Unit>
 
     /**
-     * Associates a new email identifier with the account.
+     * Starts linking a new email identifier to the account.
+     *
+     * @param email Target email address to link.
+     * @param password Password for verification.
+     * @param confirmationCode Verification OTP code.
+     * @return Created or pending identifier row, or a mapped failure.
      */
     suspend fun addUserIdentifierEmail(
         email: String,
@@ -62,7 +55,11 @@ interface IdentifierRepository {
     ): AppResult<UserIdentifierPrivate>
 
     /**
-     * Associates a new phone number identifier with the account.
+     * Starts linking a new phone identifier to the account.
+     *
+     * @param phoneNumber Target phone number to link.
+     * @param confirmationCode Verification OTP code.
+     * @return Created or pending identifier row, or a mapped failure.
      */
     suspend fun addUserIdentifierPhone(
         phoneNumber: String,
@@ -70,7 +67,11 @@ interface IdentifierRepository {
     ): AppResult<UserIdentifierPrivate>
 
     /**
-     * Associates an external authentication provider identifier (e.g., OAuth).
+     * Starts linking an external auth provider identity to the account.
+     *
+     * @param authProvider External provider identifier name.
+     * @param externalProviderToken Access/ID token from the provider.
+     * @return Created or pending identifier row, or a mapped failure.
      */
     suspend fun addUserIdentifierExternalAuthProvider(
         authProvider: String,
@@ -78,25 +79,27 @@ interface IdentifierRepository {
     ): AppResult<UserIdentifierPrivate>
 
     /**
-     * Triggers a confirmation challenge for email association.
+     * Sends a confirmation message for adding an email identifier.
+     *
+     * @param email Target email address to send OTP to.
+     * @return Confirmation dispatch result, or a mapped failure.
      */
-    suspend fun sendAddEmailIdentifierConfirmation(
-        email: String
-    ): AppResult<OtpConfirmation>
+    suspend fun sendAddEmailIdentifierConfirmation(email: String): AppResult<OtpConfirmation>
 
     /**
-     * Triggers a confirmation challenge for phone association.
+     * Sends a confirmation message for adding a phone identifier.
+     *
+     * @param phoneNumber Target phone number to send OTP to.
+     * @return Confirmation dispatch result, or a mapped failure.
      */
-    suspend fun sendAddPhoneIdentifierConfirmation(
-        phoneNumber: String
-    ): AppResult<OtpConfirmation>
+    suspend fun sendAddPhoneIdentifierConfirmation(phoneNumber: String): AppResult<OtpConfirmation>
 
     /**
-     * Updates the account password using current credentials.
+     * Changes the password for the signed-in user's email identifier.
      *
      * @param userIdentifierId Target identifier ID.
-     * @param oldPassword Current valid password.
-     * @param newPassword Target password to be applied.
+     * @param oldPassword Current password.
+     * @param newPassword New password to set.
      * @return Success indicator, or a mapped failure.
      */
     suspend fun emailChangePassword(
@@ -106,12 +109,12 @@ interface IdentifierRepository {
     ): AppResult<Unit>
 
     /**
-     * Returns the remaining cooldown for email confirmation requests.
+     * Returns remaining delay in seconds before a new email confirmation OTP can be sent.
      */
     fun getRemainingEmailConfirmationDelayInSeconds(email: String): Int
 
     /**
-     * Returns the remaining cooldown for phone confirmation requests.
+     * Returns remaining delay in seconds before a new phone confirmation OTP can be sent.
      */
     fun getRemainingPhoneNumberConfirmationDelayInSeconds(phoneNumber: String): Int
 }

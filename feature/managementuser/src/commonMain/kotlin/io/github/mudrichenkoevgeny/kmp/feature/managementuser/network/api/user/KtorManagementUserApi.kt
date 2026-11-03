@@ -1,22 +1,16 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user
 
+import io.github.mudrichenkoevgeny.kmp.core.common.network.httprequest.parameters
 import io.github.mudrichenkoevgeny.kmp.core.common.network.utils.callResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.ListingParamNames
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.permission.PermissionCode
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.user.globallist.ManagementUserListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserApiPaths
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.create.CreateByEmailRequest
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.ManagementUpdateUserRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.users.ManagementUsersRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
@@ -38,48 +32,10 @@ class KtorManagementUserApi(
     }
 
     override suspend fun getUsers(
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserSortBy?,
-        sortOrder: SortOrder?,
-        roles: List<UserRole>?,
-        accountStatuses: List<UserAccountStatus>?,
-        accountStatusesBeforeDeletion: List<UserAccountStatus>?,
-        accountLockoutTypes: List<AccountLockoutType>?,
-        authorityLevelFrom: Int?,
-        authorityLevelTo: Int?,
-        isTotpEnabled: Boolean?,
-        permissionCodes: List<PermissionCode>?
+        params: ManagementUserListParams?
     ): AppResult<PagedResult<UserSummaryPayload>> = client.callResult {
         get(ManagementUsersRoutes.GET_USERS) {
-            parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
-            parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
-            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.value)
-            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.value)
-            roles?.forEach { role ->
-                parameter(UserFilterValues.UserFilterValues.ROLE, role.value)
-            }
-            accountStatuses?.forEach { accountStatus ->
-                parameter(UserFilterValues.UserFilterValues.ACCOUNT_STATUS, accountStatus.value)
-            }
-            accountStatusesBeforeDeletion?.forEach { accountStatusOnRestore ->
-                parameter(
-                    UserFilterValues.UserFilterValues.ACCOUNT_STATUS_ON_RESTORE,
-                    accountStatusOnRestore.value
-                )
-            }
-            accountLockoutTypes?.forEach { accountLockoutType ->
-                parameter(
-                    UserFilterValues.UserFilterValues.ACCOUNT_LOCKOUT_TYPE,
-                    accountLockoutType.value
-                )
-            }
-            parameter(UserFilterValues.UserFilterValues.AUTHORITY_LEVEL_FROM, authorityLevelFrom)
-            parameter(UserFilterValues.UserFilterValues.AUTHORITY_LEVEL_TO, authorityLevelTo)
-            parameter(UserFilterValues.UserFilterValues.IS_TOTP_ENABLED, isTotpEnabled)
-            permissionCodes?.forEach { permissionCode ->
-                parameter(UserFilterValues.UserFilterValues.PERMISSION_CODES, permissionCode.value)
-            }
+            parameters(params)
         }
     }
 
@@ -89,7 +45,7 @@ class KtorManagementUserApi(
         }
     }
 
-    override suspend fun updateUser(userId: UserId, request: UpdateUserRequest): AppResult<Unit> = client.callResult {
+    override suspend fun updateUser(userId: UserId, request: ManagementUpdateUserRequest): AppResult<Unit> = client.callResult {
         patch(ManagementUsersRoutes.UPDATE_USER) {
             parameter(UserApiPaths.USER_ID, userId.value)
             setBody(request)

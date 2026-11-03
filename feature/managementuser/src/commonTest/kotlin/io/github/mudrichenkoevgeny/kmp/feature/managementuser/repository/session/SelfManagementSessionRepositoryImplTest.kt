@@ -1,12 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.session
 
-import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.network.api.session.SelfManagementSessionApiMock
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionPrivatePayload
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionSummaryPayload
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
@@ -15,6 +11,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.session.list.SelfSessionListParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.DeletedSessionsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionPrivatePayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionSummaryPayload
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -39,65 +40,34 @@ class SelfManagementSessionRepositoryImplTest {
     }
 
     @Test
-    fun `getSessions fetches from network and updates cache`() = runTest {
+    fun `getSessions fetches from network`() = runTest {
         val payload = createTestUserSessionSummaryPayload()
         val wire = createTestPagedResult(items = listOf(payload), totalCount = 1)
         api.getSessionsResult = AppResult.Success(wire)
 
         val result = repo.getSessions(
-            pageNumber = 1, pageSize = 20, sortBy = null, sortOrder = null,
-            identifiers = null, identifierIds = null, userAuthProviders = null,
-            clientTypes = null, userAgents = null, ipAddresses = null,
-            languages = null, deviceIds = null, deviceNames = null,
-            appVersions = null, operationSystemVersions = null
+            params = SelfSessionListParams(
+                pageNumber = 1,
+                pageSize = 20
+            )
         )
 
         val success = assertIs<AppResult.Success<PagedResult<UserSessionSummary>>>(result)
         assertEquals(payload.toUserSessionSummary(), success.data.items.first())
-        assertEquals(1, storage.getUserSessionsList().items.size)
-    }
-
-    @Test
-    fun `getSessions returns cache when network fails`() = runTest {
-        val session = createTestUserSessionSummaryPayload().toUserSessionSummary()
-        storage.updateUserSessionsList(createTestPagedResult(items = listOf(session)))
-        api.getSessionsResult = AppResult.Error(CommonError.Unknown())
-
-        val result = repo.getSessions(
-            pageNumber = 1,
-            pageSize = 20,
-            sortBy = null,
-            sortOrder = null,
-            identifiers = null,
-            identifierIds = null,
-            userAuthProviders = null,
-            clientTypes = null,
-            userAgents = null,
-            ipAddresses = null,
-            languages = null,
-            deviceIds = null,
-            deviceNames = null,
-            appVersions = null,
-            operationSystemVersions = null
-        )
-
-        val success = assertIs<AppResult.Success<PagedResult<UserSessionSummary>>>(result)
-        assertEquals(session, success.data.items.first())
     }
 
     @Test
     fun `logout clears storage on success`() = runTest {
         api.logoutResult = AppResult.Success(Unit)
-        storage.addUserSession(createTestUserSessionSummaryPayload().toUserSessionSummary())
 
         val result = repo.logout()
 
         assertIs<AppResult.Success<Unit>>(result)
-        assertEquals(0, storage.getUserSessionsList().items.size)
+        assertEquals(true, storage.isCleared)
     }
 
     @Test
-    fun `deleteSession removes from storage on success`() = runTest {
+    fun `deleteSession returns success on success`() = runTest {
         val sessionId = UserSessionId(Uuid.random())
         api.deleteSessionResult = AppResult.Success(Unit)
 
@@ -107,7 +77,7 @@ class SelfManagementSessionRepositoryImplTest {
     }
 
     @Test
-    fun `getSession fetches from network and updates cache`() = runTest {
+    fun `getSession fetches from network`() = runTest {
         val payload = createTestUserSessionPrivatePayload()
         api.getSessionResult = AppResult.Success(payload)
         val sessionId = UserSessionId(Uuid.random())
@@ -119,19 +89,11 @@ class SelfManagementSessionRepositoryImplTest {
     }
 
     @Test
-    fun `deleteAllOtherSessions removes IDs from storage`() = runTest {
-        val id1 = UserSessionId(Uuid.random())
-        val deletedIds = listOf(id1.value.toHexDashString())
-        api.deleteAllOtherSessionsResult = AppResult.Success(
-            io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.DeletedSessionsPayload(deletedIds)
-        )
-        
-        storage.addUserSession(createTestUserSessionSummaryPayload().toUserSessionSummary().copy(id = id1))
-        assertEquals(1, storage.getUserSessionsList().items.size)
+    fun `deleteAllOtherSessions returns success`() = runTest {
+        api.deleteAllOtherSessionsResult = AppResult.Success(DeletedSessionsPayload(emptyList()))
 
         val result = repo.deleteAllOtherSessions()
 
         assertIs<AppResult.Success<Unit>>(result)
-        assertEquals(0, storage.getUserSessionsList().items.size)
     }
 }

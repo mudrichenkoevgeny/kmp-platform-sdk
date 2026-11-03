@@ -1,9 +1,14 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
@@ -12,8 +17,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -23,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +40,7 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
+import io.github.mudrichenkoevgeny.kmp.core.common.ic_back
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
@@ -52,12 +61,18 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.preview.StorageFileImagePreview
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.rememberFilePickerLauncher
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.detail.UserDetailComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.category.StorageCategory
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.localization.StorageModuleStrings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
+import org.jetbrains.compose.resources.painterResource
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
 /**
  * Administrative user detail screen: displays user details and management action controls.
@@ -69,6 +84,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain
 fun UserDetailScreen(component: UserDetailComponent) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
+
+    val filePickerLauncher = rememberFilePickerLauncher { selectedFiles ->
+        val localUri = selectedFiles.firstOrNull()?.localUri
+        if (localUri != null) {
+            val firstFile = selectedFiles.first()
+            component.onAvatarFileSelected(firstFile)
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -104,6 +127,10 @@ fun UserDetailScreen(component: UserDetailComponent) {
                 is UserDetailScreenState.Content -> {
                     Content(
                         state = currentState,
+                        onNicknameChanged = component::onNicknameChanged,
+                        onDisplayNameChanged = component::onDisplayNameChanged,
+                        onBirthdateChanged = component::onBirthdateChanged,
+                        onChangeAvatarClick = { filePickerLauncher.launch() },
                         onAuthorityLevelChanged = component::onAuthorityLevelChanged,
                         onAccountStatusChanged = component::onAccountStatusChanged,
                         onLockoutTypeChanged = component::onLockoutTypeChanged,
@@ -130,6 +157,10 @@ fun UserDetailScreen(component: UserDetailComponent) {
 @Composable
 private fun Content(
     state: UserDetailScreenState.Content,
+    onNicknameChanged: (String) -> Unit,
+    onDisplayNameChanged: (String) -> Unit,
+    onBirthdateChanged: (String) -> Unit,
+    onChangeAvatarClick: () -> Unit,
     onAuthorityLevelChanged: (String) -> Unit,
     onAccountStatusChanged: (String) -> Unit,
     onLockoutTypeChanged: (String) -> Unit,
@@ -156,6 +187,58 @@ private fun Content(
     val lastActiveText = state.user.lastActiveAt?.let { formatInstantToDateTime(it) } ?: notAvailableText
 
     CoreScrollableScreenContent {
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            val avatarSourceUrl = state.selectedAvatarPayload?.localUri ?: state.avatarUrl
+            Surface(
+                modifier = Modifier
+                    .size(CoreTheme.dimens.previewContainerHeight)
+                    .clip(CircleShape)
+                    .border(
+                        width = CoreTheme.dimens.borderWidthThick,
+                        color = MaterialTheme.colorScheme.outlineVariant,
+                        shape = CircleShape
+                    ),
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                shape = CircleShape
+            ) {
+                if (!avatarSourceUrl.isNullOrBlank()) {
+                    StorageFileImagePreview(
+                        imageUrl = avatarSourceUrl,
+                        category = StorageCategory.IMAGE,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(CircleShape)
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(CommonRes.drawable.ic_back),
+                            contentDescription = null,
+                            modifier = Modifier.size(CoreTheme.dimens.iconSizeXLarge),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(CoreTheme.dimens.paddingSmall))
+
+        CoreButton(
+            text = "${userUi.editProfileTitle} (${userUi.avatar})",
+            onClick = onChangeAvatarClick,
+            enabled = !state.isSaving && !state.isDeleting,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(UserDetailTestTags.AVATAR_CHANGE_BUTTON)
+        )
+
         CoreTitleText(
             text = "${commonUi.userId}: ${state.user.id.value}",
             style = MaterialTheme.typography.titleMedium
@@ -222,6 +305,34 @@ private fun Content(
             text = userUi.userDetailAuditEvents,
             onClick = onAuditEventsClick,
             modifier = Modifier.testTag(UserDetailTestTags.AUDIT_EVENTS_BUTTON),
+            enabled = !state.isSaving && !state.isDeleting
+        )
+
+        CoreOutlinedTextField(
+            value = state.nicknameInput,
+            onValueChange = onNicknameChanged,
+            label = { CoreBodyText(userUi.userLabel) },
+            placeholder = { CoreBodyText(userUi.userLabel) },
+            modifier = Modifier.testTag(UserDetailTestTags.NICKNAME_INPUT),
+            enabled = !state.isSaving && !state.isDeleting
+        )
+
+        CoreOutlinedTextField(
+            value = state.displayNameInput,
+            onValueChange = onDisplayNameChanged,
+            label = { CoreBodyText(userUi.user) },
+            placeholder = { CoreBodyText(userUi.user) },
+            modifier = Modifier.testTag(UserDetailTestTags.DISPLAY_NAME_INPUT),
+            enabled = !state.isSaving && !state.isDeleting
+        )
+
+        CoreOutlinedTextField(
+            value = state.birthdateInput,
+            onValueChange = onBirthdateChanged,
+            label = { CoreBodyText(userUi.birthdate) },
+            placeholder = { CoreBodyText(userUi.birthdate) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(UserDetailTestTags.BIRTHDATE_INPUT),
             enabled = !state.isSaving && !state.isDeleting
         )
 
@@ -292,13 +403,6 @@ private fun Content(
             enabled = !state.isSaving && !state.isDeleting && !state.isSelf
         )
 
-        CoreButton(
-            text = if (state.isSaving) userUi.saving else userUi.updateUser,
-            onClick = onUpdateClick,
-            modifier = Modifier.testTag(UserDetailTestTags.UPDATE_BUTTON),
-            enabled = state.hasChanges && !state.isSaving && !state.isDeleting && !state.isSelf
-        )
-
         state.saveError?.let {
             CoreErrorText(
                 text = it.toLocalizedMessage(),
@@ -307,13 +411,21 @@ private fun Content(
         }
 
         CoreButton(
-            text = userUi.deleteUser,
+            text = if (state.isSaving) userUi.saving else userUi.updateUser,
+            onClick = onUpdateClick,
+            modifier = Modifier.testTag(UserDetailTestTags.UPDATE_BUTTON),
+            enabled = state.hasChanges && !state.isSaving && !state.isDeleting
+        )
+
+        CoreButton(
+            text = if (state.isDeleting) userUi.saving else userUi.deleteUser,
             onClick = onDeleteClick,
-            modifier = Modifier.testTag(UserDetailTestTags.DELETE_BUTTON),
-            enabled = !state.isSaving && !state.isDeleting && !state.isSelf,
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.error
-            )
+                containerColor = MaterialTheme.colorScheme.error,
+                contentColor = MaterialTheme.colorScheme.onError
+            ),
+            modifier = Modifier.testTag(UserDetailTestTags.DELETE_BUTTON),
+            enabled = !state.isSaving && !state.isDeleting && !state.isSelf
         )
 
         state.deleteError?.let {
@@ -322,28 +434,27 @@ private fun Content(
                 modifier = Modifier.testTag(UserDetailTestTags.DELETE_ERROR_TEXT)
             )
         }
-    }
 
-    if (state.isDeleteConfirmationVisible) {
-        AlertDialog(
-            onDismissRequest = onDismissDeleteDialog,
-            title = { CoreTitleText(userUi.dialogConfirmTitle) },
-            text = { CoreBodyText(userUi.deleteUserConfirmationDesc) },
-            confirmButton = {
-                CoreTextButton(
-                    text = userUi.dialogConfirm,
-                    onClick = onConfirmDeleteClick,
-                    enabled = !state.isDeleting
-                )
-            },
-            dismissButton = {
-                CoreTextButton(
-                    text = userUi.dialogCancel,
-                    onClick = onDismissDeleteDialog,
-                    enabled = !state.isDeleting
-                )
-            }
-        )
+        if (state.isDeleteConfirmationVisible) {
+            AlertDialog(
+                onDismissRequest = onDismissDeleteDialog,
+                title = { CoreTitleText(text = userUi.dialogConfirmTitle) },
+                text = { CoreBodyText(text = userUi.deleteUser) },
+                confirmButton = {
+                    CoreTextButton(
+                        text = userUi.dialogConfirm,
+                        onClick = onConfirmDeleteClick,
+                        colors = ButtonDefaults.buttonColors(contentColor = MaterialTheme.colorScheme.error)
+                    )
+                },
+                dismissButton = {
+                    CoreTextButton(
+                        text = userUi.dialogCancel,
+                        onClick = onDismissDeleteDialog
+                    )
+                }
+            )
+        }
     }
 }
 
@@ -352,57 +463,35 @@ private fun Content(
 private fun AccountStatusDropdown(
     selectedAccountStatus: String,
     onAccountStatusSelected: (String) -> Unit,
-    enabled: Boolean,
-    modifier: Modifier = Modifier
+    enabled: Boolean
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
-    val commonUi = LocalCommonStrings.current.ui
-    val userUi = LocalUserStrings.current.ui
-
-    val options = listOf(
-        UserAccountStatus.ACTIVE to commonUi.active,
-        UserAccountStatus.READ_ONLY to commonUi.readOnly,
-        UserAccountStatus.BANNED to commonUi.banned,
-        UserAccountStatus.SECURITY_HOLD to commonUi.securityHold,
-        UserAccountStatus.PENDING_DELETION to commonUi.pendingDeletion
-    )
-
-    val currentDisplayText = options.firstOrNull { it.first.name.equals(selectedAccountStatus, ignoreCase = true) }?.second
-        ?: selectedAccountStatus
+    var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
-        expanded = isExpanded && enabled,
-        onExpandedChange = {
-            if (enabled) {
-                isExpanded = it
-            }
-        },
-        modifier = modifier.fillMaxWidth()
+        expanded = expanded,
+        onExpandedChange = { if (enabled) expanded = !expanded }
     ) {
         CoreOutlinedTextField(
-            value = currentDisplayText,
+            value = selectedAccountStatus,
             onValueChange = {},
-            label = { CoreBodyText(userUi.userAccountStatus) },
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
-            },
-            enabled = enabled,
+            label = { CoreBodyText(LocalUserStrings.current.ui.userAccountStatus) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
-                .fillMaxWidth()
                 .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, enabled = enabled)
-                .testTag(UserDetailTestTags.ACCOUNT_STATUS_INPUT)
+                .testTag(UserDetailTestTags.ACCOUNT_STATUS_DROPDOWN),
+            enabled = enabled
         )
 
         ExposedDropdownMenu(
-            expanded = isExpanded && enabled,
-            onDismissRequest = { isExpanded = false }
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
         ) {
-            options.forEach { (status, label) ->
+            UserAccountStatus.entries.forEach { status ->
                 DropdownMenuItem(
-                    text = { CoreBodyText(label) },
+                    text = { CoreBodyText(status.name) },
                     onClick = {
-                        isExpanded = false
                         onAccountStatusSelected(status.name)
+                        expanded = false
                     }
                 )
             }
@@ -415,55 +504,35 @@ private fun AccountStatusDropdown(
 private fun LockoutTypeDropdown(
     selectedLockoutType: String,
     onLockoutTypeSelected: (String) -> Unit,
-    enabled: Boolean,
-    modifier: Modifier = Modifier
+    enabled: Boolean
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
-    val commonUi = LocalCommonStrings.current.ui
-
-    val options = listOf(
-        AccountLockoutType.NONE to commonUi.lockoutNone,
-        AccountLockoutType.INDEFINITE to commonUi.lockoutIndefinite,
-        AccountLockoutType.TEMPORARY to commonUi.lockoutTemporary
-    )
-
-    val resolvedType = AccountLockoutType.fromValueOrNull(selectedLockoutType)
-    val currentDisplayText = options.firstOrNull { it.first == resolvedType }?.second
-        ?: selectedLockoutType
+    var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
-        expanded = isExpanded && enabled,
-        onExpandedChange = {
-            if (enabled) {
-                isExpanded = it
-            }
-        },
-        modifier = modifier.fillMaxWidth()
+        expanded = expanded,
+        onExpandedChange = { if (enabled) expanded = !expanded }
     ) {
         CoreOutlinedTextField(
-            value = currentDisplayText,
+            value = selectedLockoutType,
             onValueChange = {},
-            label = { CoreBodyText(commonUi.lockoutType) },
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
-            },
-            enabled = enabled,
+            label = { CoreBodyText(LocalCommonStrings.current.ui.lockoutType) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
-                .fillMaxWidth()
                 .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, enabled = enabled)
-                .testTag(UserDetailTestTags.LOCKOUT_TYPE_INPUT)
+                .testTag(UserDetailTestTags.LOCKOUT_TYPE_DROPDOWN),
+            enabled = enabled
         )
 
         ExposedDropdownMenu(
-            expanded = isExpanded && enabled,
-            onDismissRequest = { isExpanded = false }
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
         ) {
-            options.forEach { (type, label) ->
+            AccountLockoutType.entries.forEach { lockoutType ->
                 DropdownMenuItem(
-                    text = { CoreBodyText(label) },
+                    text = { CoreBodyText(lockoutType.name) },
                     onClick = {
-                        isExpanded = false
-                        onLockoutTypeSelected(type.name)
+                        onLockoutTypeSelected(lockoutType.name)
+                        expanded = false
                     }
                 )
             }
@@ -473,29 +542,23 @@ private fun LockoutTypeDropdown(
 
 @InternalApi
 internal class UserDetailPreviewProvider : PreviewParameterProvider<UserDetailScreenState> {
+    private val sampleUser = createTestUserPrivate()
+    private val sampleContent = UserDetailScreenState.Content(
+        user = sampleUser,
+        authorityLevelInput = "10",
+        accountStatusInput = "ACTIVE"
+    )
+
     private val items: List<Pair<String, UserDetailScreenState>> = listOf(
-        "Content" to UserDetailScreenState.Content(
-            user = createTestUserPrivate(),
-            authorityLevelInput = "0",
-            accountStatusInput = "ACTIVE",
-            lockoutTypeInput = "NONE",
-            temporaryLockoutUntilInput = ""
-        ),
-        "Pending Deletion" to UserDetailScreenState.Content(
-            user = createTestUserPrivate().copy(accountStatus = UserAccountStatus.PENDING_DELETION),
-            authorityLevelInput = "0",
-            accountStatusInput = "PENDING_DELETION",
-            lockoutTypeInput = "NONE",
-            temporaryLockoutUntilInput = ""
-        ),
-        "Saving" to UserDetailScreenState.Content(
-            user = createTestUserPrivate(),
-            authorityLevelInput = "0",
-            accountStatusInput = "ACTIVE",
-            lockoutTypeInput = "NONE",
-            temporaryLockoutUntilInput = "",
-            isSaving = true
-        ),
+        "Content" to sampleContent,
+        "Self" to sampleContent.copy(isSelf = true),
+        "Saving" to sampleContent.copy(isSaving = true),
+        "Save Error" to sampleContent.copy(saveError = CommonError.Unknown()),
+        "Deleting" to sampleContent.copy(isDeleting = true),
+        "Delete Error" to sampleContent.copy(deleteError = CommonError.Unknown()),
+        "Disabling TOTP" to sampleContent.copy(isDisablingTotp = true),
+        "Disable TOTP Error" to sampleContent.copy(disableTotpError = CommonError.Unknown()),
+        "Delete Dialog" to sampleContent.copy(isDeleteConfirmationVisible = true),
         "Error" to UserDetailScreenState.Error(error = CommonError.Unknown()),
         "Loading" to UserDetailScreenState.Loading
     )
@@ -516,18 +579,9 @@ private fun UserDetailScreenPreviewContent(state: UserDetailScreenState) {
 }
 
 @InternalApi
-private val defaultUserDetailPreviewState = UserDetailScreenState.Content(
-    user = createTestUserPrivate(),
-    authorityLevelInput = "0",
-    accountStatusInput = "ACTIVE",
-    lockoutTypeInput = "NONE",
-    temporaryLockoutUntilInput = ""
-)
-
-@InternalApi
-@Preview(showBackground = true, group = "States")
+@ScreenSizePreviews
 @Composable
-private fun StatesPreview(
+private fun ScreenSizePreview(
     @PreviewParameter(UserDetailPreviewProvider::class) state: UserDetailScreenState
 ) {
     ScreenPreviewContainer {
@@ -536,54 +590,55 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
-@Composable
-private fun ScreenSizePreview() {
-    ScreenPreviewContainer {
-        UserDetailScreenPreviewContent(state = defaultUserDetailPreviewState)
-    }
-}
-
-@InternalApi
 @ThemePreviews
 @Composable
-private fun ThemePreview() {
+private fun ThemePreview(
+    @PreviewParameter(UserDetailPreviewProvider::class) state: UserDetailScreenState
+) {
     ScreenPreviewContainer {
-        UserDetailScreenPreviewContent(state = defaultUserDetailPreviewState)
+        UserDetailScreenPreviewContent(state = state)
     }
 }
 
 @InternalApi
 @FontScalePreviews
 @Composable
-private fun FontScalePreview() {
+private fun FontScalePreview(
+    @PreviewParameter(UserDetailPreviewProvider::class) state: UserDetailScreenState
+) {
     ScreenPreviewContainer {
-        UserDetailScreenPreviewContent(state = defaultUserDetailPreviewState)
+        UserDetailScreenPreviewContent(state = state)
     }
 }
 
-/**
- * Test tags for UI nodes on [UserDetailScreen].
- */
 object UserDetailTestTags {
     const val TITLE = "UserDetail_Title"
     const val BACK_BUTTON = "UserDetail_BackButton"
     const val GLOBAL_ERROR = "UserDetail_GlobalError"
-    const val ACCOUNT_STATUS_INPUT = "UserDetail_AccountStatusInput"
-    const val AUTHORITY_LEVEL_INPUT = "UserDetail_AuthorityLevelInput"
-    const val LOCKOUT_TYPE_INPUT = "UserDetail_LockoutTypeInput"
-    const val TEMPORARY_LOCKOUT_UNTIL_INPUT = "UserDetail_TemporaryLockoutUntilInput"
-    const val QUOTA_BYTES_INPUT = "UserDetail_QuotaBytesInput"
-    const val MAX_UPLOAD_SIZE_BYTES_INPUT = "UserDetail_MaxUploadSizeBytesInput"
-    const val MAX_PENDING_UPLOADS_INPUT = "UserDetail_MaxPendingUploadsInput"
-    const val UPDATE_BUTTON = "UserDetail_UpdateButton"
-    const val DELETE_BUTTON = "UserDetail_DeleteButton"
-    const val DISABLE_TOTP_BUTTON = "UserDetail_DisableTotpErrorText"
+
+    const val DISABLE_TOTP_BUTTON = "UserDetail_DisableTotpButton"
     const val DISABLE_TOTP_ERROR_TEXT = "UserDetail_DisableTotpErrorText"
     const val SESSIONS_BUTTON = "UserDetail_SessionsButton"
     const val IDENTIFIERS_BUTTON = "UserDetail_IdentifiersButton"
     const val FILES_BUTTON = "UserDetail_FilesButton"
     const val AUDIT_EVENTS_BUTTON = "UserDetail_AuditEventsButton"
+
+    const val NICKNAME_INPUT = "UserDetail_NicknameInput"
+    const val DISPLAY_NAME_INPUT = "UserDetail_DisplayNameInput"
+    const val AVATAR_CHANGE_BUTTON = "UserDetail_AvatarChangeButton"
+    const val BIRTHDATE_INPUT = "UserDetail_BirthdateInput"
+
+    const val ACCOUNT_STATUS_DROPDOWN = "UserDetail_AccountStatusDropdown"
+    const val AUTHORITY_LEVEL_INPUT = "UserDetail_AuthorityLevelInput"
+    const val LOCKOUT_TYPE_DROPDOWN = "UserDetail_LockoutTypeDropdown"
+    const val TEMPORARY_LOCKOUT_UNTIL_INPUT = "UserDetail_TemporaryLockoutUntilInput"
+
+    const val QUOTA_BYTES_INPUT = "UserDetail_QuotaBytesInput"
+    const val MAX_UPLOAD_SIZE_BYTES_INPUT = "UserDetail_MaxUploadSizeBytesInput"
+    const val MAX_PENDING_UPLOADS_INPUT = "UserDetail_MaxPendingUploadsInput"
+
     const val SAVE_ERROR_TEXT = "UserDetail_SaveErrorText"
+    const val UPDATE_BUTTON = "UserDetail_UpdateButton"
+    const val DELETE_BUTTON = "UserDetail_DeleteButton"
     const val DELETE_ERROR_TEXT = "UserDetail_DeleteErrorText"
 }

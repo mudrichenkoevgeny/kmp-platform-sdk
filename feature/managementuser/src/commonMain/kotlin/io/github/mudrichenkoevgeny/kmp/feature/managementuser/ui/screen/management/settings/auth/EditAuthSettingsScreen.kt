@@ -28,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
@@ -109,6 +108,11 @@ fun EditAuthSettingsScreen(component: EditAuthSettingsComponent) {
                     onMaxEmailIdentifiersChanged = component::onMaxEmailIdentifiersChanged,
                     onMaxPhoneIdentifiersChanged = component::onMaxPhoneIdentifiersChanged,
                     onMaxIdentifiersPerExternalProviderChanged = component::onMaxIdentifiersPerExternalProviderChanged,
+                    onUserNicknameMinLengthChanged = component::onUserNicknameMinLengthChanged,
+                    onUserNicknameMaxLengthChanged = component::onUserNicknameMaxLengthChanged,
+                    onUserDisplayNameMinLengthChanged = component::onUserDisplayNameMinLengthChanged,
+                    onUserDisplayNameMaxLengthChanged = component::onUserDisplayNameMaxLengthChanged,
+                    onIsUserNicknameChangeAllowedToggled = component::onIsUserNicknameChangeAllowedToggled,
                     onMaxActiveSessionsForOpenUserChanged = component::onMaxActiveSessionsForOpenUserChanged,
                     onMaxActiveSessionsForManagementUserChanged = component::onMaxActiveSessionsForManagementUserChanged,
                     onAccessTokenExpirationSecondsChanged = component::onAccessTokenExpirationSecondsChanged,
@@ -171,6 +175,11 @@ private fun EditAuthSettingsForm(
     onMaxEmailIdentifiersChanged: (String) -> Unit,
     onMaxPhoneIdentifiersChanged: (String) -> Unit,
     onMaxIdentifiersPerExternalProviderChanged: (String) -> Unit,
+    onUserNicknameMinLengthChanged: (String) -> Unit,
+    onUserNicknameMaxLengthChanged: (String) -> Unit,
+    onUserDisplayNameMinLengthChanged: (String) -> Unit,
+    onUserDisplayNameMaxLengthChanged: (String) -> Unit,
+    onIsUserNicknameChangeAllowedToggled: (Boolean) -> Unit,
     onMaxActiveSessionsForOpenUserChanged: (String) -> Unit,
     onMaxActiveSessionsForManagementUserChanged: (String) -> Unit,
     onAccessTokenExpirationSecondsChanged: (String) -> Unit,
@@ -277,6 +286,57 @@ private fun EditAuthSettingsForm(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_IDENTIFIERS_PER_EXTERNAL_PROVIDER_INPUT)
         )
+
+        CoreOutlinedTextField(
+            value = state.userNicknameMinLength,
+            onValueChange = onUserNicknameMinLengthChanged,
+            label = { CoreBodyText(userUi.userNicknameMinLength) },
+            placeholder = { CoreBodyText(userUi.userNicknameMinLength) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.USER_NICKNAME_MIN_LENGTH_INPUT)
+        )
+
+        CoreOutlinedTextField(
+            value = state.userNicknameMaxLength,
+            onValueChange = onUserNicknameMaxLengthChanged,
+            label = { CoreBodyText(userUi.userNicknameMaxLength) },
+            placeholder = { CoreBodyText(userUi.userNicknameMaxLength) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.USER_NICKNAME_MAX_LENGTH_INPUT)
+        )
+
+        CoreOutlinedTextField(
+            value = state.userDisplayNameMinLength,
+            onValueChange = onUserDisplayNameMinLengthChanged,
+            label = { CoreBodyText(userUi.userDisplayNameMinLength) },
+            placeholder = { CoreBodyText(userUi.userDisplayNameMinLength) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.USER_DISPLAY_NAME_MIN_LENGTH_INPUT)
+        )
+
+        CoreOutlinedTextField(
+            value = state.userDisplayNameMaxLength,
+            onValueChange = onUserDisplayNameMaxLengthChanged,
+            label = { CoreBodyText(userUi.userDisplayNameMaxLength) },
+            placeholder = { CoreBodyText(userUi.userDisplayNameMaxLength) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.USER_DISPLAY_NAME_MAX_LENGTH_INPUT)
+        )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Checkbox(
+                checked = state.isUserNicknameChangeAllowed,
+                onCheckedChange = onIsUserNicknameChangeAllowedToggled,
+                modifier = Modifier.testTag(EditAuthSettingsTestTags.IS_USER_NICKNAME_CHANGE_ALLOWED_CHECKBOX)
+            )
+            CoreBodyText(
+                text = userUi.isUserNicknameChangeAllowed,
+                modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
+            )
+        }
 
         CoreOutlinedTextField(
             value = state.maxActiveSessionsForOpenUser,
@@ -404,7 +464,7 @@ private fun EditAuthSettingsForm(
                 checked = state.managementEmailWhitelistEnabled,
                 onCheckedChange = onManagementEmailWhitelistEnabledToggled
             )
-            CoreBodyText(text = userUi.whitelistEnabled, modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
+            CoreBodyText(text = userUi.blacklistEnabled, modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
         }
 
         CoreOutlinedTextField(
@@ -462,6 +522,11 @@ internal class EditAuthSettingsPreviewProvider : PreviewParameterProvider<EditAu
         maxEmailIdentifiers = "5",
         maxPhoneIdentifiers = "5",
         maxIdentifiersPerExternalProvider = "2",
+        userNicknameMinLength = "3",
+        userNicknameMaxLength = "30",
+        userDisplayNameMinLength = "1",
+        userDisplayNameMaxLength = "50",
+        isUserNicknameChangeAllowed = true,
         maxActiveSessionsForOpenUser = "3",
         maxActiveSessionsForManagementUser = "5",
         accessTokenExpirationSeconds = "3600",
@@ -494,24 +559,10 @@ private fun EditAuthSettingsScreenPreviewContent(state: EditAuthSettingsScreenSt
     }
 }
 
-private val defaultEditAuthSettingsPreviewState = EditAuthSettingsScreenState.Content(
-    enabledProviders = setOf(UserAuthProvider.EMAIL, UserAuthProvider.GOOGLE),
-    maxTotalIdentifiers = "10",
-    maxEmailIdentifiers = "5",
-    maxPhoneIdentifiers = "5",
-    maxIdentifiersPerExternalProvider = "2",
-    maxActiveSessionsForOpenUser = "3",
-    maxActiveSessionsForManagementUser = "5",
-    accessTokenExpirationSeconds = "3600",
-    refreshTokenExpirationSeconds = "86400",
-    accountDeletionGracePeriodSeconds = "604800",
-    accountDeletionCheckIntervalSeconds = "86400"
-)
-
 @InternalApi
 @ScreenSizePreviews
 @Composable
-private fun StatesPreview(
+private fun ScreenSizePreview(
     @PreviewParameter(EditAuthSettingsPreviewProvider::class) state: EditAuthSettingsScreenState
 ) {
     ScreenPreviewContainer {
@@ -520,29 +571,24 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
-@Composable
-private fun ScreenSizePreview() {
-    ScreenPreviewContainer {
-        EditAuthSettingsScreenPreviewContent(state = defaultEditAuthSettingsPreviewState)
-    }
-}
-
-@InternalApi
 @ThemePreviews
 @Composable
-private fun ThemePreview() {
+private fun ThemePreview(
+    @PreviewParameter(EditAuthSettingsPreviewProvider::class) state: EditAuthSettingsScreenState
+) {
     ScreenPreviewContainer {
-        EditAuthSettingsScreenPreviewContent(state = defaultEditAuthSettingsPreviewState)
+        EditAuthSettingsScreenPreviewContent(state = state)
     }
 }
 
 @InternalApi
 @FontScalePreviews
 @Composable
-private fun FontScalePreview() {
+private fun FontScalePreview(
+    @PreviewParameter(EditAuthSettingsPreviewProvider::class) state: EditAuthSettingsScreenState
+) {
     ScreenPreviewContainer {
-        EditAuthSettingsScreenPreviewContent(state = defaultEditAuthSettingsPreviewState)
+        EditAuthSettingsScreenPreviewContent(state = state)
     }
 }
 
@@ -560,6 +606,11 @@ object EditAuthSettingsTestTags {
     const val MAX_EMAIL_IDENTIFIERS_INPUT = "EditAuthSettings_MaxEmailIdentifiersInput"
     const val MAX_PHONE_IDENTIFIERS_INPUT = "EditAuthSettings_MaxPhoneIdentifiersInput"
     const val MAX_IDENTIFIERS_PER_EXTERNAL_PROVIDER_INPUT = "EditAuthSettings_MaxIdentifiersPerExternalProviderInput"
+    const val USER_NICKNAME_MIN_LENGTH_INPUT = "EditAuthSettings_UserNicknameMinLengthInput"
+    const val USER_NICKNAME_MAX_LENGTH_INPUT = "EditAuthSettings_UserNicknameMaxLengthInput"
+    const val USER_DISPLAY_NAME_MIN_LENGTH_INPUT = "EditAuthSettings_UserDisplayNameMinLengthInput"
+    const val USER_DISPLAY_NAME_MAX_LENGTH_INPUT = "EditAuthSettings_UserDisplayNameMaxLengthInput"
+    const val IS_USER_NICKNAME_CHANGE_ALLOWED_CHECKBOX = "EditAuthSettings_IsUserNicknameChangeAllowedCheckbox"
     const val MAX_ACTIVE_SESSIONS_OPEN_INPUT = "EditAuthSettings_MaxActiveSessionsOpenInput"
     const val MAX_ACTIVE_SESSIONS_MANAGEMENT_INPUT = "EditAuthSettings_MaxActiveSessionsManagementInput"
     const val ACCESS_TOKEN_EXPIRATION_INPUT = "EditAuthSettings_AccessTokenExpirationInput"

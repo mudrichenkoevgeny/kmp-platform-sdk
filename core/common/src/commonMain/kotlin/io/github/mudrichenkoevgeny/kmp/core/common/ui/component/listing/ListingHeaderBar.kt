@@ -18,13 +18,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.ListingDefaultValues
 
 /**
  * Top bar displaying current page and total count info for a paginated list.
@@ -49,7 +49,7 @@ fun ListingHeaderBar(
             if (state.items.isEmpty()) {
                 0
             } else {
-                val pageSize = ListingConstants.DEFAULT_PAGE_SIZE
+                val pageSize = ListingDefaultValues.Pagination.PAGE_SIZE
                 val computed = (lazyListState.firstVisibleItemIndex / pageSize) + 1
                 if (totalPages > 0) computed.coerceAtMost(totalPages.toInt()) else computed
             }

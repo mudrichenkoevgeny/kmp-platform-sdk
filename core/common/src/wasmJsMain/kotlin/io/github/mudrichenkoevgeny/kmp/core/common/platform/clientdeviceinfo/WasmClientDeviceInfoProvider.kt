@@ -33,7 +33,7 @@ class WasmClientDeviceInfoProvider(
             deviceId = deviceId,
             deviceName = UserAgentParser.getDeviceName(navigator.userAgent),
             clientType = ClientType.WEB,
-            language = navigator.language,
+            language = ClientDeviceInfo.parsePrimaryLanguage(navigator.language),
             appVersion = appVersion,
             operationSystemVersion = WasmDeviceInfo.OS_VERSION
         )

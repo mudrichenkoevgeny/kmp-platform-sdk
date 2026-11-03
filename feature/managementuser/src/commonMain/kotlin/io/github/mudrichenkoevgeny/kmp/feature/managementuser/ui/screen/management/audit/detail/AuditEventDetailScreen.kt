@@ -187,13 +187,6 @@ private fun Content(
                     label = userUi.auditEventTimestamp,
                     value = timestampFormatted
                 )
-                event.updatedAt?.let { updatedAt ->
-                    val updatedAtFormatted = formatInstantToDateTime(updatedAt) ?: updatedAt.toString()
-                    DetailRow(
-                        label = userUi.auditEventUpdatedAt,
-                        value = updatedAtFormatted
-                    )
-                }
             }
         }
 

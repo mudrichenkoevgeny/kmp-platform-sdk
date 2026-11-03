@@ -21,6 +21,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.edit.UserEditComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.detail.IdentifierDetailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.SelfIdentifierListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.notifyIdentifierDeleted
@@ -53,6 +54,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.Regene
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.SetupTotpUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.NavigationRoute
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.route.open.OpenStorageNavigation
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.SelfUpdateUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ValidateDisplayNameUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ValidateNicknameUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientUserNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.detail.IdentifierDetailParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.session.detail.SessionDetailParams
@@ -106,6 +110,9 @@ class UserRootComponentImpl(
     private val sendAddPhoneIdentifierConfirmationUseCase: SendAddPhoneIdentifierConfirmationUseCase,
     private val addUserIdentifierPhoneUseCase: AddUserIdentifierPhoneUseCase,
     private val addUserIdentifierGoogleUseCase: AddUserIdentifierGoogleUseCase,
+    private val selfUpdateUserUseCase: SelfUpdateUserUseCase,
+    private val validateNicknameUseCase: ValidateNicknameUseCase,
+    private val validateDisplayNameUseCase: ValidateDisplayNameUseCase,
     private val getSessionsUseCase: GetSessionsUseCase,
     private val deleteSessionUseCase: DeleteSessionUseCase,
     private val deleteAllOtherSessionsUseCase: DeleteAllOtherSessionsUseCase,
@@ -172,6 +179,7 @@ class UserRootComponentImpl(
                 scheduleUserDeletionUseCase = scheduleUserDeletionUseCase,
                 onNavigateToLogin = onNavigateToLogin,
                 onNavigateToTotp = { navigation.bringToFront(ClientUserNavigation.TotpMain()) },
+                onNavigateToUserEdit = { navigation.bringToFront(ClientUserNavigation.UserEdit) },
                 onNavigateToSessions = { navigation.bringToFront(ClientUserNavigation.SessionList()) },
                 onNavigateToIdentifiers = { navigation.bringToFront(ClientUserNavigation.IdentifierList()) },
                 onNavigateToFilesList = {
@@ -180,6 +188,16 @@ class UserRootComponentImpl(
                         openStorageDependencies != null -> navigation.bringToFront(OpenStorageNavigation.FileList())
                     }
                 }
+            )
+        )
+        ClientUserNavigation.UserEdit -> UserRootComponent.Child.UserEdit(
+            UserEditComponentImpl(
+                componentContext = context,
+                userRepository = userRepository,
+                selfUpdateUserUseCase = selfUpdateUserUseCase,
+                validateNicknameUseCase = validateNicknameUseCase,
+                validateDisplayNameUseCase = validateDisplayNameUseCase,
+                onBack = { handleBack(ClientUserNavigation.Main) }
             )
         )
         is ClientUserNavigation.TotpMain -> UserRootComponent.Child.TotpMain(

@@ -1,12 +1,17 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create
 
 import com.arkivanov.decompose.value.Value
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.SelectedFilePayload
 
 interface CreateUserComponent {
     val state: Value<CreateUserScreenState>
 
     fun onEmailChanged(value: String)
     fun onPasswordChanged(value: String)
+    fun onNicknameChanged(value: String)
+    fun onDisplayNameChanged(value: String)
+    fun onAvatarFileSelected(payload: SelectedFilePayload)
+    fun onBirthdateChanged(value: String)
     fun onRoleChanged(value: String)
     fun onStatusChanged(value: String)
     fun onAuthorityLevelChanged(value: String)

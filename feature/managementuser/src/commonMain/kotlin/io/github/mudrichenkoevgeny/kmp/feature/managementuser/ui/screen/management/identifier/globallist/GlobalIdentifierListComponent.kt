@@ -8,32 +8,31 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.li
 /**
  * Manages all user identifiers globally: listing with filters/sort and navigation to detail screen.
  */
-interface GlobalIdentifierListComponent :
-    io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListOwner {
+interface GlobalIdentifierListComponent : IdentifierListOwner {
     /** Reactive UI state. */
     val state: Value<GlobalIdentifierListScreenState>
 
     /** Refreshes the identifier list. */
     fun onRefresh()
-    
+
     /** Requests the next page of identifiers if available. */
     fun onLoadNextPage()
-    
+
     /** Navigates back. */
     fun onBackClick()
-    
+
     /** Toggles the filter/sort panel visibility. */
     fun onToggleFilterPanel()
-    
+
     /** Applies a new sort state. */
     fun onSortChanged(sortState: ListingSortState)
-    
+
     /** Applies a new filter state for a specific filter ID. */
     fun onFilterChanged(filterId: String, filterState: ListingFilterState?)
-    
+
     /** Confirms and applies current filters and sort options. */
     fun onApplyFilters()
-    
+
     /** Navigates to identifier detail screen. */
     fun onIdentifierClick(identifierId: String)
 }

@@ -5,6 +5,7 @@ import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail.StorageFileDetailComponent
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.StorageFileListComponent
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.upload.StorageFileUploadScreenComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.edit.UserEditComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.detail.IdentifierDetailComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListOwner
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.SelfIdentifierListComponent
@@ -30,6 +31,8 @@ interface UserRootComponent {
     sealed interface Child {
         /** Main user dashboard screen. */
         class Main(val component: MainUserComponent) : Child
+        /** User edit screen. */
+        class UserEdit(val component: UserEditComponent) : Child
         /** TOTP main screen. */
         class TotpMain(val component: TotpMainComponent) : Child
         /** TOTP recovery codes management. */

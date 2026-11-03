@@ -2,10 +2,9 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.ident
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.globallist.ManagementGlobalIdentifierListParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.userlist.ManagementUserIdentifierListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
 
@@ -15,45 +14,21 @@ interface ManagementIdentifierApi {
     /**
      * Returns a paginated and filtered list of identifiers based on search criteria.
      *
-     * @param pageNumber One-based page index.
-     * @param pageSize Maximum items returned per page.
-     * @param sortBy Field to sort by (created_at, updated_at).
-     * @param sortOrder Sorting direction (ASC, DESC).
-     * @param userIds Filters by specific user identifiers.
-     * @param userAuthProviders Filters by authentication provider types.
-     * @param identifiers Filters by server-defined free-text identifier values.
+     * @param params Administrative identifier list query and filter parameters DTO.
      * @return Paginated result containing matching identifier payloads, or a mapped failure.
      */
     suspend fun getIdentifiers(
-        pageNumber: Int? = null,
-        pageSize: Int? = null,
-        sortBy: UserSortValues.UserIdentifierSortBy? = null,
-        sortOrder: SortOrder? = null,
-        userIds: List<String>? = null,
-        userAuthProviders: List<UserAuthProvider>? = null,
-        identifiers: List<String>? = null
+        params: ManagementGlobalIdentifierListParams? = null
     ): AppResult<PagedResult<UserIdentifierSummaryPayload>>
 
     /**
      * Returns a paginated and filtered list of identifiers for a specific user.
      *
-     * @param userId Target user ID.
-     * @param pageNumber One-based page index.
-     * @param pageSize Maximum items returned per page.
-     * @param sortBy Field to sort by (created_at, updated_at).
-     * @param sortOrder Sorting direction (ASC, DESC).
-     * @param userAuthProviders Filters by authentication provider types.
-     * @param identifiers Filters by server-defined free-text identifier values.
+     * @param params Per-user identifier list query and filter parameters DTO.
      * @return Paginated result containing matching identifier payloads, or a mapped failure.
      */
     suspend fun getUserIdentifiers(
-        userId: UserId,
-        pageNumber: Int? = null,
-        pageSize: Int? = null,
-        sortBy: UserSortValues.UserIdentifierSortBy? = null,
-        sortOrder: SortOrder? = null,
-        userAuthProviders: List<UserAuthProvider>? = null,
-        identifiers: List<String>? = null
+        params: ManagementUserIdentifierListParams
     ): AppResult<PagedResult<UserIdentifierSummaryPayload>>
 
     /**

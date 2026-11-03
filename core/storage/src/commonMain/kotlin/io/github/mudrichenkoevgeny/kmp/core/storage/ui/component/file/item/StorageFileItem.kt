@@ -35,8 +35,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.preview.StorageFileImagePreview
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.utils.StorageIconsMapper
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.formatting.ByteSizeFormatter
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.category.StorageCategory
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.FileUrlPresets
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.StorageFileSummary
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.status.StorageFileStatus
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.storage.domain.model.file.createTestStorageFileSummary
@@ -60,6 +63,9 @@ fun StorageFileItem(
     onFileClick: (() -> Unit)? = null
 ) {
     val storageUi = LocalStorageStrings.current.ui
+    val thumbnailUrl = file.fileUrls?.urlPresets?.get(FileUrlPresets.THUMBNAIL)
+        ?: file.fileUrls?.urlPresets?.get(FileUrlPresets.PREVIEW)
+        ?: file.fileUrls?.originalUrl
 
     Card(
         modifier = Modifier
@@ -78,6 +84,14 @@ fun StorageFileItem(
             modifier = Modifier.padding(CoreTheme.dimens.paddingMedium),
             verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
         ) {
+            if (!thumbnailUrl.isNullOrBlank()) {
+                StorageFileImagePreview(
+                    imageUrl = thumbnailUrl,
+                    category = file.category,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall),

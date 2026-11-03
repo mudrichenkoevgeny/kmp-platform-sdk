@@ -1,15 +1,12 @@
 package io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.identifier
 
+import io.github.mudrichenkoevgeny.kmp.core.common.network.httprequest.parameters
 import io.github.mudrichenkoevgeny.kmp.core.common.network.utils.callResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.ListingParamNames
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.otpconfirmation.OtpConfirmationPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.list.SelfIdentifierListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserApiPaths
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
@@ -23,7 +20,6 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.
 import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
-import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
@@ -45,27 +41,10 @@ class KtorOpenIdentifiersApi(
     }
 
     override suspend fun getUserIdentifiers(
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserIdentifierSortBy?,
-        sortOrder: SortOrder?,
-        userAuthProviders: List<UserAuthProvider>?,
-        identifiers: List<String>?
+        params: SelfIdentifierListParams?
     ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = client.callResult {
         get(OpenIdentifierRoutes.GET_IDENTIFIERS) {
-            parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
-            parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
-            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.value)
-            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.value)
-            userAuthProviders?.forEach { userAuthProvider ->
-                parameter(
-                    UserFilterValues.UserIdentifierFilterValues.USER_AUTH_PROVIDER,
-                    userAuthProvider.value
-                )
-            }
-            identifiers?.forEach { identifier ->
-                parameter(UserFilterValues.UserIdentifierFilterValues.IDENTIFIER, identifier)
-            }
+            parameters(params)
         }
     }
 

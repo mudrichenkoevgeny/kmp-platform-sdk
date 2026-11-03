@@ -6,19 +6,16 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.identifier
 import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.ConfirmationType
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
-import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedresult.mapItems
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.mapper.otpconfirmation.toOtpConfirmation
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.list.SelfIdentifierListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToPhoneRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.security.password.EmailPasswordChangeRequest
@@ -32,12 +29,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
  *
  * @param openIdentifiersApi HTTP endpoints for managing user identifiers and sending confirmations.
  * @param confirmationRepository Client-side cooldown for adding email and phone identifiers.
- * @param userStorage Local persistent storage cache.
  */
 class OpenIdentifierRepositoryImpl(
     private val openIdentifiersApi: OpenIdentifiersApi,
-    private val confirmationRepository: ConfirmationRepository,
-    private val userStorage: UserStorage
+    private val confirmationRepository: ConfirmationRepository
 ) : IdentifierRepository {
 
     override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> {
@@ -46,16 +41,9 @@ class OpenIdentifierRepositoryImpl(
     }
 
     override suspend fun getUserIdentifiers(
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserIdentifierSortBy?,
-        sortOrder: SortOrder?,
-        userAuthProviders: List<UserAuthProvider>?,
-        identifiers: List<String>?
+        params: SelfIdentifierListParams?
     ): AppResult<PagedResult<UserIdentifierSummary>> {
-        return openIdentifiersApi.getUserIdentifiers(
-            pageNumber, pageSize, sortBy, sortOrder, userAuthProviders, identifiers
-        ).mapSuccess { pagedPayload ->
+        return openIdentifiersApi.getUserIdentifiers(params).mapSuccess { pagedPayload ->
             pagedPayload.mapItems { userIdentifierPayload ->
                 userIdentifierPayload.toUserIdentifierSummary()
             }
@@ -63,9 +51,7 @@ class OpenIdentifierRepositoryImpl(
     }
 
     override suspend fun deleteUserIdentifier(identifierId: UserIdentifierId): AppResult<Unit> {
-        return openIdentifiersApi.deleteUserIdentifier(identifierId).mapSuccess {
-            userStorage.removeUserIdentifier(identifierId)
-        }
+        return openIdentifiersApi.deleteUserIdentifier(identifierId)
     }
 
     override suspend fun addUserIdentifierEmail(
@@ -75,11 +61,7 @@ class OpenIdentifierRepositoryImpl(
     ): AppResult<UserIdentifierPrivate> {
         return openIdentifiersApi.addUserIdentifierEmail(
             AddUserIdentifierEmailRequest(email, password, confirmationCode)
-        ).mapSuccess { payload ->
-            val identifier = payload.toUserIdentifierPrivate()
-            userStorage.addUserIdentifier(identifier.toUserIdentifierSummary())
-            identifier
-        }
+        ).mapSuccess { it.toUserIdentifierPrivate() }
     }
 
     override suspend fun addUserIdentifierPhone(
@@ -88,11 +70,7 @@ class OpenIdentifierRepositoryImpl(
     ): AppResult<UserIdentifierPrivate> {
         return openIdentifiersApi.addUserIdentifierPhone(
             AddUserIdentifierPhoneRequest(phoneNumber, confirmationCode)
-        ).mapSuccess { payload ->
-            val identifier = payload.toUserIdentifierPrivate()
-            userStorage.addUserIdentifier(identifier.toUserIdentifierSummary())
-            identifier
-        }
+        ).mapSuccess { it.toUserIdentifierPrivate() }
     }
 
     override suspend fun addUserIdentifierExternalAuthProvider(
@@ -101,11 +79,7 @@ class OpenIdentifierRepositoryImpl(
     ): AppResult<UserIdentifierPrivate> {
         return openIdentifiersApi.addUserIdentifierExternalAuthProvider(
             AddUserIdentifierExternalAuthProviderRequest(authProvider, externalProviderToken)
-        ).mapSuccess { payload ->
-            val identifier = payload.toUserIdentifierPrivate()
-            userStorage.addUserIdentifier(identifier.toUserIdentifierSummary())
-            identifier
-        }
+        ).mapSuccess { it.toUserIdentifierPrivate() }
     }
 
     override suspend fun sendAddEmailIdentifierConfirmation(

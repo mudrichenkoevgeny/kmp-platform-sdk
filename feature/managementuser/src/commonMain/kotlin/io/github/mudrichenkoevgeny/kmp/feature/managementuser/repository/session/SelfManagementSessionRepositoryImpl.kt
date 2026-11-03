@@ -2,29 +2,27 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.sessio
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
+import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.session.SessionApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.session.SessionRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedresult.mapItems
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.verifytotp.VerifyTotpPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.session.list.SelfSessionListParams
 
 /**
  * Implements [SessionRepository] using [SessionApi].
- * Falls back to [UserStorage] cache with client-side filtering and pagination if network calls fail.
  *
  * @param selfManagementSessionApi HTTP endpoints for session management and re-authentication.
- * @param userStorage Local persistent storage cache for user snapshots and data fallback.
+ * @param userStorage Local persistent storage cache for user snapshots.
+ * @param authStorage Auth storage for tokens.
  */
 class SelfManagementSessionRepositoryImpl(
     private val selfManagementSessionApi: SessionApi,
@@ -33,138 +31,30 @@ class SelfManagementSessionRepositoryImpl(
 ) : SessionRepository {
 
     override suspend fun getSessions(
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserSessionSortBy?,
-        sortOrder: SortOrder?,
-        identifiers: List<String>?,
-        identifierIds: List<String>?,
-        userAuthProviders: List<UserAuthProvider>?,
-        clientTypes: List<ClientType>?,
-        userAgents: List<String>?,
-        ipAddresses: List<String>?,
-        languages: List<String>?,
-        deviceIds: List<String>?,
-        deviceNames: List<String>?,
-        appVersions: List<String>?,
-        operationSystemVersions: List<String>?
+        params: SelfSessionListParams?
     ): AppResult<PagedResult<UserSessionSummary>> {
-        val networkResult = selfManagementSessionApi.getSessions(
-            pageNumber = pageNumber,
-            pageSize = pageSize,
-            sortBy = sortBy,
-            sortOrder = sortOrder,
-            identifiers = identifiers,
-            identifierIds = identifierIds,
-            userAuthProviders = userAuthProviders,
-            clientTypes = clientTypes,
-            userAgents = userAgents,
-            ipAddresses = ipAddresses,
-            languages = languages,
-            deviceIds = deviceIds,
-            deviceNames = deviceNames,
-            appVersions = appVersions,
-            operationSystemVersions = operationSystemVersions
-        )
-        return when (networkResult) {
-            is AppResult.Success -> {
-                userStorage.updateUserSessionsPayloadList(networkResult.data)
-                networkResult.mapSuccess { pagedPayload ->
-                    pagedPayload.mapItems { it.toUserSessionSummary() }
-                }
-            }
-            is AppResult.Error -> {
-                val cachedResult = userStorage.getUserSessionsList(
-                    pageNumber = pageNumber,
-                    pageSize = pageSize,
-                    sortBy = sortBy,
-                    sortOrder = sortOrder,
-                    userIds = null,
-                    userRoles = null,
-                    identifiers = identifiers,
-                    identifierIds = identifierIds,
-                    userAuthProviders = userAuthProviders,
-                    clientTypes = clientTypes,
-                    userAgents = userAgents,
-                    ipAddresses = ipAddresses,
-                    languages = languages,
-                    deviceIds = deviceIds,
-                    deviceNames = deviceNames,
-                    appVersions = appVersions,
-                    operationSystemVersions = operationSystemVersions
-                )
-                if (cachedResult.items.isNotEmpty()) {
-                    AppResult.Success(cachedResult)
-                } else {
-                    networkResult
-                }
-            }
+        return selfManagementSessionApi.getSessions(params).mapSuccess { pagedPayload ->
+            pagedPayload.mapItems { it.toUserSessionSummary() }
         }
     }
 
     override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivate> {
-        val networkResult = selfManagementSessionApi.getSession(userSessionId)
-        return when (networkResult) {
-            is AppResult.Success -> {
-                val session = networkResult.data.toUserSessionPrivate()
-                userStorage.addUserSession(session.toUserSessionSummary())
-                AppResult.Success(session)
-            }
-            is AppResult.Error -> {
-                networkResult
-            }
-        }
+        return selfManagementSessionApi.getSession(userSessionId).mapSuccess { it.toUserSessionPrivate() }
     }
 
     override suspend fun logout(): AppResult<Unit> {
-        val networkResult = selfManagementSessionApi.logout()
-        userStorage.clear()
-        authStorage.clearTokens()
-        return networkResult
+        return selfManagementSessionApi.logout().onSuccess {
+            userStorage.clear()
+            authStorage.clearTokens()
+        }
     }
 
     override suspend fun deleteSession(userSessionId: UserSessionId): AppResult<Unit> {
-        val networkResult = selfManagementSessionApi.deleteSession(userSessionId)
-        if (networkResult is AppResult.Success) {
-            userStorage.removeUserSession(userSessionId)
-        }
-        return networkResult
+        return selfManagementSessionApi.deleteSession(userSessionId)
     }
 
     override suspend fun deleteAllOtherSessions(): AppResult<Unit> {
-        val networkResult = selfManagementSessionApi.deleteAllOtherSessions()
-        if (networkResult is AppResult.Success) {
-            val deletedSessionIdsSet = networkResult.data.deletedSessionIds.toSet()
-            if (deletedSessionIdsSet.isNotEmpty()) {
-                val cachedList = userStorage.getUserSessionsList(
-                    pageNumber = null,
-                    pageSize = null,
-                    sortBy = null,
-                    sortOrder = null,
-                    userIds = null,
-                    userRoles = null,
-                    identifiers = null,
-                    identifierIds = null,
-                    userAuthProviders = null,
-                    clientTypes = null,
-                    userAgents = null,
-                    ipAddresses = null,
-                    languages = null,
-                    deviceIds = null,
-                    deviceNames = null,
-                    appVersions = null,
-                    operationSystemVersions = null
-                )
-                val idsToRemove = cachedList.items
-                    .map { it.id }
-                    .filter { it.value.toHexDashString() in deletedSessionIdsSet }
-
-                if (idsToRemove.isNotEmpty()) {
-                    userStorage.removeUserSessions(idsToRemove)
-                }
-            }
-        }
-        return networkResult.mapSuccess { }
+        return selfManagementSessionApi.deleteAllOtherSessions().mapSuccess { }
     }
 
     override suspend fun reauthenticateSession(mfaToken: String, code: String): AppResult<Unit> {

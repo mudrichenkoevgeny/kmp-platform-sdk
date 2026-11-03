@@ -16,6 +16,7 @@ open class MainUserComponentMock(
 
     var retryCalls = 0
     var totpMainCalls = 0
+    var editUserCalls = 0
     var sessionsCalls = 0
     var identifiersCalls = 0
     var filesCalls = 0
@@ -37,6 +38,10 @@ open class MainUserComponentMock(
 
     override fun onTotpMainClick() {
         totpMainCalls++
+    }
+
+    override fun onEditUserClick() {
+        editUserCalls++
     }
 
     override fun onSessionsClick() {

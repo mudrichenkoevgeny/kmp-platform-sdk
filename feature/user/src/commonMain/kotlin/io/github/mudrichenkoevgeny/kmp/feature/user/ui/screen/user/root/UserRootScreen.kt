@@ -18,6 +18,7 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail.Storag
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.StorageFileListScreen
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.upload.StorageFileUploadScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.UserRootComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.edit.UserEditScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.detail.IdentifierDetailScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.SelfIdentifierListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.detail.SessionDetailScreen
@@ -44,6 +45,7 @@ fun UserRootScreen(
     ) { child ->
         when (val instance = child.instance) {
             is UserRootComponent.Child.Main -> MainUserScreen(instance.component)
+            is UserRootComponent.Child.UserEdit -> UserEditScreen(instance.component)
             is UserRootComponent.Child.TotpMain -> TotpMainScreen(instance.component)
             is UserRootComponent.Child.TotpRecoveryCodes -> TotpRecoveryCodesScreen(instance.component)
             is UserRootComponent.Child.Sessions -> SelfSessionListScreen(instance.component)

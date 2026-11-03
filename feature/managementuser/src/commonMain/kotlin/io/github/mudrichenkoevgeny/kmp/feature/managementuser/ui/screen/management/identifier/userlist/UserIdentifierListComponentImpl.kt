@@ -5,7 +5,6 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.appendResult
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toError
@@ -19,7 +18,6 @@ import kotlinx.coroutines.flow.firstOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.toUserIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.userlist.ManagementUserIdentifierListParams
 import kotlinx.coroutines.launch
 
@@ -107,10 +105,12 @@ class UserIdentifierListComponentImpl(
     private fun fetchPage(pageNumber: Int) {
         val targetUserId = userId ?: return
         scope.launch {
+            val userParams = params.copy(
+                userId = targetUserId.asHexDashString(),
+                pageNumber = pageNumber
+            )
             managementGetUserIdentifiersUseCase(
-                userId = targetUserId,
-                pageNumber = pageNumber,
-                pageSize = params.pageSize
+                params = userParams
             )
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? UserIdentifierListScreenState.Content

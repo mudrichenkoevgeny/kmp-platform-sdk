@@ -8,78 +8,121 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.option.ListingOptionsConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortDefinition
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditFilterValues
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditSortValues
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditEventFilterValues
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditEventSortBy
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 
 @Composable
 fun getAuditEventListingOptionsConfig(): ListingOptionsConfig {
     val commonUi = LocalCommonStrings.current.ui
+    val userUi = LocalUserStrings.current.ui
+
+    val actorTypeOptions = listOf(
+        ListingFilterChoiceOption(AuditActorType.USER.value, commonUi.user),
+        ListingFilterChoiceOption(AuditActorType.SYSTEM.value, commonUi.system),
+        ListingFilterChoiceOption(AuditActorType.SERVICE.value, commonUi.service)
+    )
+
+    val roleOptions = listOf(
+        ListingFilterChoiceOption(UserRole.STAFF.name, commonUi.staff),
+        ListingFilterChoiceOption(UserRole.ADMIN.name, commonUi.admin)
+    )
+
+    val statusOptions = listOf(
+        ListingFilterChoiceOption(AuditStatus.SUCCESS.value, commonUi.success),
+        ListingFilterChoiceOption(AuditStatus.FAILED.value, commonUi.failed),
+        ListingFilterChoiceOption(AuditStatus.DENIED.value, commonUi.denied)
+    )
+
     return ListingOptionsConfig(
         sortOptions = listOf(
             ListingSortDefinition(
-                id = AuditSortValues.AuditEventSortBy.CREATED_AT.value,
+                id = AuditEventSortBy.CREATED_AT.value,
                 title = commonUi.createdAt
             )
         ),
         filters = listOf(
             TextListingFilterDefinition(
-                id = AuditFilterValues.AuditEventFilterValues.ACTOR_ID,
+                id = AuditEventFilterValues.EVENT_ID,
+                title = userUi.auditEventId,
+                placeholder = commonUi.searchPlaceholder
+            ),
+            TextListingFilterDefinition(
+                id = AuditEventFilterValues.ACTOR_ID,
                 title = commonUi.actorId,
                 placeholder = commonUi.searchPlaceholder
             ),
             ChoiceListingFilterDefinition(
-                id = AuditFilterValues.AuditEventFilterValues.ACTOR_TYPE,
+                id = AuditEventFilterValues.ACTOR_TYPE,
                 title = commonUi.actorType,
-                options = listOf(
-                    ListingFilterChoiceOption(AuditActorType.USER.value, commonUi.user),
-                    ListingFilterChoiceOption(AuditActorType.SYSTEM.value, commonUi.system),
-                    ListingFilterChoiceOption(AuditActorType.SERVICE.value, commonUi.service)
-                ),
+                options = actorTypeOptions,
                 isMultiple = true,
                 presentationStyle = ChoiceFilterPresentationStyle.DROPDOWN
             ),
             ChoiceListingFilterDefinition(
-                id = AuditFilterValues.AuditEventFilterValues.ACTOR_USER_ROLE,
+                id = AuditEventFilterValues.EXCLUDE_ACTOR_TYPE,
+                title = "${commonUi.actorType} (${commonUi.exclude})",
+                options = actorTypeOptions,
+                isMultiple = true,
+                presentationStyle = ChoiceFilterPresentationStyle.DROPDOWN
+            ),
+            ChoiceListingFilterDefinition(
+                id = AuditEventFilterValues.ACTOR_USER_ROLE,
                 title = commonUi.role,
-                options = listOf(
-                    ListingFilterChoiceOption(UserRole.STAFF.name, commonUi.staff),
-                    ListingFilterChoiceOption(UserRole.ADMIN.name, commonUi.admin)
-                ),
+                options = roleOptions,
                 isMultiple = true,
                 presentationStyle = ChoiceFilterPresentationStyle.DROPDOWN
             ),
             TextListingFilterDefinition(
-                id = AuditFilterValues.AuditEventFilterValues.ACTION,
+                id = AuditEventFilterValues.ACTION,
                 title = commonUi.action,
                 placeholder = commonUi.searchPlaceholder
             ),
             TextListingFilterDefinition(
-                id = AuditFilterValues.AuditEventFilterValues.RESOURCE,
+                id = AuditEventFilterValues.EXCLUDE_ACTION,
+                title = "${commonUi.action} (${commonUi.exclude})",
+                placeholder = commonUi.searchPlaceholder
+            ),
+            TextListingFilterDefinition(
+                id = AuditEventFilterValues.RESOURCE,
                 title = commonUi.resource,
                 placeholder = commonUi.searchPlaceholder
             ),
             TextListingFilterDefinition(
-                id = AuditFilterValues.AuditEventFilterValues.RESOURCE_ID,
+                id = AuditEventFilterValues.RESOURCE_ID,
                 title = commonUi.resourceId,
                 placeholder = commonUi.searchPlaceholder
             ),
             ChoiceListingFilterDefinition(
-                id = AuditFilterValues.AuditEventFilterValues.STATUS,
+                id = AuditEventFilterValues.STATUS,
                 title = commonUi.status,
-                options = listOf(
-                    ListingFilterChoiceOption(AuditStatus.SUCCESS.value, commonUi.success),
-                    ListingFilterChoiceOption(AuditStatus.FAILED.value, commonUi.failed),
-                    ListingFilterChoiceOption(AuditStatus.DENIED.value, commonUi.denied)
-                ),
+                options = statusOptions,
+                isMultiple = true,
+                presentationStyle = ChoiceFilterPresentationStyle.DROPDOWN
+            ),
+            ChoiceListingFilterDefinition(
+                id = AuditEventFilterValues.EXCLUDE_STATUS,
+                title = "${commonUi.status} (${commonUi.exclude})",
+                options = statusOptions,
                 isMultiple = true,
                 presentationStyle = ChoiceFilterPresentationStyle.DROPDOWN
             ),
             TextListingFilterDefinition(
-                id = AuditFilterValues.AuditEventFilterValues.MESSAGE,
-                title = commonUi.message,
+                id = AuditEventFilterValues.CREATED_AT_FROM,
+                title = "${commonUi.createdAt} (${commonUi.from})",
+                placeholder = commonUi.searchPlaceholder
+            ),
+            TextListingFilterDefinition(
+                id = AuditEventFilterValues.CREATED_AT_TO,
+                title = "${commonUi.createdAt} (${commonUi.to})",
+                placeholder = commonUi.searchPlaceholder
+            ),
+            TextListingFilterDefinition(
+                id = AuditEventFilterValues.SEARCH_QUERY,
+                title = commonUi.searchPlaceholder,
                 placeholder = commonUi.searchPlaceholder
             )
         )

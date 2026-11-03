@@ -49,6 +49,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.LogoutUseCas
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.ReauthenticateSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.RestoreUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.SelfUpdateUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ValidateDisplayNameUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ValidateNicknameUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.displayname.DisplayNameValidatorImpl
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.nickname.NicknameValidatorImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.DisableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.EnableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.GetRecoveryCodesUseCase
@@ -408,6 +413,28 @@ internal class ClientUserUseCaseModule(
     val emailChangePasswordUseCase by lazy {
         EmailChangePasswordUseCase(
             identifierRepository = clientUserRepositoryModule.identifierRepository
+        )
+    }
+
+    val selfUpdateUserUseCase by lazy {
+        SelfUpdateUserUseCase(
+            userRepository = clientUserRepositoryModule.userRepository
+        )
+    }
+
+    /** Validates nickname format and length constraints. */
+    val validateNicknameUseCase by lazy {
+        ValidateNicknameUseCase(
+            nicknameValidator = NicknameValidatorImpl(),
+            getAuthSettingsUseCase = getAuthSettingsUseCase
+        )
+    }
+
+    /** Validates display name format and length constraints. */
+    val validateDisplayNameUseCase by lazy {
+        ValidateDisplayNameUseCase(
+            displayNameValidator = DisplayNameValidatorImpl(),
+            getAuthSettingsUseCase = getAuthSettingsUseCase
         )
     }
 }

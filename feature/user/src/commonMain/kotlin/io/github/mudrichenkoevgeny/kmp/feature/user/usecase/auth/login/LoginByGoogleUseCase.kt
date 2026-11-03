@@ -8,7 +8,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginR
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 
 /**
  * Google Sign-In flow: obtains a provider token, exchanges it for session material via
@@ -31,8 +30,8 @@ class LoginByGoogleUseCase(
      */
     suspend fun execute(): AppResult<AuthData> {
         return authService.signIn()
-            .flatMap { externalProviderToken ->
-                loginRepository.loginByExternalAuthProvider(UserAuthProvider.GOOGLE, externalProviderToken)
+            .flatMap { loginByExternalAuthProviderRequest ->
+                loginRepository.loginByExternalAuthProvider(loginByExternalAuthProviderRequest)
             }
             .onSuccess { authData ->
                 authStorage.updateTokens(authData.sessionToken)

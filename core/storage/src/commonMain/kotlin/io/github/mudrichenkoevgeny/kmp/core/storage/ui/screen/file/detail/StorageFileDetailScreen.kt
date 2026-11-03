@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.row.CoreDetailRow
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.preview.StorageFileImagePreview
-import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.category.StorageCategory
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.FileUrlPresets
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -125,7 +125,7 @@ fun StorageFileDetailScreen(
                     state = currentState,
                     isDeleteAvailable = component.isDeleteAvailable,
                     onCopyUrlClick = {
-                        clipboardManager.setText(AnnotatedString(currentState.file.fileUrl))
+                        clipboardManager.setText(AnnotatedString(currentState.file.fileUrls?.originalUrl ?: ""))
                         coroutineScope.launch {
                             snackbarHostState.currentSnackbarData?.dismiss()
                             snackbarHostState.showSnackbar(message = storageUi.urlCopied)
@@ -195,9 +195,10 @@ private fun StorageFileDetailContent(
                 .height(CoreTheme.dimens.previewContainerHeight),
             contentAlignment = Alignment.Center
         ) {
-            if (isImagePreviewVisible && file.category == StorageCategory.IMAGE && file.fileUrl.isNotBlank()) {
+            val url = file.fileUrls?.urlPresets?.get(FileUrlPresets.PREVIEW) ?: file.fileUrls?.originalUrl ?: ""
+            if (isImagePreviewVisible && url.isNotBlank()) {
                 StorageFileImagePreview(
-                    imageUrl = file.fileUrl,
+                    imageUrl = url,
                     category = file.category,
                     modifier = Modifier.fillMaxWidth()
                 )

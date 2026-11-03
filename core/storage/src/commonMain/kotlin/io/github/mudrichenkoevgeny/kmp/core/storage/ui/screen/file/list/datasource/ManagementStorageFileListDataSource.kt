@@ -1,13 +1,11 @@
 package io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.datasource
 
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.TextListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.ManagementDeleteFileUseCase
 import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.ManagementDeleteFilesBatchUseCase
 import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.ManagementGetFilesUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.StorageFileSummary
-import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.listing.StorageFilterValues.StorageFileFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.screen.management.list.ManagementStorageFileListParams
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.request.file.DeleteFilesBatchRequest
 
@@ -41,9 +39,6 @@ class ManagementStorageFileListDataSource(
     }
 
     private fun StorageFileListQuery.toManagementParams(): ManagementStorageFileListParams {
-        val ownerUserIdText = (filterStates[StorageFileFilterValues.OWNER_USER_ID] as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }
-
         val ownerUserIdsList = ownerUserId?.let { listOf(it) }
             ?: ownerUserIdText?.let { listOf(it) }
             ?: emptyList()
@@ -52,12 +47,27 @@ class ManagementStorageFileListDataSource(
             pageNumber = pageNumber,
             sortBy = sortBy,
             sortOrder = sortOrder,
+            fileIds = fileIdText?.let { listOf(it) } ?: emptyList(),
             ownerUserIds = ownerUserIdsList,
-            categories = categoryChoice?.let { listOf(it) } ?: emptyList(),
-            visibilities = visibilityChoice?.let { listOf(it) } ?: emptyList(),
-            statuses = statusChoices,
+            isOwnerUserIdSet = isOwnerUserIdSetChoice,
+            fileName = fileNameText,
+            fileSizeBytesFrom = fileSizeBytesFromNumber,
+            fileSizeBytesTo = fileSizeBytesToNumber,
             mimeTypes = mimeTypeText?.let { listOf(it) } ?: emptyList(),
-            fileName = fileNameText
+            categories = categoryChoice?.let { listOf(it) } ?: emptyList(),
+            excludeCategories = excludeCategoriesChoices,
+            visibilities = visibilityChoice?.let { listOf(it) } ?: emptyList(),
+            excludeVisibilities = excludeVisibilitiesChoices,
+            statuses = statusChoices,
+            excludeStatuses = excludeStatusesChoices,
+            targetScopes = targetScopeText?.let { listOf(it) } ?: emptyList(),
+            isTargetScopeSet = isTargetScopeSetChoice,
+            createdAtFrom = createdAtFromText,
+            createdAtTo = createdAtToText,
+            updatedAtFrom = updatedAtFromText,
+            updatedAtTo = updatedAtToText,
+            isUpdatedAtSet = isUpdatedAtSetChoice,
+            searchQuery = searchQueryText
         )
     }
 }

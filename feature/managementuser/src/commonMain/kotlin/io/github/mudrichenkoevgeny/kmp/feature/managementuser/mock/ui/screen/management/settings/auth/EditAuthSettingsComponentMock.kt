@@ -20,6 +20,11 @@ class EditAuthSettingsComponentMock(
         maxEmailIdentifiers = "5",
         maxPhoneIdentifiers = "5",
         maxIdentifiersPerExternalProvider = "2",
+        userNicknameMinLength = "3",
+        userNicknameMaxLength = "30",
+        userDisplayNameMinLength = "1",
+        userDisplayNameMaxLength = "50",
+        isUserNicknameChangeAllowed = true,
         maxActiveSessionsForOpenUser = "3",
         maxActiveSessionsForManagementUser = "5",
         accessTokenExpirationSeconds = "3600",
@@ -51,6 +56,11 @@ class EditAuthSettingsComponentMock(
     override fun onMaxEmailIdentifiersChanged(value: String) {}
     override fun onMaxPhoneIdentifiersChanged(value: String) {}
     override fun onMaxIdentifiersPerExternalProviderChanged(value: String) {}
+    override fun onUserNicknameMinLengthChanged(value: String) {}
+    override fun onUserNicknameMaxLengthChanged(value: String) {}
+    override fun onUserDisplayNameMinLengthChanged(value: String) {}
+    override fun onUserDisplayNameMaxLengthChanged(value: String) {}
+    override fun onIsUserNicknameChangeAllowedToggled(enabled: Boolean) {}
     override fun onMaxActiveSessionsForOpenUserChanged(value: String) {}
     override fun onMaxActiveSessionsForManagementUserChanged(value: String) {}
     override fun onAccessTokenExpirationSecondsChanged(value: String) {}

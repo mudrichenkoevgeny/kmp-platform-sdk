@@ -4,15 +4,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.identifier.ManagementIdentifierApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedresult.mapItems
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.globallist.ManagementGlobalIdentifierListParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.userlist.ManagementUserIdentifierListParams
 
 /**
  * Implements [ManagementIdentifierRepository] by forwarding administrative operations to [ManagementIdentifierApi].
@@ -24,23 +23,9 @@ class ManagementIdentifierRepositoryImpl(
 ) : ManagementIdentifierRepository {
 
     override suspend fun getIdentifiers(
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserIdentifierSortBy?,
-        sortOrder: SortOrder?,
-        userIds: List<String>?,
-        userAuthProviders: List<UserAuthProvider>?,
-        identifiers: List<String>?
+        params: ManagementGlobalIdentifierListParams?
     ): AppResult<PagedResult<UserIdentifierSummary>> {
-        return managementIdentifierApi.getIdentifiers(
-            pageNumber = pageNumber,
-            pageSize = pageSize,
-            sortBy = sortBy,
-            sortOrder = sortOrder,
-            userIds = userIds,
-            userAuthProviders = userAuthProviders,
-            identifiers = identifiers
-        ).mapSuccess { pagedPayload ->
+        return managementIdentifierApi.getIdentifiers(params).mapSuccess { pagedPayload ->
             pagedPayload.mapItems { userIdentifierPayload ->
                 userIdentifierPayload.toUserIdentifierSummary()
             }
@@ -48,23 +33,9 @@ class ManagementIdentifierRepositoryImpl(
     }
 
     override suspend fun getUserIdentifiers(
-        userId: UserId,
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserIdentifierSortBy?,
-        sortOrder: SortOrder?,
-        userAuthProviders: List<UserAuthProvider>?,
-        identifiers: List<String>?
+        params: ManagementUserIdentifierListParams
     ): AppResult<PagedResult<UserIdentifierSummary>> {
-        return managementIdentifierApi.getUserIdentifiers(
-            userId = userId,
-            pageNumber = pageNumber,
-            pageSize = pageSize,
-            sortBy = sortBy,
-            sortOrder = sortOrder,
-            userAuthProviders = userAuthProviders,
-            identifiers = identifiers
-        ).mapSuccess { pagedPayload ->
+        return managementIdentifierApi.getUserIdentifiers(params).mapSuccess { pagedPayload ->
             pagedPayload.mapItems { userIdentifierPayload ->
                 userIdentifierPayload.toUserIdentifierSummary()
             }

@@ -5,10 +5,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.identifier.ManagementIdentifierApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.globallist.ManagementGlobalIdentifierListParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.userlist.ManagementUserIdentifierListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
 
@@ -22,23 +21,11 @@ class ManagementIdentifierApiMock : ManagementIdentifierApi {
     var deleteIdentifierPasswordResult: AppResult<Unit> = AppResult.Success(Unit)
 
     override suspend fun getIdentifiers(
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserIdentifierSortBy?,
-        sortOrder: SortOrder?,
-        userIds: List<String>?,
-        userAuthProviders: List<UserAuthProvider>?,
-        identifiers: List<String>?
+        params: ManagementGlobalIdentifierListParams?
     ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = getIdentifiersResult
 
     override suspend fun getUserIdentifiers(
-        userId: UserId,
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserIdentifierSortBy?,
-        sortOrder: SortOrder?,
-        userAuthProviders: List<UserAuthProvider>?,
-        identifiers: List<String>?
+        params: ManagementUserIdentifierListParams
     ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = getUserIdentifiersResult
 
     override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivatePayload> = getIdentifierResult

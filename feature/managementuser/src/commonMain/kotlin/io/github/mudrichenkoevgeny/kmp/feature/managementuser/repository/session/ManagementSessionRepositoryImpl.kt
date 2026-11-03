@@ -3,18 +3,15 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.sessio
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.session.ManagementSessionApi
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedresult.mapItems
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.globallist.ManagementGlobalSessionListParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.userlist.ManagementUserSessionListParams
 
 /**
  * Implements [ManagementSessionRepository] by forwarding administrative operations to [ManagementSessionApi].
@@ -26,43 +23,9 @@ class ManagementSessionRepositoryImpl(
 ) : ManagementSessionRepository {
 
     override suspend fun getSessions(
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserSessionSortBy?,
-        sortOrder: SortOrder?,
-        userIds: List<String>?,
-        userRoles: List<UserRole>?,
-        identifiers: List<String>?,
-        identifierIds: List<String>?,
-        userAuthProviders: List<UserAuthProvider>?,
-        clientTypes: List<ClientType>?,
-        userAgents: List<String>?,
-        ipAddresses: List<String>?,
-        languages: List<String>?,
-        deviceIds: List<String>?,
-        deviceNames: List<String>?,
-        appVersions: List<String>?,
-        operationSystemVersions: List<String>?
+        params: ManagementGlobalSessionListParams?
     ): AppResult<PagedResult<UserSessionSummary>> {
-        return managementSessionApi.getSessions(
-            pageNumber = pageNumber,
-            pageSize = pageSize,
-            sortBy = sortBy,
-            sortOrder = sortOrder,
-            userIds = userIds,
-            userRoles = userRoles,
-            identifiers = identifiers,
-            identifierIds = identifierIds,
-            userAuthProviders = userAuthProviders,
-            clientTypes = clientTypes,
-            userAgents = userAgents,
-            ipAddresses = ipAddresses,
-            languages = languages,
-            deviceIds = deviceIds,
-            deviceNames = deviceNames,
-            appVersions = appVersions,
-            operationSystemVersions = operationSystemVersions
-        ).mapSuccess { pagedPayload ->
+        return managementSessionApi.getSessions(params).mapSuccess { pagedPayload ->
             pagedPayload.mapItems { payload ->
                 payload.toUserSessionSummary()
             }
@@ -70,41 +33,9 @@ class ManagementSessionRepositoryImpl(
     }
 
     override suspend fun getUserSessions(
-        userId: UserId,
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserSessionSortBy?,
-        sortOrder: SortOrder?,
-        identifiers: List<String>?,
-        identifierIds: List<String>?,
-        userAuthProviders: List<UserAuthProvider>?,
-        clientTypes: List<ClientType>?,
-        userAgents: List<String>?,
-        ipAddresses: List<String>?,
-        languages: List<String>?,
-        deviceIds: List<String>?,
-        deviceNames: List<String>?,
-        appVersions: List<String>?,
-        operationSystemVersions: List<String>?
+        params: ManagementUserSessionListParams
     ): AppResult<PagedResult<UserSessionSummary>> {
-        return managementSessionApi.getUserSessions(
-            userId = userId,
-            pageNumber = pageNumber,
-            pageSize = pageSize,
-            sortBy = sortBy,
-            sortOrder = sortOrder,
-            identifiers = identifiers,
-            identifierIds = identifierIds,
-            userAuthProviders = userAuthProviders,
-            clientTypes = clientTypes,
-            userAgents = userAgents,
-            ipAddresses = ipAddresses,
-            languages = languages,
-            deviceIds = deviceIds,
-            deviceNames = deviceNames,
-            appVersions = appVersions,
-            operationSystemVersions = operationSystemVersions
-        ).mapSuccess { pagedPayload ->
+        return managementSessionApi.getUserSessions(params).mapSuccess { pagedPayload ->
             pagedPayload.mapItems { userSessionPayload ->
                 userSessionPayload.toUserSessionSummary()
             }

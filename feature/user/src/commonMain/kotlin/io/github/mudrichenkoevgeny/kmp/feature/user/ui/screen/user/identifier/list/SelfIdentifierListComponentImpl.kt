@@ -457,8 +457,7 @@ class SelfIdentifierListComponentImpl(
         scope.launch {
             val activeIdentifierId = authStorage?.getIdentifierId()?.toUserIdentifierIdOrNull()
             getUserIdentifiersUseCase(
-                pageNumber = pageNumber,
-                pageSize = params.pageSize
+                params = params.copy(pageNumber = pageNumber)
             )
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? SelfIdentifierListScreenState.Content

@@ -161,10 +161,12 @@ class UserSessionListComponentImpl(
     private fun fetchPage(pageNumber: Int) {
         val targetUserId = userId ?: return
         scope.launch {
+            val userParams = params?.copy(pageNumber = pageNumber) ?: ManagementUserSessionListParams(
+                userId = targetUserId.asHexDashString(),
+                pageNumber = pageNumber
+            )
             managementGetUserSessionsUseCase(
-                userId = targetUserId,
-                pageNumber = pageNumber,
-                pageSize = params?.pageSize ?: ListingConstants.DEFAULT_PAGE_SIZE
+                params = userParams
             )
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? UserSessionListScreenState.Content

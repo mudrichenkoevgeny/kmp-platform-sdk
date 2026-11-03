@@ -27,7 +27,7 @@ fun clientDeviceInfoMock(
     clientType = clientType,
     deviceId = deviceId,
     deviceName = deviceName,
-    language = language,
+    language = ClientDeviceInfo.parsePrimaryLanguage(language),
     appVersion = appVersion,
     operationSystemVersion = operationSystemVersion
 )

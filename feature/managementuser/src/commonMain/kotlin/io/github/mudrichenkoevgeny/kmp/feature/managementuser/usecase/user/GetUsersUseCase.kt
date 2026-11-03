@@ -3,16 +3,11 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.user.ManagementUserRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.permission.PermissionCode
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.user.globallist.ManagementUserListParams
 
 /**
- * Returns a paginated and filtered list of users based on search criteria for administrative purposes.
+ * Returns a paginated list of user summaries for administrative user management.
  *
  * @param managementUserRepository Administrative user management API.
  */
@@ -20,47 +15,12 @@ class GetUsersUseCase(
     private val managementUserRepository: ManagementUserRepository
 ) {
     /**
-     * @param pageNumber One-based page index.
-     * @param pageSize Maximum items returned per page.
-     * @param sortBy Field to sort by.
-     * @param sortOrder Sorting direction.
-     * @param roles Filters users by their assigned role types.
-     * @param accountStatuses Filters users by current account statuses.
-     * @param accountStatusesBeforeDeletion Filters users by status held prior to scheduled deletion.
-     * @param accountLockoutTypes Filters users by account lockout state types.
-     * @param authorityLevelFrom Lower bound filter for authority level.
-     * @param authorityLevelTo Upper bound filter for authority level.
-     * @param isTotpEnabled Filters users by whether TOTP second-factor authentication is active.
-     * @param permissionCodes Filters users possessing specific permission codes.
+     * @param params Query and filter parameters DTO.
      * @return Paginated result containing user summary domain models, or a mapped failure.
      */
     suspend operator fun invoke(
-        pageNumber: Int? = null,
-        pageSize: Int? = null,
-        sortBy: UserSortValues.UserSortBy? = null,
-        sortOrder: SortOrder? = null,
-        roles: List<UserRole>? = null,
-        accountStatuses: List<UserAccountStatus>? = null,
-        accountStatusesBeforeDeletion: List<UserAccountStatus>? = null,
-        accountLockoutTypes: List<AccountLockoutType>? = null,
-        authorityLevelFrom: Int? = null,
-        authorityLevelTo: Int? = null,
-        isTotpEnabled: Boolean? = null,
-        permissionCodes: List<PermissionCode>? = null
+        params: ManagementUserListParams? = null
     ): AppResult<PagedResult<UserSummary>> {
-        return managementUserRepository.getUsers(
-            pageNumber = pageNumber,
-            pageSize = pageSize,
-            sortBy = sortBy,
-            sortOrder = sortOrder,
-            roles = roles,
-            accountStatuses = accountStatuses,
-            accountStatusesBeforeDeletion = accountStatusesBeforeDeletion,
-            accountLockoutTypes = accountLockoutTypes,
-            authorityLevelFrom = authorityLevelFrom,
-            authorityLevelTo = authorityLevelTo,
-            isTotpEnabled = isTotpEnabled,
-            permissionCodes = permissionCodes
-        )
+        return managementUserRepository.getUsers(params)
     }
 }
