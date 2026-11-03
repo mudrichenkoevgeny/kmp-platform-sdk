@@ -4,12 +4,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.identifier.ManagementIdentifierRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.globallist.ManagementGlobalIdentifierListParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.userlist.ManagementUserIdentifierListParams
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
@@ -25,7 +24,7 @@ open class ManagementIdentifierRepositoryMock : ManagementIdentifierRepository {
         )
     }
 
-    var getUserIdentifiersResultProvider: (UserId) -> AppResult<PagedResult<UserIdentifierSummary>> = { _ ->
+    var getUserIdentifiersResultProvider: (ManagementUserIdentifierListParams) -> AppResult<PagedResult<UserIdentifierSummary>> = { _ ->
         AppResult.Success(
             createTestPagedResult(
                 listOf(createTestUserIdentifierSummary())
@@ -42,36 +41,21 @@ open class ManagementIdentifierRepositoryMock : ManagementIdentifierRepository {
 
     var lastUserId: UserId? = null
     var lastIdentifierId: String? = null
-    var lastIdentifiers: List<String>? = null
-    var lastSortBy: UserSortValues.UserIdentifierSortBy? = null
+    var lastGlobalParams: ManagementGlobalIdentifierListParams? = null
+    var lastUserParams: ManagementUserIdentifierListParams? = null
 
     override suspend fun getIdentifiers(
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserIdentifierSortBy?,
-        sortOrder: SortOrder?,
-        userIds: List<String>?,
-        userAuthProviders: List<UserAuthProvider>?,
-        identifiers: List<String>?
+        params: ManagementGlobalIdentifierListParams?
     ): AppResult<PagedResult<UserIdentifierSummary>> {
-        lastSortBy = sortBy
-        lastIdentifiers = identifiers
+        lastGlobalParams = params
         return getIdentifiersResultProvider()
     }
 
     override suspend fun getUserIdentifiers(
-        userId: UserId,
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserIdentifierSortBy?,
-        sortOrder: SortOrder?,
-        userAuthProviders: List<UserAuthProvider>?,
-        identifiers: List<String>?
+        params: ManagementUserIdentifierListParams
     ): AppResult<PagedResult<UserIdentifierSummary>> {
-        lastUserId = userId
-        lastSortBy = sortBy
-        lastIdentifiers = identifiers
-        return getUserIdentifiersResultProvider(userId)
+        lastUserParams = params
+        return getUserIdentifiersResultProvider(params)
     }
 
     override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivate> {

@@ -4,13 +4,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.list.SelfIdentifierListParams
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.otpconfirmation.createTestOtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierPrivate
@@ -55,12 +53,7 @@ open class IdentifierRepositoryMock : IdentifierRepository {
     }
 
     override suspend fun getUserIdentifiers(
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserIdentifierSortBy?,
-        sortOrder: SortOrder?,
-        userAuthProviders: List<UserAuthProvider>?,
-        identifiers: List<String>?
+        params: SelfIdentifierListParams?
     ): AppResult<PagedResult<UserIdentifierSummary>> = getUserIdentifiersResultProvider()
 
     override suspend fun deleteUserIdentifier(identifierId: UserIdentifierId): AppResult<Unit> {

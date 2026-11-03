@@ -17,6 +17,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToPhoneRequest
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.network.model.otpconfirmation.createTestOtpConfirmationPayload
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.auth.data.createTestAuthDataPayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.request.auth.login.createTestLoginByExternalAuthProviderRequest
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -57,7 +58,12 @@ class OpenLoginRepositoryImplTest {
         val api = OpenLoginApiMock().apply { loginByExternalAuthProviderResult = AppResult.Success(wire) }
         val repo = OpenLoginRepositoryImpl(api, ConfirmationRepositoryMock())
 
-        val loginResult = repo.loginByExternalAuthProvider(UserAuthProvider.GOOGLE, EXTERNAL_ID_TOKEN)
+        val loginResult = repo.loginByExternalAuthProvider(
+            createTestLoginByExternalAuthProviderRequest(
+                authProvider = UserAuthProvider.GOOGLE.value,
+                externalProviderToken = EXTERNAL_ID_TOKEN
+            )
+        )
 
         val success = assertIs<AppResult.Success<AuthData>>(loginResult)
         assertEquals(wire.toAuthData(), success.data)

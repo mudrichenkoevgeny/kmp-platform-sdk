@@ -6,20 +6,19 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.li
 /**
  * Manages a specific user's identifiers: listing and navigation to detail screen.
  */
-interface UserIdentifierListComponent :
-    io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListOwner {
+interface UserIdentifierListComponent : IdentifierListOwner {
     /** Reactive UI state. */
     val state: Value<UserIdentifierListScreenState>
 
     /** Refreshes the identifier list. */
     fun onRefresh()
-    
+
     /** Navigates to identifier detail screen. */
     fun onIdentifierClick(identifierId: String)
-    
+
     /** Requests the next page of identifiers if available. */
     fun onLoadNextPage()
-    
+
     /** Navigates back. */
     fun onBackClick()
 }

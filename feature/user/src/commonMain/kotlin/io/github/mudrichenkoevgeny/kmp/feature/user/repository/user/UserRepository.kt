@@ -1,6 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.repository.user
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
+import io.github.mudrichenkoevgeny.kmp.feature.user.domain.model.user.UpdateUserParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
 import kotlinx.coroutines.flow.Flow
 
@@ -27,6 +28,14 @@ interface UserRepository {
      * Cancels a pending account deletion request and updates local state.
      */
     suspend fun restoreUser(): AppResult<UserPrivate>
+
+    /**
+     * Partially updates account details and profile fields of the currently authenticated user and updates local storage.
+     *
+     * @param params Domain parameters containing fields to change.
+     * @return Updated current user DTO, or a mapped failure.
+     */
+    suspend fun selfUpdateUser(params: UpdateUserParams): AppResult<UserPrivate>
 
     /**
      * Clears local user storage and authentication tokens.

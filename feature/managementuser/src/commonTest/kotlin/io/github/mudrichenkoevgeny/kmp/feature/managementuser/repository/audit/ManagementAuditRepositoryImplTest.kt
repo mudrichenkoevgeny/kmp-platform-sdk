@@ -5,7 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.audit.ManagementAuditApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.action.CompositeAuditActionTypeParser
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditSortValues
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditEventSortBy
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.metadata.CompositeAuditMetadataKeyParser
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.resource.CompositeAuditResourceTypeParser
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
@@ -58,7 +58,7 @@ class ManagementAuditRepositoryImplTest {
         override suspend fun getAuditEvents(
             pageNumber: Int?,
             pageSize: Int?,
-            sortBy: AuditSortValues.AuditEventSortBy?,
+            sortBy: AuditEventSortBy?,
             sortOrder: SortOrder?,
             actorIds: List<String>?,
             actorTypes: List<AuditActorType>?,
@@ -67,7 +67,7 @@ class ManagementAuditRepositoryImplTest {
             resources: List<String>?,
             resourceIds: List<String>?,
             statuses: List<AuditStatus>?,
-            messages: List<String>?
+            searchQuery: String?
         ): AppResult<PagedResult<AuditEventSummaryPayload>> = getAuditEventsResult
 
         override suspend fun getAuditEvent(eventId: String): AppResult<AuditEventPrivatePayload> = getAuditEventResult

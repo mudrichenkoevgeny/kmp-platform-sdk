@@ -7,6 +7,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.Web
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.user.OpenUserApi
+import io.github.mudrichenkoevgeny.kmp.feature.user.domain.model.user.UpdateUserParams
+import io.github.mudrichenkoevgeny.kmp.feature.user.mapper.user.toSelfUpdateUserRequest
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
@@ -84,6 +86,18 @@ class OpenUserRepositoryImpl(
     override suspend fun restoreUser(): AppResult<UserPrivate> {
         return mutex.withLock {
             openUserApi.restoreUser().mapSuccess { userPrivatePayload: UserPrivatePayload ->
+                val userPrivate = userPrivatePayload.toUserPrivate()
+                userStorage.updateCurrentUser(userPrivate)
+                userPrivate
+            }
+        }
+    }
+
+    override suspend fun selfUpdateUser(
+        params: UpdateUserParams
+    ): AppResult<UserPrivate> {
+        return mutex.withLock {
+            openUserApi.selfUpdateUser(params.toSelfUpdateUserRequest()).mapSuccess { userPrivatePayload ->
                 val userPrivate = userPrivatePayload.toUserPrivate()
                 userStorage.updateCurrentUser(userPrivate)
                 userPrivate

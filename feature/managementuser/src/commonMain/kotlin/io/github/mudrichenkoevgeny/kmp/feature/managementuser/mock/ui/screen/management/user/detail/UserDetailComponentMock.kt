@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.ma
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.SelectedFilePayload
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailScreenState
 
@@ -25,6 +26,10 @@ class UserDetailComponentMock(
     var auditEventsCalls = 0
     var retryCalls = 0
     var backCalls = 0
+    var lastNicknameChanged: String? = null
+    var lastDisplayNameChanged: String? = null
+    var lastAvatarFileSelected: SelectedFilePayload? = null
+    var lastBirthdateChanged: String? = null
     var lastAuthorityLevelChanged: String? = null
     var lastAccountStatusChanged: String? = null
     var lastLockoutTypeChanged: String? = null
@@ -32,6 +37,22 @@ class UserDetailComponentMock(
     var lastQuotaBytesChanged: String? = null
     var lastMaxUploadSizeBytesChanged: String? = null
     var lastMaxPendingUploadsChanged: String? = null
+
+    override fun onNicknameChanged(value: String) {
+        lastNicknameChanged = value
+    }
+
+    override fun onDisplayNameChanged(value: String) {
+        lastDisplayNameChanged = value
+    }
+
+    override fun onAvatarFileSelected(payload: SelectedFilePayload) {
+        lastAvatarFileSelected = payload
+    }
+
+    override fun onBirthdateChanged(value: String) {
+        lastBirthdateChanged = value
+    }
 
     override fun onAuthorityLevelChanged(value: String) {
         lastAuthorityLevelChanged = value

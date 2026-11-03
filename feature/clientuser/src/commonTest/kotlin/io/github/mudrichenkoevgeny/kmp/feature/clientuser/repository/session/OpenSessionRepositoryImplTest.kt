@@ -2,7 +2,6 @@ package io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.session
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.api.session.SessionApiMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorageMock
@@ -24,7 +23,7 @@ import kotlin.test.assertTrue
 class OpenSessionRepositoryImplTest {
 
     @Test
-    fun `getSessions should update storage on success`() = runTest {
+    fun `getSessions should return success from api`() = runTest {
         val payload = createTestUserSessionSummaryPayload()
         val paged = createTestPagedResult(listOf(payload))
         val api = SessionApiMock().apply {
@@ -37,11 +36,11 @@ class OpenSessionRepositoryImplTest {
         val result = repository.getSessions()
 
         assertIs<AppResult.Success<PagedResult<UserSessionSummary>>>(result)
-        assertEquals(paged, storage.lastUpdatedSessionsPayload)
+        assertEquals(1, result.data.items.size)
     }
 
     @Test
-    fun `getSession should add to storage on success`() = runTest {
+    fun `getSession should return success from api`() = runTest {
         val payload = createTestUserSessionPrivatePayload()
         val api = SessionApiMock().apply {
             getSessionResult = AppResult.Success(payload)
@@ -53,7 +52,7 @@ class OpenSessionRepositoryImplTest {
         val result = repository.getSession(UserSessionId.generate())
 
         assertIs<AppResult.Success<UserSessionPrivate>>(result)
-        assertEquals(payload.id, storage.lastAddedSession?.id?.value?.toHexDashString())
+        assertEquals(payload.id, result.data.id.value.toHexDashString())
     }
 
     @Test
@@ -72,7 +71,7 @@ class OpenSessionRepositoryImplTest {
     }
 
     @Test
-    fun `deleteSession should remove from storage on success`() = runTest {
+    fun `deleteSession should return success from api`() = runTest {
         val sessionId = UserSessionId.generate()
         val api = SessionApiMock().apply {
             deleteSessionResult = AppResult.Success(Unit)
@@ -84,25 +83,19 @@ class OpenSessionRepositoryImplTest {
         val result = repository.deleteSession(sessionId)
 
         assertIs<AppResult.Success<Unit>>(result)
-        assertEquals(sessionId, storage.lastRemovedSessionId)
     }
 
     @Test
-    fun `deleteAllOtherSessions should remove deleted IDs from storage`() = runTest {
-        val id1 = UserSessionId.generate()
-        val deletedIds = listOf(id1.value.toHexDashString())
-        
+    fun `deleteAllOtherSessions should return success from api`() = runTest {
         val api = SessionApiMock().apply {
-            deleteAllOtherSessionsResult = AppResult.Success(DeletedSessionsPayload(deletedIds))
+            deleteAllOtherSessionsResult = AppResult.Success(DeletedSessionsPayload(emptyList()))
         }
         val storage = UserStorageMock()
         val authStorage = AuthStorageMock()
-        storage.addUserSession(createTestUserSessionSummary(id = id1))
         val repository = OpenSessionRepositoryImpl(api, storage, authStorage)
 
         val result = repository.deleteAllOtherSessions()
 
         assertIs<AppResult.Success<Unit>>(result)
-        assertEquals(listOf(id1), storage.lastRemovedSessionsList)
     }
 }

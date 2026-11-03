@@ -21,7 +21,7 @@ class IosClientDeviceInfoProvider : ClientDeviceInfoProvider {
             deviceId = ClientDeviceId.generate(),
             deviceName = "${device.systemName} ${device.model}",
             clientType = ClientType.IOS,
-            language = language,
+            language = ClientDeviceInfo.parsePrimaryLanguage(language),
             appVersion = appVersion,
             operationSystemVersion = device.systemVersion
         )

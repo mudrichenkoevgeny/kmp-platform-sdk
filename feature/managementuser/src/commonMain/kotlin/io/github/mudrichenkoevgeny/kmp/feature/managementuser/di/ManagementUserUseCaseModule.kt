@@ -69,8 +69,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionUs
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.LogoutUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.ReauthenticateSessionUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.RestoreUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.SelfUpdateUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ValidateDisplayNameUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ValidateNicknameUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.displayname.DisplayNameValidatorImpl
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.nickname.NicknameValidatorImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.DisableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.EnableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.GetRecoveryCodesUseCase
@@ -549,6 +555,35 @@ internal class ManagementUserUseCaseModule(
     val managementDeleteSessionUseCase by lazy {
         ManagementDeleteSessionUseCase(
             managementSessionRepository = managementUserRepositoryModule.managementSessionRepository
+        )
+    }
+
+    /** Partially updates account details and profile fields of the currently authenticated manager user. */
+    val selfUpdateUserUseCase by lazy {
+        SelfUpdateUserUseCase(
+            userRepository = managementUserRepositoryModule.selfManagementUserRepository
+        )
+    }
+
+    val getAuthSettingsUseCase by lazy {
+        GetAuthSettingsUseCase(
+            openAuthSettingsRepository = managementUserRepositoryModule.openAuthSettingsRepository
+        )
+    }
+
+    /** Validates nickname format and length constraints. */
+    val validateNicknameUseCase by lazy {
+        ValidateNicknameUseCase(
+            nicknameValidator = NicknameValidatorImpl(),
+            getAuthSettingsUseCase = getAuthSettingsUseCase
+        )
+    }
+
+    /** Validates display name format and length constraints. */
+    val validateDisplayNameUseCase by lazy {
+        ValidateDisplayNameUseCase(
+            displayNameValidator = DisplayNameValidatorImpl(),
+            getAuthSettingsUseCase = getAuthSettingsUseCase
         )
     }
 }

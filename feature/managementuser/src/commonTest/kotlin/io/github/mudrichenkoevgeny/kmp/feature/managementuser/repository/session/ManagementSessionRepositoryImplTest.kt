@@ -10,6 +10,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.globallist.ManagementGlobalSessionListParams
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.session.createTestUserSessionSummaryPayload
@@ -39,23 +40,10 @@ class ManagementSessionRepositoryImplTest {
         api.getSessionsResult = AppResult.Success(wire)
 
         val result = repo.getSessions(
-            pageNumber = 1,
-            pageSize = 20,
-            sortBy = null,
-            sortOrder = null,
-            userIds = null,
-            userRoles = null,
-            identifiers = null,
-            identifierIds = null,
-            userAuthProviders = null,
-            clientTypes = null,
-            userAgents = null,
-            ipAddresses = null,
-            languages = null,
-            deviceIds = null,
-            deviceNames = null,
-            appVersions = null,
-            operationSystemVersions = null
+            params = ManagementGlobalSessionListParams(
+                pageNumber = 1,
+                pageSize = 20
+            )
         )
 
         val success = assertIs<AppResult.Success<PagedResult<UserSessionSummary>>>(result)

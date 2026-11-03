@@ -10,6 +10,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.client.n
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.UserErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.UserModuleStrings
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.resolveDisplayNameTooLongMessage
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.resolveDisplayNameTooShortMessage
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.resolveNicknameTooLongMessage
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.resolveNicknameTooShortMessage
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.resolveTotalUserIdentifiersLimitReachedMessage
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.resolveUserIdentifierLimitReachedMessage
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.resolveUserLockedMessage
@@ -101,6 +105,22 @@ open class UserErrorParser(
             }
 
             UserErrorCodes.REGISTRATION_DISABLED -> strings.errors.registrationDisabled
+
+            UserErrorCodes.NICKNAME_ALREADY_TAKEN -> strings.errors.nicknameAlreadyTaken
+
+            UserErrorCodes.NICKNAME_CHANGE_DISABLED -> strings.errors.nicknameChangeDisabled
+
+            UserErrorCodes.NICKNAME_TOO_SHORT -> strings.resolveNicknameTooShortMessage(args[UserErrorArgs.NICKNAME_MIN_LENGTH])
+
+            UserErrorCodes.NICKNAME_TOO_LONG -> strings.resolveNicknameTooLongMessage(args[UserErrorArgs.NICKNAME_MAX_LENGTH])
+
+            UserErrorCodes.INVALID_NICKNAME_CHARACTERS -> strings.errors.invalidNicknameCharacters
+
+            UserErrorCodes.DISPLAY_NAME_TOO_SHORT -> strings.resolveDisplayNameTooShortMessage(args[UserErrorArgs.DISPLAY_NAME_MIN_LENGTH])
+
+            UserErrorCodes.DISPLAY_NAME_TOO_LONG -> strings.resolveDisplayNameTooLongMessage(args[UserErrorArgs.DISPLAY_NAME_MAX_LENGTH])
+
+            UserErrorCodes.INVALID_DISPLAY_NAME_CHARACTERS -> strings.errors.invalidDisplayNameCharacters
 
             ClientUserErrorCodes.EXTERNAL_AUTH_CANCELLED -> strings.errors.externalAuthCancelled
 

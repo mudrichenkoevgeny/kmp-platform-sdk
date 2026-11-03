@@ -4,7 +4,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.flatMap
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.google.GoogleAuthService
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 
 /**
@@ -24,10 +23,10 @@ class AddUserIdentifierGoogleUseCase(
      */
     suspend fun execute(): AppResult<UserIdentifierPrivate> {
         return authService.signIn()
-            .flatMap { externalProviderToken ->
+            .flatMap { loginByExternalAuthProviderRequest ->
                 identifierRepository.addUserIdentifierExternalAuthProvider(
-                    UserAuthProvider.GOOGLE.value,
-                    externalProviderToken
+                    loginByExternalAuthProviderRequest.authProvider,
+                    loginByExternalAuthProviderRequest.externalProviderToken
                 )
             }
     }

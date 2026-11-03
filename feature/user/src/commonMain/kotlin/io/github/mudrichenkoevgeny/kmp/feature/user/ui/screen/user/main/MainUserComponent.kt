@@ -15,6 +15,9 @@ interface MainUserComponent {
     /** Action to open TOTP security settings. */
     fun onTotpMainClick()
 
+    /** Action to edit user details. */
+    fun onEditUserClick()
+
     /** Action to open sessions management. */
     fun onSessionsClick()
 

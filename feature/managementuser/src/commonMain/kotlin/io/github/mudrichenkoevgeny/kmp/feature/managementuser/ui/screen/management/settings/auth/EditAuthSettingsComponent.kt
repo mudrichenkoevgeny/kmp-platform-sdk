@@ -38,6 +38,21 @@ interface EditAuthSettingsComponent {
     /** Updates max external provider identifiers field. */
     fun onMaxIdentifiersPerExternalProviderChanged(value: String)
 
+    /** Updates user nickname min length field. */
+    fun onUserNicknameMinLengthChanged(value: String)
+
+    /** Updates user nickname max length field. */
+    fun onUserNicknameMaxLengthChanged(value: String)
+
+    /** Updates user display name min length field. */
+    fun onUserDisplayNameMinLengthChanged(value: String)
+
+    /** Updates user display name max length field. */
+    fun onUserDisplayNameMaxLengthChanged(value: String)
+
+    /** Toggles whether user nickname change is allowed. */
+    fun onIsUserNicknameChangeAllowedToggled(enabled: Boolean)
+
     /** Updates max active sessions for open user field. */
     fun onMaxActiveSessionsForOpenUserChanged(value: String)
 

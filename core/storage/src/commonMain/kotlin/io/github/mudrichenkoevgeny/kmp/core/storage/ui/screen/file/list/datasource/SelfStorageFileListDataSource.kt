@@ -43,11 +43,25 @@ class SelfStorageFileListDataSource(
             pageNumber = pageNumber,
             sortBy = sortBy,
             sortOrder = sortOrder,
-            categories = categoryChoice?.let { listOf(it) } ?: emptyList(),
-            visibilities = visibilityChoice?.let { listOf(it) } ?: emptyList(),
-            statuses = statusChoices,
+            fileIds = fileIdText?.let { listOf(it) } ?: emptyList(),
+            fileName = fileNameText,
+            fileSizeBytesFrom = fileSizeBytesFromNumber,
+            fileSizeBytesTo = fileSizeBytesToNumber,
             mimeTypes = mimeTypeText?.let { listOf(it) } ?: emptyList(),
-            fileName = fileNameText
+            categories = categoryChoice?.let { listOf(it) } ?: emptyList(),
+            excludeCategories = excludeCategoriesChoices,
+            visibilities = visibilityChoice?.let { listOf(it) } ?: emptyList(),
+            excludeVisibilities = excludeVisibilitiesChoices,
+            statuses = statusChoices,
+            excludeStatuses = excludeStatusesChoices,
+            targetScopes = targetScopeText?.let { listOf(it) } ?: emptyList(),
+            isTargetScopeSet = isTargetScopeSetChoice,
+            createdAtFrom = createdAtFromText,
+            createdAtTo = createdAtToText,
+            updatedAtFrom = updatedAtFromText,
+            updatedAtTo = updatedAtToText,
+            isUpdatedAtSet = isUpdatedAtSetChoice,
+            searchQuery = searchQueryText
         )
     }
 }

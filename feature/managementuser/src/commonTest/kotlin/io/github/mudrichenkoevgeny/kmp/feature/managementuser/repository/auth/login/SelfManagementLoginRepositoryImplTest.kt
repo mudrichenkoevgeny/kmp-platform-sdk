@@ -10,6 +10,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.auth.data.createTestAuthDataPayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.request.auth.login.createTestLoginByExternalAuthProviderRequest
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -56,7 +57,12 @@ class SelfManagementLoginRepositoryImplTest {
     @Test
     fun `unsupported methods return ContractViolation`() = runTest {
         val phoneResult = repository.loginByPhone("123", "456")
-        val externalResult = repository.loginByExternalAuthProvider(UserAuthProvider.GOOGLE, "token")
+        val externalResult = repository.loginByExternalAuthProvider(
+            createTestLoginByExternalAuthProviderRequest(
+                authProvider = UserAuthProvider.GOOGLE.value,
+                externalProviderToken = "token"
+            )
+        )
         val sendResult = repository.sendLoginConfirmationToPhone("123")
 
         val phoneError = assertIs<AppResult.Error>(phoneResult).error

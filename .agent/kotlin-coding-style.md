@@ -22,6 +22,17 @@ This document defines the mandatory Kotlin syntax and formatting standards for t
 ### Trailing Commas
 - **Strict Ban:** Do not write trailing commas at the end of argument, parameter, or entry lists.
 
+### Non-Null Assertion Operator (`!!`)
+- **Strict Ban:** The non-null assertion operator (`!!`) is strictly forbidden in production code.
+- **Allowed Alternatives:**
+  - Handle absence gracefully using safe calls (`?.`), Elvis operators (`?:`), safe casts (`as?`), or explicit `if`/`when` smart-casts.
+  - Use `requireNotNull(...)` or `checkNotNull(...)` with descriptive messages only when asserting invariants or unrecoverable programming errors, never as a substitute for error handling.
+- **Exceptions:** Allowed in test code (`*Test.kt`, `src/commonTest/`, `src/test/`) when asserting non-null values where failure is intended to fail the test.
+
+### Single Declaration Per File
+- **Strict Requirement:** Every public `interface`, `class`, or `object` must reside in its own dedicated file matching its declaration name.
+- **Strict Ban:** Do not place an interface and its implementation class in the same file.
+
 ### Mandatory Complete Implementation
 - **Production-Ready Code:** All created or modified files must contain complete, production-ready code.
 - **No Stubs/Placeholders:** Placeholder code, dummy components, `TODO()` markers, and default generator stubs are strictly prohibited unless the developer explicitly asks for a stub.

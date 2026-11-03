@@ -3,15 +3,12 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.s
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.session.ManagementSessionRepository
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.globallist.ManagementGlobalSessionListParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.userlist.ManagementUserSessionListParams
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
@@ -23,7 +20,7 @@ open class ManagementSessionRepositoryMock : ManagementSessionRepository {
         AppResult.Success(createTestPagedResult(listOf(createTestUserSessionSummary())))
     }
 
-    var getUserSessionsResultProvider: (UserId) -> AppResult<PagedResult<UserSessionSummary>> = { _ ->
+    var getUserSessionsResultProvider: (ManagementUserSessionListParams) -> AppResult<PagedResult<UserSessionSummary>> = { _ ->
         AppResult.Success(createTestPagedResult(listOf(createTestUserSessionSummary())))
     }
 
@@ -37,55 +34,21 @@ open class ManagementSessionRepositoryMock : ManagementSessionRepository {
 
     var lastUserId: UserId? = null
     var lastSessionId: String? = null
-    var lastIpAddresses: List<String>? = null
-    var lastSortBy: UserSortValues.UserSessionSortBy? = null
+    var lastGlobalParams: ManagementGlobalSessionListParams? = null
+    var lastUserParams: ManagementUserSessionListParams? = null
 
     override suspend fun getSessions(
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserSessionSortBy?,
-        sortOrder: SortOrder?,
-        userIds: List<String>?,
-        userRoles: List<UserRole>?,
-        identifiers: List<String>?,
-        identifierIds: List<String>?,
-        userAuthProviders: List<UserAuthProvider>?,
-        clientTypes: List<ClientType>?,
-        userAgents: List<String>?,
-        ipAddresses: List<String>?,
-        languages: List<String>?,
-        deviceIds: List<String>?,
-        deviceNames: List<String>?,
-        appVersions: List<String>?,
-        operationSystemVersions: List<String>?
+        params: ManagementGlobalSessionListParams?
     ): AppResult<PagedResult<UserSessionSummary>> {
-        lastSortBy = sortBy
-        lastIpAddresses = ipAddresses
+        lastGlobalParams = params
         return getSessionsResultProvider()
     }
 
     override suspend fun getUserSessions(
-        userId: UserId,
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserSessionSortBy?,
-        sortOrder: SortOrder?,
-        identifiers: List<String>?,
-        identifierIds: List<String>?,
-        userAuthProviders: List<UserAuthProvider>?,
-        clientTypes: List<ClientType>?,
-        userAgents: List<String>?,
-        ipAddresses: List<String>?,
-        languages: List<String>?,
-        deviceIds: List<String>?,
-        deviceNames: List<String>?,
-        appVersions: List<String>?,
-        operationSystemVersions: List<String>?
+        params: ManagementUserSessionListParams
     ): AppResult<PagedResult<UserSessionSummary>> {
-        lastUserId = userId
-        lastSortBy = sortBy
-        lastIpAddresses = ipAddresses
-        return getUserSessionsResultProvider(userId)
+        lastUserParams = params
+        return getUserSessionsResultProvider(params)
     }
 
     override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivate> {

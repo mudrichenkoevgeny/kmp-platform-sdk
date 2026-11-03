@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.auth.google
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByExternalAuthProviderRequest
 
 /**
  * No-op Google integration that always fails with [UserError.ExternalAuthFailed].
@@ -16,7 +17,7 @@ class DisabledGoogleAuthService : GoogleAuthService {
             Exception("Google Auth is not supported")
         )
     )
-    override suspend fun signIn(): AppResult<String> {
+    override suspend fun signIn(): AppResult<LoginByExternalAuthProviderRequest> {
         return error()
     }
 

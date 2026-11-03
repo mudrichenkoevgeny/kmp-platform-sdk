@@ -9,6 +9,7 @@ import com.arkivanov.decompose.router.slot.dismiss
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.doOnCreate
+import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants.INITIAL_PAGE_NUMBER
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
@@ -23,7 +24,7 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.datasour
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.dialog.StorageFileListDialogChild
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.dialog.StorageFileListDialogConfig
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.StorageFileSummary
-import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.listing.StorageFilterValues.StorageFileFilterValues
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.listing.StorageFileFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.status.StorageFileStatus
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.request.file.DeleteFilesBatchRequest
 import kotlinx.coroutines.launch
@@ -323,42 +324,20 @@ class StorageFileListComponentImpl(
                             PaginationState()
                         }
                         val nextPaging = currentPaging.appendResult(filesResult.data)
-
-                        when (current) {
-                            is StorageFileListScreenState.Content -> {
-                                _state.value = current.copy(
-                                    paging = nextPaging,
-                                    actionLoading = false
-                                )
-                            }
-                            is StorageFileListScreenState.Loading,
-                            is StorageFileListScreenState.Error -> {
-                                _state.value = StorageFileListScreenState.Content(
-                                    paging = nextPaging,
-                                    selectedFileIds = emptySet(),
-                                    isFilterPanelExpanded = isFilterPanelExpanded,
-                                    sortState = activeSortState,
-                                    filterStates = activeFilterStates,
-                                    actionLoading = false,
-                                    actionError = null
-                                )
-                            }
-                        }
+                        val currentContent = current as? StorageFileListScreenState.Content
+                        _state.value = createContent(currentContent, nextPaging, actionLoading = false)
                     }
                     is AppResult.Error -> {
-                        when (current) {
-                            is StorageFileListScreenState.Content -> {
-                                _state.value = current.copy(
-                                    actionLoading = false,
-                                    actionError = filesResult.error
-                                )
-                            }
-                            is StorageFileListScreenState.Loading,
-                            is StorageFileListScreenState.Error -> {
-                                _state.value = StorageFileListScreenState.Error(
-                                    error = filesResult.error
-                                )
-                            }
+                        val currentContent = current as? StorageFileListScreenState.Content
+                        if (currentContent != null) {
+                            _state.value = currentContent.copy(
+                                actionLoading = false,
+                                actionError = filesResult.error
+                            )
+                        } else {
+                            _state.value = StorageFileListScreenState.Error(
+                                error = filesResult.error
+                            )
                         }
                     }
                 }
@@ -367,6 +346,25 @@ class StorageFileListComponentImpl(
             }
         }
     }
+
+    private fun createContent(
+        currentContent: StorageFileListScreenState.Content?,
+        newPaging: PaginationState<StorageFileSummary>,
+        actionLoading: Boolean = false,
+        actionError: AppError? = null
+    ) = currentContent?.copy(
+        paging = newPaging,
+        actionLoading = actionLoading,
+        actionError = actionError
+    ) ?: StorageFileListScreenState.Content(
+        paging = newPaging,
+        selectedFileIds = emptySet(),
+        isFilterPanelExpanded = isFilterPanelExpanded,
+        sortState = activeSortState,
+        filterStates = activeFilterStates,
+        actionLoading = actionLoading,
+        actionError = actionError
+    )
 
     private fun applyLocalDeletion(
         current: StorageFileListScreenState.Content,

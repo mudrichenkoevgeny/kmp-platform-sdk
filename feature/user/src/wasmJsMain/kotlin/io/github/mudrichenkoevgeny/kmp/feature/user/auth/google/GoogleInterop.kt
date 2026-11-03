@@ -67,3 +67,33 @@ fun createGoogleConfig(clientId: String, callback: (JsAny) -> Unit): JsAny =
  */
 fun getCredentialFromJsResponse(response: JsAny): String =
     js("response.credential")
+
+/**
+ * Extracts the user's display name from the decoded JWT ID Token payload.
+ *
+ * @param response The raw [JsAny] response received from the Google callback.
+ * @return The user's display name, or null if parsing fails or name is not present.
+ */
+fun getDisplayNameFromJsResponse(response: JsAny): String? = js(
+    """
+    (() => {
+        try {
+            const token = response.credential;
+            if (!token) return null;
+            const base64Url = token.split('.')[1];
+            if (!base64Url) return null;
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(
+                atob(base64)
+                    .split('')
+                    .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                    .join('')
+            );
+            const payload = JSON.parse(jsonPayload);
+            return payload.name || null;
+        } catch (e) {
+            return null;
+        }
+    })()
+    """
+)

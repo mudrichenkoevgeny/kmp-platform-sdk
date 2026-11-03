@@ -243,6 +243,7 @@ class ManagementRootComponentImpl(
                 componentContext = context,
                 params = config.params,
                 getUsersUseCase = getUsersUseCase,
+                deleteUserUseCase = deleteUserUseCase,
                 userRepository = userRepository,
                 onNavigateToUserDetail = { userId ->
                     navigation.bringToFront(ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString())))
@@ -261,6 +262,7 @@ class ManagementRootComponentImpl(
                 updateUserUseCase = updateUserUseCase,
                 deleteUserUseCase = deleteUserUseCase,
                 managementDisableTotpUseCase = managementDisableTotpUseCase,
+                uploadFileUseCase = storageDependencies?.uploadFileUseCase,
                 userRepository = userRepository,
                 onNavigateToSessions = { userId ->
                     navigation.bringToFront(ManagementUsersNavigation.UserSessionList(ManagementUserSessionListParams(userId = userId.asHexDashString())))
@@ -291,6 +293,7 @@ class ManagementRootComponentImpl(
             CreateUserComponentImpl(
                 componentContext = context,
                 createUserUseCase = createUserUseCase,
+                uploadFileUseCase = storageDependencies?.uploadFileUseCase,
                 onUserCreated = { stack.value.notifyUserCreated() },
                 onSuccess = navigation::pop,
                 onBack = { handleBack(ManagementUsersNavigation.UserList()) }
@@ -356,7 +359,7 @@ class ManagementRootComponentImpl(
                 componentContext = context,
                 params = config.params,
                 getAuditEventsUseCase = getAuditEventsUseCase,
-                onNavigateToEventDetail = { eventId ->
+                onNavigateToAuditEventDetail = { eventId ->
                     navigation.bringToFront(ManagementAuditNavigation.AuditEventDetail(ManagementAuditEventDetailParams(eventId = eventId.asHexDashString())))
                 },
                 onBack = { handleBack() }

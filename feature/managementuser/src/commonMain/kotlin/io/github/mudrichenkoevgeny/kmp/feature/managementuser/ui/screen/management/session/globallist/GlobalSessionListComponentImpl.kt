@@ -5,9 +5,9 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.appendResult
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.BooleanListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ChoiceListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.TextListingFilterState
@@ -24,8 +24,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSessionFilterValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSessionSortBy
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
@@ -184,54 +184,122 @@ class GlobalSessionListComponentImpl(
         filterStates: Map<String, ListingFilterState>?
     ) {
         val sortOrder = if (sortState?.isAscending == true) SortOrder.ASC else SortOrder.DESC
-        val sortBy = sortState?.optionId?.let { UserSortValues.UserSessionSortBy.fromValueOrNull(it) } ?: params.sortBy
+        val sortBy = sortState?.optionId?.let { UserSessionSortBy.fromValueOrNull(it) } ?: params.sortBy
 
-        val userIds = (filterStates?.get(UserFilterValues.UserSessionFilterValues.USER_ID) as? TextListingFilterState)
+        val sessionId = (filterStates?.get(UserSessionFilterValues.SESSION_ID) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.sessionIds.ifEmpty { null }
+        val userIds = (filterStates?.get(UserSessionFilterValues.USER_ID) as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.userIds.ifEmpty { null }
-        val userRoles = (filterStates?.get(UserFilterValues.UserSessionFilterValues.USER_ROLE) as? ChoiceListingFilterState)
-            ?.selectedIds?.mapNotNull { UserRole.fromValueOrNull(it) }
-        val identifiers = (filterStates?.get(UserFilterValues.UserSessionFilterValues.IDENTIFIER) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
-        val identifierIds = (filterStates?.get(UserFilterValues.UserSessionFilterValues.IDENTIFIER_ID) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
-        val userAuthProviders = (filterStates?.get(UserFilterValues.UserSessionFilterValues.USER_AUTH_PROVIDER) as? ChoiceListingFilterState)
-            ?.selectedIds?.mapNotNull { UserAuthProvider.fromValueOrNull(it) }
-        val clientTypes = (filterStates?.get(UserFilterValues.UserSessionFilterValues.CLIENT_TYPE) as? ChoiceListingFilterState)
-            ?.selectedIds?.mapNotNull { ClientType.fromValueOrNull(it) }
-        val userAgents = (filterStates?.get(UserFilterValues.UserSessionFilterValues.USER_AGENT) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
-        val ipAddresses = (filterStates?.get(UserFilterValues.UserSessionFilterValues.IP_ADDRESS) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
-        val languages = (filterStates?.get(UserFilterValues.UserSessionFilterValues.LANGUAGE) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
-        val deviceIds = (filterStates?.get(UserFilterValues.UserSessionFilterValues.DEVICE_ID) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
-        val deviceNames = (filterStates?.get(UserFilterValues.UserSessionFilterValues.DEVICE_NAME) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
-        val appVersions = (filterStates?.get(UserFilterValues.UserSessionFilterValues.APP_VERSION) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
-        val operationSystemVersions = (filterStates?.get(UserFilterValues.UserSessionFilterValues.OPERATION_SYSTEM_VERSION) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+        val userRoles = (filterStates?.get(UserSessionFilterValues.USER_ROLE) as? ChoiceListingFilterState)
+            ?.selectedIds?.mapNotNull { UserRole.fromValueOrNull(it) } ?: params.userRoles.ifEmpty { null }
+        val excludeUserRoles = (filterStates?.get(UserSessionFilterValues.EXCLUDE_USER_ROLE) as? ChoiceListingFilterState)
+            ?.selectedIds?.mapNotNull { UserRole.fromValueOrNull(it) } ?: params.excludeUserRoles.ifEmpty { null }
+        val identifiers = (filterStates?.get(UserSessionFilterValues.IDENTIFIER) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.identifier?.takeIf { it.isNotBlank() }?.let { listOf(it) }
+        val identifierIds = (filterStates?.get(UserSessionFilterValues.IDENTIFIER_ID) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.identifierIds.ifEmpty { null }
+        val identifierDisplayName = (filterStates?.get(UserSessionFilterValues.IDENTIFIER_DISPLAY_NAME) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.identifierDisplayName
+        val userAuthProviders = (filterStates?.get(UserSessionFilterValues.IDENTIFIER_AUTH_PROVIDER) as? ChoiceListingFilterState)
+            ?.selectedIds?.mapNotNull { UserAuthProvider.fromValueOrNull(it) } ?: params.identifierAuthProviders
+        val excludeUserAuthProviders = (filterStates?.get(UserSessionFilterValues.EXCLUDE_IDENTIFIER_AUTH_PROVIDER) as? ChoiceListingFilterState)
+            ?.selectedIds?.mapNotNull { UserAuthProvider.fromValueOrNull(it) } ?: params.excludeIdentifierAuthProviders
+        val deviceIds = (filterStates?.get(UserSessionFilterValues.DEVICE_ID) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.deviceId?.let { listOf(it) }
+        val isDeviceIdSet = (filterStates?.get(UserSessionFilterValues.IS_DEVICE_ID_SET) as? BooleanListingFilterState)?.value ?: params.isDeviceIdSet
+        val deviceNames = (filterStates?.get(UserSessionFilterValues.DEVICE_NAME) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.deviceName?.let { listOf(it) }
+        val isDeviceNameSet = (filterStates?.get(UserSessionFilterValues.IS_DEVICE_NAME_SET) as? BooleanListingFilterState)?.value ?: params.isDeviceNameSet
+        val clientTypes = (filterStates?.get(UserSessionFilterValues.CLIENT_TYPE) as? ChoiceListingFilterState)
+            ?.selectedIds?.mapNotNull { ClientType.fromValueOrNull(it) } ?: params.clientTypes
+        val excludeClientTypes = (filterStates?.get(UserSessionFilterValues.EXCLUDE_CLIENT_TYPE) as? ChoiceListingFilterState)
+            ?.selectedIds?.mapNotNull { ClientType.fromValueOrNull(it) } ?: params.excludeClientTypes
+        val isClientTypeSet = (filterStates?.get(UserSessionFilterValues.IS_CLIENT_TYPE_SET) as? BooleanListingFilterState)?.value ?: params.isClientTypeSet
+        val userAgents = (filterStates?.get(UserSessionFilterValues.USER_AGENT) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.userAgent?.let { listOf(it) }
+        val isUserAgentSet = (filterStates?.get(UserSessionFilterValues.IS_USER_AGENT_SET) as? BooleanListingFilterState)?.value ?: params.isUserAgentSet
+        val ipAddresses = (filterStates?.get(UserSessionFilterValues.IP_ADDRESS) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.ipAddress?.let { listOf(it) }
+        val isIpAddressSet = (filterStates?.get(UserSessionFilterValues.IS_IP_ADDRESS_SET) as? BooleanListingFilterState)?.value ?: params.isIpAddressSet
+        val languages = (filterStates?.get(UserSessionFilterValues.LANGUAGE) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.language?.let { listOf(it) }
+        val isLanguageSet = (filterStates?.get(UserSessionFilterValues.IS_LANGUAGE_SET) as? BooleanListingFilterState)?.value ?: params.isLanguageSet
+        val appVersions = (filterStates?.get(UserSessionFilterValues.APP_VERSION) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.appVersion?.let { listOf(it) }
+        val isAppVersionSet = (filterStates?.get(UserSessionFilterValues.IS_APP_VERSION_SET) as? BooleanListingFilterState)?.value ?: params.isAppVersionSet
+        val operationSystemVersions = (filterStates?.get(UserSessionFilterValues.OPERATION_SYSTEM_VERSION) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.osVersion?.let { listOf(it) }
+        val isOperationSystemVersionSet = (filterStates?.get(UserSessionFilterValues.IS_OPERATION_SYSTEM_VERSION_SET) as? BooleanListingFilterState)?.value ?: params.isOperationSystemVersionSet
+        val expiresAtFrom = (filterStates?.get(UserSessionFilterValues.EXPIRES_AT_FROM) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.expiresAtFrom
+        val expiresAtTo = (filterStates?.get(UserSessionFilterValues.EXPIRES_AT_TO) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.expiresAtTo
+        val lastAccessedAtFrom = (filterStates?.get(UserSessionFilterValues.LAST_ACCESSED_AT_FROM) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.lastAccessedAtFrom
+        val lastAccessedAtTo = (filterStates?.get(UserSessionFilterValues.LAST_ACCESSED_AT_TO) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.lastAccessedAtTo
+        val lastReauthenticatedAtFrom = (filterStates?.get(UserSessionFilterValues.LAST_REAUTHENTICATED_AT_FROM) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.lastReauthenticatedAtFrom
+        val lastReauthenticatedAtTo = (filterStates?.get(UserSessionFilterValues.LAST_REAUTHENTICATED_AT_TO) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.lastReauthenticatedAtTo
+        val createdAtFrom = (filterStates?.get(UserSessionFilterValues.CREATED_AT_FROM) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.createdAtFrom
+        val createdAtTo = (filterStates?.get(UserSessionFilterValues.CREATED_AT_TO) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.createdAtTo
+        val updatedAtFrom = (filterStates?.get(UserSessionFilterValues.UPDATED_AT_FROM) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.updatedAtFrom
+        val updatedAtTo = (filterStates?.get(UserSessionFilterValues.UPDATED_AT_TO) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.updatedAtTo
+        val isUpdatedAtSet = (filterStates?.get(UserSessionFilterValues.IS_UPDATED_AT_SET) as? BooleanListingFilterState)
+            ?.value ?: params.isUpdatedAtSet
+        val searchQuery = (filterStates?.get(UserSessionFilterValues.SEARCH_QUERY) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.searchQuery?.takeIf { it.isNotBlank() }
 
         scope.launch {
             managementGetSessionsUseCase(
-                pageNumber = pageNumber,
-                pageSize = ListingConstants.DEFAULT_PAGE_SIZE,
-                sortBy = sortBy,
-                sortOrder = sortOrder,
-                userIds = userIds,
-                userRoles = userRoles,
-                identifiers = identifiers,
-                identifierIds = identifierIds,
-                userAuthProviders = userAuthProviders,
-                clientTypes = clientTypes,
-                userAgents = userAgents,
-                ipAddresses = ipAddresses,
-                languages = languages,
-                deviceIds = deviceIds,
-                deviceNames = deviceNames,
-                appVersions = appVersions,
-                operationSystemVersions = operationSystemVersions
+                params = ManagementGlobalSessionListParams(
+                    pageNumber = pageNumber,
+                    sortBy = sortBy,
+                    sortOrder = sortOrder,
+                    sessionIds = sessionId ?: emptyList(),
+                    userIds = userIds ?: emptyList(),
+                    userRoles = userRoles ?: emptyList(),
+                    excludeUserRoles = excludeUserRoles ?: emptyList(),
+                    identifier = identifiers?.firstOrNull() ?: "",
+                    identifierIds = identifierIds ?: emptyList(),
+                    identifierDisplayName = identifierDisplayName ?: "",
+                    identifierAuthProviders = userAuthProviders,
+                    excludeIdentifierAuthProviders = excludeUserAuthProviders,
+                    deviceId = deviceIds?.firstOrNull() ?: "",
+                    isDeviceIdSet = isDeviceIdSet,
+                    deviceName = deviceNames?.firstOrNull() ?: "",
+                    isDeviceNameSet = isDeviceNameSet,
+                    clientTypes = clientTypes,
+                    excludeClientTypes = excludeClientTypes,
+                    isClientTypeSet = isClientTypeSet,
+                    userAgent = userAgents?.firstOrNull() ?: "",
+                    isUserAgentSet = isUserAgentSet,
+                    ipAddress = ipAddresses?.firstOrNull() ?: "",
+                    isIpAddressSet = isIpAddressSet,
+                    language = languages?.firstOrNull() ?: "",
+                    isLanguageSet = isLanguageSet,
+                    appVersion = appVersions?.firstOrNull() ?: "",
+                    isAppVersionSet = isAppVersionSet,
+                    osVersion = operationSystemVersions?.firstOrNull() ?: "",
+                    isOperationSystemVersionSet = isOperationSystemVersionSet,
+                    expiresAtFrom = expiresAtFrom ?: "",
+                    expiresAtTo = expiresAtTo ?: "",
+                    lastAccessedAtFrom = lastAccessedAtFrom ?: "",
+                    lastAccessedAtTo = lastAccessedAtTo ?: "",
+                    lastReauthenticatedAtFrom = lastReauthenticatedAtFrom ?: "",
+                    lastReauthenticatedAtTo = lastReauthenticatedAtTo ?: "",
+                    createdAtFrom = createdAtFrom ?: "",
+                    createdAtTo = createdAtTo ?: "",
+                    updatedAtFrom = updatedAtFrom ?: "",
+                    updatedAtTo = updatedAtTo ?: "",
+                    isUpdatedAtSet = isUpdatedAtSet,
+                    searchQuery = searchQuery ?: ""
+                )
             )
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? GlobalSessionListScreenState.Content

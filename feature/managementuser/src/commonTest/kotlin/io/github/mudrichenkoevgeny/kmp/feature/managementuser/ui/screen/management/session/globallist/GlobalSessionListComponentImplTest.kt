@@ -13,8 +13,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.se
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserFilterValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSessionFilterValues
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSessionSortBy
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
@@ -68,7 +68,7 @@ class GlobalSessionListComponentImplTest {
         advanceUntilIdle()
 
         context.component.onFilterChanged(
-            UserFilterValues.UserSessionFilterValues.IP_ADDRESS,
+            UserSessionFilterValues.IP_ADDRESS,
             TextListingFilterState(value = "127.0.0.1")
         )
         context.component.onApplyFilters()
@@ -83,10 +83,10 @@ class GlobalSessionListComponentImplTest {
         val context = createTestContext(repository = repository, sessions = listOf(createTestUserSessionSummary()))
         advanceUntilIdle()
 
-        context.component.onSortChanged(ListingSortState(optionId = UserSortValues.UserSessionSortBy.CREATED_AT.value, isAscending = false))
+        context.component.onSortChanged(ListingSortState(optionId = UserSessionSortBy.CREATED_AT.value, isAscending = false))
         advanceUntilIdle()
 
-        assertEquals(UserSortValues.UserSessionSortBy.CREATED_AT, repository.lastSortBy)
+        assertEquals(UserSessionSortBy.CREATED_AT, repository.lastSortBy)
     }
 
     @Test

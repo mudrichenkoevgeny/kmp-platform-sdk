@@ -8,7 +8,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.create.CreateByEmailRequest
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
+import io.github.mudrichenkoevgeny.kmp.feature.user.domain.model.user.UpdateUserParams
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.user.createTestUserPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.user.createTestUserSummaryPayload
 import kotlinx.coroutines.test.runTest
@@ -82,14 +82,7 @@ class ManagementUserRepositoryImplTest {
 
         val result = repository.updateUser(
             testUserId,
-            UpdateUserRequest(
-                accountStatus = null,
-                authorityLevel = null,
-                permissionCodes = null,
-                lockoutType = null,
-                temporaryLockoutUntil = null,
-                storageConfiguration = null
-            )
+            UpdateUserParams()
         )
 
         assertIs<AppResult.Success<Unit>>(result)

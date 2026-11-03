@@ -8,9 +8,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login.LoginR
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.verifytotp.VerifyTotpPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByEmailRequest
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByExternalAuthProviderRequest
 
 /**
  * Implements [LoginRepository] using [SelfManagementLoginApi].
@@ -39,8 +39,7 @@ class SelfManagementLoginRepositoryImpl(
     }
 
     override suspend fun loginByExternalAuthProvider(
-        authProvider: UserAuthProvider,
-        externalProviderToken: String
+        loginByExternalAuthProviderRequest: LoginByExternalAuthProviderRequest
     ): AppResult<AuthData> {
         return methodNotSupported()
     }

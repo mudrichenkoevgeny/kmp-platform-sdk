@@ -6,16 +6,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.identifier.SelfManagementIdentifiersApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedresult.mapItems
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.list.SelfIdentifierListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.security.password.EmailPasswordChangeRequest
 
 /**
@@ -32,16 +30,9 @@ class SelfManagementIdentifierRepositoryImpl(
     }
 
     override suspend fun getUserIdentifiers(
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserIdentifierSortBy?,
-        sortOrder: SortOrder?,
-        userAuthProviders: List<UserAuthProvider>?,
-        identifiers: List<String>?
+        params: SelfIdentifierListParams?
     ): AppResult<PagedResult<UserIdentifierSummary>> {
-        return selfManagementIdentifiersApi.getUserIdentifiers(
-            pageNumber, pageSize, sortBy, sortOrder, userAuthProviders, identifiers
-        ).mapSuccess { pagedPayload ->
+        return selfManagementIdentifiersApi.getUserIdentifiers(params).mapSuccess { pagedPayload ->
             pagedPayload.mapItems { userIdentifierPayload ->
                 userIdentifierPayload.toUserIdentifierSummary()
             }

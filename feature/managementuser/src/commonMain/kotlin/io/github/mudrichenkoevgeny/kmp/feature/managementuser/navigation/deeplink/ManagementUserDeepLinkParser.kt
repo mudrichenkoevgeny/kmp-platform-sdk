@@ -67,6 +67,9 @@ class ManagementUserDeepLinkParser : DeepLinkParser<NavigationRoute> {
             path == ManagementSelfUserNavigation.BASE_USER_ROUTE || path == ManagementSelfUserNavigation.Main.route ->
                 ManagementSelfUserNavigation.Main
 
+            path == ManagementSelfUserNavigation.UserEdit.route ->
+                ManagementSelfUserNavigation.UserEdit
+
             path == ManagementSelfUserNavigation.BASE_TOTP_ROUTE || path == ManagementSelfUserNavigation.TotpMain.ROUTE ->
                 ManagementSelfUserNavigation.TotpMain(TotpMainParams.parse(queryMap))
 

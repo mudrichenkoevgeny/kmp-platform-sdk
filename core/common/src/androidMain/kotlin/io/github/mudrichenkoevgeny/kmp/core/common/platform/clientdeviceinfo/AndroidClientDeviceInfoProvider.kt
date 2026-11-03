@@ -29,7 +29,7 @@ class AndroidClientDeviceInfoProvider(
             deviceId = ClientDeviceId.generate(),
             deviceName = "${Build.MANUFACTURER} ${Build.MODEL}",
             clientType = ClientType.ANDROID,
-            language = Locale.getDefault().language,
+            language = ClientDeviceInfo.parsePrimaryLanguage(Locale.getDefault().language),
             appVersion = appVersion,
             operationSystemVersion = Build.VERSION.RELEASE
         )

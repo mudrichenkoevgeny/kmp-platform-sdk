@@ -10,6 +10,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.identifier.toUserIdentifierSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.list.SelfIdentifierListParams
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.identifier.createTestUserIdentifierPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.identifier.createTestUserIdentifierSummaryPayload
@@ -44,12 +45,10 @@ class SelfManagementIdentifierRepositoryImplTest {
         api.getUserIdentifiersResult = AppResult.Success(wire)
 
         val result = repo.getUserIdentifiers(
-            pageNumber = 1,
-            pageSize = 20,
-            sortBy = null,
-            sortOrder = null,
-            userAuthProviders = null,
-            identifiers = null
+            params = SelfIdentifierListParams(
+                pageNumber = 1,
+                pageSize = 20
+            )
         )
 
         val success = assertIs<AppResult.Success<PagedResult<UserIdentifierSummary>>>(result)

@@ -2,6 +2,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.auth.google
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByExternalAuthProviderRequest
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
@@ -18,14 +20,23 @@ class WasmGoogleAuthService(
 ) : GoogleAuthService {
 
     @OptIn(ExperimentalWasmJsInterop::class)
-    override suspend fun signIn(): AppResult<String> = suspendCancellableCoroutine { continuation ->
+    override suspend fun signIn(): AppResult<LoginByExternalAuthProviderRequest> = suspendCancellableCoroutine { continuation ->
         try {
             google.accounts.id.initialize(
                 createGoogleConfig(webClientId) { response ->
                     val token = getCredentialFromJsResponse(response)
                     if (continuation.isActive) {
                         if (token.isNotEmpty()) {
-                            continuation.resume(AppResult.Success(token))
+                            val displayName = getDisplayNameFromJsResponse(response)
+                            continuation.resume(
+                                AppResult.Success(
+                                    LoginByExternalAuthProviderRequest(
+                                        authProvider = UserAuthProvider.GOOGLE.value,
+                                        externalProviderToken = token,
+                                        displayName = displayName
+                                    )
+                                )
+                            )
                         } else {
                             continuation.resume(
                                 AppResult.Error(UserError.ExternalAuthFailed(

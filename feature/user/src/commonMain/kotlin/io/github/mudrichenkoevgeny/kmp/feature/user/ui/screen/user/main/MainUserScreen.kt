@@ -59,13 +59,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 object MainUserTestTags {
     const val REFRESH_BUTTON = "MainUser_RefreshButton"
     const val USER_ID_TEXT = "MainUser_UserIdText"
+    const val EDIT_USER_BUTTON = "MainUser_EditUserButton"
     const val FILES_BUTTON = "MainUser_FilesButton"
     const val LOGOUT_BUTTON = "MainUser_LogoutButton"
     const val LOGIN_BUTTON = "MainUser_LoginButton"
     const val GLOBAL_ERROR_TEXT = "MainUser_GlobalErrorText"
 }
 
-@OptIn(ExperimentalMaterial3Api::class, InternalApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainUserScreen(component: MainUserComponent) {
     val state by component.state.subscribeAsState()
@@ -111,6 +112,7 @@ fun MainUserScreen(component: MainUserComponent) {
                     is MainUserScreenState.Content -> {
                         MainUserContent(
                             state = current,
+                            onEditUserClick = component::onEditUserClick,
                             onTotpMainClick = component::onTotpMainClick,
                             onSessionsClick = component::onSessionsClick,
                             onIdentifiersClick = component::onIdentifiersClick,
@@ -212,6 +214,7 @@ private fun UnauthorizedUserContent(
 @Composable
 private fun MainUserContent(
     state: MainUserScreenState.Content,
+    onEditUserClick: () -> Unit,
     onTotpMainClick: () -> Unit,
     onSessionsClick: () -> Unit,
     onIdentifiersClick: () -> Unit,
@@ -252,6 +255,16 @@ private fun MainUserContent(
         )
 
         Spacer(modifier = Modifier.height(CoreTheme.dimens.paddingLarge))
+
+        CoreButton(
+            text = userUi.editProfileTitle,
+            onClick = onEditUserClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(MainUserTestTags.EDIT_USER_BUTTON)
+        )
+
+        Spacer(modifier = Modifier.height(CoreTheme.dimens.paddingSmall))
 
         CoreButton(
             text = userUi.totpMain,

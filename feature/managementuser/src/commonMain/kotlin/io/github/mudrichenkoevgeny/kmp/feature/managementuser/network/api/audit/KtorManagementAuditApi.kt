@@ -1,22 +1,16 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.audit
 
+import io.github.mudrichenkoevgeny.kmp.core.common.network.httprequest.parameters
 import io.github.mudrichenkoevgeny.kmp.core.common.network.utils.callResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditFilterValues
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.listing.AuditSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.screen.management.audit.list.ManagementAuditEventListParams
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.contract.AuditApiPaths
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.model.event.AuditEventPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.model.event.AuditEventSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.network.route.management.ManagementAuditRoutes
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.ListingParamNames
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
-import io.ktor.client.request.parameter
 
 /**
  * Ktor-backed implementation of [ManagementAuditApi].
@@ -27,32 +21,10 @@ class KtorManagementAuditApi(
     private val client: HttpClient
 ) : ManagementAuditApi {
     override suspend fun getAuditEvents(
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: AuditSortValues.AuditEventSortBy?,
-        sortOrder: SortOrder?,
-        actorIds: List<String>?,
-        actorTypes: List<AuditActorType>?,
-        actorUserRoles: List<UserRole>?,
-        actions: List<String>?,
-        resources: List<String>?,
-        resourceIds: List<String>?,
-        statuses: List<AuditStatus>?,
-        messages: List<String>?
+        params: ManagementAuditEventListParams?
     ): AppResult<PagedResult<AuditEventSummaryPayload>> = client.callResult {
         get(ManagementAuditRoutes.GET_AUDIT_EVENTS) {
-            parameter(ListingParamNames.Pagination.PAGE_NUMBER, pageNumber)
-            parameter(ListingParamNames.Pagination.PAGE_SIZE, pageSize)
-            parameter(ListingParamNames.Sort.SORT_BY, sortBy?.value)
-            parameter(ListingParamNames.Sort.SORT_ORDER, sortOrder?.value)
-            actorIds?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.ACTOR_ID, it) }
-            actorTypes?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.ACTOR_TYPE, it.value) }
-            actorUserRoles?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.ACTOR_USER_ROLE, it.name) }
-            actions?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.ACTION, it) }
-            resources?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.RESOURCE, it) }
-            resourceIds?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.RESOURCE_ID, it) }
-            statuses?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.STATUS, it.value) }
-            messages?.forEach { parameter(AuditFilterValues.AuditEventFilterValues.MESSAGE, it) }
+            parameters(params)
         }
     }
 

@@ -140,14 +140,7 @@ class SelfSessionListComponentImpl(
     ) {
         scope.launch {
             getSessionsUseCase(
-                pageNumber = pageNumber,
-                pageSize = params.pageSize,
-                sortBy = null,
-                sortOrder = params.sortOrder,
-                userAuthProviders = params.userAuthProviders.ifEmpty { null },
-                clientTypes = params.clientTypes.ifEmpty { null },
-                ipAddresses = params.ipAddresses.ifEmpty { null },
-                deviceNames = params.deviceNames.ifEmpty { null }
+                params = params.copy(pageNumber = pageNumber)
             )
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? SelfSessionListScreenState.Content

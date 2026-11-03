@@ -21,6 +21,7 @@ class MainUserComponentImpl(
     private val scheduleUserDeletionUseCase: ScheduleUserDeletionUseCase,
     private val onNavigateToLogin: () -> Unit,
     private val onNavigateToTotp: () -> Unit,
+    private val onNavigateToUserEdit: () -> Unit = {},
     private val onNavigateToSessions: () -> Unit,
     private val onNavigateToIdentifiers: () -> Unit,
     private val onNavigateToFilesList: () -> Unit = {}
@@ -40,6 +41,10 @@ class MainUserComponentImpl(
 
     override fun onTotpMainClick() {
         onNavigateToTotp()
+    }
+
+    override fun onEditUserClick() {
+        onNavigateToUserEdit()
     }
 
     override fun onSessionsClick() {

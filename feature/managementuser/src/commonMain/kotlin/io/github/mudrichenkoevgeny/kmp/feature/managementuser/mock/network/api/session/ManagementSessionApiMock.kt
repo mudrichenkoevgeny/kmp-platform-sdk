@@ -4,13 +4,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.session.ManagementSessionApi
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSortValues
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.globallist.ManagementGlobalSessionListParams
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.userlist.ManagementUserSessionListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
 
@@ -24,42 +21,11 @@ class ManagementSessionApiMock : ManagementSessionApi {
     var deleteAllUserSessionsResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
 
     override suspend fun getSessions(
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserSessionSortBy?,
-        sortOrder: SortOrder?,
-        userIds: List<String>?,
-        userRoles: List<UserRole>?,
-        identifiers: List<String>?,
-        identifierIds: List<String>?,
-        userAuthProviders: List<UserAuthProvider>?,
-        clientTypes: List<ClientType>?,
-        userAgents: List<String>?,
-        ipAddresses: List<String>?,
-        languages: List<String>?,
-        deviceIds: List<String>?,
-        deviceNames: List<String>?,
-        appVersions: List<String>?,
-        operationSystemVersions: List<String>?
+        params: ManagementGlobalSessionListParams?
     ): AppResult<PagedResult<UserSessionSummaryPayload>> = getSessionsResult
 
     override suspend fun getUserSessions(
-        userId: UserId,
-        pageNumber: Int?,
-        pageSize: Int?,
-        sortBy: UserSortValues.UserSessionSortBy?,
-        sortOrder: SortOrder?,
-        identifiers: List<String>?,
-        identifierIds: List<String>?,
-        userAuthProviders: List<UserAuthProvider>?,
-        clientTypes: List<ClientType>?,
-        userAgents: List<String>?,
-        ipAddresses: List<String>?,
-        languages: List<String>?,
-        deviceIds: List<String>?,
-        deviceNames: List<String>?,
-        appVersions: List<String>?,
-        operationSystemVersions: List<String>?
+        params: ManagementUserSessionListParams
     ): AppResult<PagedResult<UserSessionSummaryPayload>> = getUserSessionsResult
 
     override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivatePayload> = getSessionResult

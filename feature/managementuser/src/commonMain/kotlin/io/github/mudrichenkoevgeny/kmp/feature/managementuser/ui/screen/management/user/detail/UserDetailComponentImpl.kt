@@ -5,19 +5,31 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
+import io.github.mudrichenkoevgeny.kmp.core.common.model.UpdateField
+import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.SelectedFilePayload
+import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.base.UploadFileUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.DeleteUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.domain.model.user.UpdateUserParams
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.category.StorageCategory
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.FileUrlPresets
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.visibility.StorageFileVisibility
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.request.presigned.PresignedUrlRequest
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.storage.UserStorageTargetScopes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import kotlinx.coroutines.flow.firstOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.user.detail.UserDetailParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserStorageConfigurationPayload
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.UpdateUserRequest
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import kotlin.time.Instant
 
 /**
  * Default [UserDetailComponent] implementation: manages single user account detail inspection and administrative updates.
@@ -28,6 +40,7 @@ import kotlinx.coroutines.launch
  * @param updateUserUseCase Use case to update target user account status and settings.
  * @param deleteUserUseCase Use case to administratively delete target user account.
  * @param managementDisableTotpUseCase Use case to administratively disable TOTP 2FA for target user.
+ * @param uploadFileUseCase Direct upload usecase for avatar file updates.
  * @param onNavigateToSessions Callback to navigate to the user's sessions list.
  * @param onNavigateToIdentifiers Callback to navigate to the user's identifiers list.
  * @param onNavigateToAuditEvents Callback to navigate to audit events filtered by the user's ID.
@@ -41,6 +54,7 @@ class UserDetailComponentImpl(
     private val updateUserUseCase: UpdateUserUseCase,
     private val deleteUserUseCase: DeleteUserUseCase,
     private val managementDisableTotpUseCase: ManagementDisableTotpUseCase,
+    private val uploadFileUseCase: UploadFileUseCase? = null,
     private val userRepository: UserRepository? = null,
     private val onNavigateToSessions: (UserId) -> Unit,
     private val onNavigateToIdentifiers: (UserId) -> Unit,
@@ -59,6 +73,26 @@ class UserDetailComponentImpl(
 
     init {
         loadUser()
+    }
+
+    override fun onNicknameChanged(value: String) {
+        val currentContent = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = currentContent.copy(nicknameInput = value, saveError = null)
+    }
+
+    override fun onDisplayNameChanged(value: String) {
+        val currentContent = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = currentContent.copy(displayNameInput = value, saveError = null)
+    }
+
+    override fun onAvatarFileSelected(payload: SelectedFilePayload) {
+        val currentContent = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = currentContent.copy(selectedAvatarPayload = payload, saveError = null)
+    }
+
+    override fun onBirthdateChanged(value: String) {
+        val currentContent = _state.value as? UserDetailScreenState.Content ?: return
+        _state.value = currentContent.copy(birthdateInput = value, saveError = null)
     }
 
     override fun onAuthorityLevelChanged(value: String) {
@@ -105,32 +139,73 @@ class UserDetailComponentImpl(
 
         _state.value = currentContent.copy(isSaving = true, saveError = null)
 
-        val authorityLevel = currentContent.authorityLevelInput.toIntOrNull()
-        val accountStatus = currentContent.accountStatusInput.takeIf { it.isNotBlank() }
-        val lockoutType = currentContent.lockoutTypeInput.takeIf { it.isNotBlank() }
-        val lockoutUntil = currentContent.temporaryLockoutUntilInput.toLongOrNull()
-
-        val quotaBytes = currentContent.quotaBytesInput.toLongOrNull()
-        val maxUploadSizeBytes = currentContent.maxUploadSizeBytesInput.toLongOrNull()
-        val maxPendingUploads = currentContent.maxPendingUploadsInput.toIntOrNull()
-
-        val storageConfiguration = UserStorageConfigurationPayload(
-            quotaBytes = quotaBytes,
-            maxUploadSizeBytes = maxUploadSizeBytes,
-            maxPendingUploads = maxPendingUploads
-        )
-
-        val request = UpdateUserRequest(
-            accountStatus = accountStatus,
-            authorityLevel = authorityLevel,
-            permissionCodes = null,
-            lockoutType = lockoutType,
-            temporaryLockoutUntil = lockoutUntil,
-            storageConfiguration = storageConfiguration
-        )
-
         scope.launch {
-            updateUserUseCase(targetId, request)
+            var uploadedAvatarFileId = currentContent.user.avatarFileId
+
+            val avatarPayload = currentContent.selectedAvatarPayload
+            if (avatarPayload != null && uploadFileUseCase != null) {
+                val presignedRequest = PresignedUrlRequest(
+                    fileName = avatarPayload.fileName,
+                    fileSizeBytes = avatarPayload.fileSizeBytes,
+                    mimeType = avatarPayload.mimeType,
+                    category = StorageCategory.IMAGE.value,
+                    visibility = StorageFileVisibility.PUBLIC.value,
+                    targetScope = UserStorageTargetScopes.AVATAR
+                )
+
+                val uploadResult = uploadFileUseCase(
+                    request = presignedRequest,
+                    openReadChannel = avatarPayload.openReadChannel
+                )
+
+                when (uploadResult) {
+                    is AppResult.Success -> {
+                        uploadedAvatarFileId = uploadResult.data.id
+                    }
+                    is AppResult.Error -> {
+                        _state.value = currentContent.copy(
+                            isSaving = false,
+                            saveError = uploadResult.error
+                        )
+                        return@launch
+                    }
+                }
+            }
+
+            val authorityLevel = currentContent.authorityLevelInput.toIntOrNull()
+            val accountStatusEnum = currentContent.accountStatusInput.takeIf { it.isNotBlank() }
+                ?.let { UserAccountStatus.fromValueOrNull(it) }
+            val lockoutTypeEnum = currentContent.lockoutTypeInput.takeIf { it.isNotBlank() }
+                ?.let { AccountLockoutType.fromValueOrNull(it) }
+            val lockoutUntil = currentContent.temporaryLockoutUntilInput.toLongOrNull()
+
+            val quotaBytes = currentContent.quotaBytesInput.toLongOrNull()
+            val maxUploadSizeBytes = currentContent.maxUploadSizeBytesInput.toLongOrNull()
+            val maxPendingUploads = currentContent.maxPendingUploadsInput.toIntOrNull()
+
+            val storageConfiguration = UserStorageConfigurationPayload(
+                quotaBytes = quotaBytes,
+                maxUploadSizeBytes = maxUploadSizeBytes,
+                maxPendingUploads = maxPendingUploads
+            )
+
+            val birthdateInstant = currentContent.birthdateInput.takeIf { it.isNotBlank() }
+                ?.toLongOrNull()
+                ?.let { Instant.fromEpochMilliseconds(it) }
+
+            val updateParams = UpdateUserParams(
+                accountStatus = if (accountStatusEnum != null) UpdateField.Set(accountStatusEnum) else UpdateField.Ignore,
+                authorityLevel = if (authorityLevel != null) UpdateField.Set(authorityLevel) else UpdateField.Ignore,
+                lockoutType = if (lockoutTypeEnum != null) UpdateField.Set(lockoutTypeEnum) else UpdateField.Ignore,
+                temporaryLockoutUntil = UpdateField.Set(lockoutUntil?.let { Instant.fromEpochMilliseconds(it) }),
+                storageConfiguration = UpdateField.Set(storageConfiguration),
+                nickname = UpdateField.Set(currentContent.nicknameInput.takeIf { it.isNotBlank() }),
+                displayName = UpdateField.Set(currentContent.displayNameInput.takeIf { it.isNotBlank() }),
+                avatarFileId = UpdateField.Set(uploadedAvatarFileId),
+                birthdate = UpdateField.Set(birthdateInstant)
+            )
+
+            updateUserUseCase(targetId, updateParams)
                 .onSuccess {
                     loadUser()
                 }
@@ -237,8 +312,16 @@ class UserDetailComponentImpl(
             getUserUseCase(targetId)
                 .onSuccess { user ->
                     val isSelfUser = selfUserId != null && user.id == selfUserId
+                    val avatarUrl = user.avatarUrls?.urlPresets?.get(FileUrlPresets.AVATAR_MD)
+                        ?: user.avatarUrls?.originalUrl
+
                     _state.value = UserDetailScreenState.Content(
                         user = user,
+                        nicknameInput = user.nickname ?: "",
+                        displayNameInput = user.displayName ?: "",
+                        avatarFileIdInput = user.avatarFileId?.value?.toHexDashString() ?: "",
+                        avatarUrl = avatarUrl,
+                        birthdateInput = user.birthdate?.toEpochMilliseconds()?.toString() ?: "",
                         authorityLevelInput = user.authorityLevel.toString(),
                         accountStatusInput = user.accountStatus.name,
                         lockoutTypeInput = user.lockoutType.name,
