@@ -14,9 +14,10 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.base.UploadFileUseCa
 import io.github.mudrichenkoevgeny.kmp.feature.user.domain.model.user.UpdateUserParams
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.SelfUpdateUserUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ValidateDisplayNameUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ValidateNicknameUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.ValidateDisplayNameUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.ValidateNicknameUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.category.StorageCategory
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.FileId
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.FileUrlPresets
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.visibility.StorageFileVisibility
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.request.presigned.PresignedUrlRequest
@@ -117,47 +118,67 @@ class UserEditComponentImpl(
 
             _state.value = currentContent.copy(isSaving = true, actionError = null)
 
-            var uploadedAvatarFileId = currentContent.user.avatarFileId
+            var avatarUpdateField: UpdateField<FileId> = UpdateField.Ignore
 
             val avatarPayload = currentContent.selectedAvatarPayload
-            if (avatarPayload != null && uploadFileUseCase != null) {
-                val presignedRequest = PresignedUrlRequest(
-                    fileName = avatarPayload.fileName,
-                    fileSizeBytes = avatarPayload.fileSizeBytes,
-                    mimeType = avatarPayload.mimeType,
-                    category = StorageCategory.IMAGE.value,
-                    visibility = StorageFileVisibility.PUBLIC.value,
-                    targetScope = UserStorageTargetScopes.AVATAR
-                )
+            if (avatarPayload != null) {
+                if (uploadFileUseCase != null) {
+                    val presignedRequest = PresignedUrlRequest(
+                        fileName = avatarPayload.fileName,
+                        fileSizeBytes = avatarPayload.fileSizeBytes,
+                        mimeType = avatarPayload.mimeType,
+                        category = StorageCategory.IMAGE.value,
+                        visibility = StorageFileVisibility.PUBLIC.value,
+                        targetScope = UserStorageTargetScopes.AVATAR
+                    )
 
-                val uploadResult = uploadFileUseCase(
-                    request = presignedRequest,
-                    openReadChannel = avatarPayload.openReadChannel
-                )
+                    val uploadResult = uploadFileUseCase(
+                        request = presignedRequest,
+                        openReadChannel = avatarPayload.openReadChannel
+                    )
 
-                when (uploadResult) {
-                    is AppResult.Success -> {
-                        uploadedAvatarFileId = uploadResult.data.id
-                    }
-                    is AppResult.Error -> {
-                        _state.value = currentContent.copy(
-                            isSaving = false,
-                            actionError = uploadResult.error
-                        )
-                        return@launch
+                    when (uploadResult) {
+                        is AppResult.Success -> {
+                            avatarUpdateField = UpdateField.Set(uploadResult.data.id)
+                        }
+                        is AppResult.Error -> {
+                            _state.value = currentContent.copy(
+                                isSaving = false,
+                                actionError = uploadResult.error
+                            )
+                            return@launch
+                        }
                     }
                 }
             }
 
-            val birthdateInstant = currentContent.birthdateInput.takeIf { it.isNotBlank() }
-                ?.toLongOrNull()
-                ?.let { Instant.fromEpochMilliseconds(it) }
+            val nicknameUpdateField = if (currentContent.nicknameInput != (currentContent.user.nickname ?: "")) {
+                UpdateField.Set(currentContent.nicknameInput.takeIf { it.isNotBlank() })
+            } else {
+                UpdateField.Ignore
+            }
+
+            val displayNameUpdateField = if (currentContent.displayNameInput != (currentContent.user.displayName ?: "")) {
+                UpdateField.Set(currentContent.displayNameInput.takeIf { it.isNotBlank() })
+            } else {
+                UpdateField.Ignore
+            }
+
+            val initialBirthdateString = currentContent.user.birthdate?.toEpochMilliseconds()?.toString() ?: ""
+            val birthdateUpdateField = if (currentContent.birthdateInput != initialBirthdateString) {
+                val birthdateInstant = currentContent.birthdateInput.takeIf { it.isNotBlank() }
+                    ?.toLongOrNull()
+                    ?.let { Instant.fromEpochMilliseconds(it) }
+                UpdateField.Set(birthdateInstant)
+            } else {
+                UpdateField.Ignore
+            }
 
             val updateParams = UpdateUserParams(
-                nickname = UpdateField.Set(currentContent.nicknameInput.takeIf { it.isNotBlank() }),
-                displayName = UpdateField.Set(currentContent.displayNameInput.takeIf { it.isNotBlank() }),
-                avatarFileId = UpdateField.Set(uploadedAvatarFileId),
-                birthdate = UpdateField.Set(birthdateInstant)
+                nickname = nicknameUpdateField,
+                displayName = displayNameUpdateField,
+                avatarFileId = avatarUpdateField,
+                birthdate = birthdateUpdateField
             )
 
             selfUpdateUserUseCase(updateParams)
@@ -185,6 +206,8 @@ class UserEditComponentImpl(
         _state.value = UserEditScreenState.Loading
 
         scope.launch {
+            userRepository.refreshCurrentUser()
+
             val user = userRepository.currentUser.firstOrNull()
             if (user == null) {
                 _state.value = UserEditScreenState.Error(

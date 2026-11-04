@@ -18,12 +18,16 @@ sealed interface ManagementAppDeepLinkRoute {
      * Administrative management portal deep link route.
      *
      * @param destination Specific management navigation route.
-     * @param tab Target main screen tab (defaults to [MainScreenComponent.Config.Management]).
+     * @param tab Target main screen tab (defaults to [MainScreenComponent.Config.Management] or [MainScreenComponent.Config.User] for self routes).
      * @param requiresAuth Authenticated entry required for administrative routes (defaults to `true`).
      */
     data class Management(
         val destination: NavigationRoute,
-        override val tab: MainScreenComponent.Config = MainScreenComponent.Config.Management,
+        override val tab: MainScreenComponent.Config = if (destination.route.startsWith("/self") || destination.route.startsWith("/user")) { // todo refactor
+            MainScreenComponent.Config.User
+        } else {
+            MainScreenComponent.Config.Management
+        },
         override val requiresAuth: Boolean = true
     ) : ManagementAppDeepLinkRoute
 

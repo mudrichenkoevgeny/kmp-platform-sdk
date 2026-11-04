@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user
+package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult

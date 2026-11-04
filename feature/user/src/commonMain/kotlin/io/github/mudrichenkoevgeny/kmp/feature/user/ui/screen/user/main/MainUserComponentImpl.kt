@@ -33,10 +33,11 @@ class MainUserComponentImpl(
 
     init {
         observeUser()
+        refreshUser()
     }
 
     override fun onRetry() {
-        observeUser()
+        refreshUser()
     }
 
     override fun onTotpMainClick() {
@@ -121,6 +122,12 @@ class MainUserComponentImpl(
                     _state.value = MainUserScreenState.Unauthorized()
                 }
             }
+        }
+    }
+
+    private fun refreshUser() {
+        scope.launch {
+            userRepository.refreshCurrentUser()
         }
     }
 }

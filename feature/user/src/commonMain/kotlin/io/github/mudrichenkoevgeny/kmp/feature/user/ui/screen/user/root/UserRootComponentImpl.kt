@@ -55,8 +55,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.SetupT
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.NavigationRoute
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.route.open.OpenStorageNavigation
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.SelfUpdateUserUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ValidateDisplayNameUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ValidateNicknameUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.ValidateDisplayNameUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.ValidateNicknameUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientUserNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.detail.IdentifierDetailParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.session.detail.SessionDetailParams
@@ -197,6 +197,7 @@ class UserRootComponentImpl(
                 selfUpdateUserUseCase = selfUpdateUserUseCase,
                 validateNicknameUseCase = validateNicknameUseCase,
                 validateDisplayNameUseCase = validateDisplayNameUseCase,
+                uploadFileUseCase = openStorageDependencies?.uploadFileUseCase,
                 onBack = { handleBack(ClientUserNavigation.Main) }
             )
         )

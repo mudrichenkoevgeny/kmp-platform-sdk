@@ -19,7 +19,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.domain.model.user.UpdateUser
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.category.StorageCategory
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.FileId
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.FileUrlPresets
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.toFileIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.visibility.StorageFileVisibility
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.request.presigned.PresignedUrlRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
@@ -140,36 +142,40 @@ class UserDetailComponentImpl(
         _state.value = currentContent.copy(isSaving = true, saveError = null)
 
         scope.launch {
-            var uploadedAvatarFileId = currentContent.user.avatarFileId
+            var avatarUpdateField: UpdateField<FileId> = UpdateField.Ignore
 
             val avatarPayload = currentContent.selectedAvatarPayload
-            if (avatarPayload != null && uploadFileUseCase != null) {
-                val presignedRequest = PresignedUrlRequest(
-                    fileName = avatarPayload.fileName,
-                    fileSizeBytes = avatarPayload.fileSizeBytes,
-                    mimeType = avatarPayload.mimeType,
-                    category = StorageCategory.IMAGE.value,
-                    visibility = StorageFileVisibility.PUBLIC.value,
-                    targetScope = UserStorageTargetScopes.AVATAR
-                )
+            if (avatarPayload != null) {
+                if (uploadFileUseCase != null) {
+                    val presignedRequest = PresignedUrlRequest(
+                        fileName = avatarPayload.fileName,
+                        fileSizeBytes = avatarPayload.fileSizeBytes,
+                        mimeType = avatarPayload.mimeType,
+                        category = StorageCategory.IMAGE.value,
+                        visibility = StorageFileVisibility.PUBLIC.value,
+                        targetScope = UserStorageTargetScopes.AVATAR
+                    )
 
-                val uploadResult = uploadFileUseCase(
-                    request = presignedRequest,
-                    openReadChannel = avatarPayload.openReadChannel
-                )
+                    val uploadResult = uploadFileUseCase(
+                        request = presignedRequest,
+                        openReadChannel = avatarPayload.openReadChannel
+                    )
 
-                when (uploadResult) {
-                    is AppResult.Success -> {
-                        uploadedAvatarFileId = uploadResult.data.id
-                    }
-                    is AppResult.Error -> {
-                        _state.value = currentContent.copy(
-                            isSaving = false,
-                            saveError = uploadResult.error
-                        )
-                        return@launch
+                    when (uploadResult) {
+                        is AppResult.Success -> {
+                            avatarUpdateField = UpdateField.Set(uploadResult.data.id)
+                        }
+                        is AppResult.Error -> {
+                            _state.value = currentContent.copy(
+                                isSaving = false,
+                                saveError = uploadResult.error
+                            )
+                            return@launch
+                        }
                     }
                 }
+            } else if (currentContent.avatarFileIdInput != (currentContent.user.avatarFileId?.value?.toHexDashString() ?: "")) {
+                avatarUpdateField = UpdateField.Set(currentContent.avatarFileIdInput.takeIf { it.isNotBlank() }?.toFileIdOrNull())
             }
 
             val authorityLevel = currentContent.authorityLevelInput.toIntOrNull()
@@ -189,20 +195,38 @@ class UserDetailComponentImpl(
                 maxPendingUploads = maxPendingUploads
             )
 
-            val birthdateInstant = currentContent.birthdateInput.takeIf { it.isNotBlank() }
-                ?.toLongOrNull()
-                ?.let { Instant.fromEpochMilliseconds(it) }
+            val nicknameUpdateField = if (currentContent.nicknameInput != (currentContent.user.nickname ?: "")) {
+                UpdateField.Set(currentContent.nicknameInput.takeIf { it.isNotBlank() })
+            } else {
+                UpdateField.Ignore
+            }
+
+            val displayNameUpdateField = if (currentContent.displayNameInput != (currentContent.user.displayName ?: "")) {
+                UpdateField.Set(currentContent.displayNameInput.takeIf { it.isNotBlank() })
+            } else {
+                UpdateField.Ignore
+            }
+
+            val initialBirthdateString = currentContent.user.birthdate?.toEpochMilliseconds()?.toString() ?: ""
+            val birthdateUpdateField = if (currentContent.birthdateInput != initialBirthdateString) {
+                val birthdateInstant = currentContent.birthdateInput.takeIf { it.isNotBlank() }
+                    ?.toLongOrNull()
+                    ?.let { Instant.fromEpochMilliseconds(it) }
+                UpdateField.Set(birthdateInstant)
+            } else {
+                UpdateField.Ignore
+            }
 
             val updateParams = UpdateUserParams(
-                accountStatus = if (accountStatusEnum != null) UpdateField.Set(accountStatusEnum) else UpdateField.Ignore,
-                authorityLevel = if (authorityLevel != null) UpdateField.Set(authorityLevel) else UpdateField.Ignore,
-                lockoutType = if (lockoutTypeEnum != null) UpdateField.Set(lockoutTypeEnum) else UpdateField.Ignore,
-                temporaryLockoutUntil = UpdateField.Set(lockoutUntil?.let { Instant.fromEpochMilliseconds(it) }),
-                storageConfiguration = UpdateField.Set(storageConfiguration),
-                nickname = UpdateField.Set(currentContent.nicknameInput.takeIf { it.isNotBlank() }),
-                displayName = UpdateField.Set(currentContent.displayNameInput.takeIf { it.isNotBlank() }),
-                avatarFileId = UpdateField.Set(uploadedAvatarFileId),
-                birthdate = UpdateField.Set(birthdateInstant)
+                accountStatus = if (accountStatusEnum != null && currentContent.accountStatusInput != currentContent.user.accountStatus.name) UpdateField.Set(accountStatusEnum) else UpdateField.Ignore,
+                authorityLevel = if (authorityLevel != null && authorityLevel != currentContent.user.authorityLevel) UpdateField.Set(authorityLevel) else UpdateField.Ignore,
+                lockoutType = if (lockoutTypeEnum != null && currentContent.lockoutTypeInput != currentContent.user.lockoutType.name) UpdateField.Set(lockoutTypeEnum) else UpdateField.Ignore,
+                temporaryLockoutUntil = if (currentContent.temporaryLockoutUntilInput != (currentContent.user.temporaryLockoutUntil?.toEpochMilliseconds()?.toString() ?: "")) UpdateField.Set(lockoutUntil?.let { Instant.fromEpochMilliseconds(it) }) else UpdateField.Ignore,
+                storageConfiguration = if (quotaBytes != null || maxUploadSizeBytes != null || maxPendingUploads != null) UpdateField.Set(storageConfiguration) else UpdateField.Ignore,
+                nickname = nicknameUpdateField,
+                displayName = displayNameUpdateField,
+                avatarFileId = avatarUpdateField,
+                birthdate = birthdateUpdateField
             )
 
             updateUserUseCase(targetId, updateParams)

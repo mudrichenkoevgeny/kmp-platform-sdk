@@ -73,8 +73,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAut
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.RestoreUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.SelfUpdateUserUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ValidateDisplayNameUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ValidateNicknameUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.ValidateDisplayNameUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.ValidateNicknameUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.displayname.DisplayNameValidatorImpl
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.nickname.NicknameValidatorImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.DisableTotpUseCase
