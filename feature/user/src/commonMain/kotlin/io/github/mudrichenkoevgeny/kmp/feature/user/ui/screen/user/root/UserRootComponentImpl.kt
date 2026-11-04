@@ -23,11 +23,13 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserReposito
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.edit.UserEditComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.detail.IdentifierDetailComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.SelfIdentifierListComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.datasource.SelfIdentifierListDataSource
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.notifyIdentifierDeleted
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.main.MainUserComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.detail.SessionDetailComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SelfSessionListComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.datasource.SelfSessionListDataSource
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.notifySessionRevoked
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpMainComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.recovery.TotpRecoveryCodesComponentImpl
@@ -222,12 +224,14 @@ class UserRootComponentImpl(
             )
         )
         is ClientUserNavigation.SessionList -> UserRootComponent.Child.Sessions(
-            SelfSessionListComponentImpl(
+            SessionListComponentImpl(
                 componentContext = context,
-                params = config.params,
-                getSessionsUseCase = getSessionsUseCase,
-                deleteSessionUseCase = deleteSessionUseCase,
-                deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase,
+                dataSource = SelfSessionListDataSource(
+                    getSessionsUseCase = getSessionsUseCase,
+                    deleteSessionUseCase = deleteSessionUseCase,
+                    deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase
+                ),
+                includeFilterPanel = false,
                 onNavigateToSessionDetail = { session ->
                     navigation.bringToFront(ClientUserNavigation.SessionDetail(SessionDetailParams(sessionId = session.id.asHexDashString())))
                 },
@@ -250,11 +254,13 @@ class UserRootComponentImpl(
             )
         )
         is ClientUserNavigation.IdentifierList -> UserRootComponent.Child.Identifiers(
-            SelfIdentifierListComponentImpl(
+            IdentifierListComponentImpl(
                 componentContext = context,
-                params = config.params,
-                appType = appType,
-                getUserIdentifiersUseCase = getUserIdentifiersUseCase,
+                dataSource = SelfIdentifierListDataSource(
+                    getUserIdentifiersUseCase = getUserIdentifiersUseCase,
+                    appType = appType
+                ),
+                includeFilterPanel = false,
                 getAvailableUserAuthProvidersUseCase = getAvailableUserAuthProvidersUseCase,
                 sendAddEmailIdentifierConfirmationUseCase = sendAddEmailIdentifierConfirmationUseCase,
                 addUserIdentifierEmailUseCase = addUserIdentifierEmailUseCase,

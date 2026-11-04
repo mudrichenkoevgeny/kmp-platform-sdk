@@ -12,7 +12,7 @@ This document defines the structural standards for the `kmp-platform-sdk`. All m
 
 The SDK follows a strict layering based on the **Decompose** component model to ensure platform-agnostic navigation and state management:
 
-- **UI Layer (Compose Multiplatform):** Stateless Composable functions that observe `Value` or `StateFlow` from components.
+- **UI Layer (Compose Multiplatform):** Stateless Composable functions that observe Decompose `Value` from components.
 - **Component Layer (Decompose):** Lifecycle-aware units (e.g., `LoginComponent`) that own the business logic and navigation state. They act as the "View Model" in KMP.
 - **Use Case Layer:** Atomic business operations (e.g., `RefreshSessionUseCase`, `ValidatePasswordUseCase`).
 - **Repository Layer:** Orchestrates data flow between Ktor Network clients and `EncryptedSettings` storage.
@@ -28,7 +28,7 @@ The SDK follows a strict layering based on the **Decompose** component model to 
 ## 3. Networking & Multi-target Compatibility
 
 - **Ktor Client:** Default configuration is centralized in `core/common`. Modular extensions must be implemented as `HttpClientConfigPlugin`.
-- **Concurrency:** Always use the `appScope` provided during component initialization for long-running tasks to ensure operations are cancelled when the application or component is destroyed.
+- **Concurrency:** Decompose components use `componentCoroutineScope()` for managing component-scoped asynchronous operations. Component coroutine scopes are automatically cancelled when the component's Decompose lifecycle is destroyed.
 - **Wasm Constraints:** Avoid using APIs that rely on reflection or JVM-specific libraries (like `java.util.*`). Use `kotlinx` equivalents (e.g., `kotlinx-datetime`).
 
 ## 4. Error Modeling & Chain of Responsibility
@@ -48,7 +48,7 @@ The SDK uses a localized, machine-readable error handling system:
 
 ## 6. Naming & Packaging Conventions
 
-- **Package by Feature & Layer:** `io.github.mudrichenkoevgeny.sdk.[module].[feature].[layer]`.
+- **Package by Feature & Layer:** `io.github.mudrichenkoevgeny.kmp.[module].[feature].[layer]`.
 - **Standard Layers:**
   - `ui`: Compose Multiplatform screens and widgets.
   - `component`: Decompose components and screen configurations.
@@ -61,14 +61,14 @@ The SDK uses a localized, machine-readable error handling system:
 ## 7. Guidelines for AI
 
 - **Dependency Rule:** `core/common` is the root infrastructure. It must never depend on `feature/*` modules.
-- **State Management Rule:** Prefer `StateFlow` for component state and `Channel` for one-time events (Side Effects).
+- **State Management Rule:** Decompose components use Decompose `Value` / `MutableValue` (`Value<ScreenState>`) for observable UI state. Modal overlays and dialogs use Decompose `childSlot` (`Value<ChildSlot<Config, Child>>`).
 - **KDoc Requirement:** Document all public component interfaces with their expected lifecycle and key collaborators.
 
 ## 8. Listing & Pagination
 
 All paged lists must use the standardized infrastructure from `core:common`:
 
-- **Infrastructure:** Use `PaginationState<T>` from `io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing` to manage cumulative items, loading flags, and error states. Use `INITIAL_PAGE_NUMBER` constant from `ListingConstants` and `ListingDefaultValues.Pagination.PAGE_SIZE` from `shared-foundation`.
+- **Infrastructure:** Use `PaginationState<T>` from `io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing` to manage cumulative items, loading flags, and error states. Use `ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER` and `ListingDefaultValues.Pagination.DEFAULT_PAGE_SIZE` from `shared-foundation`.
 - **State Updates:** Utilize extension functions like `appendResult()`, `toNextPageLoading()`, and `toError()` to transition the list state.
 - **UI Trigger:** Monitor scroll position using the `LazyListState.OnBottomReached` extension from `io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing` to trigger next-page loads.
 - **UI Feedback:** Always include `PagingFooter` as the last item in the `LazyColumn` to show infinite loading indicators or retry actions for failed pages.

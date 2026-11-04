@@ -9,9 +9,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.identifier.ManagementIdentifierRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.list.datasource.ManagementIdentifierListDataSource
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetUserIdentifiersUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListScreenState
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.userlist.ManagementUserIdentifierListParams
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -28,7 +31,7 @@ class UserIdentifierListComponentImplTest {
 
         advanceTimeBy(100.milliseconds)
 
-        val state = assertIs<UserIdentifierListScreenState.Content>(testContext.component.state.value)
+        val state = assertIs<IdentifierListScreenState.Content>(testContext.component.state.value)
         assertEquals(1, state.paging.items.size)
 
         testContext.lifecycle.destroy()
@@ -45,7 +48,7 @@ class UserIdentifierListComponentImplTest {
 
         advanceTimeBy(100.milliseconds)
 
-        val state = assertIs<UserIdentifierListScreenState.Error>(testContext.component.state.value)
+        val state = assertIs<IdentifierListScreenState.Error>(testContext.component.state.value)
         assertEquals(error, state.error)
 
         testContext.lifecycle.destroy()
@@ -70,13 +73,18 @@ class UserIdentifierListComponentImplTest {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
 
-        val useCase = ManagementGetUserIdentifiersUseCase(repository)
+        val getGlobalUseCase = ManagementGetIdentifiersUseCase(repository)
+        val getUserUseCase = ManagementGetUserIdentifiersUseCase(repository)
         val context = TestContext(lifecycle)
 
-        context.component = UserIdentifierListComponentImpl(
+        context.component = IdentifierListComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
-            params = ManagementUserIdentifierListParams(userId = userId.asHexDashString()),
-            managementGetUserIdentifiersUseCase = useCase,
+            dataSource = ManagementIdentifierListDataSource(
+                managementGetIdentifiersUseCase = getGlobalUseCase,
+                managementGetUserIdentifiersUseCase = getUserUseCase
+            ),
+            initialUserId = userId.asHexDashString(),
+            includeFilterPanel = false,
             onBack = { context.onBackCalls++ }
         )
 
@@ -84,7 +92,7 @@ class UserIdentifierListComponentImplTest {
     }
 
     private class TestContext(val lifecycle: LifecycleRegistry) {
-        lateinit var component: UserIdentifierListComponentImpl
+        lateinit var component: IdentifierListComponentImpl
         var onBackCalls = 0
     }
 }

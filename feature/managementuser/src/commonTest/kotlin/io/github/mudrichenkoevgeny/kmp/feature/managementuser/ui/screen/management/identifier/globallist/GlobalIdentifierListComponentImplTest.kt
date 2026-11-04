@@ -10,12 +10,15 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.L
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.identifier.ManagementIdentifierRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.list.datasource.ManagementIdentifierListDataSource
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier.ManagementGetIdentifiersUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListScreenState
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserIdentifierFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserIdentifierSortBy
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -32,7 +35,7 @@ class GlobalIdentifierListComponentImplTest {
         val context = createTestContext(identifiers = listOf(identifier))
 
         advanceUntilIdle()
-        val state = assertIs<GlobalIdentifierListScreenState.Content>(context.component.state.value)
+        val state = assertIs<IdentifierListScreenState.Content>(context.component.state.value)
         assertEquals(listOf(identifier), state.paging.items)
     }
 
@@ -44,7 +47,7 @@ class GlobalIdentifierListComponentImplTest {
         val context = createTestContext(repository = repository)
 
         advanceUntilIdle()
-        val state = assertIs<GlobalIdentifierListScreenState.Error>(context.component.state.value)
+        val state = assertIs<IdentifierListScreenState.Error>(context.component.state.value)
         assertEquals(error, state.error)
     }
 
@@ -53,11 +56,11 @@ class GlobalIdentifierListComponentImplTest {
         val context = createTestContext(identifiers = listOf(createTestUserIdentifierSummary()))
         advanceUntilIdle()
 
-        var state = assertIs<GlobalIdentifierListScreenState.Content>(context.component.state.value)
+        var state = assertIs<IdentifierListScreenState.Content>(context.component.state.value)
         assertFalse(state.isFilterPanelExpanded)
 
         context.component.onToggleFilterPanel()
-        state = assertIs<GlobalIdentifierListScreenState.Content>(context.component.state.value)
+        state = assertIs<IdentifierListScreenState.Content>(context.component.state.value)
         assertTrue(state.isFilterPanelExpanded)
     }
 
@@ -97,7 +100,7 @@ class GlobalIdentifierListComponentImplTest {
         context.component.onRefresh()
         advanceUntilIdle()
 
-        assertIs<GlobalIdentifierListScreenState.Content>(context.component.state.value)
+        assertIs<IdentifierListScreenState.Content>(context.component.state.value)
     }
 
     @Test
@@ -121,9 +124,12 @@ class GlobalIdentifierListComponentImplTest {
         val useCase = ManagementGetIdentifiersUseCase(repository)
         val context = TestContext()
 
-        context.component = GlobalIdentifierListComponentImpl(
+        context.component = IdentifierListComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
-            managementGetIdentifiersUseCase = useCase,
+            dataSource = ManagementIdentifierListDataSource(
+                managementGetIdentifiersUseCase = useCase
+            ),
+            includeFilterPanel = true,
             onBack = { context.onBackCalls++ }
         )
 
@@ -131,7 +137,7 @@ class GlobalIdentifierListComponentImplTest {
     }
 
     private class TestContext {
-        lateinit var component: GlobalIdentifierListComponentImpl
+        lateinit var component: IdentifierListComponentImpl
         var onBackCalls = 0
     }
 }

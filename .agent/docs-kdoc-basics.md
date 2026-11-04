@@ -13,7 +13,7 @@ This document defines mandatory language and syntax standards for all public int
 
 ## 2. KDoc Links & Resolution
 - **Simple Names Only:** Use only simple names that resolve via imports: `[Foo]` or `[SomeType.member]`.
-- **No FQN in Links:** Fully qualified names in links (e.g., `[io.github.mudrichenkoevgeny.sdk.Foo]`) are strictly forbidden.
+- **No FQN in Links:** Fully qualified names in links (e.g., `[io.github.mudrichenkoevgeny.kmp.Foo]`) are strictly forbidden.
 - **Import Requirement:** Every type referenced in a link must be imported in the current file to ensure the IDE can resolve the click-through.
 - **Unreachable Targets:** If a type cannot be imported (e.g., it's in a module not reachable by the current one), use **plain text** without brackets.
 - **No Deferred Prose:** Do not redirect the reader with phrases like "Same as [Other.CONST]". Every contract detail must be self-contained and fully described to prevent "click-hunting".

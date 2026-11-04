@@ -10,12 +10,16 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.L
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.session.ManagementSessionRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.list.datasource.ManagementSessionListDataSource
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListScreenState
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSessionFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing.UserSessionSortBy
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -32,7 +36,7 @@ class GlobalSessionListComponentImplTest {
         val context = createTestContext(sessions = listOf(session))
 
         advanceUntilIdle()
-        val state = assertIs<GlobalSessionListScreenState.Content>(context.component.state.value)
+        val state = assertIs<SessionListScreenState.Content>(context.component.state.value)
         assertEquals(listOf(session), state.paging.items)
     }
 
@@ -44,7 +48,7 @@ class GlobalSessionListComponentImplTest {
         val context = createTestContext(repository = repository)
 
         advanceUntilIdle()
-        val state = assertIs<GlobalSessionListScreenState.Error>(context.component.state.value)
+        val state = assertIs<SessionListScreenState.Error>(context.component.state.value)
         assertEquals(error, state.error)
     }
 
@@ -53,11 +57,11 @@ class GlobalSessionListComponentImplTest {
         val context = createTestContext(sessions = listOf(createTestUserSessionSummary()))
         advanceUntilIdle()
 
-        var state = assertIs<GlobalSessionListScreenState.Content>(context.component.state.value)
+        var state = assertIs<SessionListScreenState.Content>(context.component.state.value)
         assertFalse(state.isFilterPanelExpanded)
 
         context.component.onToggleFilterPanel()
-        state = assertIs<GlobalSessionListScreenState.Content>(context.component.state.value)
+        state = assertIs<SessionListScreenState.Content>(context.component.state.value)
         assertTrue(state.isFilterPanelExpanded)
     }
 
@@ -97,7 +101,7 @@ class GlobalSessionListComponentImplTest {
         context.component.onRefresh()
         advanceUntilIdle()
 
-        assertIs<GlobalSessionListScreenState.Content>(context.component.state.value)
+        assertIs<SessionListScreenState.Content>(context.component.state.value)
     }
 
     @Test
@@ -118,12 +122,17 @@ class GlobalSessionListComponentImplTest {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
 
-        val useCase = ManagementGetSessionsUseCase(repository)
+        val getUseCase = ManagementGetSessionsUseCase(repository)
+        val deleteUseCase = ManagementDeleteSessionUseCase(repository)
         val context = TestContext()
 
-        context.component = GlobalSessionListComponentImpl(
+        context.component = SessionListComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
-            managementGetSessionsUseCase = useCase,
+            dataSource = ManagementSessionListDataSource(
+                managementGetSessionsUseCase = getUseCase,
+                managementDeleteSessionUseCase = deleteUseCase
+            ),
+            includeFilterPanel = true,
             onBack = { context.onBackCalls++ }
         )
 
@@ -131,7 +140,7 @@ class GlobalSessionListComponentImplTest {
     }
 
     private class TestContext {
-        lateinit var component: GlobalSessionListComponentImpl
+        lateinit var component: SessionListComponentImpl
         var onBackCalls = 0
     }
 }

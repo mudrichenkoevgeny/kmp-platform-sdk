@@ -4,15 +4,11 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail.StorageFileDetailComponent
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.StorageFileListComponent
-import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.upload.StorageFileUploadScreenComponent
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.settings.EditStorageSettingsComponent
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.upload.StorageFileUploadScreenComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.detail.AuditEventDetailComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list.AuditEventListComponent
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.globallist.GlobalIdentifierListComponent
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist.UserIdentifierListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.main.MainManagementComponent
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.globallist.GlobalSessionListComponent
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.auth.EditAuthSettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.global.EditGlobalSettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.main.SettingsMainComponent
@@ -22,8 +18,10 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.GlobalUserListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.UserListOwner
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.detail.IdentifierDetailComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListOwner
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.detail.SessionDetailComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListOwner
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.NavigationRoute
 
@@ -113,14 +111,14 @@ interface ManagementRootComponent {
          *
          * @property component Decompose controller for user sessions list screen.
          */
-        class UserSessionList(val component: UserSessionListComponent) : Child, SessionListOwner by component
+        class UserSessionList(val component: SessionListComponent) : Child, SessionListOwner by component
 
         /**
          * User identifiers screen.
          *
          * @property component Decompose controller for user identifiers list screen.
          */
-        class UserIdentifierList(val component: UserIdentifierListComponent) : Child, IdentifierListOwner by component
+        class UserIdentifierList(val component: IdentifierListComponent) : Child, IdentifierListOwner by component
 
         /**
          * Audit logs list screen.
@@ -141,7 +139,7 @@ interface ManagementRootComponent {
          *
          * @property component Decompose controller for global session list screen.
          */
-        class GlobalSessionList(val component: GlobalSessionListComponent) : Child, SessionListOwner by component
+        class GlobalSessionList(val component: SessionListComponent) : Child, SessionListOwner by component
 
         /**
          * Session detail screen.
@@ -155,7 +153,7 @@ interface ManagementRootComponent {
          *
          * @property component Decompose controller for global identifier list screen.
          */
-        class GlobalIdentifierList(val component: GlobalIdentifierListComponent) : Child, IdentifierListOwner by component
+        class GlobalIdentifierList(val component: IdentifierListComponent) : Child, IdentifierListOwner by component
 
         /**
          * Identifier detail screen.

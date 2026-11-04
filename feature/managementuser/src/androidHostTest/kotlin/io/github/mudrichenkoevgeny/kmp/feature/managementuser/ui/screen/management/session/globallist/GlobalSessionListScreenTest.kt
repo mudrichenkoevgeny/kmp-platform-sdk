@@ -13,7 +13,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.Pagina
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.sessions.GlobalSessionListComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.session.SessionListComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListScreenState
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListTestTags
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -28,10 +31,10 @@ class GlobalSessionListScreenTest {
 
     @Test
     fun loading_showsIndeterminateProgressAfterDefaultDelay() = runComposeUiTest {
-        val component = GlobalSessionListComponentMock(GlobalSessionListScreenState.Loading)
+        val component = SessionListComponentMock(initialState = SessionListScreenState.Loading, includeFilterPanel = true)
         setContent {
             ComponentTestHarness {
-                GlobalSessionListScreen(component)
+                SessionListScreen(component)
             }
         }
         mainClock.autoAdvance = false
@@ -42,71 +45,84 @@ class GlobalSessionListScreenTest {
     @Test
     fun content_displaysElements() = runComposeUiTest {
         val session = createTestUserSessionSummary()
-        val component = GlobalSessionListComponentMock(
-            GlobalSessionListScreenState.Content(
+        val component = SessionListComponentMock(
+            initialState = SessionListScreenState.Content(
                 paging = PaginationState(
                     items = listOf(session),
                     isInitialLoading = false
                 )
-            )
+            ),
+            includeFilterPanel = true
         )
         setContent {
             ComponentTestHarness {
-                GlobalSessionListScreen(component)
+                SessionListScreen(component)
             }
         }
-        onNodeWithTag(GlobalSessionListTestTags.TITLE).assertIsDisplayed()
-        onNodeWithTag(GlobalSessionListTestTags.BACK_BUTTON).assertIsDisplayed()
-        onNodeWithTag(GlobalSessionListTestTags.FILTER_BUTTON).assertIsDisplayed()
-        onNodeWithTag(GlobalSessionListTestTags.REFRESH_BUTTON).assertIsDisplayed()
-        onNodeWithTag(GlobalSessionListTestTags.SESSION_LIST).assertIsDisplayed()
+        onNodeWithTag(SessionListTestTags.TITLE).assertIsDisplayed()
+        onNodeWithTag(SessionListTestTags.BACK_BUTTON).assertIsDisplayed()
+        onNodeWithTag(SessionListTestTags.FILTER_BUTTON).assertIsDisplayed()
+        onNodeWithTag(SessionListTestTags.REFRESH_BUTTON).assertIsDisplayed()
+        onNodeWithTag(SessionListTestTags.SESSION_LIST).assertIsDisplayed()
     }
 
     @Test
     fun content_clickBack_invokesCallback() = runComposeUiTest {
-        val component = GlobalSessionListComponentMock(GlobalSessionListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
+        val component = SessionListComponentMock(
+            initialState = SessionListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)),
+            includeFilterPanel = true
+        )
         setContent {
             ComponentTestHarness {
-                GlobalSessionListScreen(component)
+                SessionListScreen(component)
             }
         }
-        onNodeWithTag(GlobalSessionListTestTags.BACK_BUTTON).performClick()
+        onNodeWithTag(SessionListTestTags.BACK_BUTTON).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.backCalls)
     }
 
     @Test
     fun content_clickRefresh_invokesCallback() = runComposeUiTest {
-        val component = GlobalSessionListComponentMock(GlobalSessionListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
+        val component = SessionListComponentMock(
+            initialState = SessionListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)),
+            includeFilterPanel = true
+        )
         setContent {
             ComponentTestHarness {
-                GlobalSessionListScreen(component)
+                SessionListScreen(component)
             }
         }
-        onNodeWithTag(GlobalSessionListTestTags.REFRESH_BUTTON).performClick()
+        onNodeWithTag(SessionListTestTags.REFRESH_BUTTON).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.refreshCalls)
     }
-    
+
     @Test
     fun content_clickFilter_invokesCallback() = runComposeUiTest {
-        val component = GlobalSessionListComponentMock(GlobalSessionListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
+        val component = SessionListComponentMock(
+            initialState = SessionListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)),
+            includeFilterPanel = true
+        )
         setContent {
             ComponentTestHarness {
-                GlobalSessionListScreen(component)
+                SessionListScreen(component)
             }
         }
-        onNodeWithTag(GlobalSessionListTestTags.FILTER_BUTTON).performClick()
+        onNodeWithTag(SessionListTestTags.FILTER_BUTTON).performClick()
         assertEquals(0, component.backCalls)
     }
 
     @Test
     fun error_displaysErrorText() = runComposeUiTest {
-        val component = GlobalSessionListComponentMock(GlobalSessionListScreenState.Error(CommonError.Unknown()))
+        val component = SessionListComponentMock(
+            initialState = SessionListScreenState.Error(CommonError.Unknown()),
+            includeFilterPanel = true
+        )
         setContent {
             ComponentTestHarness {
-                GlobalSessionListScreen(component)
+                SessionListScreen(component)
             }
         }
-        onNodeWithTag(GlobalSessionListTestTags.GLOBAL_ERROR_TEXT).assertIsDisplayed()
+        onNodeWithTag(SessionListTestTags.GLOBAL_ERROR_TEXT).assertIsDisplayed()
     }
 
     private companion object {

@@ -16,7 +16,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCorou
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di.ManagementAppComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.navigation.deeplink.ManagementAppDeepLinkRoute
-import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.route.management.ManagementSelfStorageNavigation
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -90,9 +89,6 @@ class ManagementMainScreenComponentImpl(
                 MainScreenComponent.Child.UserChild(
                     managementAppComponent.managementUserComponent.createUserComponent(
                         componentContext = context,
-                        onNavigateToSelfStorageFiles = {
-                            dispatchRoute(ManagementAppDeepLinkRoute.Management(ManagementSelfStorageNavigation.FileList()))
-                        },
                         onNavigateToLogin = ::onShowLogin
                     )
                 )

@@ -13,7 +13,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.Pagina
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.identifiers.UserIdentifierListComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.identifier.IdentifierListComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListScreenState
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListTestTags
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -28,10 +31,10 @@ class UserIdentifiersScreenTest {
 
     @Test
     fun loading_showsIndeterminateProgressAfterDefaultDelay() = runComposeUiTest {
-        val component = UserIdentifierListComponentMock(UserIdentifierListScreenState.Loading)
+        val component = IdentifierListComponentMock(IdentifierListScreenState.Loading)
         setContent {
             ComponentTestHarness {
-                UserIdentifierListScreen(component)
+                IdentifierListScreen(component)
             }
         }
         mainClock.autoAdvance = false
@@ -42,8 +45,8 @@ class UserIdentifiersScreenTest {
     @Test
     fun content_displaysElements() = runComposeUiTest {
         val identifier = createTestUserIdentifierSummary()
-        val component = UserIdentifierListComponentMock(
-            UserIdentifierListScreenState.Content(
+        val component = IdentifierListComponentMock(
+            IdentifierListScreenState.Content(
                 paging = PaginationState(
                     items = listOf(identifier),
                     isInitialLoading = false
@@ -52,48 +55,48 @@ class UserIdentifiersScreenTest {
         )
         setContent {
             ComponentTestHarness {
-                UserIdentifierListScreen(component)
+                IdentifierListScreen(component)
             }
         }
-        onNodeWithTag(UserIdentifierListTestTags.TITLE).assertIsDisplayed()
-        onNodeWithTag(UserIdentifierListTestTags.BACK_BUTTON).assertIsDisplayed()
-        onNodeWithTag(UserIdentifierListTestTags.REFRESH_BUTTON).assertIsDisplayed()
-        onNodeWithTag(UserIdentifierListTestTags.IDENTIFIER_LIST).assertIsDisplayed()
+        onNodeWithTag(IdentifierListTestTags.TITLE).assertIsDisplayed()
+        onNodeWithTag(IdentifierListTestTags.BACK_BUTTON).assertIsDisplayed()
+        onNodeWithTag(IdentifierListTestTags.REFRESH_BUTTON).assertIsDisplayed()
+        onNodeWithTag(IdentifierListTestTags.IDENTIFIER_LIST).assertIsDisplayed()
     }
 
     @Test
     fun content_clickBack_invokesCallback() = runComposeUiTest {
-        val component = UserIdentifierListComponentMock(UserIdentifierListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
+        val component = IdentifierListComponentMock(IdentifierListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
         setContent {
             ComponentTestHarness {
-                UserIdentifierListScreen(component)
+                IdentifierListScreen(component)
             }
         }
-        onNodeWithTag(UserIdentifierListTestTags.BACK_BUTTON).performClick()
+        onNodeWithTag(IdentifierListTestTags.BACK_BUTTON).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.backCalls)
     }
 
     @Test
     fun content_clickRefresh_invokesCallback() = runComposeUiTest {
-        val component = UserIdentifierListComponentMock(UserIdentifierListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
+        val component = IdentifierListComponentMock(IdentifierListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
         setContent {
             ComponentTestHarness {
-                UserIdentifierListScreen(component)
+                IdentifierListScreen(component)
             }
         }
-        onNodeWithTag(UserIdentifierListTestTags.REFRESH_BUTTON).performClick()
+        onNodeWithTag(IdentifierListTestTags.REFRESH_BUTTON).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.refreshCalls)
     }
 
     @Test
     fun error_displaysErrorText() = runComposeUiTest {
-        val component = UserIdentifierListComponentMock(UserIdentifierListScreenState.Error(CommonError.Unknown()))
+        val component = IdentifierListComponentMock(IdentifierListScreenState.Error(CommonError.Unknown()))
         setContent {
             ComponentTestHarness {
-                UserIdentifierListScreen(component)
+                IdentifierListScreen(component)
             }
         }
-        onNodeWithTag(UserIdentifierListTestTags.GLOBAL_ERROR_TEXT).assertIsDisplayed()
+        onNodeWithTag(IdentifierListTestTags.GLOBAL_ERROR_TEXT).assertIsDisplayed()
     }
 
     private companion object {

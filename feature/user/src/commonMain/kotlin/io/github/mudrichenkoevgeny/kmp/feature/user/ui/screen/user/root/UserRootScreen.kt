@@ -20,9 +20,9 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.upload.StorageFile
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.UserRootComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.edit.UserEditScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.detail.IdentifierDetailScreen
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.SelfIdentifierListScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.detail.SessionDetailScreen
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SelfSessionListScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpMainScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.recovery.TotpRecoveryCodesScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.main.MainUserScreen
@@ -48,9 +48,9 @@ fun UserRootScreen(
             is UserRootComponent.Child.UserEdit -> UserEditScreen(instance.component)
             is UserRootComponent.Child.TotpMain -> TotpMainScreen(instance.component)
             is UserRootComponent.Child.TotpRecoveryCodes -> TotpRecoveryCodesScreen(instance.component)
-            is UserRootComponent.Child.Sessions -> SelfSessionListScreen(instance.component)
+            is UserRootComponent.Child.Sessions -> SessionListScreen(instance.component)
             is UserRootComponent.Child.SessionDetail -> SessionDetailScreen(instance.component)
-            is UserRootComponent.Child.Identifiers -> SelfIdentifierListScreen(instance.component)
+            is UserRootComponent.Child.Identifiers -> IdentifierListScreen(instance.component)
             is UserRootComponent.Child.IdentifierDetail -> IdentifierDetailScreen(instance.component)
             is UserRootComponent.Child.StorageFileList -> StorageFileListScreen(instance.component)
             is UserRootComponent.Child.StorageFileDetail -> StorageFileDetailScreen(instance.component)

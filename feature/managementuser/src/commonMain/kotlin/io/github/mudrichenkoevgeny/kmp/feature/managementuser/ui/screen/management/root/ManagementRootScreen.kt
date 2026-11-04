@@ -19,11 +19,9 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.upload.StorageFile
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.root.ManagementRootComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.detail.AuditEventDetailScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list.AuditEventListScreen
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.globallist.GlobalIdentifierListScreen
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist.UserIdentifierListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.main.MainManagementScreen
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.globallist.GlobalSessionListScreen
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.auth.EditAuthSettingsScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.global.EditGlobalSettingsScreen
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.main.SettingsMainScreen
@@ -56,13 +54,13 @@ fun ManagementRootScreen(component: ManagementRootComponent) {
             is ManagementRootComponent.Child.GlobalUserList -> GlobalUserListScreen(instance.component)
             is ManagementRootComponent.Child.CreateUser -> CreateUserScreen(instance.component)
             is ManagementRootComponent.Child.UserDetail -> UserDetailScreen(instance.component)
-            is ManagementRootComponent.Child.UserSessionList -> UserSessionListScreen(instance.component)
-            is ManagementRootComponent.Child.UserIdentifierList -> UserIdentifierListScreen(instance.component)
+            is ManagementRootComponent.Child.UserSessionList -> SessionListScreen(instance.component)
+            is ManagementRootComponent.Child.UserIdentifierList -> IdentifierListScreen(instance.component)
             is ManagementRootComponent.Child.AuditEventList -> AuditEventListScreen(instance.component)
             is ManagementRootComponent.Child.AuditEventDetail -> AuditEventDetailScreen(instance.component)
-            is ManagementRootComponent.Child.GlobalSessionList -> GlobalSessionListScreen(instance.component)
+            is ManagementRootComponent.Child.GlobalSessionList -> SessionListScreen(instance.component)
             is ManagementRootComponent.Child.SessionDetail -> SessionDetailScreen(instance.component)
-            is ManagementRootComponent.Child.GlobalIdentifierList -> GlobalIdentifierListScreen(instance.component)
+            is ManagementRootComponent.Child.GlobalIdentifierList -> IdentifierListScreen(instance.component)
             is ManagementRootComponent.Child.IdentifierDetail -> IdentifierDetailScreen(instance.component)
             is ManagementRootComponent.Child.GlobalStorageFileList -> StorageFileListScreen(instance.component)
             is ManagementRootComponent.Child.SelfStorageFileList -> StorageFileListScreen(instance.component)

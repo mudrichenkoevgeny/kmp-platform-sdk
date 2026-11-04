@@ -14,11 +14,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.toUserSessionIdOrNull
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.detail.AuditEventDetailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list.AuditEventListComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.globallist.GlobalIdentifierListComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.userlist.UserIdentifierListComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.identifier.list.datasource.ManagementIdentifierListDataSource
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.main.MainManagementComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.globallist.GlobalSessionListComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.userlist.UserSessionListComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.list.datasource.ManagementSessionListDataSource
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.auth.EditAuthSettingsComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.global.EditGlobalSettingsComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.main.SettingsMainComponentImpl
@@ -300,12 +300,16 @@ class ManagementRootComponentImpl(
             )
         )
         is ManagementUsersNavigation.UserSessionList -> ManagementRootComponent.Child.UserSessionList(
-            UserSessionListComponentImpl(
+            SessionListComponentImpl(
                 componentContext = context,
-                params = config.params,
-                managementGetUserSessionsUseCase = managementGetUserSessionsUseCase,
-                managementDeleteSessionUseCase = managementDeleteSessionUseCase,
-                managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase,
+                dataSource = ManagementSessionListDataSource(
+                    managementGetSessionsUseCase = managementGetSessionsUseCase,
+                    managementGetUserSessionsUseCase = managementGetUserSessionsUseCase,
+                    managementDeleteSessionUseCase = managementDeleteSessionUseCase,
+                    managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase
+                ),
+                includeFilterPanel = false,
+                initialUserId = config.params.userId,
                 authStorage = authStorage,
                 userRepository = userRepository,
                 onNavigateToSessionDetail = { session ->
@@ -329,16 +333,21 @@ class ManagementRootComponentImpl(
             )
         )
         is ManagementUsersNavigation.UserIdentifierList -> ManagementRootComponent.Child.UserIdentifierList(
-            UserIdentifierListComponentImpl(
+            IdentifierListComponentImpl(
                 componentContext = context,
-                params = config.params,
-                managementGetUserIdentifiersUseCase = managementGetUserIdentifiersUseCase,
+                dataSource = ManagementIdentifierListDataSource(
+                    managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+                    managementGetUserIdentifiersUseCase = managementGetUserIdentifiersUseCase
+                ),
+                includeFilterPanel = false,
+                initialUserId = config.params.userId,
+                authStorage = authStorage,
                 userRepository = userRepository,
                 onIdentifierSelect = { identifierId ->
                     navigation.bringToFront(
                         ManagementUsersNavigation.IdentifierDetail(
                             IdentifierDetailParams(
-                                identifierId = identifierId,
+                                identifierId = identifierId.asHexDashString(),
                                 userId = config.params.userId
                             )
                         )
@@ -384,11 +393,15 @@ class ManagementRootComponentImpl(
             )
         )
         is ManagementUsersNavigation.GlobalSessionList -> ManagementRootComponent.Child.GlobalSessionList(
-            GlobalSessionListComponentImpl(
+            SessionListComponentImpl(
                 componentContext = context,
-                params = config.params,
-                managementGetSessionsUseCase = managementGetSessionsUseCase,
-                managementDeleteSessionUseCase = managementDeleteSessionUseCase,
+                dataSource = ManagementSessionListDataSource(
+                    managementGetSessionsUseCase = managementGetSessionsUseCase,
+                    managementGetUserSessionsUseCase = managementGetUserSessionsUseCase,
+                    managementDeleteSessionUseCase = managementDeleteSessionUseCase,
+                    managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase
+                ),
+                includeFilterPanel = true,
                 authStorage = authStorage,
                 userRepository = userRepository,
                 onNavigateToSessionDetail = { session ->
@@ -442,12 +455,17 @@ class ManagementRootComponentImpl(
             )
         )
         is ManagementUsersNavigation.GlobalIdentifierList -> ManagementRootComponent.Child.GlobalIdentifierList(
-            GlobalIdentifierListComponentImpl(
+            IdentifierListComponentImpl(
                 componentContext = context,
-                params = config.params,
-                managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+                dataSource = ManagementIdentifierListDataSource(
+                    managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+                    managementGetUserIdentifiersUseCase = managementGetUserIdentifiersUseCase
+                ),
+                includeFilterPanel = true,
+                authStorage = authStorage,
+                userRepository = userRepository,
                 onIdentifierSelect = { identifierId ->
-                    navigation.bringToFront(ManagementUsersNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId)))
+                    navigation.bringToFront(ManagementUsersNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId.asHexDashString())))
                 },
                 onBack = { handleBack() }
             )

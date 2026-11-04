@@ -1,6 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.ListingDefaultValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 
 /**
@@ -29,7 +30,7 @@ data class PaginationState<T>(
      */
     val nextPageNumber: Int
         get() = if (pageNumber == 0) {
-            ListingConstants.INITIAL_PAGE_NUMBER
+            ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER
         } else {
             pageNumber + 1
         }
@@ -127,5 +128,5 @@ fun <T> PaginationState<T>.toError(error: AppError, isInitial: Boolean): Paginat
  */
 fun <T> PaginationState<T>.toError(error: AppError, pageNumber: Int): PaginationState<T> = toError(
     error = error,
-    isInitial = pageNumber == ListingConstants.INITIAL_PAGE_NUMBER
+    isInitial = pageNumber == ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER
 )

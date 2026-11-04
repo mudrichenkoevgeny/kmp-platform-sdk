@@ -49,7 +49,7 @@ fun ListingHeaderBar(
             if (state.items.isEmpty()) {
                 0
             } else {
-                val pageSize = ListingDefaultValues.Pagination.PAGE_SIZE
+                val pageSize = ListingDefaultValues.Pagination.DEFAULT_PAGE_SIZE
                 val computed = (lazyListState.firstVisibleItemIndex / pageSize) + 1
                 if (totalPages > 0) computed.coerceAtMost(totalPages.toInt()) else computed
             }

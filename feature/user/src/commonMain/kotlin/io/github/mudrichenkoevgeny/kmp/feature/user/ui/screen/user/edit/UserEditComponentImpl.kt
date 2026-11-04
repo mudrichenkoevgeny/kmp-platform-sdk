@@ -111,7 +111,8 @@ class UserEditComponentImpl(
             if (nickError != null || nameError != null) {
                 _state.value = currentContent.copy(
                     nicknameError = nickError,
-                    displayNameError = nameError
+                    displayNameError = nameError,
+                    actionError = null
                 )
                 return@launch
             }

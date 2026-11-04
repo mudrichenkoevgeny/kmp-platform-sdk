@@ -2,6 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.ListingDefaultValues
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -15,7 +16,7 @@ class PaginationStateTest {
     @Test
     fun nextPageNumber_returnsInitialPageNumber_whenPageNumberIsZero() {
         val state = PaginationState<String>(pageNumber = 0)
-        assertEquals(ListingConstants.INITIAL_PAGE_NUMBER, state.nextPageNumber)
+        assertEquals(ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER, state.nextPageNumber)
     }
 
     @Test
@@ -135,7 +136,7 @@ class PaginationStateTest {
         val error = CommonError.Unknown()
         val stateWithItems = PaginationState(items = listOf("item1"))
 
-        val initialErrorState = stateWithItems.toError(error, pageNumber = ListingConstants.INITIAL_PAGE_NUMBER)
+        val initialErrorState = stateWithItems.toError(error, pageNumber = ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER)
         assertTrue(initialErrorState.items.isEmpty())
         assertEquals(error, initialErrorState.error)
 

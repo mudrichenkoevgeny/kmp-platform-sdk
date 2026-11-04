@@ -8,14 +8,17 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.session.ManagementSessionRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.session.list.datasource.ManagementSessionListDataSource
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteAllUserSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementDeleteSessionUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session.ManagementGetUserSessionsUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListScreenState
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.userlist.ManagementUserSessionListParams
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -30,7 +33,7 @@ class UserSessionListComponentImplTest {
         val context = createTestContext(sessions = listOf(session))
 
         advanceUntilIdle()
-        val state = assertIs<UserSessionListScreenState.Content>(context.component.state.value)
+        val state = assertIs<SessionListScreenState.Content>(context.component.state.value)
         assertEquals(listOf(session), state.paging.items)
     }
 
@@ -42,7 +45,7 @@ class UserSessionListComponentImplTest {
         val context = createTestContext(repository = repository)
 
         advanceUntilIdle()
-        val state = assertIs<UserSessionListScreenState.Error>(context.component.state.value)
+        val state = assertIs<SessionListScreenState.Error>(context.component.state.value)
         assertEquals(error, state.error)
     }
 
@@ -54,7 +57,7 @@ class UserSessionListComponentImplTest {
         context.component.onRefresh()
 
         advanceUntilIdle()
-        assertIs<UserSessionListScreenState.Content>(context.component.state.value)
+        assertIs<SessionListScreenState.Content>(context.component.state.value)
     }
 
     @Test
@@ -76,17 +79,22 @@ class UserSessionListComponentImplTest {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()
 
-        val useCase = ManagementGetUserSessionsUseCase(repository)
+        val getGlobalUseCase = ManagementGetSessionsUseCase(repository)
+        val getUserUseCase = ManagementGetUserSessionsUseCase(repository)
         val deleteSessionUseCase = ManagementDeleteSessionUseCase(repository)
         val deleteAllSessionsUseCase = ManagementDeleteAllUserSessionsUseCase(repository)
         val context = TestContext()
 
-        context.component = UserSessionListComponentImpl(
+        context.component = SessionListComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
-            params = ManagementUserSessionListParams(userId = userId.asHexDashString()),
-            managementGetUserSessionsUseCase = useCase,
-            managementDeleteSessionUseCase = deleteSessionUseCase,
-            managementDeleteAllUserSessionsUseCase = deleteAllSessionsUseCase,
+            dataSource = ManagementSessionListDataSource(
+                managementGetSessionsUseCase = getGlobalUseCase,
+                managementGetUserSessionsUseCase = getUserUseCase,
+                managementDeleteSessionUseCase = deleteSessionUseCase,
+                managementDeleteAllUserSessionsUseCase = deleteAllSessionsUseCase
+            ),
+            initialUserId = userId.asHexDashString(),
+            includeFilterPanel = false,
             onBack = { context.onBackCalls++ }
         )
 
@@ -94,7 +102,7 @@ class UserSessionListComponentImplTest {
     }
 
     private class TestContext {
-        lateinit var component: UserSessionListComponentImpl
+        lateinit var component: SessionListComponentImpl
         var onBackCalls = 0
     }
 }

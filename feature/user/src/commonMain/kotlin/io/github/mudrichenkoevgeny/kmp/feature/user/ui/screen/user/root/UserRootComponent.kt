@@ -7,11 +7,11 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.StorageF
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.upload.StorageFileUploadScreenComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.edit.UserEditComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.detail.IdentifierDetailComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListOwner
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.SelfIdentifierListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.main.MainUserComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.detail.SessionDetailComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SelfSessionListComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListOwner
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpMainComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.recovery.TotpRecoveryCodesComponent
@@ -38,11 +38,11 @@ interface UserRootComponent {
         /** TOTP recovery codes management. */
         class TotpRecoveryCodes(val component: TotpRecoveryCodesComponent) : Child
         /** Active session management. */
-        class Sessions(val component: SelfSessionListComponent) : Child, SessionListOwner by component
+        class Sessions(val component: SessionListComponent) : Child, SessionListOwner by component
         /** Active session detail screen. */
         class SessionDetail(val component: SessionDetailComponent) : Child
         /** Account identifiers management. */
-        class Identifiers(val component: SelfIdentifierListComponent) : Child, IdentifierListOwner by component
+        class Identifiers(val component: IdentifierListComponent) : Child, IdentifierListOwner by component
         /** Identifier detail screen. */
         class IdentifierDetail(val component: IdentifierDetailComponent) : Child
         /** User storage file list screen. */

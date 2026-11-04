@@ -9,7 +9,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.Fullscre
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.core.testing.ui.test.captureAppScreen
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.sessions.UserSessionListComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.session.SessionListComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListPreviewProvider
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListScreenState
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -26,20 +29,22 @@ import kotlin.test.Test
 )
 class UserSessionListScreenScreenshotTest(
     private val stateName: String,
-    private val state: UserSessionListScreenState
+    private val state: SessionListScreenState
 ) {
 
     @Test
     fun capture() = runComposeUiTest {
-        val component = UserSessionListComponentMock(initialState = state)
+        val component = SessionListComponentMock(initialState = state)
 
         setContent {
             ComponentTestHarness {
-                UserSessionListScreen(component)
+                SessionListScreen(component)
             }
         }
 
-        if (state is UserSessionListScreenState.Loading) {
+        if ((state is SessionListScreenState.Loading) ||
+            (state is SessionListScreenState.Content && state.actionLoading)
+        ) {
             mainClock.autoAdvance = false
             mainClock.advanceTimeBy(FullscreenLoadingConfig.DELAY_MILLIS + 50L)
         }
@@ -55,7 +60,7 @@ class UserSessionListScreenScreenshotTest(
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
         fun data(): Collection<Array<Any>> {
-            val provider = UserSessionsPreviewProvider()
+            val provider = SessionListPreviewProvider()
             return provider.values.mapIndexed { index, state ->
                 val name = provider.getDisplayName(index) ?: "State_$index"
                 arrayOf(name, state)

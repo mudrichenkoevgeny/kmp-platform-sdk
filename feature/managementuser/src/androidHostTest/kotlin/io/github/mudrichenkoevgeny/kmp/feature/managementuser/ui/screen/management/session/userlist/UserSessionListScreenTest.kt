@@ -13,7 +13,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.Pagina
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.sessions.UserSessionListComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.session.SessionListComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListScreenState
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListTestTags
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -28,10 +31,10 @@ class UserSessionListScreenTest {
 
     @Test
     fun loading_showsIndeterminateProgressAfterDefaultDelay() = runComposeUiTest {
-        val component = UserSessionListComponentMock(UserSessionListScreenState.Loading)
+        val component = SessionListComponentMock(initialState = SessionListScreenState.Loading)
         setContent {
             ComponentTestHarness {
-                UserSessionListScreen(component)
+                SessionListScreen(component)
             }
         }
         mainClock.autoAdvance = false
@@ -42,8 +45,8 @@ class UserSessionListScreenTest {
     @Test
     fun content_displaysElements() = runComposeUiTest {
         val session = createTestUserSessionSummary()
-        val component = UserSessionListComponentMock(
-            UserSessionListScreenState.Content(
+        val component = SessionListComponentMock(
+            initialState = SessionListScreenState.Content(
                 paging = PaginationState(
                     items = listOf(session),
                     isInitialLoading = false
@@ -52,48 +55,48 @@ class UserSessionListScreenTest {
         )
         setContent {
             ComponentTestHarness {
-                UserSessionListScreen(component)
+                SessionListScreen(component)
             }
         }
-        onNodeWithTag(UserSessionListTestTags.TITLE).assertIsDisplayed()
-        onNodeWithTag(UserSessionListTestTags.BACK_BUTTON).assertIsDisplayed()
-        onNodeWithTag(UserSessionListTestTags.REFRESH_BUTTON).assertIsDisplayed()
-        onNodeWithTag(UserSessionListTestTags.SESSION_LIST).assertIsDisplayed()
+        onNodeWithTag(SessionListTestTags.TITLE).assertIsDisplayed()
+        onNodeWithTag(SessionListTestTags.BACK_BUTTON).assertIsDisplayed()
+        onNodeWithTag(SessionListTestTags.REFRESH_BUTTON).assertIsDisplayed()
+        onNodeWithTag(SessionListTestTags.SESSION_LIST).assertIsDisplayed()
     }
 
     @Test
     fun content_clickBack_invokesCallback() = runComposeUiTest {
-        val component = UserSessionListComponentMock(UserSessionListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
+        val component = SessionListComponentMock(initialState = SessionListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
         setContent {
             ComponentTestHarness {
-                UserSessionListScreen(component)
+                SessionListScreen(component)
             }
         }
-        onNodeWithTag(UserSessionListTestTags.BACK_BUTTON).performClick()
+        onNodeWithTag(SessionListTestTags.BACK_BUTTON).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.backCalls)
     }
 
     @Test
     fun content_clickRefresh_invokesCallback() = runComposeUiTest {
-        val component = UserSessionListComponentMock(UserSessionListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
+        val component = SessionListComponentMock(initialState = SessionListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
         setContent {
             ComponentTestHarness {
-                UserSessionListScreen(component)
+                SessionListScreen(component)
             }
         }
-        onNodeWithTag(UserSessionListTestTags.REFRESH_BUTTON).performClick()
+        onNodeWithTag(SessionListTestTags.REFRESH_BUTTON).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.refreshCalls)
     }
 
     @Test
     fun error_displaysErrorText() = runComposeUiTest {
-        val component = UserSessionListComponentMock(UserSessionListScreenState.Error(CommonError.Unknown()))
+        val component = SessionListComponentMock(initialState = SessionListScreenState.Error(CommonError.Unknown()))
         setContent {
             ComponentTestHarness {
-                UserSessionListScreen(component)
+                SessionListScreen(component)
             }
         }
-        onNodeWithTag(UserSessionListTestTags.GLOBAL_ERROR_TEXT).assertIsDisplayed()
+        onNodeWithTag(SessionListTestTags.GLOBAL_ERROR_TEXT).assertIsDisplayed()
     }
 
     private companion object {

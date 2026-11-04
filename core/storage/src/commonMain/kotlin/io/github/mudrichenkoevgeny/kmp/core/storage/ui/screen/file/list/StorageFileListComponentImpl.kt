@@ -11,7 +11,6 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants.INITIAL_PAGE_NUMBER
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.appendResult
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ChoiceListingFilterState
@@ -23,6 +22,7 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.datasour
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.datasource.StorageFileListQuery
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.dialog.StorageFileListDialogChild
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.dialog.StorageFileListDialogConfig
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.ListingDefaultValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.StorageFileSummary
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.listing.StorageFileFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.status.StorageFileStatus
@@ -119,7 +119,7 @@ class StorageFileListComponentImpl(
             return
         }
         _state.value = StorageFileListScreenState.Loading
-        fetchPage(pageNumber = INITIAL_PAGE_NUMBER)
+        fetchPage(pageNumber = ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER)
     }
 
     override fun onBackClick() {
@@ -137,7 +137,7 @@ class StorageFileListComponentImpl(
 
     override fun onRefresh() {
         _state.value = StorageFileListScreenState.Loading
-        fetchPage(pageNumber = INITIAL_PAGE_NUMBER)
+        fetchPage(pageNumber = ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER)
     }
 
     override fun onLoadNextPage() {
@@ -174,7 +174,7 @@ class StorageFileListComponentImpl(
 
     override fun onApplyFilters() {
         _state.value = StorageFileListScreenState.Loading
-        fetchPage(pageNumber = INITIAL_PAGE_NUMBER)
+        fetchPage(pageNumber = ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER)
     }
 
     override fun onUploadClick() {
