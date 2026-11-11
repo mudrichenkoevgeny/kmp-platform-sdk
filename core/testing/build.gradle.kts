@@ -1,4 +1,7 @@
 plugins {
+    alias(libs.plugins.kmp.platform.quality)
+    alias(libs.plugins.kmp.platform.kotlin)
+    alias(libs.plugins.kmp.platform.publish)
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
 }

@@ -1,11 +1,12 @@
 ---
-description: Constraints for Compose Preview helpers, mandatory UI testing, and localization rules
+description: UI standards for Jetpack Compose Multiplatform, Decompose, previews, and screenshot testing
+globs: "**/*.kt"
 alwaysApply: true
 ---
 
-# Compose UI, Previews, and Testing Standards
+# Compose UI, Previews, and Testing Standards — KMP Platform Additions
 
-This document defines standards for UI components, screens, preview tooling, and testing boundaries in the `kmp-platform-sdk`.
+This document defines standards for UI components, screens, preview tooling, and testing boundaries for KMP applications.
 
 ## 1. UI Localization Enforcement
 - **Production UI:** All user-facing text in production `@Composable` functions must strictly use Compose Multiplatform localized resources (`Res.string.*` via `stringResource(...)`). Hardcoded string literals in production UI code are strictly forbidden.
@@ -15,7 +16,7 @@ This document defines standards for UI components, screens, preview tooling, and
 - **UI Components:** Every reusable UI component (`Core*` or custom composable) must provide Compose previews annotated with `@ComponentSizePreviews`, `@ThemePreviews`, and `@FontScalePreviews`.
 - **UI Screens:** Every screen composable (`*Screen.kt`) must provide Compose previews annotated with `@ScreenSizePreviews`, `@ThemePreviews`, `@FontScalePreviews`, and state providers (`*PreviewParameterProvider`).
 - **Annotations & Visibility:** All preview composables must be marked `private` and annotated with `@InternalApi`.
-- **Theme Wrapper:** Previews must wrap content in `CoreTheme` (or `ScreenPreviewContainer` for screens) and provide necessary composition locals (such as `LocalErrorParser provides AppErrorParserMock`).
+- **Theme & Composition Local Wrapper:** Previews must wrap content in the application's root theme container and supply required composition local mocks to prevent preview rendering crashes (e.g. `LocalErrorParser provides AppErrorParserMock`).
 
 ## 3. Mandatory Companion Tests
 - **Screen & Component Coverage:** Every created UI screen (`*Screen.kt`) or UI component must be accompanied by both:
@@ -30,15 +31,5 @@ This document defines standards for UI components, screens, preview tooling, and
 - **Visual Feedback:** Rely on IDE Previews (`@Preview`) for rapid layout inspection.
 - **Automated Verification:** Use companion unit tests (`*Test.kt`) and Roborazzi screenshot tests (`*ScreenshotTest.kt`) for regression prevention.
 
-## 6. Design Tokens & Theme Integration
-- **Single Source of Truth:** All visual design tokens (colors, spacing, sizing, radius, elevation) and font assets (`assets/fonts/ttf/*.ttf`) originate from the [platform-design-system](https://github.com/mudrichenkoevgeny/platform-design-system) repository.
-- **Generated Tokens Artifact:** `GeneratedDesignTokens.kt` (`core/common/src/commonMain/kotlin/io/github/mudrichenkoevgeny/kmp/core/common/ui/theme/tokens/GeneratedDesignTokens.kt`) is generated automatically by the design system toolchain. **Manual modifications to `GeneratedDesignTokens.kt` are strictly prohibited.**
-- **Font Assets Location:** Physical font files (`.ttf` / `.otf`) are copied directly from `platform-design-system` (`assets/fonts/ttf/`) into `core/common/src/commonMain/composeResources/font/` so Compose Resources can generate `Res.font.*` accessors.
-- **Theme Wiring:** Theme primitives in `CoreTheme` (`Color.kt`, `Dimens.kt`, `Shapes.kt`, `Typography.kt`) must map their values directly from `GeneratedDesignTokens`.
-
-## 7. Decompose Navigation & Screen Parameters
-- **Screen Parameter Classes (`*Params`):** When Decompose screen destinations require parameters, parameters must be wrapped into dedicated serializable `*Params` data classes (e.g., `UserDetailParams(val userIdValue: String)`). The parameters data class encapsulates conversion to domain value class IDs (`val userId: UserId get() = userIdValue.toUserIdOrThrow()`).
+## 6. Decompose Navigation Hooks
 - **Child Navigation Hooks:** Root Decompose components must provide `navigateTo(destination: Destination)` functions to allow app-level deep link handlers to programmatically push nested destinations.
-
----
-*Refer to `AGENTS.md` for the full list of project standards.*

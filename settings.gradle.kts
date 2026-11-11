@@ -1,10 +1,15 @@
 pluginManagement {
+    includeBuild("tools/gradle-plugin")
     repositories {
         mavenLocal()
+        gradlePluginPortal()
         google()
         mavenCentral()
-        gradlePluginPortal()
     }
+}
+
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
 dependencyResolutionManagement {
@@ -17,11 +22,13 @@ dependencyResolutionManagement {
 
 rootProject.name = "kmp-platform-sdk"
 
-fun registerModules(parentDir: String, modules: List<String>) {
+fun registerModules(
+    group: String,
+    modules: List<String>
+) {
     modules.forEach { name ->
-        val gradlePath = ":$parentDir:$name"
-        val folderPath = "$parentDir/$name"
-
+        val gradlePath = ":$group:$name"
+        val folderPath = "$group/$name"
         include(gradlePath)
         project(gradlePath).projectDir = file(folderPath)
     }
@@ -34,14 +41,20 @@ val coreModules = listOf(
     "storage",
     "testing"
 )
-registerModules("core", coreModules)
+registerModules(
+    "core",
+    coreModules
+)
 
 val featureModules = listOf(
     "user",
     "clientuser",
     "managementuser"
 )
-registerModules("feature", featureModules)
+registerModules(
+    "feature",
+    featureModules
+)
 
 include(":bom")
 
@@ -50,3 +63,6 @@ include(":sampleclient:androidApp")
 
 include(":samplemanagement:composeApp")
 include(":samplemanagement:androidApp")
+
+include(":tools:detekt-rules")
+project(":tools:detekt-rules").projectDir = file("tools/detekt-rules")

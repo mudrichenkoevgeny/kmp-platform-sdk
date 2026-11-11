@@ -1,0 +1,2 @@
+# --- KMP OVERRIDES ---
+# Add kmp-specific editorconfig rules below

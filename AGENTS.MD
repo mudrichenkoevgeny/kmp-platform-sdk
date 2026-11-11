@@ -20,6 +20,7 @@ This document is the entry point for architectural and coding standards. These r
 - **Manual Test Execution:** AI agents must not run tests or suggest running them. Execution is always triggered explicitly by the developer.
 - **Single Declaration Per File:** Every public `interface`, `class`, or `object` must be placed in its own separate, dedicated file matching the declaration name. Never combine an interface and its implementation class in a single file.
 - **No Redundant Builds:** Do not run Gradle build tasks or attempt compilation after modifying documentation (KDoc), comments, or other non-executable changes that cannot possibly break the build.
+- **Mandatory Sub-Agent Audit (Dual-Agent Review):** After implementing non-trivial code changes, new features, or complex refactorings, the AI agent MUST automatically invoke an independent reviewer sub-agent via the `task` tool to audit modified files against `AGENTS.md` guidelines, type safety, edge cases, and error handling before presenting the final result.
 - **Git Ban (Strict Prohibition):** NEVER run git commands (`git add`, `git commit`, `git push`, etc.) via shell. Version control, staging, and committing are strictly the developer's responsibility. Do not attempt to save or document changes into git history.
 
 ## Module Map
@@ -31,7 +32,7 @@ This document is the entry point for architectural and coding standards. These r
 - **`core/security`:** Password policy validation, MFA state primitives, Ktor network client for security settings, and localized security error domains.
 - **`core/settings`:** Global application configuration logic, Ktor network client for global settings, encrypted caching, and reactive state management.
 
-### Feature Modules (`feature/*`)
+### Feature Modules (`feature/`)
 *Domain-specific logic, Network APIs, and Compose/Decompose UI.*
 
 - **`feature/user`:** Base Identity & Auth logic. Includes core models, use cases and encrypted storage for sessions.
@@ -43,12 +44,25 @@ This document is the entry point for architectural and coding standards. These r
 
 ## Detailed Standards (`.agent/`)
 
+### Global Shared Standards (`.agent/global/`)
+- **Common (`.agent/global/common/`):**
+  - **`ai-collaboration-basics.md`** — Universal AI interaction constraints, operational rules (Git ban, test execution ban), dependency rules, and architectural layering.
+- **Kotlin (`.agent/global/kotlin/`):**
+  - **`kotlin-coding-style-basics.md`** — Naming, `when` subject rules, brace requirements, FQN/Comments ban, Trailing Commas ban, `!!` ban, companion objects, value classes, and `.value` usage.
+  - **`docs-kdoc-basics.md`** — Language standards, link resolution rules, and KDoc Definition of Done.
+  - **`docs-kdoc-type-basics.md`** — Specific KDoc patterns for DTOs, Error Codes, Sealed types, Routes, and Navigation Screen Params.
+  - **`kotlin-testing-basics.md`** — Unit and integration test standards, mocking policy, and manual execution rule.
+- **KMP Platform (`.agent/global/kmp/`):**
+  - **`ai-collaboration-kmp.md`** — KMP Platform SDK interaction constraints, Decompose component model, and SDK workflow.
+  - **`docs-kdoc-type-kmp.md`** — Specific KDoc patterns for KMP components (Decompose configs, UI state, AppError hierarchies).
+  - **`localization-kmp.md`** — Compose Multiplatform localization structure, naming conventions, and resource integrity.
+  - **`ui-kmp.md`** — UI standards for Jetpack Compose Multiplatform, Decompose, previews, and screenshot testing.
+  - **`testing-kmp.md`** — Multiplatform testing strategy (`commonTest` portability, MockK policy, `runTest`, and Roborazzi workflow).
+  - **`architecture-kmp.md`** — Universal KMP architecture, Decompose component model, stack navigation, slot dialogs, and ListOwner.
+
+### Local Standards (`.agent/local/`)
 - **`project-overview.md`** — Project identity, KMP targets (Android/Wasm), module boundaries, and repository layout.
-- **`architecture-patterns.md`** — Decompose component tree rules, WebSocket message handler registration, and Error Parser chaining.
-- **`docs-kdoc-basics.md`** — Language standards (English) and KDoc Definition of Done (mandatory for every public interface member).
-- **`docs-kdoc-type-requirements.md`** — Specific KDoc patterns for DTOs, Sealed classes, and platform-specific implementations.
-- **`localization.md`** — Compose Multiplatform resource layout and naming conventions for UI strings.
-- **`kotlin-coding-style.md`** — Naming conventions, `when` subject rules, brace requirements (no one-line `if`), FQN/Comments ban, and Trailing Commas ban.
-- **`ui-compose-decompose.md`** — Rules for `CompositionLocal` usage, state hoisting in Decompose components, UI previews, tests, and localization constraints.
-- **`testing-conventions.md`** — Test conventions, manual execution policy, Roborazzi screenshot tests, and `PreviewParameterProvider` guidance for Compose.
-- **`ai-collaboration-workflow.md`** — AI constraints, Version Catalog (libs.versions.toml) management, and SDK vs Sample application boundaries.
+- **`architecture.md`** — Internal bootstrapping, AppError pipeline, listing infrastructure, and specific deep link routing for kmp-platform-sdk.
+- **`localization.md`** — Error resource key conventions and AppError alignment for kmp-platform-sdk.
+- **`ui.md`** — Design tokens integration, GeneratedDesignTokens, font assets, and CoreTheme wiring.
+- **`testing.md`** — Test fixtures, shared-foundation factories, and SDK component testing rules.

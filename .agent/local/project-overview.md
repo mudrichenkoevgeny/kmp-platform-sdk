@@ -7,12 +7,12 @@ alwaysApply: true
 
 ## Project identity
 - **Type:** Kotlin Multiplatform **client SDK (library)**. Provides shared foundation and UI for Android and Web (Wasm).
-- **Publishing:** Maven Central via `com.vanniktech.maven.publish`; versions are managed in the root `build.gradle.kts`.
+- **Publishing:** Maven Central via `com.vanniktech.maven.publish`; versions and group are managed in the root `gradle.properties`.
 - **Coordinates:** Group `io.github.mudrichenkoevgeny`, artifact IDs follow `kmp-platform-sdk-*` convention.
 - **BOM:** Located at `:bom` for consistent version alignment across all consumer modules.
 
 ## Tech stack
-- **Kotlin:** Coroutines, Kotlinx Serialization.
+- **Kotlin:** Coroutines, Kotlinx Serialization, Kotlinx DateTime.
 - **UI:** Compose Multiplatform (including `composeResources` + generated `Res`).
 - **Navigation:** Decompose (Component-based architecture).
 - **Networking:** Ktor Client (HTTP + WebSockets).
@@ -28,6 +28,8 @@ alwaysApply: true
 - **`core/common`:** The foundation. Ktor client bootstrap, WebSocket lifecycle, `AppError` model, error parsing pipeline (Chain of Responsibility), and platform metadata.
 - **`core/settings`:** Global application settings logic, Ktor network client for global settings, encrypted storage implementations, and reactive state management.
 - **`core/security`:** Password policy validation, MFA state management primitives, Ktor network client for security settings, and domain-specific security error parsing.
+- **`core/storage`:** Multiplatform storage primitives and key-value encryption abstractions.
+- **`core/testing`:** Shared testing infrastructure, screenshot capture utilities (`captureAppScreen`), and fakes.
 
 ### Feature Modules (`feature/`)
 *Pluggable domain logic and shared UI components.*
@@ -38,13 +40,14 @@ alwaysApply: true
 
 ### Other
 - **`bom`:** Bill of Materials (Gradle platform).
-- **`sampleclient`** & **`samplemanagement`:** Reference host applications demonstrating initialization of `CommonComponent`, error parser registration, and UI integration via `CompositionLocalProvider`.
+- **`sampleclient`** & **`samplemanagement`:** Reference host applications (`composeApp`, `androidApp`) demonstrating initialization of `CommonComponent`, error parser registration, and UI integration via `CompositionLocalProvider`.
+- **`tools/detekt-rules`:** Custom Detekt rules enforcing SDK-specific architectural constraints.
 
 ## Boundaries & Dependencies
-- **`core/common` is the leaf:** It must not depend on any `feature/*` modules.
+- **`core/common` is the foundational base:** It must not depend on any other core or `feature/*` modules.
 - **Feature-to-Core:** Feature modules depend on `core/common` and relevant core primitives (e.g., `feature/user` depends on `core/security`).
-- **Composition Root:** All wiring happens in the host application or `sample/`. Features must remain host-agnostic and rely on provided configuration (e.g., `baseUrl`).
-- **Sample Rule:** The `sample/` module is for integration reference only. **Never move SDK or business logic into sample.**
+- **Composition Root:** All wiring happens in host applications (`sampleclient` / `samplemanagement`). Features must remain host-agnostic and rely on provided configuration (e.g., `baseUrl`).
+- **Sample Rule:** Host modules are for integration reference only. **Never move SDK or business logic into sample modules.**
 
 ## Guidelines for AI
 - All architectural and coding standards are located in the `.agent/` directory.

@@ -1,0 +1,24 @@
+comments:
+  UndocumentedPublicClass:
+    excludes:
+      - '**/*Test*.kt'
+      - '**/*Test*/**'
+      - '**/testing/**'
+      - '**/tools/**'
+      - '**/sample*/**'
+      - '**/di/**'
+      - '**/*Module.kt'
+      - '**/*Component.kt'
+  UndocumentedPublicFunction:
+    excludes:
+      - '**/*Test*.kt'
+      - '**/*Test*/**'
+      - '**/testing/**'
+      - '**/tools/**'
+      - '**/sample*/**'
+      - '**/di/**'
+      - '**/*Module.kt'
+      - '**/*Component.kt'
+
+kmp-rules:
+  active: true

@@ -13,9 +13,12 @@ sqlDelight = "2.4.1"
 buildConfig = "6.1.2"
 maven-publish = "0.37.0"
 dependency-analysis = "3.19.2"
+gradle-versions = "0.66.0"
+bcv = "0.18.2"
+dokka = "2.3.0"
 
 # Shared Foundation
-shared-foundation = "0.1.6"
+shared-foundation = "0.1.11"
 
 # Kotlin
 kotlinx-serialization = "1.12.0"
@@ -46,11 +49,15 @@ qrose = "1.3.1"
 # Android
 androidx-activityCompose = "1.13.0"
 crypto-tink = "1.24.0"
-jetbrainsKotlinJvm = "2.4.21"
 
 # OAuth
 androidx-credentials = "1.6.0"
 googleid = "1.2.1"
+
+# Code Analysis
+ktlint = "14.2.0"
+detekt = "2.0.0-alpha.6"
+konsist = "0.18.1"
 
 # Testing (Android JVM / Robolectric)
 androidx-test-core = "1.7.0"
@@ -134,6 +141,18 @@ androidx-credentials = { module = "androidx.credentials:credentials", version.re
 androidx-credentials-play-services = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "androidx-credentials" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
 
+# Code Analysis
+detekt-api = { group = "dev.detekt", name = "detekt-api", version.ref = "detekt" }
+konsist = { module = "com.lemonappdev:konsist", version.ref = "konsist" }
+
+# Gradle Plugins
+detekt-gradle-plugin = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+ktlint-gradle-plugin = { group = "org.jlleitschuh.gradle", name = "ktlint-gradle", version.ref = "ktlint" }
+maven-publish-gradle-plugin = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version.ref = "maven-publish" }
+dokka-gradle-plugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
+kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+shared-foundation-gradle-plugin = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-gradle-plugin", version.ref = "shared-foundation" }
+
 # Testing
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
@@ -145,9 +164,12 @@ roborazzi-compose = { module = "io.github.takahirom.roborazzi:roborazzi-compose"
 roborazzi-junit-rule = { module = "io.github.takahirom.roborazzi:roborazzi-junit-rule", version.ref = "roborazzi" }
 
 [plugins]
+kmp-platform-agent-sync = { id = "io.github.mudrichenkoevgeny.kmp-platform-agent-sync" }
+kmp-platform-quality = { id = "io.github.mudrichenkoevgeny.kmp-platform-quality" }
+kmp-platform-kotlin = { id = "io.github.mudrichenkoevgeny.kmp-platform-kotlin" }
+kmp-platform-publish = { id = "io.github.mudrichenkoevgeny.kmp-platform-publish" }
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
-android-application = { id = "com.android.application", version.ref = "agp" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
@@ -155,5 +177,10 @@ sqlDelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }
 maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependency-analysis" }
-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
+gradle-versions-plugin = { id = "io.github.ben-manes.versions", version.ref = "gradle-versions" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "bcv" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }

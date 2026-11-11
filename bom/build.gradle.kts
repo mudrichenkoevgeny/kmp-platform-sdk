@@ -1,6 +1,6 @@
 plugins {
     `java-platform`
-    alias(libs.plugins.maven.publish)
+    alias(libs.plugins.kmp.platform.publish)
 }
 
 dependencies {
