@@ -191,8 +191,8 @@ private fun Content(
                         config = getSessionListingOptionsConfig(includeUserFilter = true),
                         sortState = state.sortState,
                         filterStates = state.filterStates,
-                        onSortChanged = component::onSortChanged,
-                        onFilterChanged = component::onFilterChanged,
+                        onSortChange = { sortState -> component.onSortChanged(sortState) },
+                        onFilterChange = { key, filterState -> component.onFilterChanged(key, filterState) },
                         onApplyClick = component::onApplyFilters,
                         modifier = Modifier
                             .fillMaxWidth()

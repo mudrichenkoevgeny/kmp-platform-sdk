@@ -14,6 +14,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.t
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.request.auth.login.createTestLoginByExternalAuthProviderRequest
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -39,7 +40,7 @@ class LoginByGoogleUseCaseTest {
     @Test
     fun `should complete full flow on success`() = runTest {
         val googleAuthService = GoogleAuthServiceMock().apply {
-            signInResultProvider = { AppResult.Success("id_token") }
+            signInResultProvider = { AppResult.Success(createTestLoginByExternalAuthProviderRequest()) }
         }
         val loginRepository = LoginRepositoryMock().apply {
             authDataResultProvider = { AppResult.Success(authDataMock) }
@@ -88,7 +89,7 @@ class LoginByGoogleUseCaseTest {
     fun `should fail if repository login fails`() = runTest {
         val error = CommonError.Unknown()
         val googleAuthService = GoogleAuthServiceMock().apply {
-            signInResultProvider = { AppResult.Success("id_token") }
+            signInResultProvider = { AppResult.Success(createTestLoginByExternalAuthProviderRequest()) }
         }
         val loginRepository = LoginRepositoryMock().apply {
             authDataResultProvider = { AppResult.Error(error) }

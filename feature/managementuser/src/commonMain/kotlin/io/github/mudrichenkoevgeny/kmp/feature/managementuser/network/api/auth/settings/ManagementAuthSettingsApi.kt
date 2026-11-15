@@ -26,7 +26,9 @@ public interface ManagementAuthSettingsApi {
      * @param request New authentication settings payload.
      * @return [AppResult.Success] containing updated [ManagementAuthSettingsPayload], or a mapped failure.
      */
-    public suspend fun updateManagementAuthSettings(request: ManagementAuthSettingsPayload): AppResult<ManagementAuthSettingsPayload>
+    public suspend fun updateManagementAuthSettings(
+        request: ManagementAuthSettingsPayload
+    ): AppResult<ManagementAuthSettingsPayload>
 
     /**
      * Resets global authentication settings to default values.

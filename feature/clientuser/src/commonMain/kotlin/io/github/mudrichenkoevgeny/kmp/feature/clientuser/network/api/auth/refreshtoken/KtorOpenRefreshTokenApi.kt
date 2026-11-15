@@ -12,10 +12,10 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
 /** [RefreshTokenApi] backed by [HttpClient]; the refresh route uses [markAsPublic]. */
-class KtorOpenRefreshTokenApi(
+public class KtorOpenRefreshTokenApi(
     private val client: HttpClient
 ) : RefreshTokenApi {
-    override suspend fun refreshToken(
+    public override suspend fun refreshToken(
         request: RefreshTokenPayload
     ): AppResult<SessionTokenPayload> = client.callResult {
         post(OpenRefreshTokenRoutes.REFRESH_TOKEN) {

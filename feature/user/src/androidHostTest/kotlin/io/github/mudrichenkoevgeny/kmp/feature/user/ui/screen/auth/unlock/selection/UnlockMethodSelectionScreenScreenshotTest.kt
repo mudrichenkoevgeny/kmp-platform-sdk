@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.selec
 
 import android.app.Application
 import androidx.compose.ui.test.onRoot
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig

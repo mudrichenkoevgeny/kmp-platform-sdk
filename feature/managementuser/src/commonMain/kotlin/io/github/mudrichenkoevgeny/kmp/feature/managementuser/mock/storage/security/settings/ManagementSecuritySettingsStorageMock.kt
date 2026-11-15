@@ -13,7 +13,9 @@ public class ManagementSecuritySettingsStorageMock : ManagementSecuritySettingsS
 
     public override suspend fun getManagementSecuritySettings(): ManagementSecuritySettings? = stored
 
-    public override suspend fun updateManagementSecuritySettings(managementSecuritySettings: ManagementSecuritySettings) {
+    public override suspend fun updateManagementSecuritySettings(
+        managementSecuritySettings: ManagementSecuritySettings
+    ) {
         stored = managementSecuritySettings
     }
 

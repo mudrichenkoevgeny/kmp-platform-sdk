@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
  * @param onNavigateToCreateUser Callback invoked to navigate to user creation screen.
  * @param onBack Callback invoked to pop the screen.
  */
-public class GlobalUserListComponentImpl public constructor(
+public class GlobalUserListComponentImpl(
     componentContext: ComponentContext,
     private val params: ManagementUserListParams,
     private val getUsersUseCase: GetUsersUseCase,
@@ -395,7 +395,9 @@ public class GlobalUserListComponentImpl public constructor(
         )
     }
 
-    private fun parseLastLoginFilterParams(filterStates: Map<String, ListingFilterState>?): TimestampRangeFilterParams {
+    private fun parseLastLoginFilterParams(
+        filterStates: Map<String, ListingFilterState>?
+    ): TimestampRangeFilterParams {
         val from = (filterStates?.get(UserFilterValues.LAST_LOGIN_AT_FROM) as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() } ?: params.lastLoginAtFrom
         val to = (filterStates?.get(UserFilterValues.LAST_LOGIN_AT_TO) as? TextListingFilterState)
@@ -409,7 +411,9 @@ public class GlobalUserListComponentImpl public constructor(
         )
     }
 
-    private fun parseLastActiveFilterParams(filterStates: Map<String, ListingFilterState>?): TimestampRangeFilterParams {
+    private fun parseLastActiveFilterParams(
+        filterStates: Map<String, ListingFilterState>?
+    ): TimestampRangeFilterParams {
         val from = (filterStates?.get(UserFilterValues.LAST_ACTIVE_AT_FROM) as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() } ?: params.lastActiveAtFrom
         val to = (filterStates?.get(UserFilterValues.LAST_ACTIVE_AT_TO) as? TextListingFilterState)

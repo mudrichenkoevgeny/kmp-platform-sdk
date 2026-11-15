@@ -28,7 +28,9 @@ public interface ManagementGlobalSettingsApi {
      * @param request New global settings payload.
      * @return [AppResult.Success] containing updated [ManagementGlobalSettingsPayload], or a mapped failure.
      */
-    public suspend fun updateManagementGlobalSettings(request: ManagementGlobalSettingsPayload): AppResult<ManagementGlobalSettingsPayload>
+    public suspend fun updateManagementGlobalSettings(
+        request: ManagementGlobalSettingsPayload
+    ): AppResult<ManagementGlobalSettingsPayload>
 
     /**
      * Resets platform-wide global settings to default values.

@@ -36,7 +36,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
  * @param webSocketService Source of push updates for user changes.
  * @param repositoryScope Scope used to collect WebSocket events throughout the repository's lifecycle.
  */
-class OpenUserRepositoryImpl(
+public class OpenUserRepositoryImpl(
     private val userStorage: UserStorage,
     private val authStorage: AuthStorage,
     private val openUserApi: OpenUserApi,
@@ -46,7 +46,7 @@ class OpenUserRepositoryImpl(
 
     private val mutex = Mutex()
 
-    override val currentUser: Flow<UserPrivate?> = userStorage.observeCurrentUser()
+    public override val currentUser: Flow<UserPrivate?> = userStorage.observeCurrentUser()
 
     init {
         repositoryScope.launch {
@@ -65,7 +65,7 @@ class OpenUserRepositoryImpl(
         }
     }
 
-    override suspend fun refreshCurrentUser(): AppResult<UserPrivate> = mutex.withLock {
+    public override suspend fun refreshCurrentUser(): AppResult<UserPrivate> = mutex.withLock {
         openUserApi.getUser().mapSuccess { userPrivatePayload: UserPrivatePayload ->
             val userPrivate = userPrivatePayload.toUserPrivate()
             userStorage.updateCurrentUser(userPrivate)
@@ -73,7 +73,7 @@ class OpenUserRepositoryImpl(
         }
     }
 
-    override suspend fun scheduleUserDeletion(): AppResult<UserPrivate> = mutex.withLock {
+    public override suspend fun scheduleUserDeletion(): AppResult<UserPrivate> = mutex.withLock {
         openUserApi.scheduleUserDeletion().mapSuccess { userPrivatePayload: UserPrivatePayload ->
             val userPrivate = userPrivatePayload.toUserPrivate()
             userStorage.updateCurrentUser(userPrivate)
@@ -81,7 +81,7 @@ class OpenUserRepositoryImpl(
         }
     }
 
-    override suspend fun restoreUser(): AppResult<UserPrivate> = mutex.withLock {
+    public override suspend fun restoreUser(): AppResult<UserPrivate> = mutex.withLock {
         openUserApi.restoreUser().mapSuccess { userPrivatePayload: UserPrivatePayload ->
             val userPrivate = userPrivatePayload.toUserPrivate()
             userStorage.updateCurrentUser(userPrivate)
@@ -89,7 +89,7 @@ class OpenUserRepositoryImpl(
         }
     }
 
-    override suspend fun selfUpdateUser(
+    public override suspend fun selfUpdateUser(
         params: UpdateUserParams
     ): AppResult<UserPrivate> = mutex.withLock {
         openUserApi.selfUpdateUser(params.toSelfUpdateUserRequest()).mapSuccess { userPrivatePayload ->
@@ -99,7 +99,7 @@ class OpenUserRepositoryImpl(
         }
     }
 
-    override suspend fun clearSession() {
+    public override suspend fun clearSession() {
         userStorage.clear()
         authStorage.clearTokens()
     }

@@ -28,9 +28,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
  * @param authServices Defaults to [UserAuthServicesMock].
  * @return A fully wired user feature root using the provided or default mocks.
  */
-
 @InternalApi
-fun clientUserComponentMock(
+public fun clientUserComponentMock(
     commonComponent: CommonComponent = commonComponentMock(),
     settingsComponent: SettingsComponent = settingsComponentMock(),
     securityComponent: SecurityComponent = securityComponentMock(),

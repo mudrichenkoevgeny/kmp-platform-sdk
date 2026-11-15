@@ -13,10 +13,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
 public open class EmailChangePasswordUseCaseMock : EmailChangePasswordUseCase(
     identifierRepository = IdentifierRepositoryMock()
 ) {
-    public var resultProvider: (userIdentifierId: UserIdentifierId, oldPass: String, newPass: String) -> AppResult<Unit> =
-        { _, _, _ ->
-            AppResult.Success(Unit)
-        }
+    public var resultProvider: (
+        userIdentifierId: UserIdentifierId,
+        oldPass: String,
+        newPass: String
+    ) -> AppResult<Unit> = { _, _, _ ->
+        AppResult.Success(Unit)
+    }
     public var executeCalls: Int = 0
 
     public override suspend fun invoke(

@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
  * @param resetRemoteAuthSettingsUseCase Resets auth settings to defaults.
  * @param onBack Pops this screen from the navigation stack.
  */
-public class EditAuthSettingsComponentImpl public constructor(
+public class EditAuthSettingsComponentImpl(
     componentContext: ComponentContext,
     initialDialogConfig: SettingsDialogConfig? = null,
     private val getManagementAuthSettingsUseCase: GetManagementAuthSettingsUseCase,
@@ -224,7 +224,9 @@ public class EditAuthSettingsComponentImpl public constructor(
         updateContent { copy(managementEmailWhitelist = value, saveError = null) }
     }
 
-    private inline fun updateContent(transform: EditAuthSettingsScreenState.Content.() -> EditAuthSettingsScreenState.Content) {
+    private inline fun updateContent(
+        transform: EditAuthSettingsScreenState.Content.() -> EditAuthSettingsScreenState.Content
+    ) {
         val current = _state.value as? EditAuthSettingsScreenState.Content ?: return
         _state.value = current.transform()
     }

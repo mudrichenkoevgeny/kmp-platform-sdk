@@ -78,7 +78,7 @@ class GlobalSessionListComponentImplTest {
         context.component.onApplyFilters()
         advanceUntilIdle()
 
-        assertEquals(listOf("127.0.0.1"), repository.lastIpAddresses)
+        assertEquals("127.0.0.1", repository.lastGlobalParams?.ipAddress)
     }
 
     @Test
@@ -92,7 +92,7 @@ class GlobalSessionListComponentImplTest {
         )
         advanceUntilIdle()
 
-        assertEquals(UserSessionSortBy.CREATED_AT, repository.lastSortBy)
+        assertEquals(UserSessionSortBy.CREATED_AT, repository.lastGlobalParams?.sortBy)
     }
 
     @Test

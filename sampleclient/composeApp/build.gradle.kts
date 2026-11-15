@@ -99,14 +99,19 @@ kotlin {
             implementation(libs.ktor.client.cio)
         }
 
-        getByName("androidHostTest").dependencies {
-            implementation(kotlin("test"))
-            implementation(libs.kotlinx.coroutines.test)
-            implementation(libs.androidx.test.core)
-            implementation(libs.compose.ui.test)
-            implementation(libs.androidx.compose.ui.test.manifest)
-            implementation(libs.robolectric)
-            implementation(libs.ktor.client.cio)
+        getByName("androidHostTest") {
+            compilerOptions {
+                optIn.add("androidx.compose.ui.test.ExperimentalTestApi")
+            }
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
+                implementation(libs.androidx.test.core)
+                implementation(libs.compose.ui.test)
+                implementation(libs.androidx.compose.ui.test.manifest)
+                implementation(libs.robolectric)
+                implementation(libs.ktor.client.cio)
+            }
         }
 
 //        wasmJsTest.dependencies {

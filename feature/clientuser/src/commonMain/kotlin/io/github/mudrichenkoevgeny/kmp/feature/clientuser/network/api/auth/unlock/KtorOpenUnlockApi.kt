@@ -15,11 +15,11 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
 /** [OpenUnlockApi] backed by [HttpClient]; unlock routes call [markAsPublic] so bearer auth is not applied. */
-class KtorOpenUnlockApi(
+public class KtorOpenUnlockApi(
     private val client: HttpClient
 ) : OpenUnlockApi {
 
-    override suspend fun sendUnlockEmailConfirmation(
+    public override suspend fun sendUnlockEmailConfirmation(
         request: SendConfirmationToEmailRequest
     ): AppResult<OtpConfirmationPayload> = client.callResult {
         post(OpenUnlockRoutes.SEND_UNLOCK_EMAIL_CONFIRMATION) {
@@ -28,7 +28,7 @@ class KtorOpenUnlockApi(
         }
     }
 
-    override suspend fun unlockByEmail(
+    public override suspend fun unlockByEmail(
         request: UnlockByEmailConfirmationRequest
     ): AppResult<Unit> = client.callResult {
         post(OpenUnlockRoutes.UNLOCK_BY_EMAIL) {
@@ -37,7 +37,7 @@ class KtorOpenUnlockApi(
         }
     }
 
-    override suspend fun sendUnlockPhoneConfirmation(
+    public override suspend fun sendUnlockPhoneConfirmation(
         request: SendConfirmationToPhoneRequest
     ): AppResult<OtpConfirmationPayload> = client.callResult {
         post(OpenUnlockRoutes.SEND_UNLOCK_PHONE_CONFIRMATION) {
@@ -46,7 +46,7 @@ class KtorOpenUnlockApi(
         }
     }
 
-    override suspend fun unlockByPhone(
+    public override suspend fun unlockByPhone(
         request: UnlockByPhoneConfirmationRequest
     ): AppResult<Unit> = client.callResult {
         post(OpenUnlockRoutes.UNLOCK_BY_PHONE) {
@@ -55,7 +55,7 @@ class KtorOpenUnlockApi(
         }
     }
 
-    override suspend fun unlockByExternalAuthProvider(
+    public override suspend fun unlockByExternalAuthProvider(
         request: UnlockByExternalAuthProviderRequest
     ): AppResult<Unit> = client.callResult {
         post(OpenUnlockRoutes.UNLOCK_BY_EXTERNAL_PROVIDER) {

@@ -8,6 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.audit.repository.ManagementAuditRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit.GetAuditEventsUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.screen.management.audit.list.ManagementAuditEventListParams
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventSummaryList
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -31,8 +32,9 @@ class AuditEventListComponentImplTest {
 
         val component = AuditEventListComponentImpl(
             componentContext = componentContext,
+            params = ManagementAuditEventListParams(),
             getAuditEventsUseCase = useCase,
-            onNavigateToEventDetail = {},
+            onNavigateToAuditEventDetail = {},
             onBack = {}
         )
 

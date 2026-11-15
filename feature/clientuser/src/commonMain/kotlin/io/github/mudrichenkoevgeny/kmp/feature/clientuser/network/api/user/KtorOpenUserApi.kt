@@ -13,26 +13,26 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
 /** [OpenUserApi] backed by [HttpClient]. */
-class KtorOpenUserApi(
+public class KtorOpenUserApi(
     private val client: HttpClient
 ) : OpenUserApi {
 
-    override suspend fun getUser(): AppResult<UserPrivatePayload> = client.callResult {
+    public override suspend fun getUser(): AppResult<UserPrivatePayload> = client.callResult {
         get(OpenUserRoutes.GET_USER)
     }
 
-    override suspend fun selfUpdateUser(request: SelfUpdateUserRequest): AppResult<UserPrivatePayload> =
+    public override suspend fun selfUpdateUser(request: SelfUpdateUserRequest): AppResult<UserPrivatePayload> =
         client.callResult {
             patch(OpenUserRoutes.UPDATE_USER) {
                 setBody(request)
             }
         }
 
-    override suspend fun scheduleUserDeletion(): AppResult<UserPrivatePayload> = client.callResult {
+    public override suspend fun scheduleUserDeletion(): AppResult<UserPrivatePayload> = client.callResult {
         delete(OpenUserRoutes.SCHEDULE_DELETION)
     }
 
-    override suspend fun restoreUser(): AppResult<UserPrivatePayload> = client.callResult {
+    public override suspend fun restoreUser(): AppResult<UserPrivatePayload> = client.callResult {
         post(OpenUserRoutes.RESTORE_USER)
     }
 }

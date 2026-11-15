@@ -100,7 +100,7 @@ import kotlinx.serialization.PolymorphicSerializer
 /**
  * Default implementation of [ManagementRootComponent].
  */
-public class ManagementRootComponentImpl public constructor(
+public class ManagementRootComponentImpl(
     componentContext: ComponentContext,
     private val userRepository: UserRepository,
     private val authStorage: AuthStorage? = null,

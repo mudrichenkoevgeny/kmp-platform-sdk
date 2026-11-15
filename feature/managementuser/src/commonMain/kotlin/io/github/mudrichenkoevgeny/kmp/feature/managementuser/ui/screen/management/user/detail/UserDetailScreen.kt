@@ -2,6 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,7 +50,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackB
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.container.CoreScrollableScreenContent
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error.FullscreenError
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
@@ -77,10 +77,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
  * Administrative user detail screen: displays user details and management action controls.
  *
  * @param component Component driving screen state and navigation callbacks.
+ * @param modifier Optional modifier.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun UserDetailScreen(component: UserDetailComponent) {
+public fun UserDetailScreen(
+    component: UserDetailComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
@@ -93,11 +97,18 @@ public fun UserDetailScreen(component: UserDetailComponent) {
     }
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {
+                    val currentContent = state as? UserDetailScreenState.Content
+                    val titleText = if (currentContent?.isSelf == true) {
+                        userUi.identifierDetailTitleCurrent
+                    } else {
+                        userUi.userDetailsTitle
+                    }
                     CoreScreenTitleText(
-                        text = userUi.userDetailsTitle,
+                        text = titleText,
                         modifier = Modifier.testTag(UserDetailTestTags.TITLE)
                     )
                 },
@@ -109,35 +120,43 @@ public fun UserDetailScreen(component: UserDetailComponent) {
                 }
             )
         }
-    ) { padding ->
-        Box(
+    ) { innerPadding ->
+        Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
-            contentAlignment = Alignment.Center
+                .padding(innerPadding)
         ) {
-            when (val currentState = state) {
-                is UserDetailScreenState.Loading -> FullscreenLoading()
-                is UserDetailScreenState.Error -> FullscreenError(
-                    error = currentState.error,
-                    onRetry = component::onRetry,
-                    modifier = Modifier.testTag(UserDetailTestTags.GLOBAL_ERROR)
-                )
+            when (val current = state) {
+                is UserDetailScreenState.Loading -> {
+                    FullscreenLoading()
+                }
+
+                is UserDetailScreenState.Error -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CoreErrorText(
+                            text = current.error.toLocalizedMessage(),
+                            modifier = Modifier.testTag(UserDetailTestTags.GLOBAL_ERROR)
+                        )
+                    }
+                }
 
                 is UserDetailScreenState.Content -> {
                     Content(
-                        state = currentState,
-                        onNicknameChanged = component::onNicknameChanged,
-                        onDisplayNameChanged = component::onDisplayNameChanged,
-                        onBirthdateChanged = component::onBirthdateChanged,
+                        state = current,
+                        onNicknameChange = component::onNicknameChanged,
+                        onDisplayNameChange = component::onDisplayNameChanged,
+                        onBirthdateChange = component::onBirthdateChanged,
                         onChangeAvatarClick = { filePickerLauncher.launch() },
-                        onAuthorityLevelChanged = component::onAuthorityLevelChanged,
-                        onAccountStatusChanged = component::onAccountStatusChanged,
-                        onLockoutTypeChanged = component::onLockoutTypeChanged,
-                        onTemporaryLockoutUntilChanged = component::onTemporaryLockoutUntilChanged,
-                        onQuotaBytesChanged = component::onQuotaBytesChanged,
-                        onMaxUploadSizeBytesChanged = component::onMaxUploadSizeBytesChanged,
-                        onMaxPendingUploadsChanged = component::onMaxPendingUploadsChanged,
+                        onAuthorityLevelChange = component::onAuthorityLevelChanged,
+                        onAccountStatusChange = component::onAccountStatusChanged,
+                        onLockoutTypeChange = component::onLockoutTypeChanged,
+                        onTemporaryLockoutUntilChange = component::onTemporaryLockoutUntilChanged,
+                        onQuotaBytesChange = component::onQuotaBytesChanged,
+                        onMaxUploadSizeBytesChange = component::onMaxUploadSizeBytesChanged,
+                        onMaxPendingUploadsChange = component::onMaxPendingUploadsChanged,
                         onUpdateClick = component::onUpdateClick,
                         onDeleteClick = component::onDeleteClick,
                         onConfirmDeleteClick = component::onConfirmDeleteClick,
@@ -157,17 +176,17 @@ public fun UserDetailScreen(component: UserDetailComponent) {
 @Composable
 private fun Content(
     state: UserDetailScreenState.Content,
-    onNicknameChanged: (String) -> Unit,
-    onDisplayNameChanged: (String) -> Unit,
-    onBirthdateChanged: (String) -> Unit,
+    onNicknameChange: (String) -> Unit,
+    onDisplayNameChange: (String) -> Unit,
+    onBirthdateChange: (String) -> Unit,
     onChangeAvatarClick: () -> Unit,
-    onAuthorityLevelChanged: (String) -> Unit,
-    onAccountStatusChanged: (String) -> Unit,
-    onLockoutTypeChanged: (String) -> Unit,
-    onTemporaryLockoutUntilChanged: (String) -> Unit,
-    onQuotaBytesChanged: (String) -> Unit,
-    onMaxUploadSizeBytesChanged: (String) -> Unit,
-    onMaxPendingUploadsChanged: (String) -> Unit,
+    onAuthorityLevelChange: (String) -> Unit,
+    onAccountStatusChange: (String) -> Unit,
+    onLockoutTypeChange: (String) -> Unit,
+    onTemporaryLockoutUntilChange: (String) -> Unit,
+    onQuotaBytesChange: (String) -> Unit,
+    onMaxUploadSizeBytesChange: (String) -> Unit,
+    onMaxPendingUploadsChange: (String) -> Unit,
     onUpdateClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onConfirmDeleteClick: () -> Unit,
@@ -202,16 +221,16 @@ private fun Content(
 
         UserDetailEditableFieldsSection(
             state = state,
-            onNicknameChanged = onNicknameChanged,
-            onDisplayNameChanged = onDisplayNameChanged,
-            onBirthdateChanged = onBirthdateChanged,
-            onAuthorityLevelChanged = onAuthorityLevelChanged,
-            onAccountStatusChanged = onAccountStatusChanged,
-            onLockoutTypeChanged = onLockoutTypeChanged,
-            onTemporaryLockoutUntilChanged = onTemporaryLockoutUntilChanged,
-            onQuotaBytesChanged = onQuotaBytesChanged,
-            onMaxUploadSizeBytesChanged = onMaxUploadSizeBytesChanged,
-            onMaxPendingUploadsChanged = onMaxPendingUploadsChanged
+            onNicknameChange = onNicknameChange,
+            onDisplayNameChange = onDisplayNameChange,
+            onBirthdateChange = onBirthdateChange,
+            onAuthorityLevelChange = onAuthorityLevelChange,
+            onAccountStatusChange = onAccountStatusChange,
+            onLockoutTypeChange = onLockoutTypeChange,
+            onTemporaryLockoutUntilChange = onTemporaryLockoutUntilChange,
+            onQuotaBytesChange = onQuotaBytesChange,
+            onMaxUploadSizeBytesChange = onMaxUploadSizeBytesChange,
+            onMaxPendingUploadsChange = onMaxPendingUploadsChange
         )
 
         UserDetailActionsSection(
@@ -232,9 +251,9 @@ private fun UserDetailAvatarHeader(
 ) {
     val userUi = LocalUserStrings.current.ui
 
-    Box(
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Surface(
             modifier = Modifier
@@ -270,18 +289,18 @@ private fun UserDetailAvatarHeader(
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(CoreTheme.dimens.paddingSmall))
+
+        CoreButton(
+            text = "${userUi.editProfileTitle} (${userUi.avatar})",
+            onClick = onChangeAvatarClick,
+            enabled = enabled,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(UserDetailTestTags.AVATAR_CHANGE_BUTTON)
+        )
     }
-
-    Spacer(modifier = Modifier.height(CoreTheme.dimens.paddingSmall))
-
-    CoreButton(
-        text = "${userUi.editProfileTitle} (${userUi.avatar})",
-        onClick = onChangeAvatarClick,
-        enabled = enabled,
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag(UserDetailTestTags.AVATAR_CHANGE_BUTTON)
-    )
 }
 
 @Composable
@@ -296,50 +315,52 @@ private fun UserDetailOverviewSection(
     val lastLoginText = state.user.lastLoginAt?.let { formatInstantToDateTime(it) } ?: notAvailableText
     val lastActiveText = state.user.lastActiveAt?.let { formatInstantToDateTime(it) } ?: notAvailableText
 
-    CoreTitleText(
-        text = "${commonUi.userId}: ${state.user.id.value}",
-        style = MaterialTheme.typography.titleMedium
-    )
-    CoreBodyText(
-        text = "${userUi.userRole}: ${state.user.role.value}"
-    )
-    CoreBodyText(
-        text = userUi.totpEnabledLabel(state.user.isTotpEnabled.toString())
-    )
-
-    if (state.user.isTotpEnabled) {
-        CoreButton(
-            text = if (state.isDisablingTotp) userUi.disablingTotp else userUi.disableTotp,
-            onClick = onDisableTotpClick,
-            modifier = Modifier.testTag(UserDetailTestTags.DISABLE_TOTP_BUTTON),
-            enabled = !state.isSaving && !state.isDeleting && !state.isDisablingTotp && !state.isSelf
+    Column {
+        CoreTitleText(
+            text = "${commonUi.userId}: ${state.user.id.value}",
+            style = MaterialTheme.typography.titleMedium
+        )
+        CoreBodyText(
+            text = "${userUi.userRole}: ${state.user.role.value}"
+        )
+        CoreBodyText(
+            text = userUi.totpEnabledLabel(state.user.isTotpEnabled.toString())
         )
 
-        state.disableTotpError?.let {
+        if (state.user.isTotpEnabled) {
+            CoreButton(
+                text = if (state.isDisablingTotp) userUi.disablingTotp else userUi.disableTotp,
+                onClick = onDisableTotpClick,
+                modifier = Modifier.testTag(UserDetailTestTags.DISABLE_TOTP_BUTTON),
+                enabled = !state.isSaving && !state.isDeleting && !state.isDisablingTotp && !state.isSelf
+            )
+
+            state.disableTotpError?.let {
+                CoreErrorText(
+                    text = it.toLocalizedMessage(),
+                    modifier = Modifier.testTag(UserDetailTestTags.DISABLE_TOTP_ERROR_TEXT)
+                )
+            }
+        }
+        CoreBodyText(
+            text = userUi.createdAtLabel(createdAtText)
+        )
+        CoreBodyText(
+            text = userUi.lastLoginAtLabel(lastLoginText)
+        )
+        CoreBodyText(
+            text = userUi.lastActiveAtLabel(lastActiveText)
+        )
+
+        if (state.user.accountStatus == UserAccountStatus.PENDING_DELETION &&
+            state.user.scheduledPermanentDeletionAt != null
+        ) {
+            val scheduledDeletionText = formatInstantToDateTime(state.user.scheduledPermanentDeletionAt)
+                ?: state.user.scheduledPermanentDeletionAt.toString()
             CoreErrorText(
-                text = it.toLocalizedMessage(),
-                modifier = Modifier.testTag(UserDetailTestTags.DISABLE_TOTP_ERROR_TEXT)
+                text = userUi.scheduledDeletionAtLabel(scheduledDeletionText)
             )
         }
-    }
-    CoreBodyText(
-        text = userUi.createdAtLabel(createdAtText)
-    )
-    CoreBodyText(
-        text = userUi.lastLoginAtLabel(lastLoginText)
-    )
-    CoreBodyText(
-        text = userUi.lastActiveAtLabel(lastActiveText)
-    )
-
-    if (state.user.accountStatus == UserAccountStatus.PENDING_DELETION &&
-        state.user.scheduledPermanentDeletionAt != null
-    ) {
-        val scheduledDeletionText = formatInstantToDateTime(state.user.scheduledPermanentDeletionAt)
-            ?: state.user.scheduledPermanentDeletionAt.toString()
-        CoreErrorText(
-            text = userUi.scheduledDeletionAtLabel(scheduledDeletionText)
-        )
     }
 }
 
@@ -354,45 +375,47 @@ private fun UserDetailNavigationActions(
     val userUi = LocalUserStrings.current.ui
     val storageUi = remember { StorageModuleStrings(KmpLocalization.resolver, KmpLocalization.currentLocale).ui }
 
-    CoreButton(
-        text = userUi.userSessions,
-        onClick = onSessionsClick,
-        modifier = Modifier.testTag(UserDetailTestTags.SESSIONS_BUTTON)
-    )
+    Column {
+        CoreButton(
+            text = userUi.userSessions,
+            onClick = onSessionsClick,
+            modifier = Modifier.testTag(UserDetailTestTags.SESSIONS_BUTTON)
+        )
 
-    CoreButton(
-        text = userUi.userIdentifiers,
-        onClick = onIdentifiersClick,
-        modifier = Modifier.testTag(UserDetailTestTags.IDENTIFIERS_BUTTON)
-    )
+        CoreButton(
+            text = userUi.userIdentifiers,
+            onClick = onIdentifiersClick,
+            modifier = Modifier.testTag(UserDetailTestTags.IDENTIFIERS_BUTTON)
+        )
 
-    CoreButton(
-        text = storageUi.storageFileListTitle,
-        onClick = onFilesClick,
-        modifier = Modifier.testTag(UserDetailTestTags.FILES_BUTTON)
-    )
+        CoreButton(
+            text = storageUi.storageFileListTitle,
+            onClick = onFilesClick,
+            modifier = Modifier.testTag(UserDetailTestTags.FILES_BUTTON)
+        )
 
-    CoreButton(
-        text = userUi.userDetailAuditEvents,
-        onClick = onAuditEventsClick,
-        modifier = Modifier.testTag(UserDetailTestTags.AUDIT_EVENTS_BUTTON),
-        enabled = auditEventsEnabled
-    )
+        CoreButton(
+            text = userUi.userDetailAuditEvents,
+            onClick = onAuditEventsClick,
+            modifier = Modifier.testTag(UserDetailTestTags.AUDIT_EVENTS_BUTTON),
+            enabled = auditEventsEnabled
+        )
+    }
 }
 
 @Composable
 private fun UserDetailEditableFieldsSection(
     state: UserDetailScreenState.Content,
-    onNicknameChanged: (String) -> Unit,
-    onDisplayNameChanged: (String) -> Unit,
-    onBirthdateChanged: (String) -> Unit,
-    onAuthorityLevelChanged: (String) -> Unit,
-    onAccountStatusChanged: (String) -> Unit,
-    onLockoutTypeChanged: (String) -> Unit,
-    onTemporaryLockoutUntilChanged: (String) -> Unit,
-    onQuotaBytesChanged: (String) -> Unit,
-    onMaxUploadSizeBytesChanged: (String) -> Unit,
-    onMaxPendingUploadsChanged: (String) -> Unit
+    onNicknameChange: (String) -> Unit,
+    onDisplayNameChange: (String) -> Unit,
+    onBirthdateChange: (String) -> Unit,
+    onAuthorityLevelChange: (String) -> Unit,
+    onAccountStatusChange: (String) -> Unit,
+    onLockoutTypeChange: (String) -> Unit,
+    onTemporaryLockoutUntilChange: (String) -> Unit,
+    onQuotaBytesChange: (String) -> Unit,
+    onMaxUploadSizeBytesChange: (String) -> Unit,
+    onMaxPendingUploadsChange: (String) -> Unit
 ) {
     val userUi = LocalUserStrings.current.ui
     val commonUi = LocalCommonStrings.current.ui
@@ -400,100 +423,102 @@ private fun UserDetailEditableFieldsSection(
     val isEditingEnabled = !state.isSaving && !state.isDeleting
     val isNonSelfEditingEnabled = isEditingEnabled && !state.isSelf
 
-    CoreOutlinedTextField(
-        value = state.nicknameInput,
-        onValueChange = onNicknameChanged,
-        label = { CoreBodyText(userUi.userLabel) },
-        placeholder = { CoreBodyText(userUi.userLabel) },
-        modifier = Modifier.testTag(UserDetailTestTags.NICKNAME_INPUT),
-        enabled = isEditingEnabled
-    )
+    Column {
+        CoreOutlinedTextField(
+            value = state.nicknameInput,
+            onValueChange = onNicknameChange,
+            label = { CoreBodyText(userUi.userLabel) },
+            placeholder = { CoreBodyText(userUi.userLabel) },
+            modifier = Modifier.testTag(UserDetailTestTags.NICKNAME_INPUT),
+            enabled = isEditingEnabled
+        )
 
-    CoreOutlinedTextField(
-        value = state.displayNameInput,
-        onValueChange = onDisplayNameChanged,
-        label = { CoreBodyText(userUi.user) },
-        placeholder = { CoreBodyText(userUi.user) },
-        modifier = Modifier.testTag(UserDetailTestTags.DISPLAY_NAME_INPUT),
-        enabled = isEditingEnabled
-    )
+        CoreOutlinedTextField(
+            value = state.displayNameInput,
+            onValueChange = onDisplayNameChange,
+            label = { CoreBodyText(userUi.user) },
+            placeholder = { CoreBodyText(userUi.user) },
+            modifier = Modifier.testTag(UserDetailTestTags.DISPLAY_NAME_INPUT),
+            enabled = isEditingEnabled
+        )
 
-    CoreOutlinedTextField(
-        value = state.birthdateInput,
-        onValueChange = onBirthdateChanged,
-        label = { CoreBodyText(userUi.birthdate) },
-        placeholder = { CoreBodyText(userUi.birthdate) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(UserDetailTestTags.BIRTHDATE_INPUT),
-        enabled = isEditingEnabled
-    )
+        CoreOutlinedTextField(
+            value = state.birthdateInput,
+            onValueChange = onBirthdateChange,
+            label = { CoreBodyText(userUi.birthdate) },
+            placeholder = { CoreBodyText(userUi.birthdate) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(UserDetailTestTags.BIRTHDATE_INPUT),
+            enabled = isEditingEnabled
+        )
 
-    AccountStatusDropdown(
-        selectedAccountStatus = state.accountStatusInput,
-        onAccountStatusSelected = onAccountStatusChanged,
-        enabled = isNonSelfEditingEnabled
-    )
+        AccountStatusDropdown(
+            selectedAccountStatus = state.accountStatusInput,
+            onAccountStatusSelect = onAccountStatusChange,
+            enabled = isNonSelfEditingEnabled
+        )
 
-    CoreOutlinedTextField(
-        value = state.authorityLevelInput,
-        onValueChange = onAuthorityLevelChanged,
-        label = { CoreBodyText(userUi.authorityLevel) },
-        placeholder = { CoreBodyText(userUi.authorityLevel) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(UserDetailTestTags.AUTHORITY_LEVEL_INPUT),
-        enabled = isNonSelfEditingEnabled
-    )
+        CoreOutlinedTextField(
+            value = state.authorityLevelInput,
+            onValueChange = onAuthorityLevelChange,
+            label = { CoreBodyText(userUi.authorityLevel) },
+            placeholder = { CoreBodyText(userUi.authorityLevel) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(UserDetailTestTags.AUTHORITY_LEVEL_INPUT),
+            enabled = isNonSelfEditingEnabled
+        )
 
-    LockoutTypeDropdown(
-        selectedLockoutType = state.lockoutTypeInput,
-        onLockoutTypeSelected = onLockoutTypeChanged,
-        enabled = isNonSelfEditingEnabled
-    )
+        LockoutTypeDropdown(
+            selectedLockoutType = state.lockoutTypeInput,
+            onLockoutTypeSelect = onLockoutTypeChange,
+            enabled = isNonSelfEditingEnabled
+        )
 
-    CoreOutlinedTextField(
-        value = state.temporaryLockoutUntilInput,
-        onValueChange = onTemporaryLockoutUntilChanged,
-        label = { CoreBodyText(commonUi.lockoutUntil) },
-        placeholder = { CoreBodyText(commonUi.lockoutUntil) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(UserDetailTestTags.TEMPORARY_LOCKOUT_UNTIL_INPUT),
-        enabled = isNonSelfEditingEnabled
-    )
+        CoreOutlinedTextField(
+            value = state.temporaryLockoutUntilInput,
+            onValueChange = onTemporaryLockoutUntilChange,
+            label = { CoreBodyText(commonUi.lockoutUntil) },
+            placeholder = { CoreBodyText(commonUi.lockoutUntil) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(UserDetailTestTags.TEMPORARY_LOCKOUT_UNTIL_INPUT),
+            enabled = isNonSelfEditingEnabled
+        )
 
-    CoreTitleText(
-        text = userUi.customStorageConfiguration,
-        style = MaterialTheme.typography.titleMedium
-    )
+        CoreTitleText(
+            text = userUi.customStorageConfiguration,
+            style = MaterialTheme.typography.titleMedium
+        )
 
-    CoreOutlinedTextField(
-        value = state.quotaBytesInput,
-        onValueChange = onQuotaBytesChanged,
-        label = { CoreBodyText(storageUi.storageQuotaBytes) },
-        placeholder = { CoreBodyText(storageUi.defaultNull) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(UserDetailTestTags.QUOTA_BYTES_INPUT),
-        enabled = isNonSelfEditingEnabled
-    )
+        CoreOutlinedTextField(
+            value = state.quotaBytesInput,
+            onValueChange = onQuotaBytesChange,
+            label = { CoreBodyText(storageUi.storageQuotaBytes) },
+            placeholder = { CoreBodyText(storageUi.defaultNull) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(UserDetailTestTags.QUOTA_BYTES_INPUT),
+            enabled = isNonSelfEditingEnabled
+        )
 
-    CoreOutlinedTextField(
-        value = state.maxUploadSizeBytesInput,
-        onValueChange = onMaxUploadSizeBytesChanged,
-        label = { CoreBodyText(storageUi.storageMaxUploadSizeBytes) },
-        placeholder = { CoreBodyText(storageUi.defaultNull) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(UserDetailTestTags.MAX_UPLOAD_SIZE_BYTES_INPUT),
-        enabled = isNonSelfEditingEnabled
-    )
+        CoreOutlinedTextField(
+            value = state.maxUploadSizeBytesInput,
+            onValueChange = onMaxUploadSizeBytesChange,
+            label = { CoreBodyText(storageUi.storageMaxUploadSizeBytes) },
+            placeholder = { CoreBodyText(storageUi.defaultNull) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(UserDetailTestTags.MAX_UPLOAD_SIZE_BYTES_INPUT),
+            enabled = isNonSelfEditingEnabled
+        )
 
-    CoreOutlinedTextField(
-        value = state.maxPendingUploadsInput,
-        onValueChange = onMaxPendingUploadsChanged,
-        label = { CoreBodyText(storageUi.storageMaxPendingUploads) },
-        placeholder = { CoreBodyText(storageUi.defaultNull) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(UserDetailTestTags.MAX_PENDING_UPLOADS_INPUT),
-        enabled = isNonSelfEditingEnabled
-    )
+        CoreOutlinedTextField(
+            value = state.maxPendingUploadsInput,
+            onValueChange = onMaxPendingUploadsChange,
+            label = { CoreBodyText(storageUi.storageMaxPendingUploads) },
+            placeholder = { CoreBodyText(storageUi.defaultNull) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(UserDetailTestTags.MAX_PENDING_UPLOADS_INPUT),
+            enabled = isNonSelfEditingEnabled
+        )
+    }
 }
 
 @Composable
@@ -506,57 +531,59 @@ private fun UserDetailActionsSection(
 ) {
     val userUi = LocalUserStrings.current.ui
 
-    state.saveError?.let {
-        CoreErrorText(
-            text = it.toLocalizedMessage(),
-            modifier = Modifier.testTag(UserDetailTestTags.SAVE_ERROR_TEXT)
+    Column {
+        state.saveError?.let {
+            CoreErrorText(
+                text = it.toLocalizedMessage(),
+                modifier = Modifier.testTag(UserDetailTestTags.SAVE_ERROR_TEXT)
+            )
+        }
+
+        CoreButton(
+            text = if (state.isSaving) userUi.saving else userUi.updateUser,
+            onClick = onUpdateClick,
+            modifier = Modifier.testTag(UserDetailTestTags.UPDATE_BUTTON),
+            enabled = state.hasChanges && !state.isSaving && !state.isDeleting
         )
-    }
 
-    CoreButton(
-        text = if (state.isSaving) userUi.saving else userUi.updateUser,
-        onClick = onUpdateClick,
-        modifier = Modifier.testTag(UserDetailTestTags.UPDATE_BUTTON),
-        enabled = state.hasChanges && !state.isSaving && !state.isDeleting
-    )
-
-    CoreButton(
-        text = if (state.isDeleting) userUi.saving else userUi.deleteUser,
-        onClick = onDeleteClick,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.error,
-            contentColor = MaterialTheme.colorScheme.onError
-        ),
-        modifier = Modifier.testTag(UserDetailTestTags.DELETE_BUTTON),
-        enabled = !state.isSaving && !state.isDeleting && !state.isSelf
-    )
-
-    state.deleteError?.let {
-        CoreErrorText(
-            text = it.toLocalizedMessage(),
-            modifier = Modifier.testTag(UserDetailTestTags.DELETE_ERROR_TEXT)
+        CoreButton(
+            text = if (state.isDeleting) userUi.saving else userUi.deleteUser,
+            onClick = onDeleteClick,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.error,
+                contentColor = MaterialTheme.colorScheme.onError
+            ),
+            modifier = Modifier.testTag(UserDetailTestTags.DELETE_BUTTON),
+            enabled = !state.isSaving && !state.isDeleting && !state.isSelf
         )
-    }
 
-    if (state.isDeleteConfirmationVisible) {
-        AlertDialog(
-            onDismissRequest = onDismissDeleteDialog,
-            title = { CoreTitleText(text = userUi.dialogConfirmTitle) },
-            text = { CoreBodyText(text = userUi.deleteUser) },
-            confirmButton = {
-                CoreTextButton(
-                    text = userUi.dialogConfirm,
-                    onClick = onConfirmDeleteClick,
-                    colors = ButtonDefaults.buttonColors(contentColor = MaterialTheme.colorScheme.error)
-                )
-            },
-            dismissButton = {
-                CoreTextButton(
-                    text = userUi.dialogCancel,
-                    onClick = onDismissDeleteDialog
-                )
-            }
-        )
+        state.deleteError?.let {
+            CoreErrorText(
+                text = it.toLocalizedMessage(),
+                modifier = Modifier.testTag(UserDetailTestTags.DELETE_ERROR_TEXT)
+            )
+        }
+
+        if (state.isDeleteConfirmationVisible) {
+            AlertDialog(
+                onDismissRequest = onDismissDeleteDialog,
+                title = { CoreTitleText(text = userUi.dialogConfirmTitle) },
+                text = { CoreBodyText(text = userUi.deleteUser) },
+                confirmButton = {
+                    CoreTextButton(
+                        text = userUi.dialogConfirm,
+                        onClick = onConfirmDeleteClick,
+                        colors = ButtonDefaults.buttonColors(contentColor = MaterialTheme.colorScheme.error)
+                    )
+                },
+                dismissButton = {
+                    CoreTextButton(
+                        text = userUi.dialogCancel,
+                        onClick = onDismissDeleteDialog
+                    )
+                }
+            )
+        }
     }
 }
 
@@ -564,7 +591,7 @@ private fun UserDetailActionsSection(
 @Composable
 private fun AccountStatusDropdown(
     selectedAccountStatus: String,
-    onAccountStatusSelected: (String) -> Unit,
+    onAccountStatusSelect: (String) -> Unit,
     enabled: Boolean
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -592,7 +619,7 @@ private fun AccountStatusDropdown(
                 DropdownMenuItem(
                     text = { CoreBodyText(status.name) },
                     onClick = {
-                        onAccountStatusSelected(status.name)
+                        onAccountStatusSelect(status.name)
                         expanded = false
                     }
                 )
@@ -605,7 +632,7 @@ private fun AccountStatusDropdown(
 @Composable
 private fun LockoutTypeDropdown(
     selectedLockoutType: String,
-    onLockoutTypeSelected: (String) -> Unit,
+    onLockoutTypeSelect: (String) -> Unit,
     enabled: Boolean
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -633,7 +660,7 @@ private fun LockoutTypeDropdown(
                 DropdownMenuItem(
                     text = { CoreBodyText(lockoutType.name) },
                     onClick = {
-                        onLockoutTypeSelected(lockoutType.name)
+                        onLockoutTypeSelect(lockoutType.name)
                         expanded = false
                     }
                 )

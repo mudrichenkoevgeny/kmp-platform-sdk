@@ -4,8 +4,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -19,12 +21,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
@@ -33,7 +35,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_back
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
@@ -43,7 +44,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlin
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -55,7 +55,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.man
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.ui.UiValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.category.StorageCategory
-import io.github.mudrichenkoevgeny.shared.foundation.core.storage.localization.StorageModuleStrings
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.accountstatus.UserAccountStatus
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
@@ -63,10 +64,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
  * Screen for administrative creation of a new user account.
  *
  * @param component Decompose controller for user creation form and state.
+ * @param modifier Optional modifier.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun CreateUserScreen(component: CreateUserComponent) {
+public fun CreateUserScreen(
+    component: CreateUserComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
@@ -79,11 +84,12 @@ public fun CreateUserScreen(component: CreateUserComponent) {
     }
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {
                     CoreScreenTitleText(
-                        text = userUi.createUserTitle,
+                        text = userUi.createUser,
                         modifier = Modifier.testTag(CreateUserTestTags.TITLE)
                     )
                 },
@@ -101,18 +107,18 @@ public fun CreateUserScreen(component: CreateUserComponent) {
         ) {
             CreateUserForm(
                 state = state,
-                onEmailChanged = component::onEmailChanged,
-                onPasswordChanged = component::onPasswordChanged,
-                onNicknameChanged = component::onNicknameChanged,
-                onDisplayNameChanged = component::onDisplayNameChanged,
-                onBirthdateChanged = component::onBirthdateChanged,
+                onEmailChange = component::onEmailChanged,
+                onPasswordChange = component::onPasswordChanged,
+                onNicknameChange = component::onNicknameChanged,
+                onDisplayNameChange = component::onDisplayNameChanged,
+                onBirthdateChange = component::onBirthdateChanged,
                 onChangeAvatarClick = { filePickerLauncher.launch() },
-                onRoleChanged = component::onRoleChanged,
-                onStatusChanged = component::onStatusChanged,
-                onAuthorityLevelChanged = component::onAuthorityLevelChanged,
-                onQuotaBytesChanged = component::onQuotaBytesChanged,
-                onMaxUploadSizeBytesChanged = component::onMaxUploadSizeBytesChanged,
-                onMaxPendingUploadsChanged = component::onMaxPendingUploadsChanged,
+                onRoleChange = component::onRoleChanged,
+                onStatusChange = component::onStatusChanged,
+                onAuthorityLevelChange = component::onAuthorityLevelChanged,
+                onQuotaBytesChange = component::onQuotaBytesChanged,
+                onMaxUploadSizeBytesChange = component::onMaxUploadSizeBytesChanged,
+                onMaxPendingUploadsChange = component::onMaxPendingUploadsChanged,
                 onCreateClick = component::onCreateClick
             )
         }
@@ -122,18 +128,18 @@ public fun CreateUserScreen(component: CreateUserComponent) {
 @Composable
 private fun CreateUserForm(
     state: CreateUserScreenState,
-    onEmailChanged: (String) -> Unit,
-    onPasswordChanged: (String) -> Unit,
-    onNicknameChanged: (String) -> Unit,
-    onDisplayNameChanged: (String) -> Unit,
-    onBirthdateChanged: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onNicknameChange: (String) -> Unit,
+    onDisplayNameChange: (String) -> Unit,
+    onBirthdateChange: (String) -> Unit,
     onChangeAvatarClick: () -> Unit,
-    onRoleChanged: (String) -> Unit,
-    onStatusChanged: (String) -> Unit,
-    onAuthorityLevelChanged: (String) -> Unit,
-    onQuotaBytesChanged: (String) -> Unit,
-    onMaxUploadSizeBytesChanged: (String) -> Unit,
-    onMaxPendingUploadsChanged: (String) -> Unit,
+    onRoleChange: (String) -> Unit,
+    onStatusChange: (String) -> Unit,
+    onAuthorityLevelChange: (String) -> Unit,
+    onQuotaBytesChange: (String) -> Unit,
+    onMaxUploadSizeBytesChange: (String) -> Unit,
+    onMaxPendingUploadsChange: (String) -> Unit,
     onCreateClick: () -> Unit
 ) {
     val userUi = LocalUserStrings.current.ui
@@ -149,40 +155,63 @@ private fun CreateUserForm(
 
         CreateUserInfoSection(
             state = state,
-            onEmailChanged = onEmailChanged,
-            onPasswordChanged = onPasswordChanged,
-            onNicknameChanged = onNicknameChanged,
-            onDisplayNameChanged = onDisplayNameChanged,
-            onBirthdateChanged = onBirthdateChanged
+            onEmailChange = onEmailChange,
+            onPasswordChange = onPasswordChange,
+            onNicknameChange = onNicknameChange,
+            onDisplayNameChange = onDisplayNameChange,
+            onBirthdateChange = onBirthdateChange
         )
 
-        CreateUserRoleSection(
-            state = state,
-            onRoleChanged = onRoleChanged,
-            onStatusChanged = onStatusChanged,
-            onAuthorityLevelChanged = onAuthorityLevelChanged
+        CoreOutlinedTextField(
+            value = state.role,
+            onValueChange = onRoleChange,
+            label = { CoreBodyText(userUi.user) },
+            enabled = !state.isLoading,
+            modifier = Modifier.testTag(CreateUserTestTags.ROLE_INPUT)
         )
 
-        CreateUserStorageSection(
-            state = state,
-            onQuotaBytesChanged = onQuotaBytesChanged,
-            onMaxUploadSizeBytesChanged = onMaxUploadSizeBytesChanged,
-            onMaxPendingUploadsChanged = onMaxPendingUploadsChanged
+        CoreOutlinedTextField(
+            value = state.status,
+            onValueChange = onStatusChange,
+            label = { CoreBodyText(userUi.user) },
+            enabled = !state.isLoading,
+            modifier = Modifier.testTag(CreateUserTestTags.STATUS_INPUT)
         )
+
+        CoreOutlinedTextField(
+            value = state.authorityLevel,
+            onValueChange = onAuthorityLevelChange,
+            label = { CoreBodyText(userUi.authorityLevel) },
+            placeholder = { CoreBodyText(userUi.authorityLevel) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            enabled = !state.isLoading,
+            modifier = Modifier.testTag(CreateUserTestTags.AUTHORITY_LEVEL_INPUT)
+        )
+
+        CreateUserStorageConfigSection(
+            state = state,
+            onQuotaBytesChange = onQuotaBytesChange,
+            onMaxUploadSizeBytesChange = onMaxUploadSizeBytesChange,
+            onMaxPendingUploadsChange = onMaxPendingUploadsChange
+        )
+
+        if (state.error != null) {
+            CoreErrorText(
+                text = state.error.toLocalizedMessage(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(CreateUserTestTags.ERROR_TEXT)
+            )
+        }
 
         CoreButton(
             text = if (state.isLoading) userUi.saving else userUi.createUser,
             onClick = onCreateClick,
-            modifier = Modifier.testTag(CreateUserTestTags.CREATE_BUTTON),
-            enabled = !state.isLoading
+            enabled = !state.isLoading,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(CreateUserTestTags.CREATE_BUTTON)
         )
-
-        state.error?.let {
-            CoreErrorText(
-                text = it.toLocalizedMessage(),
-                modifier = Modifier.testTag(CreateUserTestTags.ERROR_TEXT)
-            )
-        }
     }
 }
 
@@ -194,9 +223,9 @@ private fun CreateUserAvatarHeader(
 ) {
     val userUi = LocalUserStrings.current.ui
 
-    Box(
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Surface(
             modifier = Modifier
@@ -232,181 +261,143 @@ private fun CreateUserAvatarHeader(
                 }
             }
         }
-    }
 
-    CoreButton(
-        text = "${userUi.editProfileTitle} (${userUi.avatar})",
-        onClick = onChangeAvatarClick,
-        enabled = !isLoading,
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag(CreateUserTestTags.AVATAR_CHANGE_BUTTON)
-    )
+        Spacer(modifier = Modifier.height(CoreTheme.dimens.paddingSmall))
+
+        CoreButton(
+            text = "${userUi.editProfileTitle} (${userUi.avatar})",
+            onClick = onChangeAvatarClick,
+            enabled = !isLoading,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(CreateUserTestTags.AVATAR_CHANGE_BUTTON)
+        )
+    }
 }
 
 @Composable
 private fun CreateUserInfoSection(
     state: CreateUserScreenState,
-    onEmailChanged: (String) -> Unit,
-    onPasswordChanged: (String) -> Unit,
-    onNicknameChanged: (String) -> Unit,
-    onDisplayNameChanged: (String) -> Unit,
-    onBirthdateChanged: (String) -> Unit
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onNicknameChange: (String) -> Unit,
+    onDisplayNameChange: (String) -> Unit,
+    onBirthdateChange: (String) -> Unit
 ) {
     val userUi = LocalUserStrings.current.ui
 
-    CoreEmailTextField(
-        value = state.email,
-        onValueChange = onEmailChanged,
-        label = { CoreBodyText(userUi.email) },
-        placeholder = { CoreBodyText(UiValues.Placeholder.EMAIL) },
-        modifier = Modifier.testTag(CreateUserTestTags.EMAIL_INPUT),
-        enabled = !state.isLoading
-    )
+    Column(
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
+    ) {
+        CoreEmailTextField(
+            value = state.email,
+            onValueChange = onEmailChange,
+            label = { CoreBodyText(userUi.email) },
+            placeholder = { CoreBodyText(UiValues.Placeholder.EMAIL) },
+            modifier = Modifier.testTag(CreateUserTestTags.EMAIL_INPUT),
+            enabled = !state.isLoading
+        )
 
-    CoreOutlinedTextField(
-        value = state.password,
-        onValueChange = onPasswordChanged,
-        label = { CoreBodyText(userUi.password) },
-        placeholder = { CoreBodyText(userUi.password) },
-        modifier = Modifier.testTag(CreateUserTestTags.PASSWORD_INPUT),
-        enabled = !state.isLoading
-    )
+        CoreOutlinedTextField(
+            value = state.password,
+            onValueChange = onPasswordChange,
+            label = { CoreBodyText(userUi.password) },
+            placeholder = { CoreBodyText(userUi.password) },
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            modifier = Modifier.testTag(CreateUserTestTags.PASSWORD_INPUT),
+            enabled = !state.isLoading
+        )
 
-    CoreOutlinedTextField(
-        value = state.nickname,
-        onValueChange = onNicknameChanged,
-        label = { CoreBodyText(userUi.userLabel) },
-        placeholder = { CoreBodyText(userUi.userLabel) },
-        modifier = Modifier.testTag(CreateUserTestTags.NICKNAME_INPUT),
-        enabled = !state.isLoading
-    )
+        CoreOutlinedTextField(
+            value = state.nickname,
+            onValueChange = onNicknameChange,
+            label = { CoreBodyText(userUi.userLabel) },
+            placeholder = { CoreBodyText(userUi.userLabel) },
+            modifier = Modifier.testTag(CreateUserTestTags.NICKNAME_INPUT),
+            enabled = !state.isLoading
+        )
 
-    CoreOutlinedTextField(
-        value = state.displayName,
-        onValueChange = onDisplayNameChanged,
-        label = { CoreBodyText(userUi.user) },
-        placeholder = { CoreBodyText(userUi.user) },
-        modifier = Modifier.testTag(CreateUserTestTags.DISPLAY_NAME_INPUT),
-        enabled = !state.isLoading
-    )
+        CoreOutlinedTextField(
+            value = state.displayName,
+            onValueChange = onDisplayNameChange,
+            label = { CoreBodyText(userUi.user) },
+            placeholder = { CoreBodyText(userUi.user) },
+            modifier = Modifier.testTag(CreateUserTestTags.DISPLAY_NAME_INPUT),
+            enabled = !state.isLoading
+        )
 
-    CoreOutlinedTextField(
-        value = state.birthdate,
-        onValueChange = onBirthdateChanged,
-        label = { CoreBodyText(userUi.birthdate) },
-        placeholder = { CoreBodyText(userUi.birthdate) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(CreateUserTestTags.BIRTHDATE_INPUT),
-        enabled = !state.isLoading
-    )
+        CoreOutlinedTextField(
+            value = state.birthdate,
+            onValueChange = onBirthdateChange,
+            label = { CoreBodyText(userUi.birthdate) },
+            placeholder = { CoreBodyText(userUi.birthdate) },
+            modifier = Modifier.testTag(CreateUserTestTags.BIRTHDATE_INPUT),
+            enabled = !state.isLoading
+        )
+    }
 }
 
 @Composable
-private fun CreateUserRoleSection(
+private fun CreateUserStorageConfigSection(
     state: CreateUserScreenState,
-    onRoleChanged: (String) -> Unit,
-    onStatusChanged: (String) -> Unit,
-    onAuthorityLevelChanged: (String) -> Unit
+    onQuotaBytesChange: (String) -> Unit,
+    onMaxUploadSizeBytesChange: (String) -> Unit,
+    onMaxPendingUploadsChange: (String) -> Unit
 ) {
     val userUi = LocalUserStrings.current.ui
 
-    CoreOutlinedTextField(
-        value = state.role,
-        onValueChange = onRoleChanged,
-        label = { CoreBodyText(userUi.userRole) },
-        placeholder = { CoreBodyText(userUi.userRole) },
-        modifier = Modifier.testTag(CreateUserTestTags.ROLE_INPUT),
-        enabled = !state.isLoading
-    )
+    Column(
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
+    ) {
+        CoreOutlinedTextField(
+            value = state.quotaBytes,
+            onValueChange = onQuotaBytesChange,
+            label = { CoreBodyText(userUi.user) },
+            placeholder = { CoreBodyText(userUi.user) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            enabled = !state.isLoading,
+            modifier = Modifier.testTag(CreateUserTestTags.QUOTA_BYTES_INPUT)
+        )
 
-    CoreOutlinedTextField(
-        value = state.status,
-        onValueChange = onStatusChanged,
-        label = { CoreBodyText(userUi.userAccountStatus) },
-        placeholder = { CoreBodyText(userUi.userAccountStatus) },
-        modifier = Modifier.testTag(CreateUserTestTags.STATUS_INPUT),
-        enabled = !state.isLoading
-    )
+        CoreOutlinedTextField(
+            value = state.maxUploadSizeBytes,
+            onValueChange = onMaxUploadSizeBytesChange,
+            label = { CoreBodyText(userUi.user) },
+            placeholder = { CoreBodyText(userUi.user) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            enabled = !state.isLoading,
+            modifier = Modifier.testTag(CreateUserTestTags.MAX_UPLOAD_SIZE_BYTES_INPUT)
+        )
 
-    CoreOutlinedTextField(
-        value = state.authorityLevel,
-        onValueChange = onAuthorityLevelChanged,
-        label = { CoreBodyText(userUi.authorityLevel) },
-        placeholder = { CoreBodyText(userUi.authorityLevel) },
-        modifier = Modifier.testTag(CreateUserTestTags.AUTHORITY_LEVEL_INPUT),
-        enabled = !state.isLoading
-    )
-}
-
-@Composable
-private fun CreateUserStorageSection(
-    state: CreateUserScreenState,
-    onQuotaBytesChanged: (String) -> Unit,
-    onMaxUploadSizeBytesChanged: (String) -> Unit,
-    onMaxPendingUploadsChanged: (String) -> Unit
-) {
-    val userUi = LocalUserStrings.current.ui
-    val storageUi = remember { StorageModuleStrings(KmpLocalization.resolver, KmpLocalization.currentLocale).ui }
-
-    CoreTitleText(
-        text = userUi.customStorageConfiguration,
-        style = MaterialTheme.typography.titleMedium
-    )
-
-    CoreOutlinedTextField(
-        value = state.quotaBytes,
-        onValueChange = onQuotaBytesChanged,
-        label = { CoreBodyText(storageUi.storageQuotaBytes) },
-        placeholder = { CoreBodyText(storageUi.defaultNull) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(CreateUserTestTags.QUOTA_BYTES_INPUT),
-        enabled = !state.isLoading
-    )
-
-    CoreOutlinedTextField(
-        value = state.maxUploadSizeBytes,
-        onValueChange = onMaxUploadSizeBytesChanged,
-        label = { CoreBodyText(storageUi.storageMaxUploadSizeBytes) },
-        placeholder = { CoreBodyText(storageUi.defaultNull) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(CreateUserTestTags.MAX_UPLOAD_SIZE_BYTES_INPUT),
-        enabled = !state.isLoading
-    )
-
-    CoreOutlinedTextField(
-        value = state.maxPendingUploads,
-        onValueChange = onMaxPendingUploadsChanged,
-        label = { CoreBodyText(storageUi.storageMaxPendingUploads) },
-        placeholder = { CoreBodyText(storageUi.defaultNull) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(CreateUserTestTags.MAX_PENDING_UPLOADS_INPUT),
-        enabled = !state.isLoading
-    )
+        CoreOutlinedTextField(
+            value = state.maxPendingUploads,
+            onValueChange = onMaxPendingUploadsChange,
+            label = { CoreBodyText(userUi.user) },
+            placeholder = { CoreBodyText(userUi.user) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            enabled = !state.isLoading,
+            modifier = Modifier.testTag(CreateUserTestTags.MAX_PENDING_UPLOADS_INPUT)
+        )
+    }
 }
 
 @InternalApi
 internal class CreateUserPreviewProvider : PreviewParameterProvider<CreateUserScreenState> {
+    private val sampleState = CreateUserScreenState(
+        email = "newuser@example.com",
+        password = "password123",
+        nickname = "newuser",
+        displayName = "New User",
+        role = UserRole.STAFF.value,
+        status = UserAccountStatus.ACTIVE.value,
+        authorityLevel = "1"
+    )
+
     private val items: List<Pair<String, CreateUserScreenState>> = listOf(
-        "Default" to CreateUserScreenState(),
-        "Filled" to CreateUserScreenState(
-            email = "user@example.com",
-            password = "SecretPassword123!",
-            role = "USER",
-            status = "ACTIVE",
-            authorityLevel = "0",
-            quotaBytes = "10737418240",
-            maxUploadSizeBytes = "104857600",
-            maxPendingUploads = "5"
-        ),
-        "Loading" to CreateUserScreenState(
-            email = "user@example.com",
-            isLoading = true
-        ),
-        "Error" to CreateUserScreenState(
-            email = "user@example.com",
-            error = CommonError.Unknown()
-        )
+        "Form" to sampleState,
+        "Loading" to sampleState.copy(isLoading = true),
+        "Error" to CreateUserScreenState(error = CommonError.Unknown())
     )
 
     override val values: Sequence<CreateUserScreenState> = items.asSequence().map { it.second }
@@ -424,47 +415,62 @@ private fun CreateUserScreenPreviewContent(state: CreateUserScreenState) {
     }
 }
 
+private val defaultCreateUserPreviewState = CreateUserScreenState(
+    email = "newuser@example.com",
+    password = "password123",
+    nickname = "newuser",
+    displayName = "New User",
+    role = UserRole.STAFF.value,
+    status = UserAccountStatus.ACTIVE.value,
+    authorityLevel = "1"
+)
+
 @InternalApi
 @PreviewScreenSizes
 @Composable
-private fun ScreenSizePreview(
+private fun StatesPreview(
     @PreviewParameter(CreateUserPreviewProvider::class) state: CreateUserScreenState
 ) {
     ScreenPreviewContainer {
         CreateUserScreenPreviewContent(state = state)
+    }
+}
+
+@InternalApi
+@PreviewScreenSizes
+@Composable
+private fun ScreenSizePreview() {
+    ScreenPreviewContainer {
+        CreateUserScreenPreviewContent(state = defaultCreateUserPreviewState)
     }
 }
 
 @InternalApi
 @PreviewThemes
 @Composable
-private fun ThemePreview(
-    @PreviewParameter(CreateUserPreviewProvider::class) state: CreateUserScreenState
-) {
+private fun ThemePreview() {
     ScreenPreviewContainer {
-        CreateUserScreenPreviewContent(state = state)
+        CreateUserScreenPreviewContent(state = defaultCreateUserPreviewState)
     }
 }
 
 @InternalApi
 @PreviewFontScales
 @Composable
-private fun FontScalePreview(
-    @PreviewParameter(CreateUserPreviewProvider::class) state: CreateUserScreenState
-) {
+private fun FontScalePreview() {
     ScreenPreviewContainer {
-        CreateUserScreenPreviewContent(state = state)
+        CreateUserScreenPreviewContent(state = defaultCreateUserPreviewState)
     }
 }
 
 public object CreateUserTestTags {
     public const val TITLE: String = "CreateUser_Title"
     public const val BACK_BUTTON: String = "CreateUser_BackButton"
+    public const val AVATAR_CHANGE_BUTTON: String = "CreateUser_AvatarChangeButton"
     public const val EMAIL_INPUT: String = "CreateUser_EmailInput"
     public const val PASSWORD_INPUT: String = "CreateUser_PasswordInput"
     public const val NICKNAME_INPUT: String = "CreateUser_NicknameInput"
     public const val DISPLAY_NAME_INPUT: String = "CreateUser_DisplayNameInput"
-    public const val AVATAR_CHANGE_BUTTON: String = "CreateUser_AvatarChangeButton"
     public const val BIRTHDATE_INPUT: String = "CreateUser_BirthdateInput"
     public const val ROLE_INPUT: String = "CreateUser_RoleInput"
     public const val STATUS_INPUT: String = "CreateUser_StatusInput"
@@ -472,6 +478,6 @@ public object CreateUserTestTags {
     public const val QUOTA_BYTES_INPUT: String = "CreateUser_QuotaBytesInput"
     public const val MAX_UPLOAD_SIZE_BYTES_INPUT: String = "CreateUser_MaxUploadSizeBytesInput"
     public const val MAX_PENDING_UPLOADS_INPUT: String = "CreateUser_MaxPendingUploadsInput"
-    public const val CREATE_BUTTON: String = "CreateUser_CreateButton"
     public const val ERROR_TEXT: String = "CreateUser_ErrorText"
+    public const val CREATE_BUTTON: String = "CreateUser_CreateButton"
 }

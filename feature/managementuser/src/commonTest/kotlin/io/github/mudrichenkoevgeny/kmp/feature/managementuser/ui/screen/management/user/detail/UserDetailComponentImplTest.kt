@@ -4,6 +4,7 @@ import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.arkivanov.essenty.lifecycle.resume
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.model.UpdateField
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.user.ManagementUserRepositoryMock
@@ -156,7 +157,7 @@ class UserDetailComponentImplTest {
         testContext.component.onUpdateClick()
 
         advanceTimeBy(100.milliseconds)
-        val storageConfig = repository.lastUpdateRequest?.storageConfiguration
+        val storageConfig = (repository.lastUpdateParams?.storageConfiguration as? UpdateField.Set)?.value
         assertEquals(10737418240L, storageConfig?.quotaBytes)
         assertEquals(104857600L, storageConfig?.maxUploadSizeBytes)
         assertEquals(5, storageConfig?.maxPendingUploads)

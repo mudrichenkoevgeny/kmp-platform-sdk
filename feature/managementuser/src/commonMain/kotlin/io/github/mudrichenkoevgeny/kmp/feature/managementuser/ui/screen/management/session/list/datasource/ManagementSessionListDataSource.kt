@@ -24,7 +24,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  * @param managementDeleteSessionUseCase Use case administratively revoking a session.
  * @param managementDeleteAllUserSessionsUseCase Optional use case revoking all sessions for a user.
  */
-public class ManagementSessionListDataSource public constructor(
+public class ManagementSessionListDataSource(
     private val managementGetSessionsUseCase: ManagementGetSessionsUseCase,
     private val managementGetUserSessionsUseCase: ManagementGetUserSessionsUseCase? = null,
     private val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase,

@@ -20,8 +20,8 @@ public fun ScreenPreviewContainer(
 ) {
     CoreTheme {
         BoxWithConstraints(modifier = modifier) {
-            val isDesktopPreview = maxWidth == ScreenSizePreviewSpecs.WIDTH_DESKTOP.dp &&
-                maxHeight == ScreenSizePreviewSpecs.HEIGHT_DESKTOP.dp
+            val isDesktopPreview = maxWidth == PreviewScreenSizesSpecs.WIDTH_DESKTOP.dp &&
+                maxHeight == PreviewScreenSizesSpecs.HEIGHT_DESKTOP.dp
             val isMobile = !isDesktopPreview
 
             content(isMobile)

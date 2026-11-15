@@ -20,11 +20,11 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
 /** [SessionApi] backed by [HttpClient]. */
-class KtorOpenSessionApi(
+public class KtorOpenSessionApi(
     private val client: HttpClient
 ) : SessionApi {
 
-    override suspend fun getSessions(
+    public override suspend fun getSessions(
         params: SelfSessionListParams?
     ): AppResult<PagedResult<UserSessionSummaryPayload>> = client.callResult {
         get(OpenSessionRoutes.GET_SESSIONS) {
@@ -32,7 +32,7 @@ class KtorOpenSessionApi(
         }
     }
 
-    override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivatePayload> =
+    public override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivatePayload> =
         client.callResult {
             get(
                 OpenSessionRoutes.GET_SESSION.replace(
@@ -42,11 +42,11 @@ class KtorOpenSessionApi(
             )
         }
 
-    override suspend fun logout(): AppResult<Unit> = client.callResult {
+    public override suspend fun logout(): AppResult<Unit> = client.callResult {
         post(OpenSessionRoutes.LOGOUT)
     }
 
-    override suspend fun deleteSession(userSessionId: UserSessionId): AppResult<Unit> =
+    public override suspend fun deleteSession(userSessionId: UserSessionId): AppResult<Unit> =
         client.callResult {
             delete(
                 OpenSessionRoutes.DELETE_SESSION.replace(
@@ -56,12 +56,12 @@ class KtorOpenSessionApi(
             )
         }
 
-    override suspend fun deleteAllOtherSessions(): AppResult<DeletedSessionsPayload> =
+    public override suspend fun deleteAllOtherSessions(): AppResult<DeletedSessionsPayload> =
         client.callResult {
             delete(OpenSessionRoutes.DELETE_ALL_OTHER_SESSIONS)
         }
 
-    override suspend fun reauthenticateSession(request: VerifyTotpPayload): AppResult<Unit> =
+    public override suspend fun reauthenticateSession(request: VerifyTotpPayload): AppResult<Unit> =
         client.callResult {
             post(OpenSessionRoutes.REAUTHENTICATE_SESSION) {
                 setBody(request)

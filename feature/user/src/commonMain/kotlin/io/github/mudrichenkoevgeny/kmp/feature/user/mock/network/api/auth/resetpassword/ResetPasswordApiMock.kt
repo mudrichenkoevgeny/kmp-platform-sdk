@@ -27,7 +27,9 @@ public open class ResetPasswordApiMock : ResetPasswordApi {
         return resetPasswordResult
     }
 
-    public override suspend fun sendResetPasswordConfirmationToEmail(request: SendResetPasswordConfirmationRequest): AppResult<OtpConfirmationPayload> {
+    public override suspend fun sendResetPasswordConfirmationToEmail(
+        request: SendResetPasswordConfirmationRequest
+    ): AppResult<OtpConfirmationPayload> {
         lastSendResetPasswordConfirmationRequest = request
         return sendResetPasswordConfirmationToEmailResult
     }

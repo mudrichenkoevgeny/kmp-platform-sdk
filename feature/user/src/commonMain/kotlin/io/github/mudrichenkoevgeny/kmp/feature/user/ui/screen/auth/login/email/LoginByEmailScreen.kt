@@ -54,11 +54,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.em
  * @param component Decompose component providing state and callbacks.
  */
 @Composable
-public fun LoginByEmailScreen(component: LoginByEmailComponent) {
+public fun LoginByEmailScreen(
+    component: LoginByEmailComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
 
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         when (val currentState = state) {
@@ -69,8 +72,8 @@ public fun LoginByEmailScreen(component: LoginByEmailComponent) {
             is LoginByEmailScreenState.Content -> {
                 LoginByEmailContent(
                     state = currentState,
-                    onEmailChanged = component::onEmailChanged,
-                    onPasswordChanged = component::onPasswordChanged,
+                    onEmailChange = component::onEmailChanged,
+                    onPasswordChange = component::onPasswordChanged,
                     onTogglePasswordVisibility = component::onTogglePasswordVisibility,
                     onLoginClick = component::onLoginClick,
                     onForgotPasswordClick = component::onForgotPasswordClick,
@@ -85,8 +88,8 @@ public fun LoginByEmailScreen(component: LoginByEmailComponent) {
 @Composable
 private fun LoginByEmailContent(
     state: LoginByEmailScreenState.Content,
-    onEmailChanged: (String) -> Unit,
-    onPasswordChanged: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
     onTogglePasswordVisibility: () -> Unit,
     onLoginClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
@@ -128,7 +131,7 @@ private fun LoginByEmailContent(
             ) {
                 CoreEmailTextField(
                     value = state.email,
-                    onValueChange = onEmailChanged,
+                    onValueChange = onEmailChange,
                     label = { CoreBodyText(userUi.email) },
                     placeholder = { CoreBodyText(userUi.email) },
                     modifier = Modifier.testTag(LoginByEmailTestTags.EMAIL_INPUT),
@@ -139,7 +142,7 @@ private fun LoginByEmailContent(
 
                 CorePasswordTextField(
                     value = state.password,
-                    onValueChange = onPasswordChanged,
+                    onValueChange = onPasswordChange,
                     isPasswordVisible = state.isPasswordVisible,
                     onTogglePasswordVisibility = onTogglePasswordVisibility,
                     label = { CoreBodyText(userUi.password) },

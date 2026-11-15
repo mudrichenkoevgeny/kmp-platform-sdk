@@ -8,7 +8,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
@@ -47,7 +47,7 @@ class IdentifierItemTest {
         }
 
         onNodeWithText(TEST_EMAIL).assertIsDisplayed()
-        onNodeWithText("EMAIL").assertIsDisplayed()
+        onNodeWithText(identifier.userAuthProvider.value).assertIsDisplayed()
 
         onNodeWithTag(IdentifierListTestTags.IDENTIFIER_ITEM_PREFIX + identifier.id.value).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, clicks)
@@ -76,7 +76,7 @@ class IdentifierItemTest {
         }
 
         onNodeWithText("+1234567890").assertIsDisplayed()
-        onNodeWithText("PHONE").assertIsDisplayed()
+        onNodeWithText(identifier.userAuthProvider.value).assertIsDisplayed()
     }
 
     private companion object {

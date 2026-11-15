@@ -60,6 +60,7 @@ import org.jetbrains.compose.resources.painterResource
 public fun SessionItem(
     session: UserSessionSummary,
     enabled: Boolean,
+    modifier: Modifier = Modifier,
     onRevokeClick: (() -> Unit)? = null,
     isCurrentSession: Boolean = false,
     onSessionClick: (() -> Unit)? = null
@@ -72,7 +73,7 @@ public fun SessionItem(
     }
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .then(
                 if (onSessionClick != null) {

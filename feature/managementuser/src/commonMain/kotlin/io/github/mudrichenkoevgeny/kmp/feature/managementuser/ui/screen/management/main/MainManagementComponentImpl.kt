@@ -5,7 +5,7 @@ import com.arkivanov.decompose.ComponentContext
 /**
  * Default implementation of [MainManagementComponent].
  */
-public class MainManagementComponentImpl public constructor(
+public class MainManagementComponentImpl(
     componentContext: ComponentContext,
     private val onNavigateToGlobalUserList: () -> Unit,
     private val onNavigateToGlobalSessionList: () -> Unit,

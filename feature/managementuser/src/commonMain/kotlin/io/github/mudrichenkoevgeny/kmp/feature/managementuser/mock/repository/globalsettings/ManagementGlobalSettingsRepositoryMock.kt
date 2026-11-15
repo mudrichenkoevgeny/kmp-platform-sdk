@@ -17,7 +17,7 @@ public class ManagementGlobalSettingsRepositoryMock(
     initialSettings: ManagementGlobalSettings? = createTestManagementGlobalSettings()
 ) : ManagementGlobalSettingsRepository {
 
-    private val _settings = MutableStateFlow(initialSettings)
+    private val settingsStateFlow = MutableStateFlow(initialSettings)
 
     public var getManagementGlobalSettingsResult: AppResult<ManagementGlobalSettings>? = null
     public var refreshManagementGlobalSettingsResult: AppResult<ManagementGlobalSettings>? = null
@@ -29,22 +29,24 @@ public class ManagementGlobalSettingsRepositoryMock(
         if (customResult != null) {
             return customResult
         }
-        val current = _settings.value
+        val current = settingsStateFlow.value
         return if (current != null) {
             AppResult.Success(current)
         } else {
             val fresh = createTestManagementGlobalSettings()
-            _settings.value = fresh
+            settingsStateFlow.value = fresh
             AppResult.Success(fresh)
         }
     }
 
-    public override suspend fun saveRemoteManagementGlobalSettings(globalSettings: ManagementGlobalSettings): AppResult<ManagementGlobalSettings> {
+    public override suspend fun saveRemoteManagementGlobalSettings(
+        globalSettings: ManagementGlobalSettings
+    ): AppResult<ManagementGlobalSettings> {
         val customResult = saveRemoteGlobalSettingsResult
         if (customResult != null) {
             return customResult
         }
-        _settings.value = globalSettings
+        settingsStateFlow.value = globalSettings
         return AppResult.Success(globalSettings)
     }
 
@@ -57,7 +59,7 @@ public class ManagementGlobalSettingsRepositoryMock(
     }
 
     public override suspend fun updateManagementGlobalSettings(globalSettings: ManagementGlobalSettings) {
-        _settings.value = globalSettings
+        settingsStateFlow.value = globalSettings
     }
 
     public override suspend fun resetRemoteManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
@@ -68,5 +70,6 @@ public class ManagementGlobalSettingsRepositoryMock(
         return getManagementGlobalSettings()
     }
 
-    public override fun observeManagementGlobalSettings(): Flow<ManagementGlobalSettings?> = _settings.asStateFlow()
+    public override fun observeManagementGlobalSettings(): Flow<ManagementGlobalSettings?> =
+        settingsStateFlow.asStateFlow()
 }

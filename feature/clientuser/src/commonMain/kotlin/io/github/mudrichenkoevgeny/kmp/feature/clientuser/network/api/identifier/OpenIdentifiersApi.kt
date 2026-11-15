@@ -15,7 +15,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.security.useridentifiers.AddUserIdentifierPhoneRequest
 
 /** Manage user identifiers (email, phone, external providers) and related confirmations. */
-interface OpenIdentifiersApi {
+public interface OpenIdentifiersApi {
 
     /**
      * Retrieves specific identifier details by its unique id.
@@ -23,7 +23,7 @@ interface OpenIdentifiersApi {
      * @param userIdentifierId Unique identifier payload id.
      * @return Detailed identifier info or a mapped failure.
      */
-    suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivatePayload>
+    public suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivatePayload>
 
     /**
      * Returns a paginated and filtered list of identifiers linked to the current authenticated management account.
@@ -31,7 +31,7 @@ interface OpenIdentifiersApi {
      * @param params Query and filter parameters DTO.
      * @return Paginated result containing matching user identifier payloads, or a mapped failure.
      */
-    suspend fun getUserIdentifiers(
+    public suspend fun getUserIdentifiers(
         params: SelfIdentifierListParams? = null
     ): AppResult<PagedResult<UserIdentifierSummaryPayload>>
 
@@ -41,7 +41,7 @@ interface OpenIdentifiersApi {
      * @param identifierId Server identifier of the user-identifier row to delete.
      * @return Success or a mapped failure.
      */
-    suspend fun deleteUserIdentifier(identifierId: UserIdentifierId): AppResult<Unit>
+    public suspend fun deleteUserIdentifier(identifierId: UserIdentifierId): AppResult<Unit>
 
     /**
      * Starts linking a new email identifier to the account.
@@ -49,7 +49,7 @@ interface OpenIdentifiersApi {
      * @param request Email linkage payload from the shared contract.
      * @return Created or pending identifier row, or a mapped failure.
      */
-    suspend fun addUserIdentifierEmail(
+    public suspend fun addUserIdentifierEmail(
         request: AddUserIdentifierEmailRequest
     ): AppResult<UserIdentifierPrivatePayload>
 
@@ -59,7 +59,7 @@ interface OpenIdentifiersApi {
      * @param request Phone linkage payload from the shared contract.
      * @return Created or pending identifier row, or a mapped failure.
      */
-    suspend fun addUserIdentifierPhone(
+    public suspend fun addUserIdentifierPhone(
         request: AddUserIdentifierPhoneRequest
     ): AppResult<UserIdentifierPrivatePayload>
 
@@ -69,7 +69,7 @@ interface OpenIdentifiersApi {
      * @param request Provider linkage payload from the shared contract.
      * @return Created or pending identifier row, or a mapped failure.
      */
-    suspend fun addUserIdentifierExternalAuthProvider(
+    public suspend fun addUserIdentifierExternalAuthProvider(
         request: AddUserIdentifierExternalAuthProviderRequest
     ): AppResult<UserIdentifierPrivatePayload>
 
@@ -79,7 +79,7 @@ interface OpenIdentifiersApi {
      * @param request Target email and template parameters from the shared contract.
      * @return Confirmation dispatch result, or a mapped failure.
      */
-    suspend fun sendAddEmailIdentifierConfirmation(
+    public suspend fun sendAddEmailIdentifierConfirmation(
         request: SendConfirmationToEmailRequest
     ): AppResult<OtpConfirmationPayload>
 
@@ -89,7 +89,7 @@ interface OpenIdentifiersApi {
      * @param request Target phone and channel details from the shared contract.
      * @return Confirmation dispatch result, or a mapped failure.
      */
-    suspend fun sendAddPhoneIdentifierConfirmation(
+    public suspend fun sendAddPhoneIdentifierConfirmation(
         request: SendConfirmationToPhoneRequest
     ): AppResult<OtpConfirmationPayload>
 
@@ -100,7 +100,7 @@ interface OpenIdentifiersApi {
      * @param request Current and new password payload from the shared contract.
      * @return Success indicator, or a mapped failure.
      */
-    suspend fun emailChangePassword(
+    public suspend fun emailChangePassword(
         userIdentifierId: UserIdentifierId,
         request: EmailPasswordChangeRequest
     ): AppResult<Unit>

@@ -14,17 +14,17 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
  * @param actionLoading true when an API action is running.
  * @param actionError error from the last API action.
  */
-data class LoginByPhoneScreenState(
-    val phoneNumber: String = "",
-    val isPhoneNumberValid: Boolean = false,
-    val code: String = "",
-    val codeLength: Int = FieldValidator.DEFAULT_OTP_LENGTH,
-    val resendTimerSeconds: Int = 0,
-    val actionLoading: Boolean = false,
-    val actionError: AppError? = null
+public data class LoginByPhoneScreenState(
+    public val phoneNumber: String = "",
+    public val isPhoneNumberValid: Boolean = false,
+    public val code: String = "",
+    public val codeLength: Int = FieldValidator.DEFAULT_OTP_LENGTH,
+    public val resendTimerSeconds: Int = 0,
+    public val actionLoading: Boolean = false,
+    public val actionError: AppError? = null
 ) {
-    val canSendCode: Boolean get() = isPhoneNumberValid && !actionLoading
-    val isCodeFullLength: Boolean get() = code.length == codeLength
-    val canConfirmCode: Boolean get() = isCodeFullLength && !actionLoading
-    val canResendCode: Boolean get() = resendTimerSeconds <= 0 && !actionLoading
+    public val canSendCode: Boolean get() = isPhoneNumberValid && !actionLoading
+    public val isCodeFullLength: Boolean get() = code.length == codeLength
+    public val canConfirmCode: Boolean get() = isCodeFullLength && !actionLoading
+    public val canResendCode: Boolean get() = resendTimerSeconds <= 0 && !actionLoading
 }

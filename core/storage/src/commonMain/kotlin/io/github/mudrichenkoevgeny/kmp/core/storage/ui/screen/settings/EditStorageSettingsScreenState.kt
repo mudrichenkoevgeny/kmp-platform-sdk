@@ -31,18 +31,14 @@ public sealed interface EditStorageSettingsScreenState {
         public val hasChanges: Boolean
             get() = minUploadSizeBytes != initialSettings.minUploadSizeBytes.toString() ||
                 maxUploadSizeBytes != initialSettings.maxUploadSizeBytes.toString() ||
-                totalStorageQuotaForOpenUserBytes != (
-                initialSettings.totalStorageQuotaForOpenUserBytes?.toString()
-                    ?: ""
-                ) ||
+                totalStorageQuotaForOpenUserBytes !=
+                (initialSettings.totalStorageQuotaForOpenUserBytes?.toString().orEmpty()) ||
                 totalStorageQuotaForManagementUserBytes !=
-                (
-                    initialSettings.totalStorageQuotaForManagementUserBytes?.toString()
-                        ?: ""
-                    ) ||
+                (initialSettings.totalStorageQuotaForManagementUserBytes?.toString().orEmpty()) ||
                 presignedUrlExpirationSeconds != initialSettings.presignedUrlExpirationSeconds.toString() ||
-                maxPendingUploadsForOpenUser != (initialSettings.maxPendingUploadsForOpenUser.toString()) ||
-                maxPendingUploadsForManagementUser != (initialSettings.maxPendingUploadsForManagementUser.toString()) ||
+                maxPendingUploadsForOpenUser != initialSettings.maxPendingUploadsForOpenUser.toString() ||
+                maxPendingUploadsForManagementUser !=
+                initialSettings.maxPendingUploadsForManagementUser.toString() ||
                 isDeduplicationEnabled != initialSettings.isDeduplicationEnabled ||
                 deletedFilesCleanupIntervalSeconds != initialSettings.deletedFilesCleanupIntervalSeconds.toString()
     }

@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.onRoot
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
@@ -15,6 +15,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.storage.mock.ui.screen.file.list.StorageFileListComponentMock
 import io.github.mudrichenkoevgeny.kmp.core.testing.ui.test.captureAppScreen
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.toFileIdOrThrow
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.storage.domain.model.file.createTestStorageFileSummary
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
@@ -62,7 +63,9 @@ class StorageFileListScreenScreenshotTest(
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
         fun data(): Collection<Array<Any>> {
-            val testItems = listOf(createTestStorageFileSummary(), createTestStorageFileSummary())
+            val item1 = createTestStorageFileSummary(id = "00000000-0000-4000-8000-000000000001".toFileIdOrThrow())
+            val item2 = createTestStorageFileSummary(id = "00000000-0000-4000-8000-000000000002".toFileIdOrThrow())
+            val testItems = listOf(item1, item2)
             val contentState = StorageFileListScreenState.Content(
                 paging = PaginationState(items = testItems)
             )

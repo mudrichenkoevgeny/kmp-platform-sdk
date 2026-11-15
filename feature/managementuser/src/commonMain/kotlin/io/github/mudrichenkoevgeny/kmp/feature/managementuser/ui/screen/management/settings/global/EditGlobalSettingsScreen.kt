@@ -58,14 +58,19 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserString
  * Screen for editing global settings.
  *
  * @param component Decompose controller for global settings editing.
+ * @param modifier Optional modifier.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun EditGlobalSettingsScreen(component: EditGlobalSettingsComponent) {
+public fun EditGlobalSettingsScreen(
+    component: EditGlobalSettingsComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {
@@ -102,16 +107,16 @@ public fun EditGlobalSettingsScreen(component: EditGlobalSettingsComponent) {
             is EditGlobalSettingsScreenState.Content -> {
                 EditGlobalSettingsForm(
                     state = currentState,
-                    onPrivacyPolicyUrlChanged = component::onPrivacyPolicyUrlChanged,
-                    onTermsOfServiceUrlChanged = component::onTermsOfServiceUrlChanged,
-                    onContactSupportEmailChanged = component::onContactSupportEmailChanged,
-                    onMinVersionAndroidChanged = component::onMinVersionAndroidChanged,
-                    onMinVersionIosChanged = component::onMinVersionIosChanged,
-                    onMinVersionWebChanged = component::onMinVersionWebChanged,
-                    onMinVersionDesktopChanged = component::onMinVersionDesktopChanged,
-                    onTracingEnabledToggled = component::onTracingEnabledToggled,
-                    onMetricsEnabledToggled = component::onMetricsEnabledToggled,
-                    onVerboseLoggingEnabledToggled = component::onVerboseLoggingEnabledToggled,
+                    onPrivacyPolicyUrlChange = component::onPrivacyPolicyUrlChanged,
+                    onTermsOfServiceUrlChange = component::onTermsOfServiceUrlChanged,
+                    onContactSupportEmailChange = component::onContactSupportEmailChanged,
+                    onMinVersionAndroidChange = component::onMinVersionAndroidChanged,
+                    onMinVersionIosChange = component::onMinVersionIosChanged,
+                    onMinVersionWebChange = component::onMinVersionWebChanged,
+                    onMinVersionDesktopChange = component::onMinVersionDesktopChanged,
+                    onTracingEnabledToggle = component::onTracingEnabledToggled,
+                    onMetricsEnabledToggle = component::onMetricsEnabledToggled,
+                    onVerboseLoggingEnabledToggle = component::onVerboseLoggingEnabledToggled,
                     onSaveClick = component::onSaveClick,
                     onResetClick = component::onResetClick,
                     modifier = Modifier
@@ -154,16 +159,16 @@ public fun EditGlobalSettingsScreen(component: EditGlobalSettingsComponent) {
 @Composable
 private fun EditGlobalSettingsForm(
     state: EditGlobalSettingsScreenState.Content,
-    onPrivacyPolicyUrlChanged: (String) -> Unit,
-    onTermsOfServiceUrlChanged: (String) -> Unit,
-    onContactSupportEmailChanged: (String) -> Unit,
-    onMinVersionAndroidChanged: (String) -> Unit,
-    onMinVersionIosChanged: (String) -> Unit,
-    onMinVersionWebChanged: (String) -> Unit,
-    onMinVersionDesktopChanged: (String) -> Unit,
-    onTracingEnabledToggled: (Boolean) -> Unit,
-    onMetricsEnabledToggled: (Boolean) -> Unit,
-    onVerboseLoggingEnabledToggled: (Boolean) -> Unit,
+    onPrivacyPolicyUrlChange: (String) -> Unit,
+    onTermsOfServiceUrlChange: (String) -> Unit,
+    onContactSupportEmailChange: (String) -> Unit,
+    onMinVersionAndroidChange: (String) -> Unit,
+    onMinVersionIosChange: (String) -> Unit,
+    onMinVersionWebChange: (String) -> Unit,
+    onMinVersionDesktopChange: (String) -> Unit,
+    onTracingEnabledToggle: (Boolean) -> Unit,
+    onMetricsEnabledToggle: (Boolean) -> Unit,
+    onVerboseLoggingEnabledToggle: (Boolean) -> Unit,
     onSaveClick: () -> Unit,
     onResetClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -176,7 +181,7 @@ private fun EditGlobalSettingsForm(
     ) {
         CoreOutlinedTextField(
             value = state.privacyPolicyUrl,
-            onValueChange = onPrivacyPolicyUrlChanged,
+            onValueChange = onPrivacyPolicyUrlChange,
             label = { CoreBodyText(userUi.privacyPolicyUrl) },
             placeholder = { CoreBodyText(userUi.privacyPolicyUrl) },
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.PRIVACY_POLICY_URL_INPUT)
@@ -184,7 +189,7 @@ private fun EditGlobalSettingsForm(
 
         CoreOutlinedTextField(
             value = state.termsOfServiceUrl,
-            onValueChange = onTermsOfServiceUrlChanged,
+            onValueChange = onTermsOfServiceUrlChange,
             label = { CoreBodyText(userUi.termsOfServiceUrl) },
             placeholder = { CoreBodyText(userUi.termsOfServiceUrl) },
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.TERMS_OF_SERVICE_URL_INPUT)
@@ -192,7 +197,7 @@ private fun EditGlobalSettingsForm(
 
         CoreOutlinedTextField(
             value = state.contactSupportEmail,
-            onValueChange = onContactSupportEmailChanged,
+            onValueChange = onContactSupportEmailChange,
             label = { CoreBodyText(userUi.contactSupportEmail) },
             placeholder = { CoreBodyText(userUi.contactSupportEmail) },
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.CONTACT_SUPPORT_EMAIL_INPUT)
@@ -207,21 +212,21 @@ private fun EditGlobalSettingsForm(
         ToggleRow(
             label = userUi.isTracingEnabled,
             checked = state.isTracingEnabled,
-            onCheckedChange = onTracingEnabledToggled,
+            onCheckedChange = onTracingEnabledToggle,
             testTag = EditGlobalSettingsTestTags.IS_TRACING_ENABLED_CHECKBOX
         )
 
         ToggleRow(
             label = userUi.isMetricsEnabled,
             checked = state.isMetricsEnabled,
-            onCheckedChange = onMetricsEnabledToggled,
+            onCheckedChange = onMetricsEnabledToggle,
             testTag = EditGlobalSettingsTestTags.IS_METRICS_ENABLED_CHECKBOX
         )
 
         ToggleRow(
             label = userUi.isVerboseLoggingEnabled,
             checked = state.isVerboseLoggingEnabled,
-            onCheckedChange = onVerboseLoggingEnabledToggled,
+            onCheckedChange = onVerboseLoggingEnabledToggle,
             testTag = EditGlobalSettingsTestTags.IS_VERBOSE_LOGGING_ENABLED_CHECKBOX
         )
 
@@ -233,7 +238,7 @@ private fun EditGlobalSettingsForm(
 
         CoreOutlinedTextField(
             value = state.minVersionAndroid,
-            onValueChange = onMinVersionAndroidChanged,
+            onValueChange = onMinVersionAndroidChange,
             label = { CoreBodyText(userUi.minVersionAndroid) },
             placeholder = { CoreBodyText(userUi.minVersionAndroid) },
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.MIN_VERSION_ANDROID_INPUT)
@@ -241,7 +246,7 @@ private fun EditGlobalSettingsForm(
 
         CoreOutlinedTextField(
             value = state.minVersionIos,
-            onValueChange = onMinVersionIosChanged,
+            onValueChange = onMinVersionIosChange,
             label = { CoreBodyText(userUi.minVersionIos) },
             placeholder = { CoreBodyText(userUi.minVersionIos) },
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.MIN_VERSION_IOS_INPUT)
@@ -249,7 +254,7 @@ private fun EditGlobalSettingsForm(
 
         CoreOutlinedTextField(
             value = state.minVersionWeb,
-            onValueChange = onMinVersionWebChanged,
+            onValueChange = onMinVersionWebChange,
             label = { CoreBodyText(userUi.minVersionWeb) },
             placeholder = { CoreBodyText(userUi.minVersionWeb) },
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.MIN_VERSION_WEB_INPUT)
@@ -257,7 +262,7 @@ private fun EditGlobalSettingsForm(
 
         CoreOutlinedTextField(
             value = state.minVersionDesktop,
-            onValueChange = onMinVersionDesktopChanged,
+            onValueChange = onMinVersionDesktopChange,
             label = { CoreBodyText(userUi.minVersionDesktop) },
             placeholder = { CoreBodyText(userUi.minVersionDesktop) },
             modifier = Modifier.testTag(EditGlobalSettingsTestTags.MIN_VERSION_DESKTOP_INPUT)

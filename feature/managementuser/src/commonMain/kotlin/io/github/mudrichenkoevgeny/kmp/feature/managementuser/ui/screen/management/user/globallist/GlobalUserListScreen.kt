@@ -69,11 +69,15 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun GlobalUserListScreen(component: GlobalUserListComponent) {
+public fun GlobalUserListScreen(
+    component: GlobalUserListComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {
@@ -183,8 +187,8 @@ private fun Content(
                     config = getGlobalUserListingOptionsConfig(),
                     sortState = state.sortState,
                     filterStates = state.filterStates,
-                    onSortChanged = component::onSortChanged,
-                    onFilterChanged = component::onFilterChanged,
+                    onSortChange = { sortState -> component.onSortChanged(sortState) },
+                    onFilterChange = { key, filterState -> component.onFilterChanged(key, filterState) },
                     onApplyClick = component::onApplyFilters,
                     modifier = Modifier
                         .fillMaxWidth()

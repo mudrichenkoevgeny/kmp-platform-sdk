@@ -70,8 +70,8 @@ public fun FileUploadQueueItemRow(
     onRemove: (UploadQueueItemId) -> Unit,
     modifier: Modifier = Modifier,
     localUri: String? = null,
-    onCategoryChanged: ((UploadQueueItemId, StorageCategory) -> Unit)? = null,
-    onVisibilityChanged: ((UploadQueueItemId, StorageFileVisibility) -> Unit)? = null
+    onCategoryChange: ((UploadQueueItemId, StorageCategory) -> Unit)? = null,
+    onVisibilityChange: ((UploadQueueItemId, StorageFileVisibility) -> Unit)? = null
 ) {
     Card(
         modifier = modifier
@@ -99,8 +99,8 @@ public fun FileUploadQueueItemRow(
                     item = item,
                     isUploading = isUploading,
                     onRemove = onRemove,
-                    onCategoryChanged = onCategoryChanged,
-                    onVisibilityChanged = onVisibilityChanged
+                    onCategoryChange = onCategoryChange,
+                    onVisibilityChange = onVisibilityChange
                 )
             }
 
@@ -175,7 +175,7 @@ private fun QueueItemInfoSection(
 private fun QueueItemCategoryDropdown(
     item: UploadQueueItem,
     isUploading: Boolean,
-    onCategoryChanged: (UploadQueueItemId, StorageCategory) -> Unit
+    onCategoryChange: (UploadQueueItemId, StorageCategory) -> Unit
 ) {
     var isCategoryMenuExpanded by remember { mutableStateOf(false) }
     Box {
@@ -203,7 +203,7 @@ private fun QueueItemCategoryDropdown(
                     text = { Text(category.value) },
                     onClick = {
                         isCategoryMenuExpanded = false
-                        onCategoryChanged(item.id, category)
+                        onCategoryChange(item.id, category)
                     }
                 )
             }
@@ -215,7 +215,7 @@ private fun QueueItemCategoryDropdown(
 private fun QueueItemVisibilityDropdown(
     item: UploadQueueItem,
     isUploading: Boolean,
-    onVisibilityChanged: (UploadQueueItemId, StorageFileVisibility) -> Unit
+    onVisibilityChange: (UploadQueueItemId, StorageFileVisibility) -> Unit
 ) {
     var isVisibilityMenuExpanded by remember { mutableStateOf(false) }
     Box {
@@ -243,7 +243,7 @@ private fun QueueItemVisibilityDropdown(
                     text = { Text(visibility.value) },
                     onClick = {
                         isVisibilityMenuExpanded = false
-                        onVisibilityChanged(item.id, visibility)
+                        onVisibilityChange(item.id, visibility)
                     }
                 )
             }
@@ -256,8 +256,8 @@ private fun QueueItemActionsSection(
     item: UploadQueueItem,
     isUploading: Boolean,
     onRemove: (UploadQueueItemId) -> Unit,
-    onCategoryChanged: ((UploadQueueItemId, StorageCategory) -> Unit)?,
-    onVisibilityChanged: ((UploadQueueItemId, StorageFileVisibility) -> Unit)?
+    onCategoryChange: ((UploadQueueItemId, StorageCategory) -> Unit)?,
+    onVisibilityChange: ((UploadQueueItemId, StorageFileVisibility) -> Unit)?
 ) {
     val storageUi = LocalStorageStrings.current.ui
 
@@ -265,19 +265,19 @@ private fun QueueItemActionsSection(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingExtraSmall)
     ) {
-        if (onCategoryChanged != null && item.status != UploadQueueItemStatus.UPLOADING) {
+        if (onCategoryChange != null && item.status != UploadQueueItemStatus.UPLOADING) {
             QueueItemCategoryDropdown(
                 item = item,
                 isUploading = isUploading,
-                onCategoryChanged = onCategoryChanged
+                onCategoryChange = onCategoryChange
             )
         }
 
-        if (onVisibilityChanged != null && item.status != UploadQueueItemStatus.UPLOADING) {
+        if (onVisibilityChange != null && item.status != UploadQueueItemStatus.UPLOADING) {
             QueueItemVisibilityDropdown(
                 item = item,
                 isUploading = isUploading,
-                onVisibilityChanged = onVisibilityChanged
+                onVisibilityChange = onVisibilityChange
             )
         }
 

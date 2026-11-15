@@ -52,7 +52,9 @@ public open class IdentifierRepositoryMock : IdentifierRepository {
     public var lastOldPassword: String? = null
     public var lastNewPassword: String? = null
 
-    public override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> {
+    public override suspend fun getUserIdentifier(
+        userIdentifierId: UserIdentifierId
+    ): AppResult<UserIdentifierPrivate> {
         lastIdentifierId = userIdentifierId
         return getUserIdentifierResultProvider(userIdentifierId)
     }

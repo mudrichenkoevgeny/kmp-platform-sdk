@@ -61,6 +61,7 @@ class StorageFileDetailComponentImplTest {
             },
             onNavigateBack = {}
         )
+        lifecycle.onCreate()
 
         testDispatcher.scheduler.advanceUntilIdle()
 
@@ -90,6 +91,7 @@ class StorageFileDetailComponentImplTest {
             },
             onNavigateBack = {}
         )
+        lifecycle.onCreate()
 
         testDispatcher.scheduler.advanceUntilIdle()
 
@@ -124,6 +126,7 @@ class StorageFileDetailComponentImplTest {
             },
             onNavigateBack = { backCalls++ }
         )
+        lifecycle.onCreate()
 
         testDispatcher.scheduler.advanceUntilIdle()
 

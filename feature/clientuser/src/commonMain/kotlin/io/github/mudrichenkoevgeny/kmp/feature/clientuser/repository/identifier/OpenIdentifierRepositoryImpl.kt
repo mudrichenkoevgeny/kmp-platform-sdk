@@ -30,18 +30,17 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
  * @param openIdentifiersApi HTTP endpoints for managing user identifiers and sending confirmations.
  * @param confirmationRepository Client-side cooldown for adding email and phone identifiers.
  */
-class OpenIdentifierRepositoryImpl(
+public class OpenIdentifierRepositoryImpl(
     private val openIdentifiersApi: OpenIdentifiersApi,
     private val confirmationRepository: ConfirmationRepository
 ) : IdentifierRepository {
 
-    override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> =
-        openIdentifiersApi.getUserIdentifier(
-            userIdentifierId
-        )
-            .mapSuccess { it.toUserIdentifierPrivate() }
+    public override suspend fun getUserIdentifier(
+        userIdentifierId: UserIdentifierId
+    ): AppResult<UserIdentifierPrivate> = openIdentifiersApi.getUserIdentifier(userIdentifierId)
+        .mapSuccess { it.toUserIdentifierPrivate() }
 
-    override suspend fun getUserIdentifiers(
+    public override suspend fun getUserIdentifiers(
         params: SelfIdentifierListParams?
     ): AppResult<PagedResult<UserIdentifierSummary>> = openIdentifiersApi.getUserIdentifiers(
         params
@@ -51,12 +50,12 @@ class OpenIdentifierRepositoryImpl(
         }
     }
 
-    override suspend fun deleteUserIdentifier(identifierId: UserIdentifierId): AppResult<Unit> =
+    public override suspend fun deleteUserIdentifier(identifierId: UserIdentifierId): AppResult<Unit> =
         openIdentifiersApi.deleteUserIdentifier(
             identifierId
         )
 
-    override suspend fun addUserIdentifierEmail(
+    public override suspend fun addUserIdentifierEmail(
         email: String,
         password: String,
         confirmationCode: String
@@ -64,21 +63,21 @@ class OpenIdentifierRepositoryImpl(
         AddUserIdentifierEmailRequest(email, password, confirmationCode)
     ).mapSuccess { it.toUserIdentifierPrivate() }
 
-    override suspend fun addUserIdentifierPhone(
+    public override suspend fun addUserIdentifierPhone(
         phoneNumber: String,
         confirmationCode: String
     ): AppResult<UserIdentifierPrivate> = openIdentifiersApi.addUserIdentifierPhone(
         AddUserIdentifierPhoneRequest(phoneNumber, confirmationCode)
     ).mapSuccess { it.toUserIdentifierPrivate() }
 
-    override suspend fun addUserIdentifierExternalAuthProvider(
+    public override suspend fun addUserIdentifierExternalAuthProvider(
         authProvider: String,
         externalProviderToken: String
     ): AppResult<UserIdentifierPrivate> = openIdentifiersApi.addUserIdentifierExternalAuthProvider(
         AddUserIdentifierExternalAuthProviderRequest(authProvider, externalProviderToken)
     ).mapSuccess { it.toUserIdentifierPrivate() }
 
-    override suspend fun sendAddEmailIdentifierConfirmation(
+    public override suspend fun sendAddEmailIdentifierConfirmation(
         email: String
     ): AppResult<OtpConfirmation> = confirmationRepository.executeWithTimer(
         type = ConfirmationType.ADD_EMAIL,
@@ -89,7 +88,7 @@ class OpenIdentifierRepositoryImpl(
         ).mapSuccess { it.toOtpConfirmation() }
     }
 
-    override suspend fun sendAddPhoneIdentifierConfirmation(
+    public override suspend fun sendAddPhoneIdentifierConfirmation(
         phoneNumber: String
     ): AppResult<OtpConfirmation> = confirmationRepository.executeWithTimer(
         type = ConfirmationType.ADD_PHONE,
@@ -100,7 +99,7 @@ class OpenIdentifierRepositoryImpl(
         ).mapSuccess { it.toOtpConfirmation() }
     }
 
-    override suspend fun emailChangePassword(
+    public override suspend fun emailChangePassword(
         userIdentifierId: UserIdentifierId,
         oldPassword: String,
         newPassword: String
@@ -109,13 +108,13 @@ class OpenIdentifierRepositoryImpl(
         request = EmailPasswordChangeRequest(oldPassword, newPassword)
     )
 
-    override fun getRemainingEmailConfirmationDelayInSeconds(email: String): Int =
+    public override fun getRemainingEmailConfirmationDelayInSeconds(email: String): Int =
         confirmationRepository.getRemainingDelay(
             type = ConfirmationType.ADD_EMAIL,
             identifier = email
         )
 
-    override fun getRemainingPhoneNumberConfirmationDelayInSeconds(phoneNumber: String): Int =
+    public override fun getRemainingPhoneNumberConfirmationDelayInSeconds(phoneNumber: String): Int =
         confirmationRepository.getRemainingDelay(
             type = ConfirmationType.ADD_PHONE,
             identifier = phoneNumber

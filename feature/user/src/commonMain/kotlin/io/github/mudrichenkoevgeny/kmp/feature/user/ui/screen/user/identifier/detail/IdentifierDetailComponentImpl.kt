@@ -221,10 +221,12 @@ public class IdentifierDetailComponentImpl(
                             identifier = loaded,
                             isCurrentIdentifier = resolvedIsCurrent,
                             isSelfIdentifier = isSelf,
-                            canChangePassword =
-                                changePassword != null && loaded.userAuthProvider == UserAuthProvider.EMAIL && !isSelf,
-                            canDeletePassword =
-                                deletePassword != null && loaded.userAuthProvider == UserAuthProvider.EMAIL && !isSelf
+                            canChangePassword = changePassword != null &&
+                                loaded.userAuthProvider == UserAuthProvider.EMAIL &&
+                                !isSelf,
+                            canDeletePassword = deletePassword != null &&
+                                loaded.userAuthProvider == UserAuthProvider.EMAIL &&
+                                !isSelf
                         )
                     }
                     .onError { error ->

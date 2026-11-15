@@ -35,11 +35,11 @@ public class ManagementSecuritySettingsRepositoryImpl(
 ) : ManagementSecuritySettingsRepository {
 
     private val updateMutex = Mutex()
-    private val _settings = MutableStateFlow<ManagementSecuritySettings?>(null)
+    private val settingsStateFlow = MutableStateFlow<ManagementSecuritySettings?>(null)
 
     init {
         repositoryScope.launch {
-            _settings.value = managementSecuritySettingsStorage.getManagementSecuritySettings()
+            settingsStateFlow.value = managementSecuritySettingsStorage.getManagementSecuritySettings()
 
             webSocketService.observeEvents()
                 .filter { it.type == SecurityWebSocketEventTypes.MANAGEMENT_SECURITY_SETTINGS_UPDATED }
@@ -66,13 +66,13 @@ public class ManagementSecuritySettingsRepositoryImpl(
     }
 
     override suspend fun getManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
-        _settings.value?.let { return AppResult.Success(it) }
+        settingsStateFlow.value?.let { return AppResult.Success(it) }
 
         return updateMutex.withLock {
-            val cached = _settings.value ?: managementSecuritySettingsStorage.getManagementSecuritySettings()
+            val cached = settingsStateFlow.value ?: managementSecuritySettingsStorage.getManagementSecuritySettings()
 
             if (cached != null) {
-                _settings.value = cached
+                settingsStateFlow.value = cached
                 AppResult.Success(cached)
             } else {
                 refreshManagementSecuritySettingsInternal()
@@ -80,7 +80,9 @@ public class ManagementSecuritySettingsRepositoryImpl(
         }
     }
 
-    override suspend fun saveRemoteManagementSecuritySettings(securitySettings: ManagementSecuritySettings): AppResult<ManagementSecuritySettings> {
+    override suspend fun saveRemoteManagementSecuritySettings(
+        securitySettings: ManagementSecuritySettings
+    ): AppResult<ManagementSecuritySettings> {
         val payload = securitySettings.toManagementSecuritySettingsPayload()
         return managementSecuritySettingsApi.updateManagementSecuritySettings(payload)
             .mapSuccess { response ->
@@ -109,7 +111,8 @@ public class ManagementSecuritySettingsRepositoryImpl(
         }
     }
 
-    override fun observeManagementSecuritySettings(): Flow<ManagementSecuritySettings?> = _settings.asStateFlow()
+    override fun observeManagementSecuritySettings(): Flow<ManagementSecuritySettings?> =
+        settingsStateFlow.asStateFlow()
 
     private suspend fun refreshManagementSecuritySettingsInternal(): AppResult<ManagementSecuritySettings> =
         managementSecuritySettingsApi.getManagementSecuritySettings()
@@ -121,6 +124,6 @@ public class ManagementSecuritySettingsRepositoryImpl(
 
     private suspend fun applySettingsUpdate(securitySettings: ManagementSecuritySettings) {
         managementSecuritySettingsStorage.updateManagementSecuritySettings(securitySettings)
-        _settings.value = securitySettings
+        settingsStateFlow.value = securitySettings
     }
 }

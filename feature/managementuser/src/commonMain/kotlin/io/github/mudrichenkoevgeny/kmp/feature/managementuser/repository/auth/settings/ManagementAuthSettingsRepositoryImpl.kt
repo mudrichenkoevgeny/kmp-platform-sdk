@@ -41,11 +41,11 @@ public class ManagementAuthSettingsRepositoryImpl(
 ) : ManagementAuthSettingsRepository {
 
     private val updateMutex = Mutex()
-    private val _settings = MutableStateFlow<ManagementAuthSettings?>(null)
+    private val settingsStateFlow = MutableStateFlow<ManagementAuthSettings?>(null)
 
     init {
         repositoryScope.launch {
-            _settings.value = managementAuthSettingsStorage.getManagementAuthSettings()
+            settingsStateFlow.value = managementAuthSettingsStorage.getManagementAuthSettings()
 
             webSocketService.observeEvents()
                 .filter { it.type == UserWebSocketEventTypes.MANAGEMENT_AUTH_SETTINGS_UPDATED }
@@ -72,13 +72,13 @@ public class ManagementAuthSettingsRepositoryImpl(
     }
 
     override suspend fun getManagementAuthSettings(): AppResult<ManagementAuthSettings> {
-        _settings.value?.let { return AppResult.Success(it) }
+        settingsStateFlow.value?.let { return AppResult.Success(it) }
 
         return updateMutex.withLock {
-            val cached = _settings.value ?: managementAuthSettingsStorage.getManagementAuthSettings()
+            val cached = settingsStateFlow.value ?: managementAuthSettingsStorage.getManagementAuthSettings()
 
             if (cached != null) {
-                _settings.value = cached
+                settingsStateFlow.value = cached
                 AppResult.Success(cached)
             } else {
                 refreshManagementAuthSettingsInternal()
@@ -86,7 +86,9 @@ public class ManagementAuthSettingsRepositoryImpl(
         }
     }
 
-    override suspend fun saveRemoteManagementAuthSettings(authSettings: ManagementAuthSettings): AppResult<ManagementAuthSettings> {
+    override suspend fun saveRemoteManagementAuthSettings(
+        authSettings: ManagementAuthSettings
+    ): AppResult<ManagementAuthSettings> {
         val payload = authSettings.toManagementAuthSettingsPayload()
         return managementAuthSettingsApi.updateManagementAuthSettings(payload)
             .mapSuccess { response ->
@@ -114,7 +116,7 @@ public class ManagementAuthSettingsRepositoryImpl(
         }
     }
 
-    override fun observeManagementAuthSettings(): Flow<ManagementAuthSettings?> = _settings.asStateFlow()
+    override fun observeManagementAuthSettings(): Flow<ManagementAuthSettings?> = settingsStateFlow.asStateFlow()
 
     private suspend fun refreshManagementAuthSettingsInternal(): AppResult<ManagementAuthSettings> =
         managementAuthSettingsApi.getManagementAuthSettings()
@@ -126,6 +128,6 @@ public class ManagementAuthSettingsRepositoryImpl(
 
     private suspend fun applySettingsUpdate(managementAuthSettings: ManagementAuthSettings) {
         managementAuthSettingsStorage.updateManagementAuthSettings(managementAuthSettings)
-        _settings.value = managementAuthSettings
+        settingsStateFlow.value = managementAuthSettings
     }
 }

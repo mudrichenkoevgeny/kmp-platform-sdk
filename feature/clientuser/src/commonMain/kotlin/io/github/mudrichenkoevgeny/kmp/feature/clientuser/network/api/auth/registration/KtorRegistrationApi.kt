@@ -13,11 +13,11 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
 /** [RegistrationApi] backed by [HttpClient]; public routes use [markAsPublic]. */
-class KtorRegistrationApi(
+public class KtorRegistrationApi(
     private val client: HttpClient
 ) : RegistrationApi {
 
-    override suspend fun registerByEmail(
+    public override suspend fun registerByEmail(
         request: RegistrationByEmailRequest
     ): AppResult<AuthDataPayload> = client.callResult {
         post(OpenRegistrationRoutes.REGISTRATION_BY_EMAIL) {
@@ -26,7 +26,7 @@ class KtorRegistrationApi(
         }
     }
 
-    override suspend fun sendRegistrationConfirmationToEmail(
+    public override suspend fun sendRegistrationConfirmationToEmail(
         request: SendConfirmationToEmailRequest
     ): AppResult<OtpConfirmationPayload> = client.callResult {
         post(OpenRegistrationRoutes.SEND_REGISTRATION_CONFIRMATION_TO_EMAIL) {

@@ -4,7 +4,8 @@ import android.app.Application
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.v2.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
@@ -39,9 +40,9 @@ class UserEditScreenTest {
 
         onNodeWithTag(UserEditTestTags.TITLE).assertIsDisplayed()
         onNodeWithTag(UserEditTestTags.BACK_BUTTON).assertIsDisplayed()
-        onNodeWithTag(UserEditTestTags.NICKNAME_INPUT).assertIsDisplayed()
-        onNodeWithTag(UserEditTestTags.DISPLAY_NAME_INPUT).assertIsDisplayed()
-        onNodeWithTag(UserEditTestTags.SAVE_BUTTON).assertIsDisplayed().performClick()
+        onNodeWithTag(UserEditTestTags.NICKNAME_INPUT).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(UserEditTestTags.DISPLAY_NAME_INPUT).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(UserEditTestTags.SAVE_BUTTON).performScrollTo().assertIsDisplayed().performClick()
 
         assertEquals(1, component.saveCalls)
     }

@@ -4,7 +4,8 @@ import android.app.Application
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.v2.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
@@ -30,8 +31,8 @@ class StorageFileDetailScreenTest {
         }
         onNodeWithTag(StorageFileDetailTestTags.TITLE).assertIsDisplayed()
         onNodeWithTag(StorageFileDetailTestTags.BACK_BUTTON).assertIsDisplayed()
-        onNodeWithTag(StorageFileDetailTestTags.COPY_URL_BUTTON).assertIsDisplayed()
-        onNodeWithTag(StorageFileDetailTestTags.DELETE_BUTTON).assertIsDisplayed()
+        onNodeWithTag(StorageFileDetailTestTags.COPY_URL_BUTTON).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(StorageFileDetailTestTags.DELETE_BUTTON).performScrollTo().assertIsDisplayed()
     }
 
     @Test
@@ -54,7 +55,7 @@ class StorageFileDetailScreenTest {
                 StorageFileDetailScreen(component = component)
             }
         }
-        onNodeWithTag(StorageFileDetailTestTags.DELETE_BUTTON).performClick()
+        onNodeWithTag(StorageFileDetailTestTags.DELETE_BUTTON).performScrollTo().performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.deleteCalls)
     }
 

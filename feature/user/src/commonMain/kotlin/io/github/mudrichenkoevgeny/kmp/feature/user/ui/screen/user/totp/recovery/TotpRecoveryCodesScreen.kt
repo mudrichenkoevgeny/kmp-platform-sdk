@@ -65,12 +65,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun TotpRecoveryCodesScreen(component: TotpRecoveryCodesComponent) {
+public fun TotpRecoveryCodesScreen(
+    component: TotpRecoveryCodesComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         Scaffold(

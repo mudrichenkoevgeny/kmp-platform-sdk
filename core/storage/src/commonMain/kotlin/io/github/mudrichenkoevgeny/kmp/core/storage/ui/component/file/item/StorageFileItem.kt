@@ -56,6 +56,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 public fun StorageFileItem(
     file: StorageFileSummary,
+    modifier: Modifier = Modifier,
     status: StorageFileStatus? = null,
     enabled: Boolean = true,
     onDeleteClick: (() -> Unit)? = null,
@@ -67,7 +68,7 @@ public fun StorageFileItem(
         ?: file.fileUrls?.originalUrl
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .then(
                 if (onFileClick != null) {

@@ -36,6 +36,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 public fun <C : Any, T : Any> LoginRootContainer(
     stack: Value<ChildStack<C, T>>,
     onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
     isDismissible: Boolean = true,
     isFullScreen: Boolean = false,
     content: @Composable (T) -> Unit
@@ -49,7 +50,7 @@ public fun <C : Any, T : Any> LoginRootContainer(
 
     if (isFullScreen) {
         Surface(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.surface
         ) {
             Children(

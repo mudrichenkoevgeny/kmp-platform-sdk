@@ -21,7 +21,9 @@ public interface ManagementGlobalSettingsRepository {
      * @param globalSettings New global configuration payload to apply.
      * @return Updated [ManagementGlobalSettings] on success, or an error result when update fails.
      */
-    public suspend fun saveRemoteManagementGlobalSettings(globalSettings: ManagementGlobalSettings): AppResult<ManagementGlobalSettings>
+    public suspend fun saveRemoteManagementGlobalSettings(
+        globalSettings: ManagementGlobalSettings
+    ): AppResult<ManagementGlobalSettings>
 
     /**
      * Resets global settings on the remote server to default values and updates local state.

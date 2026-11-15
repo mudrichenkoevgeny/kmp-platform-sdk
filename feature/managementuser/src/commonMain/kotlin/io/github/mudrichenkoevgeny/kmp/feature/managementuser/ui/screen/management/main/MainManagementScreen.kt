@@ -35,11 +35,15 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserString
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun MainManagementScreen(component: MainManagementComponent) {
+public fun MainManagementScreen(
+    component: MainManagementComponent,
+    modifier: Modifier = Modifier
+) {
     val userUi = LocalUserStrings.current.ui
     val storageUi = LocalStorageStrings.current.ui
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {

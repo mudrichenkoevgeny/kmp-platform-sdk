@@ -58,11 +58,15 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.pe
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun PendingDeletionScreen(component: PendingDeletionComponent) {
+public fun PendingDeletionScreen(
+    component: PendingDeletionComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {

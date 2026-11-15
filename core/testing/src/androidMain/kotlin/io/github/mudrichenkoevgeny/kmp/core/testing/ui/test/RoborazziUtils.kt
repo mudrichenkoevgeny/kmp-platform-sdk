@@ -3,7 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.core.testing.ui.test
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import com.github.takahirom.roborazzi.captureRoboImage
 
-fun SemanticsNodeInteraction.captureAppScreen(
+public fun SemanticsNodeInteraction.captureAppScreen(
     testInstance: Any,
     stateName: String
 ) {

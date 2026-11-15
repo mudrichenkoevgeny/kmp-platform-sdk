@@ -4,7 +4,8 @@ import android.app.Application
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
+import com.arkivanov.decompose.Child
 import com.arkivanov.decompose.router.slot.ChildSlot
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
@@ -94,7 +95,7 @@ class IdentifierListScreenTest {
     fun addIdentifierDialog_isDisplayedWhenStateIsOpen() = runComposeUiTest {
         val config = AddIdentifierDialogConfig.ProviderSelection
         val slot = ChildSlot<AddIdentifierDialogConfig, IdentifierListComponent.AddIdentifierDialogChild>(
-            child = ChildSlot.Child.Created(
+            child = Child.Created(
                 configuration = config,
                 instance = IdentifierListComponent.AddIdentifierDialogChild.ProviderSelection
             )

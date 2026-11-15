@@ -35,11 +35,11 @@ public class ManagementGlobalSettingsRepositoryImpl(
 ) : ManagementGlobalSettingsRepository {
 
     private val updateMutex = Mutex()
-    private val _settings = MutableStateFlow<ManagementGlobalSettings?>(null)
+    private val settingsStateFlow = MutableStateFlow<ManagementGlobalSettings?>(null)
 
     init {
         repositoryScope.launch {
-            _settings.value = managementGlobalSettingsStorage.getManagementGlobalSettings()
+            settingsStateFlow.value = managementGlobalSettingsStorage.getManagementGlobalSettings()
 
             webSocketService.observeEvents()
                 .filter { it.type == SettingsWebSocketEventTypes.MANAGEMENT_GLOBAL_SETTINGS_UPDATED }
@@ -66,13 +66,13 @@ public class ManagementGlobalSettingsRepositoryImpl(
     }
 
     override suspend fun getManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
-        _settings.value?.let { return AppResult.Success(it) }
+        settingsStateFlow.value?.let { return AppResult.Success(it) }
 
         return updateMutex.withLock {
-            val cached = _settings.value ?: managementGlobalSettingsStorage.getManagementGlobalSettings()
+            val cached = settingsStateFlow.value ?: managementGlobalSettingsStorage.getManagementGlobalSettings()
 
             if (cached != null) {
-                _settings.value = cached
+                settingsStateFlow.value = cached
                 AppResult.Success(cached)
             } else {
                 refreshManagementGlobalSettingsInternal()
@@ -80,7 +80,9 @@ public class ManagementGlobalSettingsRepositoryImpl(
         }
     }
 
-    override suspend fun saveRemoteManagementGlobalSettings(globalSettings: ManagementGlobalSettings): AppResult<ManagementGlobalSettings> {
+    override suspend fun saveRemoteManagementGlobalSettings(
+        globalSettings: ManagementGlobalSettings
+    ): AppResult<ManagementGlobalSettings> {
         val payload = globalSettings.toManagementGlobalSettingsPayload()
         return managementGlobalSettingsApi.updateManagementGlobalSettings(payload)
             .mapSuccess { response ->
@@ -108,7 +110,7 @@ public class ManagementGlobalSettingsRepositoryImpl(
         }
     }
 
-    override fun observeManagementGlobalSettings(): Flow<ManagementGlobalSettings?> = _settings.asStateFlow()
+    override fun observeManagementGlobalSettings(): Flow<ManagementGlobalSettings?> = settingsStateFlow.asStateFlow()
 
     private suspend fun refreshManagementGlobalSettingsInternal(): AppResult<ManagementGlobalSettings> =
         managementGlobalSettingsApi.getManagementGlobalSettings()
@@ -120,6 +122,6 @@ public class ManagementGlobalSettingsRepositoryImpl(
 
     private suspend fun applySettingsUpdate(globalSettings: ManagementGlobalSettings) {
         managementGlobalSettingsStorage.updateManagementGlobalSettings(globalSettings)
-        _settings.value = globalSettings
+        settingsStateFlow.value = globalSettings
     }
 }

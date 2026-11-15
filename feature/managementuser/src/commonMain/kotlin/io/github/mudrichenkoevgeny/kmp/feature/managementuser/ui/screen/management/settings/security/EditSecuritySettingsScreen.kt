@@ -60,14 +60,19 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserString
  * Screen for editing security policies and settings.
  *
  * @param component Decompose controller for security settings editing.
+ * @param modifier Modifier for the screen layout.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun EditSecuritySettingsScreen(component: EditSecuritySettingsComponent) {
+public fun EditSecuritySettingsScreen(
+    component: EditSecuritySettingsComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {
@@ -104,38 +109,42 @@ public fun EditSecuritySettingsScreen(component: EditSecuritySettingsComponent) 
             is EditSecuritySettingsScreenState.Content -> {
                 EditSecuritySettingsForm(
                     state = currentState,
-                    onRecentAuthenticationValidityForOpenUserChanged = component::onRecentAuthenticationValidityForOpenUserChanged,
-                    onRecentAuthenticationValidityForManagementUserChanged = component::onRecentAuthenticationValidityForManagementUserChanged,
-                    onMfaTokenExpirationSecondsChanged = component::onMfaTokenExpirationSecondsChanged,
-                    onRefreshTokenRotationGracePeriodSecondsChanged = component::onRefreshTokenRotationGracePeriodSecondsChanged,
-                    onMaxRequestsPerPeriodChanged = component::onMaxRequestsPerPeriodChanged,
-                    onRateLimitPeriodSecondsChanged = component::onRateLimitPeriodSecondsChanged,
-                    onPasswordMinLengthChanged = component::onPasswordMinLengthChanged,
-                    onPasswordRequireLetterToggled = component::onPasswordRequireLetterToggled,
-                    onPasswordRequireUppercaseToggled = component::onPasswordRequireUpperCaseToggled,
-                    onPasswordRequireLowercaseToggled = component::onPasswordRequireLowerCaseToggled,
-                    onPasswordRequireDigitToggled = component::onPasswordRequireDigitToggled,
-                    onPasswordRequireSpecialCharToggled = component::onPasswordRequireSpecialCharToggled,
-                    onCommonPasswordsChanged = component::onCommonPasswordsChanged,
-                    onMaxFailedPasswordAttemptsChanged = component::onAccountLockoutMaxFailedPasswordAttemptsChanged,
-                    onMaxFailedOtpAttemptsChanged = component::onAccountLockoutMaxFailedOtpAttemptsChanged,
-                    onMaxFailedTotpAttemptsChanged = component::onAccountLockoutMaxFailedTotpAttemptsChanged,
-                    onFailedAttemptsWindowSecondsChanged = component::onAccountLockoutFailedAttemptsWindowSecondsChanged,
-                    onLockoutDurationSecondsChanged = component::onAccountLockoutDurationSecondsChanged,
-                    onIndefiniteLockoutThresholdChanged = component::onAccountLockoutIndefiniteLockoutThresholdChanged,
-                    onSelfServiceUnlockEnabledToggled = component::onAccountLockoutIsSelfServiceUnlockEnabledToggled,
-                    onAccountLockoutCheckIntervalSecondsChanged = component::onAccountLockoutCheckIntervalSecondsChanged,
-                    onOpenIpBlacklistEnabledToggled = component::onOpenIpBlacklistEnabledToggled,
-                    onOpenIpBlacklistChanged = component::onOpenIpBlacklistChanged,
-                    onOpenIpWhitelistEnabledToggled = component::onOpenIpWhitelistEnabledToggled,
-                    onOpenIpWhitelistChanged = component::onOpenIpWhitelistChanged,
-                    onManagementIpBlacklistEnabledToggled = component::onManagementIpBlacklistEnabledToggled,
-                    onManagementIpBlacklistChanged = component::onManagementIpBlacklistChanged,
-                    onManagementIpWhitelistEnabledToggled = component::onManagementIpWhitelistEnabledToggled,
-                    onManagementIpWhitelistChanged = component::onManagementIpWhitelistChanged,
-                    onOtpRetryAfterSecondsChanged = component::onOtpRetryAfterSecondsChanged,
-                    onOtpExpirationSecondsChanged = component::onOtpExpirationSecondsChanged,
-                    onOtpCodeLengthChanged = component::onOtpNumberOfSymbolsChanged,
+                    onRecentAuthenticationValidityForOpenUserChange =
+                        component::onRecentAuthenticationValidityForOpenUserChanged,
+                    onRecentAuthenticationValidityForManagementUserChange =
+                        component::onRecentAuthenticationValidityForManagementUserChanged,
+                    onMfaTokenExpirationSecondsChange =
+                        component::onMfaTokenExpirationSecondsChanged,
+                    onRefreshTokenRotationGracePeriodSecondsChange =
+                        component::onRefreshTokenRotationGracePeriodSecondsChanged,
+                    onMaxRequestsPerPeriodChange = component::onMaxRequestsPerPeriodChanged,
+                    onRateLimitPeriodSecondsChange = component::onRateLimitPeriodSecondsChanged,
+                    onPasswordMinLengthChange = component::onPasswordMinLengthChanged,
+                    onPasswordRequireLetterToggle = component::onPasswordRequireLetterToggled,
+                    onPasswordRequireUppercaseToggle = component::onPasswordRequireUpperCaseToggled,
+                    onPasswordRequireLowercaseToggle = component::onPasswordRequireLowerCaseToggled,
+                    onPasswordRequireDigitToggle = component::onPasswordRequireDigitToggled,
+                    onPasswordRequireSpecialCharToggle = component::onPasswordRequireSpecialCharToggled,
+                    onCommonPasswordsChange = component::onCommonPasswordsChanged,
+                    onMaxFailedPasswordAttemptsChange = component::onAccountLockoutMaxFailedPasswordAttemptsChanged,
+                    onMaxFailedOtpAttemptsChange = component::onAccountLockoutMaxFailedOtpAttemptsChanged,
+                    onMaxFailedTotpAttemptsChange = component::onAccountLockoutMaxFailedTotpAttemptsChanged,
+                    onFailedAttemptsWindowSecondsChange = component::onAccountLockoutFailedAttemptsWindowSecondsChanged,
+                    onLockoutDurationSecondsChange = component::onAccountLockoutDurationSecondsChanged,
+                    onIndefiniteLockoutThresholdChange = component::onAccountLockoutIndefiniteLockoutThresholdChanged,
+                    onSelfServiceUnlockEnabledToggle = component::onAccountLockoutIsSelfServiceUnlockEnabledToggled,
+                    onAccountLockoutCheckIntervalSecondsChange = component::onAccountLockoutCheckIntervalSecondsChanged,
+                    onOpenIpBlacklistEnabledToggle = component::onOpenIpBlacklistEnabledToggled,
+                    onOpenIpBlacklistChange = component::onOpenIpBlacklistChanged,
+                    onOpenIpWhitelistEnabledToggle = component::onOpenIpWhitelistEnabledToggled,
+                    onOpenIpWhitelistChange = component::onOpenIpWhitelistChanged,
+                    onManagementIpBlacklistEnabledToggle = component::onManagementIpBlacklistEnabledToggled,
+                    onManagementIpBlacklistChange = component::onManagementIpBlacklistChanged,
+                    onManagementIpWhitelistEnabledToggle = component::onManagementIpWhitelistEnabledToggled,
+                    onManagementIpWhitelistChange = component::onManagementIpWhitelistChanged,
+                    onOtpRetryAfterSecondsChange = component::onOtpRetryAfterSecondsChanged,
+                    onOtpExpirationSecondsChange = component::onOtpExpirationSecondsChanged,
+                    onOtpCodeLengthChange = component::onOtpNumberOfSymbolsChanged,
                     onSaveClick = component::onSaveClick,
                     onResetClick = component::onResetClick,
                     modifier = Modifier
@@ -178,38 +187,38 @@ public fun EditSecuritySettingsScreen(component: EditSecuritySettingsComponent) 
 @Composable
 private fun EditSecuritySettingsForm(
     state: EditSecuritySettingsScreenState.Content,
-    onRecentAuthenticationValidityForOpenUserChanged: (String) -> Unit,
-    onRecentAuthenticationValidityForManagementUserChanged: (String) -> Unit,
-    onMfaTokenExpirationSecondsChanged: (String) -> Unit,
-    onRefreshTokenRotationGracePeriodSecondsChanged: (String) -> Unit,
-    onMaxRequestsPerPeriodChanged: (String) -> Unit,
-    onRateLimitPeriodSecondsChanged: (String) -> Unit,
-    onPasswordMinLengthChanged: (String) -> Unit,
-    onPasswordRequireLetterToggled: (Boolean) -> Unit,
-    onPasswordRequireUppercaseToggled: (Boolean) -> Unit,
-    onPasswordRequireLowercaseToggled: (Boolean) -> Unit,
-    onPasswordRequireDigitToggled: (Boolean) -> Unit,
-    onPasswordRequireSpecialCharToggled: (Boolean) -> Unit,
-    onCommonPasswordsChanged: (String) -> Unit,
-    onMaxFailedPasswordAttemptsChanged: (String) -> Unit,
-    onMaxFailedOtpAttemptsChanged: (String) -> Unit,
-    onMaxFailedTotpAttemptsChanged: (String) -> Unit,
-    onFailedAttemptsWindowSecondsChanged: (String) -> Unit,
-    onLockoutDurationSecondsChanged: (String) -> Unit,
-    onIndefiniteLockoutThresholdChanged: (String) -> Unit,
-    onSelfServiceUnlockEnabledToggled: (Boolean) -> Unit,
-    onAccountLockoutCheckIntervalSecondsChanged: (String) -> Unit,
-    onOpenIpBlacklistEnabledToggled: (Boolean) -> Unit,
-    onOpenIpBlacklistChanged: (String) -> Unit,
-    onOpenIpWhitelistEnabledToggled: (Boolean) -> Unit,
-    onOpenIpWhitelistChanged: (String) -> Unit,
-    onManagementIpBlacklistEnabledToggled: (Boolean) -> Unit,
-    onManagementIpBlacklistChanged: (String) -> Unit,
-    onManagementIpWhitelistEnabledToggled: (Boolean) -> Unit,
-    onManagementIpWhitelistChanged: (String) -> Unit,
-    onOtpRetryAfterSecondsChanged: (String) -> Unit,
-    onOtpExpirationSecondsChanged: (String) -> Unit,
-    onOtpCodeLengthChanged: (String) -> Unit,
+    onRecentAuthenticationValidityForOpenUserChange: (String) -> Unit,
+    onRecentAuthenticationValidityForManagementUserChange: (String) -> Unit,
+    onMfaTokenExpirationSecondsChange: (String) -> Unit,
+    onRefreshTokenRotationGracePeriodSecondsChange: (String) -> Unit,
+    onMaxRequestsPerPeriodChange: (String) -> Unit,
+    onRateLimitPeriodSecondsChange: (String) -> Unit,
+    onPasswordMinLengthChange: (String) -> Unit,
+    onPasswordRequireLetterToggle: (Boolean) -> Unit,
+    onPasswordRequireUppercaseToggle: (Boolean) -> Unit,
+    onPasswordRequireLowercaseToggle: (Boolean) -> Unit,
+    onPasswordRequireDigitToggle: (Boolean) -> Unit,
+    onPasswordRequireSpecialCharToggle: (Boolean) -> Unit,
+    onCommonPasswordsChange: (String) -> Unit,
+    onMaxFailedPasswordAttemptsChange: (String) -> Unit,
+    onMaxFailedOtpAttemptsChange: (String) -> Unit,
+    onMaxFailedTotpAttemptsChange: (String) -> Unit,
+    onFailedAttemptsWindowSecondsChange: (String) -> Unit,
+    onLockoutDurationSecondsChange: (String) -> Unit,
+    onIndefiniteLockoutThresholdChange: (String) -> Unit,
+    onSelfServiceUnlockEnabledToggle: (Boolean) -> Unit,
+    onAccountLockoutCheckIntervalSecondsChange: (String) -> Unit,
+    onOpenIpBlacklistEnabledToggle: (Boolean) -> Unit,
+    onOpenIpBlacklistChange: (String) -> Unit,
+    onOpenIpWhitelistEnabledToggle: (Boolean) -> Unit,
+    onOpenIpWhitelistChange: (String) -> Unit,
+    onManagementIpBlacklistEnabledToggle: (Boolean) -> Unit,
+    onManagementIpBlacklistChange: (String) -> Unit,
+    onManagementIpWhitelistEnabledToggle: (Boolean) -> Unit,
+    onManagementIpWhitelistChange: (String) -> Unit,
+    onOtpRetryAfterSecondsChange: (String) -> Unit,
+    onOtpExpirationSecondsChange: (String) -> Unit,
+    onOtpCodeLengthChange: (String) -> Unit,
     onSaveClick: () -> Unit,
     onResetClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -222,58 +231,62 @@ private fun EditSecuritySettingsForm(
     ) {
         GeneralSecuritySection(
             state = state,
-            onRecentAuthenticationValidityForOpenUserChanged = onRecentAuthenticationValidityForOpenUserChanged,
-            onRecentAuthenticationValidityForManagementUserChanged = onRecentAuthenticationValidityForManagementUserChanged,
-            onMfaTokenExpirationSecondsChanged = onMfaTokenExpirationSecondsChanged,
-            onRefreshTokenRotationGracePeriodSecondsChanged = onRefreshTokenRotationGracePeriodSecondsChanged
+            onRecentAuthenticationValidityForOpenUserChange =
+                onRecentAuthenticationValidityForOpenUserChange,
+            onRecentAuthenticationValidityForManagementUserChange =
+                onRecentAuthenticationValidityForManagementUserChange,
+            onMfaTokenExpirationSecondsChange =
+                onMfaTokenExpirationSecondsChange,
+            onRefreshTokenRotationGracePeriodSecondsChange =
+                onRefreshTokenRotationGracePeriodSecondsChange
         )
 
         RateLimitingSection(
             state = state,
-            onMaxRequestsPerPeriodChanged = onMaxRequestsPerPeriodChanged,
-            onRateLimitPeriodSecondsChanged = onRateLimitPeriodSecondsChanged
+            onMaxRequestsPerPeriodChange = onMaxRequestsPerPeriodChange,
+            onRateLimitPeriodSecondsChange = onRateLimitPeriodSecondsChange
         )
 
         PasswordPolicySection(
             state = state,
-            onPasswordMinLengthChanged = onPasswordMinLengthChanged,
-            onPasswordRequireLetterToggled = onPasswordRequireLetterToggled,
-            onPasswordRequireUppercaseToggled = onPasswordRequireUppercaseToggled,
-            onPasswordRequireLowercaseToggled = onPasswordRequireLowercaseToggled,
-            onPasswordRequireDigitToggled = onPasswordRequireDigitToggled,
-            onPasswordRequireSpecialCharToggled = onPasswordRequireSpecialCharToggled,
-            onCommonPasswordsChanged = onCommonPasswordsChanged
+            onPasswordMinLengthChange = onPasswordMinLengthChange,
+            onPasswordRequireLetterToggle = onPasswordRequireLetterToggle,
+            onPasswordRequireUppercaseToggle = onPasswordRequireUppercaseToggle,
+            onPasswordRequireLowercaseToggle = onPasswordRequireLowercaseToggle,
+            onPasswordRequireDigitToggle = onPasswordRequireDigitToggle,
+            onPasswordRequireSpecialCharToggle = onPasswordRequireSpecialCharToggle,
+            onCommonPasswordsChange = onCommonPasswordsChange
         )
 
         AccountLockoutPolicySection(
             state = state,
-            onMaxFailedPasswordAttemptsChanged = onMaxFailedPasswordAttemptsChanged,
-            onMaxFailedOtpAttemptsChanged = onMaxFailedOtpAttemptsChanged,
-            onMaxFailedTotpAttemptsChanged = onMaxFailedTotpAttemptsChanged,
-            onFailedAttemptsWindowSecondsChanged = onFailedAttemptsWindowSecondsChanged,
-            onLockoutDurationSecondsChanged = onLockoutDurationSecondsChanged,
-            onIndefiniteLockoutThresholdChanged = onIndefiniteLockoutThresholdChanged,
-            onSelfServiceUnlockEnabledToggled = onSelfServiceUnlockEnabledToggled,
-            onAccountLockoutCheckIntervalSecondsChanged = onAccountLockoutCheckIntervalSecondsChanged
+            onMaxFailedPasswordAttemptsChange = onMaxFailedPasswordAttemptsChange,
+            onMaxFailedOtpAttemptsChange = onMaxFailedOtpAttemptsChange,
+            onMaxFailedTotpAttemptsChange = onMaxFailedTotpAttemptsChange,
+            onFailedAttemptsWindowSecondsChange = onFailedAttemptsWindowSecondsChange,
+            onLockoutDurationSecondsChange = onLockoutDurationSecondsChange,
+            onIndefiniteLockoutThresholdChange = onIndefiniteLockoutThresholdChange,
+            onSelfServiceUnlockEnabledToggle = onSelfServiceUnlockEnabledToggle,
+            onAccountLockoutCheckIntervalSecondsChange = onAccountLockoutCheckIntervalSecondsChange
         )
 
         IpRestrictionPolicySection(
             state = state,
-            onOpenIpBlacklistEnabledToggled = onOpenIpBlacklistEnabledToggled,
-            onOpenIpBlacklistChanged = onOpenIpBlacklistChanged,
-            onOpenIpWhitelistEnabledToggled = onOpenIpWhitelistEnabledToggled,
-            onOpenIpWhitelistChanged = onOpenIpWhitelistChanged,
-            onManagementIpBlacklistEnabledToggled = onManagementIpBlacklistEnabledToggled,
-            onManagementIpBlacklistChanged = onManagementIpBlacklistChanged,
-            onManagementIpWhitelistEnabledToggled = onManagementIpWhitelistEnabledToggled,
-            onManagementIpWhitelistChanged = onManagementIpWhitelistChanged
+            onOpenIpBlacklistEnabledToggle = onOpenIpBlacklistEnabledToggle,
+            onOpenIpBlacklistChange = onOpenIpBlacklistChange,
+            onOpenIpWhitelistEnabledToggle = onOpenIpWhitelistEnabledToggle,
+            onOpenIpWhitelistChange = onOpenIpWhitelistChange,
+            onManagementIpBlacklistEnabledToggle = onManagementIpBlacklistEnabledToggle,
+            onManagementIpBlacklistChange = onManagementIpBlacklistChange,
+            onManagementIpWhitelistEnabledToggle = onManagementIpWhitelistEnabledToggle,
+            onManagementIpWhitelistChange = onManagementIpWhitelistChange
         )
 
         OtpConfirmationSection(
             state = state,
-            onOtpRetryAfterSecondsChanged = onOtpRetryAfterSecondsChanged,
-            onOtpExpirationSecondsChanged = onOtpExpirationSecondsChanged,
-            onOtpCodeLengthChanged = onOtpCodeLengthChanged
+            onOtpRetryAfterSecondsChange = onOtpRetryAfterSecondsChange,
+            onOtpExpirationSecondsChange = onOtpExpirationSecondsChange,
+            onOtpCodeLengthChange = onOtpCodeLengthChange
         )
 
         ErrorText(
@@ -300,361 +313,397 @@ private fun EditSecuritySettingsForm(
 @Composable
 private fun GeneralSecuritySection(
     state: EditSecuritySettingsScreenState.Content,
-    onRecentAuthenticationValidityForOpenUserChanged: (String) -> Unit,
-    onRecentAuthenticationValidityForManagementUserChanged: (String) -> Unit,
-    onMfaTokenExpirationSecondsChanged: (String) -> Unit,
-    onRefreshTokenRotationGracePeriodSecondsChanged: (String) -> Unit
+    onRecentAuthenticationValidityForOpenUserChange: (String) -> Unit,
+    onRecentAuthenticationValidityForManagementUserChange: (String) -> Unit,
+    onMfaTokenExpirationSecondsChange: (String) -> Unit,
+    onRefreshTokenRotationGracePeriodSecondsChange: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val userUi = LocalUserStrings.current.ui
 
-    CoreTitleText(
-        text = userUi.generalSecurity,
-        style = MaterialTheme.typography.titleMedium,
-        modifier = Modifier.testTag(EditSecuritySettingsTestTags.SECTION_GENERAL_TITLE)
-    )
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
+    ) {
+        CoreTitleText(
+            text = userUi.generalSecurity,
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.SECTION_GENERAL_TITLE)
+        )
 
-    CoreOutlinedTextField(
-        value = state.recentAuthenticationValiditySecondsForOpenUser,
-        onValueChange = onRecentAuthenticationValidityForOpenUserChanged,
-        label = { CoreBodyText(userUi.recentAuthenticationValiditySeconds) },
-        placeholder = { CoreBodyText(userUi.recentAuthenticationValiditySeconds) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(EditSecuritySettingsTestTags.RECENT_AUTH_VALIDITY_OPEN_INPUT)
-    )
+        CoreOutlinedTextField(
+            value = state.recentAuthenticationValiditySecondsForOpenUser,
+            onValueChange = onRecentAuthenticationValidityForOpenUserChange,
+            label = { CoreBodyText(userUi.recentAuthenticationValiditySeconds) },
+            placeholder = { CoreBodyText(userUi.recentAuthenticationValiditySeconds) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.RECENT_AUTH_VALIDITY_OPEN_INPUT)
+        )
 
-    CoreOutlinedTextField(
-        value = state.recentAuthenticationValiditySecondsForManagementUser,
-        onValueChange = onRecentAuthenticationValidityForManagementUserChanged,
-        label = { CoreBodyText(userUi.recentAuthenticationValidityForManagement) },
-        placeholder = { CoreBodyText(userUi.recentAuthenticationValidityForManagement) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(EditSecuritySettingsTestTags.RECENT_AUTH_VALIDITY_MANAGEMENT_INPUT)
-    )
+        CoreOutlinedTextField(
+            value = state.recentAuthenticationValiditySecondsForManagementUser,
+            onValueChange = onRecentAuthenticationValidityForManagementUserChange,
+            label = { CoreBodyText(userUi.recentAuthenticationValidityForManagement) },
+            placeholder = { CoreBodyText(userUi.recentAuthenticationValidityForManagement) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.RECENT_AUTH_VALIDITY_MANAGEMENT_INPUT)
+        )
 
-    CoreOutlinedTextField(
-        value = state.mfaTokenExpirationSeconds,
-        onValueChange = onMfaTokenExpirationSecondsChanged,
-        label = { CoreBodyText(userUi.mfaTokenExpirationSeconds) },
-        placeholder = { CoreBodyText(userUi.mfaTokenExpirationSeconds) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(EditSecuritySettingsTestTags.MFA_TOKEN_EXPIRATION_INPUT)
-    )
+        CoreOutlinedTextField(
+            value = state.mfaTokenExpirationSeconds,
+            onValueChange = onMfaTokenExpirationSecondsChange,
+            label = { CoreBodyText(userUi.mfaTokenExpirationSeconds) },
+            placeholder = { CoreBodyText(userUi.mfaTokenExpirationSeconds) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.MFA_TOKEN_EXPIRATION_INPUT)
+        )
 
-    CoreOutlinedTextField(
-        value = state.refreshTokenRotationGracePeriodSeconds,
-        onValueChange = onRefreshTokenRotationGracePeriodSecondsChanged,
-        label = { CoreBodyText(userUi.refreshTokenRotationGracePeriodSeconds) },
-        placeholder = { CoreBodyText(userUi.refreshTokenRotationGracePeriodSeconds) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(EditSecuritySettingsTestTags.REFRESH_TOKEN_ROTATION_GRACE_PERIOD_INPUT)
-    )
+        CoreOutlinedTextField(
+            value = state.refreshTokenRotationGracePeriodSeconds,
+            onValueChange = onRefreshTokenRotationGracePeriodSecondsChange,
+            label = { CoreBodyText(userUi.refreshTokenRotationGracePeriodSeconds) },
+            placeholder = { CoreBodyText(userUi.refreshTokenRotationGracePeriodSeconds) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.REFRESH_TOKEN_ROTATION_GRACE_PERIOD_INPUT)
+        )
+    }
 }
 
 @Composable
 private fun RateLimitingSection(
     state: EditSecuritySettingsScreenState.Content,
-    onMaxRequestsPerPeriodChanged: (String) -> Unit,
-    onRateLimitPeriodSecondsChanged: (String) -> Unit
+    onMaxRequestsPerPeriodChange: (String) -> Unit,
+    onRateLimitPeriodSecondsChange: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val userUi = LocalUserStrings.current.ui
 
-    CoreTitleText(
-        text = userUi.rateLimiting,
-        style = MaterialTheme.typography.titleMedium,
-        modifier = Modifier.testTag(EditSecuritySettingsTestTags.SECTION_RATE_LIMITING_TITLE)
-    )
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
+    ) {
+        CoreTitleText(
+            text = userUi.rateLimiting,
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.SECTION_RATE_LIMITING_TITLE)
+        )
 
-    CoreOutlinedTextField(
-        value = state.maxRequestsPerPeriod,
-        onValueChange = onMaxRequestsPerPeriodChanged,
-        label = { CoreBodyText(userUi.maxRequestsPerPeriod) },
-        placeholder = { CoreBodyText(userUi.maxRequestsPerPeriod) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(EditSecuritySettingsTestTags.RATE_LIMIT_MAX_REQUESTS_INPUT)
-    )
+        CoreOutlinedTextField(
+            value = state.maxRequestsPerPeriod,
+            onValueChange = onMaxRequestsPerPeriodChange,
+            label = { CoreBodyText(userUi.maxRequestsPerPeriod) },
+            placeholder = { CoreBodyText(userUi.maxRequestsPerPeriod) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.RATE_LIMIT_MAX_REQUESTS_INPUT)
+        )
 
-    CoreOutlinedTextField(
-        value = state.rateLimitPeriodSeconds,
-        onValueChange = onRateLimitPeriodSecondsChanged,
-        label = { CoreBodyText(userUi.rateLimitPeriodSeconds) },
-        placeholder = { CoreBodyText(userUi.rateLimitPeriodSeconds) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(EditSecuritySettingsTestTags.RATE_LIMIT_WINDOW_INPUT)
-    )
+        CoreOutlinedTextField(
+            value = state.rateLimitPeriodSeconds,
+            onValueChange = onRateLimitPeriodSecondsChange,
+            label = { CoreBodyText(userUi.rateLimitPeriodSeconds) },
+            placeholder = { CoreBodyText(userUi.rateLimitPeriodSeconds) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.RATE_LIMIT_WINDOW_INPUT)
+        )
+    }
 }
 
 @Composable
 private fun PasswordPolicySection(
     state: EditSecuritySettingsScreenState.Content,
-    onPasswordMinLengthChanged: (String) -> Unit,
-    onPasswordRequireLetterToggled: (Boolean) -> Unit,
-    onPasswordRequireUppercaseToggled: (Boolean) -> Unit,
-    onPasswordRequireLowercaseToggled: (Boolean) -> Unit,
-    onPasswordRequireDigitToggled: (Boolean) -> Unit,
-    onPasswordRequireSpecialCharToggled: (Boolean) -> Unit,
-    onCommonPasswordsChanged: (String) -> Unit
+    onPasswordMinLengthChange: (String) -> Unit,
+    onPasswordRequireLetterToggle: (Boolean) -> Unit,
+    onPasswordRequireUppercaseToggle: (Boolean) -> Unit,
+    onPasswordRequireLowercaseToggle: (Boolean) -> Unit,
+    onPasswordRequireDigitToggle: (Boolean) -> Unit,
+    onPasswordRequireSpecialCharToggle: (Boolean) -> Unit,
+    onCommonPasswordsChange: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val userUi = LocalUserStrings.current.ui
 
-    CoreTitleText(
-        text = userUi.passwordPolicy,
-        style = MaterialTheme.typography.titleMedium,
-        modifier = Modifier.testTag(EditSecuritySettingsTestTags.SECTION_PASSWORD_POLICY_TITLE)
-    )
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
+    ) {
+        CoreTitleText(
+            text = userUi.passwordPolicy,
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.SECTION_PASSWORD_POLICY_TITLE)
+        )
 
-    CoreOutlinedTextField(
-        value = state.passwordMinLength,
-        onValueChange = onPasswordMinLengthChanged,
-        label = { CoreBodyText(userUi.passwordMinLength) },
-        placeholder = { CoreBodyText(userUi.passwordMinLength) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.testTag(EditSecuritySettingsTestTags.PASSWORD_MIN_LENGTH_INPUT)
-    )
+        CoreOutlinedTextField(
+            value = state.passwordMinLength,
+            onValueChange = onPasswordMinLengthChange,
+            label = { CoreBodyText(userUi.passwordMinLength) },
+            placeholder = { CoreBodyText(userUi.passwordMinLength) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.testTag(EditSecuritySettingsTestTags.PASSWORD_MIN_LENGTH_INPUT)
+        )
 
-    ToggleRow(
-        label = userUi.passwordRequireLetter,
-        checked = state.passwordRequireLetter,
-        onCheckedChange = onPasswordRequireLetterToggled,
-        testTag = EditSecuritySettingsTestTags.PASSWORD_REQUIRE_LETTER_CHECKBOX
-    )
+        ToggleRow(
+            label = userUi.passwordRequireLetter,
+            checked = state.passwordRequireLetter,
+            onCheckedChange = onPasswordRequireLetterToggle,
+            testTag = EditSecuritySettingsTestTags.PASSWORD_REQUIRE_LETTER_CHECKBOX
+        )
 
-    ToggleRow(
-        label = userUi.passwordRequireUppercase,
-        checked = state.passwordRequireUpperCase,
-        onCheckedChange = onPasswordRequireUppercaseToggled,
-        testTag = EditSecuritySettingsTestTags.PASSWORD_REQUIRE_UPPERCASE_CHECKBOX
-    )
+        ToggleRow(
+            label = userUi.passwordRequireUppercase,
+            checked = state.passwordRequireUpperCase,
+            onCheckedChange = onPasswordRequireUppercaseToggle,
+            testTag = EditSecuritySettingsTestTags.PASSWORD_REQUIRE_UPPERCASE_CHECKBOX
+        )
 
-    ToggleRow(
-        label = userUi.passwordRequireLowercase,
-        checked = state.passwordRequireLowerCase,
-        onCheckedChange = onPasswordRequireLowercaseToggled,
-        testTag = EditSecuritySettingsTestTags.PASSWORD_REQUIRE_LOWERCASE_CHECKBOX
-    )
+        ToggleRow(
+            label = userUi.passwordRequireLowercase,
+            checked = state.passwordRequireLowerCase,
+            onCheckedChange = onPasswordRequireLowercaseToggle,
+            testTag = EditSecuritySettingsTestTags.PASSWORD_REQUIRE_LOWERCASE_CHECKBOX
+        )
 
-    ToggleRow(
-        label = userUi.passwordRequireDigit,
-        checked = state.passwordRequireDigit,
-        onCheckedChange = onPasswordRequireDigitToggled,
-        testTag = EditSecuritySettingsTestTags.PASSWORD_REQUIRE_DIGIT_CHECKBOX
-    )
+        ToggleRow(
+            label = userUi.passwordRequireDigit,
+            checked = state.passwordRequireDigit,
+            onCheckedChange = onPasswordRequireDigitToggle,
+            testTag = EditSecuritySettingsTestTags.PASSWORD_REQUIRE_DIGIT_CHECKBOX
+        )
 
-    ToggleRow(
-        label = userUi.passwordRequireSpecialChar,
-        checked = state.passwordRequireSpecialChar,
-        onCheckedChange = onPasswordRequireSpecialCharToggled,
-        testTag = EditSecuritySettingsTestTags.PASSWORD_REQUIRE_SPECIAL_CHAR_CHECKBOX
-    )
+        ToggleRow(
+            label = userUi.passwordRequireSpecialChar,
+            checked = state.passwordRequireSpecialChar,
+            onCheckedChange = onPasswordRequireSpecialCharToggle,
+            testTag = EditSecuritySettingsTestTags.PASSWORD_REQUIRE_SPECIAL_CHAR_CHECKBOX
+        )
 
-    CoreOutlinedTextField(
-        value = state.commonPasswords,
-        onValueChange = onCommonPasswordsChanged,
-        label = { CoreBodyText(userUi.commonPasswordsPlaceholder) },
-        placeholder = { CoreBodyText(userUi.commonPasswordsPlaceholder) }
-    )
+        CoreOutlinedTextField(
+            value = state.commonPasswords,
+            onValueChange = onCommonPasswordsChange,
+            label = { CoreBodyText(userUi.commonPasswordsPlaceholder) },
+            placeholder = { CoreBodyText(userUi.commonPasswordsPlaceholder) }
+        )
+    }
 }
 
 @Composable
 private fun AccountLockoutPolicySection(
     state: EditSecuritySettingsScreenState.Content,
-    onMaxFailedPasswordAttemptsChanged: (String) -> Unit,
-    onMaxFailedOtpAttemptsChanged: (String) -> Unit,
-    onMaxFailedTotpAttemptsChanged: (String) -> Unit,
-    onFailedAttemptsWindowSecondsChanged: (String) -> Unit,
-    onLockoutDurationSecondsChanged: (String) -> Unit,
-    onIndefiniteLockoutThresholdChanged: (String) -> Unit,
-    onSelfServiceUnlockEnabledToggled: (Boolean) -> Unit,
-    onAccountLockoutCheckIntervalSecondsChanged: (String) -> Unit
+    onMaxFailedPasswordAttemptsChange: (String) -> Unit,
+    onMaxFailedOtpAttemptsChange: (String) -> Unit,
+    onMaxFailedTotpAttemptsChange: (String) -> Unit,
+    onFailedAttemptsWindowSecondsChange: (String) -> Unit,
+    onLockoutDurationSecondsChange: (String) -> Unit,
+    onIndefiniteLockoutThresholdChange: (String) -> Unit,
+    onSelfServiceUnlockEnabledToggle: (Boolean) -> Unit,
+    onAccountLockoutCheckIntervalSecondsChange: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val userUi = LocalUserStrings.current.ui
 
-    CoreTitleText(
-        text = userUi.accountLockoutPolicySection,
-        style = MaterialTheme.typography.titleMedium
-    )
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
+    ) {
+        CoreTitleText(
+            text = userUi.accountLockoutPolicySection,
+            style = MaterialTheme.typography.titleMedium
+        )
 
-    CoreOutlinedTextField(
-        value = state.accountLockoutMaxFailedPasswordAttempts,
-        onValueChange = onMaxFailedPasswordAttemptsChanged,
-        label = { CoreBodyText(userUi.maxFailedPasswordAttempts) },
-        placeholder = { CoreBodyText(userUi.maxFailedPasswordAttempts) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-    )
+        CoreOutlinedTextField(
+            value = state.accountLockoutMaxFailedPasswordAttempts,
+            onValueChange = onMaxFailedPasswordAttemptsChange,
+            label = { CoreBodyText(userUi.maxFailedPasswordAttempts) },
+            placeholder = { CoreBodyText(userUi.maxFailedPasswordAttempts) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
 
-    CoreOutlinedTextField(
-        value = state.accountLockoutMaxFailedOtpAttempts,
-        onValueChange = onMaxFailedOtpAttemptsChanged,
-        label = { CoreBodyText(userUi.maxFailedOtpAttempts) },
-        placeholder = { CoreBodyText(userUi.maxFailedOtpAttempts) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-    )
+        CoreOutlinedTextField(
+            value = state.accountLockoutMaxFailedOtpAttempts,
+            onValueChange = onMaxFailedOtpAttemptsChange,
+            label = { CoreBodyText(userUi.maxFailedOtpAttempts) },
+            placeholder = { CoreBodyText(userUi.maxFailedOtpAttempts) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
 
-    CoreOutlinedTextField(
-        value = state.accountLockoutMaxFailedTotpAttempts,
-        onValueChange = onMaxFailedTotpAttemptsChanged,
-        label = { CoreBodyText(userUi.maxFailedTotpAttempts) },
-        placeholder = { CoreBodyText(userUi.maxFailedTotpAttempts) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-    )
+        CoreOutlinedTextField(
+            value = state.accountLockoutMaxFailedTotpAttempts,
+            onValueChange = onMaxFailedTotpAttemptsChange,
+            label = { CoreBodyText(userUi.maxFailedTotpAttempts) },
+            placeholder = { CoreBodyText(userUi.maxFailedTotpAttempts) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
 
-    CoreOutlinedTextField(
-        value = state.accountLockoutFailedAttemptsWindowSeconds,
-        onValueChange = onFailedAttemptsWindowSecondsChanged,
-        label = { CoreBodyText(userUi.failedAttemptsWindowSeconds) },
-        placeholder = { CoreBodyText(userUi.failedAttemptsWindowSeconds) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-    )
+        CoreOutlinedTextField(
+            value = state.accountLockoutFailedAttemptsWindowSeconds,
+            onValueChange = onFailedAttemptsWindowSecondsChange,
+            label = { CoreBodyText(userUi.failedAttemptsWindowSeconds) },
+            placeholder = { CoreBodyText(userUi.failedAttemptsWindowSeconds) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
 
-    CoreOutlinedTextField(
-        value = state.accountLockoutDurationSeconds,
-        onValueChange = onLockoutDurationSecondsChanged,
-        label = { CoreBodyText(userUi.lockoutDurationSeconds) },
-        placeholder = { CoreBodyText(userUi.lockoutDurationSeconds) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-    )
+        CoreOutlinedTextField(
+            value = state.accountLockoutDurationSeconds,
+            onValueChange = onLockoutDurationSecondsChange,
+            label = { CoreBodyText(userUi.lockoutDurationSeconds) },
+            placeholder = { CoreBodyText(userUi.lockoutDurationSeconds) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
 
-    CoreOutlinedTextField(
-        value = state.accountLockoutIndefiniteLockoutThreshold,
-        onValueChange = onIndefiniteLockoutThresholdChanged,
-        label = { CoreBodyText(userUi.indefiniteLockoutThreshold) },
-        placeholder = { CoreBodyText(userUi.indefiniteLockoutThreshold) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-    )
+        CoreOutlinedTextField(
+            value = state.accountLockoutIndefiniteLockoutThreshold,
+            onValueChange = onIndefiniteLockoutThresholdChange,
+            label = { CoreBodyText(userUi.indefiniteLockoutThreshold) },
+            placeholder = { CoreBodyText(userUi.indefiniteLockoutThreshold) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
 
-    ToggleRow(
-        label = userUi.selfServiceUnlockEnabled,
-        checked = state.accountLockoutIsSelfServiceUnlockEnabled,
-        onCheckedChange = onSelfServiceUnlockEnabledToggled,
-        testTag = ""
-    )
+        ToggleRow(
+            label = userUi.selfServiceUnlockEnabled,
+            checked = state.accountLockoutIsSelfServiceUnlockEnabled,
+            onCheckedChange = onSelfServiceUnlockEnabledToggle,
+            testTag = ""
+        )
 
-    CoreOutlinedTextField(
-        value = state.accountLockoutCheckIntervalSeconds,
-        onValueChange = onAccountLockoutCheckIntervalSecondsChanged,
-        label = { CoreBodyText(userUi.accountLockoutCheckIntervalSeconds) },
-        placeholder = { CoreBodyText(userUi.accountLockoutCheckIntervalSeconds) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-    )
+        CoreOutlinedTextField(
+            value = state.accountLockoutCheckIntervalSeconds,
+            onValueChange = onAccountLockoutCheckIntervalSecondsChange,
+            label = { CoreBodyText(userUi.accountLockoutCheckIntervalSeconds) },
+            placeholder = { CoreBodyText(userUi.accountLockoutCheckIntervalSeconds) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+    }
 }
 
 @Composable
 private fun IpRestrictionPolicySection(
     state: EditSecuritySettingsScreenState.Content,
-    onOpenIpBlacklistEnabledToggled: (Boolean) -> Unit,
-    onOpenIpBlacklistChanged: (String) -> Unit,
-    onOpenIpWhitelistEnabledToggled: (Boolean) -> Unit,
-    onOpenIpWhitelistChanged: (String) -> Unit,
-    onManagementIpBlacklistEnabledToggled: (Boolean) -> Unit,
-    onManagementIpBlacklistChanged: (String) -> Unit,
-    onManagementIpWhitelistEnabledToggled: (Boolean) -> Unit,
-    onManagementIpWhitelistChanged: (String) -> Unit
+    onOpenIpBlacklistEnabledToggle: (Boolean) -> Unit,
+    onOpenIpBlacklistChange: (String) -> Unit,
+    onOpenIpWhitelistEnabledToggle: (Boolean) -> Unit,
+    onOpenIpWhitelistChange: (String) -> Unit,
+    onManagementIpBlacklistEnabledToggle: (Boolean) -> Unit,
+    onManagementIpBlacklistChange: (String) -> Unit,
+    onManagementIpWhitelistEnabledToggle: (Boolean) -> Unit,
+    onManagementIpWhitelistChange: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val userUi = LocalUserStrings.current.ui
 
-    CoreTitleText(
-        text = userUi.openIpRestrictionPolicy,
-        style = MaterialTheme.typography.titleMedium
-    )
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
+    ) {
+        CoreTitleText(
+            text = userUi.openIpRestrictionPolicy,
+            style = MaterialTheme.typography.titleMedium
+        )
 
-    ToggleRow(
-        label = userUi.blacklistEnabled,
-        checked = state.openIpBlacklistEnabled,
-        onCheckedChange = onOpenIpBlacklistEnabledToggled,
-        testTag = ""
-    )
+        ToggleRow(
+            label = userUi.blacklistEnabled,
+            checked = state.openIpBlacklistEnabled,
+            onCheckedChange = onOpenIpBlacklistEnabledToggle,
+            testTag = ""
+        )
 
-    CoreOutlinedTextField(
-        value = state.openIpBlacklist,
-        onValueChange = onOpenIpBlacklistChanged,
-        label = { CoreBodyText(userUi.blacklistPlaceholder) },
-        placeholder = { CoreBodyText(userUi.blacklistPlaceholder) }
-    )
+        CoreOutlinedTextField(
+            value = state.openIpBlacklist,
+            onValueChange = onOpenIpBlacklistChange,
+            label = { CoreBodyText(userUi.blacklistPlaceholder) },
+            placeholder = { CoreBodyText(userUi.blacklistPlaceholder) }
+        )
 
-    ToggleRow(
-        label = userUi.whitelistEnabled,
-        checked = state.openIpWhitelistEnabled,
-        onCheckedChange = onOpenIpWhitelistEnabledToggled,
-        testTag = ""
-    )
+        ToggleRow(
+            label = userUi.whitelistEnabled,
+            checked = state.openIpWhitelistEnabled,
+            onCheckedChange = onOpenIpWhitelistEnabledToggle,
+            testTag = ""
+        )
 
-    CoreOutlinedTextField(
-        value = state.openIpWhitelist,
-        onValueChange = onOpenIpWhitelistChanged,
-        label = { CoreBodyText(userUi.whitelistPlaceholder) },
-        placeholder = { CoreBodyText(userUi.whitelistPlaceholder) }
-    )
+        CoreOutlinedTextField(
+            value = state.openIpWhitelist,
+            onValueChange = onOpenIpWhitelistChange,
+            label = { CoreBodyText(userUi.whitelistPlaceholder) },
+            placeholder = { CoreBodyText(userUi.whitelistPlaceholder) }
+        )
 
-    CoreTitleText(
-        text = userUi.managementIpRestrictionPolicy,
-        style = MaterialTheme.typography.titleMedium
-    )
+        CoreTitleText(
+            text = userUi.managementIpRestrictionPolicy,
+            style = MaterialTheme.typography.titleMedium
+        )
 
-    ToggleRow(
-        label = userUi.blacklistEnabled,
-        checked = state.managementIpBlacklistEnabled,
-        onCheckedChange = onManagementIpBlacklistEnabledToggled,
-        testTag = ""
-    )
+        ToggleRow(
+            label = userUi.blacklistEnabled,
+            checked = state.managementIpBlacklistEnabled,
+            onCheckedChange = onManagementIpBlacklistEnabledToggle,
+            testTag = ""
+        )
 
-    CoreOutlinedTextField(
-        value = state.managementIpBlacklist,
-        onValueChange = onManagementIpBlacklistChanged,
-        label = { CoreBodyText(userUi.blacklistPlaceholder) },
-        placeholder = { CoreBodyText(userUi.blacklistPlaceholder) }
-    )
+        CoreOutlinedTextField(
+            value = state.managementIpBlacklist,
+            onValueChange = onManagementIpBlacklistChange,
+            label = { CoreBodyText(userUi.blacklistPlaceholder) },
+            placeholder = { CoreBodyText(userUi.blacklistPlaceholder) }
+        )
 
-    ToggleRow(
-        label = userUi.whitelistEnabled,
-        checked = state.managementIpWhitelistEnabled,
-        onCheckedChange = onManagementIpWhitelistEnabledToggled,
-        testTag = ""
-    )
+        ToggleRow(
+            label = userUi.whitelistEnabled,
+            checked = state.managementIpWhitelistEnabled,
+            onCheckedChange = onManagementIpWhitelistEnabledToggle,
+            testTag = ""
+        )
 
-    CoreOutlinedTextField(
-        value = state.managementIpWhitelist,
-        onValueChange = onManagementIpWhitelistChanged,
-        label = { CoreBodyText(userUi.whitelistPlaceholder) },
-        placeholder = { CoreBodyText(userUi.whitelistPlaceholder) }
-    )
+        CoreOutlinedTextField(
+            value = state.managementIpWhitelist,
+            onValueChange = onManagementIpWhitelistChange,
+            label = { CoreBodyText(userUi.whitelistPlaceholder) },
+            placeholder = { CoreBodyText(userUi.whitelistPlaceholder) }
+        )
+    }
 }
 
 @Composable
 private fun OtpConfirmationSection(
     state: EditSecuritySettingsScreenState.Content,
-    onOtpRetryAfterSecondsChanged: (String) -> Unit,
-    onOtpExpirationSecondsChanged: (String) -> Unit,
-    onOtpCodeLengthChanged: (String) -> Unit
+    onOtpRetryAfterSecondsChange: (String) -> Unit,
+    onOtpExpirationSecondsChange: (String) -> Unit,
+    onOtpCodeLengthChange: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val userUi = LocalUserStrings.current.ui
 
-    CoreTitleText(
-        text = userUi.otpConfirmation,
-        style = MaterialTheme.typography.titleMedium
-    )
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
+    ) {
+        CoreTitleText(
+            text = userUi.otpConfirmation,
+            style = MaterialTheme.typography.titleMedium
+        )
 
-    CoreOutlinedTextField(
-        value = state.otpRetryAfterSeconds,
-        onValueChange = onOtpRetryAfterSecondsChanged,
-        label = { CoreBodyText(userUi.otpRetryAfterSeconds) },
-        placeholder = { CoreBodyText(userUi.otpRetryAfterSeconds) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-    )
+        CoreOutlinedTextField(
+            value = state.otpRetryAfterSeconds,
+            onValueChange = onOtpRetryAfterSecondsChange,
+            label = { CoreBodyText(userUi.otpRetryAfterSeconds) },
+            placeholder = { CoreBodyText(userUi.otpRetryAfterSeconds) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
 
-    CoreOutlinedTextField(
-        value = state.otpExpirationSeconds,
-        onValueChange = onOtpExpirationSecondsChanged,
-        label = { CoreBodyText(userUi.otpExpirationSeconds) },
-        placeholder = { CoreBodyText(userUi.otpExpirationSeconds) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-    )
+        CoreOutlinedTextField(
+            value = state.otpExpirationSeconds,
+            onValueChange = onOtpExpirationSecondsChange,
+            label = { CoreBodyText(userUi.otpExpirationSeconds) },
+            placeholder = { CoreBodyText(userUi.otpExpirationSeconds) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
 
-    CoreOutlinedTextField(
-        value = state.otpNumberOfSymbols,
-        onValueChange = onOtpCodeLengthChanged,
-        label = { CoreBodyText(userUi.otpNumberOfSymbols) },
-        placeholder = { CoreBodyText(userUi.otpNumberOfSymbols) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-    )
+        CoreOutlinedTextField(
+            value = state.otpNumberOfSymbols,
+            onValueChange = onOtpCodeLengthChange,
+            label = { CoreBodyText(userUi.otpNumberOfSymbols) },
+            placeholder = { CoreBodyText(userUi.otpNumberOfSymbols) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+    }
 }
 
 @Composable
@@ -662,11 +711,12 @@ private fun ToggleRow(
     label: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-    testTag: String
+    testTag: String,
+    modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Checkbox(
             checked = checked,
@@ -683,12 +733,14 @@ private fun ToggleRow(
 @Composable
 private fun ErrorText(
     error: AppError?,
-    testTag: String
+    testTag: String,
+    modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
         visible = error != null,
         enter = fadeIn() + expandVertically(),
-        exit = fadeOut() + shrinkVertically()
+        exit = fadeOut() + shrinkVertically(),
+        modifier = modifier
     ) {
         error?.let {
             CoreErrorText(

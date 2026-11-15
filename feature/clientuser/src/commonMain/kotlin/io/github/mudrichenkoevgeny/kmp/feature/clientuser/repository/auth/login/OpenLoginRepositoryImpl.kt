@@ -23,12 +23,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
  * @param openLoginApi HTTP endpoints for all login variants and phone confirmation send.
  * @param confirmationRepository Client-side cooldown for phone login confirmation sends.
  */
-class OpenLoginRepositoryImpl(
+public class OpenLoginRepositoryImpl(
     private val openLoginApi: OpenLoginApi,
     private val confirmationRepository: ConfirmationRepository
 ) : LoginRepository {
 
-    override suspend fun loginByEmail(
+    public override suspend fun loginByEmail(
         email: String,
         password: String
     ): AppResult<AuthData> = openLoginApi.loginByEmail(LoginByEmailRequest(email, password))
@@ -36,7 +36,7 @@ class OpenLoginRepositoryImpl(
             authDataPayload.toAuthData()
         }
 
-    override suspend fun loginByPhone(
+    public override suspend fun loginByPhone(
         phoneNumber: String,
         confirmationCode: String
     ): AppResult<AuthData> = openLoginApi.loginByPhone(LoginByPhoneRequest(phoneNumber, confirmationCode))
@@ -44,14 +44,14 @@ class OpenLoginRepositoryImpl(
             authDataPayload.toAuthData()
         }
 
-    override suspend fun loginByExternalAuthProvider(
+    public override suspend fun loginByExternalAuthProvider(
         loginByExternalAuthProviderRequest: LoginByExternalAuthProviderRequest
     ): AppResult<AuthData> = openLoginApi.loginByExternalAuthProvider(loginByExternalAuthProviderRequest)
         .mapSuccess { authDataPayload ->
             authDataPayload.toAuthData()
         }
 
-    override suspend fun loginByTotp(
+    public override suspend fun loginByTotp(
         mfaToken: String,
         code: String
     ): AppResult<AuthData> = openLoginApi.loginByTotp(
@@ -63,7 +63,7 @@ class OpenLoginRepositoryImpl(
         authDataPayload.toAuthData()
     }
 
-    override suspend fun loginByTotpRecoveryCode(
+    public override suspend fun loginByTotpRecoveryCode(
         mfaToken: String,
         code: String
     ): AppResult<AuthData> = openLoginApi.loginByTotp(
@@ -75,7 +75,7 @@ class OpenLoginRepositoryImpl(
         authDataPayload.toAuthData()
     }
 
-    override suspend fun sendLoginConfirmationToPhone(
+    public override suspend fun sendLoginConfirmationToPhone(
         phoneNumber: String
     ): AppResult<OtpConfirmation> = confirmationRepository.executeWithTimer(
         type = ConfirmationType.LOGIN_PHONE,
@@ -88,7 +88,7 @@ class OpenLoginRepositoryImpl(
         }
     }
 
-    override fun getRemainingLoginConfirmationDelayInSeconds(phoneNumber: String): Int =
+    public override fun getRemainingLoginConfirmationDelayInSeconds(phoneNumber: String): Int =
         confirmationRepository.getRemainingDelay(
             type = ConfirmationType.LOGIN_PHONE,
             identifier = phoneNumber

@@ -20,12 +20,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
  * @param registrationApi Registration and send-confirmation HTTP endpoints.
  * @param confirmationRepository Client-side cooldown for registration email codes.
  */
-class OpenRegistrationRepositoryImpl(
+public class OpenRegistrationRepositoryImpl(
     private val registrationApi: RegistrationApi,
     private val confirmationRepository: ConfirmationRepository
 ) : RegistrationRepository {
 
-    override suspend fun registerByEmail(
+    public override suspend fun registerByEmail(
         email: String,
         password: String,
         confirmationCode: String
@@ -35,7 +35,7 @@ class OpenRegistrationRepositoryImpl(
         authDataPayload.toAuthData()
     }
 
-    override suspend fun sendRegistrationConfirmationToEmail(
+    public override suspend fun sendRegistrationConfirmationToEmail(
         email: String
     ): AppResult<OtpConfirmation> = confirmationRepository.executeWithTimer(
         type = ConfirmationType.REGISTRATION_EMAIL,
@@ -48,7 +48,7 @@ class OpenRegistrationRepositoryImpl(
         }
     }
 
-    override fun getRemainingRegistrationConfirmationDelayInSeconds(email: String): Int =
+    public override fun getRemainingRegistrationConfirmationDelayInSeconds(email: String): Int =
         confirmationRepository.getRemainingDelay(
             type = ConfirmationType.REGISTRATION_EMAIL,
             identifier = email

@@ -297,18 +297,20 @@ private fun AddIdentifierEmailInputContent(
     component: IdentifierListComponent
 ) {
     val userUi = LocalUserStrings.current.ui
-    CoreEmailTextField(
-        value = contentState.addEmail,
-        onValueChange = component::onAddIdentifierEmailChanged,
-        modifier = Modifier.fillMaxWidth()
-    )
+    Column {
+        CoreEmailTextField(
+            value = contentState.addEmail,
+            onValueChange = component::onAddIdentifierEmailChanged,
+            modifier = Modifier.fillMaxWidth()
+        )
 
-    CoreButton(
-        text = userUi.sendCode,
-        onClick = component::onAddIdentifierSendCode,
-        enabled = contentState.isAddEmailValid && !contentState.actionLoading,
-        modifier = Modifier.fillMaxWidth()
-    )
+        CoreButton(
+            text = userUi.sendCode,
+            onClick = component::onAddIdentifierSendCode,
+            enabled = contentState.isAddEmailValid && !contentState.actionLoading,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
 }
 
 @Composable
@@ -318,47 +320,49 @@ private fun AddIdentifierEmailConfirmContent(
     component: IdentifierListComponent
 ) {
     val userUi = LocalUserStrings.current.ui
-    CoreBodyText(userUi.codeSentTo(email))
+    Column {
+        CoreBodyText(userUi.codeSentTo(email))
 
-    CoreCodeTextField(
-        value = contentState.addCode,
-        onValueChange = component::onAddIdentifierCodeChanged,
-        label = { CoreBodyText(userUi.confirmationCode) },
-        placeholder = { CoreBodyText(userUi.enterConfirmationCode) },
-        modifier = Modifier.fillMaxWidth()
-    )
+        CoreCodeTextField(
+            value = contentState.addCode,
+            onValueChange = component::onAddIdentifierCodeChanged,
+            label = { CoreBodyText(userUi.confirmationCode) },
+            placeholder = { CoreBodyText(userUi.enterConfirmationCode) },
+            modifier = Modifier.fillMaxWidth()
+        )
 
-    Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+        Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
 
-    CoreOutlinedTextField(
-        value = contentState.addPassword,
-        onValueChange = component::onAddIdentifierPasswordChanged,
-        label = { CoreBodyText(userUi.password) },
-        placeholder = { CoreBodyText(userUi.password) },
-        modifier = Modifier.fillMaxWidth()
-    )
+        CoreOutlinedTextField(
+            value = contentState.addPassword,
+            onValueChange = component::onAddIdentifierPasswordChanged,
+            label = { CoreBodyText(userUi.password) },
+            placeholder = { CoreBodyText(userUi.password) },
+            modifier = Modifier.fillMaxWidth()
+        )
 
-    if (contentState.addResendTimerSeconds > 0) {
-        CoreSmallText(userUi.resendCodeTimer(contentState.addResendTimerSeconds))
-    } else {
+        if (contentState.addResendTimerSeconds > 0) {
+            CoreSmallText(userUi.resendCodeTimer(contentState.addResendTimerSeconds))
+        } else {
+            CoreTextButton(
+                text = userUi.resendCode,
+                onClick = component::onAddIdentifierSendCode,
+                enabled = contentState.canResendCode
+            )
+        }
+
+        CoreButton(
+            text = userUi.addIdentifier,
+            onClick = component::onAddIdentifierSubmit,
+            enabled = contentState.canSubmitAddEmail,
+            modifier = Modifier.fillMaxWidth()
+        )
+
         CoreTextButton(
-            text = userUi.resendCode,
-            onClick = component::onAddIdentifierSendCode,
-            enabled = contentState.canResendCode
+            text = userUi.changeEmail,
+            onClick = component::onAddIdentifierDialogBack
         )
     }
-
-    CoreButton(
-        text = userUi.addIdentifier,
-        onClick = component::onAddIdentifierSubmit,
-        enabled = contentState.canSubmitAddEmail,
-        modifier = Modifier.fillMaxWidth()
-    )
-
-    CoreTextButton(
-        text = userUi.changeEmail,
-        onClick = component::onAddIdentifierDialogBack
-    )
 }
 
 @Composable
@@ -367,22 +371,24 @@ private fun AddIdentifierPhoneInputContent(
     component: IdentifierListComponent
 ) {
     val userUi = LocalUserStrings.current.ui
-    CoreOutlinedTextField(
-        value = contentState.addPhone,
-        onValueChange = component::onAddIdentifierPhoneChanged,
-        label = { CoreBodyText(userUi.phoneNumber) },
-        placeholder = { CoreBodyText(userUi.phoneNumber) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth()
-    )
+    Column {
+        CoreOutlinedTextField(
+            value = contentState.addPhone,
+            onValueChange = component::onAddIdentifierPhoneChanged,
+            label = { CoreBodyText(userUi.phoneNumber) },
+            placeholder = { CoreBodyText(userUi.phoneNumber) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
 
-    CoreButton(
-        text = userUi.sendCode,
-        onClick = component::onAddIdentifierSendCode,
-        enabled = contentState.isAddPhoneValid && !contentState.actionLoading,
-        modifier = Modifier.fillMaxWidth()
-    )
+        CoreButton(
+            text = userUi.sendCode,
+            onClick = component::onAddIdentifierSendCode,
+            enabled = contentState.isAddPhoneValid && !contentState.actionLoading,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
 }
 
 @Composable
@@ -392,37 +398,39 @@ private fun AddIdentifierPhoneConfirmContent(
     component: IdentifierListComponent
 ) {
     val userUi = LocalUserStrings.current.ui
-    CoreBodyText(userUi.codeSentTo(phone))
+    Column {
+        CoreBodyText(userUi.codeSentTo(phone))
 
-    CoreCodeTextField(
-        value = contentState.addCode,
-        onValueChange = component::onAddIdentifierCodeChanged,
-        label = { CoreBodyText(userUi.confirmationCode) },
-        placeholder = { CoreBodyText(userUi.enterConfirmationCode) },
-        modifier = Modifier.fillMaxWidth()
-    )
+        CoreCodeTextField(
+            value = contentState.addCode,
+            onValueChange = component::onAddIdentifierCodeChanged,
+            label = { CoreBodyText(userUi.confirmationCode) },
+            placeholder = { CoreBodyText(userUi.enterConfirmationCode) },
+            modifier = Modifier.fillMaxWidth()
+        )
 
-    if (contentState.addResendTimerSeconds > 0) {
-        CoreSmallText(userUi.resendCodeTimer(contentState.addResendTimerSeconds))
-    } else {
+        if (contentState.addResendTimerSeconds > 0) {
+            CoreSmallText(userUi.resendCodeTimer(contentState.addResendTimerSeconds))
+        } else {
+            CoreTextButton(
+                text = userUi.resendCode,
+                onClick = component::onAddIdentifierSendCode,
+                enabled = contentState.canResendCode
+            )
+        }
+
+        CoreButton(
+            text = userUi.addIdentifier,
+            onClick = component::onAddIdentifierSubmit,
+            enabled = contentState.canSubmitAddPhone,
+            modifier = Modifier.fillMaxWidth()
+        )
+
         CoreTextButton(
-            text = userUi.resendCode,
-            onClick = component::onAddIdentifierSendCode,
-            enabled = contentState.canResendCode
+            text = userUi.changePhoneNumber,
+            onClick = component::onAddIdentifierDialogBack
         )
     }
-
-    CoreButton(
-        text = userUi.addIdentifier,
-        onClick = component::onAddIdentifierSubmit,
-        enabled = contentState.canSubmitAddPhone,
-        modifier = Modifier.fillMaxWidth()
-    )
-
-    CoreTextButton(
-        text = userUi.changePhoneNumber,
-        onClick = component::onAddIdentifierDialogBack
-    )
 }
 
 @Composable
@@ -453,8 +461,8 @@ private fun Content(
                         config = getIdentifierListingOptionsConfig(includeUserFilter = true),
                         sortState = state.sortState,
                         filterStates = state.filterStates,
-                        onSortChanged = component::onSortChanged,
-                        onFilterChanged = component::onFilterChanged,
+                        onSortChange = { sortState -> component.onSortChanged(sortState) },
+                        onFilterChange = { key, filterState -> component.onFilterChanged(key, filterState) },
                         onApplyClick = component::onApplyFilters,
                         modifier = Modifier
                             .fillMaxWidth()

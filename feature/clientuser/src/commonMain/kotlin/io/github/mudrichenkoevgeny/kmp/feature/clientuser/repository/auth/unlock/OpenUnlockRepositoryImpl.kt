@@ -21,12 +21,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
  * @param openUnlockApi Account unlock HTTP endpoints.
  * @param confirmationRepository Cooldown manager for OTP confirmation requests.
  */
-class OpenUnlockRepositoryImpl(
+public class OpenUnlockRepositoryImpl(
     private val openUnlockApi: OpenUnlockApi,
     private val confirmationRepository: ConfirmationRepository
 ) : UnlockRepository {
 
-    override suspend fun sendUnlockEmailConfirmation(email: String): AppResult<OtpConfirmation> =
+    public override suspend fun sendUnlockEmailConfirmation(email: String): AppResult<OtpConfirmation> =
         confirmationRepository.executeWithTimer(
             type = ConfirmationType.UNLOCK_EMAIL,
             identifier = email
@@ -38,20 +38,20 @@ class OpenUnlockRepositoryImpl(
             }
         }
 
-    override fun getRemainingUnlockEmailConfirmationDelayInSeconds(email: String): Int =
+    public override fun getRemainingUnlockEmailConfirmationDelayInSeconds(email: String): Int =
         confirmationRepository.getRemainingDelay(
             type = ConfirmationType.UNLOCK_EMAIL,
             identifier = email
         )
 
-    override suspend fun unlockByEmail(
+    public override suspend fun unlockByEmail(
         email: String,
         confirmationCode: String
     ): AppResult<Unit> = openUnlockApi.unlockByEmail(
         UnlockByEmailConfirmationRequest(email = email, confirmationCode = confirmationCode)
     )
 
-    override suspend fun sendUnlockPhoneConfirmation(phoneNumber: String): AppResult<OtpConfirmation> =
+    public override suspend fun sendUnlockPhoneConfirmation(phoneNumber: String): AppResult<OtpConfirmation> =
         confirmationRepository.executeWithTimer(
             type = ConfirmationType.UNLOCK_PHONE,
             identifier = phoneNumber
@@ -63,20 +63,20 @@ class OpenUnlockRepositoryImpl(
             }
         }
 
-    override fun getRemainingUnlockPhoneConfirmationDelayInSeconds(phoneNumber: String): Int =
+    public override fun getRemainingUnlockPhoneConfirmationDelayInSeconds(phoneNumber: String): Int =
         confirmationRepository.getRemainingDelay(
             type = ConfirmationType.UNLOCK_PHONE,
             identifier = phoneNumber
         )
 
-    override suspend fun unlockByPhone(
+    public override suspend fun unlockByPhone(
         phoneNumber: String,
         confirmationCode: String
     ): AppResult<Unit> = openUnlockApi.unlockByPhone(
         UnlockByPhoneConfirmationRequest(phoneNumber = phoneNumber, confirmationCode = confirmationCode)
     )
 
-    override suspend fun unlockByExternalAuthProvider(
+    public override suspend fun unlockByExternalAuthProvider(
         authProvider: String,
         externalProviderToken: String
     ): AppResult<Unit> = openUnlockApi.unlockByExternalAuthProvider(

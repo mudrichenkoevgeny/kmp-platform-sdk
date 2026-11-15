@@ -24,37 +24,38 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  * @param userStorage Local persistent storage cache.
  * @param authStorage Auth storage for tokens.
  */
-class OpenSessionRepositoryImpl(
+public class OpenSessionRepositoryImpl(
     private val sessionApi: SessionApi,
     private val userStorage: UserStorage,
     private val authStorage: AuthStorage
 ) : SessionRepository {
 
-    override suspend fun getSessions(
+    public override suspend fun getSessions(
         params: SelfSessionListParams?
     ): AppResult<PagedResult<UserSessionSummary>> = sessionApi.getSessions(params).mapSuccess { pagedPayload ->
         pagedPayload.mapItems { it.toUserSessionSummary() }
     }
 
-    override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivate> =
+    public override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivate> =
         sessionApi.getSession(
             userSessionId
         ).mapSuccess {
             it.toUserSessionPrivate()
         }
 
-    override suspend fun logout(): AppResult<Unit> = sessionApi.logout().onSuccess {
+    public override suspend fun logout(): AppResult<Unit> = sessionApi.logout().onSuccess {
         userStorage.clear()
         authStorage.clearTokens()
     }
 
-    override suspend fun deleteSession(userSessionId: UserSessionId): AppResult<Unit> = sessionApi.deleteSession(
+    public override suspend fun deleteSession(userSessionId: UserSessionId): AppResult<Unit> = sessionApi.deleteSession(
         userSessionId
     )
 
-    override suspend fun deleteAllOtherSessions(): AppResult<Unit> = sessionApi.deleteAllOtherSessions().mapSuccess { }
+    public override suspend fun deleteAllOtherSessions(): AppResult<Unit> =
+        sessionApi.deleteAllOtherSessions().mapSuccess { }
 
-    override suspend fun reauthenticateSession(
+    public override suspend fun reauthenticateSession(
         mfaToken: String,
         code: String
     ): AppResult<Unit> = sessionApi.reauthenticateSession(

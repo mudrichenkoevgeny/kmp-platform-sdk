@@ -38,7 +38,8 @@ public fun LegalFooter(
     isPrivacyPolicyVisible: Boolean,
     isTermsOfServiceVisible: Boolean,
     onPrivacyPolicyClick: () -> Unit,
-    onTermsOfServiceClick: () -> Unit
+    onTermsOfServiceClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     if (!isPrivacyPolicyVisible && !isTermsOfServiceVisible) {
         return
@@ -59,7 +60,7 @@ public fun LegalFooter(
     )
 
     FlowRow(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = CoreTheme.dimens.paddingMedium),
         horizontalArrangement = Arrangement.Center

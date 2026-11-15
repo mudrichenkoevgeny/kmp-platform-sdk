@@ -46,7 +46,9 @@ public class ManagementAuthSettingsApiMock : ManagementAuthSettingsApi {
         return getOpenResultProvider()
     }
 
-    public override suspend fun updateManagementAuthSettings(request: ManagementAuthSettingsPayload): AppResult<ManagementAuthSettingsPayload> {
+    public override suspend fun updateManagementAuthSettings(
+        request: ManagementAuthSettingsPayload
+    ): AppResult<ManagementAuthSettingsPayload> {
         updateCallCount++
         lastRequest = request
         return updateResultProvider()

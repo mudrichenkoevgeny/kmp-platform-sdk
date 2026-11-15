@@ -45,4 +45,14 @@ subprojects {
             )
         }
     }
+
+    plugins.withId("io.github.takahirom.roborazzi") {
+        tasks.withType<KotlinCompilationTask<*>>().configureEach {
+            if (name.contains("Test", ignoreCase = true)) {
+                compilerOptions {
+                    optIn.add("androidx.compose.ui.test.ExperimentalTestApi")
+                }
+            }
+        }
+    }
 }

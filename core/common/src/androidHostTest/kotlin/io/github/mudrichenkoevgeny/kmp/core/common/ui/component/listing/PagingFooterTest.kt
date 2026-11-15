@@ -1,6 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing
 
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness

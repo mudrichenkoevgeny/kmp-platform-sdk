@@ -20,12 +20,18 @@ import org.jetbrains.compose.resources.Font
  */
 @Composable
 public fun ptSansFontFamily(): FontFamily {
-    val regularWeight = FontWeight(GeneratedDesignTokens.Typography.fontWeightRegular)
-    val boldWeight = FontWeight(GeneratedDesignTokens.Typography.fontWeightBold)
-    val normalStyle =
-        if (GeneratedDesignTokens.Typography.fontStyleNormal == "italic") FontStyle.Italic else FontStyle.Normal
-    val italicStyle =
-        if (GeneratedDesignTokens.Typography.fontStyleItalic == "italic") FontStyle.Italic else FontStyle.Normal
+    val regularWeight = FontWeight(GeneratedDesignTokens.Typography.FONT_WEIGHT_REGULAR)
+    val boldWeight = FontWeight(GeneratedDesignTokens.Typography.FONT_WEIGHT_BOLD)
+    val normalStyle = if (GeneratedDesignTokens.Typography.FONT_STYLE_NORMAL == "italic") {
+        FontStyle.Italic
+    } else {
+        FontStyle.Normal
+    }
+    val italicStyle = if (GeneratedDesignTokens.Typography.FONT_STYLE_ITALIC == "italic") {
+        FontStyle.Italic
+    } else {
+        FontStyle.Normal
+    }
 
     return FontFamily(
         Font(Res.font.pt_sans_regular, regularWeight, normalStyle),

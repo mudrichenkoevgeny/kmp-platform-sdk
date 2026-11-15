@@ -73,7 +73,7 @@ public class ManagementUserDeepLinkParser : DeepLinkParser<NavigationRoute> {
             path == ManagementSelfUserNavigation.UserEdit.route ->
                 ManagementSelfUserNavigation.UserEdit
 
-            path == ManagementSelfUserNavigation.BASE_TOTP_ROUTE || path == ManagementSelfUserNavigation.TotpMain.ROUTE ->
+            path == ManagementSelfUserNavigation.BASE_TOTP_ROUTE ->
                 ManagementSelfUserNavigation.TotpMain(TotpMainParams.parse(queryMap))
 
             path == ManagementSelfUserNavigation.TotpRecoveryCodes.route ->
@@ -82,18 +82,28 @@ public class ManagementUserDeepLinkParser : DeepLinkParser<NavigationRoute> {
             path == ManagementSelfUserNavigation.SessionList.ROUTE ->
                 ManagementSelfUserNavigation.SessionList(SelfSessionListParams.parse(queryMap))
 
-            segments.size >= 3 && "/${segments[0]}/${segments[1]}" == ManagementSelfUserNavigation.SessionList.ROUTE -> {
+            segments.size >= 3 &&
+                "/${segments[0]}/${segments[1]}" == ManagementSelfUserNavigation.SessionList.ROUTE -> {
                 val sessionId = segments[2].toUserSessionIdOrNull()
-                    ?: return ManagementSelfUserNavigation.SessionList(SelfSessionListParams.parse(queryMap))
-                ManagementSelfUserNavigation.SessionDetail(SessionDetailParams(sessionId = sessionId.asHexDashString()))
+                    ?: return ManagementSelfUserNavigation.SessionList(
+                        SelfSessionListParams.parse(queryMap)
+                    )
+                ManagementSelfUserNavigation.SessionDetail(
+                    SessionDetailParams(sessionId = sessionId.asHexDashString())
+                )
             }
 
             path == ManagementSelfUserNavigation.IdentifierList.ROUTE ->
-                ManagementSelfUserNavigation.IdentifierList(SelfIdentifierListParams.parse(queryMap))
+                ManagementSelfUserNavigation.IdentifierList(
+                    SelfIdentifierListParams.parse(queryMap)
+                )
 
-            segments.size >= 3 && "/${segments[0]}/${segments[1]}" == ManagementSelfUserNavigation.IdentifierList.ROUTE -> {
+            segments.size >= 3 &&
+                "/${segments[0]}/${segments[1]}" == ManagementSelfUserNavigation.IdentifierList.ROUTE -> {
                 val identifierId = segments[2].toUserIdentifierIdOrNull()
-                    ?: return ManagementSelfUserNavigation.IdentifierList(SelfIdentifierListParams.parse(queryMap))
+                    ?: return ManagementSelfUserNavigation.IdentifierList(
+                        SelfIdentifierListParams.parse(queryMap)
+                    )
                 ManagementSelfUserNavigation.IdentifierDetail(
                     IdentifierDetailParams(identifierId = identifierId.asHexDashString())
                 )
@@ -128,7 +138,7 @@ public class ManagementUserDeepLinkParser : DeepLinkParser<NavigationRoute> {
         queryMap: Map<String, Any?>
     ): NavigationRoute? {
         return when {
-            path == ManagementUsersNavigation.BASE_USERS_ROUTE || path == ManagementUsersNavigation.UserList.ROUTE ->
+            path == ManagementUsersNavigation.BASE_USERS_ROUTE ->
                 ManagementUsersNavigation.UserList(ManagementUserListParams.parse(queryMap))
 
             path == ManagementUsersNavigation.CreateUser.route ->
@@ -136,7 +146,9 @@ public class ManagementUserDeepLinkParser : DeepLinkParser<NavigationRoute> {
 
             segments.size >= 2 && "/${segments[0]}" == ManagementUsersNavigation.BASE_USERS_ROUTE -> {
                 val userId = segments[1].toUserIdOrNull()
-                    ?: return ManagementUsersNavigation.UserList(ManagementUserListParams.parse(queryMap))
+                    ?: return ManagementUsersNavigation.UserList(
+                        ManagementUserListParams.parse(queryMap)
+                    )
                 val subPath = segments.getOrNull(2)
                 when (subPath) {
                     SESSIONS_SEGMENT -> ManagementUsersNavigation.UserSessionList(
@@ -147,25 +159,31 @@ public class ManagementUserDeepLinkParser : DeepLinkParser<NavigationRoute> {
                         ManagementUserIdentifierListParams(userId = userId.asHexDashString())
                     )
 
-                    else -> ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString()))
+                    else -> ManagementUsersNavigation.UserDetail(
+                        UserDetailParams(userId = userId.asHexDashString())
+                    )
                 }
             }
 
-            path == ManagementUsersNavigation.BASE_SESSIONS_ROUTE ||
-                path == ManagementUsersNavigation.GlobalSessionList.ROUTE ->
-                ManagementUsersNavigation.GlobalSessionList(ManagementGlobalSessionListParams.parse(queryMap))
+            path == ManagementUsersNavigation.BASE_SESSIONS_ROUTE ->
+                ManagementUsersNavigation.GlobalSessionList(
+                    ManagementGlobalSessionListParams.parse(queryMap)
+                )
 
             segments.size >= 2 && "/${segments[0]}" == ManagementUsersNavigation.BASE_SESSIONS_ROUTE -> {
                 val sessionId = segments[1].toUserSessionIdOrNull()
                     ?: return ManagementUsersNavigation.GlobalSessionList(
                         ManagementGlobalSessionListParams.parse(queryMap)
                     )
-                ManagementUsersNavigation.SessionDetail(SessionDetailParams(sessionId = sessionId.asHexDashString()))
+                ManagementUsersNavigation.SessionDetail(
+                    SessionDetailParams(sessionId = sessionId.asHexDashString())
+                )
             }
 
-            path == ManagementUsersNavigation.BASE_IDENTIFIERS_ROUTE ||
-                path == ManagementUsersNavigation.GlobalIdentifierList.ROUTE ->
-                ManagementUsersNavigation.GlobalIdentifierList(ManagementGlobalIdentifierListParams.parse(queryMap))
+            path == ManagementUsersNavigation.BASE_IDENTIFIERS_ROUTE ->
+                ManagementUsersNavigation.GlobalIdentifierList(
+                    ManagementGlobalIdentifierListParams.parse(queryMap)
+                )
 
             segments.size >= 2 && "/${segments[0]}" == ManagementUsersNavigation.BASE_IDENTIFIERS_ROUTE -> {
                 val identifierId = segments[1].toUserIdentifierIdOrNull()
@@ -188,11 +206,15 @@ public class ManagementUserDeepLinkParser : DeepLinkParser<NavigationRoute> {
     ): NavigationRoute? {
         return when {
             path == ManagementAuditNavigation.Main.route || path == ManagementAuditNavigation.AuditEventList.ROUTE ->
-                ManagementAuditNavigation.AuditEventList(ManagementAuditEventListParams.parse(queryMap))
+                ManagementAuditNavigation.AuditEventList(
+                    ManagementAuditEventListParams.parse(queryMap)
+                )
 
             segments.size >= 2 && "/${segments[0]}" == ManagementAuditNavigation.AuditEventList.ROUTE -> {
                 val eventId = segments[1].toAuditEventIdOrNull()
-                    ?: return ManagementAuditNavigation.AuditEventList(ManagementAuditEventListParams.parse(queryMap))
+                    ?: return ManagementAuditNavigation.AuditEventList(
+                        ManagementAuditEventListParams.parse(queryMap)
+                    )
                 ManagementAuditNavigation.AuditEventDetail(
                     ManagementAuditEventDetailParams(eventId = eventId.asHexDashString())
                 )
@@ -213,8 +235,12 @@ public class ManagementUserDeepLinkParser : DeepLinkParser<NavigationRoute> {
 
             segments.size >= 2 && "/${segments[0]}" == ManagementStorageNavigation.FileList.ROUTE -> {
                 val fileId = segments[1].toFileIdOrNull()
-                    ?: return ManagementStorageNavigation.FileList(ManagementStorageFileListParams.parse(queryMap))
-                ManagementStorageNavigation.FileDetail(StorageFileDetailParams(fileId = fileId.asHexDashString()))
+                    ?: return ManagementStorageNavigation.FileList(
+                        ManagementStorageFileListParams.parse(queryMap)
+                    )
+                ManagementStorageNavigation.FileDetail(
+                    StorageFileDetailParams(fileId = fileId.asHexDashString())
+                )
             }
 
             else -> null

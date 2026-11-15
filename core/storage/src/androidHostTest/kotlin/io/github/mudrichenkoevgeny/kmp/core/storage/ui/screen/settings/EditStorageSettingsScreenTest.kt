@@ -5,7 +5,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
@@ -29,23 +29,43 @@ class EditStorageSettingsScreenTest {
                 EditStorageSettingsScreen(component = component)
             }
         }
-        onNodeWithTag(EditStorageSettingsTestTags.TITLE).assertIsDisplayed()
-        onNodeWithTag(EditStorageSettingsTestTags.BACK_BUTTON).assertIsDisplayed()
-        onNodeWithTag(EditStorageSettingsTestTags.RESET_BUTTON).assertIsDisplayed()
-        onNodeWithTag(EditStorageSettingsTestTags.MIN_UPLOAD_SIZE_BYTES_INPUT).assertIsDisplayed()
-        onNodeWithTag(EditStorageSettingsTestTags.MAX_UPLOAD_SIZE_BYTES_INPUT).assertIsDisplayed()
-        onNodeWithTag(EditStorageSettingsTestTags.TOTAL_STORAGE_QUOTA_FOR_OPEN_USER_BYTES_INPUT).assertIsDisplayed()
-        onNodeWithTag(
-            EditStorageSettingsTestTags.TOTAL_STORAGE_QUOTA_FOR_MANAGEMENT_USER_BYTES_INPUT
-        ).assertIsDisplayed()
-        onNodeWithTag(EditStorageSettingsTestTags.PRESIGNED_URL_EXPIRATION_SECONDS_INPUT).assertIsDisplayed()
-        onNodeWithTag(EditStorageSettingsTestTags.MAX_PENDING_UPLOADS_FOR_OPEN_USER_INPUT).assertIsDisplayed()
-        onNodeWithTag(EditStorageSettingsTestTags.MAX_PENDING_UPLOADS_FOR_MANAGEMENT_USER_INPUT).assertIsDisplayed()
-        onNodeWithTag(EditStorageSettingsTestTags.IS_DEDUPLICATION_ENABLED_CHECKBOX).performScrollTo()
+        onNodeWithTag(EditStorageSettingsTestTags.TITLE)
             .assertIsDisplayed()
-        onNodeWithTag(EditStorageSettingsTestTags.DELETED_FILES_CLEANUP_INTERVAL_SECONDS_INPUT).performScrollTo()
+        onNodeWithTag(EditStorageSettingsTestTags.BACK_BUTTON)
             .assertIsDisplayed()
-        onNodeWithTag(EditStorageSettingsTestTags.SAVE_BUTTON).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(EditStorageSettingsTestTags.MIN_UPLOAD_SIZE_BYTES_INPUT)
+            .performScrollTo()
+            .assertIsDisplayed()
+        onNodeWithTag(EditStorageSettingsTestTags.MAX_UPLOAD_SIZE_BYTES_INPUT)
+            .performScrollTo()
+            .assertIsDisplayed()
+        onNodeWithTag(EditStorageSettingsTestTags.TOTAL_STORAGE_QUOTA_FOR_OPEN_USER_BYTES_INPUT)
+            .performScrollTo()
+            .assertIsDisplayed()
+        onNodeWithTag(EditStorageSettingsTestTags.TOTAL_STORAGE_QUOTA_FOR_MANAGEMENT_USER_BYTES_INPUT)
+            .performScrollTo()
+            .assertIsDisplayed()
+        onNodeWithTag(EditStorageSettingsTestTags.PRESIGNED_URL_EXPIRATION_SECONDS_INPUT)
+            .performScrollTo()
+            .assertIsDisplayed()
+        onNodeWithTag(EditStorageSettingsTestTags.MAX_PENDING_UPLOADS_FOR_OPEN_USER_INPUT)
+            .performScrollTo()
+            .assertIsDisplayed()
+        onNodeWithTag(EditStorageSettingsTestTags.MAX_PENDING_UPLOADS_FOR_MANAGEMENT_USER_INPUT)
+            .performScrollTo()
+            .assertIsDisplayed()
+        onNodeWithTag(EditStorageSettingsTestTags.IS_DEDUPLICATION_ENABLED_CHECKBOX)
+            .performScrollTo()
+            .assertIsDisplayed()
+        onNodeWithTag(EditStorageSettingsTestTags.DELETED_FILES_CLEANUP_INTERVAL_SECONDS_INPUT)
+            .performScrollTo()
+            .assertIsDisplayed()
+        onNodeWithTag(EditStorageSettingsTestTags.SAVE_BUTTON)
+            .performScrollTo()
+            .assertIsDisplayed()
+        onNodeWithTag(EditStorageSettingsTestTags.RESET_BUTTON)
+            .performScrollTo()
+            .assertIsDisplayed()
     }
 
     @Test

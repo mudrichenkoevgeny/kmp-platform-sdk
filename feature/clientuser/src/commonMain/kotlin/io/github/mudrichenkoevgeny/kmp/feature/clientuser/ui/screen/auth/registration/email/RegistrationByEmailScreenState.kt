@@ -17,20 +17,24 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
  * @param actionLoading true when an API request is in progress.
  * @param actionError error from the last API request.
  */
-data class RegistrationByEmailScreenState(
-    val email: String = "",
-    val isEmailValid: Boolean = false,
-    val code: String = "",
-    val codeLength: Int = FieldValidator.DEFAULT_OTP_LENGTH,
-    val password: String = "",
-    val isPasswordValid: Boolean = true,
-    val isPasswordVisible: Boolean = false,
-    val resendTimerSeconds: Int = 0,
-    val actionLoading: Boolean = false,
-    val actionError: AppError? = null
+public data class RegistrationByEmailScreenState(
+    public val email: String = "",
+    public val isEmailValid: Boolean = false,
+    public val code: String = "",
+    public val codeLength: Int = FieldValidator.DEFAULT_OTP_LENGTH,
+    public val password: String = "",
+    public val isPasswordValid: Boolean = true,
+    public val isPasswordVisible: Boolean = false,
+    public val resendTimerSeconds: Int = 0,
+    public val actionLoading: Boolean = false,
+    public val actionError: AppError? = null
 ) {
-    val canSendCode: Boolean get() = isEmailValid && !actionLoading
-    val isCodeFullLength: Boolean get() = code.length == codeLength
-    val canRegister: Boolean get() = isCodeFullLength && isPasswordValid && password.isNotEmpty() && !actionLoading
-    val canResendCode: Boolean get() = resendTimerSeconds <= 0 && !actionLoading
+    public val canSendCode: Boolean get() = isEmailValid && !actionLoading
+    public val isCodeFullLength: Boolean get() = code.length == codeLength
+    public val canRegister: Boolean
+        get() = isCodeFullLength &&
+            isPasswordValid &&
+            password.isNotEmpty() &&
+            !actionLoading
+    public val canResendCode: Boolean get() = resendTimerSeconds <= 0 && !actionLoading
 }

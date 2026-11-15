@@ -18,7 +18,9 @@ public interface SessionApi {
      * @param params Query and filter parameters DTO.
      * @return [AppResult.Success] containing a [PagedResult] of [UserSessionSummaryPayload] or [AppResult.Error].
      */
-    public suspend fun getSessions(params: SelfSessionListParams? = null): AppResult<PagedResult<UserSessionSummaryPayload>>
+    public suspend fun getSessions(
+        params: SelfSessionListParams? = null
+    ): AppResult<PagedResult<UserSessionSummaryPayload>>
 
     /**
      * Returns details of a specific session owned by the current management account.

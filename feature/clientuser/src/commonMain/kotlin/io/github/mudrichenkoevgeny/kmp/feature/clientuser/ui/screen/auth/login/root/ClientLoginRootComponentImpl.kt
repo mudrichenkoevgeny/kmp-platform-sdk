@@ -36,7 +36,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  * @param clientUserComponent Client user feature component providing authentication use cases and repositories.
  * @param onFinished Invoked when the authentication flow succeeds or completes.
  */
-class ClientLoginRootComponentImpl(
+public class ClientLoginRootComponentImpl(
     componentContext: ComponentContext,
     private val settingsComponent: SettingsComponent,
     private val securityComponent: SecurityComponent,
@@ -44,9 +44,9 @@ class ClientLoginRootComponentImpl(
     private val onFinished: () -> Unit
 ) : ClientLoginRootComponent, ComponentContext by componentContext {
 
-    private val navigation = StackNavigation<ClientAuthNavigation>()
+    private val navigation: StackNavigation<ClientAuthNavigation> = StackNavigation<ClientAuthNavigation>()
 
-    override val stack: Value<ChildStack<ClientAuthNavigation, ClientLoginRootComponent.Child>> =
+    public override val stack: Value<ChildStack<ClientAuthNavigation, ClientLoginRootComponent.Child>> =
         childStack(
             source = navigation,
             serializer = ClientAuthNavigation.serializer(),
@@ -55,7 +55,7 @@ class ClientLoginRootComponentImpl(
             childFactory = ::createChild
         )
 
-    override fun navigateTo(destination: ClientAuthNavigation) {
+    public override fun navigateTo(destination: ClientAuthNavigation) {
         navigation.bringToFront(destination)
     }
 
@@ -169,33 +169,37 @@ class ClientLoginRootComponentImpl(
             )
         )
 
-        is ClientAuthNavigation.Registration -> ClientLoginRootComponent.Child.RegistrationByEmail(
-            RegistrationByEmailComponentImpl(
-                componentContext = context,
-                params = config.params,
-                registrationRepository = clientUserComponent.registrationRepository,
-                sendRegistrationConfirmationToEmailUseCase =
-                    clientUserComponent.sendRegistrationConfirmationToEmailUseCase,
-                registrationByEmailUseCase = clientUserComponent.registrationByEmailUseCase,
-                validatePasswordUseCase = securityComponent.validatePasswordUseCase,
-                onBack = { handleBack(ClientAuthNavigation.Main) },
-                onFinished = onFinished
+        is ClientAuthNavigation.Registration -> {
+            val sendConfirmationUseCase = clientUserComponent.sendRegistrationConfirmationToEmailUseCase
+            ClientLoginRootComponent.Child.RegistrationByEmail(
+                RegistrationByEmailComponentImpl(
+                    componentContext = context,
+                    params = config.params,
+                    registrationRepository = clientUserComponent.registrationRepository,
+                    sendRegistrationConfirmationToEmailUseCase = sendConfirmationUseCase,
+                    registrationByEmailUseCase = clientUserComponent.registrationByEmailUseCase,
+                    validatePasswordUseCase = securityComponent.validatePasswordUseCase,
+                    onBack = { handleBack(ClientAuthNavigation.Main) },
+                    onFinished = onFinished
+                )
             )
-        )
+        }
 
-        is ClientAuthNavigation.ResetPassword -> ClientLoginRootComponent.Child.ResetEmailPassword(
-            ResetEmailPasswordComponentImpl(
-                componentContext = context,
-                params = config.params,
-                resetPasswordRepository = clientUserComponent.passwordRepository,
-                sendResetPasswordConfirmationToEmailUseCase =
-                    clientUserComponent.sendResetPasswordConfirmationToEmailUseCase,
-                resetEmailPasswordUseCase = clientUserComponent.resetEmailPasswordUseCase,
-                validatePasswordUseCase = securityComponent.validatePasswordUseCase,
-                onBack = { handleBack(ClientAuthNavigation.Main) },
-                onFinished = onFinished
+        is ClientAuthNavigation.ResetPassword -> {
+            val sendConfirmationUseCase = clientUserComponent.sendResetPasswordConfirmationToEmailUseCase
+            ClientLoginRootComponent.Child.ResetEmailPassword(
+                ResetEmailPasswordComponentImpl(
+                    componentContext = context,
+                    params = config.params,
+                    resetPasswordRepository = clientUserComponent.passwordRepository,
+                    sendResetPasswordConfirmationToEmailUseCase = sendConfirmationUseCase,
+                    resetEmailPasswordUseCase = clientUserComponent.resetEmailPasswordUseCase,
+                    validatePasswordUseCase = securityComponent.validatePasswordUseCase,
+                    onBack = { handleBack(ClientAuthNavigation.Main) },
+                    onFinished = onFinished
+                )
             )
-        )
+        }
 
         is ClientAuthNavigation.LoginByTotp -> ClientLoginRootComponent.Child.LoginByTotp(
             LoginByTotpComponentImpl(
@@ -234,5 +238,7 @@ class ClientLoginRootComponentImpl(
         )
     }
 
-    override fun onDismiss() = onFinished()
+    public override fun onDismiss() {
+        onFinished()
+    }
 }

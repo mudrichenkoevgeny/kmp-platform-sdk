@@ -32,7 +32,9 @@ public class ManagementSecuritySettingsApiMock(
 
     public override suspend fun getOpenSecuritySettings(): AppResult<OpenSecuritySettingsPayload> = getOpenResult
 
-    public override suspend fun updateManagementSecuritySettings(request: ManagementSecuritySettingsPayload): AppResult<ManagementSecuritySettingsPayload> =
+    public override suspend fun updateManagementSecuritySettings(
+        request: ManagementSecuritySettingsPayload
+    ): AppResult<ManagementSecuritySettingsPayload> =
         updateResult
 
     public override suspend fun resetManagementSecuritySettings(): AppResult<ManagementSecuritySettingsPayload> =

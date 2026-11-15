@@ -40,7 +40,9 @@ public open class ManagementIdentifierRepositoryMock : ManagementIdentifierRepos
         AppResult.Success(createTestUserIdentifierPrivate())
     }
 
-    public var deleteIdentifierResultProvider: (UserId, String) -> AppResult<Unit> = { _, _ -> AppResult.Success(Unit) }
+    public var deleteIdentifierResultProvider: (UserId, String) -> AppResult<Unit> = { _, _ ->
+        AppResult.Success(Unit)
+    }
     public var deleteIdentifierPasswordResultProvider: (UserId, String) -> AppResult<Unit> =
         { _, _ -> AppResult.Success(Unit) }
 

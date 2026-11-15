@@ -120,22 +120,25 @@ public class EditStorageSettingsComponentImpl(
         _state.value = current.copy(isSaving = true, saveError = null)
 
         componentScope.launch {
+            val minBytes = current.minUploadSizeBytes.toLongOrNull() ?: 0L
+            val maxBytes = current.maxUploadSizeBytes.toLongOrNull() ?: 0L
+            val openQuota = current.totalStorageQuotaForOpenUserBytes.toLongOrNull()
+            val mgmtQuota = current.totalStorageQuotaForManagementUserBytes.toLongOrNull()
+            val expSeconds = current.presignedUrlExpirationSeconds.toIntOrNull() ?: 0
+            val openPending = current.maxPendingUploadsForOpenUser.toIntOrNull() ?: 0
+            val mgmtPending = current.maxPendingUploadsForManagementUser.toIntOrNull() ?: 0
+            val cleanupInterval = current.deletedFilesCleanupIntervalSeconds.toIntOrNull() ?: 0
+
             val updatedSettings = ManagementStorageSettings(
-                minUploadSizeBytes = current.minUploadSizeBytes.toLongOrNull() ?: 0L,
-                maxUploadSizeBytes = current.maxUploadSizeBytes.toLongOrNull() ?: 0L,
-                totalStorageQuotaForOpenUserBytes =
-                    current.totalStorageQuotaForOpenUserBytes.toLongOrNull(),
-                totalStorageQuotaForManagementUserBytes =
-                    current.totalStorageQuotaForManagementUserBytes.toLongOrNull(),
-                presignedUrlExpirationSeconds =
-                    current.presignedUrlExpirationSeconds.toIntOrNull() ?: 0,
-                maxPendingUploadsForOpenUser =
-                    current.maxPendingUploadsForOpenUser.toIntOrNull() ?: 0,
-                maxPendingUploadsForManagementUser =
-                    current.maxPendingUploadsForManagementUser.toIntOrNull() ?: 0,
+                minUploadSizeBytes = minBytes,
+                maxUploadSizeBytes = maxBytes,
+                totalStorageQuotaForOpenUserBytes = openQuota,
+                totalStorageQuotaForManagementUserBytes = mgmtQuota,
+                presignedUrlExpirationSeconds = expSeconds,
+                maxPendingUploadsForOpenUser = openPending,
+                maxPendingUploadsForManagementUser = mgmtPending,
                 isDeduplicationEnabled = current.isDeduplicationEnabled,
-                deletedFilesCleanupIntervalSeconds =
-                    current.deletedFilesCleanupIntervalSeconds.toIntOrNull() ?: 0
+                deletedFilesCleanupIntervalSeconds = cleanupInterval
             )
 
             val saveResult = updateSettingsUseCase(updatedSettings)
@@ -193,25 +196,19 @@ public class EditStorageSettingsComponentImpl(
             when (getSettingsResult) {
                 is AppResult.Success -> {
                     val settings = getSettingsResult.data
+                    val openQuota = settings.totalStorageQuotaForOpenUserBytes?.toString().orEmpty()
+                    val mgmtQuota = settings.totalStorageQuotaForManagementUserBytes?.toString().orEmpty()
                     _state.value = EditStorageSettingsScreenState.Content(
                         initialSettings = settings,
                         minUploadSizeBytes = settings.minUploadSizeBytes.toString(),
                         maxUploadSizeBytes = settings.maxUploadSizeBytes.toString(),
-                        totalStorageQuotaForOpenUserBytes =
-                            settings.totalStorageQuotaForOpenUserBytes?.toString()
-                                .orEmpty(),
-                        totalStorageQuotaForManagementUserBytes =
-                            settings.totalStorageQuotaForManagementUserBytes?.toString()
-                                .orEmpty(),
-                        presignedUrlExpirationSeconds =
-                            settings.presignedUrlExpirationSeconds.toString(),
-                        maxPendingUploadsForOpenUser =
-                            settings.maxPendingUploadsForOpenUser.toString(),
-                        maxPendingUploadsForManagementUser =
-                            settings.maxPendingUploadsForManagementUser.toString(),
+                        totalStorageQuotaForOpenUserBytes = openQuota,
+                        totalStorageQuotaForManagementUserBytes = mgmtQuota,
+                        presignedUrlExpirationSeconds = settings.presignedUrlExpirationSeconds.toString(),
+                        maxPendingUploadsForOpenUser = settings.maxPendingUploadsForOpenUser.toString(),
+                        maxPendingUploadsForManagementUser = settings.maxPendingUploadsForManagementUser.toString(),
                         isDeduplicationEnabled = settings.isDeduplicationEnabled,
-                        deletedFilesCleanupIntervalSeconds =
-                            settings.deletedFilesCleanupIntervalSeconds.toString(),
+                        deletedFilesCleanupIntervalSeconds = settings.deletedFilesCleanupIntervalSeconds.toString(),
                         isSaving = false,
                         saveError = null
                     )

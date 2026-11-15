@@ -59,7 +59,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun UnlockTargetInputScreen(component: UnlockTargetInputComponent) {
+public fun UnlockTargetInputScreen(
+    component: UnlockTargetInputComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
@@ -74,6 +77,7 @@ public fun UnlockTargetInputScreen(component: UnlockTargetInputComponent) {
     }
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {

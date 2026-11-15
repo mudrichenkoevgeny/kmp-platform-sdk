@@ -122,9 +122,9 @@ public fun UserEditScreen(
                     Box(modifier = Modifier.fillMaxSize()) {
                         UserEditContent(
                             state = current,
-                            onNicknameChanged = component::onNicknameChanged,
-                            onDisplayNameChanged = component::onDisplayNameChanged,
-                            onBirthdateChanged = component::onBirthdateChanged,
+                            onNicknameChange = component::onNicknameChanged,
+                            onDisplayNameChange = component::onDisplayNameChanged,
+                            onBirthdateChange = component::onBirthdateChanged,
                             onChangeAvatarClick = { filePickerLauncher.launch() },
                             onSaveClick = component::onSaveClick
                         )
@@ -166,9 +166,9 @@ public object UserEditTestTags {
 @Composable
 private fun UserEditContent(
     state: UserEditScreenState.Content,
-    onNicknameChanged: (String) -> Unit,
-    onDisplayNameChanged: (String) -> Unit,
-    onBirthdateChanged: (String) -> Unit,
+    onNicknameChange: (String) -> Unit,
+    onDisplayNameChange: (String) -> Unit,
+    onBirthdateChange: (String) -> Unit,
     onChangeAvatarClick: () -> Unit,
     onSaveClick: () -> Unit
 ) {
@@ -258,7 +258,7 @@ private fun UserEditContent(
 
                 CoreOutlinedTextField(
                     value = state.nicknameInput,
-                    onValueChange = onNicknameChanged,
+                    onValueChange = onNicknameChange,
                     label = { CoreBodyText(userUi.userLabel) },
                     enabled = !state.isSaving,
                     isError = state.nicknameError != null,
@@ -278,7 +278,7 @@ private fun UserEditContent(
 
                 CoreOutlinedTextField(
                     value = state.displayNameInput,
-                    onValueChange = onDisplayNameChanged,
+                    onValueChange = onDisplayNameChange,
                     label = { CoreBodyText(userUi.user) },
                     enabled = !state.isSaving,
                     isError = state.displayNameError != null,
@@ -298,7 +298,7 @@ private fun UserEditContent(
 
                 CoreOutlinedTextField(
                     value = state.birthdateInput,
-                    onValueChange = onBirthdateChanged,
+                    onValueChange = onBirthdateChange,
                     label = { CoreBodyText(userUi.birthdate) },
                     enabled = !state.isSaving,
                     modifier = Modifier

@@ -40,11 +40,11 @@ public class OpenAuthSettingsRepositoryImpl(
 ) : OpenAuthSettingsRepository {
 
     private val updateMutex = Mutex()
-    private val _settings = MutableStateFlow<OpenAuthSettings?>(null)
+    private val settingsStateFlow = MutableStateFlow<OpenAuthSettings?>(null)
 
     init {
         repositoryScope.launch {
-            _settings.value = openAuthSettingsStorage.getOpenAuthSettings()
+            settingsStateFlow.value = openAuthSettingsStorage.getOpenAuthSettings()
 
             webSocketService.observeEvents()
                 .filter { it.type == UserWebSocketEventTypes.OPEN_AUTH_SETTINGS_UPDATED }
@@ -69,13 +69,13 @@ public class OpenAuthSettingsRepositoryImpl(
     }
 
     public override suspend fun getOpenAuthSettings(): AppResult<OpenAuthSettings> {
-        _settings.value?.let { return AppResult.Success(it) }
+        settingsStateFlow.value?.let { return AppResult.Success(it) }
 
         return updateMutex.withLock {
-            val cached = _settings.value ?: openAuthSettingsStorage.getOpenAuthSettings()
+            val cached = settingsStateFlow.value ?: openAuthSettingsStorage.getOpenAuthSettings()
 
             if (cached != null) {
-                _settings.value = cached
+                settingsStateFlow.value = cached
                 AppResult.Success(cached)
             } else {
                 refreshOpenAuthSettingsInternal()
@@ -93,7 +93,7 @@ public class OpenAuthSettingsRepositoryImpl(
         }
     }
 
-    public override fun observeOpenAuthSettings(): Flow<OpenAuthSettings?> = _settings.asStateFlow()
+    public override fun observeOpenAuthSettings(): Flow<OpenAuthSettings?> = settingsStateFlow.asStateFlow()
 
     private suspend fun refreshOpenAuthSettingsInternal(): AppResult<OpenAuthSettings> =
         openAuthSettingsApi.getAuthSettings()
@@ -105,6 +105,6 @@ public class OpenAuthSettingsRepositoryImpl(
 
     private suspend fun applySettingsUpdate(authSettings: OpenAuthSettings) {
         openAuthSettingsStorage.updateOpenAuthSettings(authSettings)
-        _settings.value = authSettings
+        settingsStateFlow.value = authSettings
     }
 }

@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
  * @param onBack pops this flow on the parent stack when appropriate.
  * @param onFinished invoked when login succeeds.
  */
-class LoginByPhoneComponentImpl(
+public class LoginByPhoneComponentImpl(
     componentContext: ComponentContext,
     params: LoginByPhoneParams = LoginByPhoneParams(),
     private val loginRepository: LoginRepository,
@@ -60,9 +60,10 @@ class LoginByPhoneComponentImpl(
     private val scope = componentCoroutineScope()
     private var timerJob: Job? = null
 
-    override val stackNavigation = StackNavigation<LoginByPhoneStepConfig>()
+    public override val stackNavigation: StackNavigation<LoginByPhoneStepConfig> =
+        StackNavigation<LoginByPhoneStepConfig>()
 
-    override val stack: Value<ChildStack<LoginByPhoneStepConfig, LoginByPhoneComponent.Child>> =
+    public override val stack: Value<ChildStack<LoginByPhoneStepConfig, LoginByPhoneComponent.Child>> =
         childStack(
             source = stackNavigation,
             serializer = LoginByPhoneStepConfig.serializer(),
@@ -71,12 +72,12 @@ class LoginByPhoneComponentImpl(
             childFactory = { config, _ -> createChild(config) }
         )
 
-    private val _state = MutableValue(
+    private val _state: MutableValue<LoginByPhoneScreenState> = MutableValue(
         LoginByPhoneScreenState(
             phoneNumber = params.phone ?: ""
         )
     )
-    override val state: Value<LoginByPhoneScreenState> = _state
+    public override val state: Value<LoginByPhoneScreenState> = _state
 
     private fun createChild(
         config: LoginByPhoneStepConfig
@@ -85,7 +86,7 @@ class LoginByPhoneComponentImpl(
         is LoginByPhoneStepConfig.CodeInput -> LoginByPhoneComponent.Child.CodeInput(config.phone)
     }
 
-    override fun onPhoneChanged(phone: String) {
+    public override fun onPhoneChanged(phone: String) {
         val isValid = FieldValidator.isPhoneNumberValid(phone)
 
         _state.value = _state.value.copy(
@@ -102,7 +103,7 @@ class LoginByPhoneComponentImpl(
         }
     }
 
-    override fun onCodeChanged(code: String) {
+    public override fun onCodeChanged(code: String) {
         if (code.length <= _state.value.codeLength) {
             val updated = _state.value.copy(code = code, actionError = null)
             _state.value = updated
@@ -112,7 +113,7 @@ class LoginByPhoneComponentImpl(
         }
     }
 
-    override fun onSendCodeClick() {
+    public override fun onSendCodeClick() {
         val current = _state.value
         if (current.actionLoading) {
             return
@@ -135,7 +136,7 @@ class LoginByPhoneComponentImpl(
         }
     }
 
-    override fun onConfirmCodeClick() {
+    public override fun onConfirmCodeClick() {
         val current = _state.value
         if (current.actionLoading || !current.isCodeFullLength) {
             return
@@ -177,7 +178,7 @@ class LoginByPhoneComponentImpl(
         }
     }
 
-    override fun onResetPhoneClick() {
+    public override fun onResetPhoneClick() {
         timerJob?.cancel()
         val phone = _state.value.phoneNumber
         _state.value = _state.value.copy(
@@ -188,7 +189,7 @@ class LoginByPhoneComponentImpl(
         stackNavigation.bringToFront(LoginByPhoneStepConfig.PhoneInput(phone))
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         if ((backHandler as? BackDispatcher)?.back() != true) {
             onBack()
         }

@@ -58,8 +58,8 @@ class EditStorageSettingsComponentImplTest {
         testDispatcher.scheduler.advanceUntilIdle()
 
         val state = assertIs<EditStorageSettingsScreenState.Content>(component.state.value)
-        assertEquals("1024", state.minUploadSizeBytes)
-        assertEquals("104857600", state.maxUploadSizeBytes)
+        assertEquals("1", state.minUploadSizeBytes)
+        assertEquals("52428800", state.maxUploadSizeBytes)
     }
 
     @Test

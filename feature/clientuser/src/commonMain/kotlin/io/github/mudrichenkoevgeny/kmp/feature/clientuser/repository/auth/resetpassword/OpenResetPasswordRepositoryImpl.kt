@@ -20,12 +20,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
  * @param resetPasswordApi HTTP endpoints for reset and confirmation send.
  * @param confirmationRepository Rate limiting for password-reset email confirmation sends.
  */
-class OpenResetPasswordRepositoryImpl(
+public class OpenResetPasswordRepositoryImpl(
     private val resetPasswordApi: ResetPasswordApi,
     private val confirmationRepository: ConfirmationRepository
 ) : ResetPasswordRepository {
 
-    override suspend fun resetPassword(
+    public override suspend fun resetPassword(
         email: String,
         newPassword: String,
         confirmationCode: String
@@ -39,7 +39,7 @@ class OpenResetPasswordRepositoryImpl(
         response.toUserIdentifierPrivate()
     }
 
-    override suspend fun sendResetPasswordConfirmationToEmail(
+    public override suspend fun sendResetPasswordConfirmationToEmail(
         email: String
     ): AppResult<OtpConfirmation> = resetPasswordApi.sendResetPasswordConfirmationToEmail(
         SendResetPasswordConfirmationRequest(email = email)
@@ -47,7 +47,7 @@ class OpenResetPasswordRepositoryImpl(
         response.toOtpConfirmation()
     }
 
-    override fun getRemainingResetPasswordConfirmationDelayInSeconds(email: String): Int =
+    public override fun getRemainingResetPasswordConfirmationDelayInSeconds(email: String): Int =
         confirmationRepository.getRemainingDelay(
             type = ConfirmationType.PASSWORD_RESET_EMAIL,
             identifier = email

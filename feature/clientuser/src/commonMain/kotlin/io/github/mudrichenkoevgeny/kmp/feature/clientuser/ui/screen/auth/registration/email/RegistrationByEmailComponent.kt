@@ -7,28 +7,28 @@ import com.arkivanov.decompose.value.Value
 /**
  * Registration by email flow: request code, enter code and password, handles timers and submission.
  */
-interface RegistrationByEmailComponent {
+public interface RegistrationByEmailComponent {
     /**
      * Decompose navigation stack driving the registration wizard steps.
      */
-    val stack: Value<ChildStack<RegistrationByEmailStepConfig, Child>>
+    public val stack: Value<ChildStack<RegistrationByEmailStepConfig, Child>>
 
     /**
      * Stack navigator for the registration wizard.
      */
-    val stackNavigation: StackNavigation<RegistrationByEmailStepConfig>
+    public val stackNavigation: StackNavigation<RegistrationByEmailStepConfig>
 
     /**
      * Current UI state for [RegistrationByEmailScreen].
      */
-    val state: Value<RegistrationByEmailScreenState>
+    public val state: Value<RegistrationByEmailScreenState>
 
     /**
      * Child instances corresponding to each wizard step.
      */
-    sealed interface Child {
-        data class EmailInput(val initialEmail: String) : Child
-        data class ConfirmInput(val email: String) : Child
+    public sealed interface Child {
+        public data class EmailInput(public val initialEmail: String) : Child
+        public data class ConfirmInput(public val email: String) : Child
     }
 
     /**
@@ -36,33 +36,33 @@ interface RegistrationByEmailComponent {
      *
      * @param email new email text.
      */
-    fun onEmailChanged(email: String)
+    public fun onEmailChanged(email: String)
 
     /** Requests a registration confirmation code for the current email. */
-    fun onSendCodeClick()
+    public fun onSendCodeClick()
 
     /**
      * Updates the confirmation code field.
      *
      * @param code new code text.
      */
-    fun onCodeChanged(code: String)
+    public fun onCodeChanged(code: String)
 
     /**
      * Updates the password field; triggers real-time password policy validation.
      *
      * @param password new password text.
      */
-    fun onPasswordChanged(password: String)
+    public fun onPasswordChanged(password: String)
 
     /** Toggles password field masking. */
-    fun onTogglePasswordVisibility()
+    public fun onTogglePasswordVisibility()
 
     /** Submits email, password, and code to create the account. */
-    fun onRegisterClick()
+    public fun onRegisterClick()
 
     /**
      * Pops the screen or returns from registration input to email input.
      */
-    fun onBackClick()
+    public fun onBackClick()
 }

@@ -40,12 +40,16 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun SettingsMainScreen(component: SettingsMainComponent) {
+public fun SettingsMainScreen(
+    component: SettingsMainComponent,
+    modifier: Modifier = Modifier
+) {
     val userUi = LocalUserStrings.current.ui
     val storageUi = LocalStorageStrings.current.ui
     val commonUi = LocalCommonStrings.current.ui
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {

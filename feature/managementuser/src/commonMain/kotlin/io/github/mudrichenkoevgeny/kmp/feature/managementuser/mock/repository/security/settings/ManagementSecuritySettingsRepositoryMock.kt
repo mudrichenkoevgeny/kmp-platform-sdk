@@ -17,7 +17,7 @@ public class ManagementSecuritySettingsRepositoryMock(
     initialSettings: ManagementSecuritySettings? = createTestManagementSecuritySettings()
 ) : ManagementSecuritySettingsRepository {
 
-    private val _settings = MutableStateFlow(initialSettings)
+    private val settingsStateFlow = MutableStateFlow(initialSettings)
 
     public var getManagementSecuritySettingsResult: AppResult<ManagementSecuritySettings>? = null
     public var refreshManagementSecuritySettingsResult: AppResult<ManagementSecuritySettings>? = null
@@ -29,22 +29,24 @@ public class ManagementSecuritySettingsRepositoryMock(
         if (customResult != null) {
             return customResult
         }
-        val current = _settings.value
+        val current = settingsStateFlow.value
         return if (current != null) {
             AppResult.Success(current)
         } else {
             val fresh = createTestManagementSecuritySettings()
-            _settings.value = fresh
+            settingsStateFlow.value = fresh
             AppResult.Success(fresh)
         }
     }
 
-    public override suspend fun saveRemoteManagementSecuritySettings(securitySettings: ManagementSecuritySettings): AppResult<ManagementSecuritySettings> {
+    public override suspend fun saveRemoteManagementSecuritySettings(
+        securitySettings: ManagementSecuritySettings
+    ): AppResult<ManagementSecuritySettings> {
         val customResult = saveRemoteSecuritySettingsResult
         if (customResult != null) {
             return customResult
         }
-        _settings.value = securitySettings
+        settingsStateFlow.value = securitySettings
         return AppResult.Success(securitySettings)
     }
 
@@ -57,7 +59,7 @@ public class ManagementSecuritySettingsRepositoryMock(
     }
 
     public override suspend fun updateManagementSecuritySettings(securitySettings: ManagementSecuritySettings) {
-        _settings.value = securitySettings
+        settingsStateFlow.value = securitySettings
     }
 
     public override suspend fun resetRemoteManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
@@ -68,5 +70,6 @@ public class ManagementSecuritySettingsRepositoryMock(
         return getManagementSecuritySettings()
     }
 
-    public override fun observeManagementSecuritySettings(): Flow<ManagementSecuritySettings?> = _settings.asStateFlow()
+    public override fun observeManagementSecuritySettings(): Flow<ManagementSecuritySettings?> =
+        settingsStateFlow.asStateFlow()
 }

@@ -58,11 +58,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  * @param component Decompose component providing state and callbacks.
  */
 @Composable
-public fun LoginByTotpScreen(component: LoginByTotpComponent) {
+public fun LoginByTotpScreen(
+    component: LoginByTotpComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
 
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         when (val currentState = state) {
@@ -73,7 +76,7 @@ public fun LoginByTotpScreen(component: LoginByTotpComponent) {
             is LoginByTotpScreenState.Content -> {
                 LoginByTotpContent(
                     state = currentState,
-                    onCodeChanged = component::onCodeChanged,
+                    onCodeChange = component::onCodeChanged,
                     onToggleModeClick = component::onToggleModeClick,
                     onSubmitClick = component::onSubmitClick,
                     onBackClick = component::onBackClick
@@ -86,7 +89,7 @@ public fun LoginByTotpScreen(component: LoginByTotpComponent) {
 @Composable
 private fun LoginByTotpContent(
     state: LoginByTotpScreenState.Content,
-    onCodeChanged: (String) -> Unit,
+    onCodeChange: (String) -> Unit,
     onToggleModeClick: () -> Unit,
     onSubmitClick: () -> Unit,
     onBackClick: () -> Unit
@@ -155,7 +158,7 @@ private fun LoginByTotpContent(
 
                 CoreOutlinedTextField(
                     value = state.code,
-                    onValueChange = onCodeChanged,
+                    onValueChange = onCodeChange,
                     modifier = Modifier
                         .testTag(LoginByTotpTestTags.CODE_INPUT),
                     label = { CoreBodyText(labelText) },

@@ -54,11 +54,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
  * @param component Decompose component driving state and callbacks.
  */
 @Composable
-public fun LoginWelcomeScreen(component: LoginWelcomeComponent) {
+public fun LoginWelcomeScreen(
+    component: LoginWelcomeComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
 
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         when (val currentState = state) {

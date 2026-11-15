@@ -17,84 +17,84 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.rou
  *
  * Implementations supply settings, security validation, and user auth use cases from the host-wired modules.
  */
-interface ClientLoginRootComponent {
+public interface ClientLoginRootComponent {
     /**
      * Current navigation stack and active child; observed by [ClientLoginRootScreen] to render the matching UI.
      *
      * @return reactive stack from Decompose ([Value] of [ChildStack]).
      */
-    val stack: Value<ChildStack<ClientAuthNavigation, Child>>
+    public val stack: Value<ChildStack<ClientAuthNavigation, Child>>
 
     /**
      * Navigates to the specified [ClientAuthNavigation] destination.
      *
      * @param destination Destination route.
      */
-    fun navigateTo(destination: ClientAuthNavigation)
+    public fun navigateTo(destination: ClientAuthNavigation)
 
     /**
      * Called when the host should close the login surface (dialog or bottom sheet dismissed).
      */
-    fun onDismiss()
+    public fun onDismiss()
 
     /**
      * Active child for a [ClientAuthNavigation] configuration; holds the corresponding Decompose component.
      */
-    sealed interface Child {
+    public sealed interface Child {
         /**
          * Welcome / provider selection.
          *
          * @param component Child Decompose component for this step.
          */
-        class Welcome(val component: LoginWelcomeComponent) : Child
+        public class Welcome(public val component: LoginWelcomeComponent) : Child
 
         /**
          * Email + password login.
          *
          * @param component Child Decompose component for this step.
          */
-        class LoginByEmail(val component: LoginByEmailComponent) : Child
+        public class LoginByEmail(public val component: LoginByEmailComponent) : Child
 
         /**
          * Phone + SMS code login.
          *
          * @param component Child Decompose component for this step.
          */
-        class LoginByPhone(val component: LoginByPhoneComponent) : Child
+        public class LoginByPhone(public val component: LoginByPhoneComponent) : Child
 
         /**
          * Email registration with verification.
          *
          * @param component Child Decompose component for this step.
          */
-        class RegistrationByEmail(val component: RegistrationByEmailComponent) : Child
+        public class RegistrationByEmail(public val component: RegistrationByEmailComponent) : Child
 
         /**
          * Reset password via email confirmation.
          *
          * @param component Child Decompose component for this step.
          */
-        class ResetEmailPassword(val component: ResetEmailPasswordComponent) : Child
+        public class ResetEmailPassword(public val component: ResetEmailPasswordComponent) : Child
 
         /**
          * MFA/TOTP verification.
          *
          * @param component Child Decompose component for this step.
          */
-        class LoginByTotp(val component: LoginByTotpComponent) : Child
+        public class LoginByTotp(public val component: LoginByTotpComponent) : Child
 
         /**
          * Intercepts logins for accounts scheduled for deletion.
          *
          * @param component Child Decompose component for this step.
          */
-        class PendingDeletion(val component: PendingDeletionComponent) : Child
+        public class PendingDeletion(public val component: PendingDeletionComponent) : Child
 
         /**
          * Account unlock flow for locked accounts.
          *
          * @param component Child Decompose component for this step.
          */
-        class AccountUnlock(val component: UnlockRootComponent) : Child
+        public class AccountUnlock(public val component: UnlockRootComponent) : Child
     }
 }

@@ -57,11 +57,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.m
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun AuditEventDetailScreen(component: AuditEventDetailComponent) {
+public fun AuditEventDetailScreen(
+    component: AuditEventDetailComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {

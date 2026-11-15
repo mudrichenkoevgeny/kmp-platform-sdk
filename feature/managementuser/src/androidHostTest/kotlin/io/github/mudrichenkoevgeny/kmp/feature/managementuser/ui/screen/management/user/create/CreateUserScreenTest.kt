@@ -6,7 +6,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
@@ -33,9 +33,9 @@ class CreateUserScreenTest {
         }
         onNodeWithTag(CreateUserTestTags.TITLE).assertIsDisplayed()
         onNodeWithTag(CreateUserTestTags.BACK_BUTTON).assertIsDisplayed()
-        onNodeWithTag(CreateUserTestTags.EMAIL_INPUT).assertIsDisplayed()
-        onNodeWithTag(CreateUserTestTags.PASSWORD_INPUT).assertIsDisplayed()
-        onNodeWithTag(CreateUserTestTags.ROLE_INPUT).assertIsDisplayed()
+        onNodeWithTag(CreateUserTestTags.EMAIL_INPUT).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(CreateUserTestTags.PASSWORD_INPUT).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(CreateUserTestTags.ROLE_INPUT).performScrollTo().assertIsDisplayed()
         onNodeWithTag(CreateUserTestTags.STATUS_INPUT).performScrollTo().assertIsDisplayed()
         onNodeWithTag(CreateUserTestTags.AUTHORITY_LEVEL_INPUT).performScrollTo().assertIsDisplayed()
         onNodeWithTag(CreateUserTestTags.QUOTA_BYTES_INPUT).performScrollTo().assertIsDisplayed()
@@ -52,7 +52,7 @@ class CreateUserScreenTest {
                 CreateUserScreen(component)
             }
         }
-        onNodeWithTag(CreateUserTestTags.EMAIL_INPUT).performTextInput("newuser@example.com")
+        onNodeWithTag(CreateUserTestTags.EMAIL_INPUT).performScrollTo().performTextInput("newuser@example.com")
         assertEquals("newuser@example.com", component.lastEmailChanged)
     }
 

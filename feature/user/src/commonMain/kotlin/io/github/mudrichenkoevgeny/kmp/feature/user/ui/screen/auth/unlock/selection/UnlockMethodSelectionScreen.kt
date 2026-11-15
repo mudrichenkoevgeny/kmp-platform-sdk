@@ -58,12 +58,16 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun UnlockMethodSelectionScreen(component: UnlockMethodSelectionComponent) {
+public fun UnlockMethodSelectionScreen(
+    component: UnlockMethodSelectionComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
     val userStrings = LocalUserStrings.current
     val userUi = userStrings.ui
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {

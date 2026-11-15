@@ -6,17 +6,17 @@ import kotlinx.serialization.Serializable
  * Serializable configurations driving the Decompose navigation stack for the phone login wizard.
  */
 @Serializable
-sealed interface LoginByPhoneStepConfig {
+public sealed interface LoginByPhoneStepConfig {
     /** Step 1: entering phone number. */
     @Serializable
-    data class PhoneInput(
-        val initialPhone: String = ""
+    public data class PhoneInput(
+        public val initialPhone: String = ""
     ) : LoginByPhoneStepConfig
 
     /** Step 2: entering confirmation OTP code. */
     @Serializable
-    data class CodeInput(
-        val phone: String,
-        val resendTimerSeconds: Int = 0
+    public data class CodeInput(
+        public val phone: String,
+        public val resendTimerSeconds: Int = 0
     ) : LoginByPhoneStepConfig
 }

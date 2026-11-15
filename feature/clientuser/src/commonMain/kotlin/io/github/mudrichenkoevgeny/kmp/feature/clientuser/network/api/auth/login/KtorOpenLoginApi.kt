@@ -16,11 +16,11 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
 /** [OpenLoginApi] backed by [HttpClient]; login routes call [markAsPublic] so bearer auth is not applied. */
-class KtorOpenLoginApi(
+public class KtorOpenLoginApi(
     private val client: HttpClient
 ) : OpenLoginApi {
 
-    override suspend fun loginByEmail(
+    public override suspend fun loginByEmail(
         request: LoginByEmailRequest
     ): AppResult<AuthDataPayload> = client.callResult {
         post(OpenLoginRoutes.LOGIN_BY_EMAIL) {
@@ -29,7 +29,7 @@ class KtorOpenLoginApi(
         }
     }
 
-    override suspend fun loginByPhone(
+    public override suspend fun loginByPhone(
         request: LoginByPhoneRequest
     ): AppResult<AuthDataPayload> = client.callResult {
         post(OpenLoginRoutes.LOGIN_BY_PHONE) {
@@ -38,7 +38,7 @@ class KtorOpenLoginApi(
         }
     }
 
-    override suspend fun loginByExternalAuthProvider(
+    public override suspend fun loginByExternalAuthProvider(
         request: LoginByExternalAuthProviderRequest
     ): AppResult<AuthDataPayload> = client.callResult {
         post(OpenLoginRoutes.LOGIN_BY_EXTERNAL_AUTH_PROVIDER) {
@@ -47,7 +47,7 @@ class KtorOpenLoginApi(
         }
     }
 
-    override suspend fun loginByTotp(
+    public override suspend fun loginByTotp(
         request: VerifyTotpPayload
     ): AppResult<AuthDataPayload> = client.callResult {
         post(OpenLoginRoutes.LOGIN_BY_TOTP) {
@@ -56,7 +56,7 @@ class KtorOpenLoginApi(
         }
     }
 
-    override suspend fun loginByTotpRecoveryCode(
+    public override suspend fun loginByTotpRecoveryCode(
         request: VerifyTotpPayload
     ): AppResult<AuthDataPayload> = client.callResult {
         post(OpenLoginRoutes.LOGIN_BY_TOTP_RECOVERY_CODE) {
@@ -65,7 +65,7 @@ class KtorOpenLoginApi(
         }
     }
 
-    override suspend fun sendLoginConfirmationToPhone(
+    public override suspend fun sendLoginConfirmationToPhone(
         request: SendConfirmationToPhoneRequest
     ): AppResult<OtpConfirmationPayload> = client.callResult {
         post(OpenLoginRoutes.SEND_LOGIN_CONFIRMATION_TO_PHONE) {

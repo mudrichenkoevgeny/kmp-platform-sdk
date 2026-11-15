@@ -14,11 +14,11 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
 /** [ResetPasswordApi] backed by [HttpClient]; reset routes use [markAsPublic]. */
-class KtorResetPasswordApi(
+public class KtorResetPasswordApi(
     private val client: HttpClient
 ) : ResetPasswordApi {
 
-    override suspend fun resetPassword(
+    public override suspend fun resetPassword(
         request: ResetPasswordRequest
     ): AppResult<UserIdentifierPrivatePayload> = client.callResult {
         post(OpenResetPasswordRoutes.RESET_EMAIL_PASSWORD) {
@@ -27,7 +27,7 @@ class KtorResetPasswordApi(
         }
     }
 
-    override suspend fun sendResetPasswordConfirmationToEmail(
+    public override suspend fun sendResetPasswordConfirmationToEmail(
         request: SendResetPasswordConfirmationRequest
     ): AppResult<OtpConfirmationPayload> = client.callResult {
         post(OpenResetPasswordRoutes.SEND_RESET_EMAIL_PASSWORD_CONFIRMATION) {

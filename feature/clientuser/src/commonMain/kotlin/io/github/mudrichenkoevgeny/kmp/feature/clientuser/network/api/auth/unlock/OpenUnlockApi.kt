@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToPhoneRequest
 
 /** Account unlock flows for the client user feature. */
-interface OpenUnlockApi {
+public interface OpenUnlockApi {
 
     /**
      * Sends an account unlock confirmation code (OTP) to the specified email address.
@@ -17,7 +17,7 @@ interface OpenUnlockApi {
      * @param request Target email address request payload.
      * @return Confirmation dispatch result, or a mapped failure.
      */
-    suspend fun sendUnlockEmailConfirmation(
+    public suspend fun sendUnlockEmailConfirmation(
         request: SendConfirmationToEmailRequest
     ): AppResult<OtpConfirmationPayload>
 
@@ -27,7 +27,7 @@ interface OpenUnlockApi {
      * @param request Unlock payload containing email and confirmation code.
      * @return Unit result on success, or a mapped failure.
      */
-    suspend fun unlockByEmail(
+    public suspend fun unlockByEmail(
         request: UnlockByEmailConfirmationRequest
     ): AppResult<Unit>
 
@@ -37,7 +37,7 @@ interface OpenUnlockApi {
      * @param request Target phone number request payload.
      * @return Confirmation dispatch result, or a mapped failure.
      */
-    suspend fun sendUnlockPhoneConfirmation(
+    public suspend fun sendUnlockPhoneConfirmation(
         request: SendConfirmationToPhoneRequest
     ): AppResult<OtpConfirmationPayload>
 
@@ -47,7 +47,7 @@ interface OpenUnlockApi {
      * @param request Unlock payload containing phone number and confirmation code.
      * @return Unit result on success, or a mapped failure.
      */
-    suspend fun unlockByPhone(
+    public suspend fun unlockByPhone(
         request: UnlockByPhoneConfirmationRequest
     ): AppResult<Unit>
 
@@ -57,7 +57,7 @@ interface OpenUnlockApi {
      * @param request Unlock payload containing external auth provider and token.
      * @return Unit result on success, or a mapped failure.
      */
-    suspend fun unlockByExternalAuthProvider(
+    public suspend fun unlockByExternalAuthProvider(
         request: UnlockByExternalAuthProviderRequest
     ): AppResult<Unit>
 }

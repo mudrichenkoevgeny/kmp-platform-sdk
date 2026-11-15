@@ -5,13 +5,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.SelfUpdateUserRequest
 
 /** Current user data fetch and account deletion. */
-interface OpenUserApi {
+public interface OpenUserApi {
     /**
      * Fetches user data for the signed-in user.
      *
      * @return Current user DTO from the shared contract, or a mapped failure.
      */
-    suspend fun getUser(): AppResult<UserPrivatePayload>
+    public suspend fun getUser(): AppResult<UserPrivatePayload>
 
     /**
      * Partially updates user details and profile fields of the currently authenticated user.
@@ -19,19 +19,19 @@ interface OpenUserApi {
      * @param request Patch payload containing fields to change.
      * @return Updated current user DTO, or a mapped failure.
      */
-    suspend fun selfUpdateUser(request: SelfUpdateUserRequest): AppResult<UserPrivatePayload>
+    public suspend fun selfUpdateUser(request: SelfUpdateUserRequest): AppResult<UserPrivatePayload>
 
     /**
      * Permanently deletes the signed-in account on the server.
      *
      * @return Success or a mapped failure.
      */
-    suspend fun scheduleUserDeletion(): AppResult<UserPrivatePayload>
+    public suspend fun scheduleUserDeletion(): AppResult<UserPrivatePayload>
 
     /**
      * Cancels a scheduled account deletion and restores the user to an active state.
      *
      * @return Current user DTO reflecting the restored account status, or a mapped failure.
      */
-    suspend fun restoreUser(): AppResult<UserPrivatePayload>
+    public suspend fun restoreUser(): AppResult<UserPrivatePayload>
 }

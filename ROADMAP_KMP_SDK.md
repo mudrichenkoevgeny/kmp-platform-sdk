@@ -6,16 +6,16 @@ This document outlines the strategic roadmap for improving code quality, archite
 
 - [ ] **Strict Kotlin Compiler Configuration (Typecheck)**
   - [ ] Treat Warnings as Errors (`-Werror`): Enforce zero-warning policy across all module targets (`commonMain`, `androidMain`, `wasmJsMain`).
-  - [ ] Explicit API Mode (`-Xexplicit-api=strict`): Mandatory for all public SDK modules (`core/*`, `feature/*`) to guarantee explicit visibility modifiers (`public`, `internal`) and explicit return types, preventing internal implementation leakage.
-- [ ] **Detekt 2.x (Static Analysis)**
-  - [ ] Gradle Integration: Setup `io.gitlab.arturbosch.detekt` with centralized baseline and `config/detekt/detekt.yml`.
+  - [x] Explicit API Mode (`-Xexplicit-api=strict`): Mandatory for all public SDK modules (`core/*`, `feature/*`) to guarantee explicit visibility modifiers (`public`, `internal`) and explicit return types, preventing internal implementation leakage.
+- [x] **Detekt 2.x (Static Analysis)**
+  - [x] Gradle Integration: Setup `io.gitlab.arturbosch.detekt` with centralized baseline and `config/detekt/detekt.yml`.
   - [ ] `UnsafeCallOnNullableType`: Absolute ban on the `!!` operator across production source sets (`commonMain`, `androidMain`, `wasmJsMain`).
   - [ ] `MandatoryBracesIfStatements`: Mandatory curly braces on all `if`/`else` control flow branches.
   - [ ] Custom / Formatting PSI checks: Ban inline implementation comments (`//`, `/* */`) inside function bodies (preserving structured KDoc `/** */`).
   - [ ] `when` Expression Control: Ban assignments and function calls inside `when (...)` condition subjects.
 - [ ] **Ktlint & Formatting Control**
-  - [ ] Gradle Plugin: Setup `org.jlleitschuh.gradle.ktlint` driven by `.editorconfig`.
-  - [ ] Strict prohibition of trailing commas (`ktlint_standard_trailing-comma-on-call-site = disabled`, `ktlint_standard_trailing-comma-on-declaration-site = disabled`).
+  - [x] Gradle Plugin: Setup `org.jlleitschuh.gradle.ktlint` driven by `.editorconfig`.
+  - [x] Strict prohibition of trailing commas (`ktlint_standard_trailing-comma-on-call-site = disabled`, `ktlint_standard_trailing-comma-on-declaration-site = disabled`).
   - [ ] Strict prohibition of Fully Qualified Names (FQN) in expressions, types, and generics (`no-empty-first-line-at-class-body`, import optimization).
   - [ ] Consistent import ordering, wildcard import bans, and automated unused import stripping.
 - [ ] **Lefthook (Local Pre-Commit Automation)**
@@ -51,7 +51,7 @@ Konsist enforces the modular boundaries and architectural invariants defined in 
   - [ ] Verify that `@Composable` functions do not pass raw string literals to UI text consumers (e.g., `Text`, buttons, dialog labels).
   - [ ] Require localized resources (`Res.string.*` via `stringResource(...)`).
 - [ ] **Compose Preview Coverage**
-  - [ ] Validate that every UI screen component (`*Screen.kt`) provides dedicated preview entry points utilizing preview annotations (`@ComponentSizePreviews`, `@ThemePreviews`, `@FontScalePreviews`, `@ScreenSizePreviews`).
+  - [ ] Validate that every UI screen component (`*Screen.kt`) provides dedicated preview entry points utilizing preview annotations (`@PreviewComponentSizes`, `@PreviewThemes`, `@PreviewFontScales`, `@PreviewScreenSizes`).
 - [ ] **Design Tokens Consistency Check**
   - [ ] CI verification ensuring `CoreTheme` (colors, typography, dimensions, shapes) maps directly to `GeneratedDesignTokens.kt`.
   - [ ] Guard `GeneratedDesignTokens.kt` against manual PR modifications (source of truth is `platform-design-system`).
@@ -79,7 +79,7 @@ Konsist enforces the modular boundaries and architectural invariants defined in 
 ## 5. API Backward Compatibility & Consumer ProGuard
 
 - [ ] **Binary Compatibility Validator**
-  - [ ] Setup `org.jetbrains.kotlinx.binary-compatibility-validator`.
+  - [x] Setup `org.jetbrains.kotlinx.binary-compatibility-validator`.
   - [ ] Maintain `.api` dumps for all published modules (`core/*`, `feature/*`, `bom`).
   - [ ] Configure `validationDisabled = true` during active feature development phases to prevent blocking builds on ABI evolution, switching to strict mode prior to major releases.
 - [ ] **Consumer R8 / ProGuard Rules (`consumer-rules.pro`)**
@@ -105,7 +105,7 @@ Konsist enforces the modular boundaries and architectural invariants defined in 
 ## 7. Developer Experience (DX) & Documentation
 
 - [ ] **Dokka V2 Documentation Site**
-  - [ ] Integrated `org.jetbrains.dokka` plugin using Dokka V2 HTML engine (`./gradlew dokkaGenerate`).
+  - [x] Integrated `org.jetbrains.dokka` plugin using Dokka V2 HTML engine (`./gradlew dokkaGenerate`).
   - [ ] Cross-module linking across all `core/*` and `feature/*` packages.
   - [ ] Automated deployment of generated static API reference docs to GitHub Pages on release.
 - [ ] **SDK vs Sample Architectural Guard**

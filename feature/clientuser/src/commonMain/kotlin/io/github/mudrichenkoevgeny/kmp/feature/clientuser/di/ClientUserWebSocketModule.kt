@@ -18,7 +18,7 @@ import kotlinx.coroutines.CoroutineScope
  * @param refreshTokenUseCase Triggers token refresh on authentication expiry frames.
  * @param scope Coroutine scope for storage/network update tasks.
  */
-class ClientUserWebSocketModule(
+public class ClientUserWebSocketModule(
     private val userStorage: UserStorage,
     private val userRepository: UserRepository,
     private val authStorage: AuthStorage,
@@ -28,7 +28,7 @@ class ClientUserWebSocketModule(
     /**
      * Component that handles user-related push messages from the server.
      */
-    val userWebSocketMessageHandler: WebSocketMessageHandler by lazy {
+    public val userWebSocketMessageHandler: WebSocketMessageHandler by lazy {
         UserWebSocketMessageHandler(
             userStorage = userStorage,
             userRepository = userRepository,

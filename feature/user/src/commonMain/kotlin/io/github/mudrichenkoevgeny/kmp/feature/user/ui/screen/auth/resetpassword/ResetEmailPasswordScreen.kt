@@ -58,11 +58,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.resetpas
  * @param component Decompose component providing state and callbacks.
  */
 @Composable
-public fun ResetEmailPasswordScreen(component: ResetEmailPasswordComponent) {
+public fun ResetEmailPasswordScreen(
+    component: ResetEmailPasswordComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
 
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Children(
@@ -73,7 +76,7 @@ public fun ResetEmailPasswordScreen(component: ResetEmailPasswordComponent) {
                 is ResetEmailPasswordComponent.Child.EmailInput -> {
                     EmailInputContent(
                         state = state,
-                        onEmailChanged = component::onEmailChanged,
+                        onEmailChange = component::onEmailChanged,
                         onSendCodeClick = component::onSendCodeClick,
                         onBackClick = component::onBackClick
                     )
@@ -83,8 +86,8 @@ public fun ResetEmailPasswordScreen(component: ResetEmailPasswordComponent) {
                     ResetInputContent(
                         state = state,
                         email = activeChild.email,
-                        onCodeChanged = component::onCodeChanged,
-                        onPasswordChanged = component::onPasswordChanged,
+                        onCodeChange = component::onCodeChanged,
+                        onPasswordChange = component::onPasswordChanged,
                         onConfirmResetClick = component::onConfirmResetClick,
                         onResendCodeClick = component::onSendCodeClick,
                         onResetEmailClick = component::onResetEmailClick,
@@ -99,7 +102,7 @@ public fun ResetEmailPasswordScreen(component: ResetEmailPasswordComponent) {
 @Composable
 private fun EmailInputContent(
     state: ResetEmailPasswordScreenState,
-    onEmailChanged: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
     onSendCodeClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
@@ -138,7 +141,7 @@ private fun EmailInputContent(
             ) {
                 CoreEmailTextField(
                     value = state.email,
-                    onValueChange = onEmailChanged,
+                    onValueChange = onEmailChange,
                     label = { CoreBodyText(userUi.email) },
                     placeholder = { CoreBodyText(userUi.email) },
                     modifier = Modifier.testTag(ResetEmailPasswordTestTags.EMAIL_INPUT),
@@ -164,8 +167,8 @@ private fun EmailInputContent(
 private fun ResetInputContent(
     state: ResetEmailPasswordScreenState,
     email: String,
-    onCodeChanged: (String) -> Unit,
-    onPasswordChanged: (String) -> Unit,
+    onCodeChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
     onConfirmResetClick: () -> Unit,
     onResendCodeClick: () -> Unit,
     onResetEmailClick: () -> Unit,
@@ -214,7 +217,7 @@ private fun ResetInputContent(
             ) {
                 CoreCodeTextField(
                     value = state.code,
-                    onValueChange = onCodeChanged,
+                    onValueChange = onCodeChange,
                     label = { CoreBodyText(userUi.confirmationCode) },
                     placeholder = { CoreBodyText(userUi.confirmationCode) },
                     modifier = Modifier.testTag(ResetEmailPasswordTestTags.CODE_INPUT),
@@ -225,7 +228,7 @@ private fun ResetInputContent(
 
                 CoreOutlinedTextField(
                     value = state.newPassword,
-                    onValueChange = onPasswordChanged,
+                    onValueChange = onPasswordChange,
                     modifier = Modifier.testTag(ResetEmailPasswordTestTags.NEW_PASSWORD_INPUT),
                     label = { CoreBodyText(userUi.newPassword) },
                     placeholder = { CoreBodyText(userUi.newPassword) },

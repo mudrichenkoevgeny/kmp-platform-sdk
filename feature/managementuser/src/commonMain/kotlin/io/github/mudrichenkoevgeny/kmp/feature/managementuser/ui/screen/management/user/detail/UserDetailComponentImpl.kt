@@ -49,7 +49,7 @@ import kotlin.time.Instant
  * @param onUserDeleted Callback invoked when the user account is deleted.
  * @param onBack Pops this screen from the navigation stack.
  */
-public class UserDetailComponentImpl public constructor(
+public class UserDetailComponentImpl(
     componentContext: ComponentContext,
     private val params: UserDetailParams,
     private val getUserUseCase: GetUserUseCase,

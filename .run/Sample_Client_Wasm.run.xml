@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="Sample Client Wasm" type="GradleRunConfiguration" factoryName="Gradle">
+    <configuration name="Sample Client Wasm" default="false" factoryName="Gradle" type="GradleRunConfiguration">
         <ExternalSystemSettings>
             <option name="executionName" />
             <option name="externalProjectPath" value="$PROJECT_DIR$" />

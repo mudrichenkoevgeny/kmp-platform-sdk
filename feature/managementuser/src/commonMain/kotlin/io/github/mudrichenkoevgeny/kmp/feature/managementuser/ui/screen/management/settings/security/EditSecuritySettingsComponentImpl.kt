@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
  * @param resetRemoteSecuritySettingsUseCase Resets security settings to defaults.
  * @param onBack Pops this screen from the navigation stack.
  */
-public class EditSecuritySettingsComponentImpl public constructor(
+public class EditSecuritySettingsComponentImpl(
     componentContext: ComponentContext,
     initialDialogConfig: SettingsDialogConfig? = null,
     private val getManagementSecuritySettingsUseCase: GetManagementSecuritySettingsUseCase,

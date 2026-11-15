@@ -33,7 +33,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  * @param managementUserComponent Management user feature component providing administrative auth use cases.
  * @param onFinished Invoked when staff authentication succeeds or completes.
  */
-public class ManagementLoginRootComponentImpl public constructor(
+public class ManagementLoginRootComponentImpl(
     componentContext: ComponentContext,
     private val settingsComponent: SettingsComponent,
     private val securityComponent: SecurityComponent,
@@ -149,7 +149,8 @@ public class ManagementLoginRootComponentImpl public constructor(
                 componentContext = context,
                 params = config.params,
                 resetPasswordRepository = managementUserComponent.passwordRepository,
-                sendResetPasswordConfirmationToEmailUseCase = managementUserComponent.sendResetPasswordConfirmationToEmailUseCase,
+                sendResetPasswordConfirmationToEmailUseCase =
+                    managementUserComponent.sendResetPasswordConfirmationToEmailUseCase,
                 resetEmailPasswordUseCase = managementUserComponent.resetEmailPasswordUseCase,
                 validatePasswordUseCase = securityComponent.validatePasswordUseCase,
                 onBack = { handleBack(ManagementAuthNavigation.Main) },

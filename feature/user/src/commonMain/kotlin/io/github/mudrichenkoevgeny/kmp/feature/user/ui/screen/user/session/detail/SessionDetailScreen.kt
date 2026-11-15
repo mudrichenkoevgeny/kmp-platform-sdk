@@ -73,11 +73,15 @@ import org.jetbrains.compose.resources.painterResource
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun SessionDetailScreen(component: SessionDetailComponent) {
+public fun SessionDetailScreen(
+    component: SessionDetailComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {

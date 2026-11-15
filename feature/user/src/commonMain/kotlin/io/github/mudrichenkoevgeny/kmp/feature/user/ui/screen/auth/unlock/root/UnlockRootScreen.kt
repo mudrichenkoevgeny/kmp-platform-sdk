@@ -29,7 +29,7 @@ public fun UnlockRootScreen(component: UnlockRootComponent) {
             is UnlockRootComponent.Child.MethodSelection -> UnlockMethodSelectionScreen(instance.component)
             is UnlockRootComponent.Child.TargetInput -> UnlockTargetInputScreen(instance.component)
             is UnlockRootComponent.Child.OtpInput -> UnlockOtpScreen(instance.component)
-            is UnlockRootComponent.Child.Success -> UnlockSuccessScreen(onFinished = component::onDismiss)
+            is UnlockRootComponent.Child.Success -> UnlockSuccessScreen(onFinish = component::onDismiss)
         }
     }
 }

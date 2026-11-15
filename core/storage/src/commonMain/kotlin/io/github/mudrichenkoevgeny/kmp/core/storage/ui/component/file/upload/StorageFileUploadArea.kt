@@ -118,8 +118,8 @@ public fun StorageFileUploadArea(
                         isUploading = state.isUploading,
                         localUri = component.getFilePayload(item.id)?.localUri,
                         onRemove = { id -> component.onRemoveItemClicked(id) },
-                        onCategoryChanged = { id, category -> component.onItemCategoryChanged(id, category) },
-                        onVisibilityChanged = { id, visibility -> component.onItemVisibilityChanged(id, visibility) }
+                        onCategoryChange = { id, category -> component.onItemCategoryChanged(id, category) },
+                        onVisibilityChange = { id, visibility -> component.onItemVisibilityChanged(id, visibility) }
                     )
                 }
             }

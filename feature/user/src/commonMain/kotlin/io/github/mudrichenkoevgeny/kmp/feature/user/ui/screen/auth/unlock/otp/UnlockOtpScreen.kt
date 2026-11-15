@@ -56,11 +56,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun UnlockOtpScreen(component: UnlockOtpComponent) {
+public fun UnlockOtpScreen(
+    component: UnlockOtpComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {

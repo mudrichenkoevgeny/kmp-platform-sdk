@@ -24,11 +24,11 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
 /** [OpenIdentifiersApi] backed by [HttpClient]. */
-class KtorOpenIdentifiersApi(
+public class KtorOpenIdentifiersApi(
     private val client: HttpClient
 ) : OpenIdentifiersApi {
 
-    override suspend fun getUserIdentifier(
+    public override suspend fun getUserIdentifier(
         userIdentifierId: UserIdentifierId
     ): AppResult<UserIdentifierPrivatePayload> = client.callResult {
         get(
@@ -40,7 +40,7 @@ class KtorOpenIdentifiersApi(
         )
     }
 
-    override suspend fun getUserIdentifiers(
+    public override suspend fun getUserIdentifiers(
         params: SelfIdentifierListParams?
     ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = client.callResult {
         get(OpenIdentifierRoutes.GET_IDENTIFIERS) {
@@ -48,7 +48,7 @@ class KtorOpenIdentifiersApi(
         }
     }
 
-    override suspend fun deleteUserIdentifier(
+    public override suspend fun deleteUserIdentifier(
         identifierId: UserIdentifierId
     ): AppResult<Unit> = client.callResult {
         delete(
@@ -60,7 +60,7 @@ class KtorOpenIdentifiersApi(
         )
     }
 
-    override suspend fun addUserIdentifierEmail(
+    public override suspend fun addUserIdentifierEmail(
         request: AddUserIdentifierEmailRequest
     ): AppResult<UserIdentifierPrivatePayload> = client.callResult {
         post(OpenIdentifierRoutes.ADD_IDENTIFIER_EMAIL) {
@@ -68,7 +68,7 @@ class KtorOpenIdentifiersApi(
         }
     }
 
-    override suspend fun addUserIdentifierPhone(
+    public override suspend fun addUserIdentifierPhone(
         request: AddUserIdentifierPhoneRequest
     ): AppResult<UserIdentifierPrivatePayload> = client.callResult {
         post(OpenIdentifierRoutes.ADD_IDENTIFIER_PHONE) {
@@ -76,7 +76,7 @@ class KtorOpenIdentifiersApi(
         }
     }
 
-    override suspend fun addUserIdentifierExternalAuthProvider(
+    public override suspend fun addUserIdentifierExternalAuthProvider(
         request: AddUserIdentifierExternalAuthProviderRequest
     ): AppResult<UserIdentifierPrivatePayload> = client.callResult {
         post(OpenIdentifierRoutes.ADD_IDENTIFIER_EXTERNAL_AUTH_PROVIDER) {
@@ -84,7 +84,7 @@ class KtorOpenIdentifiersApi(
         }
     }
 
-    override suspend fun sendAddEmailIdentifierConfirmation(
+    public override suspend fun sendAddEmailIdentifierConfirmation(
         request: SendConfirmationToEmailRequest
     ): AppResult<OtpConfirmationPayload> = client.callResult {
         post(OpenIdentifierRoutes.SEND_ADD_EMAIL_IDENTIFIER_CONFIRMATION) {
@@ -92,7 +92,7 @@ class KtorOpenIdentifiersApi(
         }
     }
 
-    override suspend fun sendAddPhoneIdentifierConfirmation(
+    public override suspend fun sendAddPhoneIdentifierConfirmation(
         request: SendConfirmationToPhoneRequest
     ): AppResult<OtpConfirmationPayload> = client.callResult {
         post(OpenIdentifierRoutes.SEND_ADD_PHONE_IDENTIFIER_CONFIRMATION) {
@@ -100,7 +100,7 @@ class KtorOpenIdentifiersApi(
         }
     }
 
-    override suspend fun emailChangePassword(
+    public override suspend fun emailChangePassword(
         userIdentifierId: UserIdentifierId,
         request: EmailPasswordChangeRequest
     ): AppResult<Unit> = client.callResult {

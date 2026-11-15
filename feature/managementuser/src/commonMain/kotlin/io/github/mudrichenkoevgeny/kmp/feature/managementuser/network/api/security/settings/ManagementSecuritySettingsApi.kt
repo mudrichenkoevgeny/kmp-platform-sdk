@@ -28,7 +28,9 @@ public interface ManagementSecuritySettingsApi {
      * @param request New security settings payload.
      * @return [AppResult.Success] containing updated [ManagementSecuritySettingsPayload], or a mapped failure.
      */
-    public suspend fun updateManagementSecuritySettings(request: ManagementSecuritySettingsPayload): AppResult<ManagementSecuritySettingsPayload>
+    public suspend fun updateManagementSecuritySettings(
+        request: ManagementSecuritySettingsPayload
+    ): AppResult<ManagementSecuritySettingsPayload>
 
     /**
      * Resets global security settings and policies to default values.

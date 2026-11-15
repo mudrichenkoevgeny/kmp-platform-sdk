@@ -34,11 +34,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserString
  * @param onFinished Callback invoked when the user confirms completion of the unlock flow.
  */
 @Composable
-public fun UnlockSuccessScreen(onFinished: () -> Unit) {
+public fun UnlockSuccessScreen(
+    onFinish: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val userUi = LocalUserStrings.current.ui
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(CoreTheme.dimens.paddingLarge),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -59,7 +62,7 @@ public fun UnlockSuccessScreen(onFinished: () -> Unit) {
         )
         Spacer(Modifier.height(CoreTheme.dimens.paddingLarge))
         Button(
-            onClick = onFinished,
+            onClick = onFinish,
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag(UnlockSuccessTestTags.FINISH_BUTTON)
@@ -80,7 +83,7 @@ public object UnlockSuccessTestTags {
 private fun UnlockSuccessScreenPreviewContent() {
     CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
         Surface {
-            UnlockSuccessScreen(onFinished = {})
+            UnlockSuccessScreen(onFinish = {})
         }
     }
 }

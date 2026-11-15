@@ -4,6 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.session.ManagementSessionRepositoryMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.userlist.ManagementUserSessionListParams
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -18,10 +19,11 @@ class ManagementGetUserSessionsUseCaseTest {
         val repo = ManagementSessionRepositoryMock()
         val useCase = ManagementGetUserSessionsUseCase(repo)
         val targetUserId = UserId(Uuid.random())
+        val params = ManagementUserSessionListParams(userId = targetUserId.asHexDashString())
 
-        val result = useCase(userId = targetUserId)
+        val result = useCase(params = params)
 
         assertIs<AppResult.Success<*>>(result)
-        assertEquals(targetUserId, repo.lastUserId)
+        assertEquals(params, repo.lastUserParams)
     }
 }

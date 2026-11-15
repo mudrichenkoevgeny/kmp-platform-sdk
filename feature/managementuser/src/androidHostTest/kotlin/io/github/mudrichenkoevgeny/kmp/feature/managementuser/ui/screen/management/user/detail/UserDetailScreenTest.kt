@@ -8,7 +8,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig
@@ -59,7 +59,7 @@ class UserDetailScreenTest {
         onNodeWithTag(UserDetailTestTags.BACK_BUTTON).assertIsDisplayed()
         onNodeWithTag(UserDetailTestTags.SESSIONS_BUTTON).performScrollTo().assertIsDisplayed()
         onNodeWithTag(UserDetailTestTags.IDENTIFIERS_BUTTON).performScrollTo().assertIsDisplayed()
-        onNodeWithTag(UserDetailTestTags.ACCOUNT_STATUS_INPUT).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(UserDetailTestTags.ACCOUNT_STATUS_DROPDOWN).performScrollTo().assertIsDisplayed()
         onNodeWithTag(UserDetailTestTags.AUTHORITY_LEVEL_INPUT).performScrollTo().assertIsDisplayed()
         onNodeWithTag(UserDetailTestTags.QUOTA_BYTES_INPUT).performScrollTo().assertIsDisplayed()
         onNodeWithTag(UserDetailTestTags.MAX_UPLOAD_SIZE_BYTES_INPUT).performScrollTo().assertIsDisplayed()

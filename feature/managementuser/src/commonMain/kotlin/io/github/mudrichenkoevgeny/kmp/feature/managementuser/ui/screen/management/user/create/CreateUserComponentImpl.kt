@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
  * @param onSuccess Callback invoked when user creation succeeds to dismiss/pop creation screen.
  * @param onBack Pops this screen from the navigation stack.
  */
-public class CreateUserComponentImpl public constructor(
+public class CreateUserComponentImpl(
     componentContext: ComponentContext,
     private val createUserUseCase: CreateUserUseCase,
     private val uploadFileUseCase: UploadFileUseCase? = null,

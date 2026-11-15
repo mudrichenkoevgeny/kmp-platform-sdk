@@ -22,7 +22,9 @@ public class SelfManagementIdentifiersApiMock : SelfManagementIdentifiersApi {
         AppResult.Error(CommonError.Unknown())
     public var emailChangePasswordResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
 
-    public override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivatePayload> =
+    public override suspend fun getUserIdentifier(
+        userIdentifierId: UserIdentifierId
+    ): AppResult<UserIdentifierPrivatePayload> =
         getUserIdentifierResult
 
     public override suspend fun getUserIdentifiers(

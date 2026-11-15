@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
  * @param onNavigateToAuditEventDetail Callback invoked when an audit event card is selected.
  * @param onBack Callback invoked to pop the screen.
  */
-public class AuditEventListComponentImpl public constructor(
+public class AuditEventListComponentImpl(
     componentContext: ComponentContext,
     private val params: ManagementAuditEventListParams,
     private val getAuditEventsUseCase: GetAuditEventsUseCase,

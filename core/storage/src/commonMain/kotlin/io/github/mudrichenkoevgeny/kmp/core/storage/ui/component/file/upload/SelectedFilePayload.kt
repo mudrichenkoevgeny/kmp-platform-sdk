@@ -15,6 +15,6 @@ public class SelectedFilePayload(
     public val fileName: String,
     public val fileSizeBytes: Long,
     public val mimeType: String,
-    public val localUri: String?,
+    public val localUri: String? = null,
     public val openReadChannel: suspend () -> ByteReadChannel
 )

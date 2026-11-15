@@ -108,18 +108,23 @@ public fun EditStorageSettingsScreen(
             }
 
             is EditStorageSettingsScreenState.Content -> {
+                val onOpenQuotaChange = component::onTotalStorageQuotaForOpenUserBytesChanged
+                val onMgmtQuotaChange = component::onTotalStorageQuotaForManagementUserBytesChanged
+                val onOpenMaxPendingChange = component::onMaxPendingUploadsForOpenUserChanged
+                val onMgmtMaxPendingChange = component::onMaxPendingUploadsForManagementUserChanged
+                val onCleanupIntervalChange = component::onDeletedFilesCleanupIntervalSecondsChanged
+
                 EditStorageSettingsForm(
                     state = currentState,
-                    onMinUploadSizeBytesChanged = component::onMinUploadSizeBytesChanged,
-                    onMaxUploadSizeBytesChanged = component::onMaxUploadSizeBytesChanged,
-                    onTotalStorageQuotaForOpenUserBytesChanged = component::onTotalStorageQuotaForOpenUserBytesChanged,
-                    onTotalStorageQuotaForManagementUserBytesChanged =
-                        component::onTotalStorageQuotaForManagementUserBytesChanged,
-                    onPresignedUrlExpirationSecondsChanged = component::onPresignedUrlExpirationSecondsChanged,
-                    onMaxPendingUploadsForOpenUserChanged = component::onMaxPendingUploadsForOpenUserChanged,
-                    onMaxPendingUploadsForManagementUserChanged = component::onMaxPendingUploadsForManagementUserChanged,
-                    onIsDeduplicationEnabledToggled = component::onIsDeduplicationEnabledToggled,
-                    onDeletedFilesCleanupIntervalSecondsChanged = component::onDeletedFilesCleanupIntervalSecondsChanged,
+                    onMinUploadSizeBytesChange = component::onMinUploadSizeBytesChanged,
+                    onMaxUploadSizeBytesChange = component::onMaxUploadSizeBytesChanged,
+                    onTotalStorageQuotaForOpenUserBytesChange = onOpenQuotaChange,
+                    onTotalStorageQuotaForManagementUserBytesChange = onMgmtQuotaChange,
+                    onPresignedUrlExpirationSecondsChange = component::onPresignedUrlExpirationSecondsChanged,
+                    onMaxPendingUploadsForOpenUserChange = onOpenMaxPendingChange,
+                    onMaxPendingUploadsForManagementUserChange = onMgmtMaxPendingChange,
+                    onIsDeduplicationEnabledToggle = component::onIsDeduplicationEnabledToggled,
+                    onDeletedFilesCleanupIntervalSecondsChange = onCleanupIntervalChange,
                     onSaveClick = component::onSaveClick,
                     onResetClick = component::onResetClick,
                     modifier = Modifier.padding(padding)
@@ -158,15 +163,15 @@ public fun EditStorageSettingsScreen(
 @Composable
 private fun EditStorageSettingsForm(
     state: EditStorageSettingsScreenState.Content,
-    onMinUploadSizeBytesChanged: (String) -> Unit,
-    onMaxUploadSizeBytesChanged: (String) -> Unit,
-    onTotalStorageQuotaForOpenUserBytesChanged: (String) -> Unit,
-    onTotalStorageQuotaForManagementUserBytesChanged: (String) -> Unit,
-    onPresignedUrlExpirationSecondsChanged: (String) -> Unit,
-    onMaxPendingUploadsForOpenUserChanged: (String) -> Unit,
-    onMaxPendingUploadsForManagementUserChanged: (String) -> Unit,
-    onIsDeduplicationEnabledToggled: (Boolean) -> Unit,
-    onDeletedFilesCleanupIntervalSecondsChanged: (String) -> Unit,
+    onMinUploadSizeBytesChange: (String) -> Unit,
+    onMaxUploadSizeBytesChange: (String) -> Unit,
+    onTotalStorageQuotaForOpenUserBytesChange: (String) -> Unit,
+    onTotalStorageQuotaForManagementUserBytesChange: (String) -> Unit,
+    onPresignedUrlExpirationSecondsChange: (String) -> Unit,
+    onMaxPendingUploadsForOpenUserChange: (String) -> Unit,
+    onMaxPendingUploadsForManagementUserChange: (String) -> Unit,
+    onIsDeduplicationEnabledToggle: (Boolean) -> Unit,
+    onDeletedFilesCleanupIntervalSecondsChange: (String) -> Unit,
     onSaveClick: () -> Unit,
     onResetClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -179,7 +184,7 @@ private fun EditStorageSettingsForm(
     ) {
         CoreOutlinedTextField(
             value = state.minUploadSizeBytes,
-            onValueChange = onMinUploadSizeBytesChanged,
+            onValueChange = onMinUploadSizeBytesChange,
             label = { CoreBodyText(storageUi.minUploadSizeBytes) },
             enabled = !state.isSaving,
             modifier = Modifier
@@ -189,7 +194,7 @@ private fun EditStorageSettingsForm(
 
         CoreOutlinedTextField(
             value = state.maxUploadSizeBytes,
-            onValueChange = onMaxUploadSizeBytesChanged,
+            onValueChange = onMaxUploadSizeBytesChange,
             label = { CoreBodyText(storageUi.maxUploadSizeBytes) },
             enabled = !state.isSaving,
             modifier = Modifier
@@ -199,7 +204,7 @@ private fun EditStorageSettingsForm(
 
         CoreOutlinedTextField(
             value = state.totalStorageQuotaForOpenUserBytes,
-            onValueChange = onTotalStorageQuotaForOpenUserBytesChanged,
+            onValueChange = onTotalStorageQuotaForOpenUserBytesChange,
             label = { CoreBodyText(storageUi.totalStorageQuotaForOpenUserBytes) },
             enabled = !state.isSaving,
             modifier = Modifier
@@ -209,7 +214,7 @@ private fun EditStorageSettingsForm(
 
         CoreOutlinedTextField(
             value = state.totalStorageQuotaForManagementUserBytes,
-            onValueChange = onTotalStorageQuotaForManagementUserBytesChanged,
+            onValueChange = onTotalStorageQuotaForManagementUserBytesChange,
             label = { CoreBodyText(storageUi.totalStorageQuotaForManagementUserBytes) },
             enabled = !state.isSaving,
             modifier = Modifier
@@ -219,7 +224,7 @@ private fun EditStorageSettingsForm(
 
         CoreOutlinedTextField(
             value = state.presignedUrlExpirationSeconds,
-            onValueChange = onPresignedUrlExpirationSecondsChanged,
+            onValueChange = onPresignedUrlExpirationSecondsChange,
             label = { CoreBodyText(storageUi.presignedUrlExpirationSeconds) },
             enabled = !state.isSaving,
             modifier = Modifier
@@ -229,7 +234,7 @@ private fun EditStorageSettingsForm(
 
         CoreOutlinedTextField(
             value = state.maxPendingUploadsForOpenUser,
-            onValueChange = onMaxPendingUploadsForOpenUserChanged,
+            onValueChange = onMaxPendingUploadsForOpenUserChange,
             label = { CoreBodyText(storageUi.maxPendingUploadsForOpenUser) },
             enabled = !state.isSaving,
             modifier = Modifier
@@ -239,7 +244,7 @@ private fun EditStorageSettingsForm(
 
         CoreOutlinedTextField(
             value = state.maxPendingUploadsForManagementUser,
-            onValueChange = onMaxPendingUploadsForManagementUserChanged,
+            onValueChange = onMaxPendingUploadsForManagementUserChange,
             label = { CoreBodyText(storageUi.maxPendingUploadsForManagementUser) },
             enabled = !state.isSaving,
             modifier = Modifier
@@ -254,7 +259,7 @@ private fun EditStorageSettingsForm(
         ) {
             Checkbox(
                 checked = state.isDeduplicationEnabled,
-                onCheckedChange = onIsDeduplicationEnabledToggled,
+                onCheckedChange = onIsDeduplicationEnabledToggle,
                 enabled = !state.isSaving,
                 modifier = Modifier.testTag(EditStorageSettingsTestTags.IS_DEDUPLICATION_ENABLED_CHECKBOX)
             )
@@ -263,7 +268,7 @@ private fun EditStorageSettingsForm(
 
         CoreOutlinedTextField(
             value = state.deletedFilesCleanupIntervalSeconds,
-            onValueChange = onDeletedFilesCleanupIntervalSecondsChanged,
+            onValueChange = onDeletedFilesCleanupIntervalSecondsChange,
             label = { CoreBodyText(storageUi.deletedFilesCleanupIntervalSeconds) },
             enabled = !state.isSaving,
             modifier = Modifier

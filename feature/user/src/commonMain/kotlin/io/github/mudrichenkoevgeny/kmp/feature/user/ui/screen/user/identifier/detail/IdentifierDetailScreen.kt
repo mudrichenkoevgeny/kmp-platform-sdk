@@ -66,11 +66,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun IdentifierDetailScreen(component: IdentifierDetailComponent) {
+public fun IdentifierDetailScreen(
+    component: IdentifierDetailComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {
@@ -111,7 +115,7 @@ public fun IdentifierDetailScreen(component: IdentifierDetailComponent) {
                 is IdentifierDetailScreenState.Content -> {
                     Content(
                         state = currentState,
-                        onDeleteIdentifierRequested = component::onDeleteIdentifierRequested,
+                        onDeleteIdentifierRequest = component::onDeleteIdentifierRequested,
                         onDismissDeleteIdentifierDialog = component::onDismissDeleteIdentifierDialog,
                         onDeleteIdentifierConfirm = component::onDeleteIdentifierClick,
                         onChangePasswordClick = component::onChangePasswordClick,
@@ -129,7 +133,7 @@ public fun IdentifierDetailScreen(component: IdentifierDetailComponent) {
 @Composable
 private fun Content(
     state: IdentifierDetailScreenState.Content,
-    onDeleteIdentifierRequested: () -> Unit,
+    onDeleteIdentifierRequest: () -> Unit,
     onDismissDeleteIdentifierDialog: () -> Unit,
     onDeleteIdentifierConfirm: () -> Unit,
     onChangePasswordClick: () -> Unit,
@@ -240,7 +244,7 @@ private fun Content(
         if (!state.isCurrentIdentifier && !state.isSelfIdentifier) {
             CoreButton(
                 text = userUi.identifierDeleteButton,
-                onClick = onDeleteIdentifierRequested,
+                onClick = onDeleteIdentifierRequest,
                 enabled = !state.actionLoading,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.error,

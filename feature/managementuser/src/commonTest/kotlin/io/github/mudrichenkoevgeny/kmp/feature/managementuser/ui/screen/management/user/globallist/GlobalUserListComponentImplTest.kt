@@ -8,9 +8,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.user.ManagementUserRepositoryMock
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.DeleteUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUsersUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserSummary
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.user.globallist.ManagementUserListParams
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserSummary
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -90,11 +92,14 @@ class GlobalUserListComponentImplTest {
         lifecycle.resume()
 
         val useCase = GetUsersUseCase(repository)
+        val deleteUserUseCase = DeleteUserUseCase(repository)
         val context = TestContext()
 
         context.component = GlobalUserListComponentImpl(
             componentContext = DefaultComponentContext(lifecycle),
+            params = ManagementUserListParams(),
             getUsersUseCase = useCase,
+            deleteUserUseCase = deleteUserUseCase,
             onNavigateToUserDetail = { userId -> context.lastUserClicked = userId },
             onNavigateToCreateUser = { context.onCreateUserCalls++ },
             onBack = { context.onBackCalls++ }

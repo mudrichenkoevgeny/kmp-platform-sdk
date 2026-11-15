@@ -13,7 +13,9 @@ public class SaveRemoteSecuritySettingsUseCase(
     private val managementSecuritySettingsRepository: ManagementSecuritySettingsRepository
 ) {
     /** Saves remote management security settings. */
-    public suspend operator fun invoke(securitySettings: ManagementSecuritySettings): AppResult<ManagementSecuritySettings> =
+    public suspend operator fun invoke(
+        securitySettings: ManagementSecuritySettings
+    ): AppResult<ManagementSecuritySettings> =
         managementSecuritySettingsRepository.saveRemoteManagementSecuritySettings(
             securitySettings
         )

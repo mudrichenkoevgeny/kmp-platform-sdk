@@ -3,7 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail
 import android.app.Application
 import androidx.compose.material3.Surface
 import androidx.compose.ui.test.onRoot
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi

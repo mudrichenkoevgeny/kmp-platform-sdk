@@ -178,22 +178,28 @@ public class ManagementUserComponent(
     )
 
     /** Repository for self-management login (email/totp). */
-    public val loginRepository: LoginRepository get() = repositoryModule.selfManagementLoginRepository
+    public val loginRepository: LoginRepository
+        get() = repositoryModule.selfManagementLoginRepository
 
     /** Repository for self-management account unlock operations. */
-    public val unlockRepository: UnlockRepository get() = repositoryModule.selfManagementUnlockRepository
+    public val unlockRepository: UnlockRepository
+        get() = repositoryModule.selfManagementUnlockRepository
 
     /** Repository for current management user data. */
-    public val userRepository: UserRepository get() = repositoryModule.selfManagementUserRepository
+    public val userRepository: UserRepository
+        get() = repositoryModule.selfManagementUserRepository
 
     /** Repository for password recovery in management context. */
-    public val passwordRepository: ResetPasswordRepository get() = repositoryModule.selfManagementResetPasswordRepository
+    public val passwordRepository: ResetPasswordRepository
+        get() = repositoryModule.selfManagementResetPasswordRepository
 
     /** Repository for management-specific authentication settings. */
-    public val authSettingsRepository: ManagementAuthSettingsRepository get() = repositoryModule.managementAuthSettingsRepository
+    public val authSettingsRepository: ManagementAuthSettingsRepository
+        get() = repositoryModule.managementAuthSettingsRepository
 
     /** Validator for password rules from core security. */
-    public val passwordPolicyValidator: PasswordPolicyValidator get() = securityComponent.passwordPolicyValidator
+    public val passwordPolicyValidator: PasswordPolicyValidator
+        get() = securityComponent.passwordPolicyValidator
 
     private val useCaseModule = ManagementUserUseCaseModule(
         managementUserRepositoryModule = repositoryModule,
@@ -211,166 +217,220 @@ public class ManagementUserComponent(
     )
 
     /** Refreshes the management session. */
-    public val refreshTokenUseCase: RefreshTokenUseCase get() = useCaseModule.refreshTokenUseCase
+    public val refreshTokenUseCase: RefreshTokenUseCase
+        get() = useCaseModule.refreshTokenUseCase
 
     /** Signs in as manager via email. */
-    public val loginByEmailUseCase: LoginByEmailUseCase get() = useCaseModule.loginByEmailUseCase
+    public val loginByEmailUseCase: LoginByEmailUseCase
+        get() = useCaseModule.loginByEmailUseCase
 
     /** Signs in as manager via TOTP. */
-    public val loginByTotpUseCase: LoginByTotpUseCase get() = useCaseModule.loginByTotpUseCase
+    public val loginByTotpUseCase: LoginByTotpUseCase
+        get() = useCaseModule.loginByTotpUseCase
 
     /** Signs in as manager via recovery code. */
-    public val loginByTotpRecoveryCodeUseCase: LoginByTotpRecoveryCodeUseCase get() = useCaseModule.loginByTotpRecoveryCodeUseCase
+    public val loginByTotpRecoveryCodeUseCase: LoginByTotpRecoveryCodeUseCase
+        get() = useCaseModule.loginByTotpRecoveryCodeUseCase
 
     /** Forces refresh of auth settings. */
-    public val refreshManagementAuthSettingsUseCase: RefreshManagementAuthSettingsUseCase get() = useCaseModule.refreshManagementAuthSettingsUseCase
+    public val refreshManagementAuthSettingsUseCase: RefreshManagementAuthSettingsUseCase
+        get() = useCaseModule.refreshManagementAuthSettingsUseCase
 
     /** Forces refresh of global settings. */
-    public val refreshManagementGlobalSettingsUseCase: RefreshManagementGlobalSettingsUseCase get() = useCaseModule.refreshManagementGlobalSettingsUseCase
+    public val refreshManagementGlobalSettingsUseCase: RefreshManagementGlobalSettingsUseCase
+        get() = useCaseModule.refreshManagementGlobalSettingsUseCase
 
     /** Forces refresh of security settings. */
-    public val refreshManagementSecuritySettingsUseCase: RefreshManagementSecuritySettingsUseCase get() = useCaseModule.refreshManagementSecuritySettingsUseCase
+    public val refreshManagementSecuritySettingsUseCase: RefreshManagementSecuritySettingsUseCase
+        get() = useCaseModule.refreshManagementSecuritySettingsUseCase
 
     /** Resets management password. */
-    public val resetEmailPasswordUseCase: ResetEmailPasswordUseCase get() = useCaseModule.resetEmailPasswordUseCase
+    public val resetEmailPasswordUseCase: ResetEmailPasswordUseCase
+        get() = useCaseModule.resetEmailPasswordUseCase
 
     /** Requests password reset code. */
-    public val sendResetPasswordConfirmationToEmailUseCase: SendResetPasswordConfirmationToEmailUseCase get() = useCaseModule.sendResetPasswordConfirmationToEmailUseCase
+    public val sendResetPasswordConfirmationToEmailUseCase: SendResetPasswordConfirmationToEmailUseCase
+        get() = useCaseModule.sendResetPasswordConfirmationToEmailUseCase
 
     /** Returns auth providers for management app. */
-    public val getAvailableUserAuthProvidersUseCase: GetAvailableUserAuthProvidersUseCase get() = useCaseModule.getAvailableUserAuthProvidersUseCase
+    public val getAvailableUserAuthProvidersUseCase: GetAvailableUserAuthProvidersUseCase
+        get() = useCaseModule.getAvailableUserAuthProvidersUseCase
 
     /** Refreshes full configuration for the management user. */
-    public val refreshUserConfigurationUseCase: RefreshManagementUserConfigurationUseCase get() = useCaseModule.refreshUserConfigurationUseCase
+    public val refreshUserConfigurationUseCase: RefreshManagementUserConfigurationUseCase
+        get() = useCaseModule.refreshUserConfigurationUseCase
 
     /** Sends an account unlock code to the specified email. */
-    public val sendUnlockEmailConfirmationUseCase: SendUnlockEmailConfirmationUseCase get() = useCaseModule.sendUnlockEmailConfirmationUseCase
+    public val sendUnlockEmailConfirmationUseCase: SendUnlockEmailConfirmationUseCase
+        get() = useCaseModule.sendUnlockEmailConfirmationUseCase
 
     /** Unlocks an account using an email code. */
-    public val unlockByEmailUseCase: UnlockByEmailUseCase get() = useCaseModule.unlockByEmailUseCase
+    public val unlockByEmailUseCase: UnlockByEmailUseCase
+        get() = useCaseModule.unlockByEmailUseCase
 
     /** Sends an account unlock code to the specified phone. */
-    public val sendUnlockPhoneConfirmationUseCase: SendUnlockPhoneConfirmationUseCase get() = useCaseModule.sendUnlockPhoneConfirmationUseCase
+    public val sendUnlockPhoneConfirmationUseCase: SendUnlockPhoneConfirmationUseCase
+        get() = useCaseModule.sendUnlockPhoneConfirmationUseCase
 
     /** Unlocks an account using a phone code. */
-    public val unlockByPhoneUseCase: UnlockByPhoneUseCase get() = useCaseModule.unlockByPhoneUseCase
+    public val unlockByPhoneUseCase: UnlockByPhoneUseCase
+        get() = useCaseModule.unlockByPhoneUseCase
 
     /** Unlocks an account using an external provider. */
-    public val unlockByExternalAuthProviderUseCase: UnlockByExternalAuthProviderUseCase get() = useCaseModule.unlockByExternalAuthProviderUseCase
+    public val unlockByExternalAuthProviderUseCase: UnlockByExternalAuthProviderUseCase
+        get() = useCaseModule.unlockByExternalAuthProviderUseCase
 
     /** Signs out the manager. */
-    public val logoutUseCase: LogoutUseCase get() = useCaseModule.logoutUseCase
+    public val logoutUseCase: LogoutUseCase
+        get() = useCaseModule.logoutUseCase
 
     /** Schedules the manager account for deletion. */
-    public val scheduleUserDeletionUseCase: ScheduleUserDeletionUseCase get() = useCaseModule.scheduleUserDeletionUseCase
+    public val scheduleUserDeletionUseCase: ScheduleUserDeletionUseCase
+        get() = useCaseModule.scheduleUserDeletionUseCase
 
     /** Restores an account scheduled for deletion. */
-    public val restoreUserUseCase: RestoreUserUseCase get() = useCaseModule.restoreUserUseCase
+    public val restoreUserUseCase: RestoreUserUseCase
+        get() = useCaseModule.restoreUserUseCase
 
     /** Initiates TOTP setup for the manager. */
-    public val setupTotpUseCase: SetupTotpUseCase get() = useCaseModule.setupTotpUseCase
+    public val setupTotpUseCase: SetupTotpUseCase
+        get() = useCaseModule.setupTotpUseCase
 
     /** Enables TOTP for the manager. */
-    public val enableTotpUseCase: EnableTotpUseCase get() = useCaseModule.enableTotpUseCase
+    public val enableTotpUseCase: EnableTotpUseCase
+        get() = useCaseModule.enableTotpUseCase
 
     /** Disables TOTP for the manager. */
-    public val disableTotpUseCase: DisableTotpUseCase get() = useCaseModule.disableTotpUseCase
+    public val disableTotpUseCase: DisableTotpUseCase
+        get() = useCaseModule.disableTotpUseCase
 
     /** Returns active MFA recovery codes for the manager. */
-    public val getRecoveryCodesUseCase: GetRecoveryCodesUseCase get() = useCaseModule.getRecoveryCodesUseCase
+    public val getRecoveryCodesUseCase: GetRecoveryCodesUseCase
+        get() = useCaseModule.getRecoveryCodesUseCase
 
     /** Generates new MFA recovery codes for the manager. */
-    public val regenerateRecoveryCodesUseCase: RegenerateRecoveryCodesUseCase get() = useCaseModule.regenerateRecoveryCodesUseCase
+    public val regenerateRecoveryCodesUseCase: RegenerateRecoveryCodesUseCase
+        get() = useCaseModule.regenerateRecoveryCodesUseCase
 
     /** Returns active sessions for the manager. */
-    public val getSessionsUseCase: GetSessionsUseCase get() = useCaseModule.getSessionsUseCase
+    public val getSessionsUseCase: GetSessionsUseCase
+        get() = useCaseModule.getSessionsUseCase
 
     /** Returns specific session details for the manager. */
-    public val getSessionUseCase: GetSessionUseCase get() = useCaseModule.getSessionUseCase
+    public val getSessionUseCase: GetSessionUseCase
+        get() = useCaseModule.getSessionUseCase
 
     /** Revokes specific manager session. */
-    public val deleteSessionUseCase: DeleteSessionUseCase get() = useCaseModule.deleteSessionUseCase
+    public val deleteSessionUseCase: DeleteSessionUseCase
+        get() = useCaseModule.deleteSessionUseCase
 
     /** Removes a user identifier password administratively. */
-    public val deleteIdentifierPasswordUseCase: ManagementDeleteIdentifierPasswordUseCase get() = useCaseModule.managementDeleteIdentifierPasswordUseCase
+    public val deleteIdentifierPasswordUseCase: ManagementDeleteIdentifierPasswordUseCase
+        get() = useCaseModule.managementDeleteIdentifierPasswordUseCase
 
     /** Revokes all other manager sessions. */
-    public val deleteAllOtherSessionsUseCase: DeleteAllOtherSessionsUseCase get() = useCaseModule.deleteAllOtherSessionsUseCase
+    public val deleteAllOtherSessionsUseCase: DeleteAllOtherSessionsUseCase
+        get() = useCaseModule.deleteAllOtherSessionsUseCase
 
     /** Re-authenticates session via TOTP to update its trust level. */
-    public val reauthenticateSessionUseCase: ReauthenticateSessionUseCase get() = useCaseModule.reauthenticateSessionUseCase
+    public val reauthenticateSessionUseCase: ReauthenticateSessionUseCase
+        get() = useCaseModule.reauthenticateSessionUseCase
 
     /** Returns account identifiers for the manager. */
-    public val getUserIdentifiersUseCase: GetUserIdentifiersUseCase get() = useCaseModule.getUserIdentifiersUseCase
+    public val getUserIdentifiersUseCase: GetUserIdentifiersUseCase
+        get() = useCaseModule.getUserIdentifiersUseCase
 
     /** Returns identifier details for the manager. */
-    public val getUserIdentifierUseCase: GetUserIdentifierUseCase get() = useCaseModule.getUserIdentifierUseCase
+    public val getUserIdentifierUseCase: GetUserIdentifierUseCase
+        get() = useCaseModule.getUserIdentifierUseCase
 
     /** Removes a manager identifier. */
-    public val deleteUserIdentifierUseCase: DeleteUserIdentifierUseCase get() = useCaseModule.deleteUserIdentifierUseCase
+    public val deleteUserIdentifierUseCase: DeleteUserIdentifierUseCase
+        get() = useCaseModule.deleteUserIdentifierUseCase
 
     /** Sends email confirmation for linking (manager). */
-    public val sendAddEmailIdentifierConfirmationUseCase: SendAddEmailIdentifierConfirmationUseCase get() = useCaseModule.sendAddEmailIdentifierConfirmationUseCase
+    public val sendAddEmailIdentifierConfirmationUseCase: SendAddEmailIdentifierConfirmationUseCase
+        get() = useCaseModule.sendAddEmailIdentifierConfirmationUseCase
 
     /** Links new email (manager). */
-    public val addUserIdentifierEmailUseCase: AddUserIdentifierEmailUseCase get() = useCaseModule.addUserIdentifierEmailUseCase
+    public val addUserIdentifierEmailUseCase: AddUserIdentifierEmailUseCase
+        get() = useCaseModule.addUserIdentifierEmailUseCase
 
     /** Sends phone confirmation for linking (manager). */
-    public val sendAddPhoneIdentifierConfirmationUseCase: SendAddPhoneIdentifierConfirmationUseCase get() = useCaseModule.sendAddPhoneIdentifierConfirmationUseCase
+    public val sendAddPhoneIdentifierConfirmationUseCase: SendAddPhoneIdentifierConfirmationUseCase
+        get() = useCaseModule.sendAddPhoneIdentifierConfirmationUseCase
 
     /** Links new phone (manager). */
-    public val addUserIdentifierPhoneUseCase: AddUserIdentifierPhoneUseCase get() = useCaseModule.addUserIdentifierPhoneUseCase
+    public val addUserIdentifierPhoneUseCase: AddUserIdentifierPhoneUseCase
+        get() = useCaseModule.addUserIdentifierPhoneUseCase
 
     /** Updates account password. */
-    public val emailChangePasswordUseCase: EmailChangePasswordUseCase get() = useCaseModule.emailChangePasswordUseCase
+    public val emailChangePasswordUseCase: EmailChangePasswordUseCase
+        get() = useCaseModule.emailChangePasswordUseCase
 
     /** Returns paginated list of users. */
-    public val getUsersUseCase: GetUsersUseCase get() = useCaseModule.getUsersUseCase
+    public val getUsersUseCase: GetUsersUseCase
+        get() = useCaseModule.getUsersUseCase
 
     /** Retrieves specific user details. */
-    public val getUserUseCase: GetUserUseCase get() = useCaseModule.getUserUseCase
+    public val getUserUseCase: GetUserUseCase
+        get() = useCaseModule.getUserUseCase
 
     /** Creates a new user account. */
-    public val createUserUseCase: CreateUserUseCase get() = useCaseModule.createUserUseCase
+    public val createUserUseCase: CreateUserUseCase
+        get() = useCaseModule.createUserUseCase
 
     /** Updates user details. */
-    public val updateUserUseCase: UpdateUserUseCase get() = useCaseModule.updateUserUseCase
+    public val updateUserUseCase: UpdateUserUseCase
+        get() = useCaseModule.updateUserUseCase
 
     /** Deletes user account. */
-    public val deleteUserUseCase: DeleteUserUseCase get() = useCaseModule.deleteUserUseCase
+    public val deleteUserUseCase: DeleteUserUseCase
+        get() = useCaseModule.deleteUserUseCase
 
     /** Retrieves user sessions administratively. */
-    public val managementGetSessionsUseCase: ManagementGetSessionsUseCase get() = useCaseModule.managementGetSessionsUseCase
+    public val managementGetSessionsUseCase: ManagementGetSessionsUseCase
+        get() = useCaseModule.managementGetSessionsUseCase
 
     /** Retrieves active user sessions for a specific user administratively. */
-    public val managementGetUserSessionsUseCase: ManagementGetUserSessionsUseCase get() = useCaseModule.managementGetUserSessionsUseCase
+    public val managementGetUserSessionsUseCase: ManagementGetUserSessionsUseCase
+        get() = useCaseModule.managementGetUserSessionsUseCase
 
     /** Retrieves specific user session details administratively. */
-    public val managementGetSessionUseCase: ManagementGetSessionUseCase get() = useCaseModule.managementGetSessionUseCase
+    public val managementGetSessionUseCase: ManagementGetSessionUseCase
+        get() = useCaseModule.managementGetSessionUseCase
 
     /** Retrieves user identifiers administratively. */
-    public val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase get() = useCaseModule.managementGetIdentifiersUseCase
+    public val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase
+        get() = useCaseModule.managementGetIdentifiersUseCase
 
     /** Retrieves user identifiers for a specific user administratively. */
-    public val managementGetUserIdentifiersUseCase: ManagementGetUserIdentifiersUseCase get() = useCaseModule.managementGetUserIdentifiersUseCase
+    public val managementGetUserIdentifiersUseCase: ManagementGetUserIdentifiersUseCase
+        get() = useCaseModule.managementGetUserIdentifiersUseCase
 
     /** Retrieves specific user identifier details administratively. */
-    public val managementGetIdentifierUseCase: ManagementGetIdentifierUseCase get() = useCaseModule.managementGetIdentifierUseCase
+    public val managementGetIdentifierUseCase: ManagementGetIdentifierUseCase
+        get() = useCaseModule.managementGetIdentifierUseCase
 
     /** Disables TOTP for a specific user administratively. */
-    public val managementDisableTotpUseCase: ManagementDisableTotpUseCase get() = useCaseModule.managementDisableTotpUseCase
+    public val managementDisableTotpUseCase: ManagementDisableTotpUseCase
+        get() = useCaseModule.managementDisableTotpUseCase
 
     /** Revokes all sessions for a specific user administratively. */
-    public val managementDeleteAllUserSessionsUseCase: ManagementDeleteAllUserSessionsUseCase get() = useCaseModule.managementDeleteAllUserSessionsUseCase
+    public val managementDeleteAllUserSessionsUseCase: ManagementDeleteAllUserSessionsUseCase
+        get() = useCaseModule.managementDeleteAllUserSessionsUseCase
 
     /** Revokes a specific session for a user administratively. */
-    public val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase get() = useCaseModule.managementDeleteSessionUseCase
+    public val managementDeleteSessionUseCase: ManagementDeleteSessionUseCase
+        get() = useCaseModule.managementDeleteSessionUseCase
 
     /** Returns paginated audit events. */
-    public val getAuditEventsUseCase: GetAuditEventsUseCase get() = auditApiComponent.getAuditEventsUseCase
+    public val getAuditEventsUseCase: GetAuditEventsUseCase
+        get() = auditApiComponent.getAuditEventsUseCase
 
     /** Retrieves specific audit event by ID. */
-    public val getAuditEventUseCase: GetAuditEventUseCase get() = auditApiComponent.getAuditEventUseCase
+    public val getAuditEventUseCase: GetAuditEventUseCase
+        get() = auditApiComponent.getAuditEventUseCase
 
     private val userWebSocketModule = ManagementUserWebSocketModule(
         userStorage = storageModule.userStorage,
@@ -381,70 +441,92 @@ public class ManagementUserComponent(
     )
 
     /** WebSocket handler for management push events. */
-    public val userWebSocketMessageHandler: WebSocketMessageHandler get() = userWebSocketModule.userWebSocketMessageHandler
+    public val userWebSocketMessageHandler: WebSocketMessageHandler
+        get() = userWebSocketModule.userWebSocketMessageHandler
 
     /** Repository for management-specific global settings. */
-    public val globalSettingsRepository: ManagementGlobalSettingsRepository get() = repositoryModule.managementGlobalSettingsRepository
+    public val globalSettingsRepository: ManagementGlobalSettingsRepository
+        get() = repositoryModule.managementGlobalSettingsRepository
 
     /** Repository for management-specific security settings. */
-    public val securitySettingsRepository: ManagementSecuritySettingsRepository get() = repositoryModule.managementSecuritySettingsRepository
+    public val securitySettingsRepository: ManagementSecuritySettingsRepository
+        get() = repositoryModule.managementSecuritySettingsRepository
 
     /** Returns management auth settings. */
-    public val getManagementAuthSettingsUseCase: GetManagementAuthSettingsUseCase get() = useCaseModule.getManagementAuthSettingsUseCase
+    public val getManagementAuthSettingsUseCase: GetManagementAuthSettingsUseCase
+        get() = useCaseModule.getManagementAuthSettingsUseCase
 
     /** Saves remote auth settings. */
-    public val saveRemoteAuthSettingsUseCase: SaveRemoteAuthSettingsUseCase get() = useCaseModule.saveRemoteAuthSettingsUseCase
+    public val saveRemoteAuthSettingsUseCase: SaveRemoteAuthSettingsUseCase
+        get() = useCaseModule.saveRemoteAuthSettingsUseCase
 
     /** Resets remote auth settings. */
-    public val resetRemoteAuthSettingsUseCase: ResetRemoteAuthSettingsUseCase get() = useCaseModule.resetRemoteAuthSettingsUseCase
+    public val resetRemoteAuthSettingsUseCase: ResetRemoteAuthSettingsUseCase
+        get() = useCaseModule.resetRemoteAuthSettingsUseCase
 
     /** Returns management global settings. */
-    public val getManagementGlobalSettingsUseCase: GetManagementGlobalSettingsUseCase get() = useCaseModule.getManagementGlobalSettingsUseCase
+    public val getManagementGlobalSettingsUseCase: GetManagementGlobalSettingsUseCase
+        get() = useCaseModule.getManagementGlobalSettingsUseCase
 
     /** Saves remote global settings. */
-    public val saveRemoteGlobalSettingsUseCase: SaveRemoteGlobalSettingsUseCase get() = useCaseModule.saveRemoteGlobalSettingsUseCase
+    public val saveRemoteGlobalSettingsUseCase: SaveRemoteGlobalSettingsUseCase
+        get() = useCaseModule.saveRemoteGlobalSettingsUseCase
 
     /** Resets remote global settings. */
-    public val resetRemoteGlobalSettingsUseCase: ResetRemoteGlobalSettingsUseCase get() = useCaseModule.resetRemoteGlobalSettingsUseCase
+    public val resetRemoteGlobalSettingsUseCase: ResetRemoteGlobalSettingsUseCase
+        get() = useCaseModule.resetRemoteGlobalSettingsUseCase
 
     /** Returns management security settings. */
-    public val getManagementSecuritySettingsUseCase: GetManagementSecuritySettingsUseCase get() = useCaseModule.getManagementSecuritySettingsUseCase
+    public val getManagementSecuritySettingsUseCase: GetManagementSecuritySettingsUseCase
+        get() = useCaseModule.getManagementSecuritySettingsUseCase
 
     /** Saves remote security settings. */
-    public val saveRemoteSecuritySettingsUseCase: SaveRemoteSecuritySettingsUseCase get() = useCaseModule.saveRemoteSecuritySettingsUseCase
+    public val saveRemoteSecuritySettingsUseCase: SaveRemoteSecuritySettingsUseCase
+        get() = useCaseModule.saveRemoteSecuritySettingsUseCase
 
     /** Resets remote security settings. */
-    public val resetRemoteSecuritySettingsUseCase: ResetRemoteSecuritySettingsUseCase get() = useCaseModule.resetRemoteSecuritySettingsUseCase
+    public val resetRemoteSecuritySettingsUseCase: ResetRemoteSecuritySettingsUseCase
+        get() = useCaseModule.resetRemoteSecuritySettingsUseCase
 
     /** Administrative storage file listing. */
-    public val managementGetFilesUseCase: ManagementGetFilesUseCase get() = storageComponent.managementGetFilesUseCase
+    public val managementGetFilesUseCase: ManagementGetFilesUseCase
+        get() = storageComponent.managementGetFilesUseCase
 
     /** Administrative storage file detail. */
-    public val managementGetFileDetailUseCase: ManagementGetFileDetailUseCase get() = storageComponent.managementGetFileDetailUseCase
+    public val managementGetFileDetailUseCase: ManagementGetFileDetailUseCase
+        get() = storageComponent.managementGetFileDetailUseCase
 
     /** Administrative storage file deletion. */
-    public val managementDeleteFileUseCase: ManagementDeleteFileUseCase get() = storageComponent.managementDeleteFileUseCase
+    public val managementDeleteFileUseCase: ManagementDeleteFileUseCase
+        get() = storageComponent.managementDeleteFileUseCase
 
     /** Administrative storage file batch deletion. */
-    public val managementDeleteFilesBatchUseCase: ManagementDeleteFilesBatchUseCase get() = storageComponent.managementDeleteFilesBatchUseCase
+    public val managementDeleteFilesBatchUseCase: ManagementDeleteFilesBatchUseCase
+        get() = storageComponent.managementDeleteFilesBatchUseCase
 
     /** Bundles management storage dependencies. */
-    public val managementStorageDependencies: ManagementStorageDependencies get() = storageComponent.managementStorageDependencies
+    public val managementStorageDependencies: ManagementStorageDependencies
+        get() = storageComponent.managementStorageDependencies
 
     /** Returns management storage settings. */
-    public val getManagementStorageSettingsUseCase: GetManagementStorageSettingsUseCase get() = storageComponent.getManagementStorageSettingsUseCase
+    public val getManagementStorageSettingsUseCase: GetManagementStorageSettingsUseCase
+        get() = storageComponent.getManagementStorageSettingsUseCase
 
     /** Refreshes management storage settings. */
-    public val refreshManagementStorageSettingsUseCase: RefreshManagementStorageSettingsUseCase get() = storageComponent.refreshManagementStorageSettingsUseCase
+    public val refreshManagementStorageSettingsUseCase: RefreshManagementStorageSettingsUseCase
+        get() = storageComponent.refreshManagementStorageSettingsUseCase
 
     /** Updates remote management storage settings. */
-    public val updateManagementStorageSettingsUseCase: UpdateManagementStorageSettingsUseCase get() = storageComponent.updateManagementStorageSettingsUseCase
+    public val updateManagementStorageSettingsUseCase: UpdateManagementStorageSettingsUseCase
+        get() = storageComponent.updateManagementStorageSettingsUseCase
 
     /** Resets remote management storage settings. */
-    public val resetRemoteManagementStorageSettingsUseCase: ResetRemoteManagementStorageSettingsUseCase get() = storageComponent.resetRemoteManagementStorageSettingsUseCase
+    public val resetRemoteManagementStorageSettingsUseCase: ResetRemoteManagementStorageSettingsUseCase
+        get() = storageComponent.resetRemoteManagementStorageSettingsUseCase
 
     /** Observes management storage settings flow. */
-    public val observeManagementStorageSettingsUseCase: ObserveManagementStorageSettingsUseCase get() = storageComponent.observeManagementStorageSettingsUseCase
+    public val observeManagementStorageSettingsUseCase: ObserveManagementStorageSettingsUseCase
+        get() = storageComponent.observeManagementStorageSettingsUseCase
 
     /**
      * Creates the root Decompose component for the management user flow.
@@ -477,10 +559,6 @@ public class ManagementUserComponent(
         validateDisplayNameUseCase = useCaseModule.validateDisplayNameUseCase,
         getSessionsUseCase = getSessionsUseCase,
         deleteSessionUseCase = deleteSessionUseCase,
-        openStorageDependencies = storageComponent.createStorageDependencies(
-            storageComponent.selfManagementStorageRepository
-        ),
-        onNavigateToClientStorageFiles = onNavigateToSelfStorageFiles,
         deleteAllOtherSessionsUseCase = deleteAllOtherSessionsUseCase,
         setupTotpUseCase = setupTotpUseCase,
         enableTotpUseCase = enableTotpUseCase,
@@ -491,6 +569,8 @@ public class ManagementUserComponent(
         getUserIdentifierUseCase = getUserIdentifierUseCase,
         deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
         emailChangePasswordUseCase = emailChangePasswordUseCase,
+        openStorageDependencies = storageComponent.createStorageDependencies(storageComponent.openStorageRepository),
+        onNavigateToClientStorageFiles = onNavigateToSelfStorageFiles,
         onNavigateToLogin = onNavigateToLogin
     )
 
@@ -521,44 +601,43 @@ public class ManagementUserComponent(
     public fun createManagementComponent(
         componentContext: ComponentContext,
         onNavigateToUserMain: () -> Unit = {}
-    ): ManagementRootComponent =
-        ManagementRootComponentImpl(
-            componentContext = componentContext,
-            userRepository = userRepository,
-            authStorage = authStorage,
-            deleteSessionUseCase = deleteSessionUseCase,
-            deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
-            getManagementAuthSettingsUseCase = getManagementAuthSettingsUseCase,
-            saveRemoteAuthSettingsUseCase = saveRemoteAuthSettingsUseCase,
-            resetRemoteAuthSettingsUseCase = resetRemoteAuthSettingsUseCase,
-            getManagementGlobalSettingsUseCase = getManagementGlobalSettingsUseCase,
-            saveRemoteGlobalSettingsUseCase = saveRemoteGlobalSettingsUseCase,
-            resetRemoteGlobalSettingsUseCase = resetRemoteGlobalSettingsUseCase,
-            getManagementSecuritySettingsUseCase = getManagementSecuritySettingsUseCase,
-            saveRemoteSecuritySettingsUseCase = saveRemoteSecuritySettingsUseCase,
-            resetRemoteSecuritySettingsUseCase = resetRemoteSecuritySettingsUseCase,
-            getManagementStorageSettingsUseCase = getManagementStorageSettingsUseCase,
-            updateManagementStorageSettingsUseCase = updateManagementStorageSettingsUseCase,
-            resetRemoteManagementStorageSettingsUseCase = resetRemoteManagementStorageSettingsUseCase,
-            getUsersUseCase = getUsersUseCase,
-            getUserUseCase = getUserUseCase,
-            createUserUseCase = createUserUseCase,
-            updateUserUseCase = updateUserUseCase,
-            deleteUserUseCase = deleteUserUseCase,
-            managementGetSessionsUseCase = managementGetSessionsUseCase,
-            managementGetSessionUseCase = managementGetSessionUseCase,
-            managementGetUserSessionsUseCase = managementGetUserSessionsUseCase,
-            managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
-            managementGetIdentifierUseCase = managementGetIdentifierUseCase,
-            managementGetUserIdentifiersUseCase = managementGetUserIdentifiersUseCase,
-            managementDisableTotpUseCase = managementDisableTotpUseCase,
-            managementDeleteSessionUseCase = managementDeleteSessionUseCase,
-            managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase,
-            managementDeleteIdentifierUseCase = useCaseModule.managementDeleteIdentifierUseCase,
-            deleteIdentifierPasswordUseCase = useCaseModule.managementDeleteIdentifierPasswordUseCase,
-            getAuditEventsUseCase = getAuditEventsUseCase,
-            getAuditEventUseCase = getAuditEventUseCase,
-            storageDependencies = managementStorageDependencies,
-            onNavigateToUserMain = onNavigateToUserMain
-        )
+    ): ManagementRootComponent = ManagementRootComponentImpl(
+        componentContext = componentContext,
+        userRepository = userRepository,
+        authStorage = authStorage,
+        deleteSessionUseCase = deleteSessionUseCase,
+        deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
+        getManagementAuthSettingsUseCase = getManagementAuthSettingsUseCase,
+        saveRemoteAuthSettingsUseCase = saveRemoteAuthSettingsUseCase,
+        resetRemoteAuthSettingsUseCase = resetRemoteAuthSettingsUseCase,
+        getManagementGlobalSettingsUseCase = getManagementGlobalSettingsUseCase,
+        saveRemoteGlobalSettingsUseCase = saveRemoteGlobalSettingsUseCase,
+        resetRemoteGlobalSettingsUseCase = resetRemoteGlobalSettingsUseCase,
+        getManagementSecuritySettingsUseCase = getManagementSecuritySettingsUseCase,
+        saveRemoteSecuritySettingsUseCase = saveRemoteSecuritySettingsUseCase,
+        resetRemoteSecuritySettingsUseCase = resetRemoteSecuritySettingsUseCase,
+        getManagementStorageSettingsUseCase = getManagementStorageSettingsUseCase,
+        updateManagementStorageSettingsUseCase = updateManagementStorageSettingsUseCase,
+        resetRemoteManagementStorageSettingsUseCase = resetRemoteManagementStorageSettingsUseCase,
+        getUsersUseCase = getUsersUseCase,
+        getUserUseCase = getUserUseCase,
+        createUserUseCase = createUserUseCase,
+        updateUserUseCase = updateUserUseCase,
+        deleteUserUseCase = deleteUserUseCase,
+        managementGetSessionsUseCase = managementGetSessionsUseCase,
+        managementGetSessionUseCase = managementGetSessionUseCase,
+        managementGetUserSessionsUseCase = managementGetUserSessionsUseCase,
+        managementGetIdentifiersUseCase = managementGetIdentifiersUseCase,
+        managementGetIdentifierUseCase = managementGetIdentifierUseCase,
+        managementGetUserIdentifiersUseCase = managementGetUserIdentifiersUseCase,
+        managementDisableTotpUseCase = managementDisableTotpUseCase,
+        managementDeleteSessionUseCase = managementDeleteSessionUseCase,
+        managementDeleteAllUserSessionsUseCase = managementDeleteAllUserSessionsUseCase,
+        managementDeleteIdentifierUseCase = useCaseModule.managementDeleteIdentifierUseCase,
+        deleteIdentifierPasswordUseCase = useCaseModule.managementDeleteIdentifierPasswordUseCase,
+        getAuditEventsUseCase = getAuditEventsUseCase,
+        getAuditEventUseCase = getAuditEventUseCase,
+        storageDependencies = managementStorageDependencies,
+        onNavigateToUserMain = onNavigateToUserMain
+    )
 }

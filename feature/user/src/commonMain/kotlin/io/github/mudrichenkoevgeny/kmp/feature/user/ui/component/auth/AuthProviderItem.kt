@@ -37,14 +37,15 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 public fun AuthProviderItem(
     authProvider: UserAuthProvider,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Surface(
         onClick = onClick,
         shape = CoreTheme.shapes.small,
         color = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.onPrimary,
-        modifier = Modifier.size(CoreTheme.dimens.iconButtonSize)
+        modifier = modifier.size(CoreTheme.dimens.iconButtonSize)
     ) {
         Box(
             contentAlignment = Alignment.Center,

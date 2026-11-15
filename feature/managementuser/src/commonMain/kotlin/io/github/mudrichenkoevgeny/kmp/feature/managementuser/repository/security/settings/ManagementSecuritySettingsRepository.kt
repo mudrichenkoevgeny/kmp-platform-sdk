@@ -21,7 +21,9 @@ public interface ManagementSecuritySettingsRepository {
      * @param securitySettings New security configuration payload to apply.
      * @return Updated [ManagementSecuritySettings] on success, or an error result when update fails.
      */
-    public suspend fun saveRemoteManagementSecuritySettings(securitySettings: ManagementSecuritySettings): AppResult<ManagementSecuritySettings>
+    public suspend fun saveRemoteManagementSecuritySettings(
+        securitySettings: ManagementSecuritySettings
+    ): AppResult<ManagementSecuritySettings>
 
     /**
      * Resets security settings on the remote server to default values and updates local state.

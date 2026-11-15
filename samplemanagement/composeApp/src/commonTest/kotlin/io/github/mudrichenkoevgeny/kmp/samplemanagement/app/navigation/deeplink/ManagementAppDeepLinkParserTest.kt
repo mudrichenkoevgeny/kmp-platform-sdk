@@ -2,8 +2,9 @@ package io.github.mudrichenkoevgeny.kmp.samplemanagement.app.navigation.deeplink
 
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.route.management.ManagementAuditNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientUserNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.management.ManagementSelfUserNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.management.ManagementUsersNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.totp.main.TotpMainParams
 import io.ktor.http.Url
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -30,8 +31,9 @@ class ManagementAppDeepLinkParserTest {
         val url = Url("https://kmp-platform.internal/user/totp")
         val route = parser.parse(url)
 
-        val userRoute = assertIs<ManagementAppDeepLinkRoute.User>(route)
-        assertEquals(ClientUserNavigation.TotpMain(), userRoute.destination)
+        val managementRoute = assertIs<ManagementAppDeepLinkRoute.Management>(route)
+        val totpDest = assertIs<ManagementSelfUserNavigation.TotpMain>(managementRoute.destination)
+        assertEquals(TotpMainParams(), totpDest.params)
     }
 
     @Test

@@ -78,7 +78,7 @@ class GlobalIdentifierListComponentImplTest {
         context.component.onApplyFilters()
         advanceUntilIdle()
 
-        assertEquals(listOf("test@example.com"), repository.lastIdentifiers)
+        assertEquals("test@example.com", repository.lastGlobalParams?.identifier)
     }
 
     @Test
@@ -93,7 +93,7 @@ class GlobalIdentifierListComponentImplTest {
         )
         advanceUntilIdle()
 
-        assertEquals(UserIdentifierSortBy.CREATED_AT, repository.lastSortBy)
+        assertEquals(UserIdentifierSortBy.CREATED_AT, repository.lastGlobalParams?.sortBy)
     }
 
     @Test

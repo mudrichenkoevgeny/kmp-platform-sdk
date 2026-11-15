@@ -76,12 +76,15 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-public fun TotpMainScreen(component: TotpMainComponent) {
+public fun TotpMainScreen(
+    component: TotpMainComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         Scaffold(
@@ -142,7 +145,7 @@ public fun TotpMainScreen(component: TotpMainComponent) {
                                 SetupInProgressContent(
                                     state = state,
                                     setup = activeChild,
-                                    onCodeChanged = component::onCodeChanged,
+                                    onCodeChange = component::onCodeChanged,
                                     onConfirmClick = component::onConfirmSetupClick
                                 )
                             }
@@ -214,7 +217,7 @@ private fun DisabledContent(
 private fun SetupInProgressContent(
     state: TotpMainScreenState,
     setup: TotpMainComponent.Child.Setup,
-    onCodeChanged: (String) -> Unit,
+    onCodeChange: (String) -> Unit,
     onConfirmClick: () -> Unit
 ) {
     @Suppress("DEPRECATION")
@@ -303,7 +306,7 @@ private fun SetupInProgressContent(
 
         CoreCodeTextField(
             value = state.code,
-            onValueChange = onCodeChanged,
+            onValueChange = onCodeChange,
             label = { CoreBodyText(userUi.totpCode) },
             placeholder = { CoreBodyText(UiValues.Placeholder.TOTP_CODE) },
             enabled = !state.actionLoading,
