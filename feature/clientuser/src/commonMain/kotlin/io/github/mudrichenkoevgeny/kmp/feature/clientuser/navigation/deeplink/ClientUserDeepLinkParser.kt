@@ -10,7 +10,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.client.auth.registration.email.ClientRegistrationByEmailParams
 import io.ktor.http.Url
 
-class ClientUserDeepLinkParser : DeepLinkParser<ClientAuthNavigation> {
+/**
+ * Parses deep links into corresponding [ClientAuthNavigation] destinations.
+ */
+public class ClientUserDeepLinkParser : DeepLinkParser<ClientAuthNavigation> {
     override fun parse(url: Url): ClientAuthNavigation? {
         val queryMap: Map<String, Any?> = url.parameters.entries().associate { (key, values) ->
             key to if (values.size == 1) values.first() else values
@@ -21,13 +24,32 @@ class ClientUserDeepLinkParser : DeepLinkParser<ClientAuthNavigation> {
         return when (path) {
             ClientAuthNavigation.BASE_AUTH_ROUTE,
             ClientAuthNavigation.Main.ROUTE -> ClientAuthNavigation.Main
-            ClientAuthNavigation.LoginByEmail.ROUTE -> ClientAuthNavigation.LoginByEmail(LoginByEmailParams.parse(queryMap))
-            ClientAuthNavigation.LoginByPhone.ROUTE -> ClientAuthNavigation.LoginByPhone(LoginByPhoneParams.parse(queryMap))
-            ClientAuthNavigation.Registration.ROUTE -> ClientAuthNavigation.Registration(ClientRegistrationByEmailParams.parse(queryMap))
-            ClientAuthNavigation.LoginByTotp.ROUTE -> ClientAuthNavigation.LoginByTotp(LoginByTotpParams.parse(queryMap))
+
+            ClientAuthNavigation.LoginByEmail.ROUTE -> ClientAuthNavigation.LoginByEmail(
+                LoginByEmailParams.parse(queryMap)
+            )
+
+            ClientAuthNavigation.LoginByPhone.ROUTE -> ClientAuthNavigation.LoginByPhone(
+                LoginByPhoneParams.parse(queryMap)
+            )
+
+            ClientAuthNavigation.Registration.ROUTE -> ClientAuthNavigation.Registration(
+                ClientRegistrationByEmailParams.parse(queryMap)
+            )
+
+            ClientAuthNavigation.LoginByTotp.ROUTE -> ClientAuthNavigation.LoginByTotp(
+                LoginByTotpParams.parse(queryMap)
+            )
+
             ClientAuthNavigation.PendingDeletion.ROUTE -> ClientAuthNavigation.PendingDeletion
-            ClientAuthNavigation.ResetPassword.ROUTE -> ClientAuthNavigation.ResetPassword(ResetPasswordParams.parse(queryMap))
-            ClientAuthNavigation.UnlockMethodSelection.ROUTE -> ClientAuthNavigation.UnlockMethodSelection(UnlockMethodSelectionParams.parse(queryMap))
+            ClientAuthNavigation.ResetPassword.ROUTE -> ClientAuthNavigation.ResetPassword(
+                ResetPasswordParams.parse(queryMap)
+            )
+
+            ClientAuthNavigation.UnlockMethodSelection.ROUTE -> ClientAuthNavigation.UnlockMethodSelection(
+                UnlockMethodSelectionParams.parse(queryMap)
+            )
+
             else -> null
         }
     }

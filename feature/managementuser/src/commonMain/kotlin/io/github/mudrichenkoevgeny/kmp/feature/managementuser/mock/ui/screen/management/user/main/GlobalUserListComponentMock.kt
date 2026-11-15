@@ -9,65 +9,72 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.GlobalUserListScreenState
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 
+/**
+ * Mock implementation of [GlobalUserListComponent] for testing.
+ */
 @InternalApi
-class GlobalUserListComponentMock(
+public class GlobalUserListComponentMock(
     initialState: GlobalUserListScreenState = GlobalUserListScreenState.Loading
 ) : GlobalUserListComponent {
 
     private val _state = MutableValue(initialState)
-    override val state: Value<GlobalUserListScreenState> = _state
+    public override val state: Value<GlobalUserListScreenState> = _state
 
-    var refreshCalls = 0
-    var createUserCalls = 0
-    var loadNextPageCalls = 0
-    var backCalls = 0
-    var toggleFilterPanelCalls = 0
-    var lastUserClicked: UserId? = null
+    public var refreshCalls: Int = 0
+    public var createUserCalls: Int = 0
+    public var loadNextPageCalls: Int = 0
+    public var backCalls: Int = 0
+    public var toggleFilterPanelCalls: Int = 0
+    public var lastUserClicked: UserId? = null
 
-    fun updateState(state: GlobalUserListScreenState) {
+    /** Updates the current screen state. */
+    public fun updateState(state: GlobalUserListScreenState) {
         _state.value = state
     }
 
-    override fun onRefresh() {
+    public override fun onRefresh() {
         refreshCalls++
     }
 
-    override fun onUserDeleted(userId: UserId) {
+    public override fun onUserDeleted(userId: UserId) {
         val current = _state.value as? GlobalUserListScreenState.Content ?: return
         val updatedItems = current.paging.items.filterNot { it.id == userId }
         _state.value = current.copy(paging = current.paging.copy(items = updatedItems))
     }
 
-    override fun onUserCreated() {
+    public override fun onUserCreated() {
         onRefresh()
     }
 
-    override fun onUserClick(userId: UserId) {
+    public override fun onUserClick(userId: UserId) {
         lastUserClicked = userId
     }
 
-    override fun onCreateUserClick() {
+    public override fun onCreateUserClick() {
         createUserCalls++
     }
 
-    override fun onLoadNextPage() {
+    public override fun onLoadNextPage() {
         loadNextPageCalls++
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         backCalls++
     }
 
-    override fun onToggleFilterPanel() {
+    public override fun onToggleFilterPanel() {
         toggleFilterPanelCalls++
     }
 
-    override fun onSortChanged(sortState: ListingSortState) {
+    public override fun onSortChanged(sortState: ListingSortState) {
         val current = _state.value as? GlobalUserListScreenState.Content ?: return
         _state.value = current.copy(sortState = sortState)
     }
 
-    override fun onFilterChanged(filterId: String, filterState: ListingFilterState?) {
+    public override fun onFilterChanged(
+        filterId: String,
+        filterState: ListingFilterState?
+    ) {
         val current = _state.value as? GlobalUserListScreenState.Content ?: return
         val newFilters = current.filterStates.toMutableMap()
         if (filterState == null) {
@@ -78,7 +85,7 @@ class GlobalUserListComponentMock(
         _state.value = current.copy(filterStates = newFilters)
     }
 
-    override fun onApplyFilters() {
+    public override fun onApplyFilters() {
         val current = _state.value as? GlobalUserListScreenState.Content ?: return
         _state.value = current.copy(isFilterPanelExpanded = false)
     }

@@ -19,7 +19,7 @@ import io.ktor.client.HttpClient
  * @param compositeAuditResourceTypeParser Parser for audit resource types.
  * @param compositeAuditMetadataKeyParser Parser for audit metadata keys.
  */
-class AuditApiComponent(
+public class AuditApiComponent(
     httpClient: HttpClient,
     compositeAuditActionTypeParser: CompositeAuditActionTypeParser,
     compositeAuditResourceTypeParser: CompositeAuditResourceTypeParser,
@@ -34,8 +34,8 @@ class AuditApiComponent(
     )
 
     /** Use case for fetching paginated audit events. */
-    val getAuditEventsUseCase = GetAuditEventsUseCase(auditRepository)
+    public val getAuditEventsUseCase: GetAuditEventsUseCase = GetAuditEventsUseCase(auditRepository)
 
     /** Use case for fetching a specific audit event by ID. */
-    val getAuditEventUseCase = GetAuditEventUseCase(auditRepository)
+    public val getAuditEventUseCase: GetAuditEventUseCase = GetAuditEventUseCase(auditRepository)
 }

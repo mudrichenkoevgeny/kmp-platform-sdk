@@ -7,12 +7,15 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.auth.refreshtoke
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.RefreshTokenPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.token.SessionTokenPayload
 
+/**
+ * Mock implementation of [RefreshTokenApi] for testing.
+ */
 @InternalApi
-class RefreshTokenApiMock : RefreshTokenApi {
-    var refreshTokenResult: AppResult<SessionTokenPayload> = AppResult.Error(CommonError.Unknown())
-    var lastRefreshTokenRequest: RefreshTokenPayload? = null
+public class RefreshTokenApiMock : RefreshTokenApi {
+    public var refreshTokenResult: AppResult<SessionTokenPayload> = AppResult.Error(CommonError.Unknown())
+    public var lastRefreshTokenRequest: RefreshTokenPayload? = null
 
-    override suspend fun refreshToken(request: RefreshTokenPayload): AppResult<SessionTokenPayload> {
+    public override suspend fun refreshToken(request: RefreshTokenPayload): AppResult<SessionTokenPayload> {
         lastRefreshTokenRequest = request
         return refreshTokenResult
     }

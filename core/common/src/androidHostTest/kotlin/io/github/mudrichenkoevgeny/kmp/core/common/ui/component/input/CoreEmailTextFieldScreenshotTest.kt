@@ -51,11 +51,9 @@ class CoreEmailTextFieldScreenshotTest(
         @Suppress("Unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
-        fun data(): Collection<Array<Any>> {
-            return listOf(
-                arrayOf("Empty", ""),
-                arrayOf("Filled", "user@example.com")
-            )
-        }
+        fun data(): Collection<Array<Any>> = listOf(
+            arrayOf("Empty", ""),
+            arrayOf("Filled", "user@example.com")
+        )
     }
 }

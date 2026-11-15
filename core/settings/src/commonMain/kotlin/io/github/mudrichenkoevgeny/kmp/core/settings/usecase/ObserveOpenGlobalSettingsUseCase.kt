@@ -9,13 +9,11 @@ import kotlinx.coroutines.flow.Flow
  *
  * @param openGlobalSettingsRepository Source of truth for cached or network-backed settings.
  */
-class ObserveOpenGlobalSettingsUseCase(
+public class ObserveOpenGlobalSettingsUseCase(
     private val openGlobalSettingsRepository: OpenGlobalSettingsRepository
 ) {
     /**
      * @return Cold [Flow] emitting the latest [OpenGlobalSettings] or `null`.
      */
-    operator fun invoke(): Flow<OpenGlobalSettings?> {
-        return openGlobalSettingsRepository.observeOpenGlobalSettings()
-    }
+    public operator fun invoke(): Flow<OpenGlobalSettings?> = openGlobalSettingsRepository.observeOpenGlobalSettings()
 }

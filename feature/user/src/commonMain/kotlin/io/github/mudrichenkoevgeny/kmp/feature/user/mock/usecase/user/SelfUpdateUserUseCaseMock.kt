@@ -9,17 +9,20 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.SelfUpdateUserU
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 
+/**
+ * Mock implementation of [SelfUpdateUserUseCase] for testing.
+ */
 @InternalApi
-class SelfUpdateUserUseCaseMock(
+public class SelfUpdateUserUseCaseMock(
     userRepository: UserRepository = UserRepositoryMock()
 ) : SelfUpdateUserUseCase(userRepository) {
 
-    var executeCalls = 0
-    var resultProvider: (UpdateUserParams) -> AppResult<UserPrivate> = { _ ->
+    public var executeCalls: Int = 0
+    public var resultProvider: (UpdateUserParams) -> AppResult<UserPrivate> = { _ ->
         AppResult.Success(createTestUserPrivate())
     }
 
-    override suspend fun invoke(params: UpdateUserParams): AppResult<UserPrivate> {
+    public override suspend fun invoke(params: UpdateUserParams): AppResult<UserPrivate> {
         executeCalls++
         return resultProvider(params)
     }

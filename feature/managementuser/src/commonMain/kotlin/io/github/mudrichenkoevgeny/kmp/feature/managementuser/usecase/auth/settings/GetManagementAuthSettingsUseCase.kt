@@ -9,13 +9,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
  *
  * @param managementAuthSettingsRepository Remote management auth settings API.
  */
-class GetManagementAuthSettingsUseCase(
+public class GetManagementAuthSettingsUseCase(
     private val managementAuthSettingsRepository: ManagementAuthSettingsRepository
 ) {
     /**
      * @return [ManagementAuthSettings] on success, or a mapped failure.
      */
-    suspend operator fun invoke(): AppResult<ManagementAuthSettings> {
-        return managementAuthSettingsRepository.getManagementAuthSettings()
-    }
+    public suspend operator fun invoke(): AppResult<ManagementAuthSettings> =
+        managementAuthSettingsRepository.getManagementAuthSettings()
 }

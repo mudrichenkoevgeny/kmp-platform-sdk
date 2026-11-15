@@ -7,17 +7,23 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.securit
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.EnableTotpUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totprecoverycodes.TotpRecoveryCodes
 
+/**
+ * Mock implementation of [EnableTotpUseCase] for testing.
+ */
 @InternalApi
-class EnableTotpUseCaseMock : EnableTotpUseCase(
+public class EnableTotpUseCaseMock : EnableTotpUseCase(
     userSecurityRepository = UserSecurityRepositoryMock()
 ) {
-    var executeCalls: Int = 0
+    public var executeCalls: Int = 0
 
-    var resultProvider: (String, String) -> AppResult<TotpRecoveryCodes> = { _, _ ->
+    public var resultProvider: (String, String) -> AppResult<TotpRecoveryCodes> = { _, _ ->
         AppResult.Error(CommonError.Unknown())
     }
 
-    override suspend fun invoke(mfaToken: String, code: String): AppResult<TotpRecoveryCodes> {
+    public override suspend fun invoke(
+        mfaToken: String,
+        code: String
+    ): AppResult<TotpRecoveryCodes> {
         executeCalls++
         return resultProvider(mfaToken, code)
     }

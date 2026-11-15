@@ -18,7 +18,7 @@ bcv = "0.18.2"
 dokka = "2.3.0"
 
 # Shared Foundation
-shared-foundation = "0.1.11"
+shared-foundation = "0.1.17"
 
 # Kotlin
 kotlinx-serialization = "1.12.0"
@@ -56,6 +56,7 @@ googleid = "1.2.1"
 
 # Code Analysis
 ktlint = "14.2.0"
+ktlint-compose-rules = "0.6.8"
 detekt = "2.0.0-alpha.6"
 konsist = "0.18.1"
 
@@ -144,6 +145,7 @@ googleid = { module = "com.google.android.libraries.identity.googleid:googleid",
 # Code Analysis
 detekt-api = { group = "dev.detekt", name = "detekt-api", version.ref = "detekt" }
 konsist = { module = "com.lemonappdev:konsist", version.ref = "konsist" }
+ktlint-compose-rules = { module = "io.nlopez.compose.rules:ktlint", version.ref = "ktlint-compose-rules" }
 
 # Gradle Plugins
 detekt-gradle-plugin = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
@@ -164,6 +166,9 @@ roborazzi-compose = { module = "io.github.takahirom.roborazzi:roborazzi-compose"
 roborazzi-junit-rule = { module = "io.github.takahirom.roborazzi:roborazzi-junit-rule", version.ref = "roborazzi" }
 
 [plugins]
+shared-foundation-kotlin = { id = "io.github.mudrichenkoevgeny.shared-foundation-kotlin", version.ref = "shared-foundation" }
+shared-foundation-quality = { id = "io.github.mudrichenkoevgeny.shared-foundation-quality", version.ref = "shared-foundation" }
+shared-foundation-publish = { id = "io.github.mudrichenkoevgeny.shared-foundation-publish", version.ref = "shared-foundation" }
 kmp-platform-agent-sync = { id = "io.github.mudrichenkoevgeny.kmp-platform-agent-sync" }
 kmp-platform-quality = { id = "io.github.mudrichenkoevgeny.kmp-platform-quality" }
 kmp-platform-kotlin = { id = "io.github.mudrichenkoevgeny.kmp-platform-kotlin" }

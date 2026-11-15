@@ -5,13 +5,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 /**
  * Persists cached open auth settings.
  */
-interface OpenAuthSettingsStorage {
+public interface OpenAuthSettingsStorage {
     /** @return Last known open auth settings snapshot, or null if never loaded. */
-    suspend fun getOpenAuthSettings(): OpenAuthSettings?
+    public suspend fun getOpenAuthSettings(): OpenAuthSettings?
 
     /** @param openAuthSettings Replaces cached open provider/policy settings. */
-    suspend fun updateOpenAuthSettings(openAuthSettings: OpenAuthSettings)
+    public suspend fun updateOpenAuthSettings(openAuthSettings: OpenAuthSettings)
 
     /** Clears cached open auth settings. */
-    suspend fun clearOpenAuthSettings()
+    public suspend fun clearOpenAuthSettings()
 }

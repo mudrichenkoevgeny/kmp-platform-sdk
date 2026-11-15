@@ -60,7 +60,8 @@ class EncryptedAuthStorageTest {
     fun clearTokens_clearsBackingStoreAndFlow() = runTest {
         val storage = EncryptedAuthStorage(EncryptedSettingsMock(), this)
         advanceUntilIdle()
-        val futureExpiry = Instant.fromEpochMilliseconds(Clock.System.now().toEpochMilliseconds() + 1.hours.inWholeMilliseconds)
+        val futureExpiry =
+            Instant.fromEpochMilliseconds(Clock.System.now().toEpochMilliseconds() + 1.hours.inWholeMilliseconds)
         val token = SessionToken(
             accessToken = AccessToken(ACCESS_A),
             refreshToken = RefreshToken(REFRESH_A),

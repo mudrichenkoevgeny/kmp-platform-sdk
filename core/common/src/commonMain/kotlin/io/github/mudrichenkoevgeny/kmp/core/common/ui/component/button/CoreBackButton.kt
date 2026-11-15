@@ -10,9 +10,9 @@ import androidx.compose.ui.graphics.painter.Painter
 import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_back
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import org.jetbrains.compose.resources.painterResource
 
@@ -26,7 +26,7 @@ import org.jetbrains.compose.resources.painterResource
  * @param contentDescription Optional accessibility content description for the icon.
  */
 @Composable
-fun CoreBackButton(
+public fun CoreBackButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -47,7 +47,7 @@ fun CoreBackButton(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun CoreBackButtonComponentSizePreview() {
     CoreTheme {
@@ -58,7 +58,7 @@ private fun CoreBackButtonComponentSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun CoreBackButtonThemePreview() {
     CoreTheme {
@@ -69,7 +69,7 @@ private fun CoreBackButtonThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun CoreBackButtonFontScalePreview() {
     CoreTheme {

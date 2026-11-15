@@ -7,9 +7,9 @@ import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.unlock.selection.UnlockMethodSelectionComponentMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -26,7 +26,10 @@ class UnlockMethodSelectionScreenTest {
         var emailUnlockClicked = false
         val initialState = UnlockMethodSelectionScreenState(
             knownIdentifiers = listOf(
-                createTestUserIdentifierSummary().copy(userAuthProvider = UserAuthProvider.EMAIL, identifier = "user@example.com")
+                createTestUserIdentifierSummary().copy(
+                    userAuthProvider = UserAuthProvider.EMAIL,
+                    identifier = "user@example.com"
+                )
             )
         )
         val component = object : UnlockMethodSelectionComponentMock(initialState = initialState) {
@@ -51,7 +54,10 @@ class UnlockMethodSelectionScreenTest {
         var phoneUnlockClicked = false
         val initialState = UnlockMethodSelectionScreenState(
             knownIdentifiers = listOf(
-                createTestUserIdentifierSummary().copy(userAuthProvider = UserAuthProvider.PHONE, identifier = "+1234567890")
+                createTestUserIdentifierSummary().copy(
+                    userAuthProvider = UserAuthProvider.PHONE,
+                    identifier = "+1234567890"
+                )
             )
         )
         val component = object : UnlockMethodSelectionComponentMock(initialState = initialState) {

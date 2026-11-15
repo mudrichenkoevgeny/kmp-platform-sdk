@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.Flow
  *
  * @param managementGlobalSettingsRepository Management global settings repository.
  */
-class ObserveManagementGlobalSettingsUseCase(
+public class ObserveManagementGlobalSettingsUseCase(
     private val managementGlobalSettingsRepository: ManagementGlobalSettingsRepository
 ) {
-    operator fun invoke(): Flow<ManagementGlobalSettings?> {
-        return managementGlobalSettingsRepository.observeManagementGlobalSettings()
-    }
+    /** Observes management global settings updates. */
+    public operator fun invoke(): Flow<ManagementGlobalSettings?> =
+        managementGlobalSettingsRepository.observeManagementGlobalSettings()
 }

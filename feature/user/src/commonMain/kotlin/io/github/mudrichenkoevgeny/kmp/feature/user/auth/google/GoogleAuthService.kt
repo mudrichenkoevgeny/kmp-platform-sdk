@@ -9,18 +9,18 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
  *
  * Implementations run platform UI (Credential Manager, Google Identity Services, GIDSignIn, etc.) and surface outcomes as [AppResult].
  */
-interface GoogleAuthService {
+public interface GoogleAuthService {
     /**
      * Runs interactive Google sign-in and returns a backend-ready credential (typically a Google ID token string).
      *
      * @return Success with the token, or [AppResult.Error] wrapping [UserError.ExternalAuthCancelled] / [UserError.ExternalAuthFailed].
      */
-    suspend fun signIn(): AppResult<LoginByExternalAuthProviderRequest>
+    public suspend fun signIn(): AppResult<LoginByExternalAuthProviderRequest>
 
     /**
      * Clears the on-device Google session or credential state where the platform API supports it.
      *
      * @return Success on clean sign-out, or an error if the platform call fails.
      */
-    suspend fun signOut(): AppResult<Unit>
+    public suspend fun signOut(): AppResult<Unit>
 }

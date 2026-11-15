@@ -14,9 +14,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_hide
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_show
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import org.jetbrains.compose.resources.painterResource
 
@@ -28,23 +28,24 @@ import org.jetbrains.compose.resources.painterResource
  * @param isPasswordVisible Whether password characters are visible.
  * @param onTogglePasswordVisibility Callback invoked when toggle icon is clicked.
  * @param modifier [Modifier] applied to the text field.
+ * @param toggleModifier [Modifier] applied to the visibility toggle icon button.
+ * @param enabled Controls whether the text field is enabled.
+ * @param isError Controls error state.
  * @param label Optional composable label.
  * @param placeholder Optional composable placeholder.
- * @param isError Controls error state.
- * @param toggleModifier [Modifier] applied to the visibility toggle icon button.
  */
 @Composable
-fun CorePasswordTextField(
+public fun CorePasswordTextField(
     value: String,
     onValueChange: (String) -> Unit,
     isPasswordVisible: Boolean,
     onTogglePasswordVisibility: () -> Unit,
     modifier: Modifier = Modifier,
+    toggleModifier: Modifier = Modifier,
     enabled: Boolean = true,
-    label: @Composable (() -> Unit)? = null,
-    placeholder: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
-    toggleModifier: Modifier = Modifier
+    label: @Composable (() -> Unit)? = null,
+    placeholder: @Composable (() -> Unit)? = null
 ) {
     CoreOutlinedTextField(
         value = value,
@@ -84,7 +85,7 @@ fun CorePasswordTextField(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun CorePasswordTextFieldComponentSizePreview() {
     CoreTheme {
@@ -100,7 +101,7 @@ private fun CorePasswordTextFieldComponentSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun CorePasswordTextFieldThemePreview() {
     CoreTheme {
@@ -116,7 +117,7 @@ private fun CorePasswordTextFieldThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun CorePasswordTextFieldFontScalePreview() {
     CoreTheme {

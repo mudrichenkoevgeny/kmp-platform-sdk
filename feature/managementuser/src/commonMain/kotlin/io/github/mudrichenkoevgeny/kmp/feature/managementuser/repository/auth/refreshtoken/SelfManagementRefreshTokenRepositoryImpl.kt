@@ -13,14 +13,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
  *
  * @param refreshTokenApi HTTP endpoint for token refresh.
  */
-class SelfManagementRefreshTokenRepositoryImpl(
+public class SelfManagementRefreshTokenRepositoryImpl(
     private val refreshTokenApi: RefreshTokenApi
 ) : RefreshTokenRepository {
 
-    override suspend fun refreshToken(refreshToken: String): AppResult<SessionToken> {
-        return refreshTokenApi.refreshToken(RefreshTokenPayload(refreshToken))
-            .mapSuccess { sessionTokenResponse ->
-                sessionTokenResponse.toSessionToken()
-            }
-    }
+    override suspend fun refreshToken(refreshToken: String): AppResult<SessionToken> = refreshTokenApi.refreshToken(
+        RefreshTokenPayload(refreshToken)
+    )
+        .mapSuccess { sessionTokenResponse ->
+            sessionTokenResponse.toSessionToken()
+        }
 }

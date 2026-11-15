@@ -15,17 +15,16 @@ import java.net.UnknownHostException
  * @param e Failure from HTTP/WebSocket or lower-level I/O.
  * @return `true` if the SDK should treat this as a no-internet style condition.
  */
-actual fun isNoInternetException(e: Throwable): Boolean {
-    return when (e) {
-        is UnknownHostException -> true
-        is ConnectException -> true
-        is SocketTimeoutException -> true
-        is IOException -> {
-            val message = e.message?.lowercase() ?: ""
-            message.contains("unable to resolve host") ||
-                    message.contains("no route to host") ||
-                    message.contains("connection refused")
-        }
-        else -> false
+public actual fun isNoInternetException(e: Throwable): Boolean = when (e) {
+    is UnknownHostException -> true
+    is ConnectException -> true
+    is SocketTimeoutException -> true
+    is IOException -> {
+        val message = e.message?.lowercase() ?: ""
+        message.contains("unable to resolve host") ||
+            message.contains("no route to host") ||
+            message.contains("connection refused")
     }
+
+    else -> false
 }

@@ -4,18 +4,21 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.storage.storage.management.ManagementStorageSettingsStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.storagesettings.ManagementStorageSettings
 
+/**
+ * Mock implementation of [ManagementStorageSettingsStorage] for testing.
+ */
 @InternalApi
-class ManagementStorageSettingsStorageMock(
-    var settings: ManagementStorageSettings? = null
+public class ManagementStorageSettingsStorageMock(
+    public var settings: ManagementStorageSettings? = null
 ) : ManagementStorageSettingsStorage {
 
-    override suspend fun getManagementStorageSettings(): ManagementStorageSettings? = settings
+    public override suspend fun getManagementStorageSettings(): ManagementStorageSettings? = settings
 
-    override suspend fun updateManagementStorageSettings(managementStorageSettings: ManagementStorageSettings) {
+    public override suspend fun updateManagementStorageSettings(managementStorageSettings: ManagementStorageSettings) {
         settings = managementStorageSettings
     }
 
-    override suspend fun clearManagementStorageSettings() {
+    public override suspend fun clearManagementStorageSettings() {
         settings = null
     }
 }

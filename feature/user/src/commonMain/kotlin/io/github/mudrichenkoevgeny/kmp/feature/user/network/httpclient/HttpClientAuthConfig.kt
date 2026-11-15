@@ -18,6 +18,7 @@ import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import kotlinx.coroutines.CancellationException
 import kotlin.time.Clock
 
 private const val LOGGER_AUTH_PREFIX = "Auth"
@@ -45,7 +46,7 @@ private val SESSION_INVALIDATING_ERROR_CODES = setOf(
  * @param refreshTokenRoute Route path for token refresh operations.
  * @param onSessionCleared Optional callback triggered when local session must be invalidated.
  */
-fun HttpClientConfig<*>.setupAuthConfig(
+public fun HttpClientConfig<*>.setupAuthConfig(
     baseUrl: String,
     networkLogger: Logger,
     authStorage: AuthStorage,
@@ -103,7 +104,9 @@ fun HttpClientConfig<*>.setupAuthConfig(
                         accessToken = tokenResponse.accessToken,
                         refreshToken = tokenResponse.refreshToken
                     )
-                } catch (e: Exception) {
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
                     networkLogger.log("$LOGGER_AUTH_PREFIX: Token refresh failed: ${e.message}")
                     onSessionCleared?.invoke() ?: authStorage.clearTokens()
                     null
@@ -121,13 +124,16 @@ fun HttpClientConfig<*>.setupAuthConfig(
         handleResponseExceptionWithRequest { exception, _ ->
             val apiException = exception as? ApiException
                 ?: (exception as? ResponseException)?.let { responseException ->
-                    runCatching { responseException.response.body<ApiErrorResponse>() }.getOrNull()?.let { apiErrorResponse ->
-                        ApiException(apiErrorResponse)
-                    }
+                    runCatching { responseException.response.body<ApiErrorResponse>() }.getOrNull()
+                        ?.let { apiErrorResponse ->
+                            ApiException(apiErrorResponse)
+                        }
                 }
             val errorCode = apiException?.apiErrorResponse?.code
             if (errorCode != null && SESSION_INVALIDATING_ERROR_CODES.contains(errorCode)) {
-                networkLogger.log("$LOGGER_AUTH_PREFIX: Session invalidating error code received: $errorCode. Clearing session...")
+                networkLogger.log(
+                    "$LOGGER_AUTH_PREFIX: Session invalidating error code received: $errorCode. Clearing session..."
+                )
                 onSessionCleared?.invoke() ?: authStorage.clearTokens()
             }
         }

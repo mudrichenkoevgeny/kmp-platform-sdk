@@ -28,25 +28,27 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
 /** [StorageApi] implementation for staff self-service storage backed by Ktor [HttpClient]. */
-class KtorSelfManagementStorageApi(
+public class KtorSelfManagementStorageApi(
     private val client: HttpClient
 ) : StorageApi {
 
-    override suspend fun getPresignedUploadUrl(request: PresignedUrlRequest): AppResult<PresignedUrl> =
+    public override suspend fun getPresignedUploadUrl(request: PresignedUrlRequest): AppResult<PresignedUrl> =
         client.callResult<PresignedUrlPayload> {
             post(SelfManagementStorageRoutes.POST_PRESIGNED_UPLOAD_URL) {
                 setBody(request)
             }
         }.mapSuccess { it.toPresignedUrl() }
 
-    override suspend fun confirmUpload(fileId: String): AppResult<StorageFilePrivate> {
+    public override suspend fun confirmUpload(fileId: String): AppResult<StorageFilePrivate> {
         val path = SelfManagementStorageRoutes.CONFIRM_UPLOAD.replace("{${StorageApiPaths.FILE_ID}}", fileId)
         return client.callResult<StorageFilePrivatePayload> {
             post(path)
         }.mapSuccess { it.toStorageFilePrivate() }
     }
 
-    override suspend fun getFiles(params: SelfStorageFileListParams?): AppResult<PagedResult<StorageFileSummary>> =
+    public override suspend fun getFiles(
+        params: SelfStorageFileListParams?
+    ): AppResult<PagedResult<StorageFileSummary>> =
         client.callResult<PagedResult<StorageFileSummaryPayload>> {
             get(SelfManagementStorageRoutes.GET_FILES) {
                 parameters(params)
@@ -55,21 +57,21 @@ class KtorSelfManagementStorageApi(
             pagedResult.mapItems { it.toStorageFileSummary() }
         }
 
-    override suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate> {
+    public override suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate> {
         val path = SelfManagementStorageRoutes.GET_FILE.replace("{${StorageApiPaths.FILE_ID}}", fileId)
         return client.callResult<StorageFilePrivatePayload> {
             get(path)
         }.mapSuccess { it.toStorageFilePrivate() }
     }
 
-    override suspend fun deleteFile(fileId: String): AppResult<Unit> {
+    public override suspend fun deleteFile(fileId: String): AppResult<Unit> {
         val path = SelfManagementStorageRoutes.DELETE_FILE.replace("{${StorageApiPaths.FILE_ID}}", fileId)
         return client.callResult {
             delete(path)
         }
     }
 
-    override suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit> =
+    public override suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit> =
         client.callResult {
             post(SelfManagementStorageRoutes.DELETE_FILES_BATCH) {
                 setBody(request)

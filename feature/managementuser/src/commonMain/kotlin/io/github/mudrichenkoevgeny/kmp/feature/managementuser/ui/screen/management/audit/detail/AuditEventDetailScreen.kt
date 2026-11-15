@@ -39,21 +39,25 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyTex
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreSmallText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.audit.detail.AuditEventDetailComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.actor.AuditActorType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.audit.resource.UserAuditResourceType
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventPrivate
 
+/**
+ * Screen displaying detailed information about a single audit log event.
+ *
+ * @param component Decompose controller for managing audit event detail state and interactions.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AuditEventDetailScreen(component: AuditEventDetailComponent) {
+public fun AuditEventDetailScreen(component: AuditEventDetailComponent) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
@@ -88,6 +92,7 @@ fun AuditEventDetailScreen(component: AuditEventDetailComponent) {
                     onRetry = component::onRetry,
                     modifier = Modifier.testTag(AuditEventDetailTestTags.GLOBAL_ERROR)
                 )
+
                 is AuditEventDetailScreenState.Content -> {
                     Content(
                         state = currentState,
@@ -110,15 +115,17 @@ private fun Content(
     val userUi = LocalUserStrings.current.ui
 
     val resourceName = event.resource.value
-    val isResourceClickable = event.resourceId != null && (
-        resourceName.equals(UserAuditResourceType.USER.value, ignoreCase = true) ||
-            resourceName.equals(UserAuditResourceType.SESSION.value, ignoreCase = true) ||
-            resourceName.equals(UserAuditResourceType.IDENTIFIER.value, ignoreCase = true)
-    )
-    val isSubjectClickable = !event.actorId.isNullOrBlank() && (
-        event.actorType == AuditActorType.USER ||
-            event.actorType.value.equals(AuditActorType.USER.value, ignoreCase = true)
-    )
+    val isResourceClickable = event.resourceId != null &&
+        (
+            resourceName.equals(UserAuditResourceType.USER.value, ignoreCase = true) ||
+                resourceName.equals(UserAuditResourceType.SESSION.value, ignoreCase = true) ||
+                resourceName.equals(UserAuditResourceType.IDENTIFIER.value, ignoreCase = true)
+            )
+    val isSubjectClickable = !event.actorId.isNullOrBlank() &&
+        (
+            event.actorType == AuditActorType.USER ||
+                event.actorType.value.equals(AuditActorType.USER.value, ignoreCase = true)
+            )
 
     val resourceValue = if (event.resourceId != null) {
         "${event.resource.value}: ${event.resourceId}"
@@ -286,7 +293,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
@@ -295,7 +302,7 @@ private fun ScreenSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -304,7 +311,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {
@@ -312,10 +319,10 @@ private fun FontScalePreview() {
     }
 }
 
-object AuditEventDetailTestTags {
-    const val TITLE = "AuditEventDetail_Title"
-    const val BACK_BUTTON = "AuditEventDetail_BackButton"
-    const val GLOBAL_ERROR = "AuditEventDetail_GlobalError"
-    const val RESOURCE_ROW = "AuditEventDetail_ResourceRow"
-    const val SUBJECT_ROW = "AuditEventDetail_SubjectRow"
+public object AuditEventDetailTestTags {
+    public const val TITLE: String = "AuditEventDetail_Title"
+    public const val BACK_BUTTON: String = "AuditEventDetail_BackButton"
+    public const val GLOBAL_ERROR: String = "AuditEventDetail_GlobalError"
+    public const val RESOURCE_ROW: String = "AuditEventDetail_ResourceRow"
+    public const val SUBJECT_ROW: String = "AuditEventDetail_SubjectRow"
 }

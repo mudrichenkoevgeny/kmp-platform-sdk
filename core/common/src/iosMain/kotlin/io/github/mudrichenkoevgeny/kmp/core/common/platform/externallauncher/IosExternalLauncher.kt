@@ -5,6 +5,9 @@ import platform.Foundation.NSURLComponents
 import platform.Foundation.NSURLQueryItem
 import platform.UIKit.UIApplication
 
+/**
+ * iOS implementation of [ExternalLauncher] for opening external URLs, emails, and files using UIKit.
+ */
 class IosExternalLauncher : ExternalLauncher {
 
     override fun openUrl(url: String) {
@@ -14,7 +17,11 @@ class IosExternalLauncher : ExternalLauncher {
         }
     }
 
-    override fun openMail(email: String, subject: String?, body: String?) {
+    override fun openMail(
+        email: String,
+        subject: String?,
+        body: String?
+    ) {
         val components = NSURLComponents.componentsWithString(MAIL_TO_DATA + email)
 
         val queryItems = mutableListOf<NSURLQueryItem>()

@@ -12,7 +12,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.reques
 /**
  * Base REST API client interface for self-service file storage operations returning mapped domain models.
  */
-interface StorageApi {
+public interface StorageApi {
 
     /**
      * Retrieves a presigned URL to upload a file directly to S3 using input parameters.
@@ -20,7 +20,7 @@ interface StorageApi {
      * @param request Presigned upload URL request parameters DTO.
      * @return [AppResult.Success] containing [PresignedUrl] or [AppResult.Error].
      */
-    suspend fun getPresignedUploadUrl(request: PresignedUrlRequest): AppResult<PresignedUrl>
+    public suspend fun getPresignedUploadUrl(request: PresignedUrlRequest): AppResult<PresignedUrl>
 
     /**
      * Confirms that a file has been successfully uploaded to S3.
@@ -28,7 +28,7 @@ interface StorageApi {
      * @param fileId Unique identifier of the uploaded file.
      * @return [AppResult.Success] containing [StorageFilePrivate] or [AppResult.Error].
      */
-    suspend fun confirmUpload(fileId: String): AppResult<StorageFilePrivate>
+    public suspend fun confirmUpload(fileId: String): AppResult<StorageFilePrivate>
 
     /**
      * Fetches a paginated list of storage files based on query parameters.
@@ -36,7 +36,7 @@ interface StorageApi {
      * @param params Optional query parameters DTO for filtering and pagination.
      * @return [AppResult.Success] containing a [PagedResult] of [StorageFileSummary] or [AppResult.Error].
      */
-    suspend fun getFiles(params: SelfStorageFileListParams? = null): AppResult<PagedResult<StorageFileSummary>>
+    public suspend fun getFiles(params: SelfStorageFileListParams? = null): AppResult<PagedResult<StorageFileSummary>>
 
     /**
      * Retrieves detailed private view of a specific file.
@@ -44,7 +44,7 @@ interface StorageApi {
      * @param fileId Unique identifier of the requested file.
      * @return [AppResult.Success] containing [StorageFilePrivate] or [AppResult.Error].
      */
-    suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate>
+    public suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate>
 
     /**
      * Deletes a specific file.
@@ -52,7 +52,7 @@ interface StorageApi {
      * @param fileId Unique identifier of the target file to delete.
      * @return [AppResult.Success] containing [Unit] or [AppResult.Error].
      */
-    suspend fun deleteFile(fileId: String): AppResult<Unit>
+    public suspend fun deleteFile(fileId: String): AppResult<Unit>
 
     /**
      * Deletes multiple files in a single batch operation using a request DTO.
@@ -60,5 +60,5 @@ interface StorageApi {
      * @param request Batch deletion request parameters containing target file identifiers.
      * @return [AppResult.Success] containing [Unit] or [AppResult.Error].
      */
-    suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit>
+    public suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit>
 }

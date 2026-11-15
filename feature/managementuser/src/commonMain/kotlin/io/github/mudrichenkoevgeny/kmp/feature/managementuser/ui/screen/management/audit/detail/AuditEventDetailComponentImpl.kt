@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
  * @param onNavigateToIdentifierDetail Navigates to identifier detail screen.
  * @param onBack Pops this screen from the navigation stack.
  */
-class AuditEventDetailComponentImpl(
+public class AuditEventDetailComponentImpl public constructor(
     componentContext: ComponentContext,
     private val params: ManagementAuditEventDetailParams,
     private val userRepository: UserRepository,
@@ -77,14 +77,17 @@ class AuditEventDetailComponentImpl(
                 val targetUserId = resourceId.toUserIdOrNull() ?: return
                 onNavigateToUserDetail?.invoke(targetUserId)
             }
+
             UserAuditResourceType.SESSION -> {
                 val targetSessionId = resourceId.toUserSessionIdOrNull() ?: return
                 onNavigateToSessionDetail?.invoke(targetSessionId)
             }
+
             UserAuditResourceType.IDENTIFIER -> {
                 val targetIdentifierId = resourceId.toUserIdentifierIdOrNull() ?: return
                 onNavigateToIdentifierDetail?.invoke(targetIdentifierId)
             }
+
             else -> {}
         }
     }

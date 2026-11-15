@@ -19,9 +19,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist.GlobalUserListTestTags
 
@@ -38,7 +38,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain
  * @param isSelf True if this card represents the current logged-in manager's account.
  */
 @Composable
-fun UserItem(
+public fun UserItem(
     user: UserSummary,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -67,11 +67,11 @@ fun UserItem(
             )
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
             CoreBodyText(
-                text = "${userUi.userRole}: ${user.role.name}",
+                text = "${userUi.userRole}: ${user.role.value}",
                 style = MaterialTheme.typography.bodySmall
             )
             CoreBodyText(
-                text = "${userUi.userAccountStatus}: ${user.accountStatus.name}",
+                text = "${userUi.userAccountStatus}: ${user.accountStatus.value}",
                 style = MaterialTheme.typography.bodySmall
             )
         }
@@ -104,21 +104,21 @@ private fun UserItemStatesPreview() {
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun UserItemComponentSizePreview() {
     UserItemPreviewContent(user = defaultUserItemPreviewState)
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun UserItemThemePreview() {
     UserItemPreviewContent(user = defaultUserItemPreviewState)
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun UserItemFontScalePreview() {
     UserItemPreviewContent(user = defaultUserItemPreviewState)

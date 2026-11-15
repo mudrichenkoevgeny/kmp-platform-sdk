@@ -5,13 +5,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
 /**
  * Persistence port for [ManagementSecuritySettings].
  */
-interface ManagementSecuritySettingsStorage {
+public interface ManagementSecuritySettingsStorage {
     /** @return Stored [ManagementSecuritySettings], or `null` if none are persisted yet. */
-    suspend fun getManagementSecuritySettings(): ManagementSecuritySettings?
+    public suspend fun getManagementSecuritySettings(): ManagementSecuritySettings?
 
     /** @param managementSecuritySettings Snapshot to serialize and persist. */
-    suspend fun updateManagementSecuritySettings(managementSecuritySettings: ManagementSecuritySettings)
+    public suspend fun updateManagementSecuritySettings(managementSecuritySettings: ManagementSecuritySettings)
 
     /** Removes persisted management security settings, if any. */
-    suspend fun clearManagementSecuritySettings()
+    public suspend fun clearManagementSecuritySettings()
 }

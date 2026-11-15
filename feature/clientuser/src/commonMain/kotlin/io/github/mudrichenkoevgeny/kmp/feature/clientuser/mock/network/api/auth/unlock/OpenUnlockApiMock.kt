@@ -11,20 +11,27 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToPhoneRequest
 
+/**
+ * Mock implementation of [OpenUnlockApi] for unit and UI testing.
+ */
 @InternalApi
-open class OpenUnlockApiMock : OpenUnlockApi {
+public open class OpenUnlockApiMock : OpenUnlockApi {
 
-    var sendUnlockEmailConfirmationResult: AppResult<OtpConfirmationPayload> = AppResult.Error(CommonError.Unknown())
-    var unlockByEmailResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
-    var sendUnlockPhoneConfirmationResult: AppResult<OtpConfirmationPayload> = AppResult.Error(CommonError.Unknown())
-    var unlockByPhoneResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
-    var unlockByExternalAuthProviderResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
+    public var sendUnlockEmailConfirmationResult: AppResult<OtpConfirmationPayload> = AppResult.Error(
+        CommonError.Unknown()
+    )
+    public var unlockByEmailResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
+    public var sendUnlockPhoneConfirmationResult: AppResult<OtpConfirmationPayload> = AppResult.Error(
+        CommonError.Unknown()
+    )
+    public var unlockByPhoneResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
+    public var unlockByExternalAuthProviderResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
 
-    var lastSendUnlockEmailConfirmationRequest: SendConfirmationToEmailRequest? = null
-    var lastUnlockByEmailRequest: UnlockByEmailConfirmationRequest? = null
-    var lastSendUnlockPhoneConfirmationRequest: SendConfirmationToPhoneRequest? = null
-    var lastUnlockByPhoneRequest: UnlockByPhoneConfirmationRequest? = null
-    var lastUnlockByExternalAuthProviderRequest: UnlockByExternalAuthProviderRequest? = null
+    public var lastSendUnlockEmailConfirmationRequest: SendConfirmationToEmailRequest? = null
+    public var lastUnlockByEmailRequest: UnlockByEmailConfirmationRequest? = null
+    public var lastSendUnlockPhoneConfirmationRequest: SendConfirmationToPhoneRequest? = null
+    public var lastUnlockByPhoneRequest: UnlockByPhoneConfirmationRequest? = null
+    public var lastUnlockByExternalAuthProviderRequest: UnlockByExternalAuthProviderRequest? = null
 
     override suspend fun sendUnlockEmailConfirmation(
         request: SendConfirmationToEmailRequest

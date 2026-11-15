@@ -17,21 +17,22 @@ import kotlinx.coroutines.sync.withLock
  * All operations are guarded by a [Mutex] to make the mock safe for concurrent access.
  */
 @InternalApi
-class EncryptedSettingsMock : EncryptedSettings {
+public class EncryptedSettingsMock : EncryptedSettings {
     private val mutex = Mutex()
     private val storage = mutableMapOf<String, MutableStateFlow<String?>>()
 
-    override suspend fun put(key: String, value: String) {
+    override suspend fun put(
+        key: String,
+        value: String
+    ) {
         mutex.withLock {
             val flow = storage.getOrPut(key) { MutableStateFlow(null) }
             flow.value = value
         }
     }
 
-    override suspend fun get(key: String): String? {
-        return mutex.withLock {
-            storage[key]?.value
-        }
+    override suspend fun get(key: String): String? = mutex.withLock {
+        storage[key]?.value
     }
 
     override suspend fun remove(key: String) {

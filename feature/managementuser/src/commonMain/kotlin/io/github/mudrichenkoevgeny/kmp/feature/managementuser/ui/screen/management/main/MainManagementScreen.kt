@@ -19,28 +19,23 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.main.MainManagementComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 
-object MainManagementTestTags {
-    const val TITLE = "MainManagement_Title"
-    const val GLOBAL_USER_LIST_BUTTON = "MainManagement_GlobalUserListButton"
-    const val SESSIONS_BUTTON = "MainManagement_SessionsButton"
-    const val IDENTIFIERS_BUTTON = "MainManagement_IdentifiersButton"
-    const val AUDIT_EVENT_LIST_BUTTON = "MainManagement_AuditEventListButton"
-    const val SETTINGS_BUTTON = "MainManagement_SettingsButton"
-    const val GLOBAL_STORAGE_FILE_LIST_BUTTON = "MainManagement_GlobalStorageFileListButton"
-}
-
+/**
+ * Main dashboard screen for management application administrative navigation.
+ *
+ * @param component Decompose controller for managing main management section choices.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainManagementScreen(component: MainManagementComponent) {
+public fun MainManagementScreen(component: MainManagementComponent) {
     val userUi = LocalUserStrings.current.ui
     val storageUi = LocalStorageStrings.current.ui
 
@@ -123,7 +118,7 @@ private fun MainManagementScreenPreview() {
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
@@ -132,7 +127,7 @@ private fun ScreenSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -141,10 +136,20 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {
         MainManagementScreenPreviewContent()
     }
+}
+
+public object MainManagementTestTags {
+    public const val TITLE: String = "MainManagement_Title"
+    public const val GLOBAL_USER_LIST_BUTTON: String = "MainManagement_GlobalUserListButton"
+    public const val SESSIONS_BUTTON: String = "MainManagement_SessionsButton"
+    public const val IDENTIFIERS_BUTTON: String = "MainManagement_IdentifiersButton"
+    public const val AUDIT_EVENT_LIST_BUTTON: String = "MainManagement_AuditEventListButton"
+    public const val SETTINGS_BUTTON: String = "MainManagement_SettingsButton"
+    public const val GLOBAL_STORAGE_FILE_LIST_BUTTON: String = "MainManagement_GlobalStorageFileListButton"
 }

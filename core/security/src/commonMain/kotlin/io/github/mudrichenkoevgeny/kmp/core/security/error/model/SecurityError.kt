@@ -12,17 +12,17 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.
  * Each instance carries a stable [code] aligned with [ClientSecurityErrorCodes] or [PasswordPolicyFailReason]
  * (or shared foundation codes where applicable for parsing).
  */
-sealed class SecurityError(
-    override val id: ErrorId,
-    override val code: String,
-    override val args: Map<String, String>? = null,
-    override val isRetryable: Boolean
+public sealed class SecurityError(
+    public override val id: ErrorId,
+    public override val code: String,
+    public override val args: Map<String, String>? = null,
+    public override val isRetryable: Boolean
 ) : AppError {
 
     /**
      * Password policy could not be loaded (for example security settings could not be fetched).
      */
-    class PasswordPolicyUnavailable : SecurityError(
+    public class PasswordPolicyUnavailable : SecurityError(
         id = ErrorId.generate(),
         code = ClientSecurityErrorCodes.PASSWORD_POLICY_UNAVAILABLE,
         isRetryable = true
@@ -33,54 +33,54 @@ sealed class SecurityError(
      *
      * @param minLength Optional minimum length requirement to populate [SecurityErrorArgs.PASSWORD_MIN_LENGTH] in [args].
      */
-    class PasswordTooShort(
+    public class PasswordTooShort(
         minLength: Int? = null
     ) : SecurityError(
         id = ErrorId.generate(),
-        code = PasswordPolicyFailReason.TOO_SHORT.name,
+        code = PasswordPolicyFailReason.TOO_SHORT.value,
         args = minLength?.let { mapOf(SecurityErrorArgs.PASSWORD_MIN_LENGTH to it.toString()) },
         isRetryable = false
     )
 
     /** Password does not contain a letter. */
-    class PasswordNoLetter : SecurityError(
+    public class PasswordNoLetter : SecurityError(
         id = ErrorId.generate(),
-        code = PasswordPolicyFailReason.NO_LETTER.name,
+        code = PasswordPolicyFailReason.NO_LETTER.value,
         isRetryable = false
     )
 
     /** Password does not contain an uppercase letter. */
-    class PasswordNoUpperCase : SecurityError(
+    public class PasswordNoUpperCase : SecurityError(
         id = ErrorId.generate(),
-        code = PasswordPolicyFailReason.NO_UPPERCASE.name,
+        code = PasswordPolicyFailReason.NO_UPPERCASE.value,
         isRetryable = false
     )
 
     /** Password does not contain a lowercase letter. */
-    class PasswordNoLowerCase : SecurityError(
+    public class PasswordNoLowerCase : SecurityError(
         id = ErrorId.generate(),
-        code = PasswordPolicyFailReason.NO_LOWERCASE.name,
+        code = PasswordPolicyFailReason.NO_LOWERCASE.value,
         isRetryable = false
     )
 
     /** Password does not contain a digit. */
-    class PasswordNoDigit : SecurityError(
+    public class PasswordNoDigit : SecurityError(
         id = ErrorId.generate(),
-        code = PasswordPolicyFailReason.NO_DIGIT.name,
+        code = PasswordPolicyFailReason.NO_DIGIT.value,
         isRetryable = false
     )
 
     /** Password does not contain a special character. */
-    class PasswordNoSpecialChar : SecurityError(
+    public class PasswordNoSpecialChar : SecurityError(
         id = ErrorId.generate(),
-        code = PasswordPolicyFailReason.NO_SPECIAL_CHAR.name,
+        code = PasswordPolicyFailReason.NO_SPECIAL_CHAR.value,
         isRetryable = false
     )
 
     /** Password matches a blocked common-password list. */
-    class PasswordTooCommon : SecurityError(
+    public class PasswordTooCommon : SecurityError(
         id = ErrorId.generate(),
-        code = PasswordPolicyFailReason.TOO_COMMON.name,
+        code = PasswordPolicyFailReason.TOO_COMMON.value,
         isRetryable = false
     )
 }

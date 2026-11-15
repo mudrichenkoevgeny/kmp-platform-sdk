@@ -10,14 +10,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.networ
  * Deterministic [GoogleAuthService] for tests and previews.
  */
 @InternalApi
-class GoogleAuthServiceMock : GoogleAuthService {
+public class GoogleAuthServiceMock : GoogleAuthService {
 
-    var signInResultProvider: () -> AppResult<LoginByExternalAuthProviderRequest> = {
+    public var signInResultProvider: () -> AppResult<LoginByExternalAuthProviderRequest> = {
         AppResult.Success(createTestLoginByExternalAuthProviderRequest())
     }
-    var signOutResultProvider: () -> AppResult<Unit> = { AppResult.Success(Unit) }
+    public var signOutResultProvider: () -> AppResult<Unit> = { AppResult.Success(Unit) }
 
-    override suspend fun signIn(): AppResult<LoginByExternalAuthProviderRequest> = signInResultProvider()
+    public override suspend fun signIn(): AppResult<LoginByExternalAuthProviderRequest> = signInResultProvider()
 
-    override suspend fun signOut(): AppResult<Unit> = signOutResultProvider()
+    public override suspend fun signOut(): AppResult<Unit> = signOutResultProvider()
 }

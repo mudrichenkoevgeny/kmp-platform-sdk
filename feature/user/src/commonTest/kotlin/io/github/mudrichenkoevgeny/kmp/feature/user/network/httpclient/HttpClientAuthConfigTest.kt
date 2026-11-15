@@ -1,8 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.kmp.core.common.network.httprequest.markAsPublic
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.AuthStorageMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.model.ApiErrorResponse
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
@@ -33,7 +33,7 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Instant
 
 private object SilentLogger : Logger {
-    override fun log(message: String) {}
+    override fun log(message: String) = Unit
 }
 
 @InternalApi

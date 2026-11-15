@@ -13,56 +13,63 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
 
+/**
+ * Mock implementation of [ManagementSessionRepository] for testing.
+ */
 @InternalApi
-open class ManagementSessionRepositoryMock : ManagementSessionRepository {
+public open class ManagementSessionRepositoryMock : ManagementSessionRepository {
 
-    var getSessionsResultProvider: () -> AppResult<PagedResult<UserSessionSummary>> = {
+    public var getSessionsResultProvider: () -> AppResult<PagedResult<UserSessionSummary>> = {
         AppResult.Success(createTestPagedResult(listOf(createTestUserSessionSummary())))
     }
 
-    var getUserSessionsResultProvider: (ManagementUserSessionListParams) -> AppResult<PagedResult<UserSessionSummary>> = { _ ->
+    public var getUserSessionsResultProvider:
+            (ManagementUserSessionListParams) -> AppResult<PagedResult<UserSessionSummary>> = { _ ->
         AppResult.Success(createTestPagedResult(listOf(createTestUserSessionSummary())))
     }
 
-    var getSessionResultProvider: (String) -> AppResult<UserSessionPrivate> = {
+    public var getSessionResultProvider: (String) -> AppResult<UserSessionPrivate> = {
         AppResult.Success(createTestUserSessionPrivate())
     }
 
-    var deleteSessionResultProvider: (UserId, String) -> AppResult<Unit> = { _, _ -> AppResult.Success(Unit) }
+    public var deleteSessionResultProvider: (UserId, String) -> AppResult<Unit> = { _, _ -> AppResult.Success(Unit) }
 
-    var deleteAllUserSessionsResultProvider: (UserId) -> AppResult<Unit> = { _ -> AppResult.Success(Unit) }
+    public var deleteAllUserSessionsResultProvider: (UserId) -> AppResult<Unit> = { _ -> AppResult.Success(Unit) }
 
-    var lastUserId: UserId? = null
-    var lastSessionId: String? = null
-    var lastGlobalParams: ManagementGlobalSessionListParams? = null
-    var lastUserParams: ManagementUserSessionListParams? = null
+    public var lastUserId: UserId? = null
+    public var lastSessionId: String? = null
+    public var lastGlobalParams: ManagementGlobalSessionListParams? = null
+    public var lastUserParams: ManagementUserSessionListParams? = null
 
-    override suspend fun getSessions(
+    public override suspend fun getSessions(
         params: ManagementGlobalSessionListParams?
     ): AppResult<PagedResult<UserSessionSummary>> {
         lastGlobalParams = params
         return getSessionsResultProvider()
     }
 
-    override suspend fun getUserSessions(
+    public override suspend fun getUserSessions(
         params: ManagementUserSessionListParams
     ): AppResult<PagedResult<UserSessionSummary>> {
         lastUserParams = params
         return getUserSessionsResultProvider(params)
     }
 
-    override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivate> {
+    public override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivate> {
         lastSessionId = sessionId
         return getSessionResultProvider(sessionId)
     }
 
-    override suspend fun deleteSession(userId: UserId, sessionId: String): AppResult<Unit> {
+    public override suspend fun deleteSession(
+        userId: UserId,
+        sessionId: String
+    ): AppResult<Unit> {
         lastUserId = userId
         lastSessionId = sessionId
         return deleteSessionResultProvider(userId, sessionId)
     }
 
-    override suspend fun deleteAllUserSessions(userId: UserId): AppResult<Unit> {
+    public override suspend fun deleteAllUserSessions(userId: UserId): AppResult<Unit> {
         lastUserId = userId
         return deleteAllUserSessionsResultProvider(userId)
     }

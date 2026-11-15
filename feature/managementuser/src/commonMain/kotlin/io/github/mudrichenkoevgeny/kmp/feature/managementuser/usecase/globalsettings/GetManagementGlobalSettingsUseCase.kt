@@ -9,10 +9,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.model.
  *
  * @param managementGlobalSettingsRepository Management global settings API.
  */
-class GetManagementGlobalSettingsUseCase(
+public class GetManagementGlobalSettingsUseCase(
     private val managementGlobalSettingsRepository: ManagementGlobalSettingsRepository
 ) {
-    suspend operator fun invoke(): AppResult<ManagementGlobalSettings> {
-        return managementGlobalSettingsRepository.getManagementGlobalSettings()
-    }
+    /** Executes the use case to retrieve management global settings. */
+    public suspend operator fun invoke(): AppResult<ManagementGlobalSettings> =
+        managementGlobalSettingsRepository.getManagementGlobalSettings()
 }

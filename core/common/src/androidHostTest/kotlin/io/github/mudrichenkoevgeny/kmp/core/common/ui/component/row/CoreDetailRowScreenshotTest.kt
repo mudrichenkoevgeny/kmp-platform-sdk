@@ -58,11 +58,9 @@ class CoreDetailRowScreenshotTest(
         @Suppress("Unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
-        fun data(): Collection<Array<Any?>> {
-            return listOf(
-                arrayOf("Standard", "Status", "Active"),
-                arrayOf("LongValue", "Owner User ID", "usr_1234567890abcdef")
-            )
-        }
+        fun data(): Collection<Array<Any?>> = listOf(
+            arrayOf("Standard", "Status", "Active"),
+            arrayOf("LongValue", "Owner User ID", "usr_1234567890abcdef")
+        )
     }
 }

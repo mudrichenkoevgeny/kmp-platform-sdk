@@ -15,8 +15,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.lis
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
 
+/**
+ * Creates the listing options configuration for audit event sorting and filtering.
+ *
+ * @return [ListingOptionsConfig] populated with available audit event sort definitions and filter controls.
+ */
 @Composable
-fun getAuditEventListingOptionsConfig(): ListingOptionsConfig {
+public fun getAuditEventListingOptionsConfig(): ListingOptionsConfig {
     val commonUi = LocalCommonStrings.current.ui
     val userUi = LocalUserStrings.current.ui
 
@@ -27,8 +32,8 @@ fun getAuditEventListingOptionsConfig(): ListingOptionsConfig {
     )
 
     val roleOptions = listOf(
-        ListingFilterChoiceOption(UserRole.STAFF.name, commonUi.staff),
-        ListingFilterChoiceOption(UserRole.ADMIN.name, commonUi.admin)
+        ListingFilterChoiceOption(UserRole.STAFF.value, commonUi.staff),
+        ListingFilterChoiceOption(UserRole.ADMIN.value, commonUi.admin)
     )
 
     val statusOptions = listOf(

@@ -12,112 +12,128 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.localization.S
 /**
  * [AppErrorParser] for storage-related error codes using `shared-foundation` localization.
  */
-open class StorageErrorParser(
+public open class StorageErrorParser(
     private val localeProvider: () -> String = { KmpLocalization.currentLocale }
 ) : AppErrorParser {
 
-    companion object : StorageErrorParser()
-
-    override fun parse(appError: AppError): String? {
+    public override fun parse(appError: AppError): String? {
         val args = appError.args ?: emptyMap()
         val locale = localeProvider()
         val strings = StorageModuleStrings(KmpLocalization.resolver, locale)
 
-        return when (appError.code) {
-            StorageErrorCodes.FILE_SIZE_EXCEEDS_LIMIT -> {
-                val maxFileSize = args[StorageErrorArgs.MAX_FILE_SIZE_BYTES]
-                if (!maxFileSize.isNullOrBlank()) {
-                    val formatted = ByteSizeFormatter.format(
-                        bytesRaw = maxFileSize,
-                        resolver = KmpLocalization.resolver,
-                        locale = locale
-                    ) ?: maxFileSize
-                    strings.errors.fileSizeExceedsLimit(formatted)
-                } else {
-                    strings.errors.fileSizeExceedsLimitWithoutArgs
-                }
-            }
-
-            StorageErrorCodes.FILE_SIZE_BELOW_MINIMUM -> {
-                val minFileSize = args[StorageErrorArgs.MIN_FILE_SIZE_BYTES]
-                if (!minFileSize.isNullOrBlank()) {
-                    val formatted = ByteSizeFormatter.format(
-                        bytesRaw = minFileSize,
-                        resolver = KmpLocalization.resolver,
-                        locale = locale
-                    ) ?: minFileSize
-                    strings.errors.fileSizeBelowMinimum(formatted)
-                } else {
-                    strings.errors.fileSizeBelowMinimumWithoutArgs
-                }
-            }
-
-            StorageErrorCodes.UNSUPPORTED_MIME_TYPE -> strings.errors.unsupportedMimeType
-
-            StorageErrorCodes.UNSUPPORTED_STORAGE_CATEGORY -> strings.errors.unsupportedStorageCategory
-
-            StorageErrorCodes.STORAGE_QUOTA_EXCEEDED -> {
-                val quota = args[StorageErrorArgs.QUOTA_BYTES]
-                val used = args[StorageErrorArgs.USED_BYTES]
-                if (!quota.isNullOrBlank() && !used.isNullOrBlank()) {
-                    val formattedQuota = ByteSizeFormatter.format(
-                        bytesRaw = quota,
-                        resolver = KmpLocalization.resolver,
-                        locale = locale
-                    ) ?: quota
-                    val formattedUsed = ByteSizeFormatter.format(
-                        bytesRaw = used,
-                        resolver = KmpLocalization.resolver,
-                        locale = locale
-                    ) ?: used
-                    strings.errors.storageQuotaExceeded(
-                        formattedUsed = formattedUsed,
-                        formattedQuota = formattedQuota
-                    )
-                } else {
-                    strings.errors.storageQuotaExceededWithoutArgs
-                }
-            }
-
-            StorageErrorCodes.TOO_MANY_PENDING_UPLOADS -> {
-                val maxPending = args[StorageErrorArgs.MAX_PENDING_UPLOADS]
-                if (!maxPending.isNullOrBlank()) {
-                    strings.errors.tooManyPendingUploads(maxPending)
-                } else {
-                    strings.errors.tooManyPendingUploadsWithoutArgs
-                }
-            }
-
-            StorageErrorCodes.MAX_BATCH_UPLOAD_COUNT_EXCEEDED -> {
-                val maxBatch = args[StorageErrorArgs.MAX_BATCH_UPLOAD_COUNT]
-                if (!maxBatch.isNullOrBlank()) {
-                    strings.errors.maxBatchUploadCountExceeded(maxBatch)
-                } else {
-                    strings.errors.maxBatchUploadCountExceededWithoutArgs
-                }
-            }
-
-            StorageErrorCodes.PRESIGNED_URL_EXPIRED -> strings.errors.presignedUrlExpired
-
-            StorageErrorCodes.INVALID_UPLOAD_TOKEN,
-            StorageErrorCodes.STORAGE_ERROR -> strings.errors.storageError
-
-            StorageErrorCodes.UPLOAD_ALREADY_COMPLETED -> strings.errors.uploadAlreadyCompleted
-
-            StorageErrorCodes.STORAGE_UPLOAD_FAILED,
-            ClientStorageErrorCodes.S3_UPLOAD_FAILED -> strings.errors.storageUploadFailed
-
-            ClientStorageErrorCodes.DIRECT_UPLOAD_CANCELLED -> strings.errors.uploadCancelled
-
-            StorageErrorCodes.FILE_NOT_FOUND -> strings.errors.fileNotFound
-
-            StorageErrorCodes.FILE_NOT_READY -> strings.errors.fileNotReady
-
-            StorageErrorCodes.FILE_ALREADY_EXISTS -> strings.errors.fileAlreadyExists
-
-            StorageErrorCodes.FILE_DELETE_FAILED -> strings.errors.fileDeleteFailed
-
-            else -> null
-        }
+        return parseFileSizeAndQuotaError(appError.code, args, locale, strings)
+            ?: parseGeneralStorageErrorCode(appError.code, args, strings)
     }
+
+    private fun parseFileSizeAndQuotaError(
+        code: String,
+        args: Map<String, String>,
+        locale: String,
+        strings: StorageModuleStrings
+    ): String? = when (code) {
+        StorageErrorCodes.FILE_SIZE_EXCEEDS_LIMIT -> {
+            val maxFileSize = args[StorageErrorArgs.MAX_FILE_SIZE_BYTES]
+            if (!maxFileSize.isNullOrBlank()) {
+                val formatted = ByteSizeFormatter.format(
+                    bytesRaw = maxFileSize,
+                    resolver = KmpLocalization.resolver,
+                    locale = locale
+                ) ?: maxFileSize
+                strings.errors.fileSizeExceedsLimit(formatted)
+            } else {
+                strings.errors.fileSizeExceedsLimitWithoutArgs
+            }
+        }
+
+        StorageErrorCodes.FILE_SIZE_BELOW_MINIMUM -> {
+            val minFileSize = args[StorageErrorArgs.MIN_FILE_SIZE_BYTES]
+            if (!minFileSize.isNullOrBlank()) {
+                val formatted = ByteSizeFormatter.format(
+                    bytesRaw = minFileSize,
+                    resolver = KmpLocalization.resolver,
+                    locale = locale
+                ) ?: minFileSize
+                strings.errors.fileSizeBelowMinimum(formatted)
+            } else {
+                strings.errors.fileSizeBelowMinimumWithoutArgs
+            }
+        }
+
+        StorageErrorCodes.STORAGE_QUOTA_EXCEEDED -> {
+            val quota = args[StorageErrorArgs.QUOTA_BYTES]
+            val used = args[StorageErrorArgs.USED_BYTES]
+            if (!quota.isNullOrBlank() && !used.isNullOrBlank()) {
+                val formattedQuota = ByteSizeFormatter.format(
+                    bytesRaw = quota,
+                    resolver = KmpLocalization.resolver,
+                    locale = locale
+                ) ?: quota
+                val formattedUsed = ByteSizeFormatter.format(
+                    bytesRaw = used,
+                    resolver = KmpLocalization.resolver,
+                    locale = locale
+                ) ?: used
+                strings.errors.storageQuotaExceeded(
+                    formattedUsed = formattedUsed,
+                    formattedQuota = formattedQuota
+                )
+            } else {
+                strings.errors.storageQuotaExceededWithoutArgs
+            }
+        }
+
+        else -> null
+    }
+
+    private fun parseGeneralStorageErrorCode(
+        code: String,
+        args: Map<String, String>,
+        strings: StorageModuleStrings
+    ): String? = when (code) {
+        StorageErrorCodes.UNSUPPORTED_MIME_TYPE -> strings.errors.unsupportedMimeType
+
+        StorageErrorCodes.UNSUPPORTED_STORAGE_CATEGORY -> strings.errors.unsupportedStorageCategory
+
+        StorageErrorCodes.TOO_MANY_PENDING_UPLOADS -> {
+            val maxPending = args[StorageErrorArgs.MAX_PENDING_UPLOADS]
+            if (!maxPending.isNullOrBlank()) {
+                strings.errors.tooManyPendingUploads(maxPending)
+            } else {
+                strings.errors.tooManyPendingUploadsWithoutArgs
+            }
+        }
+
+        StorageErrorCodes.MAX_BATCH_UPLOAD_COUNT_EXCEEDED -> {
+            val maxBatch = args[StorageErrorArgs.MAX_BATCH_UPLOAD_COUNT]
+            if (!maxBatch.isNullOrBlank()) {
+                strings.errors.maxBatchUploadCountExceeded(maxBatch)
+            } else {
+                strings.errors.maxBatchUploadCountExceededWithoutArgs
+            }
+        }
+
+        StorageErrorCodes.PRESIGNED_URL_EXPIRED -> strings.errors.presignedUrlExpired
+
+        StorageErrorCodes.INVALID_UPLOAD_TOKEN,
+        StorageErrorCodes.STORAGE_ERROR -> strings.errors.storageError
+
+        StorageErrorCodes.UPLOAD_ALREADY_COMPLETED -> strings.errors.uploadAlreadyCompleted
+
+        StorageErrorCodes.STORAGE_UPLOAD_FAILED,
+        ClientStorageErrorCodes.S3_UPLOAD_FAILED -> strings.errors.storageUploadFailed
+
+        ClientStorageErrorCodes.DIRECT_UPLOAD_CANCELLED -> strings.errors.uploadCancelled
+
+        StorageErrorCodes.FILE_NOT_FOUND -> strings.errors.fileNotFound
+
+        StorageErrorCodes.FILE_NOT_READY -> strings.errors.fileNotReady
+
+        StorageErrorCodes.FILE_ALREADY_EXISTS -> strings.errors.fileAlreadyExists
+
+        StorageErrorCodes.FILE_DELETE_FAILED -> strings.errors.fileDeleteFailed
+
+        else -> null
+    }
+
+    public companion object : StorageErrorParser()
 }

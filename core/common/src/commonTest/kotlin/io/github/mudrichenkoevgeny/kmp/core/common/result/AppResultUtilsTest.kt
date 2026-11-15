@@ -74,4 +74,3 @@ class AppResultUtilsTest {
         assertSame(propagatedError, error)
     }
 }
-

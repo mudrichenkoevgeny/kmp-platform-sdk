@@ -8,12 +8,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.model.w
  * The socket service offers each frame to registered handlers until one returns a result other than
  * [WebSocketMessageHandlerResult.NotHandled].
  */
-interface WebSocketMessageHandler {
+public interface WebSocketMessageHandler {
     /**
      * @param frame Incoming frame from the server.
      * @return [WebSocketMessageHandlerResult.NotHandled] if this handler does not apply; otherwise
      * [WebSocketMessageHandlerResult.Handled], [WebSocketMessageHandlerResult.SendSocketFrame], or
      * [WebSocketMessageHandlerResult.Error] as appropriate.
      */
-    suspend fun handle(frame: SocketFrame): WebSocketMessageHandlerResult
+    public suspend fun handle(frame: SocketFrame): WebSocketMessageHandlerResult
 }

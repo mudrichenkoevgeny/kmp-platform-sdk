@@ -17,7 +17,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
 /** [SelfManagementIdentifiersApi] backed by [HttpClient]. */
-class KtorSelfManagementIdentifiersApi(
+public class KtorSelfManagementIdentifiersApi(
     private val client: HttpClient
 ) : SelfManagementIdentifiersApi {
 

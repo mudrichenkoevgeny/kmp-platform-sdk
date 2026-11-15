@@ -15,13 +15,13 @@ import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.di.ClientUserComponent
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.phone.LoginByPhoneComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email.RegistrationByEmailComponentImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.pendingdeletion.PendingDeletionComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.root.UnlockRootComponentImpl
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.apptype.AppType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientAuthNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.login.totp.LoginByTotpParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.methodselection.UnlockMethodSelectionParams
@@ -70,7 +70,8 @@ class ClientLoginRootComponentImpl(
             navigation.pop()
         } else if (parentDestination != null && parentDestination != stack.value.active.configuration) {
             navigation.navigate { currentStack ->
-                val index = currentStack.indexOfLast { it == parentDestination || it::class == parentDestination::class }
+                val index =
+                    currentStack.indexOfLast { it == parentDestination || it::class == parentDestination::class }
                 if (index >= 0) {
                     currentStack.take(index + 1)
                 } else {
@@ -97,18 +98,24 @@ class ClientLoginRootComponentImpl(
                 loginByGoogleUseCase = clientUserComponent.loginByGoogleUseCase,
                 onNavigateToLoginByEmail = { navigation.bringToFront(ClientAuthNavigation.LoginByEmail()) },
                 onNavigateToLoginByPhone = { navigation.bringToFront(ClientAuthNavigation.LoginByPhone()) },
-                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ClientAuthNavigation.LoginByTotp(LoginByTotpParams(mfaToken = mfaToken))) },
+                onNavigateToTotp = { mfaToken ->
+                    navigation.bringToFront(ClientAuthNavigation.LoginByTotp(LoginByTotpParams(mfaToken = mfaToken)))
+                },
                 onNavigateToPendingDeletion = { navigation.bringToFront(ClientAuthNavigation.PendingDeletion) },
                 onNavigateToAccountUnlock = { lockoutType, lockoutUntil ->
                     navigation.bringToFront(
                         ClientAuthNavigation.UnlockMethodSelection(
-                            UnlockMethodSelectionParams(accountLockoutType = lockoutType, temporaryLockoutUntil = lockoutUntil)
+                            UnlockMethodSelectionParams(
+                                accountLockoutType = lockoutType,
+                                temporaryLockoutUntil = lockoutUntil
+                            )
                         )
                     )
                 },
                 onFinished = onFinished
             )
         )
+
         is ClientAuthNavigation.LoginByEmail -> ClientLoginRootComponent.Child.LoginByEmail(
             LoginByEmailComponentImpl(
                 componentContext = context,
@@ -117,12 +124,17 @@ class ClientLoginRootComponentImpl(
                 loginByEmailUseCase = clientUserComponent.loginByEmailUseCase,
                 onNavigateToRegistrationByEmail = { navigation.bringToFront(ClientAuthNavigation.Registration()) },
                 onNavigateToForgotPassword = { navigation.bringToFront(ClientAuthNavigation.ResetPassword()) },
-                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ClientAuthNavigation.LoginByTotp(LoginByTotpParams(mfaToken = mfaToken))) },
+                onNavigateToTotp = { mfaToken ->
+                    navigation.bringToFront(ClientAuthNavigation.LoginByTotp(LoginByTotpParams(mfaToken = mfaToken)))
+                },
                 onNavigateToPendingDeletion = { navigation.bringToFront(ClientAuthNavigation.PendingDeletion) },
                 onNavigateToAccountUnlock = { lockoutType, lockoutUntil ->
                     navigation.bringToFront(
                         ClientAuthNavigation.UnlockMethodSelection(
-                            UnlockMethodSelectionParams(accountLockoutType = lockoutType, temporaryLockoutUntil = lockoutUntil)
+                            UnlockMethodSelectionParams(
+                                accountLockoutType = lockoutType,
+                                temporaryLockoutUntil = lockoutUntil
+                            )
                         )
                     )
                 },
@@ -130,6 +142,7 @@ class ClientLoginRootComponentImpl(
                 onFinished = onFinished
             )
         )
+
         is ClientAuthNavigation.LoginByPhone -> ClientLoginRootComponent.Child.LoginByPhone(
             LoginByPhoneComponentImpl(
                 componentContext = context,
@@ -137,12 +150,17 @@ class ClientLoginRootComponentImpl(
                 loginRepository = clientUserComponent.loginRepository,
                 sendLoginConfirmationToPhoneUseCase = clientUserComponent.sendLoginConfirmationToPhoneUseCase,
                 loginByPhoneUseCase = clientUserComponent.loginByPhoneUseCase,
-                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ClientAuthNavigation.LoginByTotp(LoginByTotpParams(mfaToken = mfaToken))) },
+                onNavigateToTotp = { mfaToken ->
+                    navigation.bringToFront(ClientAuthNavigation.LoginByTotp(LoginByTotpParams(mfaToken = mfaToken)))
+                },
                 onNavigateToPendingDeletion = { navigation.bringToFront(ClientAuthNavigation.PendingDeletion) },
                 onNavigateToAccountUnlock = { lockoutType, lockoutUntil ->
                     navigation.bringToFront(
                         ClientAuthNavigation.UnlockMethodSelection(
-                            UnlockMethodSelectionParams(accountLockoutType = lockoutType, temporaryLockoutUntil = lockoutUntil)
+                            UnlockMethodSelectionParams(
+                                accountLockoutType = lockoutType,
+                                temporaryLockoutUntil = lockoutUntil
+                            )
                         )
                     )
                 },
@@ -150,30 +168,35 @@ class ClientLoginRootComponentImpl(
                 onFinished = onFinished
             )
         )
+
         is ClientAuthNavigation.Registration -> ClientLoginRootComponent.Child.RegistrationByEmail(
             RegistrationByEmailComponentImpl(
                 componentContext = context,
                 params = config.params,
                 registrationRepository = clientUserComponent.registrationRepository,
-                sendRegistrationConfirmationToEmailUseCase = clientUserComponent.sendRegistrationConfirmationToEmailUseCase,
+                sendRegistrationConfirmationToEmailUseCase =
+                    clientUserComponent.sendRegistrationConfirmationToEmailUseCase,
                 registrationByEmailUseCase = clientUserComponent.registrationByEmailUseCase,
                 validatePasswordUseCase = securityComponent.validatePasswordUseCase,
                 onBack = { handleBack(ClientAuthNavigation.Main) },
                 onFinished = onFinished
             )
         )
+
         is ClientAuthNavigation.ResetPassword -> ClientLoginRootComponent.Child.ResetEmailPassword(
             ResetEmailPasswordComponentImpl(
                 componentContext = context,
                 params = config.params,
                 resetPasswordRepository = clientUserComponent.passwordRepository,
-                sendResetPasswordConfirmationToEmailUseCase = clientUserComponent.sendResetPasswordConfirmationToEmailUseCase,
+                sendResetPasswordConfirmationToEmailUseCase =
+                    clientUserComponent.sendResetPasswordConfirmationToEmailUseCase,
                 resetEmailPasswordUseCase = clientUserComponent.resetEmailPasswordUseCase,
                 validatePasswordUseCase = securityComponent.validatePasswordUseCase,
                 onBack = { handleBack(ClientAuthNavigation.Main) },
                 onFinished = onFinished
             )
         )
+
         is ClientAuthNavigation.LoginByTotp -> ClientLoginRootComponent.Child.LoginByTotp(
             LoginByTotpComponentImpl(
                 componentContext = context,
@@ -185,6 +208,7 @@ class ClientLoginRootComponentImpl(
                 onFinished = onFinished
             )
         )
+
         ClientAuthNavigation.PendingDeletion -> ClientLoginRootComponent.Child.PendingDeletion(
             PendingDeletionComponentImpl(
                 componentContext = context,
@@ -194,6 +218,7 @@ class ClientLoginRootComponentImpl(
                 onSignOut = { handleBack(ClientAuthNavigation.Main) }
             )
         )
+
         is ClientAuthNavigation.UnlockMethodSelection,
         is ClientAuthNavigation.UnlockTargetInput,
         is ClientAuthNavigation.UnlockOtpInput,

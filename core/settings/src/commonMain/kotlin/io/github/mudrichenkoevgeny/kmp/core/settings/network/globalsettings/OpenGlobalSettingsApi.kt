@@ -6,11 +6,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.model
 /**
  * Direct HTTP API for fetching open global platform settings.
  */
-interface OpenGlobalSettingsApi {
+public interface OpenGlobalSettingsApi {
     /**
      * Fetches the active open global settings payload from the server.
      *
      * @return [AppResult.Success] containing [OpenGlobalSettingsPayload] or [AppResult.Error].
      */
-    suspend fun getOpenGlobalSettings(): AppResult<OpenGlobalSettingsPayload>
+    public suspend fun getOpenGlobalSettings(): AppResult<OpenGlobalSettingsPayload>
 }

@@ -9,24 +9,24 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.model.w
  * The websocket service uses this to decide whether to emit the frame as an event,
  * ignore it, send an outgoing socket frame, or report an error.
  */
-sealed interface WebSocketMessageHandlerResult {
+public sealed interface WebSocketMessageHandlerResult {
     /**
      * Handler did not recognize the frame.
      */
-    object NotHandled : WebSocketMessageHandlerResult
+    public object NotHandled : WebSocketMessageHandlerResult
 
     /**
      * Handler processed the frame and no additional action is required.
      */
-    object Handled : WebSocketMessageHandlerResult
+    public object Handled : WebSocketMessageHandlerResult
 
     /**
      * Handler requests sending a new outgoing socket frame.
      */
-    data class SendSocketFrame(val socketFrame: SocketFrame) : WebSocketMessageHandlerResult
+    public data class SendSocketFrame(public val socketFrame: SocketFrame) : WebSocketMessageHandlerResult
 
     /**
      * Handler failed to process the frame with an application-level [AppError].
      */
-    data class Error(val appError: AppError) : WebSocketMessageHandlerResult
+    public data class Error(public val appError: AppError) : WebSocketMessageHandlerResult
 }

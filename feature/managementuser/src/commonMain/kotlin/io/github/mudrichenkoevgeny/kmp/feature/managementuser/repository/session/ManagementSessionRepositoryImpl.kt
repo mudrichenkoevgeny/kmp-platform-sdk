@@ -18,44 +18,46 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  *
  * @param managementSessionApi Administrative HTTP endpoints for managing user sessions.
  */
-class ManagementSessionRepositoryImpl(
+public class ManagementSessionRepositoryImpl(
     private val managementSessionApi: ManagementSessionApi
 ) : ManagementSessionRepository {
 
     override suspend fun getSessions(
         params: ManagementGlobalSessionListParams?
-    ): AppResult<PagedResult<UserSessionSummary>> {
-        return managementSessionApi.getSessions(params).mapSuccess { pagedPayload ->
-            pagedPayload.mapItems { payload ->
-                payload.toUserSessionSummary()
-            }
+    ): AppResult<PagedResult<UserSessionSummary>> = managementSessionApi.getSessions(
+        params
+    ).mapSuccess { pagedPayload ->
+        pagedPayload.mapItems { payload ->
+            payload.toUserSessionSummary()
         }
     }
 
     override suspend fun getUserSessions(
         params: ManagementUserSessionListParams
-    ): AppResult<PagedResult<UserSessionSummary>> {
-        return managementSessionApi.getUserSessions(params).mapSuccess { pagedPayload ->
-            pagedPayload.mapItems { userSessionPayload ->
-                userSessionPayload.toUserSessionSummary()
-            }
+    ): AppResult<PagedResult<UserSessionSummary>> = managementSessionApi.getUserSessions(
+        params
+    ).mapSuccess { pagedPayload ->
+        pagedPayload.mapItems { userSessionPayload ->
+            userSessionPayload.toUserSessionSummary()
         }
     }
 
-    override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivate> {
-        return managementSessionApi.getSession(sessionId).mapSuccess { payload ->
-            payload.toUserSessionPrivate()
-        }
+    override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivate> = managementSessionApi.getSession(
+        sessionId
+    ).mapSuccess { payload ->
+        payload.toUserSessionPrivate()
     }
 
-    override suspend fun deleteSession(userId: UserId, sessionId: String): AppResult<Unit> {
-        return managementSessionApi.deleteSession(
-            userId = userId,
-            sessionId = sessionId
+    override suspend fun deleteSession(
+        userId: UserId,
+        sessionId: String
+    ): AppResult<Unit> = managementSessionApi.deleteSession(
+        userId = userId,
+        sessionId = sessionId
+    )
+
+    override suspend fun deleteAllUserSessions(userId: UserId): AppResult<Unit> =
+        managementSessionApi.deleteAllUserSessions(
+            userId
         )
-    }
-
-    override suspend fun deleteAllUserSessions(userId: UserId): AppResult<Unit> {
-        return managementSessionApi.deleteAllUserSessions(userId)
-    }
 }

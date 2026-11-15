@@ -7,7 +7,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.refres
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.registration.OpenRegistrationRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.resetpassword.OpenResetPasswordRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.unlock.OpenUnlockRepositoryImpl
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.identifier.OpenIdentifierRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.session.OpenSessionRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.user.OpenUserRepositoryImpl
@@ -18,6 +17,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.refreshtoken
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.registration.RegistrationRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpassword.ResetPasswordRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.unlock.UnlockRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepositoryImpl
@@ -50,37 +50,41 @@ internal class ClientUserRepositoryModule(
     private val webSocketService: WebSocketService,
     repositoryScope: CoroutineScope
 ) {
-    // Confirmation
     /** Shared repository for managing confirmation code request intervals. */
     val confirmationRepository: ConfirmationRepository by lazy {
         ConfirmationRepositoryImpl(Clock.System)
     }
 
-    // Auth
     /** Repository for authentication flows. */
     val loginRepository: LoginRepository by lazy {
         OpenLoginRepositoryImpl(networkModule.loginApi, confirmationRepository)
     }
+
     /** Repository for registration flows. */
     val registrationRepository: RegistrationRepository by lazy {
         OpenRegistrationRepositoryImpl(networkModule.registrationApi, confirmationRepository)
     }
+
     /** Repository for token refresh logic. */
     val refreshTokenRepository: RefreshTokenRepository by lazy {
         OpenRefreshTokenRepositoryImpl(networkModule.refreshTokenApi)
     }
+
     /** Repository for password recovery. */
     val resetPasswordRepository: ResetPasswordRepository by lazy {
         OpenResetPasswordRepositoryImpl(networkModule.resetPasswordApi, confirmationRepository)
     }
+
     /** Repository for self-service account unlocking. */
     val unlockRepository: UnlockRepository by lazy {
         OpenUnlockRepositoryImpl(networkModule.unlockApi, confirmationRepository)
     }
+
     /** Storage for open auth settings. */
     val openAuthSettingsStorage: OpenAuthSettingsStorage by lazy {
         EncryptedOpenAuthSettingsStorage(encryptedSettings)
     }
+
     /** Repository for public authentication settings. */
     val openAuthSettingsRepository: OpenAuthSettingsRepository by lazy {
         OpenAuthSettingsRepositoryImpl(
@@ -91,7 +95,6 @@ internal class ClientUserRepositoryModule(
         )
     }
 
-    // Identifier
     /** Repository for managing user identity records. */
     val identifierRepository: IdentifierRepository by lazy {
         OpenIdentifierRepositoryImpl(
@@ -100,7 +103,6 @@ internal class ClientUserRepositoryModule(
         )
     }
 
-    // Session
     /** Repository for managing active user sessions. */
     val sessionRepository: SessionRepository by lazy {
         OpenSessionRepositoryImpl(
@@ -110,7 +112,6 @@ internal class ClientUserRepositoryModule(
         )
     }
 
-    // User
     /** Repository for user data. */
     val userRepository: UserRepository by lazy {
         OpenUserRepositoryImpl(

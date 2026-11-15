@@ -12,13 +12,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.model.
  *
  * @param encryptedSettings Host-provided encrypted settings.
  */
-class EncryptedManagementStorageSettingsStorage(
+public class EncryptedManagementStorageSettingsStorage(
     private val encryptedSettings: EncryptedSettings
 ) : ManagementStorageSettingsStorage {
 
     private val json = FoundationJson
 
-    override suspend fun getManagementStorageSettings(): ManagementStorageSettings? {
+    public override suspend fun getManagementStorageSettings(): ManagementStorageSettings? {
         val data = encryptedSettings.get(KEY_MANAGEMENT_STORAGE_SETTINGS) ?: return null
         return try {
             json.decodeFromString<ManagementStorageSettingsPayload>(data).toManagementStorageSettings()
@@ -28,17 +28,17 @@ class EncryptedManagementStorageSettingsStorage(
         }
     }
 
-    override suspend fun updateManagementStorageSettings(managementStorageSettings: ManagementStorageSettings) {
+    public override suspend fun updateManagementStorageSettings(managementStorageSettings: ManagementStorageSettings) {
         val payload = managementStorageSettings.toManagementStorageSettingsPayload()
         val data = json.encodeToString(payload)
         encryptedSettings.put(KEY_MANAGEMENT_STORAGE_SETTINGS, data)
     }
 
-    override suspend fun clearManagementStorageSettings() {
+    public override suspend fun clearManagementStorageSettings() {
         encryptedSettings.remove(KEY_MANAGEMENT_STORAGE_SETTINGS)
     }
 
-    companion object {
+    public companion object {
         private const val KEY_MANAGEMENT_STORAGE_SETTINGS = "storage_management_settings"
     }
 }

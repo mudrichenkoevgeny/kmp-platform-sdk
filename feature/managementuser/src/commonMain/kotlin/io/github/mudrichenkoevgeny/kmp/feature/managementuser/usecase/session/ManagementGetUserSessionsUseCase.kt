@@ -11,16 +11,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  *
  * @param managementSessionRepository Administrative session management API.
  */
-class ManagementGetUserSessionsUseCase(
+public class ManagementGetUserSessionsUseCase(
     private val managementSessionRepository: ManagementSessionRepository
 ) {
     /**
      * @param params Per-user session list query and filter parameters DTO.
      * @return Paginated result containing matching session models, or a mapped failure.
      */
-    suspend operator fun invoke(
+    public suspend operator fun invoke(
         params: ManagementUserSessionListParams
-    ): AppResult<PagedResult<UserSessionSummary>> {
-        return managementSessionRepository.getUserSessions(params)
-    }
+    ): AppResult<PagedResult<UserSessionSummary>> = managementSessionRepository.getUserSessions(params)
 }

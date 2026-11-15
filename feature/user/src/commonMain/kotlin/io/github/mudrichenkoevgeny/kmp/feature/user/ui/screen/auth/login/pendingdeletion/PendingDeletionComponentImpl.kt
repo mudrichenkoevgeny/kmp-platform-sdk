@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
  * @param onRestoreSuccess Invoked when account restoration succeeds so the host app can proceed.
  * @param onSignOut Invoked when the user chooses to sign out and return to the welcome screen.
  */
-class PendingDeletionComponentImpl(
+public class PendingDeletionComponentImpl(
     componentContext: ComponentContext,
     private val restoreUserUseCase: RestoreUserUseCase,
     private val logoutUseCase: LogoutUseCase,
@@ -29,9 +29,9 @@ class PendingDeletionComponentImpl(
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue(PendingDeletionScreenState())
-    override val state: Value<PendingDeletionScreenState> = _state
+    public override val state: Value<PendingDeletionScreenState> = _state
 
-    override fun onRestoreAccountClick() {
+    public override fun onRestoreAccountClick() {
         val current = _state.value
         if (current.actionLoading) {
             return
@@ -50,7 +50,7 @@ class PendingDeletionComponentImpl(
         }
     }
 
-    override fun onSignOutClick() {
+    public override fun onSignOutClick() {
         val current = _state.value
         if (current.actionLoading) {
             return

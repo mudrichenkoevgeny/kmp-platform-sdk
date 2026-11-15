@@ -15,9 +15,6 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail.dataso
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.StorageFileListComponent
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.factory.createClientStorageFileListComponent
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.upload.StorageFileUploadScreenComponentImpl
-import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.screen.base.detail.StorageFileDetailParams
-import io.github.mudrichenkoevgeny.shared.foundation.core.storage.ui.component.fileupload.StorageFileUploadUiConfig
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
@@ -49,16 +46,19 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionUs
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.LogoutUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.SelfUpdateUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.DisableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.EnableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.GetRecoveryCodesUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.RegenerateRecoveryCodesUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.SetupTotpUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.NavigationRoute
-import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.route.open.OpenStorageNavigation
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.SelfUpdateUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.ValidateDisplayNameUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.ValidateNicknameUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.apptype.AppType
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.NavigationRoute
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.route.open.OpenStorageNavigation
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.screen.base.detail.StorageFileDetailParams
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.ui.component.fileupload.StorageFileUploadUiConfig
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientUserNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.detail.IdentifierDetailParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.session.detail.SessionDetailParams
@@ -97,7 +97,7 @@ import kotlinx.serialization.PolymorphicSerializer
  * @param onNavigateToClientStorageFiles Optional external callback to navigate to self-service storage files screen.
  * @param onNavigateToLogin Invoked when the user logs out or requires re-authentication.
  */
-class UserRootComponentImpl(
+public class UserRootComponentImpl(
     componentContext: ComponentContext,
     private val appType: AppType,
     private val userRepository: UserRepository,
@@ -135,7 +135,7 @@ class UserRootComponentImpl(
     private val navigation = StackNavigation<NavigationRoute>()
     private var clientStorageFileListComponent: StorageFileListComponent? = null
 
-    override val stack: Value<ChildStack<NavigationRoute, UserRootComponent.Child>> =
+    public override val stack: Value<ChildStack<NavigationRoute, UserRootComponent.Child>> =
         childStack(
             source = navigation,
             serializer = PolymorphicSerializer(NavigationRoute::class),
@@ -144,7 +144,7 @@ class UserRootComponentImpl(
             childFactory = ::createChild
         )
 
-    override fun navigateTo(destination: NavigationRoute) {
+    public override fun navigateTo(destination: NavigationRoute) {
         navigation.bringToFront(destination)
     }
 
@@ -159,7 +159,8 @@ class UserRootComponentImpl(
             navigation.pop()
         } else if (parentDestination != null && parentDestination != stack.value.active.configuration) {
             navigation.navigate { currentStack ->
-                val index = currentStack.indexOfLast { it == parentDestination || it::class == parentDestination::class }
+                val index =
+                    currentStack.indexOfLast { it == parentDestination || it::class == parentDestination::class }
                 if (index >= 0) {
                     currentStack.take(index + 1)
                 } else {
@@ -173,7 +174,24 @@ class UserRootComponentImpl(
         config: NavigationRoute,
         context: ComponentContext
     ): UserRootComponent.Child = when (config) {
-        ClientUserNavigation.Main -> UserRootComponent.Child.Main(
+        ClientUserNavigation.Main -> createMainChild(context)
+        ClientUserNavigation.UserEdit -> createUserEditChild(context)
+        is ClientUserNavigation.TotpMain -> createTotpMainChild(config, context)
+        ClientUserNavigation.TotpRecoveryCodes -> createTotpRecoveryCodesChild(context)
+        is ClientUserNavigation.SessionList -> createSessionListChild(context)
+        is ClientUserNavigation.SessionDetail -> createSessionDetailChild(config, context)
+        is ClientUserNavigation.IdentifierList -> createIdentifierListChild(context)
+        is ClientUserNavigation.IdentifierDetail -> createIdentifierDetailChild(config, context)
+        is OpenStorageNavigation.FileList,
+        is OpenStorageNavigation.FileDetail,
+        is OpenStorageNavigation.FileUpload,
+        is OpenStorageNavigation.Main -> createStorageChild(config, context)
+
+        else -> createMainChild(context)
+    }
+
+    private fun createMainChild(context: ComponentContext): UserRootComponent.Child =
+        UserRootComponent.Child.Main(
             MainUserComponentImpl(
                 componentContext = context,
                 userRepository = userRepository,
@@ -192,7 +210,9 @@ class UserRootComponentImpl(
                 }
             )
         )
-        ClientUserNavigation.UserEdit -> UserRootComponent.Child.UserEdit(
+
+    private fun createUserEditChild(context: ComponentContext): UserRootComponent.Child =
+        UserRootComponent.Child.UserEdit(
             UserEditComponentImpl(
                 componentContext = context,
                 userRepository = userRepository,
@@ -203,19 +223,25 @@ class UserRootComponentImpl(
                 onBack = { handleBack(ClientUserNavigation.Main) }
             )
         )
-        is ClientUserNavigation.TotpMain -> UserRootComponent.Child.TotpMain(
-            TotpMainComponentImpl(
-                componentContext = context,
-                params = config.params,
-                userRepository = userRepository,
-                setupTotpUseCase = setupTotpUseCase,
-                enableTotpUseCase = enableTotpUseCase,
-                disableTotpUseCase = disableTotpUseCase,
-                onNavigateToRecoveryCodes = { navigation.bringToFront(ClientUserNavigation.TotpRecoveryCodes) },
-                onBack = { handleBack(ClientUserNavigation.Main) }
-            )
+
+    private fun createTotpMainChild(
+        config: ClientUserNavigation.TotpMain,
+        context: ComponentContext
+    ): UserRootComponent.Child = UserRootComponent.Child.TotpMain(
+        TotpMainComponentImpl(
+            componentContext = context,
+            params = config.params,
+            userRepository = userRepository,
+            setupTotpUseCase = setupTotpUseCase,
+            enableTotpUseCase = enableTotpUseCase,
+            disableTotpUseCase = disableTotpUseCase,
+            onNavigateToRecoveryCodes = { navigation.bringToFront(ClientUserNavigation.TotpRecoveryCodes) },
+            onBack = { handleBack(ClientUserNavigation.Main) }
         )
-        ClientUserNavigation.TotpRecoveryCodes -> UserRootComponent.Child.TotpRecoveryCodes(
+    )
+
+    private fun createTotpRecoveryCodesChild(context: ComponentContext): UserRootComponent.Child =
+        UserRootComponent.Child.TotpRecoveryCodes(
             TotpRecoveryCodesComponentImpl(
                 componentContext = context,
                 getRecoveryCodesUseCase = getRecoveryCodesUseCase,
@@ -223,7 +249,9 @@ class UserRootComponentImpl(
                 onBack = { handleBack(ClientUserNavigation.TotpMain()) }
             )
         )
-        is ClientUserNavigation.SessionList -> UserRootComponent.Child.Sessions(
+
+    private fun createSessionListChild(context: ComponentContext): UserRootComponent.Child =
+        UserRootComponent.Child.Sessions(
             SessionListComponentImpl(
                 componentContext = context,
                 dataSource = SelfSessionListDataSource(
@@ -233,27 +261,41 @@ class UserRootComponentImpl(
                 ),
                 includeFilterPanel = false,
                 onNavigateToSessionDetail = { session ->
-                    navigation.bringToFront(ClientUserNavigation.SessionDetail(SessionDetailParams(sessionId = session.id.asHexDashString())))
+                    navigation.bringToFront(
+                        ClientUserNavigation.SessionDetail(
+                            SessionDetailParams(sessionId = session.id.asHexDashString())
+                        )
+                    )
                 },
                 onBack = { handleBack(ClientUserNavigation.Main) },
                 authStorage = authStorage
             )
         )
-        is ClientUserNavigation.SessionDetail -> UserRootComponent.Child.SessionDetail(
-            SessionDetailComponentImpl(
-                componentContext = context,
-                params = config.params,
-                getSessionUseCase = getSessionUseCase,
-                deleteSessionUseCase = deleteSessionUseCase,
-                authStorage = authStorage,
-                onSessionRevoked = { sessionId -> stack.value.notifySessionRevoked(sessionId) },
-                onNavigateToIdentifierDetail = { identifierId ->
-                    navigation.bringToFront(ClientUserNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId.asHexDashString())))
-                },
-                onBack = { handleBack(ClientUserNavigation.SessionList()) }
-            )
+
+    private fun createSessionDetailChild(
+        config: ClientUserNavigation.SessionDetail,
+        context: ComponentContext
+    ): UserRootComponent.Child = UserRootComponent.Child.SessionDetail(
+        SessionDetailComponentImpl(
+            componentContext = context,
+            params = config.params,
+            getSessionUseCase = getSessionUseCase,
+            deleteSessionUseCase = deleteSessionUseCase,
+            authStorage = authStorage,
+            onSessionRevoked = { sessionId -> stack.value.notifySessionRevoked(sessionId) },
+            onNavigateToIdentifierDetail = { identifierId ->
+                navigation.bringToFront(
+                    ClientUserNavigation.IdentifierDetail(
+                        IdentifierDetailParams(identifierId = identifierId.asHexDashString())
+                    )
+                )
+            },
+            onBack = { handleBack(ClientUserNavigation.SessionList()) }
         )
-        is ClientUserNavigation.IdentifierList -> UserRootComponent.Child.Identifiers(
+    )
+
+    private fun createIdentifierListChild(context: ComponentContext): UserRootComponent.Child =
+        UserRootComponent.Child.Identifiers(
             IdentifierListComponentImpl(
                 componentContext = context,
                 dataSource = SelfIdentifierListDataSource(
@@ -270,120 +312,95 @@ class UserRootComponentImpl(
                 identifierRepository = identifierRepository,
                 authStorage = authStorage,
                 onIdentifierSelect = { identifierId ->
-                    navigation.bringToFront(ClientUserNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId.asHexDashString())))
+                    navigation.bringToFront(
+                        ClientUserNavigation.IdentifierDetail(
+                            IdentifierDetailParams(identifierId = identifierId.asHexDashString())
+                        )
+                    )
                 },
                 onBack = { handleBack(ClientUserNavigation.Main) }
             )
         )
-        is ClientUserNavigation.IdentifierDetail -> UserRootComponent.Child.IdentifierDetail(
-            IdentifierDetailComponentImpl(
-                componentContext = context,
-                params = config.params,
-                getUserIdentifierUseCase = getUserIdentifierUseCase,
-                deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
-                emailChangePasswordUseCase = emailChangePasswordUseCase,
-                authStorage = authStorage,
-                onIdentifierDeleted = { identifierId -> stack.value.notifyIdentifierDeleted(identifierId) },
-                onBack = { handleBack(ClientUserNavigation.IdentifierList()) }
-            )
+
+    private fun createIdentifierDetailChild(
+        config: ClientUserNavigation.IdentifierDetail,
+        context: ComponentContext
+    ): UserRootComponent.Child = UserRootComponent.Child.IdentifierDetail(
+        IdentifierDetailComponentImpl(
+            componentContext = context,
+            params = config.params,
+            getUserIdentifierUseCase = getUserIdentifierUseCase,
+            deleteUserIdentifierUseCase = deleteUserIdentifierUseCase,
+            emailChangePasswordUseCase = emailChangePasswordUseCase,
+            authStorage = authStorage,
+            onIdentifierDeleted = { identifierId -> stack.value.notifyIdentifierDeleted(identifierId) },
+            onBack = { handleBack(ClientUserNavigation.IdentifierList()) }
         )
-        is OpenStorageNavigation.FileList -> {
-            val dependencies = openStorageDependencies
-            if (dependencies != null) {
+    )
+
+    private fun createStorageChild(
+        config: NavigationRoute,
+        context: ComponentContext
+    ): UserRootComponent.Child {
+        val dependencies = openStorageDependencies ?: return createMainChild(context)
+        return when (config) {
+            is OpenStorageNavigation.FileList -> {
                 val listComponent = clientStorageFileListComponent ?: createClientStorageFileListComponent(
                     componentContext = context,
                     getFilesUseCase = dependencies.getFilesUseCase,
                     deleteFileUseCase = dependencies.deleteFileUseCase,
                     deleteFilesBatchUseCase = dependencies.deleteFilesBatchUseCase,
-                    onNavigateToUpload = {
-                        navigation.bringToFront(OpenStorageNavigation.FileUpload())
-                    },
+                    onNavigateToUpload = { navigation.bringToFront(OpenStorageNavigation.FileUpload()) },
                     onNavigateToFileDetail = { fileId ->
-                        navigation.bringToFront(OpenStorageNavigation.FileDetail(StorageFileDetailParams(fileId = fileId)))
+                        navigation.bringToFront(
+                            OpenStorageNavigation.FileDetail(StorageFileDetailParams(fileId = fileId))
+                        )
                     },
                     onNavigateBack = { handleBack() }
                 ).also { clientStorageFileListComponent = it }
                 UserRootComponent.Child.StorageFileList(listComponent)
-            } else {
-                createChild(ClientUserNavigation.Main, context)
             }
-        }
-        is OpenStorageNavigation.FileDetail -> {
-            val dependencies = openStorageDependencies
-            if (dependencies != null) {
-                UserRootComponent.Child.StorageFileDetail(
-                    StorageFileDetailComponentImpl(
-                        componentContext = context,
-                        params = config.params,
-                        dataSource = object : StorageFileDetailDataSource {
-                            override val isDeleteAvailable: Boolean = true
-                            override suspend fun getFileDetail(fileId: String) = dependencies.getFileDetailUseCase(fileId)
-                            override suspend fun deleteFile(fileId: String) = dependencies.deleteFileUseCase(fileId)
-                        },
-                        onNavigateBack = { handleBack(OpenStorageNavigation.FileList()) }
-                    )
+
+            is OpenStorageNavigation.FileDetail -> UserRootComponent.Child.StorageFileDetail(
+                StorageFileDetailComponentImpl(
+                    componentContext = context,
+                    params = config.params,
+                    dataSource = object : StorageFileDetailDataSource {
+                        override val isDeleteAvailable: Boolean = true
+                        override suspend fun getFileDetail(fileId: String) =
+                            dependencies.getFileDetailUseCase(fileId)
+
+                        override suspend fun deleteFile(fileId: String) = dependencies.deleteFileUseCase(fileId)
+                    },
+                    onNavigateBack = { handleBack(OpenStorageNavigation.FileList()) }
                 )
-            } else {
-                createChild(ClientUserNavigation.Main, context)
-            }
-        }
-        is OpenStorageNavigation.FileUpload -> {
-            val dependencies = openStorageDependencies
-            if (dependencies != null) {
-                UserRootComponent.Child.StorageFileUpload(
-                    StorageFileUploadScreenComponentImpl(
-                        componentContext = context,
-                        config = StorageFileUploadUiConfig(),
-                        uploadFileUseCase = dependencies.uploadFileUseCase,
-                        onUploaded = {
-                            clientStorageFileListComponent?.onRefresh()
-                        },
-                        onNavigateBack = { handleBack(OpenStorageNavigation.FileList()) }
-                    )
-                )
-            } else {
-                createChild(ClientUserNavigation.Main, context)
-            }
-        }
-        is OpenStorageNavigation.Main -> {
-            val dependencies = openStorageDependencies
-            if (dependencies != null) {
-                UserRootComponent.Child.StorageFileList(
-                    createClientStorageFileListComponent(
-                        componentContext = context,
-                        getFilesUseCase = dependencies.getFilesUseCase,
-                        deleteFileUseCase = dependencies.deleteFileUseCase,
-                        deleteFilesBatchUseCase = dependencies.deleteFilesBatchUseCase,
-                        onNavigateToUpload = {
-                            navigation.bringToFront(OpenStorageNavigation.FileUpload())
-                        },
-                        onNavigateToFileDetail = { fileId ->
-                            navigation.bringToFront(OpenStorageNavigation.FileDetail(StorageFileDetailParams(fileId = fileId)))
-                        },
-                        onNavigateBack = { handleBack() }
-                    )
-                )
-            } else {
-                createChild(ClientUserNavigation.Main, context)
-            }
-        }
-        else -> UserRootComponent.Child.Main(
-            MainUserComponentImpl(
-                componentContext = context,
-                userRepository = userRepository,
-                logoutUseCase = logoutUseCase,
-                scheduleUserDeletionUseCase = scheduleUserDeletionUseCase,
-                onNavigateToLogin = onNavigateToLogin,
-                onNavigateToTotp = { navigation.bringToFront(ClientUserNavigation.TotpMain()) },
-                onNavigateToSessions = { navigation.bringToFront(ClientUserNavigation.SessionList()) },
-                onNavigateToIdentifiers = { navigation.bringToFront(ClientUserNavigation.IdentifierList()) },
-                onNavigateToFilesList = {
-                    when {
-                        onNavigateToClientStorageFiles != null -> onNavigateToClientStorageFiles.invoke()
-                        openStorageDependencies != null -> navigation.bringToFront(OpenStorageNavigation.FileList())
-                    }
-                }
             )
-        )
+
+            is OpenStorageNavigation.FileUpload -> UserRootComponent.Child.StorageFileUpload(
+                StorageFileUploadScreenComponentImpl(
+                    componentContext = context,
+                    config = StorageFileUploadUiConfig(),
+                    uploadFileUseCase = dependencies.uploadFileUseCase,
+                    onUploaded = { clientStorageFileListComponent?.onRefresh() },
+                    onNavigateBack = { handleBack(OpenStorageNavigation.FileList()) }
+                )
+            )
+
+            else -> UserRootComponent.Child.StorageFileList(
+                createClientStorageFileListComponent(
+                    componentContext = context,
+                    getFilesUseCase = dependencies.getFilesUseCase,
+                    deleteFileUseCase = dependencies.deleteFileUseCase,
+                    deleteFilesBatchUseCase = dependencies.deleteFilesBatchUseCase,
+                    onNavigateToUpload = { navigation.bringToFront(OpenStorageNavigation.FileUpload()) },
+                    onNavigateToFileDetail = { fileId ->
+                        navigation.bringToFront(
+                            OpenStorageNavigation.FileDetail(StorageFileDetailParams(fileId = fileId))
+                        )
+                    },
+                    onNavigateBack = { handleBack() }
+                )
+            )
+        }
     }
 }

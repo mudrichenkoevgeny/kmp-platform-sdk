@@ -12,7 +12,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.model
  *
  * @param encryptedSettings Host-provided encrypted settings.
  */
-class EncryptedManagementGlobalSettingsStorage(
+public class EncryptedManagementGlobalSettingsStorage(
     private val encryptedSettings: EncryptedSettings
 ) : ManagementGlobalSettingsStorage {
 
@@ -38,7 +38,7 @@ class EncryptedManagementGlobalSettingsStorage(
         encryptedSettings.remove(KEY_MANAGEMENT_GLOBAL_SETTINGS)
     }
 
-    companion object {
-        private const val KEY_MANAGEMENT_GLOBAL_SETTINGS = "global_management_settings"
+    public companion object {
+        private const val KEY_MANAGEMENT_GLOBAL_SETTINGS: String = "global_management_settings"
     }
 }

@@ -8,8 +8,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.contr
 /**
  * [WebSocketMessageHandler] for settings-domain frame types (see [SettingsWebSocketEventTypes]).
  */
-class SettingsWebSocketMessageHandler : WebSocketMessageHandler {
-    override suspend fun handle(frame: SocketFrame): WebSocketMessageHandlerResult {
-        return WebSocketMessageHandlerResult.NotHandled
-    }
+public class SettingsWebSocketMessageHandler : WebSocketMessageHandler {
+    override suspend fun handle(frame: SocketFrame): WebSocketMessageHandlerResult =
+        WebSocketMessageHandlerResult.NotHandled
 }

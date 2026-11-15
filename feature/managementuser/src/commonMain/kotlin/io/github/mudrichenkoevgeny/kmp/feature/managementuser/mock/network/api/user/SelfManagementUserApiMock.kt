@@ -7,13 +7,17 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user.S
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.SelfUpdateUserRequest
 
+/**
+ * Mock implementation of [SelfManagementUserApi] for testing.
+ */
 @InternalApi
-class SelfManagementUserApiMock : SelfManagementUserApi {
+public class SelfManagementUserApiMock : SelfManagementUserApi {
 
-    var userResult: AppResult<UserPrivatePayload> = AppResult.Error(CommonError.Unknown())
-    var updateUserResult: AppResult<UserPrivatePayload> = AppResult.Error(CommonError.Unknown())
+    public var userResult: AppResult<UserPrivatePayload> = AppResult.Error(CommonError.Unknown())
+    public var updateUserResult: AppResult<UserPrivatePayload> = AppResult.Error(CommonError.Unknown())
 
-    override suspend fun getUser(): AppResult<UserPrivatePayload> = userResult
+    public override suspend fun getUser(): AppResult<UserPrivatePayload> = userResult
 
-    override suspend fun selfUpdateUser(request: SelfUpdateUserRequest): AppResult<UserPrivatePayload> = updateUserResult
+    public override suspend fun selfUpdateUser(request: SelfUpdateUserRequest): AppResult<UserPrivatePayload> =
+        updateUserResult
 }

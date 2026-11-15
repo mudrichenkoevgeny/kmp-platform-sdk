@@ -11,8 +11,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.global.EditGlobalSettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.global.EditGlobalSettingsScreenState
 
+/**
+ * Mock implementation of [EditGlobalSettingsComponent] for testing.
+ */
 @InternalApi
-class EditGlobalSettingsComponentMock(
+public class EditGlobalSettingsComponentMock(
     initialState: EditGlobalSettingsScreenState = EditGlobalSettingsScreenState.Content(
         privacyPolicyUrl = "https://example.com/privacy",
         termsOfServiceUrl = "https://example.com/terms",
@@ -26,36 +29,45 @@ class EditGlobalSettingsComponentMock(
         isVerboseLoggingEnabled = false
     )
 ) : EditGlobalSettingsComponent {
-    override val state: Value<EditGlobalSettingsScreenState> = MutableValue(initialState)
+    public override val state: Value<EditGlobalSettingsScreenState> = MutableValue(initialState)
 
-    override val dialogSlotNavigation = SlotNavigation<SettingsDialogConfig>()
+    public override val dialogSlotNavigation: SlotNavigation<SettingsDialogConfig> =
+        SlotNavigation<SettingsDialogConfig>()
     private val _dialogSlot = MutableValue<ChildSlot<SettingsDialogConfig, SettingsDialogChild>>(ChildSlot())
-    override val dialogSlot: Value<ChildSlot<SettingsDialogConfig, SettingsDialogChild>> = _dialogSlot
+    public override val dialogSlot: Value<ChildSlot<SettingsDialogConfig, SettingsDialogChild>> = _dialogSlot
 
-    fun setDialog(config: SettingsDialogConfig?) {
+    /** Sets the active dialog configuration. */
+    public fun setDialog(config: SettingsDialogConfig?) {
         val child = when (config) {
             is SettingsDialogConfig.ConfirmReset -> SettingsDialogChild.ConfirmReset
             null -> null
         }
         _dialogSlot.value = ChildSlot(
-            child = if (config != null && child != null) Child.Created(configuration = config, instance = child) else null
+            child = if (config != null && child != null) {
+                Child.Created(
+                    configuration = config,
+                    instance = child
+                )
+            } else {
+                null
+            }
         )
     }
 
-    override fun onRetry() {}
-    override fun onPrivacyPolicyUrlChanged(value: String) {}
-    override fun onTermsOfServiceUrlChanged(value: String) {}
-    override fun onContactSupportEmailChanged(value: String) {}
-    override fun onMinVersionAndroidChanged(value: String) {}
-    override fun onMinVersionIosChanged(value: String) {}
-    override fun onMinVersionWebChanged(value: String) {}
-    override fun onMinVersionDesktopChanged(value: String) {}
-    override fun onTracingEnabledToggled(enabled: Boolean) {}
-    override fun onMetricsEnabledToggled(enabled: Boolean) {}
-    override fun onVerboseLoggingEnabledToggled(enabled: Boolean) {}
-    override fun onSaveClick() {}
-    override fun onResetClick() {}
-    override fun onConfirmReset() {}
-    override fun onDismissDialog() {}
-    override fun onBackClick() {}
+    public override fun onRetry(): Unit = Unit
+    public override fun onPrivacyPolicyUrlChanged(value: String): Unit = Unit
+    public override fun onTermsOfServiceUrlChanged(value: String): Unit = Unit
+    public override fun onContactSupportEmailChanged(value: String): Unit = Unit
+    public override fun onMinVersionAndroidChanged(value: String): Unit = Unit
+    public override fun onMinVersionIosChanged(value: String): Unit = Unit
+    public override fun onMinVersionWebChanged(value: String): Unit = Unit
+    public override fun onMinVersionDesktopChanged(value: String): Unit = Unit
+    public override fun onTracingEnabledToggled(enabled: Boolean): Unit = Unit
+    public override fun onMetricsEnabledToggled(enabled: Boolean): Unit = Unit
+    public override fun onVerboseLoggingEnabledToggled(enabled: Boolean): Unit = Unit
+    public override fun onSaveClick(): Unit = Unit
+    public override fun onResetClick(): Unit = Unit
+    public override fun onConfirmReset(): Unit = Unit
+    public override fun onDismissDialog(): Unit = Unit
+    public override fun onBackClick(): Unit = Unit
 }

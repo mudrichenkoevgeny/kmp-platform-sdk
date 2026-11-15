@@ -5,10 +5,12 @@ import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.ClearCredentialException
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
@@ -26,14 +28,16 @@ import kotlinx.coroutines.withContext
  * @property webClientId The server's OAuth 2.0 client ID (Web application type)
  * used to identify the app to Google's identity servers.
  */
-class AndroidGoogleAuthService(
+public class AndroidGoogleAuthService(
     private val context: Context,
     private val webClientId: String
 ) : GoogleAuthService {
 
-    private val credentialManager = CredentialManager.create(context)
+    private val credentialManager: CredentialManager = CredentialManager.create(context)
 
-    override suspend fun signIn(): AppResult<LoginByExternalAuthProviderRequest> = withContext(Dispatchers.Main) {
+    public override suspend fun signIn(): AppResult<LoginByExternalAuthProviderRequest> = withContext(
+        Dispatchers.Main
+    ) {
         try {
             val googleIdOption = GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(false)
@@ -66,7 +70,7 @@ class AndroidGoogleAuthService(
             } else {
                 AppResult.Error(
                     UserError.ExternalAuthFailed(
-                        throwable = Exception("Received unexpected credential type: ${credential.type}")
+                        throwable = IllegalStateException("Received unexpected credential type: ${credential.type}")
                     )
                 )
             }
@@ -74,16 +78,18 @@ class AndroidGoogleAuthService(
             AppResult.Error(UserError.ExternalAuthCancelled(throwable = e))
         } catch (e: GetCredentialException) {
             AppResult.Error(UserError.ExternalAuthFailed(throwable = e))
-        } catch (e: Exception) {
+        } catch (e: GoogleIdTokenParsingException) {
+            AppResult.Error(UserError.ExternalAuthFailed(throwable = e))
+        } catch (e: IllegalArgumentException) {
             AppResult.Error(UserError.ExternalAuthFailed(throwable = e))
         }
     }
 
-    override suspend fun signOut(): AppResult<Unit> = withContext(Dispatchers.Main) {
+    public override suspend fun signOut(): AppResult<Unit> = withContext(Dispatchers.Main) {
         try {
             credentialManager.clearCredentialState(ClearCredentialStateRequest())
             AppResult.Success(Unit)
-        } catch (e: Exception) {
+        } catch (e: ClearCredentialException) {
             AppResult.Error(UserError.ExternalAuthFailed(throwable = e))
         }
     }

@@ -1,2 +1,4 @@
 # --- KMP OVERRIDES ---
-# Add kmp-specific editorconfig rules below
+[*.{kt,kts}]
+ktlint_function_naming_ignore_when_annotated_with = Composable
+ktlint_compose_compositionlocal-allowlist = disabled

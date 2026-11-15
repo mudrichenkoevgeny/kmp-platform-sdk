@@ -15,36 +15,45 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.ui.component.f
  * Mock implementation of [StorageFileUploadComponent] for testing and Compose previews.
  */
 @InternalApi
-class StorageFileUploadComponentMock(
+public class StorageFileUploadComponentMock(
     initialState: StorageFileUploadState = StorageFileUploadState(config = StorageFileUploadUiConfig())
 ) : StorageFileUploadComponent {
 
     private val _state = MutableValue(initialState)
-    override val state: Value<StorageFileUploadState> = _state
+    public override val state: Value<StorageFileUploadState> = _state
 
-    var lastSelectedFiles: List<SelectedFilePayload>? = null
-    var uploadCallCount = 0
-    var lastRemovedItemId: UploadQueueItemId? = null
+    public var lastSelectedFiles: List<SelectedFilePayload>? = null
+    public var uploadCallCount: Int = 0
+    public var lastRemovedItemId: UploadQueueItemId? = null
 
-    override fun getFilePayload(id: UploadQueueItemId): SelectedFilePayload? = null
+    public override fun getFilePayload(id: UploadQueueItemId): SelectedFilePayload? = null
 
-    override fun onFilesSelected(files: List<SelectedFilePayload>) {
+    public override fun onFilesSelected(files: List<SelectedFilePayload>) {
         lastSelectedFiles = files
     }
 
-    override fun onItemCategoryChanged(id: UploadQueueItemId, category: StorageCategory) {}
+    public override fun onItemCategoryChanged(
+        id: UploadQueueItemId,
+        category: StorageCategory
+    ): Unit = Unit
 
-    override fun onItemVisibilityChanged(id: UploadQueueItemId, visibility: StorageFileVisibility) {}
+    public override fun onItemVisibilityChanged(
+        id: UploadQueueItemId,
+        visibility: StorageFileVisibility
+    ): Unit = Unit
 
-    override fun onUploadClicked() {
+    public override fun onUploadClicked() {
         uploadCallCount++
     }
 
-    override fun onRemoveItemClicked(id: UploadQueueItemId) {
+    public override fun onRemoveItemClicked(id: UploadQueueItemId) {
         lastRemovedItemId = id
     }
 
-    fun emitState(newState: StorageFileUploadState) {
+    /**
+     * Emits a new [newState] to [state] for testing purposes.
+     */
+    public fun emitState(newState: StorageFileUploadState) {
         _state.value = newState
     }
 }

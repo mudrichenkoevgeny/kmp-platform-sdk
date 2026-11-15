@@ -16,52 +16,49 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.reques
  * @param deleteFileUseCase Use case deleting a single file.
  * @param deleteFilesBatchUseCase Use case deleting files in batch.
  */
-class SelfStorageFileListDataSource(
+public class SelfStorageFileListDataSource(
     private val getFilesUseCase: GetFilesUseCase,
     private val deleteFileUseCase: DeleteFileUseCase,
     private val deleteFilesBatchUseCase: DeleteFilesBatchUseCase
 ) : StorageFileListDataSource {
 
-    override val isSingleDeleteAvailable: Boolean = true
-    override val isBatchDeleteAvailable: Boolean = true
+    public override val isSingleDeleteAvailable: Boolean = true
+    public override val isBatchDeleteAvailable: Boolean = true
 
-    override suspend fun getFiles(query: StorageFileListQuery): AppResult<PagedResult<StorageFileSummary>> {
+    public override suspend fun getFiles(query: StorageFileListQuery): AppResult<PagedResult<StorageFileSummary>> {
         val params = query.toSelfParams()
         return getFilesUseCase(params)
     }
 
-    override suspend fun deleteFile(fileId: String): AppResult<Unit> {
-        return deleteFileUseCase(fileId)
-    }
+    public override suspend fun deleteFile(fileId: String): AppResult<Unit> = deleteFileUseCase(fileId)
 
-    override suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit> {
-        return deleteFilesBatchUseCase(request)
-    }
-
-    private fun StorageFileListQuery.toSelfParams(): SelfStorageFileListParams {
-        return SelfStorageFileListParams(
-            pageNumber = pageNumber,
-            sortBy = sortBy,
-            sortOrder = sortOrder,
-            fileIds = fileIdText?.let { listOf(it) } ?: emptyList(),
-            fileName = fileNameText,
-            fileSizeBytesFrom = fileSizeBytesFromNumber,
-            fileSizeBytesTo = fileSizeBytesToNumber,
-            mimeTypes = mimeTypeText?.let { listOf(it) } ?: emptyList(),
-            categories = categoryChoice?.let { listOf(it) } ?: emptyList(),
-            excludeCategories = excludeCategoriesChoices,
-            visibilities = visibilityChoice?.let { listOf(it) } ?: emptyList(),
-            excludeVisibilities = excludeVisibilitiesChoices,
-            statuses = statusChoices,
-            excludeStatuses = excludeStatusesChoices,
-            targetScopes = targetScopeText?.let { listOf(it) } ?: emptyList(),
-            isTargetScopeSet = isTargetScopeSetChoice,
-            createdAtFrom = createdAtFromText,
-            createdAtTo = createdAtToText,
-            updatedAtFrom = updatedAtFromText,
-            updatedAtTo = updatedAtToText,
-            isUpdatedAtSet = isUpdatedAtSetChoice,
-            searchQuery = searchQueryText
+    public override suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit> =
+        deleteFilesBatchUseCase(
+            request
         )
-    }
+
+    private fun StorageFileListQuery.toSelfParams(): SelfStorageFileListParams = SelfStorageFileListParams(
+        pageNumber = pageNumber,
+        sortBy = sortBy,
+        sortOrder = sortOrder,
+        fileIds = fileIdText?.let { listOf(it) } ?: emptyList(),
+        fileName = fileNameText,
+        fileSizeBytesFrom = fileSizeBytesFromNumber,
+        fileSizeBytesTo = fileSizeBytesToNumber,
+        mimeTypes = mimeTypeText?.let { listOf(it) } ?: emptyList(),
+        categories = categoryChoice?.let { listOf(it) } ?: emptyList(),
+        excludeCategories = excludeCategoriesChoices,
+        visibilities = visibilityChoice?.let { listOf(it) } ?: emptyList(),
+        excludeVisibilities = excludeVisibilitiesChoices,
+        statuses = statusChoices,
+        excludeStatuses = excludeStatusesChoices,
+        targetScopes = targetScopeText?.let { listOf(it) } ?: emptyList(),
+        isTargetScopeSet = isTargetScopeSetChoice,
+        createdAtFrom = createdAtFromText,
+        createdAtTo = createdAtToText,
+        updatedAtFrom = updatedAtFromText,
+        updatedAtTo = updatedAtToText,
+        isUpdatedAtSet = isUpdatedAtSetChoice,
+        searchQuery = searchQueryText
+    )
 }

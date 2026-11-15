@@ -6,7 +6,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.t
 /**
  * Obtains a new session token pair using a refresh token from the auth API.
  */
-interface RefreshTokenRepository {
+public interface RefreshTokenRepository {
     /**
      * Exchanges [refreshToken] for fresh access and refresh tokens.
      *
@@ -14,5 +14,5 @@ interface RefreshTokenRepository {
      * @return [SessionToken] on success, or an error [AppResult] when refresh is rejected or the
      * request fails.
      */
-    suspend fun refreshToken(refreshToken: String): AppResult<SessionToken>
+    public suspend fun refreshToken(refreshToken: String): AppResult<SessionToken>
 }

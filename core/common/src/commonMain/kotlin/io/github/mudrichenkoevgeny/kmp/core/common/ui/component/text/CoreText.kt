@@ -11,9 +11,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
@@ -28,7 +28,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
  * @param overflow Overflow strategy.
  */
 @Composable
-fun CoreBodyText(
+public fun CoreBodyText(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
@@ -60,7 +60,7 @@ fun CoreBodyText(
  * @param overflow Overflow strategy.
  */
 @Composable
-fun CoreSmallText(
+public fun CoreSmallText(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
@@ -92,7 +92,7 @@ fun CoreSmallText(
  * @param overflow Overflow strategy.
  */
 @Composable
-fun CoreTitleText(
+public fun CoreTitleText(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
@@ -113,7 +113,7 @@ fun CoreTitleText(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun CoreBodyTextComponentSizePreview() {
     CoreTheme {
@@ -124,7 +124,7 @@ private fun CoreBodyTextComponentSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun CoreBodyTextThemePreview() {
     CoreTheme {
@@ -135,7 +135,7 @@ private fun CoreBodyTextThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun CoreBodyTextFontScalePreview() {
     CoreTheme {

@@ -8,11 +8,11 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 
 /** [OpenAuthSettingsApi] backed by [HttpClient]. */
-class KtorOpenAuthSettingsApi(
+public class KtorOpenAuthSettingsApi(
     private val client: HttpClient
 ) : OpenAuthSettingsApi {
 
-    override suspend fun getAuthSettings(): AppResult<OpenAuthSettingsPayload> = client.callResult {
+    public override suspend fun getAuthSettings(): AppResult<OpenAuthSettingsPayload> = client.callResult {
         get(OpenAuthSettingsRoutes.GET_OPEN_AUTH_SETTINGS)
     }
 }

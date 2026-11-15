@@ -9,14 +9,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 /**
  * Repository contract providing access to administrative audit logs and events.
  */
-interface ManagementAuditRepository {
+public interface ManagementAuditRepository {
     /**
      * Retrieves a paginated list of domain audit events.
      *
      * @param params Query and filter parameters DTO.
      * @return Paginated result containing domain audit events, or a failure.
      */
-    suspend fun getAuditEvents(
+    public suspend fun getAuditEvents(
         params: ManagementAuditEventListParams? = null
     ): AppResult<PagedResult<AuditEventSummary>>
 
@@ -26,5 +26,5 @@ interface ManagementAuditRepository {
      * @param eventId Unique audit event identifier string.
      * @return Domain audit event, or a failure.
      */
-    suspend fun getAuditEvent(eventId: String): AppResult<AuditEventPrivate>
+    public suspend fun getAuditEvent(eventId: String): AppResult<AuditEventPrivate>
 }

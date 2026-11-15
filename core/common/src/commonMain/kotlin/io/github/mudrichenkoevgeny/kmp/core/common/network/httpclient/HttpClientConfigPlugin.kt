@@ -12,12 +12,15 @@ import io.ktor.client.plugins.logging.Logger
  * - configure request/response behavior
  * - register additional serializers or logging
  */
-fun interface HttpClientConfigPlugin {
+public fun interface HttpClientConfigPlugin {
     /**
      * Install this plugin into the provided Ktor [config].
      *
      * @param config Ktor client configuration (client plugins installation scope).
      * @param networkLogger SDK logger instance for consistent logging.
      */
-    fun install(config: HttpClientConfig<out HttpClientEngineConfig>, networkLogger: Logger)
+    public fun install(
+        config: HttpClientConfig<out HttpClientEngineConfig>,
+        networkLogger: Logger
+    )
 }

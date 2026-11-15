@@ -12,7 +12,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.unlock.Unloc
  * @param authService Platform Google auth helper.
  * @param unlockRepository Repository for unlock requests.
  */
-open class UnlockByGoogleUseCase(
+public open class UnlockByGoogleUseCase(
     private val authService: GoogleAuthService,
     private val unlockRepository: UnlockRepository
 ) {
@@ -21,12 +21,11 @@ open class UnlockByGoogleUseCase(
      *
      * @return Unit result on success, or an error result from the auth service or unlock repository.
      */
-    open suspend fun execute(): AppResult<Unit> {
-        return authService.signIn().flatMap { loginByExternalAuthProviderRequest ->
+    public open suspend fun execute(): AppResult<Unit> =
+        authService.signIn().flatMap { loginByExternalAuthProviderRequest ->
             unlockRepository.unlockByExternalAuthProvider(
                 authProvider = loginByExternalAuthProviderRequest.authProvider,
                 externalProviderToken = loginByExternalAuthProviderRequest.externalProviderToken
             )
         }
-    }
 }

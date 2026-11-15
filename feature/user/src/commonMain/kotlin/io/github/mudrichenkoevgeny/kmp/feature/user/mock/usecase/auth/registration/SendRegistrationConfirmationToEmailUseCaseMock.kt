@@ -7,14 +7,17 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.registr
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.registration.SendRegistrationConfirmationToEmailUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 
+/**
+ * Mock implementation of [SendRegistrationConfirmationToEmailUseCase] for testing.
+ */
 @InternalApi
-class SendRegistrationConfirmationToEmailUseCaseMock : SendRegistrationConfirmationToEmailUseCase(
+public class SendRegistrationConfirmationToEmailUseCaseMock : SendRegistrationConfirmationToEmailUseCase(
     registrationRepository = RegistrationRepositoryMock()
 ) {
-    var resultProvider: (String) -> AppResult<OtpConfirmation> = { _ ->
+    public var resultProvider: (String) -> AppResult<OtpConfirmation> = { _ ->
         AppResult.Error(CommonError.Unknown())
     }
 
-    override suspend fun execute(email: String): AppResult<OtpConfirmation> =
+    public override suspend fun execute(email: String): AppResult<OtpConfirmation> =
         resultProvider(email)
 }

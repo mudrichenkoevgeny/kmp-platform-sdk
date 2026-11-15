@@ -16,11 +16,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.container.CoreScrollableScreenContent
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
 import io.github.mudrichenkoevgeny.kmp.core.storage.mock.ui.component.file.upload.StorageFileUploadComponentMock
@@ -38,7 +38,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.ui.component.f
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StorageFileUploadScreen(
+public fun StorageFileUploadScreen(
     component: StorageFileUploadScreenComponent,
     modifier: Modifier = Modifier,
     enabled: Boolean = true
@@ -127,28 +127,28 @@ private fun StorageFileUploadScreenStatesPreview(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun StorageFileUploadScreenComponentSizePreview() {
     StorageFileUploadScreenPreviewContent(state = defaultStorageFileUploadScreenPreviewState)
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun StorageFileUploadScreenSizePreview() {
     StorageFileUploadScreenPreviewContent(state = defaultStorageFileUploadScreenPreviewState)
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun StorageFileUploadScreenThemePreview() {
     StorageFileUploadScreenPreviewContent(state = defaultStorageFileUploadScreenPreviewState)
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun StorageFileUploadScreenFontScalePreview() {
     StorageFileUploadScreenPreviewContent(state = defaultStorageFileUploadScreenPreviewState)

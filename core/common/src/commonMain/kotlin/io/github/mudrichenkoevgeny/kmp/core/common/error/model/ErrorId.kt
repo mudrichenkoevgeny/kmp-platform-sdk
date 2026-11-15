@@ -1,7 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.error.model
 
 import kotlinx.serialization.Serializable
-import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
 /**
@@ -12,19 +11,19 @@ import kotlin.uuid.Uuid
  */
 @JvmInline
 @Serializable
-value class ErrorId(val value: Uuid) {
+public value class ErrorId(public val value: Uuid) {
 
     /**
      * Returns the underlying [Uuid] as a canonical hex string with dashes.
      */
-    fun asHexDashString(): String = value.toHexDashString()
+    public fun asHexDashString(): String = value.toHexDashString()
 
-    companion object {
+    public companion object {
 
         /**
          * Generates a new random [ErrorId].
          */
-        fun generate() = ErrorId(Uuid.random())
+        public fun generate(): ErrorId = ErrorId(Uuid.random())
     }
 }
 
@@ -33,10 +32,10 @@ value class ErrorId(val value: Uuid) {
  *
  * Returns `null` if the value is not a valid UUID in hex-with-dashes form.
  */
-fun String.toErrorIdOrNull(): ErrorId? =
+public fun String.toErrorIdOrNull(): ErrorId? =
     Uuid.parseOrNull(this)?.let { ErrorId(it) }
 
 /**
  * Parses this string into an [ErrorId] or throws if the value is not a valid UUID.
  */
-fun String.toErrorIdOrThrow(): ErrorId = ErrorId(Uuid.parse(this))
+public fun String.toErrorIdOrThrow(): ErrorId = ErrorId(Uuid.parse(this))

@@ -13,70 +13,70 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.rou
 /**
  * Root of the nested login flow for management: stack navigation over [ManagementAuthNavigation] with restricted child components.
  */
-interface ManagementLoginRootComponent {
+public interface ManagementLoginRootComponent {
     /**
      * Current navigation stack and active child; observed by [ManagementLoginRootScreen] to render the matching UI.
      *
      * @return reactive stack from Decompose ([Value] of [ChildStack]).
      */
-    val stack: Value<ChildStack<ManagementAuthNavigation, Child>>
+    public val stack: Value<ChildStack<ManagementAuthNavigation, Child>>
 
     /**
      * Navigates to the specified [ManagementAuthNavigation] destination.
      *
      * @param destination Destination route.
      */
-    fun navigateTo(destination: ManagementAuthNavigation)
+    public fun navigateTo(destination: ManagementAuthNavigation)
 
     /**
      * Called when the host should close the login surface (dialog or bottom sheet dismissed).
      */
-    fun onDismiss()
+    public fun onDismiss()
 
     /**
      * Active child for a [ManagementAuthNavigation] configuration; holds the corresponding Decompose component.
      */
-    sealed interface Child {
+    public sealed interface Child {
         /**
          * Welcome / provider selection.
          *
          * @param component Child Decompose component for this step.
          */
-        class Welcome(val component: LoginWelcomeComponent) : Child
+        public class Welcome(public val component: LoginWelcomeComponent) : Child
 
         /**
          * Email + password login.
          *
          * @param component Child Decompose component for this step.
          */
-        class LoginByEmail(val component: LoginByEmailComponent) : Child
+        public class LoginByEmail(public val component: LoginByEmailComponent) : Child
 
         /**
          * Reset password via email confirmation.
          *
          * @param component Child Decompose component for this step.
          */
-        class ResetEmailPassword(val component: ResetEmailPasswordComponent) : Child
+        public class ResetEmailPassword(public val component: ResetEmailPasswordComponent) : Child
 
         /**
          * MFA/TOTP verification.
          *
          * @param component Child Decompose component for this step.
          */
-        class LoginByTotp(val component: LoginByTotpComponent) : Child
+        public class LoginByTotp(public val component: LoginByTotpComponent) : Child
 
         /**
          * Intercepts logins for accounts scheduled for deletion.
          *
          * @param component Child Decompose component for this step.
          */
-        class PendingDeletion(val component: PendingDeletionComponent) : Child
+        public class PendingDeletion(public val component: PendingDeletionComponent) : Child
 
         /**
          * Account unlock flow for locked accounts.
          *
          * @param component Child Decompose component for this step.
          */
-        class AccountUnlock(val component: UnlockRootComponent) : Child
+        public class AccountUnlock(public val component: UnlockRootComponent) : Child
     }
 }

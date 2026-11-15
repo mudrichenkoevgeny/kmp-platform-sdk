@@ -4,9 +4,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.websocket.service.WebSocketServiceMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.settings.mock.network.globalsettings.OpenGlobalSettingsApiMock
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.network.model.websocket.createTestSocketFrame
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.settings.domain.model.globalsettings.createTestOpenGlobalSettings
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.settings.network.model.globalsettings.createTestOpenGlobalSettingsPayload
 import io.github.mudrichenkoevgeny.kmp.core.settings.mock.storage.globalsettings.OpenGlobalSettingsStorageMock
 import io.github.mudrichenkoevgeny.kmp.core.settings.repository.OpenGlobalSettingsRepositoryImpl
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
@@ -14,6 +11,9 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.model.
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.mapper.globalsettings.toOpenGlobalSettings
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.contract.SettingsWebSocketEventTypes
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.model.globalsettings.OpenGlobalSettingsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.network.model.websocket.createTestSocketFrame
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.settings.domain.model.globalsettings.createTestOpenGlobalSettings
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.settings.network.model.globalsettings.createTestOpenGlobalSettingsPayload
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
@@ -95,7 +95,11 @@ class OpenGlobalSettingsRepositoryImplTest {
         repo.getOpenGlobalSettings()
         assertEquals(initialWire.toOpenGlobalSettings(), storage.stored)
 
-        val pushed = createTestOpenGlobalSettingsPayload(privacyPolicyUrl = "ws-p", termsOfServiceUrl = "ws-t", contactSupportEmail = "ws@e")
+        val pushed = createTestOpenGlobalSettingsPayload(
+            privacyPolicyUrl = "ws-p",
+            termsOfServiceUrl = "ws-t",
+            contactSupportEmail = "ws@e"
+        )
         val frame = createTestSocketFrame(
             type = SettingsWebSocketEventTypes.OPEN_GLOBAL_SETTINGS_UPDATED,
             payload = FoundationJson.encodeToJsonElement(

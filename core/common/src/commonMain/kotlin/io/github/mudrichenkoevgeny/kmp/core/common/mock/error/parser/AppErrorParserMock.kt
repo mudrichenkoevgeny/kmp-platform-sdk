@@ -10,8 +10,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
  * Always returns a constant message, regardless of [AppError].
  */
 @InternalApi
-object AppErrorParserMock : AppErrorParser {
-    override fun parse(appError: AppError): String {
-        return "Unknown Error"
-    }
+public object AppErrorParserMock : AppErrorParser {
+    override fun parse(appError: AppError): String = "Unknown Error"
 }

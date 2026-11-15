@@ -9,13 +9,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
  *
  * @param openAuthSettingsRepository Remote auth settings API.
  */
-class GetAuthSettingsUseCase(
+public class GetAuthSettingsUseCase(
     private val openAuthSettingsRepository: OpenAuthSettingsRepository
 ) {
     /**
      * @return [OpenAuthSettings] on success, or a mapped failure.
      */
-    suspend operator fun invoke(): AppResult<OpenAuthSettings> {
-        return openAuthSettingsRepository.getOpenAuthSettings()
-    }
+    public suspend operator fun invoke(): AppResult<OpenAuthSettings> = openAuthSettingsRepository.getOpenAuthSettings()
 }

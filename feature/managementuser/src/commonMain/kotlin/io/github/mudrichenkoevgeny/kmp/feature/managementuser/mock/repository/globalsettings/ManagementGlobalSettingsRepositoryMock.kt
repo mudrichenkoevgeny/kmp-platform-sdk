@@ -9,19 +9,22 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+/**
+ * Mock implementation of [ManagementGlobalSettingsRepository] for testing.
+ */
 @InternalApi
-class ManagementGlobalSettingsRepositoryMock(
+public class ManagementGlobalSettingsRepositoryMock(
     initialSettings: ManagementGlobalSettings? = createTestManagementGlobalSettings()
 ) : ManagementGlobalSettingsRepository {
 
     private val _settings = MutableStateFlow(initialSettings)
 
-    var getManagementGlobalSettingsResult: AppResult<ManagementGlobalSettings>? = null
-    var refreshManagementGlobalSettingsResult: AppResult<ManagementGlobalSettings>? = null
-    var saveRemoteGlobalSettingsResult: AppResult<ManagementGlobalSettings>? = null
-    var resetRemoteGlobalSettingsResult: AppResult<ManagementGlobalSettings>? = null
+    public var getManagementGlobalSettingsResult: AppResult<ManagementGlobalSettings>? = null
+    public var refreshManagementGlobalSettingsResult: AppResult<ManagementGlobalSettings>? = null
+    public var saveRemoteGlobalSettingsResult: AppResult<ManagementGlobalSettings>? = null
+    public var resetRemoteGlobalSettingsResult: AppResult<ManagementGlobalSettings>? = null
 
-    override suspend fun getManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
+    public override suspend fun getManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
         val customResult = getManagementGlobalSettingsResult
         if (customResult != null) {
             return customResult
@@ -36,7 +39,7 @@ class ManagementGlobalSettingsRepositoryMock(
         }
     }
 
-    override suspend fun saveRemoteManagementGlobalSettings(globalSettings: ManagementGlobalSettings): AppResult<ManagementGlobalSettings> {
+    public override suspend fun saveRemoteManagementGlobalSettings(globalSettings: ManagementGlobalSettings): AppResult<ManagementGlobalSettings> {
         val customResult = saveRemoteGlobalSettingsResult
         if (customResult != null) {
             return customResult
@@ -45,7 +48,7 @@ class ManagementGlobalSettingsRepositoryMock(
         return AppResult.Success(globalSettings)
     }
 
-    override suspend fun refreshManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
+    public override suspend fun refreshManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
         val customResult = refreshManagementGlobalSettingsResult
         if (customResult != null) {
             return customResult
@@ -53,11 +56,11 @@ class ManagementGlobalSettingsRepositoryMock(
         return getManagementGlobalSettings()
     }
 
-    override suspend fun updateManagementGlobalSettings(globalSettings: ManagementGlobalSettings) {
+    public override suspend fun updateManagementGlobalSettings(globalSettings: ManagementGlobalSettings) {
         _settings.value = globalSettings
     }
 
-    override suspend fun resetRemoteManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
+    public override suspend fun resetRemoteManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
         val customResult = resetRemoteGlobalSettingsResult
         if (customResult != null) {
             return customResult
@@ -65,5 +68,5 @@ class ManagementGlobalSettingsRepositoryMock(
         return getManagementGlobalSettings()
     }
 
-    override fun observeManagementGlobalSettings(): Flow<ManagementGlobalSettings?> = _settings.asStateFlow()
+    public override fun observeManagementGlobalSettings(): Flow<ManagementGlobalSettings?> = _settings.asStateFlow()
 }

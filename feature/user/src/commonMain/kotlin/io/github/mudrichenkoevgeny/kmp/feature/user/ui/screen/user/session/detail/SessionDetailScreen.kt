@@ -50,10 +50,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorTe
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreSmallText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_apple
@@ -62,13 +62,18 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_google
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_phone
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.session.detail.SessionDetailComponentMock
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionPrivate
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * Screen displaying detailed information about a specific user session, with actions to revoke session.
+ *
+ * @param component Component driving session detail state and actions.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SessionDetailScreen(component: SessionDetailComponent) {
+public fun SessionDetailScreen(component: SessionDetailComponent) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
@@ -107,6 +112,7 @@ fun SessionDetailScreen(component: SessionDetailComponent) {
                     onRetry = component::onRetry,
                     modifier = Modifier.testTag(SessionDetailTestTags.GLOBAL_ERROR)
                 )
+
                 is SessionDetailScreenState.Content -> {
                     Content(
                         state = currentState,
@@ -188,7 +194,7 @@ private fun Content(
                             modifier = Modifier.testTag(SessionDetailTestTags.IDENTIFIER_DISPLAY_NAME)
                         )
                         CoreSmallText(
-                            text = session.identifierAuthProvider.name,
+                            text = session.identifierAuthProvider.value,
                             color = MaterialTheme.colorScheme.secondary,
                             modifier = Modifier.testTag(SessionDetailTestTags.AUTH_PROVIDER)
                         )
@@ -201,24 +207,35 @@ private fun Content(
                     text = userUi.sessionDetailDeviceInfo,
                     style = MaterialTheme.typography.titleSmall
                 )
+                val deviceName = session.clientDeviceInfo.deviceName
+                    ?: session.userAgent
+                    ?: notAvailableText
                 CoreBodyText(
-                    text = "${userUi.sessionDetailDeviceName}: ${session.clientDeviceInfo.deviceName ?: session.userAgent ?: notAvailableText}",
+                    text = "${userUi.sessionDetailDeviceName}: $deviceName",
                     modifier = Modifier.testTag(SessionDetailTestTags.DEVICE_NAME)
                 )
+                val clientType = session.clientDeviceInfo.clientType?.value
+                    ?: notAvailableText
                 CoreBodyText(
-                    text = "${userUi.sessionDetailClientType}: ${session.clientDeviceInfo.clientType?.name ?: notAvailableText}",
+                    text = "${userUi.sessionDetailClientType}: $clientType",
                     modifier = Modifier.testTag(SessionDetailTestTags.CLIENT_TYPE)
                 )
+                val language = session.clientDeviceInfo.language
+                    ?: notAvailableText
                 CoreBodyText(
-                    text = "${userUi.sessionDetailLanguage}: ${session.clientDeviceInfo.language ?: notAvailableText}",
+                    text = "${userUi.sessionDetailLanguage}: $language",
                     modifier = Modifier.testTag(SessionDetailTestTags.LANGUAGE)
                 )
+                val appVersion = session.clientDeviceInfo.appVersion
+                    ?: notAvailableText
                 CoreBodyText(
-                    text = "${userUi.sessionDetailAppVersion}: ${session.clientDeviceInfo.appVersion ?: notAvailableText}",
+                    text = "${userUi.sessionDetailAppVersion}: $appVersion",
                     modifier = Modifier.testTag(SessionDetailTestTags.APP_VERSION)
                 )
+                val osVersion = session.clientDeviceInfo.operationSystemVersion
+                    ?: notAvailableText
                 CoreBodyText(
-                    text = "${userUi.sessionDetailOsVersion}: ${session.clientDeviceInfo.operationSystemVersion ?: notAvailableText}",
+                    text = "${userUi.sessionDetailOsVersion}: $osVersion",
                     modifier = Modifier.testTag(SessionDetailTestTags.OS_VERSION)
                 )
 
@@ -328,7 +345,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
@@ -337,7 +354,7 @@ private fun ScreenSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -346,7 +363,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {
@@ -354,23 +371,23 @@ private fun FontScalePreview() {
     }
 }
 
-object SessionDetailTestTags {
-    const val TITLE = "SessionDetail_Title"
-    const val BACK_BUTTON = "SessionDetail_BackButton"
-    const val GLOBAL_ERROR = "SessionDetail_GlobalError"
-    const val USER_ROW = "SessionDetail_UserRow"
-    const val USER_ID = "SessionDetail_UserId"
-    const val SESSION_CARD = "SessionDetail_SessionCard"
-    const val IDENTIFIER_DISPLAY_NAME = "SessionDetail_IdentifierDisplayName"
-    const val AUTH_PROVIDER = "SessionDetail_AuthProvider"
-    const val DEVICE_NAME = "SessionDetail_DeviceName"
-    const val CLIENT_TYPE = "SessionDetail_ClientType"
-    const val LANGUAGE = "SessionDetail_Language"
-    const val APP_VERSION = "SessionDetail_AppVersion"
-    const val OS_VERSION = "SessionDetail_OsVersion"
-    const val IP_ADDRESS = "SessionDetail_IpAddress"
-    const val LAST_ACCESSED_AT = "SessionDetail_LastAccessedAt"
-    const val CREATED_AT = "SessionDetail_CreatedAt"
-    const val REVOKE_BUTTON = "SessionDetail_RevokeButton"
-    const val ACTION_ERROR_TEXT = "SessionDetail_ActionErrorText"
+public object SessionDetailTestTags {
+    public const val TITLE: String = "SessionDetail_Title"
+    public const val BACK_BUTTON: String = "SessionDetail_BackButton"
+    public const val GLOBAL_ERROR: String = "SessionDetail_GlobalError"
+    public const val USER_ROW: String = "SessionDetail_UserRow"
+    public const val USER_ID: String = "SessionDetail_UserId"
+    public const val SESSION_CARD: String = "SessionDetail_SessionCard"
+    public const val IDENTIFIER_DISPLAY_NAME: String = "SessionDetail_IdentifierDisplayName"
+    public const val AUTH_PROVIDER: String = "SessionDetail_AuthProvider"
+    public const val DEVICE_NAME: String = "SessionDetail_DeviceName"
+    public const val CLIENT_TYPE: String = "SessionDetail_ClientType"
+    public const val LANGUAGE: String = "SessionDetail_Language"
+    public const val APP_VERSION: String = "SessionDetail_AppVersion"
+    public const val OS_VERSION: String = "SessionDetail_OsVersion"
+    public const val IP_ADDRESS: String = "SessionDetail_IpAddress"
+    public const val LAST_ACCESSED_AT: String = "SessionDetail_LastAccessedAt"
+    public const val CREATED_AT: String = "SessionDetail_CreatedAt"
+    public const val REVOKE_BUTTON: String = "SessionDetail_RevokeButton"
+    public const val ACTION_ERROR_TEXT: String = "SessionDetail_ActionErrorText"
 }

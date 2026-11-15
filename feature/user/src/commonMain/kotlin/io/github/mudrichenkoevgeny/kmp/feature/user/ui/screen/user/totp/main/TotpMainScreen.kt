@@ -58,10 +58,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyTex
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.totp.TotpMainComponentMock
@@ -69,9 +69,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.ui.UiValues
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
+/**
+ * Main screen for TOTP (Time-based One-Time Password) management, setup, and status toggling.
+ *
+ * @param component Component driving TOTP main screen state and callbacks.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TotpMainScreen(component: TotpMainComponent) {
+public fun TotpMainScreen(component: TotpMainComponent) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
@@ -132,6 +137,7 @@ fun TotpMainScreen(component: TotpMainComponent) {
                                     )
                                 }
                             }
+
                             is TotpMainComponent.Child.Setup -> {
                                 SetupInProgressContent(
                                     state = state,
@@ -143,7 +149,7 @@ fun TotpMainScreen(component: TotpMainComponent) {
                         }
                     }
                 }
-                
+
                 val dialogSlot by component.dialogSlot.subscribeAsState()
                 dialogSlot.child?.instance?.let { dialogChild ->
                     when (dialogChild) {
@@ -211,6 +217,7 @@ private fun SetupInProgressContent(
     onCodeChanged: (String) -> Unit,
     onConfirmClick: () -> Unit
 ) {
+    @Suppress("DEPRECATION")
     val clipboardManager = LocalClipboardManager.current
     val userUi = LocalUserStrings.current.ui
 
@@ -382,7 +389,10 @@ private fun EnabledContent(
 }
 
 @Composable
-private fun ErrorText(error: AppError?, testTag: String) {
+private fun ErrorText(
+    error: AppError?,
+    testTag: String
+) {
     AnimatedVisibility(
         visible = error != null,
         enter = fadeIn() + expandVertically(),
@@ -447,7 +457,7 @@ private val defaultTotpMainPreviewState = TotpMainScreenState(
 )
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun StatesPreview(
     @PreviewParameter(TotpMainPreviewProvider::class) state: TotpMainScreenState
@@ -458,7 +468,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
@@ -467,7 +477,7 @@ private fun ScreenSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -476,7 +486,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {
@@ -484,30 +494,30 @@ private fun FontScalePreview() {
     }
 }
 
-object TotpMainTestTags {
-    const val TITLE = "TotpMain_Title"
-    const val BACK_BUTTON = "TotpMain_BackButton"
-    const val GLOBAL_ERROR_TEXT = "TotpMain_GlobalErrorText"
+public object TotpMainTestTags {
+    public const val TITLE: String = "TotpMain_Title"
+    public const val BACK_BUTTON: String = "TotpMain_BackButton"
+    public const val GLOBAL_ERROR_TEXT: String = "TotpMain_GlobalErrorText"
 
-    const val DISABLED_DESC_TEXT = "TotpMain_DisabledDescText"
-    const val SETUP_TOTP_BUTTON = "TotpMain_SetupTotpButton"
-    const val DISABLED_ACTION_ERROR_TEXT = "TotpMain_DisabledActionErrorText"
+    public const val DISABLED_DESC_TEXT: String = "TotpMain_DisabledDescText"
+    public const val SETUP_TOTP_BUTTON: String = "TotpMain_SetupTotpButton"
+    public const val DISABLED_ACTION_ERROR_TEXT: String = "TotpMain_DisabledActionErrorText"
 
-    const val STEP1_TITLE = "TotpMain_Step1Title"
-    const val STEP1_DESC = "TotpMain_Step1Desc"
-    const val QR_CODE_BOX = "TotpMain_QrCodeBox"
-    const val MANUAL_KEY_LABEL = "TotpMain_ManualKeyLabel"
-    const val SECRET_KEY_TEXT = "TotpMain_SecretKeyText"
-    const val COPY_SECRET_KEY_BUTTON = "TotpMain_CopySecretKeyButton"
-    const val STEP2_TITLE = "TotpMain_Step2Title"
-    const val STEP2_DESC = "TotpMain_Step2Desc"
-    const val CODE_INPUT = "TotpMain_CodeInput"
-    const val CONFIRM_SETUP_BUTTON = "TotpMain_ConfirmSetupButton"
-    const val SETUP_ACTION_ERROR_TEXT = "TotpMain_SetupActionErrorText"
+    public const val STEP1_TITLE: String = "TotpMain_Step1Title"
+    public const val STEP1_DESC: String = "TotpMain_Step1Desc"
+    public const val QR_CODE_BOX: String = "TotpMain_QrCodeBox"
+    public const val MANUAL_KEY_LABEL: String = "TotpMain_ManualKeyLabel"
+    public const val SECRET_KEY_TEXT: String = "TotpMain_SecretKeyText"
+    public const val COPY_SECRET_KEY_BUTTON: String = "TotpMain_CopySecretKeyButton"
+    public const val STEP2_TITLE: String = "TotpMain_Step2Title"
+    public const val STEP2_DESC: String = "TotpMain_Step2Desc"
+    public const val CODE_INPUT: String = "TotpMain_CodeInput"
+    public const val CONFIRM_SETUP_BUTTON: String = "TotpMain_ConfirmSetupButton"
+    public const val SETUP_ACTION_ERROR_TEXT: String = "TotpMain_SetupActionErrorText"
 
-    const val ENABLED_TITLE = "TotpMain_EnabledTitle"
-    const val ENABLED_DESC = "TotpMain_EnabledDescText"
-    const val RECOVERY_CODES_BUTTON = "TotpMain_RecoveryCodesButton"
-    const val DISABLE_TOTP_BUTTON = "TotpMain_DisableTotpButton"
-    const val ENABLED_ACTION_ERROR_TEXT = "TotpMain_EnabledActionErrorText"
+    public const val ENABLED_TITLE: String = "TotpMain_EnabledTitle"
+    public const val ENABLED_DESC: String = "TotpMain_EnabledDescText"
+    public const val RECOVERY_CODES_BUTTON: String = "TotpMain_RecoveryCodesButton"
+    public const val DISABLE_TOTP_BUTTON: String = "TotpMain_DisableTotpButton"
+    public const val ENABLED_ACTION_ERROR_TEXT: String = "TotpMain_EnabledActionErrorText"
 }

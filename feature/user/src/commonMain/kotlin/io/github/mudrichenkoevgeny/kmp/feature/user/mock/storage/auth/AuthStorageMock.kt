@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * `EncryptedAuthStorage` behavior without persistence.
  */
 @InternalApi
-class AuthStorageMock : AuthStorage {
+public class AuthStorageMock : AuthStorage {
 
     private var accessToken: AccessToken? = null
     private var refreshToken: RefreshToken? = null
@@ -22,23 +22,23 @@ class AuthStorageMock : AuthStorage {
     private var sessionId: String? = null
     private var identifierId: String? = null
 
-    var isTokensCleared = false
+    public var isTokensCleared: Boolean = false
         private set
 
     private val _accessTokenFlow = MutableStateFlow<String?>(null)
-    override val accessTokenFlow: StateFlow<String?> = _accessTokenFlow.asStateFlow()
+    public override val accessTokenFlow: StateFlow<String?> = _accessTokenFlow.asStateFlow()
 
-    override suspend fun getAccessToken(): AccessToken? = accessToken
+    public override suspend fun getAccessToken(): AccessToken? = accessToken
 
-    override suspend fun getRefreshToken(): RefreshToken? = refreshToken
+    public override suspend fun getRefreshToken(): RefreshToken? = refreshToken
 
-    override suspend fun getExpiresAt(): Long = expiresAt
+    public override suspend fun getExpiresAt(): Long = expiresAt
 
-    override suspend fun getSessionId(): String? = sessionId
+    public override suspend fun getSessionId(): String? = sessionId
 
-    override suspend fun getIdentifierId(): String? = identifierId
+    public override suspend fun getIdentifierId(): String? = identifierId
 
-    override suspend fun updateTokens(sessionToken: SessionToken) {
+    public override suspend fun updateTokens(sessionToken: SessionToken) {
         this.accessToken = sessionToken.accessToken
         this.refreshToken = sessionToken.refreshToken
         this.expiresAt = sessionToken.expiresAt.toEpochMilliseconds()
@@ -47,7 +47,7 @@ class AuthStorageMock : AuthStorage {
         _accessTokenFlow.value = sessionToken.accessToken.value
     }
 
-    override suspend fun clearTokens() {
+    public override suspend fun clearTokens() {
         accessToken = null
         refreshToken = null
         expiresAt = 0L

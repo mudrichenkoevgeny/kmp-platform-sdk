@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
  * @param onBack Pops this screen from the navigation stack.
  * @param coroutineScope Scope for async operations.
  */
-class UnlockMethodSelectionComponentImpl(
+public class UnlockMethodSelectionComponentImpl(
     componentContext: ComponentContext,
     params: UnlockMethodSelectionParams = UnlockMethodSelectionParams(),
     lockoutType: AccountLockoutType? = params.accountLockoutType,
@@ -50,7 +50,7 @@ class UnlockMethodSelectionComponentImpl(
             lockoutUntil = lockoutUntil
         )
     )
-    override val state: Value<UnlockMethodSelectionScreenState> = _state
+    public override val state: Value<UnlockMethodSelectionScreenState> = _state
 
     init {
         loadIdentifiers()
@@ -68,6 +68,7 @@ class UnlockMethodSelectionComponentImpl(
                             )
                         }
                     }
+
                     is AppResult.Error -> {
                     }
                 }
@@ -75,15 +76,15 @@ class UnlockMethodSelectionComponentImpl(
         }
     }
 
-    override fun onSelectEmailUnlock() {
+    public override fun onSelectEmailUnlock() {
         onNavigateToEmailInput()
     }
 
-    override fun onSelectPhoneUnlock() {
+    public override fun onSelectPhoneUnlock() {
         onNavigateToPhoneInput()
     }
 
-    override fun onSelectGoogleUnlock() {
+    public override fun onSelectGoogleUnlock() {
         val unlockByGoogle = unlockByGoogleUseCase
         if (unlockByGoogle == null) {
             _state.update {
@@ -103,14 +104,17 @@ class UnlockMethodSelectionComponentImpl(
                     _state.update { currentState -> currentState.copy(actionLoading = false) }
                     onUnlockSuccess()
                 }
+
                 is AppResult.Error -> {
-                    _state.update { currentState -> currentState.copy(actionLoading = false, actionError = result.error) }
+                    _state.update { currentState ->
+                        currentState.copy(actionLoading = false, actionError = result.error)
+                    }
                 }
             }
         }
     }
 
-    override fun onSelectAppleUnlock() {
+    public override fun onSelectAppleUnlock() {
         _state.update {
             it.copy(
                 actionError = UserError.ExternalAuthFailed(
@@ -120,7 +124,7 @@ class UnlockMethodSelectionComponentImpl(
         }
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         onBack()
     }
 }

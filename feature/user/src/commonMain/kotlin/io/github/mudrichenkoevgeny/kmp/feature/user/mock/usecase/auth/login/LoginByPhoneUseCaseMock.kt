@@ -9,16 +9,22 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorag
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByPhoneUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
 
+/**
+ * Mock implementation of [LoginByPhoneUseCase] for testing.
+ */
 @InternalApi
-class LoginByPhoneUseCaseMock : LoginByPhoneUseCase(
+public class LoginByPhoneUseCaseMock : LoginByPhoneUseCase(
     loginRepository = LoginRepositoryMock(),
     authStorage = AuthStorageMock(),
     userStorage = UserStorageMock()
 ) {
-    var resultProvider: (String, String) -> AppResult<AuthData> = { _, _ ->
+    public var resultProvider: (String, String) -> AppResult<AuthData> = { _, _ ->
         AppResult.Error(CommonError.Unknown())
     }
 
-    override suspend fun execute(phoneNumber: String, confirmationCode: String): AppResult<AuthData> =
+    public override suspend fun execute(
+        phoneNumber: String,
+        confirmationCode: String
+    ): AppResult<AuthData> =
         resultProvider(phoneNumber, confirmationCode)
 }

@@ -6,7 +6,7 @@ package io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort
  * @property optionId The unique identifier of the selected sort option (e.g., column name or sorting key).
  * @property isAscending Indicates the sort direction; `true` for ascending order, `false` for descending order.
  */
-data class ListingSortState(
-    val optionId: String,
-    val isAscending: Boolean
+public data class ListingSortState(
+    public val optionId: String,
+    public val isAscending: Boolean
 )

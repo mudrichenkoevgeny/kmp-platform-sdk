@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AlertDialog
@@ -49,7 +50,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackB
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingEmptyState
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingHeaderBar
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReach
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
@@ -58,15 +59,16 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyTex
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
 import io.github.mudrichenkoevgeny.kmp.core.storage.mock.ui.screen.file.list.StorageFileListComponentMock
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.item.StorageFileItem
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.dialog.StorageFileListDialogChild
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.StorageFileSummary
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.status.StorageFileStatus
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
@@ -79,64 +81,16 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StorageFileListScreen(
+public fun StorageFileListScreen(
     component: StorageFileListComponent,
     modifier: Modifier = Modifier
 ) {
     val currentState by component.state.subscribeAsState()
-    val storageUi = LocalStorageStrings.current.ui
 
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopAppBar(
-                title = {
-                    CoreScreenTitleText(
-                        text = storageUi.storageFileListTitle,
-                        modifier = Modifier.testTag(StorageFileListTestTags.TITLE)
-                    )
-                },
-                navigationIcon = {
-                    CoreBackButton(
-                        onClick = component::onBackClick,
-                        modifier = Modifier.testTag(StorageFileListTestTags.BACK_BUTTON)
-                    )
-                },
-                actions = {
-                    if (component.isUploadAvailable) {
-                        IconButton(
-                            onClick = component::onUploadClick,
-                            modifier = Modifier.testTag(StorageFileListTestTags.UPLOAD_BUTTON)
-                        ) {
-                            Icon(
-                                painter = painterResource(CommonRes.drawable.ic_add),
-                                contentDescription = null,
-                                modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
-                            )
-                        }
-                    }
-                    IconButton(
-                        onClick = component::onToggleFilterPanel,
-                        modifier = Modifier.testTag(StorageFileListTestTags.FILTER_BUTTON)
-                    ) {
-                        Icon(
-                            painter = painterResource(CommonRes.drawable.ic_filter),
-                            contentDescription = null,
-                            modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
-                        )
-                    }
-                    IconButton(
-                        onClick = component::onRefresh,
-                        modifier = Modifier.testTag(StorageFileListTestTags.REFRESH_BUTTON)
-                    ) {
-                        Icon(
-                            painter = painterResource(CommonRes.drawable.ic_refresh),
-                            contentDescription = null,
-                            modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
-                        )
-                    }
-                }
-            )
+            StorageFileListTopBar(component = component)
         }
     ) { padding ->
         Box(
@@ -158,6 +112,7 @@ fun StorageFileListScreen(
                         )
                     }
                 }
+
                 is StorageFileListScreenState.Error -> {
                     CoreErrorText(
                         text = (currentState as StorageFileListScreenState.Error).error.toLocalizedMessage(),
@@ -169,6 +124,62 @@ fun StorageFileListScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun StorageFileListTopBar(
+    component: StorageFileListComponent
+) {
+    val storageUi = LocalStorageStrings.current.ui
+    TopAppBar(
+        title = {
+            CoreScreenTitleText(
+                text = storageUi.storageFileListTitle,
+                modifier = Modifier.testTag(StorageFileListTestTags.TITLE)
+            )
+        },
+        navigationIcon = {
+            CoreBackButton(
+                onClick = component::onBackClick,
+                modifier = Modifier.testTag(StorageFileListTestTags.BACK_BUTTON)
+            )
+        },
+        actions = {
+            if (component.isUploadAvailable) {
+                IconButton(
+                    onClick = component::onUploadClick,
+                    modifier = Modifier.testTag(StorageFileListTestTags.UPLOAD_BUTTON)
+                ) {
+                    Icon(
+                        painter = painterResource(CommonRes.drawable.ic_add),
+                        contentDescription = null,
+                        modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+                    )
+                }
+            }
+            IconButton(
+                onClick = component::onToggleFilterPanel,
+                modifier = Modifier.testTag(StorageFileListTestTags.FILTER_BUTTON)
+            ) {
+                Icon(
+                    painter = painterResource(CommonRes.drawable.ic_filter),
+                    contentDescription = null,
+                    modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+                )
+            }
+            IconButton(
+                onClick = component::onRefresh,
+                modifier = Modifier.testTag(StorageFileListTestTags.REFRESH_BUTTON)
+            ) {
+                Icon(
+                    painter = painterResource(CommonRes.drawable.ic_refresh),
+                    contentDescription = null,
+                    modifier = Modifier.padding(CoreTheme.dimens.paddingExtraSmall)
+                )
+            }
+        }
+    )
+}
+
 @Composable
 private fun Content(
     state: StorageFileListScreenState.Content,
@@ -176,161 +187,23 @@ private fun Content(
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
-    val storageUi = LocalStorageStrings.current.ui
-    val commonUi = LocalCommonStrings.current.ui
 
-    listState.OnBottomReached {
+    listState.OnBottomReach {
         component.onLoadNextPage()
     }
-
-    val selectedCount = state.selectedFileIds.size
 
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
     ) {
-        Column(
+        StorageFileListBody(
+            state = state,
+            component = component,
+            listState = listState,
             modifier = Modifier
                 .widthIn(max = CoreTheme.dimens.maxContentWidth)
                 .fillMaxSize()
-        ) {
-            AnimatedVisibility(visible = state.isFilterPanelExpanded) {
-                ListingOptionsPanel(
-                    config = getStorageFileListOptionsConfig(includeOwnerFilter = component.includeOwnerFilter),
-                    sortState = state.sortState,
-                    filterStates = state.filterStates,
-                    onSortChanged = component::onSortChanged,
-                    onFilterChanged = component::onFilterChanged,
-                    onApplyClick = component::onApplyFilters,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(CoreTheme.dimens.paddingMedium)
-                )
-            }
-
-            state.actionError?.let {
-                CoreErrorText(
-                    text = it.toLocalizedMessage(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(CoreTheme.dimens.paddingMedium)
-                        .testTag(StorageFileListTestTags.ACTION_ERROR_TEXT)
-                )
-            }
-
-            if (selectedCount > 0) {
-                Surface(
-                    color = MaterialTheme.colorScheme.secondaryContainer,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag(StorageFileListTestTags.BATCH_ACTION_BAR)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                horizontal = CoreTheme.dimens.paddingMedium,
-                                vertical = CoreTheme.dimens.paddingSmall
-                            ),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = commonUi.selectedCount(selectedCount),
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSecondaryContainer
-                        )
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingExtraSmall)
-                        ) {
-                            TextButton(
-                                onClick = component::selectAllFiles,
-                                modifier = Modifier.testTag(StorageFileListTestTags.SELECT_ALL_BUTTON)
-                            ) {
-                                Text(commonUi.selectAll)
-                            }
-                            TextButton(
-                                onClick = component::clearFileSelection,
-                                modifier = Modifier.testTag(StorageFileListTestTags.CLEAR_SELECTION_BUTTON)
-                            ) {
-                                Text(commonUi.clearAll)
-                            }
-                            if (component.isBatchDeleteAvailable) {
-                                TextButton(
-                                    onClick = component::onDeleteSelectedFilesClick,
-                                    modifier = Modifier.testTag(StorageFileListTestTags.BATCH_DELETE_BUTTON)
-                                ) {
-                                    Text(
-                                        text = storageUi.deleteFileAction,
-                                        color = MaterialTheme.colorScheme.error
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (state.paging.isEmpty && (!state.paging.isInitialLoading) && (state.paging.error == null)) {
-                ListingEmptyState(
-                    modifier = Modifier.weight(1f)
-                )
-            } else {
-                ListingHeaderBar(
-                    state = state.paging,
-                    lazyListState = listState
-                )
-
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier
-                        .weight(1f)
-                        .testTag(StorageFileListTestTags.FILE_LIST),
-                    contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
-                    verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
-                ) {
-                    items(
-                        items = state.paging.items,
-                        key = { it.id.asHexDashString() }
-                    ) { file ->
-                        val fileIdString = file.id.asHexDashString()
-                        val isSelected = state.selectedFileIds.contains(fileIdString)
-                        val isDeleted = file.status == StorageFileStatus.DELETED
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
-                        ) {
-                            if (component.isBatchDeleteAvailable) {
-                                Checkbox(
-                                    checked = isSelected,
-                                    onCheckedChange = { component.toggleSelectFile(fileIdString) },
-                                    enabled = !isDeleted && !state.actionLoading
-                                )
-                            }
-                            Box(modifier = Modifier.weight(1f)) {
-                                StorageFileItem(
-                                    file = file,
-                                    enabled = !state.actionLoading,
-                                    onDeleteClick = if (component.isSingleDeleteAvailable && !isDeleted) {
-                                        { component.onDeleteFileClick(fileIdString) }
-                                    } else null,
-                                    onFileClick = { component.onFileClick(file) }
-                                )
-                            }
-                        }
-                    }
-
-                    item {
-                        PagingFooter(
-                            state = state.paging,
-                            onRetry = component::onLoadNextPage
-                        )
-                    }
-                }
-            }
-        }
+        )
 
         CoreLazyColumnScrollbar(
             lazyListState = listState,
@@ -340,8 +213,213 @@ private fun Content(
         )
     }
 
+    StorageFileListDialogs(
+        component = component,
+        selectedCount = state.selectedFileIds.size
+    )
+}
+
+@Composable
+private fun StorageFileListBody(
+    state: StorageFileListScreenState.Content,
+    component: StorageFileListComponent,
+    listState: LazyListState,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+    ) {
+        StorageFileListFilterPanel(
+            state = state,
+            component = component
+        )
+
+        state.actionError?.let { actionError ->
+            CoreErrorText(
+                text = actionError.toLocalizedMessage(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(CoreTheme.dimens.paddingMedium)
+                    .testTag(StorageFileListTestTags.ACTION_ERROR_TEXT)
+            )
+        }
+
+        if (state.selectedFileIds.isNotEmpty()) {
+            StorageFileListBatchActionBar(
+                selectedCount = state.selectedFileIds.size,
+                component = component
+            )
+        }
+
+        if (state.paging.isEmpty && (!state.paging.isInitialLoading) && (state.paging.error == null)) {
+            ListingEmptyState(
+                modifier = Modifier.weight(1f)
+            )
+        } else {
+            ListingHeaderBar(
+                state = state.paging,
+                lazyListState = listState
+            )
+
+            LazyColumn(
+                state = listState,
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag(StorageFileListTestTags.FILE_LIST),
+                contentPadding = PaddingValues(CoreTheme.dimens.paddingMedium),
+                verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+            ) {
+                items(
+                    items = state.paging.items,
+                    key = { it.id.asHexDashString() }
+                ) { file ->
+                    StorageFileListItemRow(
+                        file = file,
+                        isSelected = state.selectedFileIds.contains(file.id.asHexDashString()),
+                        actionLoading = state.actionLoading,
+                        component = component
+                    )
+                }
+
+                item {
+                    PagingFooter(
+                        state = state.paging,
+                        onRetry = component::onLoadNextPage
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun StorageFileListFilterPanel(
+    state: StorageFileListScreenState.Content,
+    component: StorageFileListComponent
+) {
+    AnimatedVisibility(visible = state.isFilterPanelExpanded) {
+        ListingOptionsPanel(
+            config = getStorageFileListOptionsConfig(includeOwnerFilter = component.includeOwnerFilter),
+            sortState = state.sortState,
+            filterStates = state.filterStates,
+            onSortChanged = component::onSortChanged,
+            onFilterChanged = component::onFilterChanged,
+            onApplyClick = component::onApplyFilters,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(CoreTheme.dimens.paddingMedium)
+        )
+    }
+}
+
+@Composable
+private fun StorageFileListBatchActionBar(
+    selectedCount: Int,
+    component: StorageFileListComponent
+) {
+    val commonUi = LocalCommonStrings.current.ui
+    val storageUi = LocalStorageStrings.current.ui
+
+    Surface(
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(StorageFileListTestTags.BATCH_ACTION_BAR)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = CoreTheme.dimens.paddingMedium,
+                    vertical = CoreTheme.dimens.paddingSmall
+                ),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = commonUi.selectedCount(selectedCount),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingExtraSmall)
+            ) {
+                TextButton(
+                    onClick = component::selectAllFiles,
+                    modifier = Modifier.testTag(StorageFileListTestTags.SELECT_ALL_BUTTON)
+                ) {
+                    Text(commonUi.selectAll)
+                }
+                TextButton(
+                    onClick = component::clearFileSelection,
+                    modifier = Modifier.testTag(StorageFileListTestTags.CLEAR_SELECTION_BUTTON)
+                ) {
+                    Text(commonUi.clearAll)
+                }
+                if (component.isBatchDeleteAvailable) {
+                    TextButton(
+                        onClick = component::onDeleteSelectedFilesClick,
+                        modifier = Modifier.testTag(StorageFileListTestTags.BATCH_DELETE_BUTTON)
+                    ) {
+                        Text(
+                            text = storageUi.deleteFileAction,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun StorageFileListItemRow(
+    file: StorageFileSummary,
+    isSelected: Boolean,
+    actionLoading: Boolean,
+    component: StorageFileListComponent
+) {
+    val fileIdString = file.id.asHexDashString()
+    val isDeleted = file.status == StorageFileStatus.DELETED
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+    ) {
+        if (component.isBatchDeleteAvailable) {
+            Checkbox(
+                checked = isSelected,
+                onCheckedChange = { component.toggleSelectFile(fileIdString) },
+                enabled = !isDeleted && !actionLoading
+            )
+        }
+        Box(modifier = Modifier.weight(1f)) {
+            StorageFileItem(
+                file = file,
+                enabled = !actionLoading,
+                onDeleteClick = if (component.isSingleDeleteAvailable && !isDeleted) {
+                    { component.onDeleteFileClick(fileIdString) }
+                } else {
+                    null
+                },
+                onFileClick = { component.onFileClick(file) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun StorageFileListDialogs(
+    component: StorageFileListComponent,
+    selectedCount: Int
+) {
+    val storageUi = LocalStorageStrings.current.ui
+    val commonUi = LocalCommonStrings.current.ui
     val dialogSlot by component.dialogSlot.subscribeAsState()
     val dialogChild = dialogSlot.child?.instance
+
     if (dialogChild != null) {
         when (dialogChild) {
             is StorageFileListDialogChild.ConfirmDeleteFile -> {
@@ -363,6 +441,7 @@ private fun Content(
                     }
                 )
             }
+
             is StorageFileListDialogChild.ConfirmDeleteBatchFiles -> {
                 AlertDialog(
                     onDismissRequest = component::onDismissDeleteDialog,
@@ -424,7 +503,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
@@ -433,7 +512,7 @@ private fun ScreenSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -442,7 +521,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {

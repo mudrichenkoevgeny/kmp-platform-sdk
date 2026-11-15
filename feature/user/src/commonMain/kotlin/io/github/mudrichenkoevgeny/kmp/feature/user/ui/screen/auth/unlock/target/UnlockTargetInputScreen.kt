@@ -43,18 +43,23 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.Fullscre
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.unlock.target.UnlockTargetInputComponentMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.UnlockMethod
 
+/**
+ * Screen for entering target email or phone number to send unlock verification code.
+ *
+ * @param component Component driving unlock target input state and actions.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UnlockTargetInputScreen(component: UnlockTargetInputComponent) {
+public fun UnlockTargetInputScreen(component: UnlockTargetInputComponent) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
@@ -123,6 +128,7 @@ fun UnlockTargetInputScreen(component: UnlockTargetInputComponent) {
                                 enabled = !state.actionLoading
                             )
                         }
+
                         UnlockMethod.PHONE -> {
                             CoreOutlinedTextField(
                                 value = state.input,
@@ -176,13 +182,13 @@ private fun ErrorText(error: AppError?) {
     }
 }
 
-internal object UnlockTargetInputTestTags {
-    const val TITLE = "UnlockTargetInput_Title"
-    const val BACK_BUTTON = "UnlockTargetInput_BackButton"
-    const val DESC_TEXT = "UnlockTargetInput_DescText"
-    const val INPUT = "UnlockTargetInput_Input"
-    const val SUBMIT_BUTTON = "UnlockTargetInput_SubmitButton"
-    const val ACTION_ERROR_TEXT = "UnlockTargetInput_ActionErrorText"
+public object UnlockTargetInputTestTags {
+    public const val TITLE: String = "UnlockTargetInput_Title"
+    public const val BACK_BUTTON: String = "UnlockTargetInput_BackButton"
+    public const val DESC_TEXT: String = "UnlockTargetInput_DescText"
+    public const val INPUT: String = "UnlockTargetInput_Input"
+    public const val SUBMIT_BUTTON: String = "UnlockTargetInput_SubmitButton"
+    public const val ACTION_ERROR_TEXT: String = "UnlockTargetInput_ActionErrorText"
 }
 
 @InternalApi
@@ -246,7 +252,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun AdaptivePreview() {
     ScreenPreviewContainer {
@@ -255,7 +261,7 @@ private fun AdaptivePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -264,7 +270,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {

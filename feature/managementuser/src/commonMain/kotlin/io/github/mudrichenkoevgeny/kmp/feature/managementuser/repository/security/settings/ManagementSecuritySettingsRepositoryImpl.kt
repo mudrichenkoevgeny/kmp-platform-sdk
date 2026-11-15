@@ -20,13 +20,14 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.decodeFromJsonElement
 
 /**
  * Implementation of [ManagementSecuritySettingsRepository] backing in-memory flow, [ManagementSecuritySettingsStorage],
  * REST updates via [ManagementSecuritySettingsApi], and WebSocket events for live changes.
  */
-class ManagementSecuritySettingsRepositoryImpl(
+public class ManagementSecuritySettingsRepositoryImpl(
     private val managementSecuritySettingsApi: ManagementSecuritySettingsApi,
     private val managementSecuritySettingsStorage: ManagementSecuritySettingsStorage,
     private val webSocketService: WebSocketService,
@@ -53,7 +54,11 @@ class ManagementSecuritySettingsRepositoryImpl(
                         } else {
                             Logger.w { "Received MANAGEMENT_SECURITY_SETTINGS_UPDATED with invalid payload" }
                         }
-                    } catch (e: Exception) {
+                    } catch (e: SerializationException) {
+                        Logger.e(e) { "Failed to process WebSocket event" }
+                    } catch (e: IllegalArgumentException) {
+                        Logger.e(e) { "Failed to process WebSocket event" }
+                    } catch (e: IllegalStateException) {
                         Logger.e(e) { "Failed to process WebSocket event" }
                     }
                 }
@@ -85,20 +90,18 @@ class ManagementSecuritySettingsRepositoryImpl(
             }
     }
 
-    override suspend fun resetRemoteManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
-        return managementSecuritySettingsApi.resetManagementSecuritySettings()
+    override suspend fun resetRemoteManagementSecuritySettings(): AppResult<ManagementSecuritySettings> =
+        managementSecuritySettingsApi.resetManagementSecuritySettings()
             .mapSuccess { response ->
                 val settings = response.toManagementSecuritySettings()
                 updateManagementSecuritySettings(settings)
                 settings
             }
-    }
 
-    override suspend fun refreshManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
-        return updateMutex.withLock {
+    override suspend fun refreshManagementSecuritySettings(): AppResult<ManagementSecuritySettings> =
+        updateMutex.withLock {
             refreshManagementSecuritySettingsInternal()
         }
-    }
 
     override suspend fun updateManagementSecuritySettings(securitySettings: ManagementSecuritySettings) {
         updateMutex.withLock {
@@ -108,14 +111,13 @@ class ManagementSecuritySettingsRepositoryImpl(
 
     override fun observeManagementSecuritySettings(): Flow<ManagementSecuritySettings?> = _settings.asStateFlow()
 
-    private suspend fun refreshManagementSecuritySettingsInternal(): AppResult<ManagementSecuritySettings> {
-        return managementSecuritySettingsApi.getManagementSecuritySettings()
+    private suspend fun refreshManagementSecuritySettingsInternal(): AppResult<ManagementSecuritySettings> =
+        managementSecuritySettingsApi.getManagementSecuritySettings()
             .mapSuccess { response ->
                 val settings = response.toManagementSecuritySettings()
                 applySettingsUpdate(settings)
                 settings
             }
-    }
 
     private suspend fun applySettingsUpdate(securitySettings: ManagementSecuritySettings) {
         managementSecuritySettingsStorage.updateManagementSecuritySettings(securitySettings)

@@ -9,13 +9,12 @@ import kotlinx.coroutines.flow.Flow
  *
  * @param managementStorageSettingsRepository Management storage settings repository.
  */
-class ObserveManagementStorageSettingsUseCase(
+public class ObserveManagementStorageSettingsUseCase(
     private val managementStorageSettingsRepository: ManagementStorageSettingsRepository
 ) {
     /**
      * @return Cold [Flow] emitting the latest [ManagementStorageSettings] or `null`.
      */
-    operator fun invoke(): Flow<ManagementStorageSettings?> {
-        return managementStorageSettingsRepository.observeManagementStorageSettings()
-    }
+    public operator fun invoke(): Flow<ManagementStorageSettings?> =
+        managementStorageSettingsRepository.observeManagementStorageSettings()
 }

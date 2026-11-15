@@ -8,7 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.repository.management.Manage
  *
  * @param managementStorageRepository Management storage repository for administrative file operations.
  */
-class ManagementDeleteFileUseCase(
+public class ManagementDeleteFileUseCase(
     private val managementStorageRepository: ManagementStorageRepository
 ) {
     /**
@@ -17,7 +17,5 @@ class ManagementDeleteFileUseCase(
      * @param fileId Unique identifier of the target file to delete.
      * @return [AppResult.Success] containing [Unit], or [AppResult.Error] on failure.
      */
-    suspend operator fun invoke(fileId: String): AppResult<Unit> {
-        return managementStorageRepository.deleteFile(fileId)
-    }
+    public suspend operator fun invoke(fileId: String): AppResult<Unit> = managementStorageRepository.deleteFile(fileId)
 }

@@ -7,21 +7,21 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Auth-related remote settings: fetch, refresh, push updates, and observe the latest snapshot.
  */
-interface OpenAuthSettingsRepository {
+public interface OpenAuthSettingsRepository {
     /**
      * Returns cached settings when already loaded or stored; otherwise loads from the network or
      * storage as implemented.
      *
      * @return [AppResult.Success] with [OpenAuthSettings], or [AppResult.Error] when load fails.
      */
-    suspend fun getOpenAuthSettings(): AppResult<OpenAuthSettings>
+    public suspend fun getOpenAuthSettings(): AppResult<OpenAuthSettings>
 
     /**
      * Forces a network reload and updates the observable snapshot on success.
      *
      * @return Fresh [OpenAuthSettings] on success, or an error result when the request fails.
      */
-    suspend fun refreshOpenAuthSettings(): AppResult<OpenAuthSettings>
+    public suspend fun refreshOpenAuthSettings(): AppResult<OpenAuthSettings>
 
     /**
      * Persists [authSettings] and publishes them to observers. Failures are not represented as
@@ -29,12 +29,12 @@ interface OpenAuthSettingsRepository {
      *
      * @param authSettings Complete settings payload to apply locally and in persistence.
      */
-    suspend fun updateOpenAuthSettings(authSettings: OpenAuthSettings)
+    public suspend fun updateOpenAuthSettings(authSettings: OpenAuthSettings)
 
     /**
      * Observes the in-memory settings snapshot (including `null` before the first successful load).
      *
      * @return [Flow] of the current [OpenAuthSettings] or `null`.
      */
-    fun observeOpenAuthSettings(): Flow<OpenAuthSettings?>
+    public fun observeOpenAuthSettings(): Flow<OpenAuthSettings?>
 }

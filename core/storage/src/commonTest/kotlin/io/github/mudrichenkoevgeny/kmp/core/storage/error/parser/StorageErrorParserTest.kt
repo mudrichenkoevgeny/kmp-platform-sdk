@@ -12,21 +12,24 @@ class StorageErrorParserTest {
 
     private val parser = StorageErrorParser()
 
-    private fun createError(code: String, args: Map<String, String>? = null): AppError {
-        return object : AppError {
-            override val id = ErrorId.generate()
-            override val code = code
-            override val args = args
-            override val isRetryable = false
-        }
+    private fun createError(
+        code: String,
+        args: Map<String, String>? = null
+    ): AppError = object : AppError {
+        override val id = ErrorId.generate()
+        override val code = code
+        override val args = args
+        override val isRetryable = false
     }
 
     @Test
     fun parse_fileSizeExceedsLimit_returnsFormattedString() {
-        val parsedWithArgs = parser.parse(createError(
-            StorageErrorCodes.FILE_SIZE_EXCEEDS_LIMIT,
-            mapOf(StorageErrorArgs.MAX_FILE_SIZE_BYTES to "10485760")
-        ))
+        val parsedWithArgs = parser.parse(
+            createError(
+                StorageErrorCodes.FILE_SIZE_EXCEEDS_LIMIT,
+                mapOf(StorageErrorArgs.MAX_FILE_SIZE_BYTES to "10485760")
+            )
+        )
         assertNotNull(parsedWithArgs)
 
         val parsedWithoutArgs = parser.parse(createError(StorageErrorCodes.FILE_SIZE_EXCEEDS_LIMIT))
@@ -35,10 +38,12 @@ class StorageErrorParserTest {
 
     @Test
     fun parse_fileSizeBelowMinimum_returnsFormattedString() {
-        val parsedWithArgs = parser.parse(createError(
-            StorageErrorCodes.FILE_SIZE_BELOW_MINIMUM,
-            mapOf(StorageErrorArgs.MIN_FILE_SIZE_BYTES to "1024")
-        ))
+        val parsedWithArgs = parser.parse(
+            createError(
+                StorageErrorCodes.FILE_SIZE_BELOW_MINIMUM,
+                mapOf(StorageErrorArgs.MIN_FILE_SIZE_BYTES to "1024")
+            )
+        )
         assertNotNull(parsedWithArgs)
 
         val parsedWithoutArgs = parser.parse(createError(StorageErrorCodes.FILE_SIZE_BELOW_MINIMUM))
@@ -47,13 +52,15 @@ class StorageErrorParserTest {
 
     @Test
     fun parse_storageQuotaExceeded_returnsFormattedString() {
-        val parsedWithArgs = parser.parse(createError(
-            StorageErrorCodes.STORAGE_QUOTA_EXCEEDED,
-            mapOf(
-                StorageErrorArgs.QUOTA_BYTES to "1073741824",
-                StorageErrorArgs.USED_BYTES to "996147200"
+        val parsedWithArgs = parser.parse(
+            createError(
+                StorageErrorCodes.STORAGE_QUOTA_EXCEEDED,
+                mapOf(
+                    StorageErrorArgs.QUOTA_BYTES to "1073741824",
+                    StorageErrorArgs.USED_BYTES to "996147200"
+                )
             )
-        ))
+        )
         assertNotNull(parsedWithArgs)
 
         val parsedWithoutArgs = parser.parse(createError(StorageErrorCodes.STORAGE_QUOTA_EXCEEDED))
@@ -62,10 +69,12 @@ class StorageErrorParserTest {
 
     @Test
     fun parse_tooManyPendingUploads_returnsFormattedString() {
-        val parsedWithArgs = parser.parse(createError(
-            StorageErrorCodes.TOO_MANY_PENDING_UPLOADS,
-            mapOf(StorageErrorArgs.MAX_PENDING_UPLOADS to "5")
-        ))
+        val parsedWithArgs = parser.parse(
+            createError(
+                StorageErrorCodes.TOO_MANY_PENDING_UPLOADS,
+                mapOf(StorageErrorArgs.MAX_PENDING_UPLOADS to "5")
+            )
+        )
         assertNotNull(parsedWithArgs)
 
         val parsedWithoutArgs = parser.parse(createError(StorageErrorCodes.TOO_MANY_PENDING_UPLOADS))
@@ -74,10 +83,12 @@ class StorageErrorParserTest {
 
     @Test
     fun parse_maxBatchUploadCountExceeded_returnsFormattedString() {
-        val parsedWithArgs = parser.parse(createError(
-            StorageErrorCodes.MAX_BATCH_UPLOAD_COUNT_EXCEEDED,
-            mapOf(StorageErrorArgs.MAX_BATCH_UPLOAD_COUNT to "10")
-        ))
+        val parsedWithArgs = parser.parse(
+            createError(
+                StorageErrorCodes.MAX_BATCH_UPLOAD_COUNT_EXCEEDED,
+                mapOf(StorageErrorArgs.MAX_BATCH_UPLOAD_COUNT to "10")
+            )
+        )
         assertNotNull(parsedWithArgs)
 
         val parsedWithoutArgs = parser.parse(createError(StorageErrorCodes.MAX_BATCH_UPLOAD_COUNT_EXCEEDED))

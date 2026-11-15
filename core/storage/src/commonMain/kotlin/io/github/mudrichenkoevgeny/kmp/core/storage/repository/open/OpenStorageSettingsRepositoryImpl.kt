@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.decodeFromJsonElement
 
 /**
@@ -30,7 +31,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
  * @param webSocketService WebSocket service for real-time setting updates.
  * @param repositoryScope Scope used to collect WebSocket events.
  */
-class OpenStorageSettingsRepositoryImpl(
+public class OpenStorageSettingsRepositoryImpl(
     private val openStorageSettingsApi: OpenStorageSettingsApi,
     private val openStorageSettingsStorage: OpenStorageSettingsStorage,
     private val webSocketService: WebSocketService,
@@ -38,11 +39,11 @@ class OpenStorageSettingsRepositoryImpl(
 ) : OpenStorageSettingsRepository {
 
     private val updateMutex = Mutex()
-    private val _settings = MutableStateFlow<OpenStorageSettings?>(null)
+    private val settingsStateFlow = MutableStateFlow<OpenStorageSettings?>(null)
 
     init {
         repositoryScope.launch {
-            _settings.value = openStorageSettingsStorage.getOpenStorageSettings()
+            settingsStateFlow.value = openStorageSettingsStorage.getOpenStorageSettings()
 
             webSocketService.observeEvents()
                 .filter { it.type == StorageWebSocketEventTypes.OPEN_STORAGE_SETTINGS_UPDATED }
@@ -57,21 +58,25 @@ class OpenStorageSettingsRepositoryImpl(
                         } else {
                             Logger.w { "Received OPEN_STORAGE_SETTINGS_UPDATED with invalid payload" }
                         }
-                    } catch (e: Exception) {
+                    } catch (e: SerializationException) {
+                        Logger.e(e) { "Failed to process WebSocket event in OpenStorageSettingsRepositoryImpl" }
+                    } catch (e: IllegalArgumentException) {
+                        Logger.e(e) { "Failed to process WebSocket event in OpenStorageSettingsRepositoryImpl" }
+                    } catch (e: IllegalStateException) {
                         Logger.e(e) { "Failed to process WebSocket event in OpenStorageSettingsRepositoryImpl" }
                     }
                 }
         }
     }
 
-    override suspend fun getOpenStorageSettings(): AppResult<OpenStorageSettings> {
-        _settings.value?.let { return AppResult.Success(it) }
+    public override suspend fun getOpenStorageSettings(): AppResult<OpenStorageSettings> {
+        settingsStateFlow.value?.let { return AppResult.Success(it) }
 
         return updateMutex.withLock {
-            val cached = _settings.value ?: openStorageSettingsStorage.getOpenStorageSettings()
+            val cached = settingsStateFlow.value ?: openStorageSettingsStorage.getOpenStorageSettings()
 
             if (cached != null) {
-                _settings.value = cached
+                settingsStateFlow.value = cached
                 AppResult.Success(cached)
             } else {
                 refreshOpenStorageSettingsInternal()
@@ -79,31 +84,28 @@ class OpenStorageSettingsRepositoryImpl(
         }
     }
 
-    override suspend fun refreshOpenStorageSettings(): AppResult<OpenStorageSettings> {
-        return updateMutex.withLock {
-            refreshOpenStorageSettingsInternal()
-        }
+    public override suspend fun refreshOpenStorageSettings(): AppResult<OpenStorageSettings> = updateMutex.withLock {
+        refreshOpenStorageSettingsInternal()
     }
 
-    override suspend fun updateOpenStorageSettings(openStorageSettings: OpenStorageSettings) {
+    public override suspend fun updateOpenStorageSettings(openStorageSettings: OpenStorageSettings) {
         updateMutex.withLock {
             applySettingsUpdate(openStorageSettings)
         }
     }
 
-    override fun observeOpenStorageSettings(): Flow<OpenStorageSettings?> = _settings.asStateFlow()
+    public override fun observeOpenStorageSettings(): Flow<OpenStorageSettings?> = settingsStateFlow.asStateFlow()
 
-    private suspend fun refreshOpenStorageSettingsInternal(): AppResult<OpenStorageSettings> {
-        return openStorageSettingsApi.getStorageSettings()
+    private suspend fun refreshOpenStorageSettingsInternal(): AppResult<OpenStorageSettings> =
+        openStorageSettingsApi.getStorageSettings()
             .mapSuccess { response ->
                 val settings = response.toOpenStorageSettings()
                 applySettingsUpdate(settings)
                 settings
             }
-    }
 
     private suspend fun applySettingsUpdate(openStorageSettings: OpenStorageSettings) {
         openStorageSettingsStorage.updateOpenStorageSettings(openStorageSettings)
-        _settings.value = openStorageSettings
+        settingsStateFlow.value = openStorageSettings
     }
 }

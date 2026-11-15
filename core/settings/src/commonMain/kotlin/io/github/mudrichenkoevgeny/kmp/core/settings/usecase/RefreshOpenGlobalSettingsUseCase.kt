@@ -9,13 +9,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.model.
  *
  * @param openGlobalSettingsRepository Repository performing the network refresh and persistence.
  */
-class RefreshOpenGlobalSettingsUseCase(
+public class RefreshOpenGlobalSettingsUseCase(
     private val openGlobalSettingsRepository: OpenGlobalSettingsRepository
 ) {
     /**
      * @return [AppResult.Success] with refreshed [OpenGlobalSettings], or [AppResult.Error] on failure.
      */
-    suspend operator fun invoke(): AppResult<OpenGlobalSettings> {
-        return openGlobalSettingsRepository.refreshOpenGlobalSettings()
-    }
+    public suspend operator fun invoke(): AppResult<OpenGlobalSettings> =
+        openGlobalSettingsRepository.refreshOpenGlobalSettings()
 }

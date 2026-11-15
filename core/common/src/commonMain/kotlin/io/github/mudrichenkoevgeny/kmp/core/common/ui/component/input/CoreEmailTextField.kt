@@ -8,9 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
@@ -24,7 +24,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
  * @param isError Controls error state.
  */
 @Composable
-fun CoreEmailTextField(
+public fun CoreEmailTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -47,7 +47,7 @@ fun CoreEmailTextField(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun CoreEmailTextFieldComponentSizePreview() {
     CoreTheme {
@@ -61,7 +61,7 @@ private fun CoreEmailTextFieldComponentSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun CoreEmailTextFieldThemePreview() {
     CoreTheme {
@@ -75,7 +75,7 @@ private fun CoreEmailTextFieldThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun CoreEmailTextFieldFontScalePreview() {
     CoreTheme {

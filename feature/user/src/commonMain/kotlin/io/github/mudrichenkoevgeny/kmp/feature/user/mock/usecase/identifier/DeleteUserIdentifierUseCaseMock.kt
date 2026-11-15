@@ -6,14 +6,17 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.identifier.I
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.DeleteUserIdentifierUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 
+/**
+ * Mock implementation of [DeleteUserIdentifierUseCase] for testing.
+ */
 @InternalApi
-class DeleteUserIdentifierUseCaseMock : DeleteUserIdentifierUseCase(
+public class DeleteUserIdentifierUseCaseMock : DeleteUserIdentifierUseCase(
     identifierRepository = IdentifierRepositoryMock()
 ) {
-    var resultProvider: (UserIdentifierId) -> AppResult<Unit> = { AppResult.Success(Unit) }
-    var executeCalls = 0
+    public var resultProvider: (UserIdentifierId) -> AppResult<Unit> = { AppResult.Success(Unit) }
+    public var executeCalls: Int = 0
 
-    override suspend fun invoke(identifierId: UserIdentifierId): AppResult<Unit> {
+    public override suspend fun invoke(identifierId: UserIdentifierId): AppResult<Unit> {
         executeCalls++
         return resultProvider(identifierId)
     }

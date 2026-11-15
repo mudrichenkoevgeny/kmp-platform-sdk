@@ -9,9 +9,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.di.commonComponentMock
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewDialogSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.auth.login.root.ManagementLoginRootComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.pendingdeletion.PendingDeletionScreen
@@ -21,8 +21,15 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.root.UnlockRootScreen
 
+/**
+ * Root Composable for the management user login authentication flow.
+ *
+ * @param component Decompose controller for managing login root navigation stack.
+ * @param isDismissible True if the login modal dialog can be dismissed by tapping outside.
+ * @param isFullScreen True if the login container should fill the entire screen size.
+ */
 @Composable
-fun ManagementLoginRootScreen(
+public fun ManagementLoginRootScreen(
     component: ManagementLoginRootComponent,
     isDismissible: Boolean = true,
     isFullScreen: Boolean = false
@@ -67,7 +74,7 @@ private fun ManagementLoginRootScreenPreview() {
 }
 
 @InternalApi
-@DialogSizePreviews
+@PreviewDialogSizes
 @Composable
 private fun DialogSizePreview() {
     DialogPreviewContainer {
@@ -76,7 +83,7 @@ private fun DialogSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     DialogPreviewContainer {
@@ -85,7 +92,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     DialogPreviewContainer {

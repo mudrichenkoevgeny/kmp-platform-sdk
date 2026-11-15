@@ -23,28 +23,24 @@ import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrin
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
-object SettingsMainTestTags {
-    const val TITLE = "SettingsMain_Title"
-    const val BACK_BUTTON = "SettingsMain_BackButton"
-    const val EDIT_AUTH_SETTINGS_BUTTON = "SettingsMain_EditAuthSettingsButton"
-    const val EDIT_GLOBAL_SETTINGS_BUTTON = "SettingsMain_EditGlobalSettingsButton"
-    const val EDIT_SECURITY_SETTINGS_BUTTON = "SettingsMain_EditSecuritySettingsButton"
-    const val EDIT_STORAGE_SETTINGS_BUTTON = "SettingsMain_EditStorageSettingsButton"
-}
-
+/**
+ * Main management settings navigation screen.
+ *
+ * @param component Decompose controller for settings main navigation.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsMainScreen(component: SettingsMainComponent) {
+public fun SettingsMainScreen(component: SettingsMainComponent) {
     val userUi = LocalUserStrings.current.ui
     val storageUi = LocalStorageStrings.current.ui
     val commonUi = LocalCommonStrings.current.ui
@@ -113,11 +109,11 @@ private fun SettingsMainScreenPreviewContent() {
     CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
         SettingsMainScreen(
             component = object : SettingsMainComponent {
-                override fun onEditAuthSettingsClick() {}
-                override fun onEditGlobalSettingsClick() {}
-                override fun onEditSecuritySettingsClick() {}
-                override fun onEditStorageSettingsClick() {}
-                override fun onBackClick() {}
+                override fun onEditAuthSettingsClick() = Unit
+                override fun onEditGlobalSettingsClick() = Unit
+                override fun onEditSecuritySettingsClick() = Unit
+                override fun onEditStorageSettingsClick() = Unit
+                override fun onBackClick() = Unit
             }
         )
     }
@@ -133,7 +129,7 @@ private fun SettingsMainScreenPreview() {
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
@@ -142,7 +138,7 @@ private fun ScreenSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -151,10 +147,19 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {
         SettingsMainScreenPreviewContent()
     }
+}
+
+public object SettingsMainTestTags {
+    public const val TITLE: String = "SettingsMain_Title"
+    public const val BACK_BUTTON: String = "SettingsMain_BackButton"
+    public const val EDIT_AUTH_SETTINGS_BUTTON: String = "SettingsMain_EditAuthSettingsButton"
+    public const val EDIT_GLOBAL_SETTINGS_BUTTON: String = "SettingsMain_EditGlobalSettingsButton"
+    public const val EDIT_SECURITY_SETTINGS_BUTTON: String = "SettingsMain_EditSecuritySettingsButton"
+    public const val EDIT_STORAGE_SETTINGS_BUTTON: String = "SettingsMain_EditStorageSettingsButton"
 }

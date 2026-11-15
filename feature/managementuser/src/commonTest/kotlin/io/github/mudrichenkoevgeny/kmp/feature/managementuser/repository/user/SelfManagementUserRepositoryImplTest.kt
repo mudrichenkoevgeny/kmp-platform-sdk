@@ -38,15 +38,13 @@ class SelfManagementUserRepositoryImplTest {
     private val userApi = SelfManagementUserApiMock()
     private val webSocketService = WebSocketServiceMock()
 
-    private fun createRepository(scope: TestScope): SelfManagementUserRepositoryImpl {
-        return SelfManagementUserRepositoryImpl(
-            userStorage = userStorage,
-            authStorage = authStorage,
-            selfManagementUserApi = userApi,
-            webSocketService = webSocketService,
-            repositoryScope = scope.backgroundScope
-        )
-    }
+    private fun createRepository(scope: TestScope): SelfManagementUserRepositoryImpl = SelfManagementUserRepositoryImpl(
+        userStorage = userStorage,
+        authStorage = authStorage,
+        selfManagementUserApi = userApi,
+        webSocketService = webSocketService,
+        repositoryScope = scope.backgroundScope
+    )
 
     @Test
     fun `currentUser reflects storage flow`() = runTest {

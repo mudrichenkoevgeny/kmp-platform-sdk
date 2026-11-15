@@ -6,56 +6,67 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.unlock.Unloc
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.otpconfirmation.createTestOtpConfirmation
 
+/**
+ * Mock implementation of [UnlockRepository] for testing.
+ */
 @InternalApi
-class UnlockRepositoryMock : UnlockRepository {
+public class UnlockRepositoryMock : UnlockRepository {
 
-    var sendUnlockEmailConfirmationResult: AppResult<OtpConfirmation> = AppResult.Success(createTestOtpConfirmation())
-    var remainingEmailDelaySeconds: Int = 0
-    var unlockByEmailResult: AppResult<Unit> = AppResult.Success(Unit)
+    public var sendUnlockEmailConfirmationResult: AppResult<OtpConfirmation> = AppResult.Success(
+        createTestOtpConfirmation()
+    )
+    public var remainingEmailDelaySeconds: Int = 0
+    public var unlockByEmailResult: AppResult<Unit> = AppResult.Success(Unit)
 
-    var sendUnlockPhoneConfirmationResult: AppResult<OtpConfirmation> = AppResult.Success(createTestOtpConfirmation())
-    var remainingPhoneDelaySeconds: Int = 0
-    var unlockByPhoneResult: AppResult<Unit> = AppResult.Success(Unit)
+    public var sendUnlockPhoneConfirmationResult: AppResult<OtpConfirmation> = AppResult.Success(
+        createTestOtpConfirmation()
+    )
+    public var remainingPhoneDelaySeconds: Int = 0
+    public var unlockByPhoneResult: AppResult<Unit> = AppResult.Success(Unit)
 
-    var unlockByExternalAuthProviderResult: AppResult<Unit> = AppResult.Success(Unit)
+    public var unlockByExternalAuthProviderResult: AppResult<Unit> = AppResult.Success(Unit)
 
-    var lastEmail: String? = null
-    var lastPhoneNumber: String? = null
-    var lastConfirmationCode: String? = null
-    var lastAuthProvider: String? = null
-    var lastExternalProviderToken: String? = null
+    public var lastEmail: String? = null
+    public var lastPhoneNumber: String? = null
+    public var lastConfirmationCode: String? = null
+    public var lastAuthProvider: String? = null
+    public var lastExternalProviderToken: String? = null
 
-    override suspend fun sendUnlockEmailConfirmation(email: String): AppResult<OtpConfirmation> {
+    public override suspend fun sendUnlockEmailConfirmation(email: String): AppResult<OtpConfirmation> {
         lastEmail = email
         return sendUnlockEmailConfirmationResult
     }
 
-    override fun getRemainingUnlockEmailConfirmationDelayInSeconds(email: String): Int {
-        return remainingEmailDelaySeconds
-    }
+    public override fun getRemainingUnlockEmailConfirmationDelayInSeconds(email: String): Int =
+        remainingEmailDelaySeconds
 
-    override suspend fun unlockByEmail(email: String, confirmationCode: String): AppResult<Unit> {
+    public override suspend fun unlockByEmail(
+        email: String,
+        confirmationCode: String
+    ): AppResult<Unit> {
         lastEmail = email
         lastConfirmationCode = confirmationCode
         return unlockByEmailResult
     }
 
-    override suspend fun sendUnlockPhoneConfirmation(phoneNumber: String): AppResult<OtpConfirmation> {
+    public override suspend fun sendUnlockPhoneConfirmation(phoneNumber: String): AppResult<OtpConfirmation> {
         lastPhoneNumber = phoneNumber
         return sendUnlockPhoneConfirmationResult
     }
 
-    override fun getRemainingUnlockPhoneConfirmationDelayInSeconds(phoneNumber: String): Int {
-        return remainingPhoneDelaySeconds
-    }
+    public override fun getRemainingUnlockPhoneConfirmationDelayInSeconds(phoneNumber: String): Int =
+        remainingPhoneDelaySeconds
 
-    override suspend fun unlockByPhone(phoneNumber: String, confirmationCode: String): AppResult<Unit> {
+    public override suspend fun unlockByPhone(
+        phoneNumber: String,
+        confirmationCode: String
+    ): AppResult<Unit> {
         lastPhoneNumber = phoneNumber
         lastConfirmationCode = confirmationCode
         return unlockByPhoneResult
     }
 
-    override suspend fun unlockByExternalAuthProvider(
+    public override suspend fun unlockByExternalAuthProvider(
         authProvider: String,
         externalProviderToken: String
     ): AppResult<Unit> {

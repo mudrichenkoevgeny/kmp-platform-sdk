@@ -9,14 +9,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
  *
  * @param managementUserSecurityRepository Administrative security management API.
  */
-class ManagementDisableTotpUseCase(
+public class ManagementDisableTotpUseCase(
     private val managementUserSecurityRepository: ManagementUserSecurityRepository
 ) {
     /**
      * @param userId Unique identifier of the target user.
      * @return Empty success indicator, or a mapped failure.
      */
-    suspend operator fun invoke(userId: UserId): AppResult<Unit> {
-        return managementUserSecurityRepository.disableTotp(userId)
-    }
+    public suspend operator fun invoke(userId: UserId): AppResult<Unit> = managementUserSecurityRepository.disableTotp(
+        userId
+    )
 }

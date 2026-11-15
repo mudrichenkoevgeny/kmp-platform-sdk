@@ -41,7 +41,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  * @param unlockByPhoneUseCase Completes account unlock using phone code.
  * @param onFinished Invoked when account unlock flow completes.
  */
-class UnlockRootComponentImpl(
+public class UnlockRootComponentImpl(
     componentContext: ComponentContext,
     private val params: UnlockMethodSelectionParams? = null,
     private val lockoutType: AccountLockoutType? = params?.accountLockoutType,
@@ -57,7 +57,7 @@ class UnlockRootComponentImpl(
 
     private val navigation = StackNavigation<ClientAuthNavigation>()
 
-    override val stack: Value<ChildStack<ClientAuthNavigation, UnlockRootComponent.Child>> =
+    public override val stack: Value<ChildStack<ClientAuthNavigation, UnlockRootComponent.Child>> =
         childStack(
             source = navigation,
             serializer = ClientAuthNavigation.serializer(),
@@ -82,7 +82,8 @@ class UnlockRootComponentImpl(
             navigation.pop()
         } else if (parentDestination != null && parentDestination != stack.value.active.configuration) {
             navigation.navigate { currentStack ->
-                val index = currentStack.indexOfLast { it == parentDestination || it::class == parentDestination::class }
+                val index =
+                    currentStack.indexOfLast { it == parentDestination || it::class == parentDestination::class }
                 if (index >= 0) {
                     currentStack.take(index + 1)
                 } else {
@@ -159,6 +160,7 @@ class UnlockRootComponentImpl(
                 onBack = { handleBack() }
             )
         )
+
         is ClientAuthNavigation.UnlockSuccess,
         is ClientAuthNavigation.Auth,
         is ClientAuthNavigation.Main,
@@ -170,7 +172,7 @@ class UnlockRootComponentImpl(
         is ClientAuthNavigation.PendingDeletion -> UnlockRootComponent.Child.Success
     }
 
-    override fun onDismiss() {
+    public override fun onDismiss() {
         onFinished()
     }
 }

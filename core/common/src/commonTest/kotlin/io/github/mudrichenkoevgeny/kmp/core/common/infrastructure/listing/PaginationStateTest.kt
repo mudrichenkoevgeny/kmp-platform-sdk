@@ -68,7 +68,8 @@ class PaginationStateTest {
 
     @Test
     fun canLoadMore_returnsTrue_whenHasMorePagesAndIsIdle() {
-        val canLoadState = PaginationState<String>(pageNumber = 1, totalPages = 2, isInitialLoading = false, isNextPageLoading = false)
+        val canLoadState =
+            PaginationState<String>(pageNumber = 1, totalPages = 2, isInitialLoading = false, isNextPageLoading = false)
         assertTrue(canLoadState.canLoadMore)
 
         val loadingState = PaginationState<String>(pageNumber = 1, totalPages = 2, isNextPageLoading = true)
@@ -136,7 +137,8 @@ class PaginationStateTest {
         val error = CommonError.Unknown()
         val stateWithItems = PaginationState(items = listOf("item1"))
 
-        val initialErrorState = stateWithItems.toError(error, pageNumber = ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER)
+        val initialErrorState =
+            stateWithItems.toError(error, pageNumber = ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER)
         assertTrue(initialErrorState.items.isEmpty())
         assertEquals(error, initialErrorState.error)
 

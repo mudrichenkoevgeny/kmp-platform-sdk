@@ -11,7 +11,5 @@ import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrin
  * If no parser recognizes the error code, the function falls back to common unknown error message.
  */
 @Composable
-fun AppError.toLocalizedMessage(): String {
-    return LocalErrorParser.current.parse(this)
-        ?: LocalCommonStrings.current.errors.unknown
-}
+public fun AppError.toLocalizedMessage(): String = LocalErrorParser.current.parse(this)
+    ?: LocalCommonStrings.current.errors.unknown

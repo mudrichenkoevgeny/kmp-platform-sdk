@@ -18,7 +18,6 @@ kotlin {
         }
     }
 
-    // TODO: [IOS] Uncomment when starting iOS development
 //    listOf(
 //        iosArm64(),
 //        iosSimulatorArm64()
@@ -29,17 +28,17 @@ kotlin {
 //        }
 //    }
 
-    wasmJs {
-        browser {
-            commonWebpackConfig {
-                outputFileName = "composeApp.js"
-                devServer = (devServer ?: org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.DevServer()).apply {
-                    port = 8082
-                }
-            }
-        }
-        binaries.executable()
-    }
+//    wasmJs {
+//        browser {
+//            commonWebpackConfig {
+//                outputFileName = "composeApp.js"
+//                devServer = (devServer ?: org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.DevServer()).apply {
+//                    port = 8082
+//                }
+//            }
+//        }
+//        binaries.executable()
+//    }
 
     sourceSets {
         commonMain.dependencies {
@@ -81,13 +80,13 @@ kotlin {
             implementation(libs.kermit)
         }
 
-        wasmJsMain.dependencies {
-            // Project Modules
-            implementation(project(":core:common"))
-            
-            // Decompose Web History
-            implementation(libs.decompose.compose.experimental)
-        }
+//        wasmJsMain.dependencies {
+//            // Project Modules
+//            implementation(project(":core:common"))
+//
+//            // Decompose Web History
+//            implementation(libs.decompose.compose.experimental)
+//        }
 
         androidMain.dependencies {
             implementation(libs.compose.ui)
@@ -114,10 +113,10 @@ kotlin {
             implementation(libs.ktor.client.cio)
         }
 
-        wasmJsTest.dependencies {
-            implementation(kotlin("test"))
-            implementation(libs.kotlinx.coroutines.test)
-        }
+//        wasmJsTest.dependencies {
+//            implementation(kotlin("test"))
+//            implementation(libs.kotlinx.coroutines.test)
+//        }
     }
 }
 
@@ -139,17 +138,22 @@ buildConfig {
         "prod" -> {
             buildConfigField("BASE_URL", "http://192.168.0.134:9091")
             buildConfigField("ENV_NAME", "Production")
-            buildConfigField("GOOGLE_WEB_CLIENT_ID", "982478008604-albtrhoegkqkpe2ev7rirg6c8h9hijfl.apps.googleusercontent.com")
+            buildConfigField("GOOGLE_WEB_CLIENT_ID",
+                "982478008604-albtrhoegkqkpe2ev7rirg6c8h9hijfl.apps.googleusercontent.com")
         }
+
         "test" -> {
             buildConfigField("BASE_URL", "http://192.168.0.134:9091")
             buildConfigField("ENV_NAME", "Testing")
-            buildConfigField("GOOGLE_WEB_CLIENT_ID", "982478008604-albtrhoegkqkpe2ev7rirg6c8h9hijfl.apps.googleusercontent.com")
+            buildConfigField("GOOGLE_WEB_CLIENT_ID",
+                "982478008604-albtrhoegkqkpe2ev7rirg6c8h9hijfl.apps.googleusercontent.com")
         }
+
         else -> {
             buildConfigField("BASE_URL", "http://192.168.0.134:9091")
             buildConfigField("ENV_NAME", "Development")
-            buildConfigField("GOOGLE_WEB_CLIENT_ID", "982478008604-albtrhoegkqkpe2ev7rirg6c8h9hijfl.apps.googleusercontent.com")
+            buildConfigField("GOOGLE_WEB_CLIENT_ID",
+                "982478008604-albtrhoegkqkpe2ev7rirg6c8h9hijfl.apps.googleusercontent.com")
         }
     }
 }

@@ -21,7 +21,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.l
  * @return Configured [ListingOptionsConfig] for filtering and sorting user identifiers.
  */
 @Composable
-fun getIdentifierListingOptionsConfig(includeUserFilter: Boolean = true): ListingOptionsConfig {
+public fun getIdentifierListingOptionsConfig(includeUserFilter: Boolean = true): ListingOptionsConfig {
     val commonUi = LocalCommonStrings.current.ui
 
     val authProviderOptions = listOf(
@@ -119,11 +119,11 @@ fun getIdentifierListingOptionsConfig(includeUserFilter: Boolean = true): Listin
     return ListingOptionsConfig(
         sortOptions = listOf(
             ListingSortDefinition(
-                id = UserIdentifierSortBy.CREATED_AT.name,
+                id = UserIdentifierSortBy.CREATED_AT.value,
                 title = commonUi.createdAt
             ),
             ListingSortDefinition(
-                id = UserIdentifierSortBy.UPDATED_AT.name,
+                id = UserIdentifierSortBy.UPDATED_AT.value,
                 title = commonUi.updatedAt
             )
         ),

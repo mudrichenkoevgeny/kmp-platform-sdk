@@ -12,7 +12,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
  * @param authService Platform Google auth helper that returns a credential string.
  * @param identifierRepository Remote identifier management API.
  */
-class AddUserIdentifierGoogleUseCase(
+public class AddUserIdentifierGoogleUseCase(
     private val authService: GoogleAuthService,
     private val identifierRepository: IdentifierRepository
 ) {
@@ -21,13 +21,11 @@ class AddUserIdentifierGoogleUseCase(
      *
      * @return [UserIdentifierPrivate] on success, or a mapped failure.
      */
-    suspend fun execute(): AppResult<UserIdentifierPrivate> {
-        return authService.signIn()
-            .flatMap { loginByExternalAuthProviderRequest ->
-                identifierRepository.addUserIdentifierExternalAuthProvider(
-                    loginByExternalAuthProviderRequest.authProvider,
-                    loginByExternalAuthProviderRequest.externalProviderToken
-                )
-            }
-    }
+    public suspend fun execute(): AppResult<UserIdentifierPrivate> = authService.signIn()
+        .flatMap { loginByExternalAuthProviderRequest ->
+            identifierRepository.addUserIdentifierExternalAuthProvider(
+                loginByExternalAuthProviderRequest.authProvider,
+                loginByExternalAuthProviderRequest.externalProviderToken
+            )
+        }
 }

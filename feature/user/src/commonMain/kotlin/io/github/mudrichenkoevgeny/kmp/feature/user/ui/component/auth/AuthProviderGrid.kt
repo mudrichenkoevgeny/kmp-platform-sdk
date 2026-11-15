@@ -13,8 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 
@@ -26,7 +26,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
  * @param modifier optional modifier for the container.
  */
 @Composable
-fun AuthProviderGrid(
+public fun AuthProviderGrid(
     authProviders: List<UserAuthProvider>,
     onProviderClick: (UserAuthProvider) -> Unit,
     modifier: Modifier = Modifier
@@ -49,9 +49,9 @@ fun AuthProviderGrid(
 /**
  * [PreviewParameterProvider] supplying sample lists of [UserAuthProvider] for [AuthProviderGrid] previews.
  */
-class AuthGridPreviewProvider : PreviewParameterProvider<List<UserAuthProvider>> {
+public class AuthGridPreviewProvider : PreviewParameterProvider<List<UserAuthProvider>> {
     /** Varying list sizes and provider mixes for layout previews. */
-    override val values: Sequence<List<UserAuthProvider>> = sequenceOf(
+    public override val values: Sequence<List<UserAuthProvider>> = sequenceOf(
         listOf(UserAuthProvider.GOOGLE, UserAuthProvider.APPLE),
         listOf(
             UserAuthProvider.EMAIL,
@@ -100,14 +100,14 @@ private fun AuthProviderGridStatesPreview(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun AuthProviderGridComponentSizePreview() {
     AuthProviderGridPreviewContent(providers = defaultAuthProviderGridPreviewState)
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun AuthProviderGridThemePreview() {
     AuthProviderGridPreviewContent(providers = defaultAuthProviderGridPreviewState)

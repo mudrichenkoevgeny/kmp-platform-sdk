@@ -13,7 +13,7 @@ import java.io.File
  * - Register a `FileProvider` in `AndroidManifest.xml` whose `android:authorities` matches the
  *   `authority` passed to this class.
  */
-class AndroidFileOpener(
+public class AndroidFileOpener(
     private val context: Context,
     private val authority: String
 ) {
@@ -22,7 +22,7 @@ class AndroidFileOpener(
      *
      * @param filePath Absolute filesystem path to the file.
      */
-    fun openLocalFile(filePath: String) {
+    public fun openLocalFile(filePath: String) {
         runCatching {
             val file = File(filePath)
             if (!file.exists()) {

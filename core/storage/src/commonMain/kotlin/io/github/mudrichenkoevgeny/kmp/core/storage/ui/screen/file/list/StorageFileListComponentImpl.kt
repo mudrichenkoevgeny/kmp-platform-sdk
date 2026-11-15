@@ -42,10 +42,10 @@ import kotlinx.coroutines.launch
  * @param onNavigateToFileDetail Optional callback to navigate to file detail screen.
  * @param onNavigateBack Callback for back navigation.
  */
-class StorageFileListComponentImpl(
+public class StorageFileListComponentImpl(
     componentContext: ComponentContext,
     private val dataSource: StorageFileListDataSource,
-    override val includeOwnerFilter: Boolean = false,
+    public override val includeOwnerFilter: Boolean = false,
     private val initialUserId: String? = null,
     private val initialUserIdProvider: (suspend () -> String?)? = null,
     initialFilterStates: Map<String, ListingFilterState>? = null,
@@ -55,22 +55,23 @@ class StorageFileListComponentImpl(
     private val onNavigateBack: () -> Unit
 ) : StorageFileListComponent, ComponentContext by componentContext {
 
-    override val isSingleDeleteAvailable: Boolean
+    public override val isSingleDeleteAvailable: Boolean
         get() = dataSource.isSingleDeleteAvailable
 
-    override val isBatchDeleteAvailable: Boolean
+    public override val isBatchDeleteAvailable: Boolean
         get() = dataSource.isBatchDeleteAvailable
 
-    override val isUploadAvailable: Boolean
+    public override val isUploadAvailable: Boolean
         get() = onNavigateToUpload != null
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue<StorageFileListScreenState>(StorageFileListScreenState.Loading)
-    override val state: Value<StorageFileListScreenState> = _state
+    public override val state: Value<StorageFileListScreenState> = _state
 
-    override val dialogSlotNavigation = SlotNavigation<StorageFileListDialogConfig>()
+    public override val dialogSlotNavigation: SlotNavigation<StorageFileListDialogConfig> =
+        SlotNavigation<StorageFileListDialogConfig>()
 
-    override val dialogSlot: Value<ChildSlot<StorageFileListDialogConfig, StorageFileListDialogChild>> =
+    public override val dialogSlot: Value<ChildSlot<StorageFileListDialogConfig, StorageFileListDialogChild>> =
         childSlot(
             source = dialogSlotNavigation,
             serializer = StorageFileListDialogConfig.serializer(),
@@ -79,6 +80,7 @@ class StorageFileListComponentImpl(
                 when (config) {
                     is StorageFileListDialogConfig.ConfirmDeleteFile ->
                         StorageFileListDialogChild.ConfirmDeleteFile(config.fileId)
+
                     is StorageFileListDialogConfig.ConfirmDeleteBatchFiles ->
                         StorageFileListDialogChild.ConfirmDeleteBatchFiles
                 }
@@ -89,21 +91,6 @@ class StorageFileListComponentImpl(
     private var activeSortState: ListingSortState? = null
     private var activeFilterStates: Map<String, ListingFilterState> = initialFilterStates ?: getDefaultFilterStates()
     private var isFilterPanelExpanded: Boolean = false
-
-    companion object {
-        /**
-         * Returns default listing filter states excluding [StorageFileStatus.DELETED].
-         */
-        fun getDefaultFilterStates(): Map<String, ListingFilterState> {
-            val nonDeletedStatusIds = StorageFileStatus.entries
-                .filter { it != StorageFileStatus.DELETED }
-                .map { it.name }
-                .toSet()
-            return mapOf(
-                StorageFileFilterValues.STATUS to ChoiceListingFilterState(selectedIds = nonDeletedStatusIds)
-            )
-        }
-    }
 
     init {
         lifecycle.doOnCreate {
@@ -122,11 +109,11 @@ class StorageFileListComponentImpl(
         fetchPage(pageNumber = ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER)
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         onNavigateBack()
     }
 
-    override fun onToggleFilterPanel() {
+    public override fun onToggleFilterPanel() {
         val current = _state.value
         if (current is StorageFileListScreenState.Content) {
             val expanded = !current.isFilterPanelExpanded
@@ -135,12 +122,12 @@ class StorageFileListComponentImpl(
         }
     }
 
-    override fun onRefresh() {
+    public override fun onRefresh() {
         _state.value = StorageFileListScreenState.Loading
         fetchPage(pageNumber = ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER)
     }
 
-    override fun onLoadNextPage() {
+    public override fun onLoadNextPage() {
         val current = _state.value
         if (current !is StorageFileListScreenState.Content || !current.paging.hasMorePages) {
             return
@@ -149,7 +136,7 @@ class StorageFileListComponentImpl(
         fetchPage(pageNumber = current.paging.nextPageNumber)
     }
 
-    override fun onSortChanged(sortState: ListingSortState?) {
+    public override fun onSortChanged(sortState: ListingSortState?) {
         activeSortState = sortState
         val current = _state.value
         if (current is StorageFileListScreenState.Content) {
@@ -157,7 +144,10 @@ class StorageFileListComponentImpl(
         }
     }
 
-    override fun onFilterChanged(filterId: String, filterState: ListingFilterState?) {
+    public override fun onFilterChanged(
+        filterId: String,
+        filterState: ListingFilterState?
+    ) {
         val newFilters = activeFilterStates.toMutableMap()
         if (filterState == null) {
             newFilters.remove(filterId)
@@ -172,20 +162,20 @@ class StorageFileListComponentImpl(
         }
     }
 
-    override fun onApplyFilters() {
+    public override fun onApplyFilters() {
         _state.value = StorageFileListScreenState.Loading
         fetchPage(pageNumber = ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER)
     }
 
-    override fun onUploadClick() {
+    public override fun onUploadClick() {
         onNavigateToUpload?.invoke()
     }
 
-    override fun onFileClick(file: StorageFileSummary) {
+    public override fun onFileClick(file: StorageFileSummary) {
         onNavigateToFileDetail?.invoke(file.id.asHexDashString())
     }
 
-    override fun toggleSelectFile(fileId: String) {
+    public override fun toggleSelectFile(fileId: String) {
         val current = _state.value
         if (current is StorageFileListScreenState.Content) {
             val isSelected = current.selectedFileIds.contains(fileId)
@@ -198,7 +188,7 @@ class StorageFileListComponentImpl(
         }
     }
 
-    override fun selectAllFiles() {
+    public override fun selectAllFiles() {
         val current = _state.value
         if (current is StorageFileListScreenState.Content) {
             val allIds = current.paging.items
@@ -209,26 +199,26 @@ class StorageFileListComponentImpl(
         }
     }
 
-    override fun clearFileSelection() {
+    public override fun clearFileSelection() {
         val current = _state.value
         if (current is StorageFileListScreenState.Content) {
             _state.value = current.copy(selectedFileIds = emptySet())
         }
     }
 
-    override fun onDeleteFileClick(fileId: String) {
+    public override fun onDeleteFileClick(fileId: String) {
         dialogSlotNavigation.activate(StorageFileListDialogConfig.ConfirmDeleteFile(fileId))
     }
 
-    override fun onDeleteSelectedFilesClick() {
+    public override fun onDeleteSelectedFilesClick() {
         dialogSlotNavigation.activate(StorageFileListDialogConfig.ConfirmDeleteBatchFiles)
     }
 
-    override fun onDismissDeleteDialog() {
+    public override fun onDismissDeleteDialog() {
         dialogSlotNavigation.dismiss()
     }
 
-    override fun onConfirmDeleteFile() {
+    public override fun onConfirmDeleteFile() {
         val activeChild = dialogSlot.value.child?.instance as? StorageFileListDialogChild.ConfirmDeleteFile
         val fileId = activeChild?.fileId
         dialogSlotNavigation.dismiss()
@@ -249,6 +239,7 @@ class StorageFileListComponentImpl(
                         _state.value = applyLocalDeletion(latest, listOf(fileId))
                     }
                 }
+
                 is AppResult.Error -> {
                     val latest = _state.value
                     if (latest is StorageFileListScreenState.Content) {
@@ -262,7 +253,7 @@ class StorageFileListComponentImpl(
         }
     }
 
-    override fun onConfirmBatchDeleteFiles() {
+    public override fun onConfirmBatchDeleteFiles() {
         dialogSlotNavigation.dismiss()
         val current = _state.value as? StorageFileListScreenState.Content ?: return
         val fileIds = current.selectedFileIds.toList()
@@ -283,6 +274,7 @@ class StorageFileListComponentImpl(
                         _state.value = applyLocalDeletion(latest, fileIds)
                     }
                 }
+
                 is AppResult.Error -> {
                     val latest = _state.value
                     if (latest is StorageFileListScreenState.Content) {
@@ -327,6 +319,7 @@ class StorageFileListComponentImpl(
                         val currentContent = current as? StorageFileListScreenState.Content
                         _state.value = createContent(currentContent, nextPaging, actionLoading = false)
                     }
+
                     is AppResult.Error -> {
                         val currentContent = current as? StorageFileListScreenState.Content
                         if (currentContent != null) {
@@ -372,8 +365,7 @@ class StorageFileListComponentImpl(
     ): StorageFileListScreenState.Content {
         val statusFilter = current.filterStates[StorageFileFilterValues.STATUS] as? ChoiceListingFilterState
         val isDeletedStatusIncluded = statusFilter?.selectedIds?.any { raw ->
-            raw.equals(StorageFileStatus.DELETED.name, ignoreCase = true) ||
-                raw.equals(StorageFileStatus.DELETED.value, ignoreCase = true)
+            raw.equals(StorageFileStatus.DELETED.value, ignoreCase = true)
         } == true
 
         val deletedSet = deletedIds.toSet()
@@ -407,5 +399,20 @@ class StorageFileListComponentImpl(
                 totalCount = maxOf(0, current.paging.totalCount - removedCount)
             )
         )
+    }
+
+    public companion object {
+        /**
+         * Returns default listing filter states excluding [StorageFileStatus.DELETED].
+         */
+        public fun getDefaultFilterStates(): Map<String, ListingFilterState> {
+            val nonDeletedStatusIds = StorageFileStatus.entries
+                .filter { it != StorageFileStatus.DELETED }
+                .map { it.value }
+                .toSet()
+            return mapOf(
+                StorageFileFilterValues.STATUS to ChoiceListingFilterState(selectedIds = nonDeletedStatusIds)
+            )
+        }
     }
 }

@@ -8,7 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.session.SessionRe
  *
  * @param sessionRepository Remote session management API.
  */
-class ReauthenticateSessionUseCase(
+public class ReauthenticateSessionUseCase(
     private val sessionRepository: SessionRepository
 ) {
     /**
@@ -16,7 +16,8 @@ class ReauthenticateSessionUseCase(
      * @param code time-based verification code.
      * @return Empty success indicator, or a mapped failure.
      */
-    suspend operator fun invoke(mfaToken: String, code: String): AppResult<Unit> {
-        return sessionRepository.reauthenticateSession(mfaToken, code)
-    }
+    public suspend operator fun invoke(
+        mfaToken: String,
+        code: String
+    ): AppResult<Unit> = sessionRepository.reauthenticateSession(mfaToken, code)
 }

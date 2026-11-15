@@ -6,11 +6,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.model.
 /**
  * Direct HTTP API for fetching open storage settings.
  */
-interface OpenStorageSettingsApi {
+public interface OpenStorageSettingsApi {
     /**
      * Fetches the active open storage settings payload from the server.
      *
      * @return [AppResult.Success] containing [OpenStorageSettingsPayload] or [AppResult.Error].
      */
-    suspend fun getStorageSettings(): AppResult<OpenStorageSettingsPayload>
+    public suspend fun getStorageSettings(): AppResult<OpenStorageSettingsPayload>
 }

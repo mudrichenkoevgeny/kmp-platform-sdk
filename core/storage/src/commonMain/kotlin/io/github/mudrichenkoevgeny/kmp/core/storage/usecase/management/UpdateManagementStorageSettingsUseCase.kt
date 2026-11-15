@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.s
  *
  * @param managementStorageSettingsRepository Management storage settings repository.
  */
-class UpdateManagementStorageSettingsUseCase(
+public class UpdateManagementStorageSettingsUseCase(
     private val managementStorageSettingsRepository: ManagementStorageSettingsRepository
 ) {
     /**
@@ -18,7 +18,10 @@ class UpdateManagementStorageSettingsUseCase(
      * @param storageSettings New settings to apply.
      * @return Updated [ManagementStorageSettings] on success, or an [AppResult.Error].
      */
-    suspend operator fun invoke(storageSettings: ManagementStorageSettings): AppResult<ManagementStorageSettings> {
-        return managementStorageSettingsRepository.saveRemoteManagementStorageSettings(storageSettings)
-    }
+    public suspend operator fun invoke(
+        storageSettings: ManagementStorageSettings
+    ): AppResult<ManagementStorageSettings> =
+        managementStorageSettingsRepository.saveRemoteManagementStorageSettings(
+            storageSettings
+        )
 }

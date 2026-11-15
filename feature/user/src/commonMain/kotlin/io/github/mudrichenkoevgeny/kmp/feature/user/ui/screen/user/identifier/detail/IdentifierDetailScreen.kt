@@ -50,10 +50,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorTe
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreSmallText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.identifier.detail.IdentifierDetailComponentMock
@@ -66,7 +66,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IdentifierDetailScreen(component: IdentifierDetailComponent) {
+public fun IdentifierDetailScreen(component: IdentifierDetailComponent) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
@@ -107,6 +107,7 @@ fun IdentifierDetailScreen(component: IdentifierDetailComponent) {
                     onRetry = component::onRetry,
                     modifier = Modifier.testTag(IdentifierDetailTestTags.GLOBAL_ERROR)
                 )
+
                 is IdentifierDetailScreenState.Content -> {
                     Content(
                         state = currentState,
@@ -178,7 +179,7 @@ private fun Content(
 
                 DetailRow(
                     label = userUi.identifierDetailAuthProvider,
-                    value = identifier.userAuthProvider.name
+                    value = identifier.userAuthProvider.value
                 )
 
                 DetailRow(
@@ -421,21 +422,21 @@ private fun IdentifierDetailStatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun IdentifierDetailScreenSizePreview() {
     IdentifierDetailPreviewContent(state = defaultIdentifierDetailPreviewState)
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun IdentifierDetailThemePreview() {
     IdentifierDetailPreviewContent(state = defaultIdentifierDetailPreviewState)
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun IdentifierDetailFontScalePreview() {
     IdentifierDetailPreviewContent(state = defaultIdentifierDetailPreviewState)
@@ -444,13 +445,13 @@ private fun IdentifierDetailFontScalePreview() {
 /**
  * Test tags for UI nodes on [IdentifierDetailScreen].
  */
-object IdentifierDetailTestTags {
-    const val TITLE = "identifier_detail_title"
-    const val BACK_BUTTON = "identifier_detail_back_button"
-    const val GLOBAL_ERROR = "identifier_detail_global_error"
-    const val CARD = "identifier_detail_card"
-    const val USER_ROW = "identifier_detail_user_row"
-    const val DELETE_BUTTON = "identifier_detail_delete_button"
-    const val CHANGE_PASSWORD_BUTTON = "identifier_detail_change_password_button"
-    const val DELETE_PASSWORD_BUTTON = "identifier_detail_delete_password_button"
+public object IdentifierDetailTestTags {
+    public const val TITLE: String = "identifier_detail_title"
+    public const val BACK_BUTTON: String = "identifier_detail_back_button"
+    public const val GLOBAL_ERROR: String = "identifier_detail_global_error"
+    public const val CARD: String = "identifier_detail_card"
+    public const val USER_ROW: String = "identifier_detail_user_row"
+    public const val DELETE_BUTTON: String = "identifier_detail_delete_button"
+    public const val CHANGE_PASSWORD_BUTTON: String = "identifier_detail_change_password_button"
+    public const val DELETE_PASSWORD_BUTTON: String = "identifier_detail_delete_password_button"
 }

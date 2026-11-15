@@ -5,13 +5,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 /**
  * Persists cached management auth settings.
  */
-interface ManagementAuthSettingsStorage {
+public interface ManagementAuthSettingsStorage {
     /** @return Last known management auth settings snapshot, or null if never loaded. */
-    suspend fun getManagementAuthSettings(): ManagementAuthSettings?
+    public suspend fun getManagementAuthSettings(): ManagementAuthSettings?
 
     /** @param managementAuthSettings Replaces cached management auth settings. */
-    suspend fun updateManagementAuthSettings(managementAuthSettings: ManagementAuthSettings)
+    public suspend fun updateManagementAuthSettings(managementAuthSettings: ManagementAuthSettings)
 
     /** Clears cached management auth settings. */
-    suspend fun clearManagementAuthSettings()
+    public suspend fun clearManagementAuthSettings()
 }

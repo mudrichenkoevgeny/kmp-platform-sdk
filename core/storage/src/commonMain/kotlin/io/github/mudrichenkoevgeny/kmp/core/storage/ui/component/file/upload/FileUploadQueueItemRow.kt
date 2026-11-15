@@ -26,26 +26,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.preview.StorageFileImagePreview
-import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.visibility.StorageFileVisibility
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_delete
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.kmp.core.storage.Res as StorageRes
 import io.github.mudrichenkoevgeny.kmp.core.storage.ic_file_status_ready
 import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.preview.StorageFileImagePreview
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.preview.StorageFilePreview
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.formatting.ByteSizeFormatter
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.category.StorageCategory
@@ -53,7 +50,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.u
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.upload.UploadQueueItemId
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.upload.UploadQueueItemStatus
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.upload.toUploadQueueItemIdOrThrow
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.visibility.StorageFileVisibility
 import org.jetbrains.compose.resources.painterResource
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
+import io.github.mudrichenkoevgeny.kmp.core.storage.Res as StorageRes
 
 /**
  * Individual row component representing a queued file item in the upload area.
@@ -64,7 +64,7 @@ import org.jetbrains.compose.resources.painterResource
  * @param modifier Optional [Modifier] for layout adjustments.
  */
 @Composable
-fun FileUploadQueueItemRow(
+public fun FileUploadQueueItemRow(
     item: UploadQueueItem,
     isUploading: Boolean,
     onRemove: (UploadQueueItemId) -> Unit,
@@ -73,8 +73,6 @@ fun FileUploadQueueItemRow(
     onCategoryChanged: ((UploadQueueItemId, StorageCategory) -> Unit)? = null,
     onVisibilityChanged: ((UploadQueueItemId, StorageFileVisibility) -> Unit)? = null
 ) {
-    val storageUi = LocalStorageStrings.current.ui
-
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -92,165 +90,22 @@ fun FileUploadQueueItemRow(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall),
+                QueueItemInfoSection(
+                    item = item,
+                    localUri = localUri,
                     modifier = Modifier.weight(1f)
-                ) {
-                    if (!localUri.isNullOrBlank() && item.category == StorageCategory.IMAGE) {
-                        StorageFileImagePreview(
-                            imageUrl = localUri,
-                            category = item.category,
-                            modifier = Modifier.size(CoreTheme.dimens.previewThumbnailSize),
-                            containerHeight = CoreTheme.dimens.previewThumbnailSize
-                        )
-                    } else {
-                        StorageFilePreview(
-                            category = item.category,
-                            containerSize = CoreTheme.dimens.previewThumbnailSize,
-                            iconSize = CoreTheme.dimens.iconSizeMedium
-                        )
-                    }
-
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = item.fileName,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        val formattedSize = remember(item.fileSizeBytes) {
-                            ByteSizeFormatter.format(
-                                bytesRaw = item.fileSizeBytes,
-                                resolver = KmpLocalization.resolver,
-                                locale = KmpLocalization.currentLocale
-                            ) ?: "${item.fileSizeBytes} B"
-                        }
-                        Text(
-                            text = formattedSize,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingExtraSmall)
-                ) {
-                    if (onCategoryChanged != null && item.status != UploadQueueItemStatus.UPLOADING) {
-                        var isCategoryMenuExpanded by remember { mutableStateOf(false) }
-                        Box {
-                            Surface(
-                                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                shape = MaterialTheme.shapes.extraSmall,
-                                modifier = Modifier.clickable(!isUploading) { isCategoryMenuExpanded = true }
-                            ) {
-                                Text(
-                                    text = item.category.name,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.padding(
-                                        horizontal = CoreTheme.dimens.paddingSmall,
-                                        vertical = CoreTheme.dimens.paddingExtraSmall
-                                    )
-                                )
-                            }
-                            DropdownMenu(
-                                expanded = isCategoryMenuExpanded,
-                                onDismissRequest = { isCategoryMenuExpanded = false }
-                            ) {
-                                StorageCategory.entries.forEach { category ->
-                                    DropdownMenuItem(
-                                        text = { Text(category.name) },
-                                        onClick = {
-                                            isCategoryMenuExpanded = false
-                                            onCategoryChanged(item.id, category)
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    if (onVisibilityChanged != null && item.status != UploadQueueItemStatus.UPLOADING) {
-                        var isVisibilityMenuExpanded by remember { mutableStateOf(false) }
-                        Box {
-                            Surface(
-                                color = MaterialTheme.colorScheme.secondaryContainer,
-                                shape = MaterialTheme.shapes.extraSmall,
-                                modifier = Modifier.clickable(!isUploading) { isVisibilityMenuExpanded = true }
-                            ) {
-                                Text(
-                                    text = item.visibility.name,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                    modifier = Modifier.padding(
-                                        horizontal = CoreTheme.dimens.paddingSmall,
-                                        vertical = CoreTheme.dimens.paddingExtraSmall
-                                    )
-                                )
-                            }
-                            DropdownMenu(
-                                expanded = isVisibilityMenuExpanded,
-                                onDismissRequest = { isVisibilityMenuExpanded = false }
-                            ) {
-                                StorageFileVisibility.entries.forEach { visibility ->
-                                    DropdownMenuItem(
-                                        text = { Text(visibility.name) },
-                                        onClick = {
-                                            isVisibilityMenuExpanded = false
-                                            onVisibilityChanged(item.id, visibility)
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    if (item.status == UploadQueueItemStatus.COMPLETED) {
-                        Icon(
-                            painter = painterResource(StorageRes.drawable.ic_file_status_ready),
-                            contentDescription = null,
-                            tint = Color(0xFF4CAF50),
-                            modifier = Modifier.size(CoreTheme.dimens.iconSizeMedium)
-                        )
-                    }
-
-                    if (item.status != UploadQueueItemStatus.UPLOADING && item.status != UploadQueueItemStatus.COMPLETED) {
-                        IconButton(
-                            onClick = { onRemove(item.id) },
-                            enabled = !isUploading,
-                            modifier = Modifier.testTag(StorageFileUploadAreaTestTags.REMOVE_ITEM_BUTTON)
-                        ) {
-                            Icon(
-                                painter = painterResource(CommonRes.drawable.ic_delete),
-                                contentDescription = storageUi.deleteFile,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
+                )
+                QueueItemActionsSection(
+                    item = item,
+                    isUploading = isUploading,
+                    onRemove = onRemove,
+                    onCategoryChanged = onCategoryChanged,
+                    onVisibilityChanged = onVisibilityChanged
+                )
             }
 
             if (item.status == UploadQueueItemStatus.UPLOADING) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingExtraSmall)
-                ) {
-                    LinearProgressIndicator(
-                        progress = { item.progressPercent / 100f },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Text(
-                        text = storageUi.fileUploadingProgress(item.progressPercent),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.align(Alignment.End)
-                    )
-                }
+                QueueItemProgressSection(progressPercent = item.progressPercent)
             }
 
             if (item.status == UploadQueueItemStatus.FAILED && item.error != null) {
@@ -260,6 +115,218 @@ fun FileUploadQueueItemRow(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun QueueItemInfoSection(
+    item: UploadQueueItem,
+    localUri: String?,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall),
+        modifier = modifier
+    ) {
+        if (!localUri.isNullOrBlank() && item.category == StorageCategory.IMAGE) {
+            StorageFileImagePreview(
+                imageUrl = localUri,
+                category = item.category,
+                modifier = Modifier.size(CoreTheme.dimens.previewThumbnailSize),
+                containerHeight = CoreTheme.dimens.previewThumbnailSize
+            )
+        } else {
+            StorageFilePreview(
+                category = item.category,
+                containerSize = CoreTheme.dimens.previewThumbnailSize,
+                iconSize = CoreTheme.dimens.iconSizeMedium
+            )
+        }
+
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = item.fileName,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            val formattedSize = remember(item.fileSizeBytes) {
+                ByteSizeFormatter.format(
+                    bytesRaw = item.fileSizeBytes,
+                    resolver = KmpLocalization.resolver,
+                    locale = KmpLocalization.currentLocale
+                ) ?: "${item.fileSizeBytes} B"
+            }
+            Text(
+                text = formattedSize,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun QueueItemCategoryDropdown(
+    item: UploadQueueItem,
+    isUploading: Boolean,
+    onCategoryChanged: (UploadQueueItemId, StorageCategory) -> Unit
+) {
+    var isCategoryMenuExpanded by remember { mutableStateOf(false) }
+    Box {
+        Surface(
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+            shape = MaterialTheme.shapes.extraSmall,
+            modifier = Modifier.clickable(!isUploading) { isCategoryMenuExpanded = true }
+        ) {
+            Text(
+                text = item.category.value,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(
+                    horizontal = CoreTheme.dimens.paddingSmall,
+                    vertical = CoreTheme.dimens.paddingExtraSmall
+                )
+            )
+        }
+        DropdownMenu(
+            expanded = isCategoryMenuExpanded,
+            onDismissRequest = { isCategoryMenuExpanded = false }
+        ) {
+            StorageCategory.entries.forEach { category ->
+                DropdownMenuItem(
+                    text = { Text(category.value) },
+                    onClick = {
+                        isCategoryMenuExpanded = false
+                        onCategoryChanged(item.id, category)
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun QueueItemVisibilityDropdown(
+    item: UploadQueueItem,
+    isUploading: Boolean,
+    onVisibilityChanged: (UploadQueueItemId, StorageFileVisibility) -> Unit
+) {
+    var isVisibilityMenuExpanded by remember { mutableStateOf(false) }
+    Box {
+        Surface(
+            color = MaterialTheme.colorScheme.secondaryContainer,
+            shape = MaterialTheme.shapes.extraSmall,
+            modifier = Modifier.clickable(!isUploading) { isVisibilityMenuExpanded = true }
+        ) {
+            Text(
+                text = item.visibility.value,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = Modifier.padding(
+                    horizontal = CoreTheme.dimens.paddingSmall,
+                    vertical = CoreTheme.dimens.paddingExtraSmall
+                )
+            )
+        }
+        DropdownMenu(
+            expanded = isVisibilityMenuExpanded,
+            onDismissRequest = { isVisibilityMenuExpanded = false }
+        ) {
+            StorageFileVisibility.entries.forEach { visibility ->
+                DropdownMenuItem(
+                    text = { Text(visibility.value) },
+                    onClick = {
+                        isVisibilityMenuExpanded = false
+                        onVisibilityChanged(item.id, visibility)
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun QueueItemActionsSection(
+    item: UploadQueueItem,
+    isUploading: Boolean,
+    onRemove: (UploadQueueItemId) -> Unit,
+    onCategoryChanged: ((UploadQueueItemId, StorageCategory) -> Unit)?,
+    onVisibilityChanged: ((UploadQueueItemId, StorageFileVisibility) -> Unit)?
+) {
+    val storageUi = LocalStorageStrings.current.ui
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingExtraSmall)
+    ) {
+        if (onCategoryChanged != null && item.status != UploadQueueItemStatus.UPLOADING) {
+            QueueItemCategoryDropdown(
+                item = item,
+                isUploading = isUploading,
+                onCategoryChanged = onCategoryChanged
+            )
+        }
+
+        if (onVisibilityChanged != null && item.status != UploadQueueItemStatus.UPLOADING) {
+            QueueItemVisibilityDropdown(
+                item = item,
+                isUploading = isUploading,
+                onVisibilityChanged = onVisibilityChanged
+            )
+        }
+
+        if (item.status == UploadQueueItemStatus.COMPLETED) {
+            Icon(
+                painter = painterResource(StorageRes.drawable.ic_file_status_ready),
+                contentDescription = null,
+                tint = Color(0xFF4CAF50),
+                modifier = Modifier.size(CoreTheme.dimens.iconSizeMedium)
+            )
+        }
+
+        if (item.status != UploadQueueItemStatus.UPLOADING &&
+            item.status != UploadQueueItemStatus.COMPLETED
+        ) {
+            IconButton(
+                onClick = { onRemove(item.id) },
+                enabled = !isUploading,
+                modifier = Modifier.testTag(StorageFileUploadAreaTestTags.REMOVE_ITEM_BUTTON)
+            ) {
+                Icon(
+                    painter = painterResource(CommonRes.drawable.ic_delete),
+                    contentDescription = storageUi.deleteFile,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun QueueItemProgressSection(
+    progressPercent: Int
+) {
+    val storageUi = LocalStorageStrings.current.ui
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingExtraSmall)
+    ) {
+        LinearProgressIndicator(
+            progress = { progressPercent / 100f },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Text(
+            text = storageUi.fileUploadingProgress(progressPercent),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.align(Alignment.End)
+        )
     }
 }
 
@@ -349,21 +416,21 @@ private fun FileUploadQueueItemRowStatesPreview(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun FileUploadQueueItemRowComponentSizePreview() {
     FileUploadQueueItemRowPreviewContent(state = defaultFileUploadQueueItemRowPreviewState)
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun FileUploadQueueItemRowThemePreview() {
     FileUploadQueueItemRowPreviewContent(state = defaultFileUploadQueueItemRowPreviewState)
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FileUploadQueueItemRowFontScalePreview() {
     FileUploadQueueItemRowPreviewContent(state = defaultFileUploadQueueItemRowPreviewState)

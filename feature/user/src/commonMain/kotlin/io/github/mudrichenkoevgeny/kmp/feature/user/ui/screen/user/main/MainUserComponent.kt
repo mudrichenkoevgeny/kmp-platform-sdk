@@ -5,46 +5,46 @@ import com.arkivanov.decompose.value.Value
 /**
  * Interface for the main user screen component displaying summary and actions.
  */
-interface MainUserComponent {
+public interface MainUserComponent {
     /** Reactive state for the screen. */
-    val state: Value<MainUserScreenState>
+    public val state: Value<MainUserScreenState>
 
     /** Retries data fetch on failure. */
-    fun onRetry()
+    public fun onRetry()
 
     /** Action to open TOTP security settings. */
-    fun onTotpMainClick()
+    public fun onTotpMainClick()
 
     /** Action to edit user details. */
-    fun onEditUserClick()
+    public fun onEditUserClick()
 
     /** Action to open sessions management. */
-    fun onSessionsClick()
+    public fun onSessionsClick()
 
     /** Action to open credentials/identifiers management. */
-    fun onIdentifiersClick()
+    public fun onIdentifiersClick()
 
     /** Action to open personal storage files list. */
-    fun onFilesListClick()
+    public fun onFilesListClick()
 
     /** Action to schedule user deletion. */
-    fun onDeleteUserClick()
+    public fun onDeleteUserClick()
 
     /** Confirms scheduled user deletion. */
-    fun onConfirmDeleteUserClick()
+    public fun onConfirmDeleteUserClick()
 
     /** Dismisses scheduled deletion confirmation dialog. */
-    fun onDismissDeleteUserDialog()
+    public fun onDismissDeleteUserDialog()
 
     /** Triggers user logout confirmation dialog. */
-    fun onLogoutClick()
+    public fun onLogoutClick()
 
     /** Confirms user logout. */
-    fun onConfirmLogoutClick()
+    public fun onConfirmLogoutClick()
 
     /** Dismisses logout confirmation dialog. */
-    fun onDismissLogoutDialog()
+    public fun onDismissLogoutDialog()
 
     /** Action to show login flow when unauthorized. */
-    fun onLoginClick()
+    public fun onLoginClick()
 }

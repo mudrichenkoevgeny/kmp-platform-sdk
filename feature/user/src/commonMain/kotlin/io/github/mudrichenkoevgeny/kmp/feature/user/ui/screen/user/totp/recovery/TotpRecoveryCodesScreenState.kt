@@ -4,10 +4,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totprecoverycodes.TotpRecoveryCodes
 
 /** UI state for viewing and regenerating TOTP recovery codes. */
-sealed interface TotpRecoveryCodesScreenState {
+public sealed interface TotpRecoveryCodesScreenState {
 
     /** Loading recovery codes from network. */
-    data object Loading : TotpRecoveryCodesScreenState
+    public data object Loading : TotpRecoveryCodesScreenState
 
     /**
      * Active recovery codes state.
@@ -17,7 +17,7 @@ sealed interface TotpRecoveryCodesScreenState {
      * @param actionLoading true when regenerating codes.
      * @param actionError error from the last regenerate attempt.
      */
-    data class Content(
+    public data class Content(
         val recoveryCodes: TotpRecoveryCodes,
         val showRegenerateConfirmation: Boolean = false,
         val actionLoading: Boolean = false,
@@ -25,5 +25,5 @@ sealed interface TotpRecoveryCodesScreenState {
     ) : TotpRecoveryCodesScreenState
 
     /** Error during initial loading of recovery codes. */
-    data class Error(val error: AppError) : TotpRecoveryCodesScreenState
+    public data class Error(val error: AppError) : TotpRecoveryCodesScreenState
 }

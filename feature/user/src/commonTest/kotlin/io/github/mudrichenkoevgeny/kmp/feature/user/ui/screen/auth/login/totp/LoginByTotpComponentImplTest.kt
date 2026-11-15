@@ -11,8 +11,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.login.LoginByTotpRecoveryCodeUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.login.LoginByTotpUseCaseMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.auth.data.createTestAuthDataPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.login.totp.LoginByTotpMode
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.auth.data.createTestAuthDataPayload
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -175,11 +175,12 @@ class LoginByTotpComponentImplTest {
                 AppResult.Success(createTestAuthDataPayload().toAuthData())
             }
         },
-        loginByTotpRecoveryCodeUseCase: LoginByTotpRecoveryCodeUseCaseMock = LoginByTotpRecoveryCodeUseCaseMock().apply {
-            resultProvider = { _, _ ->
-                AppResult.Success(createTestAuthDataPayload().toAuthData())
+        loginByTotpRecoveryCodeUseCase: LoginByTotpRecoveryCodeUseCaseMock =
+            LoginByTotpRecoveryCodeUseCaseMock().apply {
+                resultProvider = { _, _ ->
+                    AppResult.Success(createTestAuthDataPayload().toAuthData())
+                }
             }
-        }
     ): LoginByTotpComponentTestContext {
         val lifecycle = LifecycleRegistry()
         lifecycle.resume()

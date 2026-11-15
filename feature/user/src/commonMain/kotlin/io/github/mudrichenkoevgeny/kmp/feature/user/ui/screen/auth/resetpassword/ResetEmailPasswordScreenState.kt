@@ -16,7 +16,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
  * @param actionLoading while API requests are running.
  * @param actionError error from API requests or validation.
  */
-data class ResetEmailPasswordScreenState(
+public data class ResetEmailPasswordScreenState(
     val email: String = "",
     val isEmailValid: Boolean = false,
     val code: String = "",
@@ -27,7 +27,7 @@ data class ResetEmailPasswordScreenState(
     val actionLoading: Boolean = false,
     val actionError: AppError? = null
 ) {
-    val isCodeFullLength: Boolean = code.length == codeLength
-    val canConfirm: Boolean = isCodeFullLength && isPasswordValid && !actionLoading
-    val canResendCode: Boolean = resendTimerSeconds <= 0 && !actionLoading
+    public val isCodeFullLength: Boolean = code.length == codeLength
+    public val canConfirm: Boolean = isCodeFullLength && isPasswordValid && !actionLoading
+    public val canResendCode: Boolean = resendTimerSeconds <= 0 && !actionLoading
 }

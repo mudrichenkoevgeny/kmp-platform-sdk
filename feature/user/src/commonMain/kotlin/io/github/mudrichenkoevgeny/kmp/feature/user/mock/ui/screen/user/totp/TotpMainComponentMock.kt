@@ -12,39 +12,47 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.Tot
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpMainScreenState
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpStepConfig
 
+/**
+ * Mock implementation of [TotpMainComponent] for Compose previews and testing.
+ */
 @InternalApi
-class TotpMainComponentMock(
+public class TotpMainComponentMock(
     initialState: TotpMainScreenState = TotpMainScreenState()
 ) : TotpMainComponent {
 
-    override val stackNavigation = StackNavigation<TotpStepConfig>()
-    override val dialogSlotNavigation = SlotNavigation<TotpDialogConfig>()
+    public override val stackNavigation: StackNavigation<TotpStepConfig> = StackNavigation<TotpStepConfig>()
+    public override val dialogSlotNavigation: SlotNavigation<TotpDialogConfig> = SlotNavigation<TotpDialogConfig>()
 
     private val defaultStepConfig: TotpStepConfig = TotpStepConfig.Status
 
-    private val _stack = MutableValue(
+    private val _stack: MutableValue<ChildStack<TotpStepConfig, TotpMainComponent.Child>> = MutableValue(
         ChildStack(
             configuration = defaultStepConfig,
             instance = createChild(defaultStepConfig)
         )
     )
-    override val stack: Value<ChildStack<TotpStepConfig, TotpMainComponent.Child>> = _stack
+    public override val stack: Value<ChildStack<TotpStepConfig, TotpMainComponent.Child>> = _stack
 
-    override val dialogSlot: Value<ChildSlot<TotpDialogConfig, TotpMainComponent.DialogChild>> = MutableValue(
+    public override val dialogSlot: Value<ChildSlot<TotpDialogConfig, TotpMainComponent.DialogChild>> = MutableValue(
         ChildSlot()
     )
 
-    private val _state = MutableValue(initialState)
-    override val state: Value<TotpMainScreenState> = _state
+    private val _state: MutableValue<TotpMainScreenState> = MutableValue(initialState)
+    public override val state: Value<TotpMainScreenState> = _state
 
-    var setupCalls: Int = 0
-    var codeChangedCalls: MutableList<String> = mutableListOf()
-    var confirmSetupCalls: Int = 0
-    var recoveryCodesCalls: Int = 0
-    var disableCalls: Int = 0
-    var backCalls: Int = 0
+    public var setupCalls: Int = 0
+    public var codeChangedCalls: MutableList<String> = mutableListOf()
+    public var confirmSetupCalls: Int = 0
+    public var recoveryCodesCalls: Int = 0
+    public var disableCalls: Int = 0
+    public var backCalls: Int = 0
 
-    fun setStep(config: TotpStepConfig) {
+    /**
+     * Updates the current active step configuration in the stack.
+     *
+     * @param config The step configuration.
+     */
+    public fun setStep(config: TotpStepConfig) {
         _stack.value = ChildStack(
             configuration = config,
             instance = createChild(config)
@@ -56,35 +64,40 @@ class TotpMainComponentMock(
         is TotpStepConfig.Setup -> TotpMainComponent.Child.Setup(config.mfaToken, config.otpAuthUrl, config.secretKey)
     }
 
-    fun updateState(state: TotpMainScreenState) {
+    /**
+     * Updates the component state value.
+     *
+     * @param state The new state value.
+     */
+    public fun updateState(state: TotpMainScreenState) {
         _state.value = state
     }
 
-    override fun onSetupClick() {
+    public override fun onSetupClick() {
         setupCalls++
     }
 
-    override fun onCodeChanged(code: String) {
+    public override fun onCodeChanged(code: String) {
         codeChangedCalls.add(code)
     }
 
-    override fun onConfirmSetupClick() {
+    public override fun onConfirmSetupClick() {
         confirmSetupCalls++
     }
 
-    override fun onRecoveryCodesClick() {
+    public override fun onRecoveryCodesClick() {
         recoveryCodesCalls++
     }
 
-    override fun onDisableClick() {
+    public override fun onDisableClick() {
         disableCalls++
     }
 
-    override fun onConfirmDisable() {}
+    public override fun onConfirmDisable(): Unit = Unit
 
-    override fun onDismissDialogs() {}
+    public override fun onDismissDialogs(): Unit = Unit
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         backCalls++
     }
 }

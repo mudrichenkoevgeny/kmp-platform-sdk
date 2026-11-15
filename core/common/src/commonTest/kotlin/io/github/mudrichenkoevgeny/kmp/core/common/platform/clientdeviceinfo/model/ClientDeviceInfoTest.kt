@@ -53,4 +53,3 @@ class ClientDeviceInfoTest {
         assertFalse(clientDeviceInfo.isMobileClient())
     }
 }
-

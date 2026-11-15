@@ -11,16 +11,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  *
  * @param identifierRepository Identifiers repository.
  */
-open class GetUserIdentifiersUseCase(
+public open class GetUserIdentifiersUseCase(
     private val identifierRepository: IdentifierRepository
 ) {
     /**
      * @param params Query and filter parameters DTO.
      * @return Paginated result containing [UserIdentifierSummary] items on success, or a mapped failure.
      */
-    open suspend operator fun invoke(
+    public open suspend operator fun invoke(
         params: SelfIdentifierListParams? = null
-    ): AppResult<PagedResult<UserIdentifierSummary>> {
-        return identifierRepository.getUserIdentifiers(params)
-    }
+    ): AppResult<PagedResult<UserIdentifierSummary>> = identifierRepository.getUserIdentifiers(params)
 }

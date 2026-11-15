@@ -15,16 +15,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
+/**
+ * Mock implementation of [StorageRepository] for testing.
+ */
 @InternalApi
-class StorageRepositoryMock : StorageRepository {
-    var uploadFileResult: AppResult<StorageFilePrivate> = AppResult.Error(CommonError.Unknown())
-    var getFilesResult: AppResult<PagedResult<StorageFileSummary>> = AppResult.Error(CommonError.Unknown())
-    var getFileDetailResult: AppResult<StorageFilePrivate> = AppResult.Error(CommonError.Unknown())
-    var deleteFileResult: AppResult<Unit> = AppResult.Success(Unit)
-    var deleteFilesBatchResult: AppResult<Unit> = AppResult.Success(Unit)
-    private val _fileUpdates = MutableSharedFlow<StorageFilePrivate>()
+public class StorageRepositoryMock : StorageRepository {
+    public var uploadFileResult: AppResult<StorageFilePrivate> = AppResult.Error(CommonError.Unknown())
+    public var getFilesResult: AppResult<PagedResult<StorageFileSummary>> = AppResult.Error(CommonError.Unknown())
+    public var getFileDetailResult: AppResult<StorageFilePrivate> = AppResult.Error(CommonError.Unknown())
+    public var deleteFileResult: AppResult<Unit> = AppResult.Success(Unit)
+    public var deleteFilesBatchResult: AppResult<Unit> = AppResult.Success(Unit)
+    private val fileUpdatesFlow = MutableSharedFlow<StorageFilePrivate>()
 
-    override suspend fun uploadFile(
+    public override suspend fun uploadFile(
         request: PresignedUrlRequest,
         openReadChannel: suspend () -> ByteReadChannel,
         onProgress: ((percent: Int) -> Unit)?
@@ -33,9 +36,14 @@ class StorageRepositoryMock : StorageRepository {
         return uploadFileResult
     }
 
-    override suspend fun getFiles(params: SelfStorageFileListParams?): AppResult<PagedResult<StorageFileSummary>> = getFilesResult
-    override suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate> = getFileDetailResult
-    override suspend fun deleteFile(fileId: String): AppResult<Unit> = deleteFileResult
-    override suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit> = deleteFilesBatchResult
-    override fun observeFileUpdates(): Flow<StorageFilePrivate> = _fileUpdates.asSharedFlow()
+    public override suspend fun getFiles(
+        params: SelfStorageFileListParams?
+    ): AppResult<PagedResult<StorageFileSummary>> = getFilesResult
+
+    public override suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate> = getFileDetailResult
+    public override suspend fun deleteFile(fileId: String): AppResult<Unit> = deleteFileResult
+    public override suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit> =
+        deleteFilesBatchResult
+
+    public override fun observeFileUpdates(): Flow<StorageFilePrivate> = fileUpdatesFlow.asSharedFlow()
 }

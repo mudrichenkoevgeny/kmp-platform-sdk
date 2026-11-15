@@ -9,13 +9,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.model.
  *
  * @param openGlobalSettingsRepository Source of truth for cached or network-backed settings.
  */
-class GetOpenGlobalSettingsUseCase(
+public class GetOpenGlobalSettingsUseCase(
     private val openGlobalSettingsRepository: OpenGlobalSettingsRepository
 ) {
     /**
      * @return [AppResult.Success] with [OpenGlobalSettings], or [AppResult.Error] when none can be loaded.
      */
-    suspend operator fun invoke(): AppResult<OpenGlobalSettings> {
-        return openGlobalSettingsRepository.getOpenGlobalSettings()
-    }
+    public suspend operator fun invoke(): AppResult<OpenGlobalSettings> =
+        openGlobalSettingsRepository.getOpenGlobalSettings()
 }

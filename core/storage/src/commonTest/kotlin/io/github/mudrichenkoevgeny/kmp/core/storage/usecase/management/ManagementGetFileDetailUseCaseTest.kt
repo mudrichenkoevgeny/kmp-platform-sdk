@@ -16,7 +16,8 @@ class ManagementGetFileDetailUseCaseTest {
     @Test
     fun invoke_delegatesToRepository() = runTest {
         val expectedFile = createTestStorageFilePrivate()
-        val repository = ManagementStorageRepositoryMock().apply { getFileDetailResult = AppResult.Success(expectedFile) }
+        val repository =
+            ManagementStorageRepositoryMock().apply { getFileDetailResult = AppResult.Success(expectedFile) }
         val useCase = ManagementGetFileDetailUseCase(repository)
 
         val result = useCase("file_123")

@@ -9,16 +9,22 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorag
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByEmailUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
 
+/**
+ * Mock implementation of [LoginByEmailUseCase] for testing.
+ */
 @InternalApi
-class LoginByEmailUseCaseMock : LoginByEmailUseCase(
+public class LoginByEmailUseCaseMock : LoginByEmailUseCase(
     loginRepository = LoginRepositoryMock(),
     authStorage = AuthStorageMock(),
     userStorage = UserStorageMock()
 ) {
-    var resultProvider: (String, String) -> AppResult<AuthData> = { _, _ ->
+    public var resultProvider: (String, String) -> AppResult<AuthData> = { _, _ ->
         AppResult.Error(CommonError.Unknown())
     }
 
-    override suspend fun execute(email: String, password: String): AppResult<AuthData> =
+    public override suspend fun execute(
+        email: String,
+        password: String
+    ): AppResult<AuthData> =
         resultProvider(email, password)
 }

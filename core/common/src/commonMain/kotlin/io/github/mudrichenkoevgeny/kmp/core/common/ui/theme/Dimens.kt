@@ -6,11 +6,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.tokens.GeneratedDesignTokens
 
+internal val LocalCoreDimens = staticCompositionLocalOf { CoreDimens() }
+
 /**
  * Centralized dimension data class used by shared UI components.
  */
 @Immutable
-data class CoreDimens(
+public data class CoreDimens(
     val paddingExtraSmall: Dp = GeneratedDesignTokens.Spacing.extraSmall,
     val paddingSmall: Dp = GeneratedDesignTokens.Spacing.small,
     val paddingMedium: Dp = GeneratedDesignTokens.Spacing.medium,
@@ -44,5 +46,3 @@ data class CoreDimens(
     val maxButtonWidth: Dp = GeneratedDesignTokens.Sizing.maxButtonWidth,
     val navigationRailWidth: Dp = GeneratedDesignTokens.Sizing.navigationRailWidth
 )
-
-internal val LocalCoreDimens = staticCompositionLocalOf { CoreDimens() }

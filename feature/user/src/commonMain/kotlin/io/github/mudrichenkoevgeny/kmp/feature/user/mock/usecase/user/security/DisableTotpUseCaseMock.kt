@@ -6,17 +6,20 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.security.UserSecurityRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.DisableTotpUseCase
 
+/**
+ * Mock implementation of [DisableTotpUseCase] for testing.
+ */
 @InternalApi
-class DisableTotpUseCaseMock : DisableTotpUseCase(
+public class DisableTotpUseCaseMock : DisableTotpUseCase(
     userSecurityRepository = UserSecurityRepositoryMock()
 ) {
-    var executeCalls: Int = 0
+    public var executeCalls: Int = 0
 
-    var resultProvider: () -> AppResult<Unit> = {
+    public var resultProvider: () -> AppResult<Unit> = {
         AppResult.Error(CommonError.Unknown())
     }
 
-    override suspend fun invoke(): AppResult<Unit> {
+    public override suspend fun invoke(): AppResult<Unit> {
         executeCalls++
         return resultProvider()
     }

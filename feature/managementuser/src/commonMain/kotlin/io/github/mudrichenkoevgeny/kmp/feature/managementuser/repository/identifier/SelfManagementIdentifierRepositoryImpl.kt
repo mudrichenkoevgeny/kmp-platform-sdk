@@ -20,22 +20,23 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
  * Implements [IdentifierRepository] using [SelfManagementIdentifiersApi] for the management context.
  * Only identifier retrieval and password modification are supported.
  */
-class SelfManagementIdentifierRepositoryImpl(
+public class SelfManagementIdentifierRepositoryImpl(
     private val selfManagementIdentifiersApi: SelfManagementIdentifiersApi
 ) : IdentifierRepository {
 
-    override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> {
-        return selfManagementIdentifiersApi.getUserIdentifier(userIdentifierId)
+    override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> =
+        selfManagementIdentifiersApi.getUserIdentifier(
+            userIdentifierId
+        )
             .mapSuccess { it.toUserIdentifierPrivate() }
-    }
 
     override suspend fun getUserIdentifiers(
         params: SelfIdentifierListParams?
-    ): AppResult<PagedResult<UserIdentifierSummary>> {
-        return selfManagementIdentifiersApi.getUserIdentifiers(params).mapSuccess { pagedPayload ->
-            pagedPayload.mapItems { userIdentifierPayload ->
-                userIdentifierPayload.toUserIdentifierSummary()
-            }
+    ): AppResult<PagedResult<UserIdentifierSummary>> = selfManagementIdentifiersApi.getUserIdentifiers(
+        params
+    ).mapSuccess { pagedPayload ->
+        pagedPayload.mapItems { userIdentifierPayload ->
+            userIdentifierPayload.toUserIdentifierSummary()
         }
     }
 
@@ -43,46 +44,34 @@ class SelfManagementIdentifierRepositoryImpl(
         userIdentifierId: UserIdentifierId,
         oldPassword: String,
         newPassword: String
-    ): AppResult<Unit> {
-        return selfManagementIdentifiersApi.emailChangePassword(
-            userIdentifierId = userIdentifierId,
-            request = EmailPasswordChangeRequest(oldPassword, newPassword)
-        )
-    }
+    ): AppResult<Unit> = selfManagementIdentifiersApi.emailChangePassword(
+        userIdentifierId = userIdentifierId,
+        request = EmailPasswordChangeRequest(oldPassword, newPassword)
+    )
 
-    override suspend fun deleteUserIdentifier(identifierId: UserIdentifierId): AppResult<Unit> {
-        return methodNotSupported()
-    }
+    override suspend fun deleteUserIdentifier(identifierId: UserIdentifierId): AppResult<Unit> = methodNotSupported()
 
     override suspend fun addUserIdentifierEmail(
         email: String,
         password: String,
         confirmationCode: String
-    ): AppResult<UserIdentifierPrivate> {
-        return methodNotSupported()
-    }
+    ): AppResult<UserIdentifierPrivate> = methodNotSupported()
 
     override suspend fun addUserIdentifierPhone(
         phoneNumber: String,
         confirmationCode: String
-    ): AppResult<UserIdentifierPrivate> {
-        return methodNotSupported()
-    }
+    ): AppResult<UserIdentifierPrivate> = methodNotSupported()
 
     override suspend fun addUserIdentifierExternalAuthProvider(
         authProvider: String,
         externalProviderToken: String
-    ): AppResult<UserIdentifierPrivate> {
-        return methodNotSupported()
-    }
+    ): AppResult<UserIdentifierPrivate> = methodNotSupported()
 
-    override suspend fun sendAddEmailIdentifierConfirmation(email: String): AppResult<OtpConfirmation> {
-        return methodNotSupported()
-    }
+    override suspend fun sendAddEmailIdentifierConfirmation(email: String): AppResult<OtpConfirmation> =
+        methodNotSupported()
 
-    override suspend fun sendAddPhoneIdentifierConfirmation(phoneNumber: String): AppResult<OtpConfirmation> {
-        return methodNotSupported()
-    }
+    override suspend fun sendAddPhoneIdentifierConfirmation(phoneNumber: String): AppResult<OtpConfirmation> =
+        methodNotSupported()
 
     override fun getRemainingEmailConfirmationDelayInSeconds(email: String): Int = 0
 

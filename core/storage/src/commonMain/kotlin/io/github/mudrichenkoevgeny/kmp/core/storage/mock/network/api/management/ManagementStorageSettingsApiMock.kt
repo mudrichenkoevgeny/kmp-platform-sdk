@@ -8,16 +8,31 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.model.
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.storage.network.model.storagesettings.createTestManagementStorageSettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.storage.network.model.storagesettings.createTestOpenStorageSettingsPayload
 
+/**
+ * Mock implementation of [ManagementStorageSettingsApi] for testing.
+ */
 @InternalApi
-class ManagementStorageSettingsApiMock(
-    var getResult: AppResult<ManagementStorageSettingsPayload> = AppResult.Success(createTestManagementStorageSettingsPayload()),
-    var getOpenResult: AppResult<OpenStorageSettingsPayload> = AppResult.Success(createTestOpenStorageSettingsPayload()),
-    var updateResult: AppResult<ManagementStorageSettingsPayload> = AppResult.Success(createTestManagementStorageSettingsPayload()),
-    var resetResult: AppResult<ManagementStorageSettingsPayload> = AppResult.Success(createTestManagementStorageSettingsPayload())
+public class ManagementStorageSettingsApiMock(
+    public var getResult: AppResult<ManagementStorageSettingsPayload> = AppResult.Success(
+        createTestManagementStorageSettingsPayload()
+    ),
+    public var getOpenResult: AppResult<OpenStorageSettingsPayload> = AppResult.Success(
+        createTestOpenStorageSettingsPayload()
+    ),
+    public var updateResult: AppResult<ManagementStorageSettingsPayload> = AppResult.Success(
+        createTestManagementStorageSettingsPayload()
+    ),
+    public var resetResult: AppResult<ManagementStorageSettingsPayload> = AppResult.Success(
+        createTestManagementStorageSettingsPayload()
+    )
 ) : ManagementStorageSettingsApi {
 
-    override suspend fun getManagementStorageSettings(): AppResult<ManagementStorageSettingsPayload> = getResult
-    override suspend fun getOpenStorageSettings(): AppResult<OpenStorageSettingsPayload> = getOpenResult
-    override suspend fun updateManagementStorageSettings(request: ManagementStorageSettingsPayload): AppResult<ManagementStorageSettingsPayload> = updateResult
-    override suspend fun resetManagementStorageSettings(): AppResult<ManagementStorageSettingsPayload> = resetResult
+    public override suspend fun getManagementStorageSettings(): AppResult<ManagementStorageSettingsPayload> = getResult
+    public override suspend fun getOpenStorageSettings(): AppResult<OpenStorageSettingsPayload> = getOpenResult
+    public override suspend fun updateManagementStorageSettings(
+        request: ManagementStorageSettingsPayload
+    ): AppResult<ManagementStorageSettingsPayload> = updateResult
+
+    public override suspend fun resetManagementStorageSettings(): AppResult<ManagementStorageSettingsPayload> =
+        resetResult
 }

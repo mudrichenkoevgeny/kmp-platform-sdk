@@ -13,7 +13,12 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
-class KtorOpenUserUserSecurityApi(
+/**
+ * Ktor-based implementation of [UserSecurityApi] for managing user TOTP and security settings.
+ *
+ * @param client Host-configured Ktor [HttpClient].
+ */
+public class KtorOpenUserUserSecurityApi(
     private val client: HttpClient
 ) : UserSecurityApi {
 

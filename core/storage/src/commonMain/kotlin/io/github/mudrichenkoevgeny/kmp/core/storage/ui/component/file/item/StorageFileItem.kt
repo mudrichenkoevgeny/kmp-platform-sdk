@@ -30,15 +30,14 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.preview.StorageFileImagePreview
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.utils.StorageIconsMapper
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.formatting.ByteSizeFormatter
-import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.category.StorageCategory
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.FileUrlPresets
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.StorageFileSummary
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.status.StorageFileStatus
@@ -55,7 +54,7 @@ import org.jetbrains.compose.resources.painterResource
  * @param onFileClick Optional callback invoked when the item card is tapped.
  */
 @Composable
-fun StorageFileItem(
+public fun StorageFileItem(
     file: StorageFileSummary,
     status: StorageFileStatus? = null,
     enabled: Boolean = true,
@@ -131,7 +130,7 @@ fun StorageFileItem(
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
-                                text = status.name,
+                                text = status.value,
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -144,7 +143,7 @@ fun StorageFileItem(
                     shape = MaterialTheme.shapes.extraSmall
                 ) {
                     Text(
-                        text = file.category.name,
+                        text = file.category.value,
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSecondaryContainer,
                         modifier = Modifier.padding(
@@ -266,26 +265,26 @@ private fun StorageFileItemStatesPreview(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun StorageFileItemComponentSizePreview() {
     StorageFileItemPreviewContent(state = defaultStorageFileItemPreviewState)
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun StorageFileItemThemePreview() {
     StorageFileItemPreviewContent(state = defaultStorageFileItemPreviewState)
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun StorageFileItemFontScalePreview() {
     StorageFileItemPreviewContent(state = defaultStorageFileItemPreviewState)
 }
 
-object StorageFileItemTestTags {
-    const val ITEM_PREFIX = "StorageFileItem_"
+public object StorageFileItemTestTags {
+    public const val ITEM_PREFIX: String = "StorageFileItem_"
 }

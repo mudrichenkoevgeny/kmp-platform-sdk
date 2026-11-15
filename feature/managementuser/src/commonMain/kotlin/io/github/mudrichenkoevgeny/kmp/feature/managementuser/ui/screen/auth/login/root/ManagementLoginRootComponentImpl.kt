@@ -13,12 +13,12 @@ import com.arkivanov.essenty.backhandler.BackDispatcher
 import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
 import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.di.ManagementUserComponent
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordComponentImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.root.UnlockRootComponentImpl
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.apptype.AppType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.management.ManagementAuthNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.login.totp.LoginByTotpParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.methodselection.UnlockMethodSelectionParams
@@ -33,7 +33,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  * @param managementUserComponent Management user feature component providing administrative auth use cases.
  * @param onFinished Invoked when staff authentication succeeds or completes.
  */
-class ManagementLoginRootComponentImpl(
+public class ManagementLoginRootComponentImpl public constructor(
     componentContext: ComponentContext,
     private val settingsComponent: SettingsComponent,
     private val securityComponent: SecurityComponent,
@@ -71,7 +71,8 @@ class ManagementLoginRootComponentImpl(
             navigation.pop()
         } else if (parentDestination != null && parentDestination != stack.value.active.configuration) {
             navigation.navigate { currentStack ->
-                val index = currentStack.indexOfLast { it == parentDestination || it::class == parentDestination::class }
+                val index =
+                    currentStack.indexOfLast { it == parentDestination || it::class == parentDestination::class }
                 if (index >= 0) {
                     currentStack.take(index + 1)
                 } else {
@@ -98,18 +99,24 @@ class ManagementLoginRootComponentImpl(
                 loginByGoogleUseCase = null,
                 onNavigateToLoginByEmail = { navigation.bringToFront(ManagementAuthNavigation.LoginByEmail()) },
                 onNavigateToLoginByPhone = { },
-                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ManagementAuthNavigation.LoginByTotp(LoginByTotpParams(mfaToken))) },
+                onNavigateToTotp = { mfaToken ->
+                    navigation.bringToFront(ManagementAuthNavigation.LoginByTotp(LoginByTotpParams(mfaToken)))
+                },
                 onNavigateToPendingDeletion = { },
                 onNavigateToAccountUnlock = { lockoutType, lockoutUntil ->
                     navigation.bringToFront(
                         ManagementAuthNavigation.UnlockMethodSelection(
-                            UnlockMethodSelectionParams(accountLockoutType = lockoutType, temporaryLockoutUntil = lockoutUntil)
+                            UnlockMethodSelectionParams(
+                                accountLockoutType = lockoutType,
+                                temporaryLockoutUntil = lockoutUntil
+                            )
                         )
                     )
                 },
                 onFinished = onFinished
             )
         )
+
         is ManagementAuthNavigation.LoginByEmail -> ManagementLoginRootComponent.Child.LoginByEmail(
             LoginByEmailComponentImpl(
                 componentContext = context,
@@ -118,12 +125,17 @@ class ManagementLoginRootComponentImpl(
                 loginByEmailUseCase = managementUserComponent.loginByEmailUseCase,
                 onNavigateToRegistrationByEmail = { },
                 onNavigateToForgotPassword = { navigation.bringToFront(ManagementAuthNavigation.ResetPassword()) },
-                onNavigateToTotp = { mfaToken -> navigation.bringToFront(ManagementAuthNavigation.LoginByTotp(LoginByTotpParams(mfaToken))) },
+                onNavigateToTotp = { mfaToken ->
+                    navigation.bringToFront(ManagementAuthNavigation.LoginByTotp(LoginByTotpParams(mfaToken)))
+                },
                 onNavigateToPendingDeletion = { },
                 onNavigateToAccountUnlock = { lockoutType, lockoutUntil ->
                     navigation.bringToFront(
                         ManagementAuthNavigation.UnlockMethodSelection(
-                            UnlockMethodSelectionParams(accountLockoutType = lockoutType, temporaryLockoutUntil = lockoutUntil)
+                            UnlockMethodSelectionParams(
+                                accountLockoutType = lockoutType,
+                                temporaryLockoutUntil = lockoutUntil
+                            )
                         )
                     )
                 },
@@ -131,6 +143,7 @@ class ManagementLoginRootComponentImpl(
                 onFinished = onFinished
             )
         )
+
         is ManagementAuthNavigation.ResetPassword -> ManagementLoginRootComponent.Child.ResetEmailPassword(
             ResetEmailPasswordComponentImpl(
                 componentContext = context,
@@ -143,6 +156,7 @@ class ManagementLoginRootComponentImpl(
                 onFinished = onFinished
             )
         )
+
         is ManagementAuthNavigation.LoginByTotp -> ManagementLoginRootComponent.Child.LoginByTotp(
             LoginByTotpComponentImpl(
                 componentContext = context,
@@ -154,6 +168,7 @@ class ManagementLoginRootComponentImpl(
                 onFinished = onFinished
             )
         )
+
         is ManagementAuthNavigation.UnlockMethodSelection,
         is ManagementAuthNavigation.UnlockTargetInput,
         is ManagementAuthNavigation.UnlockOtpInput,

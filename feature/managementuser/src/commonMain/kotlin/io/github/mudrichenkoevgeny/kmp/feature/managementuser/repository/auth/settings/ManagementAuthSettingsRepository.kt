@@ -7,14 +7,14 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Auth-related remote settings: fetch, refresh, push updates, and observe the latest snapshot.
  */
-interface ManagementAuthSettingsRepository {
+public interface ManagementAuthSettingsRepository {
     /**
      * Returns cached settings when already loaded or stored; otherwise loads from the network or
      * storage as implemented.
      *
      * @return [AppResult.Success] with [ManagementAuthSettings], or [AppResult.Error] when load fails.
      */
-    suspend fun getManagementAuthSettings(): AppResult<ManagementAuthSettings>
+    public suspend fun getManagementAuthSettings(): AppResult<ManagementAuthSettings>
 
     /**
      * Pushes [authSettings] to the remote server and updates the local storage and state flow on success.
@@ -22,21 +22,21 @@ interface ManagementAuthSettingsRepository {
      * @param authSettings New configuration payload to apply.
      * @return Updated [ManagementAuthSettings] on success, or an error result when the remote update fails.
      */
-    suspend fun saveRemoteManagementAuthSettings(authSettings: ManagementAuthSettings): AppResult<ManagementAuthSettings>
+    public suspend fun saveRemoteManagementAuthSettings(authSettings: ManagementAuthSettings): AppResult<ManagementAuthSettings>
 
     /**
      * Resets auth settings on the remote server to default values and updates local state.
      *
      * @return Fresh [ManagementAuthSettings] on success, or an error result when the remote reset fails.
      */
-    suspend fun resetRemoteManagementAuthSettings(): AppResult<ManagementAuthSettings>
+    public suspend fun resetRemoteManagementAuthSettings(): AppResult<ManagementAuthSettings>
 
     /**
      * Forces a network reload and updates the observable snapshot on success.
      *
      * @return Fresh [ManagementAuthSettings] on success, or an error result when the request fails.
      */
-    suspend fun refreshManagementAuthSettings(): AppResult<ManagementAuthSettings>
+    public suspend fun refreshManagementAuthSettings(): AppResult<ManagementAuthSettings>
 
     /**
      * Persists [authSettings] and publishes them to observers. Failures are not represented as
@@ -44,12 +44,12 @@ interface ManagementAuthSettingsRepository {
      *
      * @param authSettings Complete settings payload to apply locally and in persistence.
      */
-    suspend fun updateManagementAuthSettings(authSettings: ManagementAuthSettings)
+    public suspend fun updateManagementAuthSettings(authSettings: ManagementAuthSettings)
 
     /**
      * Observes the in-memory settings snapshot (including `null` before the first successful load).
      *
      * @return [Flow] of the current [ManagementAuthSettings] or `null`.
      */
-    fun observeManagementAuthSettings(): Flow<ManagementAuthSettings?>
+    public fun observeManagementAuthSettings(): Flow<ManagementAuthSettings?>
 }

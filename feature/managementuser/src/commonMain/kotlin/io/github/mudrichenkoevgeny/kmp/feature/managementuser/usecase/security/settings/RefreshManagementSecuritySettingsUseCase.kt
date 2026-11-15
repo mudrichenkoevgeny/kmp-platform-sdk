@@ -9,13 +9,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
  *
  * @param managementSecuritySettingsRepository Repository performing the network refresh and persistence.
  */
-class RefreshManagementSecuritySettingsUseCase(
+public class RefreshManagementSecuritySettingsUseCase(
     private val managementSecuritySettingsRepository: ManagementSecuritySettingsRepository
 ) {
     /**
      * @return [AppResult.Success] with refreshed [ManagementSecuritySettings], or [AppResult.Error] on failure.
      */
-    suspend operator fun invoke(): AppResult<ManagementSecuritySettings> {
-        return managementSecuritySettingsRepository.refreshManagementSecuritySettings()
-    }
+    public suspend operator fun invoke(): AppResult<ManagementSecuritySettings> =
+        managementSecuritySettingsRepository.refreshManagementSecuritySettings()
 }

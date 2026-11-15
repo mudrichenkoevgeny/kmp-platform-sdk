@@ -1,8 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.security.settings
 
+import io.github.mudrichenkoevgeny.kmp.core.common.network.httprequest.markAsPublic
 import io.github.mudrichenkoevgeny.kmp.core.common.network.utils.callResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.kmp.core.common.network.httprequest.markAsPublic
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.securitysettings.ManagementSecuritySettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.securitysettings.OpenSecuritySettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.route.management.security.settings.ManagementSecuritySettingsRoutes
@@ -17,7 +17,7 @@ import io.ktor.client.request.setBody
  *
  * @param client Shared Ktor client configured with base URL.
  */
-class KtorManagementSecuritySettingsApi(
+public class KtorManagementSecuritySettingsApi(
     private val client: HttpClient
 ) : ManagementSecuritySettingsApi {
 

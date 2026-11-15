@@ -29,11 +29,25 @@ class MainManagementScreenTest {
         var settingsClicked = false
 
         val component = object : MainManagementComponentMock() {
-            override fun onGlobalUserListClick() { usersClicked = true }
-            override fun onGlobalSessionListClick() { sessionsClicked = true }
-            override fun onGlobalIdentifierListClick() { identifiersClicked = true }
-            override fun onAuditEventListClick() { auditClicked = true }
-            override fun onSettingsClick() { settingsClicked = true }
+            override fun onGlobalUserListClick() {
+                usersClicked = true
+            }
+
+            override fun onGlobalSessionListClick() {
+                sessionsClicked = true
+            }
+
+            override fun onGlobalIdentifierListClick() {
+                identifiersClicked = true
+            }
+
+            override fun onAuditEventListClick() {
+                auditClicked = true
+            }
+
+            override fun onSettingsClick() {
+                settingsClicked = true
+            }
         }
 
         setContent {

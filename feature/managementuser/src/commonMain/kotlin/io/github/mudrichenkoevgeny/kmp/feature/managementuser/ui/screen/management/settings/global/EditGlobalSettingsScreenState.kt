@@ -5,26 +5,26 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 /**
  * UI state for editing global platform settings.
  */
-sealed interface EditGlobalSettingsScreenState {
+public sealed interface EditGlobalSettingsScreenState {
     /** Initial loading state. */
-    object Loading : EditGlobalSettingsScreenState
+    public object Loading : EditGlobalSettingsScreenState
 
     /** Loading error state. */
-    data class Error(val error: AppError) : EditGlobalSettingsScreenState
+    public data class Error(public val error: AppError) : EditGlobalSettingsScreenState
 
     /** Form content state. */
-    data class Content(
-        val privacyPolicyUrl: String,
-        val termsOfServiceUrl: String,
-        val contactSupportEmail: String,
-        val minVersionAndroid: String = "",
-        val minVersionIos: String = "",
-        val minVersionWeb: String = "",
-        val minVersionDesktop: String = "",
-        val isTracingEnabled: Boolean = true,
-        val isMetricsEnabled: Boolean = true,
-        val isVerboseLoggingEnabled: Boolean = false,
-        val isSaving: Boolean = false,
-        val saveError: AppError? = null
+    public data class Content(
+        public val privacyPolicyUrl: String,
+        public val termsOfServiceUrl: String,
+        public val contactSupportEmail: String,
+        public val minVersionAndroid: String = "",
+        public val minVersionIos: String = "",
+        public val minVersionWeb: String = "",
+        public val minVersionDesktop: String = "",
+        public val isTracingEnabled: Boolean = true,
+        public val isMetricsEnabled: Boolean = true,
+        public val isVerboseLoggingEnabled: Boolean = false,
+        public val isSaving: Boolean = false,
+        public val saveError: AppError? = null
     ) : EditGlobalSettingsScreenState
 }

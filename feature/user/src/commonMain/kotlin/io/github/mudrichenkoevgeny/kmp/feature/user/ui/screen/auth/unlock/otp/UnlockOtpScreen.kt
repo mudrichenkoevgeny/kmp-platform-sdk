@@ -40,18 +40,23 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.Fullscre
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.unlock.otp.UnlockOtpComponentMock
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.UnlockMethod
 
+/**
+ * Screen for submitting confirmation OTP code during account unlock flow.
+ *
+ * @param component Component driving unlock OTP state and actions.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UnlockOtpScreen(component: UnlockOtpComponent) {
+public fun UnlockOtpScreen(component: UnlockOtpComponent) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
@@ -153,15 +158,15 @@ private fun ErrorText(error: AppError?) {
     }
 }
 
-internal object UnlockOtpTestTags {
-    const val TITLE = "UnlockOtp_Title"
-    const val BACK_BUTTON = "UnlockOtp_BackButton"
-    const val TARGET_TEXT = "UnlockOtp_TargetText"
-    const val CODE_INPUT = "UnlockOtp_CodeInput"
-    const val UNLOCK_BUTTON = "UnlockOtp_UnlockButton"
-    const val RESEND_BUTTON = "UnlockOtp_ResendButton"
-    const val RESEND_TIMER_TEXT = "UnlockOtp_ResendTimerText"
-    const val ACTION_ERROR_TEXT = "UnlockOtp_ActionErrorText"
+public object UnlockOtpTestTags {
+    public const val TITLE: String = "UnlockOtp_Title"
+    public const val BACK_BUTTON: String = "UnlockOtp_BackButton"
+    public const val TARGET_TEXT: String = "UnlockOtp_TargetText"
+    public const val CODE_INPUT: String = "UnlockOtp_CodeInput"
+    public const val UNLOCK_BUTTON: String = "UnlockOtp_UnlockButton"
+    public const val RESEND_BUTTON: String = "UnlockOtp_ResendButton"
+    public const val RESEND_TIMER_TEXT: String = "UnlockOtp_ResendTimerText"
+    public const val ACTION_ERROR_TEXT: String = "UnlockOtp_ActionErrorText"
 }
 
 @InternalApi
@@ -236,7 +241,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun AdaptivePreview() {
     ScreenPreviewContainer {
@@ -245,7 +250,7 @@ private fun AdaptivePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -254,7 +259,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {

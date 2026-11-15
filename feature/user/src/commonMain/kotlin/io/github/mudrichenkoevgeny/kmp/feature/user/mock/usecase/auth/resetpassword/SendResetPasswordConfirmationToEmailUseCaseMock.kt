@@ -7,14 +7,17 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.resetpa
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.SendResetPasswordConfirmationToEmailUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 
+/**
+ * Mock implementation of [SendResetPasswordConfirmationToEmailUseCase] for testing.
+ */
 @InternalApi
-class SendResetPasswordConfirmationToEmailUseCaseMock : SendResetPasswordConfirmationToEmailUseCase(
+public class SendResetPasswordConfirmationToEmailUseCaseMock : SendResetPasswordConfirmationToEmailUseCase(
     resetPasswordRepository = ResetPasswordRepositoryMock()
 ) {
-    var resultProvider: (String) -> AppResult<OtpConfirmation> = { _ ->
+    public var resultProvider: (String) -> AppResult<OtpConfirmation> = { _ ->
         AppResult.Error(CommonError.Unknown())
     }
 
-    override suspend fun execute(email: String): AppResult<OtpConfirmation> =
+    public override suspend fun execute(email: String): AppResult<OtpConfirmation> =
         resultProvider(email)
 }

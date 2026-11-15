@@ -7,17 +7,20 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.securit
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.GetRecoveryCodesUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totprecoverycodes.TotpRecoveryCodes
 
+/**
+ * Mock implementation of [GetRecoveryCodesUseCase] for testing.
+ */
 @InternalApi
-class GetRecoveryCodesUseCaseMock : GetRecoveryCodesUseCase(
+public class GetRecoveryCodesUseCaseMock : GetRecoveryCodesUseCase(
     userSecurityRepository = UserSecurityRepositoryMock()
 ) {
-    var executeCalls: Int = 0
+    public var executeCalls: Int = 0
 
-    var resultProvider: () -> AppResult<TotpRecoveryCodes> = {
+    public var resultProvider: () -> AppResult<TotpRecoveryCodes> = {
         AppResult.Error(CommonError.Unknown())
     }
 
-    override suspend fun invoke(): AppResult<TotpRecoveryCodes> {
+    public override suspend fun invoke(): AppResult<TotpRecoveryCodes> {
         executeCalls++
         return resultProvider()
     }

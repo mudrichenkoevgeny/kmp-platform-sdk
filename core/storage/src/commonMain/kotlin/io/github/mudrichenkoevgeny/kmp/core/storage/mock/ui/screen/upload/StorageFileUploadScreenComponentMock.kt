@@ -9,18 +9,18 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.upload.StorageFile
  * Mock implementation of [StorageFileUploadScreenComponent] for testing and Compose previews.
  */
 @InternalApi
-class StorageFileUploadScreenComponentMock(
-    override val uploadComponent: StorageFileUploadComponent = StorageFileUploadComponentMock()
+public class StorageFileUploadScreenComponentMock(
+    public override val uploadComponent: StorageFileUploadComponent = StorageFileUploadComponentMock()
 ) : StorageFileUploadScreenComponent {
 
-    var backCalls = 0
-    var selectFilesCalls = 0
+    public var backCalls: Int = 0
+    public var selectFilesCalls: Int = 0
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         backCalls++
     }
 
-    override fun onSelectFilesClick() {
+    public override fun onSelectFilesClick() {
         selectFilesCalls++
     }
 }

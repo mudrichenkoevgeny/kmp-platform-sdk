@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.f
  *
  * @param storageRepository Storage repository for file operations.
  */
-class GetFileDetailUseCase(
+public class GetFileDetailUseCase(
     private val storageRepository: StorageRepository
 ) {
     /**
@@ -18,7 +18,7 @@ class GetFileDetailUseCase(
      * @param fileId Unique identifier of the target file.
      * @return [AppResult.Success] containing [StorageFilePrivate], or [AppResult.Error] on failure.
      */
-    suspend operator fun invoke(fileId: String): AppResult<StorageFilePrivate> {
-        return storageRepository.getFileDetail(fileId)
-    }
+    public suspend operator fun invoke(fileId: String): AppResult<StorageFilePrivate> = storageRepository.getFileDetail(
+        fileId
+    )
 }

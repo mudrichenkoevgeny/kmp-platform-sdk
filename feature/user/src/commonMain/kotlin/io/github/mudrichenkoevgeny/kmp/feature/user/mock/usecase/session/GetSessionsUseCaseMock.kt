@@ -11,17 +11,20 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
 
+/**
+ * Mock implementation of [GetSessionsUseCase] for testing.
+ */
 @InternalApi
-class GetSessionsUseCaseMock(
+public class GetSessionsUseCaseMock(
     sessionRepository: SessionRepository = SessionRepositoryMock()
 ) : GetSessionsUseCase(sessionRepository) {
 
-    var executeCalls = 0
-    var resultProvider: (params: SelfSessionListParams?) -> AppResult<PagedResult<UserSessionSummary>> = { _ ->
+    public var executeCalls: Int = 0
+    public var resultProvider: (params: SelfSessionListParams?) -> AppResult<PagedResult<UserSessionSummary>> = { _ ->
         AppResult.Success(createTestPagedResult(listOf(createTestUserSessionSummary())))
     }
 
-    override suspend fun invoke(
+    public override suspend fun invoke(
         params: SelfSessionListParams?
     ): AppResult<PagedResult<UserSessionSummary>> {
         executeCalls++

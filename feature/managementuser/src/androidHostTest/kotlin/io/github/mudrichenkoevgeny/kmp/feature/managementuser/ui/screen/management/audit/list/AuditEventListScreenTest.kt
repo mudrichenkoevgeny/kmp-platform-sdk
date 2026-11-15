@@ -13,8 +13,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.Pagina
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventSummary
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.audit.list.AuditEventListComponentMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventSummary
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -63,7 +63,9 @@ class AuditEventListScreenTest {
 
     @Test
     fun content_clickBack_invokesCallback() = runComposeUiTest {
-        val component = AuditEventListComponentMock(AuditEventListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
+        val component = AuditEventListComponentMock(
+            AuditEventListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false))
+        )
         setContent {
             ComponentTestHarness {
                 AuditEventListScreen(component)
@@ -75,7 +77,9 @@ class AuditEventListScreenTest {
 
     @Test
     fun content_clickRefresh_invokesCallback() = runComposeUiTest {
-        val component = AuditEventListComponentMock(AuditEventListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
+        val component = AuditEventListComponentMock(
+            AuditEventListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false))
+        )
         setContent {
             ComponentTestHarness {
                 AuditEventListScreen(component)

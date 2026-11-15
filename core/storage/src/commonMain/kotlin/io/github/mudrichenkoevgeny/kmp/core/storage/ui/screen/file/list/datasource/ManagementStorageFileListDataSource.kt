@@ -16,27 +16,26 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.reques
  * @param deleteFileUseCase Use case deleting a single file in management context.
  * @param deleteFilesBatchUseCase Use case deleting files in batch in management context.
  */
-class ManagementStorageFileListDataSource(
+public class ManagementStorageFileListDataSource(
     private val getFilesUseCase: ManagementGetFilesUseCase,
     private val deleteFileUseCase: ManagementDeleteFileUseCase,
     private val deleteFilesBatchUseCase: ManagementDeleteFilesBatchUseCase
 ) : StorageFileListDataSource {
 
-    override val isSingleDeleteAvailable: Boolean = true
-    override val isBatchDeleteAvailable: Boolean = true
+    public override val isSingleDeleteAvailable: Boolean = true
+    public override val isBatchDeleteAvailable: Boolean = true
 
-    override suspend fun getFiles(query: StorageFileListQuery): AppResult<PagedResult<StorageFileSummary>> {
+    public override suspend fun getFiles(query: StorageFileListQuery): AppResult<PagedResult<StorageFileSummary>> {
         val params = query.toManagementParams()
         return getFilesUseCase(params)
     }
 
-    override suspend fun deleteFile(fileId: String): AppResult<Unit> {
-        return deleteFileUseCase(fileId)
-    }
+    public override suspend fun deleteFile(fileId: String): AppResult<Unit> = deleteFileUseCase(fileId)
 
-    override suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit> {
-        return deleteFilesBatchUseCase(request)
-    }
+    public override suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit> =
+        deleteFilesBatchUseCase(
+            request
+        )
 
     private fun StorageFileListQuery.toManagementParams(): ManagementStorageFileListParams {
         val ownerUserIdsList = ownerUserId?.let { listOf(it) }

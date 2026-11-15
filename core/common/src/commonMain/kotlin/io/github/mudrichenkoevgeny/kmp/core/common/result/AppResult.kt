@@ -7,20 +7,20 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
  *
  * The error is modeled as an [AppError] to enable consistent error mapping and localization.
  */
-sealed class AppResult<out T> {
+public sealed class AppResult<out T> {
     /**
      * Successful result wrapper.
      *
      * @param data The successful payload.
      */
-    data class Success<out T>(val data: T) : AppResult<T>()
+    public data class Success<out T>(public val data: T) : AppResult<T>()
 
     /**
      * Error result wrapper.
      *
      * @param error The failure details.
      */
-    data class Error(val error: AppError) : AppResult<Nothing>()
+    public data class Error(public val error: AppError) : AppResult<Nothing>()
 
     /**
      * Standard transformation function that handles both possible states of the result.
@@ -29,7 +29,10 @@ sealed class AppResult<out T> {
      * @param onFailure Callback for [Error] state.
      * @return Result of the transformation.
      */
-    inline fun <R> fold(onSuccess: (T) -> R, onFailure: (AppError) -> R): R =
+    public inline fun <R> fold(
+        onSuccess: (T) -> R,
+        onFailure: (AppError) -> R
+    ): R =
         when (this) {
             is Success -> onSuccess(data)
             is Error -> onFailure(error)

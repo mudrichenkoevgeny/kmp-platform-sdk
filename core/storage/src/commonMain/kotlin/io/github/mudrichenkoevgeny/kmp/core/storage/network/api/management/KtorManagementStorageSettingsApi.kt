@@ -17,23 +17,23 @@ import io.ktor.client.request.setBody
  *
  * @param client Shared Ktor client configured with base URL.
  */
-class KtorManagementStorageSettingsApi(
+public class KtorManagementStorageSettingsApi(
     private val client: HttpClient
 ) : ManagementStorageSettingsApi {
 
-    override suspend fun getManagementStorageSettings(): AppResult<ManagementStorageSettingsPayload> =
+    public override suspend fun getManagementStorageSettings(): AppResult<ManagementStorageSettingsPayload> =
         client.callResult {
             get(ManagementStorageSettingsRoutes.GET_MANAGEMENT_STORAGE_SETTINGS)
         }
 
-    override suspend fun getOpenStorageSettings(): AppResult<OpenStorageSettingsPayload> =
+    public override suspend fun getOpenStorageSettings(): AppResult<OpenStorageSettingsPayload> =
         client.callResult {
             get(ManagementStorageSettingsRoutes.GET_OPEN_STORAGE_SETTINGS) {
                 markAsPublic()
             }
         }
 
-    override suspend fun updateManagementStorageSettings(
+    public override suspend fun updateManagementStorageSettings(
         request: ManagementStorageSettingsPayload
     ): AppResult<ManagementStorageSettingsPayload> =
         client.callResult {
@@ -42,7 +42,7 @@ class KtorManagementStorageSettingsApi(
             }
         }
 
-    override suspend fun resetManagementStorageSettings(): AppResult<ManagementStorageSettingsPayload> =
+    public override suspend fun resetManagementStorageSettings(): AppResult<ManagementStorageSettingsPayload> =
         client.callResult {
             post(ManagementStorageSettingsRoutes.RESET_MANAGEMENT_STORAGE_SETTINGS)
         }

@@ -49,18 +49,23 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyTex
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.totp.recovery.TotpRecoveryCodesComponentMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totprecoverycodes.TotpRecoveryCodes
 
+/**
+ * Screen displaying and managing TOTP recovery codes.
+ *
+ * @param component Component driving TOTP recovery codes state and regeneration actions.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TotpRecoveryCodesScreen(component: TotpRecoveryCodesComponent) {
+public fun TotpRecoveryCodesScreen(component: TotpRecoveryCodesComponent) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
@@ -101,6 +106,7 @@ fun TotpRecoveryCodesScreen(component: TotpRecoveryCodesComponent) {
                         onConfirmRegenerate = component::onConfirmRegenerate,
                         onDismissDialogs = component::onDismissDialogs
                     )
+
                     is TotpRecoveryCodesScreenState.Error -> {
                         CoreErrorText(
                             text = currentState.error.toLocalizedMessage(),
@@ -120,6 +126,7 @@ private fun Content(
     onConfirmRegenerate: () -> Unit,
     onDismissDialogs: () -> Unit
 ) {
+    @Suppress("DEPRECATION")
     val clipboardManager = LocalClipboardManager.current
     val userUi = LocalUserStrings.current.ui
 
@@ -207,7 +214,10 @@ private fun Content(
 }
 
 @Composable
-private fun ErrorText(error: AppError?, testTag: String) {
+private fun ErrorText(
+    error: AppError?,
+    testTag: String
+) {
     AnimatedVisibility(
         visible = error != null,
         enter = fadeIn() + expandVertically(),
@@ -268,7 +278,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
@@ -277,7 +287,7 @@ private fun ScreenSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -286,7 +296,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {
@@ -294,14 +304,14 @@ private fun FontScalePreview() {
     }
 }
 
-object TotpRecoveryCodesTestTags {
-    const val TITLE = "TotpRecoveryCodes_Title"
-    const val BACK_BUTTON = "TotpRecoveryCodes_BackButton"
-    const val GLOBAL_ERROR_TEXT = "TotpRecoveryCodes_GlobalErrorText"
-    const val RECOVERY_CODES_TITLE = "TotpRecoveryCodes_TitleText"
-    const val RECOVERY_CODES_DESC = "TotpRecoveryCodes_DescText"
-    const val RECOVERY_CODES_CONTAINER = "TotpRecoveryCodes_Container"
-    const val COPY_ALL_RECOVERY_CODES_BUTTON = "TotpRecoveryCodes_CopyAllButton"
-    const val REGENERATE_RECOVERY_CODES_BUTTON = "TotpRecoveryCodes_RegenerateButton"
-    const val ACTION_ERROR_TEXT = "TotpRecoveryCodes_ActionErrorText"
+public object TotpRecoveryCodesTestTags {
+    public const val TITLE: String = "TotpRecoveryCodes_Title"
+    public const val BACK_BUTTON: String = "TotpRecoveryCodes_BackButton"
+    public const val GLOBAL_ERROR_TEXT: String = "TotpRecoveryCodes_GlobalErrorText"
+    public const val RECOVERY_CODES_TITLE: String = "TotpRecoveryCodes_TitleText"
+    public const val RECOVERY_CODES_DESC: String = "TotpRecoveryCodes_DescText"
+    public const val RECOVERY_CODES_CONTAINER: String = "TotpRecoveryCodes_Container"
+    public const val COPY_ALL_RECOVERY_CODES_BUTTON: String = "TotpRecoveryCodes_CopyAllButton"
+    public const val REGENERATE_RECOVERY_CODES_BUTTON: String = "TotpRecoveryCodes_RegenerateButton"
+    public const val ACTION_ERROR_TEXT: String = "TotpRecoveryCodes_ActionErrorText"
 }

@@ -5,19 +5,19 @@ import com.arkivanov.decompose.value.Value
 /**
  * Manages fetching and displaying details of a specific audit event.
  */
-interface AuditEventDetailComponent {
+public interface AuditEventDetailComponent {
     /** Reactive UI state. */
-    val state: Value<AuditEventDetailScreenState>
+    public val state: Value<AuditEventDetailScreenState>
 
     /** Retries loading event details after a failure. */
-    fun onRetry()
+    public fun onRetry()
 
     /** Navigates back. */
-    fun onBackClick()
+    public fun onBackClick()
 
     /** Navigates to resource detail screen depending on resource type and ownership. */
-    fun onResourceClick()
+    public fun onResourceClick()
 
     /** Navigates to subject user detail screen depending on subject type and ownership. */
-    fun onSubjectClick()
+    public fun onSubjectClick()
 }

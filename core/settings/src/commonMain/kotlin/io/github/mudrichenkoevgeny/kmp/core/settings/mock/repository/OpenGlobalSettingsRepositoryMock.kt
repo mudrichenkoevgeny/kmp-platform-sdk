@@ -9,27 +9,30 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+/**
+ * Mock implementation of [OpenGlobalSettingsRepository] for testing purposes.
+ */
 @InternalApi
-class OpenGlobalSettingsRepositoryMock(
+public class OpenGlobalSettingsRepositoryMock(
     initialSettings: OpenGlobalSettings? = createTestOpenGlobalSettings()
 ) : OpenGlobalSettingsRepository {
 
-    private val _settings = MutableStateFlow(initialSettings)
+    private val settingsStateFlow = MutableStateFlow(initialSettings)
 
-    var getGlobalSettingsResult: AppResult<OpenGlobalSettings>? = null
-    var refreshGlobalSettingsResult: AppResult<OpenGlobalSettings>? = null
+    public var getGlobalSettingsResult: AppResult<OpenGlobalSettings>? = null
+    public var refreshGlobalSettingsResult: AppResult<OpenGlobalSettings>? = null
 
     override suspend fun getOpenGlobalSettings(): AppResult<OpenGlobalSettings> {
         val customResult = getGlobalSettingsResult
         if (customResult != null) {
             return customResult
         }
-        val current = _settings.value
+        val current = settingsStateFlow.value
         return if (current != null) {
             AppResult.Success(current)
         } else {
             val fresh = createTestOpenGlobalSettings()
-            _settings.value = fresh
+            settingsStateFlow.value = fresh
             AppResult.Success(fresh)
         }
     }
@@ -40,13 +43,13 @@ class OpenGlobalSettingsRepositoryMock(
             return customResult
         }
         val fresh = createTestOpenGlobalSettings()
-        _settings.value = fresh
+        settingsStateFlow.value = fresh
         return AppResult.Success(fresh)
     }
 
     override suspend fun updateOpenGlobalSettings(globalSettings: OpenGlobalSettings) {
-        _settings.value = globalSettings
+        settingsStateFlow.value = globalSettings
     }
 
-    override fun observeOpenGlobalSettings(): Flow<OpenGlobalSettings?> = _settings.asStateFlow()
+    override fun observeOpenGlobalSettings(): Flow<OpenGlobalSettings?> = settingsStateFlow.asStateFlow()
 }

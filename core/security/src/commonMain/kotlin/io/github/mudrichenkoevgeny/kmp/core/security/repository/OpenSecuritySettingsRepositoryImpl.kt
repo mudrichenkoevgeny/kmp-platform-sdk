@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.decodeFromJsonElement
 
 /**
@@ -31,7 +32,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
  * @param webSocketService Source of push events; non-matching frame types are ignored.
  * @param repositoryScope Coroutine scope used to preload cache and collect socket events.
  */
-class OpenSecuritySettingsRepositoryImpl(
+public class OpenSecuritySettingsRepositoryImpl(
     private val openSecuritySettingsApi: OpenSecuritySettingsApi,
     private val openSecuritySettingsStorage: OpenSecuritySettingsStorage,
     private val webSocketService: WebSocketService,
@@ -39,11 +40,11 @@ class OpenSecuritySettingsRepositoryImpl(
 ) : OpenSecuritySettingsRepository {
 
     private val updateMutex = Mutex()
-    private val _settings = MutableStateFlow<OpenSecuritySettings?>(null)
+    private val settingsStateFlow = MutableStateFlow<OpenSecuritySettings?>(null)
 
     init {
         repositoryScope.launch {
-            _settings.value = openSecuritySettingsStorage.getOpenSecuritySettings()
+            settingsStateFlow.value = openSecuritySettingsStorage.getOpenSecuritySettings()
 
             webSocketService.observeEvents()
                 .filter { it.type == SecurityWebSocketEventTypes.OPEN_SECURITY_SETTINGS_UPDATED }
@@ -58,21 +59,25 @@ class OpenSecuritySettingsRepositoryImpl(
                         } else {
                             Logger.w { "Received OPEN_SECURITY_SETTINGS_UPDATED with invalid payload" }
                         }
-                    } catch (e: Exception) {
+                    } catch (e: SerializationException) {
+                        Logger.e(e) { "Failed to process WebSocket event" }
+                    } catch (e: IllegalArgumentException) {
+                        Logger.e(e) { "Failed to process WebSocket event" }
+                    } catch (e: IllegalStateException) {
                         Logger.e(e) { "Failed to process WebSocket event" }
                     }
                 }
         }
     }
 
-    override suspend fun getOpenSecuritySettings(): AppResult<OpenSecuritySettings> {
-        _settings.value?.let { return AppResult.Success(it) }
+    public override suspend fun getOpenSecuritySettings(): AppResult<OpenSecuritySettings> {
+        settingsStateFlow.value?.let { return AppResult.Success(it) }
 
         return updateMutex.withLock {
-            val cached = _settings.value ?: openSecuritySettingsStorage.getOpenSecuritySettings()
+            val cached = settingsStateFlow.value ?: openSecuritySettingsStorage.getOpenSecuritySettings()
 
             if (cached != null) {
-                _settings.value = cached
+                settingsStateFlow.value = cached
                 AppResult.Success(cached)
             } else {
                 refreshOpenSecuritySettingsInternal()
@@ -80,31 +85,28 @@ class OpenSecuritySettingsRepositoryImpl(
         }
     }
 
-    override suspend fun refreshOpenSecuritySettings(): AppResult<OpenSecuritySettings> {
-        return updateMutex.withLock {
-            refreshOpenSecuritySettingsInternal()
-        }
+    public override suspend fun refreshOpenSecuritySettings(): AppResult<OpenSecuritySettings> = updateMutex.withLock {
+        refreshOpenSecuritySettingsInternal()
     }
 
-    override suspend fun updateOpenSecuritySettings(securitySettings: OpenSecuritySettings) {
+    public override suspend fun updateOpenSecuritySettings(securitySettings: OpenSecuritySettings) {
         updateMutex.withLock {
             applySettingsUpdate(securitySettings)
         }
     }
 
-    override fun observeOpenSecuritySettings(): Flow<OpenSecuritySettings?> = _settings.asStateFlow()
+    public override fun observeOpenSecuritySettings(): Flow<OpenSecuritySettings?> = settingsStateFlow.asStateFlow()
 
-    private suspend fun refreshOpenSecuritySettingsInternal(): AppResult<OpenSecuritySettings> {
-        return openSecuritySettingsApi.getSecuritySettings()
+    private suspend fun refreshOpenSecuritySettingsInternal(): AppResult<OpenSecuritySettings> =
+        openSecuritySettingsApi.getSecuritySettings()
             .mapSuccess { response ->
                 val settings = response.toOpenSecuritySettings()
                 applySettingsUpdate(settings)
                 settings
             }
-    }
 
     private suspend fun applySettingsUpdate(securitySettings: OpenSecuritySettings) {
         openSecuritySettingsStorage.updateOpenSecuritySettings(securitySettings)
-        _settings.value = securitySettings
+        settingsStateFlow.value = securitySettings
     }
 }

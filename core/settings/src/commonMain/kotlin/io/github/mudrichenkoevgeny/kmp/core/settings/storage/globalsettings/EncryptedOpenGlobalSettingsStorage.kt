@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.model.
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.mapper.globalsettings.toOpenGlobalSettings
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.mapper.globalsettings.toOpenGlobalSettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.model.globalsettings.OpenGlobalSettingsPayload
+import kotlinx.serialization.json.Json
 
 /**
  * [OpenGlobalSettingsStorage] implementation that uses [EncryptedSettings] for persistence.
@@ -14,13 +15,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.model
  *
  * @param encryptedSettings Key-value store used for the `global_settings` entry.
  */
-class EncryptedOpenGlobalSettingsStorage(
+public class EncryptedOpenGlobalSettingsStorage(
     private val encryptedSettings: EncryptedSettings
 ) : OpenGlobalSettingsStorage {
 
-    private val json = FoundationJson
+    private val json: Json = FoundationJson
 
-    override suspend fun getOpenGlobalSettings(): OpenGlobalSettings? {
+    public override suspend fun getOpenGlobalSettings(): OpenGlobalSettings? {
         val data = encryptedSettings.get(KEY_GLOBAL_SETTINGS)
             ?: return null
         return try {
@@ -31,17 +32,17 @@ class EncryptedOpenGlobalSettingsStorage(
         }
     }
 
-    override suspend fun updateOpenGlobalSettings(globalSettings: OpenGlobalSettings) {
+    public override suspend fun updateOpenGlobalSettings(globalSettings: OpenGlobalSettings) {
         val payload = globalSettings.toOpenGlobalSettingsPayload()
         val data = json.encodeToString(payload)
         encryptedSettings.put(KEY_GLOBAL_SETTINGS, data)
     }
 
-    override suspend fun clearOpenGlobalSettings() {
+    public override suspend fun clearOpenGlobalSettings() {
         encryptedSettings.remove(KEY_GLOBAL_SETTINGS)
     }
 
-    companion object {
-        private const val KEY_GLOBAL_SETTINGS = "global_settings"
+    public companion object {
+        private const val KEY_GLOBAL_SETTINGS: String = "global_settings"
     }
 }

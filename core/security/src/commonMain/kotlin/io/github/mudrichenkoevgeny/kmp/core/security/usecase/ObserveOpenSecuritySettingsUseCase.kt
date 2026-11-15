@@ -9,13 +9,12 @@ import kotlinx.coroutines.flow.Flow
  *
  * @param openSecuritySettingsRepository Source of truth for cached or network-backed settings.
  */
-class ObserveOpenSecuritySettingsUseCase(
+public class ObserveOpenSecuritySettingsUseCase(
     private val openSecuritySettingsRepository: OpenSecuritySettingsRepository
 ) {
     /**
      * @return Cold [Flow] emitting the latest [OpenSecuritySettings] or `null`.
      */
-    operator fun invoke(): Flow<OpenSecuritySettings?> {
-        return openSecuritySettingsRepository.observeOpenSecuritySettings()
-    }
+    public operator fun invoke(): Flow<OpenSecuritySettings?> =
+        openSecuritySettingsRepository.observeOpenSecuritySettings()
 }

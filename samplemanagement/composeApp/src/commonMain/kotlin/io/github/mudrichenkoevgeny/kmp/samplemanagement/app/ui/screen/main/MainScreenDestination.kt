@@ -12,18 +12,24 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
  */
 sealed interface MainScreenDestination {
     val config: MainScreenComponent.Config
-    @Composable fun title(): String
+
+    @Composable
+    fun title(): String
     val iconRes: DrawableResource
 
     data object Management : MainScreenDestination {
         override val config = MainScreenComponent.Config.Management
-        @Composable override fun title(): String = LocalUserStrings.current.ui.usersManagementTitle
+
+        @Composable
+        override fun title(): String = LocalUserStrings.current.ui.usersManagementTitle
         override val iconRes = CommonRes.drawable.ic_settings
     }
 
     data object User : MainScreenDestination {
         override val config = MainScreenComponent.Config.User
-        @Composable override fun title(): String = LocalUserStrings.current.ui.user
+
+        @Composable
+        override fun title(): String = LocalUserStrings.current.ui.user
         override val iconRes = CommonRes.drawable.ic_user
     }
 

@@ -12,7 +12,7 @@ import com.arkivanov.decompose.ComponentContext
  * @param onNavigateToEditStorageSettings Callback to navigate to edit storage settings.
  * @param onBack Pops this screen from the navigation stack.
  */
-class SettingsMainComponentImpl(
+public class SettingsMainComponentImpl public constructor(
     componentContext: ComponentContext,
     private val onNavigateToEditAuthSettings: () -> Unit,
     private val onNavigateToEditGlobalSettings: () -> Unit,

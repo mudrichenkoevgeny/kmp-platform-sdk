@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorPar
 
 @InternalApi
 @Composable
-fun ComponentTestHarness(content: @Composable () -> Unit) {
+public fun ComponentTestHarness(content: @Composable () -> Unit) {
     MaterialTheme {
         CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
             content()

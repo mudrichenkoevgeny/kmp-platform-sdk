@@ -22,7 +22,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedres
  * @param compositeAuditResourceTypeParser Parser for converting audit resource wire strings to domain models.
  * @param compositeAuditMetadataKeyParser Parser for converting audit metadata keys.
  */
-class ManagementAuditRepositoryImpl(
+public class ManagementAuditRepositoryImpl(
     private val managementAuditApi: ManagementAuditApi,
     private val compositeAuditActionTypeParser: CompositeAuditActionTypeParser,
     private val compositeAuditResourceTypeParser: CompositeAuditResourceTypeParser,
@@ -31,24 +31,23 @@ class ManagementAuditRepositoryImpl(
 
     override suspend fun getAuditEvents(
         params: ManagementAuditEventListParams?
-    ): AppResult<PagedResult<AuditEventSummary>> {
-        return managementAuditApi.getAuditEvents(params).mapSuccess { pagedResult ->
-            pagedResult.mapItems {
-                it.toAuditEventSummary(
-                    compositeActionTypeParser = compositeAuditActionTypeParser,
-                    compositeResourceTypeParser = compositeAuditResourceTypeParser
-                )
-            }
+    ): AppResult<PagedResult<AuditEventSummary>> = managementAuditApi.getAuditEvents(params).mapSuccess { pagedResult ->
+        pagedResult.mapItems {
+            it.toAuditEventSummary(
+                compositeActionTypeParser = compositeAuditActionTypeParser,
+                compositeResourceTypeParser = compositeAuditResourceTypeParser
+            )
         }
     }
 
-    override suspend fun getAuditEvent(eventId: String): AppResult<AuditEventPrivate> {
-        return managementAuditApi.getAuditEvent(eventId).mapSuccess {
+    override suspend fun getAuditEvent(eventId: String): AppResult<AuditEventPrivate> =
+        managementAuditApi.getAuditEvent(
+            eventId
+        ).mapSuccess {
             it.toAuditEventPrivate(
                 compositeActionTypeParser = compositeAuditActionTypeParser,
                 compositeResourceTypeParser = compositeAuditResourceTypeParser,
                 compositeMetadataKeyParser = compositeAuditMetadataKeyParser
             )
         }
-    }
 }

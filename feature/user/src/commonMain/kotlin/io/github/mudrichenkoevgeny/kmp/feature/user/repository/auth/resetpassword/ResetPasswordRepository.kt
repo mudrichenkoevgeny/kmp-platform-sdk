@@ -7,7 +7,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
 /**
  * Password recovery: reset with a confirmation code and send-code flows with client-side retry hints.
  */
-interface ResetPasswordRepository {
+public interface ResetPasswordRepository {
     /**
      * Completes password reset for the account identified by [email] using [newPassword] and
      * [confirmationCode] from the email confirmation step.
@@ -17,7 +17,7 @@ interface ResetPasswordRepository {
      * @param confirmationCode One-time code delivered to [email].
      * @return [UserIdentifierPrivate] on success, or an error [AppResult] on failure.
      */
-    suspend fun resetPassword(
+    public suspend fun resetPassword(
         email: String,
         newPassword: String,
         confirmationCode: String
@@ -29,7 +29,7 @@ interface ResetPasswordRepository {
      * @param email Destination address for the reset code.
      * @return [OtpConfirmation] with server retry metadata on success, or an error result.
      */
-    suspend fun sendResetPasswordConfirmationToEmail(
+    public suspend fun sendResetPasswordConfirmationToEmail(
         email: String
     ): AppResult<OtpConfirmation>
 
@@ -37,5 +37,5 @@ interface ResetPasswordRepository {
      * @param email Same email key as used for password-reset confirmation sends.
      * @return Remaining client-side cooldown in seconds before another send is allowed, or `0`.
      */
-    fun getRemainingResetPasswordConfirmationDelayInSeconds(email: String): Int
+    public fun getRemainingResetPasswordConfirmationDelayInSeconds(email: String): Int
 }

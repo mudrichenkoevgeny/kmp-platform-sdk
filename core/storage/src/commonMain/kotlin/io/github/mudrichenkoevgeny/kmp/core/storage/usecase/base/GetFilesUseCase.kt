@@ -11,7 +11,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.scr
  *
  * @param storageRepository Storage repository for file operations.
  */
-class GetFilesUseCase(
+public class GetFilesUseCase(
     private val storageRepository: StorageRepository
 ) {
     /**
@@ -20,9 +20,7 @@ class GetFilesUseCase(
      * @param params Optional listing query, filter, and pagination parameters DTO.
      * @return [AppResult.Success] containing a [PagedResult] of [StorageFileSummary], or [AppResult.Error] on failure.
      */
-    suspend operator fun invoke(
+    public suspend operator fun invoke(
         params: SelfStorageFileListParams? = null
-    ): AppResult<PagedResult<StorageFileSummary>> {
-        return storageRepository.getFiles(params)
-    }
+    ): AppResult<PagedResult<StorageFileSummary>> = storageRepository.getFiles(params)
 }

@@ -18,47 +18,50 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  *
  * @param managementIdentifierApi Administrative HTTP endpoints for managing user identifiers.
  */
-class ManagementIdentifierRepositoryImpl(
+public class ManagementIdentifierRepositoryImpl(
     private val managementIdentifierApi: ManagementIdentifierApi
 ) : ManagementIdentifierRepository {
 
     override suspend fun getIdentifiers(
         params: ManagementGlobalIdentifierListParams?
-    ): AppResult<PagedResult<UserIdentifierSummary>> {
-        return managementIdentifierApi.getIdentifiers(params).mapSuccess { pagedPayload ->
-            pagedPayload.mapItems { userIdentifierPayload ->
-                userIdentifierPayload.toUserIdentifierSummary()
-            }
+    ): AppResult<PagedResult<UserIdentifierSummary>> = managementIdentifierApi.getIdentifiers(
+        params
+    ).mapSuccess { pagedPayload ->
+        pagedPayload.mapItems { userIdentifierPayload ->
+            userIdentifierPayload.toUserIdentifierSummary()
         }
     }
 
     override suspend fun getUserIdentifiers(
         params: ManagementUserIdentifierListParams
-    ): AppResult<PagedResult<UserIdentifierSummary>> {
-        return managementIdentifierApi.getUserIdentifiers(params).mapSuccess { pagedPayload ->
-            pagedPayload.mapItems { userIdentifierPayload ->
-                userIdentifierPayload.toUserIdentifierSummary()
-            }
+    ): AppResult<PagedResult<UserIdentifierSummary>> = managementIdentifierApi.getUserIdentifiers(
+        params
+    ).mapSuccess { pagedPayload ->
+        pagedPayload.mapItems { userIdentifierPayload ->
+            userIdentifierPayload.toUserIdentifierSummary()
         }
     }
 
-    override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivate> {
-        return managementIdentifierApi.getIdentifier(identifierId).mapSuccess { payload ->
+    override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivate> =
+        managementIdentifierApi.getIdentifier(
+            identifierId
+        ).mapSuccess { payload ->
             payload.toUserIdentifierPrivate()
         }
-    }
 
-    override suspend fun deleteIdentifier(userId: UserId, identifierId: String): AppResult<Unit> {
-        return managementIdentifierApi.deleteIdentifier(
-            userId = userId,
-            identifierId = identifierId
-        )
-    }
+    override suspend fun deleteIdentifier(
+        userId: UserId,
+        identifierId: String
+    ): AppResult<Unit> = managementIdentifierApi.deleteIdentifier(
+        userId = userId,
+        identifierId = identifierId
+    )
 
-    override suspend fun deleteIdentifierPassword(userId: UserId, identifierId: String): AppResult<Unit> {
-        return managementIdentifierApi.deleteIdentifierPassword(
-            userId = userId,
-            identifierId = identifierId
-        )
-    }
+    override suspend fun deleteIdentifierPassword(
+        userId: UserId,
+        identifierId: String
+    ): AppResult<Unit> = managementIdentifierApi.deleteIdentifierPassword(
+        userId = userId,
+        identifierId = identifierId
+    )
 }

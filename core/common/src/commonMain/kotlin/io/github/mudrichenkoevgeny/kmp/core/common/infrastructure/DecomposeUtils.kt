@@ -33,7 +33,7 @@ import kotlin.coroutines.CoroutineContext
  * Intended for cases when SDK code needs a standalone component context (e.g. previews).
  */
 @Composable
-fun rememberComponentContext(): ComponentContext {
+public fun rememberComponentContext(): ComponentContext {
     val lifecycle = remember { LifecycleRegistry() }
 
     DisposableEffect(Unit) {
@@ -47,7 +47,7 @@ fun rememberComponentContext(): ComponentContext {
 /**
  * Creates a [CoroutineScope] that is canceled when the Decompose component is destroyed.
  */
-fun ComponentContext.componentCoroutineScope(): CoroutineScope {
+public fun ComponentContext.componentCoroutineScope(): CoroutineScope {
     val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     lifecycle.doOnDestroy { scope.cancel() }
     return scope
@@ -62,7 +62,7 @@ fun ComponentContext.componentCoroutineScope(): CoroutineScope {
  * @param lifecycle Component lifecycle to bind cancellation to.
  * @param context Coroutine context used for collecting the flow.
  */
-fun <T : Any> Flow<T>.asValue(
+public fun <T : Any> Flow<T>.asValue(
     initialValue: T,
     lifecycle: Lifecycle,
     context: CoroutineContext = Dispatchers.Main.immediate

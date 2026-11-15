@@ -15,10 +15,10 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.base.UploadFileUseCa
  * @property deleteFileUseCase Use case deleting a single storage file.
  * @property deleteFilesBatchUseCase Use case deleting storage files in batch.
  */
-data class OpenStorageDependencies(
-    val getFilesUseCase: GetFilesUseCase,
-    val getFileDetailUseCase: GetFileDetailUseCase,
-    val uploadFileUseCase: UploadFileUseCase,
-    val deleteFileUseCase: DeleteFileUseCase,
-    val deleteFilesBatchUseCase: DeleteFilesBatchUseCase
+public data class OpenStorageDependencies(
+    public val getFilesUseCase: GetFilesUseCase,
+    public val getFileDetailUseCase: GetFileDetailUseCase,
+    public val uploadFileUseCase: UploadFileUseCase,
+    public val deleteFileUseCase: DeleteFileUseCase,
+    public val deleteFilesBatchUseCase: DeleteFilesBatchUseCase
 )

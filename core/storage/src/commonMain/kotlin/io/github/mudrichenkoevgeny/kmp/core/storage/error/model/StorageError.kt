@@ -12,11 +12,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.error.naming.S
  *
  * [code] values follow shared [StorageErrorCodes] or [ClientStorageErrorCodes].
  */
-sealed class StorageError(
-    override val id: ErrorId,
-    override val code: String,
-    override val args: Map<String, String>? = null,
-    override val isRetryable: Boolean
+public sealed class StorageError(
+    public override val id: ErrorId,
+    public override val code: String,
+    public override val args: Map<String, String>? = null,
+    public override val isRetryable: Boolean
 ) : AppError {
 
     /**
@@ -25,8 +25,8 @@ sealed class StorageError(
      * @param throwable Optional underlying cancellation or network cause for logging; not shown directly to users.
      * @param message Diagnostic error detail message string.
      */
-    class S3UploadFailed(
-        val throwable: Throwable? = null,
+    public class S3UploadFailed(
+        public val throwable: Throwable? = null,
         message: String? = null
     ) : StorageError(
         id = ErrorId.generate(),
@@ -36,7 +36,7 @@ sealed class StorageError(
     )
 
     /** Direct S3 upload was cancelled by the user or client application. */
-    class DirectUploadCancelled : StorageError(
+    public class DirectUploadCancelled : StorageError(
         id = ErrorId.generate(),
         code = ClientStorageErrorCodes.DIRECT_UPLOAD_CANCELLED,
         isRetryable = false
@@ -50,7 +50,7 @@ sealed class StorageError(
      * @param category Target storage category identifier.
      * @param fileName Target file name.
      */
-    class FileSizeExceedsLimit(
+    public class FileSizeExceedsLimit(
         maxFileSizeBytes: Long? = null,
         fileSizeBytes: Long? = null,
         category: String? = null,
@@ -74,7 +74,7 @@ sealed class StorageError(
      * @param category Target storage category identifier.
      * @param fileName Target file name.
      */
-    class UnsupportedMimeType(
+    public class UnsupportedMimeType(
         mimeType: String? = null,
         category: String? = null,
         fileName: String? = null
@@ -94,7 +94,7 @@ sealed class StorageError(
      *
      * @param maxBatchUploadCount Maximum permitted files in a single batch.
      */
-    class MaxBatchUploadCountExceeded(
+    public class MaxBatchUploadCountExceeded(
         maxBatchUploadCount: Int? = null
     ) : StorageError(
         id = ErrorId.generate(),

@@ -16,28 +16,30 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  * @param deleteSessionUseCase Use case revoking a specific session.
  * @param deleteAllOtherSessionsUseCase Use case revoking all sessions except current.
  */
-class SelfSessionListDataSource(
+public class SelfSessionListDataSource(
     private val getSessionsUseCase: GetSessionsUseCase,
     private val deleteSessionUseCase: DeleteSessionUseCase,
     private val deleteAllOtherSessionsUseCase: DeleteAllOtherSessionsUseCase
 ) : SessionListDataSource {
 
-    override val isRevokeAvailable: Boolean = true
-    override val isRevokeAllOthersAvailable: Boolean = true
+    public override val isRevokeAvailable: Boolean = true
+    public override val isRevokeAllOthersAvailable: Boolean = true
 
-    override suspend fun getSessions(query: SessionListQuery): AppResult<PagedResult<UserSessionSummary>> {
+    public override suspend fun getSessions(query: SessionListQuery): AppResult<PagedResult<UserSessionSummary>> {
         val params = SelfSessionListParams(
             pageNumber = query.pageNumber
         )
         return getSessionsUseCase(params)
     }
 
-    override suspend fun revokeSession(sessionId: String, userId: String?): AppResult<Unit> {
+    public override suspend fun revokeSession(
+        sessionId: String,
+        userId: String?
+    ): AppResult<Unit> {
         val typedSessionId = sessionId.toUserSessionIdOrThrow()
         return deleteSessionUseCase(typedSessionId)
     }
 
-    override suspend fun revokeAllOtherSessions(userId: String?): AppResult<Unit> {
-        return deleteAllOtherSessionsUseCase()
-    }
+    public override suspend fun revokeAllOtherSessions(userId: String?): AppResult<Unit> =
+        deleteAllOtherSessionsUseCase()
 }

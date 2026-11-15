@@ -15,61 +15,61 @@ import kotlin.coroutines.resume
  *
  * @property webClientId OAuth 2.0 client ID (Web application type) used for browser-based authentication.
  */
-class WasmGoogleAuthService(
+public class WasmGoogleAuthService(
     private val webClientId: String
 ) : GoogleAuthService {
 
     @OptIn(ExperimentalWasmJsInterop::class)
-    override suspend fun signIn(): AppResult<LoginByExternalAuthProviderRequest> = suspendCancellableCoroutine { continuation ->
-        try {
-            google.accounts.id.initialize(
-                createGoogleConfig(webClientId) { response ->
-                    val token = getCredentialFromJsResponse(response)
-                    if (continuation.isActive) {
-                        if (token.isNotEmpty()) {
-                            val displayName = getDisplayNameFromJsResponse(response)
-                            continuation.resume(
-                                AppResult.Success(
-                                    LoginByExternalAuthProviderRequest(
-                                        authProvider = UserAuthProvider.GOOGLE.value,
-                                        externalProviderToken = token,
-                                        displayName = displayName
+    public override suspend fun signIn(): AppResult<LoginByExternalAuthProviderRequest> =
+        suspendCancellableCoroutine { continuation ->
+            try {
+                google.accounts.id.initialize(
+                    createGoogleConfig(webClientId) { response ->
+                        val token = getCredentialFromJsResponse(response)
+                        if (continuation.isActive) {
+                            if (token.isNotEmpty()) {
+                                val displayName = getDisplayNameFromJsResponse(response)
+                                continuation.resume(
+                                    AppResult.Success(
+                                        LoginByExternalAuthProviderRequest(
+                                            authProvider = UserAuthProvider.GOOGLE.value,
+                                            externalProviderToken = token,
+                                            displayName = displayName
+                                        )
                                     )
                                 )
-                            )
-                        } else {
+                            } else {
+                                continuation.resume(
+                                    AppResult.Error(
+                                        UserError.ExternalAuthFailed(
+                                            IllegalStateException("Google Auth: Token is empty")
+                                        )
+                                    )
+                                )
+                            }
+                        }
+                    }
+                )
+
+                google.accounts.id.prompt { notification: PromptMomentNotification ->
+                    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                        if (continuation.isActive) {
                             continuation.resume(
-                                AppResult.Error(UserError.ExternalAuthFailed(
-                                    Exception("Google Auth: Token is empty")
-                                ))
+                                AppResult.Error(
+                                    UserError.ExternalAuthCancelled(
+                                        IllegalStateException("Google Prompt was dismissed or skipped")
+                                    )
+                                )
                             )
                         }
                     }
                 }
-            )
-
-            google.accounts.id.prompt { notification: PromptMomentNotification ->
-                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                    if (continuation.isActive) {
-                        continuation.resume(
-                            AppResult.Error(
-                                UserError.ExternalAuthCancelled(
-                                    Exception("Google Prompt was dismissed or skipped")
-                                )
-                            )
-                        )
-                    }
+            } catch (@Suppress("TooGenericExceptionCaught") e: Throwable) {
+                if (continuation.isActive) {
+                    continuation.resume(AppResult.Error(UserError.ExternalAuthFailed(e)))
                 }
             }
-
-        } catch (e: Exception) {
-            if (continuation.isActive) {
-                continuation.resume(AppResult.Error(UserError.ExternalAuthFailed(e)))
-            }
         }
-    }
 
-    override suspend fun signOut(): AppResult<Unit> {
-        return AppResult.Success(Unit)
-    }
+    public override suspend fun signOut(): AppResult<Unit> = AppResult.Success(Unit)
 }

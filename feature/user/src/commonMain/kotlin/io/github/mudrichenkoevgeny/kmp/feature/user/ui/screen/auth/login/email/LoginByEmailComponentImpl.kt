@@ -6,9 +6,9 @@ import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCoroutineScope
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.apptype.AppType
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout.AccountLockoutType
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorArgs
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.SecurityErrorCodes
@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
  * @param onBack Pops this screen on the parent stack.
  * @param onFinished Invoked when login succeeds so the host can close the flow.
  */
-class LoginByEmailComponentImpl(
+public class LoginByEmailComponentImpl(
     componentContext: ComponentContext,
     appType: AppType,
     params: LoginByEmailParams = LoginByEmailParams(),
@@ -57,9 +57,9 @@ class LoginByEmailComponentImpl(
             isRegistrationAvailable = appType == AppType.CLIENT
         )
     )
-    override val state: Value<LoginByEmailScreenState> = _state
+    public override val state: Value<LoginByEmailScreenState> = _state
 
-    override fun onEmailChanged(email: String) {
+    public override fun onEmailChanged(email: String) {
         val current = _state.value as? LoginByEmailScreenState.Content ?: return
         _state.value = current.copy(
             email = email,
@@ -68,7 +68,7 @@ class LoginByEmailComponentImpl(
         )
     }
 
-    override fun onPasswordChanged(password: String) {
+    public override fun onPasswordChanged(password: String) {
         val current = _state.value as? LoginByEmailScreenState.Content ?: return
 
         _state.value = current.copy(
@@ -78,12 +78,12 @@ class LoginByEmailComponentImpl(
         )
     }
 
-    override fun onTogglePasswordVisibility() {
+    public override fun onTogglePasswordVisibility() {
         val current = _state.value as? LoginByEmailScreenState.Content ?: return
         _state.value = current.copy(isPasswordVisible = !current.isPasswordVisible)
     }
 
-    override fun onLoginClick() {
+    public override fun onLoginClick() {
         val current = _state.value as? LoginByEmailScreenState.Content ?: return
         if (!current.canLogin) {
             return
@@ -130,15 +130,15 @@ class LoginByEmailComponentImpl(
         }
     }
 
-    override fun onForgotPasswordClick() {
+    public override fun onForgotPasswordClick() {
         onNavigateToForgotPassword()
     }
 
-    override fun onRegistrationClick() {
+    public override fun onRegistrationClick() {
         onNavigateToRegistrationByEmail()
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         onBack()
     }
 }

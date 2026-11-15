@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
  * @param onNavigateToAuditEventDetail Callback invoked when an audit event card is selected.
  * @param onBack Callback invoked to pop the screen.
  */
-class AuditEventListComponentImpl(
+public class AuditEventListComponentImpl public constructor(
     componentContext: ComponentContext,
     private val params: ManagementAuditEventListParams,
     private val getAuditEventsUseCase: GetAuditEventsUseCase,
@@ -95,7 +95,10 @@ class AuditEventListComponentImpl(
         )
     }
 
-    override fun onFilterChanged(filterId: String, filterState: ListingFilterState?) {
+    override fun onFilterChanged(
+        filterId: String,
+        filterState: ListingFilterState?
+    ) {
         val currentContent = _state.value as? AuditEventListScreenState.Content ?: return
         val updatedFilters = currentContent.filterStates.toMutableMap()
         if (filterState != null) {
@@ -128,68 +131,13 @@ class AuditEventListComponentImpl(
         sortState: ListingSortState?,
         filterStates: Map<String, ListingFilterState>?
     ) {
-        val sortOrder = if (sortState?.isAscending == true) SortOrder.ASC else SortOrder.DESC
-        val sortBy = if (sortState?.optionId == AuditEventSortBy.CREATED_AT.value) {
-            AuditEventSortBy.CREATED_AT
-        } else {
-            params.sortBy
-        }
-
-        val eventIds = (filterStates?.get(AuditEventFilterValues.EVENT_ID) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.eventIds.ifEmpty { null }
-        val actorIds = (filterStates?.get(AuditEventFilterValues.ACTOR_ID) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.actorIds.ifEmpty { null }
-        val actorTypes = (filterStates?.get(AuditEventFilterValues.ACTOR_TYPE) as? ChoiceListingFilterState)
-            ?.selectedIds?.mapNotNull { AuditActorType.fromValueOrNull(it) } ?: params.actorTypes.ifEmpty { null }
-        val excludeActorTypes = (filterStates?.get(AuditEventFilterValues.EXCLUDE_ACTOR_TYPE) as? ChoiceListingFilterState)
-            ?.selectedIds?.mapNotNull { AuditActorType.fromValueOrNull(it) } ?: params.excludeActorTypes.ifEmpty { null }
-        val actorUserRoles = (filterStates?.get(AuditEventFilterValues.ACTOR_USER_ROLE) as? ChoiceListingFilterState)
-            ?.selectedIds?.mapNotNull { id -> UserRole.fromValueOrNull(id) } ?: params.actorUserRoles.mapNotNull { id -> UserRole.fromValueOrNull(id) }.ifEmpty { null }
-        val actions = (filterStates?.get(AuditEventFilterValues.ACTION) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.actions.ifEmpty { null }
-        val excludeActions = (filterStates?.get(AuditEventFilterValues.EXCLUDE_ACTION) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.excludeActions.ifEmpty { null }
-        val resources = (filterStates?.get(AuditEventFilterValues.RESOURCE) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.resources.ifEmpty { null }
-        val resourceIds = (filterStates?.get(AuditEventFilterValues.RESOURCE_ID) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.resourceIds.ifEmpty { null }
-        val statuses = (filterStates?.get(AuditEventFilterValues.STATUS) as? ChoiceListingFilterState)
-            ?.selectedIds?.mapNotNull { AuditStatus.fromValueOrNull(it) } ?: params.statuses.ifEmpty { null }
-        val excludeStatuses = (filterStates?.get(AuditEventFilterValues.EXCLUDE_STATUS) as? ChoiceListingFilterState)
-            ?.selectedIds?.mapNotNull { AuditStatus.fromValueOrNull(it) } ?: params.excludeStatuses.ifEmpty { null }
-        val createdAtFrom = (filterStates?.get(AuditEventFilterValues.CREATED_AT_FROM) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() } ?: params.createdAtFrom?.takeIf { it.isNotBlank() }
-        val createdAtTo = (filterStates?.get(AuditEventFilterValues.CREATED_AT_TO) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() } ?: params.createdAtTo?.takeIf { it.isNotBlank() }
-        val searchQuery = (filterStates?.get(AuditEventFilterValues.SEARCH_QUERY) as? TextListingFilterState)
-            ?.value?.takeIf { it.isNotBlank() } ?: params.searchQuery?.takeIf { it.isNotBlank() }
-
+        val requestParams = buildManagementAuditEventListParams(pageNumber, sortState, filterStates)
         scope.launch {
-            getAuditEventsUseCase(
-                params = ManagementAuditEventListParams(
-                    pageNumber = pageNumber,
-                    pageSize = params.pageSize,
-                    sortBy = sortBy,
-                    sortOrder = sortOrder,
-                    eventIds = eventIds ?: emptyList(),
-                    actorIds = actorIds ?: emptyList(),
-                    actorTypes = actorTypes ?: emptyList(),
-                    excludeActorTypes = excludeActorTypes ?: emptyList(),
-                    actorUserRoles = actorUserRoles?.map { it.value } ?: emptyList(),
-                    actions = actions ?: emptyList(),
-                    excludeActions = excludeActions ?: emptyList(),
-                    resources = resources ?: emptyList(),
-                    resourceIds = resourceIds ?: emptyList(),
-                    statuses = statuses ?: emptyList(),
-                    excludeStatuses = excludeStatuses ?: emptyList(),
-                    createdAtFrom = createdAtFrom ?: "",
-                    createdAtTo = createdAtTo ?: "",
-                    searchQuery = searchQuery ?: ""
-                )
-            )
+            getAuditEventsUseCase(params = requestParams)
                 .onSuccess { pagedResult ->
                     val currentContent = _state.value as? AuditEventListScreenState.Content
-                    val newPaging = (currentContent?.paging ?: PaginationState<AuditEventSummary>()).appendResult(pagedResult)
+                    val newPaging =
+                        (currentContent?.paging ?: PaginationState<AuditEventSummary>()).appendResult(pagedResult)
                     _state.value = createContent(currentContent, newPaging, sortState, filterStates)
                 }
                 .onError { error ->
@@ -205,6 +153,112 @@ class AuditEventListComponentImpl(
         }
     }
 
+    private fun buildManagementAuditEventListParams(
+        pageNumber: Int,
+        sortState: ListingSortState?,
+        filterStates: Map<String, ListingFilterState>?
+    ): ManagementAuditEventListParams {
+        val sortOrder = if (sortState?.isAscending == true) SortOrder.ASC else SortOrder.DESC
+        val sortBy = if (sortState?.optionId == AuditEventSortBy.CREATED_AT.value) {
+            AuditEventSortBy.CREATED_AT
+        } else {
+            params.sortBy
+        }
+
+        val eventAndActorFilters = parseAuditEventAndActorFilters(filterStates)
+        val actionAndResourceFilters = parseAuditActionAndResourceFilters(filterStates)
+        val timestampAndSearchFilters = parseAuditTimestampAndSearchFilters(filterStates)
+
+        return ManagementAuditEventListParams(
+            pageNumber = pageNumber,
+            pageSize = params.pageSize,
+            sortBy = sortBy,
+            sortOrder = sortOrder,
+            eventIds = eventAndActorFilters.eventIds,
+            actorIds = eventAndActorFilters.actorIds,
+            actorTypes = eventAndActorFilters.actorTypes,
+            excludeActorTypes = eventAndActorFilters.excludeActorTypes,
+            actorUserRoles = eventAndActorFilters.actorUserRoles.map { it.value },
+            actions = actionAndResourceFilters.actions,
+            excludeActions = actionAndResourceFilters.excludeActions,
+            resources = actionAndResourceFilters.resources,
+            resourceIds = actionAndResourceFilters.resourceIds,
+            statuses = actionAndResourceFilters.statuses,
+            excludeStatuses = actionAndResourceFilters.excludeStatuses,
+            createdAtFrom = timestampAndSearchFilters.createdAtFrom,
+            createdAtTo = timestampAndSearchFilters.createdAtTo,
+            searchQuery = timestampAndSearchFilters.searchQuery
+        )
+    }
+
+    private fun parseAuditEventAndActorFilters(
+        filterStates: Map<String, ListingFilterState>?
+    ): AuditEventAndActorFilters {
+        val eventIds = (filterStates?.get(AuditEventFilterValues.EVENT_ID) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.eventIds
+        val actorIds = (filterStates?.get(AuditEventFilterValues.ACTOR_ID) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.actorIds
+        val actorTypes = (filterStates?.get(AuditEventFilterValues.ACTOR_TYPE) as? ChoiceListingFilterState)
+            ?.selectedIds?.mapNotNull { AuditActorType.fromValueOrNull(it) } ?: params.actorTypes
+        val excludeActorTypes =
+            (filterStates?.get(AuditEventFilterValues.EXCLUDE_ACTOR_TYPE) as? ChoiceListingFilterState)
+                ?.selectedIds?.mapNotNull { AuditActorType.fromValueOrNull(it) } ?: params.excludeActorTypes
+        val actorUserRoles = (filterStates?.get(AuditEventFilterValues.ACTOR_USER_ROLE) as? ChoiceListingFilterState)
+            ?.selectedIds?.mapNotNull { id -> UserRole.fromValueOrNull(id) }
+            ?: params.actorUserRoles.mapNotNull { id -> UserRole.fromValueOrNull(id) }
+
+        return AuditEventAndActorFilters(
+            eventIds = eventIds,
+            actorIds = actorIds,
+            actorTypes = actorTypes,
+            excludeActorTypes = excludeActorTypes,
+            actorUserRoles = actorUserRoles
+        )
+    }
+
+    private fun parseAuditActionAndResourceFilters(
+        filterStates: Map<String, ListingFilterState>?
+    ): AuditActionAndResourceFilters {
+        val actions = (filterStates?.get(AuditEventFilterValues.ACTION) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.actions
+        val excludeActions = (filterStates?.get(AuditEventFilterValues.EXCLUDE_ACTION) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.excludeActions
+        val resources = (filterStates?.get(AuditEventFilterValues.RESOURCE) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.resources
+        val resourceIds = (filterStates?.get(AuditEventFilterValues.RESOURCE_ID) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: params.resourceIds
+        val statuses = (filterStates?.get(AuditEventFilterValues.STATUS) as? ChoiceListingFilterState)
+            ?.selectedIds?.mapNotNull { AuditStatus.fromValueOrNull(it) } ?: params.statuses
+        val excludeStatuses = (filterStates?.get(AuditEventFilterValues.EXCLUDE_STATUS) as? ChoiceListingFilterState)
+            ?.selectedIds?.mapNotNull { AuditStatus.fromValueOrNull(it) } ?: params.excludeStatuses
+
+        return AuditActionAndResourceFilters(
+            actions = actions,
+            excludeActions = excludeActions,
+            resources = resources,
+            resourceIds = resourceIds,
+            statuses = statuses,
+            excludeStatuses = excludeStatuses
+        )
+    }
+
+    private fun parseAuditTimestampAndSearchFilters(
+        filterStates: Map<String, ListingFilterState>?
+    ): AuditTimestampAndSearchFilters {
+        val createdAtFrom = (filterStates?.get(AuditEventFilterValues.CREATED_AT_FROM) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.createdAtFrom?.takeIf { it.isNotBlank() }
+        val createdAtTo = (filterStates?.get(AuditEventFilterValues.CREATED_AT_TO) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.createdAtTo?.takeIf { it.isNotBlank() }
+        val searchQuery = (filterStates?.get(AuditEventFilterValues.SEARCH_QUERY) as? TextListingFilterState)
+            ?.value?.takeIf { it.isNotBlank() } ?: params.searchQuery?.takeIf { it.isNotBlank() }
+
+        return AuditTimestampAndSearchFilters(
+            createdAtFrom = createdAtFrom ?: "",
+            createdAtTo = createdAtTo ?: "",
+            searchQuery = searchQuery ?: ""
+        )
+    }
+
     private fun createContent(
         currentContent: AuditEventListScreenState.Content?,
         newPaging: PaginationState<AuditEventSummary>,
@@ -216,3 +270,26 @@ class AuditEventListComponentImpl(
         filterStates = filterStates ?: emptyMap()
     )
 }
+
+private data class AuditEventAndActorFilters(
+    val eventIds: List<String>,
+    val actorIds: List<String>,
+    val actorTypes: List<AuditActorType>,
+    val excludeActorTypes: List<AuditActorType>,
+    val actorUserRoles: List<UserRole>
+)
+
+private data class AuditActionAndResourceFilters(
+    val actions: List<String>,
+    val excludeActions: List<String>,
+    val resources: List<String>,
+    val resourceIds: List<String>,
+    val statuses: List<AuditStatus>,
+    val excludeStatuses: List<AuditStatus>
+)
+
+private data class AuditTimestampAndSearchFilters(
+    val createdAtFrom: String,
+    val createdAtTo: String,
+    val searchQuery: String
+)

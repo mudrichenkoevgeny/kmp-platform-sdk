@@ -9,50 +9,57 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list.AuditEventListScreenState
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventId
 
+/**
+ * Mock implementation of [AuditEventListComponent] for testing.
+ */
 @InternalApi
-class AuditEventListComponentMock(
+public class AuditEventListComponentMock(
     initialState: AuditEventListScreenState = AuditEventListScreenState.Loading
 ) : AuditEventListComponent {
 
     private val _state = MutableValue(initialState)
-    override val state: Value<AuditEventListScreenState> = _state
+    public override val state: Value<AuditEventListScreenState> = _state
 
-    var backCalls = 0
-    var refreshCalls = 0
-    var loadNextPageCalls = 0
-    var toggleFilterPanelCalls = 0
-    var lastEventClicked: AuditEventId? = null
+    public var backCalls: Int = 0
+    public var refreshCalls: Int = 0
+    public var loadNextPageCalls: Int = 0
+    public var toggleFilterPanelCalls: Int = 0
+    public var lastEventClicked: AuditEventId? = null
 
-    fun updateState(state: AuditEventListScreenState) {
+    /** Updates the current screen state. */
+    public fun updateState(state: AuditEventListScreenState) {
         _state.value = state
     }
 
-    override fun onEventClick(eventId: AuditEventId) {
+    public override fun onEventClick(eventId: AuditEventId) {
         lastEventClicked = eventId
     }
 
-    override fun onLoadNextPage() {
+    public override fun onLoadNextPage() {
         loadNextPageCalls++
     }
 
-    override fun onRefresh() {
+    public override fun onRefresh() {
         refreshCalls++
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         backCalls++
     }
 
-    override fun onToggleFilterPanel() {
+    public override fun onToggleFilterPanel() {
         toggleFilterPanelCalls++
     }
 
-    override fun onSortChanged(sortState: ListingSortState) {
+    public override fun onSortChanged(sortState: ListingSortState) {
         val current = _state.value as? AuditEventListScreenState.Content ?: return
         _state.value = current.copy(sortState = sortState)
     }
 
-    override fun onFilterChanged(filterId: String, filterState: ListingFilterState?) {
+    public override fun onFilterChanged(
+        filterId: String,
+        filterState: ListingFilterState?
+    ) {
         val current = _state.value as? AuditEventListScreenState.Content ?: return
         val newFilters = current.filterStates.toMutableMap()
         if (filterState == null) {
@@ -63,7 +70,7 @@ class AuditEventListComponentMock(
         _state.value = current.copy(filterStates = newFilters)
     }
 
-    override fun onApplyFilters() {
+    public override fun onApplyFilters() {
         val current = _state.value as? AuditEventListScreenState.Content ?: return
         _state.value = current.copy(isFilterPanelExpanded = false)
     }

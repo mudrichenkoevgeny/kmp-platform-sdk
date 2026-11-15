@@ -1,7 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.factory
 
 import com.arkivanov.decompose.ComponentContext
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.StorageFileListComponent
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.StorageFileListComponentImpl
@@ -25,7 +24,7 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.Managemen
  * @param onNavigateBack Callback for back navigation.
  * @return Configured [StorageFileListComponent] instance.
  */
-fun createManagementGlobalStorageFileListComponent(
+public fun createManagementGlobalStorageFileListComponent(
     componentContext: ComponentContext,
     getFilesUseCase: ManagementGetFilesUseCase,
     deleteFileUseCase: ManagementDeleteFileUseCase,

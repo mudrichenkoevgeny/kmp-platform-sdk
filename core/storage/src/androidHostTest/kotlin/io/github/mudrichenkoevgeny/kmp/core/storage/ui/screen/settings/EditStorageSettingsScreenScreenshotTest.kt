@@ -52,12 +52,10 @@ class EditStorageSettingsScreenScreenshotTest(
         @Suppress("Unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
-        fun data(): Collection<Array<Any>> {
-            return listOf(
-                arrayOf("Loading", EditStorageSettingsScreenState.Loading),
-                arrayOf("Error", EditStorageSettingsScreenState.Error(error = CommonError.Unknown())),
-                arrayOf("Content", EditStorageSettingsComponentMock().state.value)
-            )
-        }
+        fun data(): Collection<Array<Any>> = listOf(
+            arrayOf("Loading", EditStorageSettingsScreenState.Loading),
+            arrayOf("Error", EditStorageSettingsScreenState.Error(error = CommonError.Unknown())),
+            arrayOf("Content", EditStorageSettingsComponentMock().state.value)
+        )
     }
 }

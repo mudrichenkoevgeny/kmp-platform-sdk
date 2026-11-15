@@ -64,7 +64,9 @@ class GlobalUserListScreenTest {
 
     @Test
     fun content_clickBack_invokesCallback() = runComposeUiTest {
-        val component = GlobalUserListComponentMock(GlobalUserListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
+        val component = GlobalUserListComponentMock(
+            GlobalUserListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false))
+        )
         setContent {
             ComponentTestHarness {
                 GlobalUserListScreen(component)
@@ -76,7 +78,9 @@ class GlobalUserListScreenTest {
 
     @Test
     fun content_clickRefresh_invokesCallback() = runComposeUiTest {
-        val component = GlobalUserListComponentMock(GlobalUserListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
+        val component = GlobalUserListComponentMock(
+            GlobalUserListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false))
+        )
         setContent {
             ComponentTestHarness {
                 GlobalUserListScreen(component)
@@ -88,7 +92,9 @@ class GlobalUserListScreenTest {
 
     @Test
     fun content_clickCreateUser_invokesCallback() = runComposeUiTest {
-        val component = GlobalUserListComponentMock(GlobalUserListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
+        val component = GlobalUserListComponentMock(
+            GlobalUserListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false))
+        )
         setContent {
             ComponentTestHarness {
                 GlobalUserListScreen(component)

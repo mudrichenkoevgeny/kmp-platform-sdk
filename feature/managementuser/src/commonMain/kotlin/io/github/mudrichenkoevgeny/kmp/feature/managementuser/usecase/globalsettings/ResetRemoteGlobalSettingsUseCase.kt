@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.model.
  *
  * @param managementGlobalSettingsRepository Remote management global settings API.
  */
-class ResetRemoteGlobalSettingsUseCase(
+public class ResetRemoteGlobalSettingsUseCase(
     private val managementGlobalSettingsRepository: ManagementGlobalSettingsRepository
 ) {
     /**
@@ -17,7 +17,6 @@ class ResetRemoteGlobalSettingsUseCase(
      *
      * @return Updated default [ManagementGlobalSettings] on success, or an error result when the remote reset fails.
      */
-    suspend operator fun invoke(): AppResult<ManagementGlobalSettings> {
-        return managementGlobalSettingsRepository.resetRemoteManagementGlobalSettings()
-    }
+    public suspend operator fun invoke(): AppResult<ManagementGlobalSettings> =
+        managementGlobalSettingsRepository.resetRemoteManagementGlobalSettings()
 }

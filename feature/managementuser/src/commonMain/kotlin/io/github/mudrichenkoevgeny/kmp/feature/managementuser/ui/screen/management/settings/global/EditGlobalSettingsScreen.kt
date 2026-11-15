@@ -26,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
@@ -46,10 +45,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyTex
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.settings.global.EditGlobalSettingsComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogChild
@@ -62,7 +61,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserString
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditGlobalSettingsScreen(component: EditGlobalSettingsComponent) {
+public fun EditGlobalSettingsScreen(component: EditGlobalSettingsComponent) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
@@ -89,6 +88,7 @@ fun EditGlobalSettingsScreen(component: EditGlobalSettingsComponent) {
             is EditGlobalSettingsScreenState.Loading -> {
                 FullscreenLoading(modifier = Modifier.padding(padding))
             }
+
             is EditGlobalSettingsScreenState.Error -> {
                 FullscreenError(
                     error = currentState.error,
@@ -98,6 +98,7 @@ fun EditGlobalSettingsScreen(component: EditGlobalSettingsComponent) {
                         .testTag(EditGlobalSettingsTestTags.GLOBAL_ERROR)
                 )
             }
+
             is EditGlobalSettingsScreenState.Content -> {
                 EditGlobalSettingsForm(
                     state = currentState,
@@ -307,7 +308,10 @@ private fun ToggleRow(
 }
 
 @Composable
-private fun ErrorText(error: AppError?, testTag: String) {
+private fun ErrorText(
+    error: AppError?,
+    testTag: String
+) {
     AnimatedVisibility(
         visible = error != null,
         enter = fadeIn() + expandVertically(),
@@ -377,7 +381,7 @@ private val defaultEditGlobalSettingsPreviewState = EditGlobalSettingsScreenStat
 )
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun StatesPreview(
     @PreviewParameter(EditGlobalSettingsPreviewProvider::class) state: EditGlobalSettingsScreenState
@@ -388,7 +392,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
@@ -397,7 +401,7 @@ private fun ScreenSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -406,7 +410,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {
@@ -414,27 +418,27 @@ private fun FontScalePreview() {
     }
 }
 
-object EditGlobalSettingsTestTags {
-    const val TITLE = "EditGlobalSettings_Title"
-    const val BACK_BUTTON = "EditGlobalSettings_BackButton"
-    const val GLOBAL_ERROR = "EditGlobalSettings_GlobalError"
+public object EditGlobalSettingsTestTags {
+    public const val TITLE: String = "EditGlobalSettings_Title"
+    public const val BACK_BUTTON: String = "EditGlobalSettings_BackButton"
+    public const val GLOBAL_ERROR: String = "EditGlobalSettings_GlobalError"
 
-    const val PRIVACY_POLICY_URL_INPUT = "EditGlobalSettings_PrivacyPolicyUrlInput"
-    const val TERMS_OF_SERVICE_URL_INPUT = "EditGlobalSettings_TermsOfServiceUrlInput"
-    const val CONTACT_SUPPORT_EMAIL_INPUT = "EditGlobalSettings_ContactSupportEmailInput"
+    public const val PRIVACY_POLICY_URL_INPUT: String = "EditGlobalSettings_PrivacyPolicyUrlInput"
+    public const val TERMS_OF_SERVICE_URL_INPUT: String = "EditGlobalSettings_TermsOfServiceUrlInput"
+    public const val CONTACT_SUPPORT_EMAIL_INPUT: String = "EditGlobalSettings_ContactSupportEmailInput"
 
-    const val SECTION_TELEMETRY_TITLE = "EditGlobalSettings_SectionTelemetryTitle"
-    const val IS_TRACING_ENABLED_CHECKBOX = "EditGlobalSettings_IsTracingEnabledCheckbox"
-    const val IS_METRICS_ENABLED_CHECKBOX = "EditGlobalSettings_IsMetricsEnabledCheckbox"
-    const val IS_VERBOSE_LOGGING_ENABLED_CHECKBOX = "EditGlobalSettings_IsVerboseLoggingEnabledCheckbox"
+    public const val SECTION_TELEMETRY_TITLE: String = "EditGlobalSettings_SectionTelemetryTitle"
+    public const val IS_TRACING_ENABLED_CHECKBOX: String = "EditGlobalSettings_IsTracingEnabledCheckbox"
+    public const val IS_METRICS_ENABLED_CHECKBOX: String = "EditGlobalSettings_IsMetricsEnabledCheckbox"
+    public const val IS_VERBOSE_LOGGING_ENABLED_CHECKBOX: String = "EditGlobalSettings_IsVerboseLoggingEnabledCheckbox"
 
-    const val SECTION_MIN_VERSIONS_TITLE = "EditGlobalSettings_SectionMinVersionsTitle"
-    const val MIN_VERSION_ANDROID_INPUT = "EditGlobalSettings_MinVersionAndroidInput"
-    const val MIN_VERSION_IOS_INPUT = "EditGlobalSettings_MinVersionIosInput"
-    const val MIN_VERSION_WEB_INPUT = "EditGlobalSettings_MinVersionWebInput"
-    const val MIN_VERSION_DESKTOP_INPUT = "EditGlobalSettings_MinVersionDesktopInput"
+    public const val SECTION_MIN_VERSIONS_TITLE: String = "EditGlobalSettings_SectionMinVersionsTitle"
+    public const val MIN_VERSION_ANDROID_INPUT: String = "EditGlobalSettings_MinVersionAndroidInput"
+    public const val MIN_VERSION_IOS_INPUT: String = "EditGlobalSettings_MinVersionIosInput"
+    public const val MIN_VERSION_WEB_INPUT: String = "EditGlobalSettings_MinVersionWebInput"
+    public const val MIN_VERSION_DESKTOP_INPUT: String = "EditGlobalSettings_MinVersionDesktopInput"
 
-    const val SAVE_ERROR_TEXT = "EditGlobalSettings_SaveErrorText"
-    const val SAVE_BUTTON = "EditGlobalSettings_SaveButton"
-    const val RESET_BUTTON = "EditGlobalSettings_ResetButton"
+    public const val SAVE_ERROR_TEXT: String = "EditGlobalSettings_SaveErrorText"
+    public const val SAVE_BUTTON: String = "EditGlobalSettings_SaveButton"
+    public const val RESET_BUTTON: String = "EditGlobalSettings_ResetButton"
 }

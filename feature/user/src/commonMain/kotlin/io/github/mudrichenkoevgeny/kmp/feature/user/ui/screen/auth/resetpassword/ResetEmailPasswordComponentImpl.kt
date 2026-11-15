@@ -14,16 +14,16 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.core.common.time.resendCountdown
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.PasswordPolicyFailReason
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.client.naming.ClientSecurityErrorCodes
 import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ValidatePasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpassword.ResetPasswordRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.ResetEmailPasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.SendResetPasswordConfirmationToEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
-import kotlinx.coroutines.Job
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.PasswordPolicyFailReason
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.client.naming.ClientSecurityErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.resetpassword.ResetPasswordParams
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 /**
@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
  * @param onBack pops this screen or returns to email step.
  * @param onFinished invoked when the password was reset successfully.
  */
-class ResetEmailPasswordComponentImpl(
+public class ResetEmailPasswordComponentImpl(
     componentContext: ComponentContext,
     params: ResetPasswordParams = ResetPasswordParams(),
     private val resetPasswordRepository: ResetPasswordRepository,
@@ -53,25 +53,26 @@ class ResetEmailPasswordComponentImpl(
     private var timerJob: Job? = null
     private var passwordValidationJob: Job? = null
 
-    private val startStepConfig: ResetPasswordStepConfig = if (!params.code.isNullOrBlank() || !params.email.isNullOrBlank()) {
-        if (!params.code.isNullOrBlank()) {
-            ResetPasswordStepConfig.ConfirmInput(email = params.email ?: "")
+    private val startStepConfig: ResetPasswordStepConfig =
+        if (!params.code.isNullOrBlank() || !params.email.isNullOrBlank()) {
+            if (!params.code.isNullOrBlank()) {
+                ResetPasswordStepConfig.ConfirmInput(email = params.email ?: "")
+            } else {
+                ResetPasswordStepConfig.EmailInput(initialEmail = params.email ?: "")
+            }
         } else {
-            ResetPasswordStepConfig.EmailInput(initialEmail = params.email ?: "")
+            ResetPasswordStepConfig.EmailInput()
         }
-    } else {
-        ResetPasswordStepConfig.EmailInput()
-    }
 
-    override val stackNavigation = StackNavigation<ResetPasswordStepConfig>()
+    public override val stackNavigation: StackNavigation<ResetPasswordStepConfig> = StackNavigation()
 
-    override val stack: Value<ChildStack<ResetPasswordStepConfig, ResetEmailPasswordComponent.Child>> =
+    public override val stack: Value<ChildStack<ResetPasswordStepConfig, ResetEmailPasswordComponent.Child>> =
         childStack(
             source = stackNavigation,
             serializer = ResetPasswordStepConfig.serializer(),
             initialConfiguration = startStepConfig,
             handleBackButton = true,
-            childFactory = ::createChild
+            childFactory = { config, _ -> createChild(config) }
         )
 
     private val _state = MutableValue(
@@ -86,7 +87,7 @@ class ResetEmailPasswordComponentImpl(
             }
         )
     )
-    override val state: Value<ResetEmailPasswordScreenState> = _state
+    public override val state: Value<ResetEmailPasswordScreenState> = _state
 
     init {
         if (startStepConfig is ResetPasswordStepConfig.ConfirmInput && startStepConfig.resendTimerSeconds > 0) {
@@ -95,14 +96,13 @@ class ResetEmailPasswordComponentImpl(
     }
 
     private fun createChild(
-        config: ResetPasswordStepConfig,
-        context: ComponentContext
+        config: ResetPasswordStepConfig
     ): ResetEmailPasswordComponent.Child = when (config) {
         is ResetPasswordStepConfig.EmailInput -> ResetEmailPasswordComponent.Child.EmailInput(config.initialEmail)
         is ResetPasswordStepConfig.ConfirmInput -> ResetEmailPasswordComponent.Child.ConfirmInput(config.email)
     }
 
-    override fun onEmailChanged(email: String) {
+    public override fun onEmailChanged(email: String) {
         val isValid = FieldValidator.isEmailValid(email)
 
         _state.value = _state.value.copy(
@@ -120,7 +120,7 @@ class ResetEmailPasswordComponentImpl(
         }
     }
 
-    override fun onPasswordChanged(password: String) {
+    public override fun onPasswordChanged(password: String) {
         _state.value = _state.value.copy(
             newPassword = password,
             actionError = null
@@ -132,7 +132,8 @@ class ResetEmailPasswordComponentImpl(
 
             val isPasswordValid = when (result) {
                 is AppResult.Success -> true
-                is AppResult.Error -> result.error.code != PasswordPolicyFailReason.TOO_SHORT.name &&
+                is AppResult.Error ->
+                    result.error.code != PasswordPolicyFailReason.TOO_SHORT.value &&
                         result.error.code != ClientSecurityErrorCodes.PASSWORD_POLICY_UNAVAILABLE
             }
 
@@ -142,13 +143,13 @@ class ResetEmailPasswordComponentImpl(
         }
     }
 
-    override fun onCodeChanged(code: String) {
+    public override fun onCodeChanged(code: String) {
         if (code.length <= _state.value.codeLength) {
             _state.value = _state.value.copy(code = code, actionError = null)
         }
     }
 
-    override fun onSendCodeClick() {
+    public override fun onSendCodeClick() {
         val email = _state.value.email
         updateLoading(true)
 
@@ -167,7 +168,7 @@ class ResetEmailPasswordComponentImpl(
         }
     }
 
-    override fun onConfirmResetClick() {
+    public override fun onConfirmResetClick() {
         val current = _state.value
         if (!current.canConfirm) {
             return
@@ -194,7 +195,7 @@ class ResetEmailPasswordComponentImpl(
         }
     }
 
-    override fun onResetEmailClick() {
+    public override fun onResetEmailClick() {
         timerJob?.cancel()
         val email = _state.value.email
         _state.value = _state.value.copy(
@@ -207,13 +208,16 @@ class ResetEmailPasswordComponentImpl(
         stackNavigation.bringToFront(ResetPasswordStepConfig.EmailInput(email))
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         if ((backHandler as? BackDispatcher)?.back() != true) {
             onBack()
         }
     }
 
-    private fun moveToResetInput(email: String, seconds: Int) {
+    private fun moveToResetInput(
+        email: String,
+        seconds: Int
+    ) {
         _state.value = _state.value.copy(
             email = email,
             resendTimerSeconds = seconds,

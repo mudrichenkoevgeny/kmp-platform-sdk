@@ -45,11 +45,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyTex
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
 import io.github.mudrichenkoevgeny.kmp.core.storage.mock.ui.screen.settings.EditStorageSettingsComponentMock
@@ -64,7 +64,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.core.storage.domain
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditStorageSettingsScreen(
+public fun EditStorageSettingsScreen(
     component: EditStorageSettingsComponent,
     modifier: Modifier = Modifier
 ) {
@@ -98,6 +98,7 @@ fun EditStorageSettingsScreen(
             is EditStorageSettingsScreenState.Loading -> {
                 FullscreenLoading(modifier = Modifier.padding(padding))
             }
+
             is EditStorageSettingsScreenState.Error -> {
                 FullscreenError(
                     error = currentState.error,
@@ -105,6 +106,7 @@ fun EditStorageSettingsScreen(
                     modifier = Modifier.padding(padding)
                 )
             }
+
             is EditStorageSettingsScreenState.Content -> {
                 EditStorageSettingsForm(
                     state = currentState,
@@ -112,7 +114,7 @@ fun EditStorageSettingsScreen(
                     onMaxUploadSizeBytesChanged = component::onMaxUploadSizeBytesChanged,
                     onTotalStorageQuotaForOpenUserBytesChanged = component::onTotalStorageQuotaForOpenUserBytesChanged,
                     onTotalStorageQuotaForManagementUserBytesChanged =
-                    component::onTotalStorageQuotaForManagementUserBytesChanged,
+                        component::onTotalStorageQuotaForManagementUserBytesChanged,
                     onPresignedUrlExpirationSecondsChanged = component::onPresignedUrlExpirationSecondsChanged,
                     onMaxPendingUploadsForOpenUserChanged = component::onMaxPendingUploadsForOpenUserChanged,
                     onMaxPendingUploadsForManagementUserChanged = component::onMaxPendingUploadsForManagementUserChanged,
@@ -295,7 +297,10 @@ private fun EditStorageSettingsForm(
 }
 
 @Composable
-private fun ErrorText(error: AppError?, testTag: String) {
+private fun ErrorText(
+    error: AppError?,
+    testTag: String
+) {
     AnimatedVisibility(
         visible = error != null,
         enter = fadeIn() + expandVertically(),
@@ -391,28 +396,28 @@ private fun EditStorageSettingsStatesPreview(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun EditStorageSettingsComponentSizePreview() {
     EditStorageSettingsPreviewContent(state = defaultEditStorageSettingsPreviewState)
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun EditStorageSettingsScreenSizePreview() {
     EditStorageSettingsPreviewContent(state = defaultEditStorageSettingsPreviewState)
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun EditStorageSettingsThemePreview() {
     EditStorageSettingsPreviewContent(state = defaultEditStorageSettingsPreviewState)
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun EditStorageSettingsFontScalePreview() {
     EditStorageSettingsPreviewContent(state = defaultEditStorageSettingsPreviewState)

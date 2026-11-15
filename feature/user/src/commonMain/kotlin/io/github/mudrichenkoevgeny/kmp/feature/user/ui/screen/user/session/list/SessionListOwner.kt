@@ -6,13 +6,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
 /**
  * Interface for components or child wrappers that manage an active list of user sessions.
  */
-interface SessionListOwner {
+public interface SessionListOwner {
     /**
      * Removes the revoked session from the active list state.
      *
      * @param sessionId The [UserSessionId] of the revoked session.
      */
-    fun onSessionRevoked(sessionId: UserSessionId)
+    public fun onSessionRevoked(sessionId: UserSessionId)
 }
 
 /**
@@ -20,7 +20,7 @@ interface SessionListOwner {
  *
  * @param sessionId The [UserSessionId] of the revoked session.
  */
-fun ChildStack<*, *>.notifySessionRevoked(sessionId: UserSessionId) {
+public fun ChildStack<*, *>.notifySessionRevoked(sessionId: UserSessionId) {
     items
         .map { it.instance }
         .filterIsInstance<SessionListOwner>()

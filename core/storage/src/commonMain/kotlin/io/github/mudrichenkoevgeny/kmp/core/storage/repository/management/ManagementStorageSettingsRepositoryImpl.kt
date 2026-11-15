@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.decodeFromJsonElement
 
 /**
@@ -31,7 +32,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
  * @param webSocketService WebSocket service for real-time setting updates.
  * @param repositoryScope Scope used to collect WebSocket events.
  */
-class ManagementStorageSettingsRepositoryImpl(
+public class ManagementStorageSettingsRepositoryImpl(
     private val managementStorageSettingsApi: ManagementStorageSettingsApi,
     private val managementStorageSettingsStorage: ManagementStorageSettingsStorage,
     private val webSocketService: WebSocketService,
@@ -39,11 +40,11 @@ class ManagementStorageSettingsRepositoryImpl(
 ) : ManagementStorageSettingsRepository {
 
     private val updateMutex = Mutex()
-    private val _settings = MutableStateFlow<ManagementStorageSettings?>(null)
+    private val settingsStateFlow = MutableStateFlow<ManagementStorageSettings?>(null)
 
     init {
         repositoryScope.launch {
-            _settings.value = managementStorageSettingsStorage.getManagementStorageSettings()
+            settingsStateFlow.value = managementStorageSettingsStorage.getManagementStorageSettings()
 
             webSocketService.observeEvents()
                 .filter { it.type == StorageWebSocketEventTypes.MANAGEMENT_STORAGE_SETTINGS_UPDATED }
@@ -58,21 +59,25 @@ class ManagementStorageSettingsRepositoryImpl(
                         } else {
                             Logger.w { "Received MANAGEMENT_STORAGE_SETTINGS_UPDATED with invalid payload" }
                         }
-                    } catch (e: Exception) {
+                    } catch (e: SerializationException) {
+                        Logger.e(e) { "Failed to process WebSocket event" }
+                    } catch (e: IllegalArgumentException) {
+                        Logger.e(e) { "Failed to process WebSocket event" }
+                    } catch (e: IllegalStateException) {
                         Logger.e(e) { "Failed to process WebSocket event" }
                     }
                 }
         }
     }
 
-    override suspend fun getManagementStorageSettings(): AppResult<ManagementStorageSettings> {
-        _settings.value?.let { return AppResult.Success(it) }
+    public override suspend fun getManagementStorageSettings(): AppResult<ManagementStorageSettings> {
+        settingsStateFlow.value?.let { return AppResult.Success(it) }
 
         return updateMutex.withLock {
-            val cached = _settings.value ?: managementStorageSettingsStorage.getManagementStorageSettings()
+            val cached = settingsStateFlow.value ?: managementStorageSettingsStorage.getManagementStorageSettings()
 
             if (cached != null) {
-                _settings.value = cached
+                settingsStateFlow.value = cached
                 AppResult.Success(cached)
             } else {
                 refreshManagementStorageSettingsInternal()
@@ -80,7 +85,9 @@ class ManagementStorageSettingsRepositoryImpl(
         }
     }
 
-    override suspend fun saveRemoteManagementStorageSettings(storageSettings: ManagementStorageSettings): AppResult<ManagementStorageSettings> {
+    public override suspend fun saveRemoteManagementStorageSettings(
+        storageSettings: ManagementStorageSettings
+    ): AppResult<ManagementStorageSettings> {
         val payload = storageSettings.toManagementStorageSettingsPayload()
         return managementStorageSettingsApi.updateManagementStorageSettings(payload)
             .mapSuccess { response ->
@@ -90,40 +97,38 @@ class ManagementStorageSettingsRepositoryImpl(
             }
     }
 
-    override suspend fun resetRemoteManagementStorageSettings(): AppResult<ManagementStorageSettings> {
-        return managementStorageSettingsApi.resetManagementStorageSettings()
+    public override suspend fun resetRemoteManagementStorageSettings(): AppResult<ManagementStorageSettings> =
+        managementStorageSettingsApi.resetManagementStorageSettings()
             .mapSuccess { response ->
                 val settings = response.toManagementStorageSettings()
                 updateManagementStorageSettings(settings)
                 settings
             }
-    }
 
-    override suspend fun refreshManagementStorageSettings(): AppResult<ManagementStorageSettings> {
-        return updateMutex.withLock {
+    public override suspend fun refreshManagementStorageSettings(): AppResult<ManagementStorageSettings> =
+        updateMutex.withLock {
             refreshManagementStorageSettingsInternal()
         }
-    }
 
-    override suspend fun updateManagementStorageSettings(storageSettings: ManagementStorageSettings) {
+    public override suspend fun updateManagementStorageSettings(storageSettings: ManagementStorageSettings) {
         updateMutex.withLock {
             applySettingsUpdate(storageSettings)
         }
     }
 
-    override fun observeManagementStorageSettings(): Flow<ManagementStorageSettings?> = _settings.asStateFlow()
+    public override fun observeManagementStorageSettings(): Flow<ManagementStorageSettings?> =
+        settingsStateFlow.asStateFlow()
 
-    private suspend fun refreshManagementStorageSettingsInternal(): AppResult<ManagementStorageSettings> {
-        return managementStorageSettingsApi.getManagementStorageSettings()
+    private suspend fun refreshManagementStorageSettingsInternal(): AppResult<ManagementStorageSettings> =
+        managementStorageSettingsApi.getManagementStorageSettings()
             .mapSuccess { response ->
                 val settings = response.toManagementStorageSettings()
                 applySettingsUpdate(settings)
                 settings
             }
-    }
 
     private suspend fun applySettingsUpdate(storageSettings: ManagementStorageSettings) {
         managementStorageSettingsStorage.updateManagementStorageSettings(storageSettings)
-        _settings.value = storageSettings
+        settingsStateFlow.value = storageSettings
     }
 }

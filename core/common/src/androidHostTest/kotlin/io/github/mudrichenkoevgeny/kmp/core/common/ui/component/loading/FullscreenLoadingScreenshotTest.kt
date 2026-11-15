@@ -48,10 +48,8 @@ class FullscreenLoadingScreenshotTest(
         @Suppress("Unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
-        fun data(): Collection<Array<Any>> {
-            return listOf(
-                arrayOf("Immediate", 0L)
-            )
-        }
+        fun data(): Collection<Array<Any>> = listOf(
+            arrayOf("Immediate", 0L)
+        )
     }
 }

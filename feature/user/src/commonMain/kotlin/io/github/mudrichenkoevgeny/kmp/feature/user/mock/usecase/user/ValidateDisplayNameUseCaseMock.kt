@@ -8,15 +8,16 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.Vali
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.displayname.DisplayNameValidator
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.displayname.DisplayNameValidatorImpl
 
+/**
+ * Mock implementation of [ValidateDisplayNameUseCase] for testing.
+ */
 @InternalApi
-class ValidateDisplayNameUseCaseMock(
+public class ValidateDisplayNameUseCaseMock(
     displayNameValidator: DisplayNameValidator = DisplayNameValidatorImpl(),
     getAuthSettingsUseCase: GetAuthSettingsUseCase = GetAuthSettingsUseCase(OpenAuthSettingsRepositoryMock())
 ) : ValidateDisplayNameUseCase(displayNameValidator, getAuthSettingsUseCase) {
 
-    var resultProvider: (String) -> AppResult<Unit> = { _ -> AppResult.Success(Unit) }
+    public var resultProvider: (String) -> AppResult<Unit> = { _ -> AppResult.Success(Unit) }
 
-    override suspend fun invoke(newDisplayName: String): AppResult<Unit> {
-        return resultProvider(newDisplayName)
-    }
+    public override suspend fun invoke(newDisplayName: String): AppResult<Unit> = resultProvider(newDisplayName)
 }

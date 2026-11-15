@@ -39,7 +39,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.secur
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.google.DisabledGoogleAuthService
 import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserStorageModule
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByEmailUseCase
@@ -48,6 +47,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByTo
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.refreshtoken.RefreshTokenUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.ResetEmailPasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.SendResetPasswordConfirmationToEmailUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.SendUnlockEmailConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.SendUnlockPhoneConfirmationUseCase
@@ -69,19 +69,19 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionUs
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.GetSessionsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.LogoutUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.ReauthenticateSessionUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.RestoreUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.SelfUpdateUserUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.ValidateDisplayNameUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.ValidateNicknameUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.displayname.DisplayNameValidatorImpl
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.nickname.NicknameValidatorImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.DisableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.EnableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.GetRecoveryCodesUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.RegenerateRecoveryCodesUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.SetupTotpUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.ValidateDisplayNameUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.ValidateNicknameUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.apptype.AppType
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.displayname.DisplayNameValidatorImpl
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.nickname.NicknameValidatorImpl
 
 /**
  * Internal dependency wiring for management use cases.
@@ -101,8 +101,6 @@ internal class ManagementUserUseCaseModule(
     private val managementGlobalSettingsRepository: ManagementGlobalSettingsRepository,
     private val managementSecuritySettingsRepository: ManagementSecuritySettingsRepository
 ) {
-
-    // Auth
     /** Refreshes the management session. */
     val refreshTokenUseCase by lazy {
         RefreshTokenUseCase(

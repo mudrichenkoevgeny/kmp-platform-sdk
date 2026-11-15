@@ -18,9 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
@@ -38,7 +38,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
  * @param interactionSource Stream of interactions for observing button state changes.
  */
 @Composable
-fun CoreTextButton(
+public fun CoreTextButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -80,7 +80,7 @@ fun CoreTextButton(
  * @param content Composable content displayed inside the button.
  */
 @Composable
-fun CoreTextButton(
+public fun CoreTextButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -107,7 +107,7 @@ fun CoreTextButton(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun CoreTextButtonComponentSizePreview() {
     CoreTheme {
@@ -121,7 +121,7 @@ private fun CoreTextButtonComponentSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun CoreTextButtonThemePreview() {
     CoreTheme {
@@ -135,7 +135,7 @@ private fun CoreTextButtonThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun CoreTextButtonFontScalePreview() {
     CoreTheme {

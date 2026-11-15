@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
  * @param resetRemoteGlobalSettingsUseCase Resets global settings to defaults.
  * @param onBack Pops this screen from the navigation stack.
  */
-class EditGlobalSettingsComponentImpl(
+public class EditGlobalSettingsComponentImpl public constructor(
     componentContext: ComponentContext,
     initialDialogConfig: SettingsDialogConfig? = null,
     private val getManagementGlobalSettingsUseCase: GetManagementGlobalSettingsUseCase,
@@ -42,7 +42,7 @@ class EditGlobalSettingsComponentImpl(
     private val _state = MutableValue<EditGlobalSettingsScreenState>(EditGlobalSettingsScreenState.Loading)
     override val state: Value<EditGlobalSettingsScreenState> = _state
 
-    override val dialogSlotNavigation = SlotNavigation<SettingsDialogConfig>()
+    override val dialogSlotNavigation: SlotNavigation<SettingsDialogConfig> = SlotNavigation<SettingsDialogConfig>()
 
     override val dialogSlot: Value<ChildSlot<SettingsDialogConfig, SettingsDialogChild>> =
         childSlot(
@@ -87,6 +87,7 @@ class EditGlobalSettingsComponentImpl(
                         isVerboseLoggingEnabled = settings.isVerboseLoggingEnabled
                     )
                 }
+
                 is AppResult.Error -> EditGlobalSettingsScreenState.Error(result.error)
             }
             _state.value = nextState
@@ -166,6 +167,7 @@ class EditGlobalSettingsComponentImpl(
                     onBack()
                     current.copy(isSaving = false)
                 }
+
                 is AppResult.Error -> current.copy(isSaving = false, saveError = saveResult.error)
             }
             _state.value = nextState
@@ -187,6 +189,7 @@ class EditGlobalSettingsComponentImpl(
                     onBack()
                     current.copy(isSaving = false)
                 }
+
                 is AppResult.Error -> current.copy(isSaving = false, saveError = result.error)
             }
             _state.value = nextState

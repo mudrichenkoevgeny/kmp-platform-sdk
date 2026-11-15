@@ -11,7 +11,7 @@ import io.ktor.utils.io.ByteReadChannel
  *
  * @param storageRepository Storage repository for file operations.
  */
-class UploadFileUseCase(
+public class UploadFileUseCase(
     private val storageRepository: StorageRepository
 ) {
     /**
@@ -22,15 +22,13 @@ class UploadFileUseCase(
      * @param onProgress Optional callback tracking upload completion percentage (0 to 100).
      * @return [AppResult.Success] containing confirmed [StorageFilePrivate], or [AppResult.Error] on failure.
      */
-    suspend operator fun invoke(
+    public suspend operator fun invoke(
         request: PresignedUrlRequest,
         openReadChannel: suspend () -> ByteReadChannel,
         onProgress: ((percent: Int) -> Unit)? = null
-    ): AppResult<StorageFilePrivate> {
-        return storageRepository.uploadFile(
-            request = request,
-            openReadChannel = openReadChannel,
-            onProgress = onProgress
-        )
-    }
+    ): AppResult<StorageFilePrivate> = storageRepository.uploadFile(
+        request = request,
+        openReadChannel = openReadChannel,
+        onProgress = onProgress
+    )
 }

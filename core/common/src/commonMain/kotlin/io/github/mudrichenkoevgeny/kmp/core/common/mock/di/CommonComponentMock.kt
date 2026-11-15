@@ -24,18 +24,16 @@ import kotlinx.coroutines.SupervisorJob
  * @return A [CommonComponent] that does not require platform encrypted storage or a real base URL.
  */
 @InternalApi
-fun commonComponentMock(
+public fun commonComponentMock(
     clientType: ClientType = ClientType.ANDROID,
     platformContext: Any? = null
-): CommonComponent {
-    return CommonComponent(
-        encryptedSettings = EncryptedSettingsMock(),
-        clientDeviceInfo = clientDeviceInfoMock(clientType = clientType),
-        baseUrl = "",
-        webSocketPath = "",
-        httpClientConfigPlugins = emptyList(),
-        accessTokenProvider = AccessTokenProviderMock(),
-        appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
-        platformContext = platformContext
-    )
-}
+): CommonComponent = CommonComponent(
+    encryptedSettings = EncryptedSettingsMock(),
+    clientDeviceInfo = clientDeviceInfoMock(clientType = clientType),
+    baseUrl = "",
+    webSocketPath = "",
+    httpClientConfigPlugins = emptyList(),
+    accessTokenProvider = AccessTokenProviderMock(),
+    appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
+    platformContext = platformContext
+)

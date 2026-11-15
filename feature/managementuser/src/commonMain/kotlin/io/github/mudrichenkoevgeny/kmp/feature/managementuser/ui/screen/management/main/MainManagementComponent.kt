@@ -3,22 +3,22 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 /**
  * Component driving the main management landing screen.
  */
-interface MainManagementComponent {
+public interface MainManagementComponent {
     /** Navigates to global user list screen. */
-    fun onGlobalUserListClick()
+    public fun onGlobalUserListClick()
 
     /** Navigates to all platform sessions screen. */
-    fun onGlobalSessionListClick()
+    public fun onGlobalSessionListClick()
 
     /** Navigates to all platform identifiers screen. */
-    fun onGlobalIdentifierListClick()
+    public fun onGlobalIdentifierListClick()
 
     /** Navigates to audit logs screen. */
-    fun onAuditEventListClick()
+    public fun onAuditEventListClick()
 
     /** Navigates to system settings hub. */
-    fun onSettingsClick()
+    public fun onSettingsClick()
 
     /** Navigates to all platform storage files screen. */
-    fun onGlobalStorageFileListClick()
+    public fun onGlobalStorageFileListClick()
 }

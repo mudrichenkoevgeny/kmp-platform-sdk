@@ -10,4 +10,4 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.model.Api
  *
  * @param apiErrorResponse Raw server error payload.
  */
-class ApiException(val apiErrorResponse: ApiErrorResponse) : Exception()
+public class ApiException(public val apiErrorResponse: ApiErrorResponse) : Exception()

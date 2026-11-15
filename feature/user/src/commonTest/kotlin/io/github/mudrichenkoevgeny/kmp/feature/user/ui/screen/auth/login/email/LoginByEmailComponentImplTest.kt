@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.auth.login.LoginByEmailUseCaseMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.apptype.AppType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.auth.data.createTestAuthDataPayload
 import kotlinx.coroutines.test.advanceUntilIdle

@@ -14,35 +14,35 @@ import kotlinx.serialization.json.JsonElement
  * - routing incoming frames through a list of [WebSocketMessageHandler]s
  * - sending outgoing events (`sendEvent`, `sendPing`)
  */
-interface WebSocketService {
+public interface WebSocketService {
     /**
      * Starts the connection and begins listening for frames.
      */
-    fun connect()
+    public fun connect()
 
     /**
      * Stops the connection and releases resources.
      */
-    fun disconnect()
+    public fun disconnect()
 
     /**
      * Restarts the connection when it is already started.
      */
-    fun restart()
+    public fun restart()
 
     /**
      * Hot stream of frames that were not handled by any registered [WebSocketMessageHandler].
      *
      * @return Flow of unhandled incoming frames.
      */
-    fun observeEvents(): Flow<SocketFrame>
+    public fun observeEvents(): Flow<SocketFrame>
 
     /**
      * Updates the set of message handlers used to process incoming frames.
      *
      * @param webSocketMessageHandlers Handlers tried in order until one handles the frame.
      */
-    fun updateWebSocketMessageHandlers(webSocketMessageHandlers: List<WebSocketMessageHandler>)
+    public fun updateWebSocketMessageHandlers(webSocketMessageHandlers: List<WebSocketMessageHandler>)
 
     /**
      * Sends an event frame to the server.
@@ -51,7 +51,7 @@ interface WebSocketService {
      * @param payload Optional JSON payload.
      * @param metadata Additional metadata attached to the outgoing frame.
      */
-    suspend fun sendEvent(
+    public suspend fun sendEvent(
         type: String,
         payload: JsonElement?,
         metadata: Map<String, String> = emptyMap()
@@ -60,5 +60,5 @@ interface WebSocketService {
     /**
      * Convenience method for sending a `PING` event.
      */
-    suspend fun sendPing(metadata: Map<String, String> = emptyMap())
+    public suspend fun sendPing(metadata: Map<String, String> = emptyMap())
 }

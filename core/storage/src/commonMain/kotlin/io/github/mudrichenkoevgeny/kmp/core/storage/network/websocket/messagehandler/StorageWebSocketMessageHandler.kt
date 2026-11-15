@@ -8,8 +8,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.contra
 /**
  * [WebSocketMessageHandler] for storage-domain frame types (see [StorageWebSocketEventTypes]).
  */
-class StorageWebSocketMessageHandler : WebSocketMessageHandler {
-    override suspend fun handle(frame: SocketFrame): WebSocketMessageHandlerResult {
-        return WebSocketMessageHandlerResult.NotHandled
-    }
+public class StorageWebSocketMessageHandler : WebSocketMessageHandler {
+    public override suspend fun handle(frame: SocketFrame): WebSocketMessageHandlerResult =
+        WebSocketMessageHandlerResult.NotHandled
 }

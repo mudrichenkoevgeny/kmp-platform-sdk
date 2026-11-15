@@ -1,78 +1,41 @@
-import com.vanniktech.maven.publish.GradlePlugin
-import com.vanniktech.maven.publish.JavadocJar
-import com.vanniktech.maven.publish.SourcesJar
-import org.gradle.language.jvm.tasks.ProcessResources
-import java.io.File
-import java.util.Properties
-
 val repoRootDir: File = rootDir.parentFile.parentFile
-
-val rootProps = Properties().apply {
-    val rootPropsFile = repoRootDir.resolve("gradle.properties")
-    check(rootPropsFile.exists()) {
-        "Root gradle.properties not found at: ${rootPropsFile.absolutePath}"
-    }
-    rootPropsFile.inputStream().use { load(it) }
-}
-
-group = checkNotNull(rootProps.getProperty("group")) { "Missing 'group' property in root gradle.properties" }
-version = checkNotNull(rootProps.getProperty("version")) { "Missing 'version' property in root gradle.properties" }
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
     `java-gradle-plugin`
-    alias(libs.plugins.maven.publish)
-}
-
-kotlin {
-    explicitApi()
+    alias(libs.plugins.shared.foundation.kotlin)
+    alias(libs.plugins.shared.foundation.quality)
+    alias(libs.plugins.shared.foundation.publish)
 }
 
 gradlePlugin {
     plugins {
         create("kmpAgentSync") {
             id = "io.github.mudrichenkoevgeny.kmp-platform-agent-sync"
-            implementationClass = "io.github.mudrichenkoevgeny.kmp.plugin.KmpAgentSyncPlugin"
+            implementationClass = "io.github.mudrichenkoevgeny.kmp.tools.gradleplugin.KmpAgentSyncPlugin"
             displayName = "KMP Platform Agent Sync Gradle Plugin"
             description = "Gradle plugin synchronizing KMP platform AI agent rules into consumer projects"
         }
         create("kmpQuality") {
             id = "io.github.mudrichenkoevgeny.kmp-platform-quality"
-            implementationClass = "io.github.mudrichenkoevgeny.kmp.plugin.KmpQualityPlugin"
+            implementationClass = "io.github.mudrichenkoevgeny.kmp.tools.gradleplugin.KmpQualityPlugin"
             displayName = "KMP Platform Quality Gradle Plugin"
             description = "Gradle plugin configuring Detekt with KMP rules and Ktlint"
         }
         create("kmpKotlinConvention") {
             id = "io.github.mudrichenkoevgeny.kmp-platform-kotlin"
-            implementationClass = "io.github.mudrichenkoevgeny.kmp.plugin.KmpKotlinConventionPlugin"
+            implementationClass = "io.github.mudrichenkoevgeny.kmp.tools.gradleplugin.KmpKotlinConventionPlugin"
             displayName = "KMP Platform Kotlin Convention Gradle Plugin"
             description = "Gradle plugin configuring Kotlin options and explicitApi for KMP modules"
         }
         create("kmpPublishConvention") {
             id = "io.github.mudrichenkoevgeny.kmp-platform-publish"
-            implementationClass = "io.github.mudrichenkoevgeny.kmp.plugin.KmpPublishConventionPlugin"
+            implementationClass = "io.github.mudrichenkoevgeny.kmp.tools.gradleplugin.KmpPublishConventionPlugin"
             displayName = "KMP Platform Maven Publishing Convention Gradle Plugin"
-            description = "Gradle plugin configuring Vanniktech Maven Publishing, Dokka, and POM metadata for KMP modules"
+            description =
+                "Gradle plugin configuring Vanniktech Maven Publishing, Dokka, and POM metadata for KMP modules"
         }
     }
-}
-
-mavenPublishing {
-    coordinates(
-        group.toString(),
-        "kmp-platform-sdk-gradle-plugin",
-        version.toString()
-    )
-
-    publishToMavenCentral()
-    signAllPublications()
-
-    configure(
-        GradlePlugin(
-            javadocJar = JavadocJar.Javadoc(),
-            sourcesJar = SourcesJar.Sources()
-        )
-    )
 }
 
 dependencies {
@@ -84,22 +47,29 @@ dependencies {
     implementation(libs.shared.foundation.gradle.plugin)
 }
 
-val generatePluginVersionResource = tasks.register("generatePluginVersionResource") {
+val generatePluginResources = tasks.register("generatePluginResources") {
     group = "build"
-    description = "Generates plugin version resource file"
+    description = "Generates plugin version and dependency coordinate resource files"
+
     val currentVersion = project.version.toString()
+    val ktlintComposeRulesNotation = libs.ktlint.compose.rules.get().toString()
+
     inputs.property("version", currentVersion)
-    val versionFile = layout.buildDirectory.file("generated/resources/kmp-platform-sdk-plugin-version.txt")
-    outputs.file(versionFile)
+    inputs.property("ktlintComposeRulesNotation", ktlintComposeRulesNotation)
+
+    val outputDir = layout.buildDirectory.dir("generated/resources/plugin-meta")
+    outputs.dir(outputDir)
+
     doLast {
-        val file = versionFile.get().asFile
-        file.parentFile.mkdirs()
-        file.writeText(currentVersion)
+        val dir = outputDir.get().asFile
+        dir.mkdirs()
+        dir.resolve("kmp-platform-sdk-plugin-version.txt").writeText(currentVersion)
+        dir.resolve("ktlint-compose-rules-dependency.txt").writeText(ktlintComposeRulesNotation)
     }
 }
 
 tasks.named<ProcessResources>("processResources") {
-    from(generatePluginVersionResource)
+    from(generatePluginResources)
     from(repoRootDir.resolve(".agent/global/kmp")) {
         into("agent-rules/kmp")
     }

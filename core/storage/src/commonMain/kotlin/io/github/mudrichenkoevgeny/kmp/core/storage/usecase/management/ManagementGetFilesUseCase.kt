@@ -11,7 +11,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.scr
  *
  * @param managementStorageRepository Management storage repository for administrative file operations.
  */
-class ManagementGetFilesUseCase(
+public class ManagementGetFilesUseCase(
     private val managementStorageRepository: ManagementStorageRepository
 ) {
     /**
@@ -20,9 +20,7 @@ class ManagementGetFilesUseCase(
      * @param params Optional query, filter, and pagination parameters DTO.
      * @return [AppResult.Success] containing a [PagedResult] of [StorageFileSummary], or [AppResult.Error] on failure.
      */
-    suspend operator fun invoke(
+    public suspend operator fun invoke(
         params: ManagementStorageFileListParams? = null
-    ): AppResult<PagedResult<StorageFileSummary>> {
-        return managementStorageRepository.getFiles(params)
-    }
+    ): AppResult<PagedResult<StorageFileSummary>> = managementStorageRepository.getFiles(params)
 }

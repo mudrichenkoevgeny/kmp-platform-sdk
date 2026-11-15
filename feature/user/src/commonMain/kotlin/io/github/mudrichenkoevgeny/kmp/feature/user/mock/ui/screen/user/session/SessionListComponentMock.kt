@@ -10,70 +10,79 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 
+/**
+ * Mock implementation of [SessionListComponent] for Compose previews and testing.
+ */
 @InternalApi
-class SessionListComponentMock(
+public class SessionListComponentMock(
     initialState: SessionListScreenState = SessionListScreenState.Loading,
-    override val isRevokeAvailable: Boolean = true,
-    override val isRevokeAllOthersAvailable: Boolean = true,
-    override val includeFilterPanel: Boolean = false
+    public override val isRevokeAvailable: Boolean = true,
+    public override val isRevokeAllOthersAvailable: Boolean = true,
+    public override val includeFilterPanel: Boolean = false
 ) : SessionListComponent {
 
-    private val _state = MutableValue(initialState)
-    override val state: Value<SessionListScreenState> = _state
+    private val _state: MutableValue<SessionListScreenState> = MutableValue(initialState)
+    public override val state: Value<SessionListScreenState> = _state
 
-    var refreshCalls: Int = 0
-    var sessionClickCalls: MutableList<UserSessionSummary> = mutableListOf()
-    var sessionRevokedCalls: MutableList<UserSessionId> = mutableListOf()
-    var revokeSessionCalls: MutableList<UserSessionId> = mutableListOf()
-    var revokeAllOtherSessionsCalls: Int = 0
-    var loadNextPageCalls: Int = 0
-    var backCalls: Int = 0
-    var toggleFilterPanelCalls: Int = 0
-    var applyFiltersCalls: Int = 0
+    public var refreshCalls: Int = 0
+    public var sessionClickCalls: MutableList<UserSessionSummary> = mutableListOf()
+    public var sessionRevokedCalls: MutableList<UserSessionId> = mutableListOf()
+    public var revokeSessionCalls: MutableList<UserSessionId> = mutableListOf()
+    public var revokeAllOtherSessionsCalls: Int = 0
+    public var loadNextPageCalls: Int = 0
+    public var backCalls: Int = 0
+    public var toggleFilterPanelCalls: Int = 0
+    public var applyFiltersCalls: Int = 0
 
-    fun updateState(state: SessionListScreenState) {
+    /**
+     * Updates the component state value.
+     *
+     * @param state The new state value.
+     */
+    public fun updateState(state: SessionListScreenState) {
         _state.value = state
     }
 
-    override fun onRefresh() {
+    public override fun onRefresh() {
         refreshCalls++
     }
 
-    override fun onLoadNextPage() {
+    public override fun onLoadNextPage() {
         loadNextPageCalls++
     }
 
-    override fun onToggleFilterPanel() {
+    public override fun onToggleFilterPanel() {
         toggleFilterPanelCalls++
     }
 
-    override fun onSortChanged(sortState: ListingSortState) {
-    }
+    public override fun onSortChanged(sortState: ListingSortState): Unit = Unit
 
-    override fun onFilterChanged(filterId: String, filterState: ListingFilterState?) {
-    }
+    public override fun onFilterChanged(
+        filterId: String,
+        filterState: ListingFilterState?
+    ): Unit = Unit
 
-    override fun onApplyFilters() {
+    public override fun onApplyFilters() {
         applyFiltersCalls++
     }
 
-    override fun onSessionClick(session: UserSessionSummary) {
+    public override fun onSessionClick(session: UserSessionSummary) {
         sessionClickCalls.add(session)
     }
 
-    override fun onSessionRevoked(sessionId: UserSessionId) {
+    public override fun onSessionRevoked(sessionId: UserSessionId) {
         sessionRevokedCalls.add(sessionId)
     }
 
-    override fun onRevokeSessionClick(sessionId: UserSessionId) {
+    public override fun onRevokeSessionClick(sessionId: UserSessionId) {
         revokeSessionCalls.add(sessionId)
     }
 
-    override fun onRevokeAllOtherSessionsClick() {
+    public override fun onRevokeAllOtherSessionsClick() {
         revokeAllOtherSessionsCalls++
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         backCalls++
     }
 }

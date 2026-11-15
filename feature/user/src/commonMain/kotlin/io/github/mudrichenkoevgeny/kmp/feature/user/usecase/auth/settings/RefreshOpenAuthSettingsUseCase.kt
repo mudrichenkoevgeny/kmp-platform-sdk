@@ -9,13 +9,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
  *
  * @param openAuthSettingsRepository Auth settings aggregate.
  */
-class RefreshOpenAuthSettingsUseCase(
+public class RefreshOpenAuthSettingsUseCase(
     private val openAuthSettingsRepository: OpenAuthSettingsRepository
 ) {
     /**
      * @return Fresh [OpenAuthSettings] on success, or an error result when the refresh request fails.
      */
-    suspend operator fun invoke(): AppResult<OpenAuthSettings> {
-        return openAuthSettingsRepository.refreshOpenAuthSettings()
-    }
+    public suspend operator fun invoke(): AppResult<OpenAuthSettings> =
+        openAuthSettingsRepository.refreshOpenAuthSettings()
 }

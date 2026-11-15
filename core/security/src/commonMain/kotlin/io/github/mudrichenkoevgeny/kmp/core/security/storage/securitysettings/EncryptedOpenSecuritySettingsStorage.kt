@@ -13,13 +13,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model
  *
  * @param encryptedSettings Key-value store used for the `security_settings` entry.
  */
-class EncryptedOpenSecuritySettingsStorage(
+public class EncryptedOpenSecuritySettingsStorage(
     private val encryptedSettings: EncryptedSettings
 ) : OpenSecuritySettingsStorage {
 
     private val json = FoundationJson
 
-    override suspend fun getOpenSecuritySettings(): OpenSecuritySettings? {
+    public override suspend fun getOpenSecuritySettings(): OpenSecuritySettings? {
         val data = encryptedSettings.get(KEY_SECURITY_SETTINGS)
             ?: return null
         return try {
@@ -30,17 +30,17 @@ class EncryptedOpenSecuritySettingsStorage(
         }
     }
 
-    override suspend fun updateOpenSecuritySettings(securitySettings: OpenSecuritySettings) {
+    public override suspend fun updateOpenSecuritySettings(securitySettings: OpenSecuritySettings) {
         val payload = securitySettings.toOpenSecuritySettingsPayload()
         val data = json.encodeToString(payload)
         encryptedSettings.put(KEY_SECURITY_SETTINGS, data)
     }
 
-    override suspend fun clearOpenSecuritySettings() {
+    public override suspend fun clearOpenSecuritySettings() {
         encryptedSettings.remove(KEY_SECURITY_SETTINGS)
     }
 
-    companion object {
+    private companion object {
         private const val KEY_SECURITY_SETTINGS = "security_settings"
     }
 }

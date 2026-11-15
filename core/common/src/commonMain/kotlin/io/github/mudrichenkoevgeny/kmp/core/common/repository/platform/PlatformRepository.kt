@@ -5,9 +5,9 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.cl
 /**
  * Abstraction for accessing platform/device information from SDK layers.
  */
-interface PlatformRepository {
+public interface PlatformRepository {
     /**
      * @return current [ClientDeviceInfo] for the running host platform.
      */
-    fun getClientDeviceInfo(): ClientDeviceInfo
+    public fun getClientDeviceInfo(): ClientDeviceInfo
 }

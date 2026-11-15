@@ -11,10 +11,10 @@ import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.core.testing.ui.test.captureAppScreen
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventSummary
+import io.github.mudrichenkoevgeny.kmp.core.testing.ui.test.captureAppScreen
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventSummary
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventSummary
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -59,10 +59,8 @@ class AuditItemScreenshotTest(
         @Suppress("Unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
-        fun data(): Collection<Array<Any>> {
-            return listOf(
-                arrayOf("Default", createTestAuditEventSummary())
-            )
-        }
+        fun data(): Collection<Array<Any>> = listOf(
+            arrayOf("Default", createTestAuditEventSummary())
+        )
     }
 }

@@ -8,29 +8,25 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
 /**
  * Converts a domain-layer [UpdateUserParams] into a network-layer [SelfUpdateUserRequest].
  */
-fun UpdateUserParams.toSelfUpdateUserRequest(): SelfUpdateUserRequest {
-    return SelfUpdateUserRequest(
-        nickname = nickname.toPatchField(),
-        displayName = displayName.toPatchField(),
-        avatarFileId = avatarFileId.toPatchField { it.value.toHexDashString() },
-        birthdate = birthdate.toPatchField { it.toEpochMilliseconds() }
-    )
-}
+public fun UpdateUserParams.toSelfUpdateUserRequest(): SelfUpdateUserRequest = SelfUpdateUserRequest(
+    nickname = nickname.toPatchField(),
+    displayName = displayName.toPatchField(),
+    avatarFileId = avatarFileId.toPatchField { it.value.toHexDashString() },
+    birthdate = birthdate.toPatchField { it.toEpochMilliseconds() }
+)
 
 /**
  * Converts a domain-layer [UpdateUserParams] into a network-layer [ManagementUpdateUserRequest].
  */
-fun UpdateUserParams.toManagementUpdateUserRequest(): ManagementUpdateUserRequest {
-    return ManagementUpdateUserRequest(
-        accountStatus = accountStatus.toPatchField { it.value },
-        authorityLevel = authorityLevel.toPatchField(),
-        permissionCodes = permissions.toPatchField { set -> set.map { it.value }.toSet() },
-        lockoutType = lockoutType.toPatchField { it.value },
-        temporaryLockoutUntil = temporaryLockoutUntil.toPatchField { it.toEpochMilliseconds() },
-        storageConfiguration = storageConfiguration.toPatchField(),
-        nickname = nickname.toPatchField(),
-        displayName = displayName.toPatchField(),
-        avatarFileId = avatarFileId.toPatchField { it.value.toHexDashString() },
-        birthdate = birthdate.toPatchField { it.toEpochMilliseconds() }
-    )
-}
+public fun UpdateUserParams.toManagementUpdateUserRequest(): ManagementUpdateUserRequest = ManagementUpdateUserRequest(
+    accountStatus = accountStatus.toPatchField { it.value },
+    authorityLevel = authorityLevel.toPatchField(),
+    permissionCodes = permissions.toPatchField { set -> set.map { it.value }.toSet() },
+    lockoutType = lockoutType.toPatchField { it.value },
+    temporaryLockoutUntil = temporaryLockoutUntil.toPatchField { it.toEpochMilliseconds() },
+    storageConfiguration = storageConfiguration.toPatchField(),
+    nickname = nickname.toPatchField(),
+    displayName = displayName.toPatchField(),
+    avatarFileId = avatarFileId.toPatchField { it.value.toHexDashString() },
+    birthdate = birthdate.toPatchField { it.toEpochMilliseconds() }
+)

@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.decodeFromJsonElement
 
 /**
@@ -31,19 +32,19 @@ import kotlinx.serialization.json.decodeFromJsonElement
  * @param webSocketService Source of push events; non-matching frame types are ignored.
  * @param repositoryScope Coroutine scope used to preload cache and collect socket events.
  */
-class OpenGlobalSettingsRepositoryImpl(
+public class OpenGlobalSettingsRepositoryImpl(
     private val openGlobalSettingsApi: OpenGlobalSettingsApi,
     private val openGlobalSettingsStorage: OpenGlobalSettingsStorage,
     private val webSocketService: WebSocketService,
     repositoryScope: CoroutineScope
 ) : OpenGlobalSettingsRepository {
 
-    private val updateMutex = Mutex()
-    private val _settings = MutableStateFlow<OpenGlobalSettings?>(null)
+    private val updateMutex: Mutex = Mutex()
+    private val settingsStateFlow: MutableStateFlow<OpenGlobalSettings?> = MutableStateFlow(null)
 
     init {
         repositoryScope.launch {
-            _settings.value = openGlobalSettingsStorage.getOpenGlobalSettings()
+            settingsStateFlow.value = openGlobalSettingsStorage.getOpenGlobalSettings()
 
             webSocketService.observeEvents()
                 .filter { it.type == SettingsWebSocketEventTypes.OPEN_GLOBAL_SETTINGS_UPDATED }
@@ -58,21 +59,25 @@ class OpenGlobalSettingsRepositoryImpl(
                         } else {
                             Logger.w { "Received OPEN_GLOBAL_SETTINGS_UPDATED with invalid payload" }
                         }
-                    } catch (e: Exception) {
+                    } catch (e: SerializationException) {
+                        Logger.e(e) { "Failed to process WebSocket event" }
+                    } catch (e: IllegalArgumentException) {
+                        Logger.e(e) { "Failed to process WebSocket event" }
+                    } catch (e: IllegalStateException) {
                         Logger.e(e) { "Failed to process WebSocket event" }
                     }
                 }
         }
     }
 
-    override suspend fun getOpenGlobalSettings(): AppResult<OpenGlobalSettings> {
-        _settings.value?.let { return AppResult.Success(it) }
+    public override suspend fun getOpenGlobalSettings(): AppResult<OpenGlobalSettings> {
+        settingsStateFlow.value?.let { return AppResult.Success(it) }
 
         return updateMutex.withLock {
-            val cached = _settings.value ?: openGlobalSettingsStorage.getOpenGlobalSettings()
+            val cached = settingsStateFlow.value ?: openGlobalSettingsStorage.getOpenGlobalSettings()
 
             if (cached != null) {
-                _settings.value = cached
+                settingsStateFlow.value = cached
                 AppResult.Success(cached)
             } else {
                 refreshOpenGlobalSettingsInternal()
@@ -80,31 +85,28 @@ class OpenGlobalSettingsRepositoryImpl(
         }
     }
 
-    override suspend fun refreshOpenGlobalSettings(): AppResult<OpenGlobalSettings> {
-        return updateMutex.withLock {
-            refreshOpenGlobalSettingsInternal()
-        }
+    public override suspend fun refreshOpenGlobalSettings(): AppResult<OpenGlobalSettings> = updateMutex.withLock {
+        refreshOpenGlobalSettingsInternal()
     }
 
-    override suspend fun updateOpenGlobalSettings(globalSettings: OpenGlobalSettings) {
+    public override suspend fun updateOpenGlobalSettings(globalSettings: OpenGlobalSettings) {
         updateMutex.withLock {
             applySettingsUpdate(globalSettings)
         }
     }
 
-    override fun observeOpenGlobalSettings(): Flow<OpenGlobalSettings?> = _settings.asStateFlow()
+    public override fun observeOpenGlobalSettings(): Flow<OpenGlobalSettings?> = settingsStateFlow.asStateFlow()
 
-    private suspend fun refreshOpenGlobalSettingsInternal(): AppResult<OpenGlobalSettings> {
-        return openGlobalSettingsApi.getOpenGlobalSettings()
+    private suspend fun refreshOpenGlobalSettingsInternal(): AppResult<OpenGlobalSettings> =
+        openGlobalSettingsApi.getOpenGlobalSettings()
             .mapSuccess { response ->
                 val settings = response.toOpenGlobalSettings()
                 applySettingsUpdate(settings)
                 settings
             }
-    }
 
     private suspend fun applySettingsUpdate(globalSettings: OpenGlobalSettings) {
         openGlobalSettingsStorage.updateOpenGlobalSettings(globalSettings)
-        _settings.value = globalSettings
+        settingsStateFlow.value = globalSettings
     }
 }

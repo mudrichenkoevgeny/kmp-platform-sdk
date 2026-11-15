@@ -3,7 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail.dialo
 /**
  * Child instances created for storage file detail dialog configurations.
  */
-sealed class StorageFileDetailDialogChild {
+public sealed class StorageFileDetailDialogChild {
     /** Confirmation dialog instance for deleting the file. */
-    data class ConfirmDeleteFile(val fileId: String) : StorageFileDetailDialogChild()
+    public data class ConfirmDeleteFile(public val fileId: String) : StorageFileDetailDialogChild()
 }

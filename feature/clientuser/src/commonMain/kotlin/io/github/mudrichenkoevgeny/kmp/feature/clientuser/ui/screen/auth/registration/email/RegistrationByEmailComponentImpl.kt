@@ -13,14 +13,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.core.common.time.resendCountdown
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.PasswordPolicyFailReason
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.client.naming.ClientSecurityErrorCodes
 import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ValidatePasswordUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.registration.RegistrationRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.registration.RegistrationByEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.registration.SendRegistrationConfirmationToEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.passwordpolicy.PasswordPolicyFailReason
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.client.naming.ClientSecurityErrorCodes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.client.auth.registration.email.ClientRegistrationByEmailParams
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
  * @param onBack pops this screen or returns to email step.
  * @param onFinished invoked when registration succeeds.
  */
-class RegistrationByEmailComponentImpl(
+public class RegistrationByEmailComponentImpl(
     componentContext: ComponentContext,
     params: ClientRegistrationByEmailParams = ClientRegistrationByEmailParams(),
     private val registrationRepository: RegistrationRepository,
@@ -52,7 +52,8 @@ class RegistrationByEmailComponentImpl(
     private var timerJob: Job? = null
     private var passwordValidationJob: Job? = null
 
-    override val stackNavigation = StackNavigation<RegistrationByEmailStepConfig>()
+    override val stackNavigation: StackNavigation<RegistrationByEmailStepConfig> =
+        StackNavigation<RegistrationByEmailStepConfig>()
 
     override val stack: Value<ChildStack<RegistrationByEmailStepConfig, RegistrationByEmailComponent.Child>> =
         childStack(
@@ -60,7 +61,7 @@ class RegistrationByEmailComponentImpl(
             serializer = RegistrationByEmailStepConfig.serializer(),
             initialConfiguration = RegistrationByEmailStepConfig.EmailInput(initialEmail = params.email ?: ""),
             handleBackButton = true,
-            childFactory = ::createChild
+            childFactory = { config, _ -> createChild(config) }
         )
 
     private val _state = MutableValue(
@@ -71,10 +72,12 @@ class RegistrationByEmailComponentImpl(
     override val state: Value<RegistrationByEmailScreenState> = _state
 
     private fun createChild(
-        config: RegistrationByEmailStepConfig,
-        context: ComponentContext
+        config: RegistrationByEmailStepConfig
     ): RegistrationByEmailComponent.Child = when (config) {
-        is RegistrationByEmailStepConfig.EmailInput -> RegistrationByEmailComponent.Child.EmailInput(config.initialEmail)
+        is RegistrationByEmailStepConfig.EmailInput -> RegistrationByEmailComponent.Child.EmailInput(
+            config.initialEmail
+        )
+
         is RegistrationByEmailStepConfig.ConfirmInput -> RegistrationByEmailComponent.Child.ConfirmInput(config.email)
     }
 
@@ -136,7 +139,8 @@ class RegistrationByEmailComponentImpl(
 
             val isPasswordValid = when (result) {
                 is AppResult.Success -> true
-                is AppResult.Error -> result.error.code != PasswordPolicyFailReason.TOO_SHORT.name &&
+                is AppResult.Error ->
+                    result.error.code != PasswordPolicyFailReason.TOO_SHORT.value &&
                         result.error.code != ClientSecurityErrorCodes.PASSWORD_POLICY_UNAVAILABLE
             }
 
@@ -187,7 +191,10 @@ class RegistrationByEmailComponentImpl(
         }
     }
 
-    private fun moveToRegistrationInput(email: String, seconds: Int) {
+    private fun moveToRegistrationInput(
+        email: String,
+        seconds: Int
+    ) {
         _state.value = _state.value.copy(
             email = email,
             resendTimerSeconds = seconds,

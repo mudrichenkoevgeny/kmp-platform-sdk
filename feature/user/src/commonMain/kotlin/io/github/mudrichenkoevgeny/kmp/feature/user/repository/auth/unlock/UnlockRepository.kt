@@ -4,7 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 
 /** Operations for self-service account unlocking. */
-interface UnlockRepository {
+public interface UnlockRepository {
 
     /**
      * Sends an account unlock confirmation code (OTP) to the specified email address.
@@ -12,7 +12,7 @@ interface UnlockRepository {
      * @param email Target email address.
      * @return Confirmation metadata on success, or an error [AppResult] on failure.
      */
-    suspend fun sendUnlockEmailConfirmation(email: String): AppResult<OtpConfirmation>
+    public suspend fun sendUnlockEmailConfirmation(email: String): AppResult<OtpConfirmation>
 
     /**
      * Gets the remaining client-side cooldown in seconds before another email unlock OTP can be sent.
@@ -20,7 +20,7 @@ interface UnlockRepository {
      * @param email Target email address.
      * @return Remaining delay in seconds.
      */
-    fun getRemainingUnlockEmailConfirmationDelayInSeconds(email: String): Int
+    public fun getRemainingUnlockEmailConfirmationDelayInSeconds(email: String): Int
 
     /**
      * Unlocks an account using an email confirmation code.
@@ -29,7 +29,10 @@ interface UnlockRepository {
      * @param confirmationCode Verification code sent to the email.
      * @return Unit result on success, or an error [AppResult] on failure.
      */
-    suspend fun unlockByEmail(email: String, confirmationCode: String): AppResult<Unit>
+    public suspend fun unlockByEmail(
+        email: String,
+        confirmationCode: String
+    ): AppResult<Unit>
 
     /**
      * Sends an account unlock confirmation code (OTP) to the specified phone number.
@@ -37,7 +40,7 @@ interface UnlockRepository {
      * @param phoneNumber Target phone number.
      * @return Confirmation metadata on success, or an error [AppResult] on failure.
      */
-    suspend fun sendUnlockPhoneConfirmation(phoneNumber: String): AppResult<OtpConfirmation>
+    public suspend fun sendUnlockPhoneConfirmation(phoneNumber: String): AppResult<OtpConfirmation>
 
     /**
      * Gets the remaining client-side cooldown in seconds before another phone unlock OTP can be sent.
@@ -45,7 +48,7 @@ interface UnlockRepository {
      * @param phoneNumber Target phone number.
      * @return Remaining delay in seconds.
      */
-    fun getRemainingUnlockPhoneConfirmationDelayInSeconds(phoneNumber: String): Int
+    public fun getRemainingUnlockPhoneConfirmationDelayInSeconds(phoneNumber: String): Int
 
     /**
      * Unlocks an account using a phone confirmation code.
@@ -54,7 +57,10 @@ interface UnlockRepository {
      * @param confirmationCode Verification code sent to the phone.
      * @return Unit result on success, or an error [AppResult] on failure.
      */
-    suspend fun unlockByPhone(phoneNumber: String, confirmationCode: String): AppResult<Unit>
+    public suspend fun unlockByPhone(
+        phoneNumber: String,
+        confirmationCode: String
+    ): AppResult<Unit>
 
     /**
      * Unlocks an account using an external authentication provider token.
@@ -63,5 +69,8 @@ interface UnlockRepository {
      * @param externalProviderToken Identity provider token.
      * @return Unit result on success, or an error [AppResult] on failure.
      */
-    suspend fun unlockByExternalAuthProvider(authProvider: String, externalProviderToken: String): AppResult<Unit>
+    public suspend fun unlockByExternalAuthProvider(
+        authProvider: String,
+        externalProviderToken: String
+    ): AppResult<Unit>
 }

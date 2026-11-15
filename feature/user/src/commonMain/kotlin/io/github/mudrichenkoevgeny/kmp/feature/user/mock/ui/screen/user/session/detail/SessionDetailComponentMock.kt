@@ -6,38 +6,46 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.detail.SessionDetailComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.detail.SessionDetailScreenState
 
+/**
+ * Mock implementation of [SessionDetailComponent] for Compose previews and testing.
+ */
 @InternalApi
-class SessionDetailComponentMock(
+public class SessionDetailComponentMock(
     initialState: SessionDetailScreenState = SessionDetailScreenState.Loading
 ) : SessionDetailComponent {
 
-    private val _state = MutableValue(initialState)
-    override val state: Value<SessionDetailScreenState> = _state
+    private val _state: MutableValue<SessionDetailScreenState> = MutableValue(initialState)
+    public override val state: Value<SessionDetailScreenState> = _state
 
-    var revokeSessionCalls = 0
-    var retryCalls = 0
-    var backCalls = 0
-    var userClickCalls = 0
+    public var revokeSessionCalls: Int = 0
+    public var retryCalls: Int = 0
+    public var backCalls: Int = 0
+    public var userClickCalls: Int = 0
 
-    fun updateState(state: SessionDetailScreenState) {
+    /**
+     * Updates the component state value.
+     *
+     * @param state The new state value.
+     */
+    public fun updateState(state: SessionDetailScreenState) {
         _state.value = state
     }
 
-    override fun onRevokeSessionClick() {
+    public override fun onRevokeSessionClick() {
         revokeSessionCalls++
     }
 
-    override fun onRetry() {
+    public override fun onRetry() {
         retryCalls++
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         backCalls++
     }
 
-    override fun onIdentifierClick() {}
+    public override fun onIdentifierClick(): Unit = Unit
 
-    override fun onUserClick() {
+    public override fun onUserClick() {
         userClickCalls++
     }
 }

@@ -25,16 +25,14 @@ import kotlinx.coroutines.SupervisorJob
  * @return A fully wired [SettingsComponent] suitable for non-production hosts.
  */
 @InternalApi
-fun settingsComponentMock(
+public fun settingsComponentMock(
     httpClient: HttpClient = HttpClient(),
     webSocketService: WebSocketService = WebSocketServiceMock(),
     parentScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-): SettingsComponent {
-    return SettingsComponent(
-        webSocketService = webSocketService,
-        httpClient = httpClient,
-        openGlobalSettingsApi = OpenGlobalSettingsApiMock(),
-        encryptedSettings = EncryptedSettingsMock(),
-        parentScope = parentScope
-    )
-}
+): SettingsComponent = SettingsComponent(
+    webSocketService = webSocketService,
+    httpClient = httpClient,
+    openGlobalSettingsApi = OpenGlobalSettingsApiMock(),
+    encryptedSettings = EncryptedSettingsMock(),
+    parentScope = parentScope
+)

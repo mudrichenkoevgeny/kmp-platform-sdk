@@ -10,9 +10,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.auth.google.GoogleAuthServic
  * @param context Android `Context` used for credential requests.
  * @param googleWebClientId OAuth 2.0 web application (server) client ID passed to `GetGoogleIdOption`.
  */
-class AndroidUserAuthServices(
+public class AndroidUserAuthServices(
     context: Context,
     googleWebClientId: String
 ) : UserAuthServices {
-    override val googleAuth: GoogleAuthService = AndroidGoogleAuthService(context, googleWebClientId)
+    public override val googleAuth: GoogleAuthService = AndroidGoogleAuthService(context, googleWebClientId)
 }

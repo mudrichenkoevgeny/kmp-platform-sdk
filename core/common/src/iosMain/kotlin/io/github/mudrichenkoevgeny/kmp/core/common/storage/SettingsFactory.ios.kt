@@ -19,6 +19,12 @@ import platform.Foundation.NSUserDomainMask
 
 private const val DATASTORE_FILE_NAME = "secure_settings.preferences_pb"
 
+/**
+ * Returns a [SettingsFactory] implementation that creates DataStore-backed [EncryptedSettings] for iOS.
+ *
+ * @param platformContext Optional platform context, unused on iOS.
+ * @return A [SettingsFactory] instance for iOS.
+ */
 actual fun getSettingsFactory(platformContext: Any?): SettingsFactory = object : SettingsFactory {
     @OptIn(ExperimentalForeignApi::class)
     override fun create(): EncryptedSettings {
@@ -45,7 +51,10 @@ actual fun getSettingsFactory(platformContext: Any?): SettingsFactory = object :
 private class DataStoreEncryptedSettings(
     private val dataStore: DataStore<Preferences>
 ) : EncryptedSettings {
-    override suspend fun put(key: String, value: String) {
+    override suspend fun put(
+        key: String,
+        value: String
+    ) {
         dataStore.edit { it[stringPreferencesKey(key)] = value }
     }
 

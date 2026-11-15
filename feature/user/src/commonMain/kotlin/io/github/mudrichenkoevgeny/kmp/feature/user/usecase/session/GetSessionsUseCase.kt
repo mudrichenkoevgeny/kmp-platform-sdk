@@ -11,16 +11,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  *
  * @param sessionRepository Session management repository.
  */
-open class GetSessionsUseCase(
+public open class GetSessionsUseCase(
     private val sessionRepository: SessionRepository
 ) {
     /**
      * @param params Query and filter parameters DTO.
      * @return Paginated result containing [UserSessionSummary] items on success, or a mapped failure.
      */
-    open suspend operator fun invoke(
+    public open suspend operator fun invoke(
         params: SelfSessionListParams? = null
-    ): AppResult<PagedResult<UserSessionSummary>> {
-        return sessionRepository.getSessions(params)
-    }
+    ): AppResult<PagedResult<UserSessionSummary>> = sessionRepository.getSessions(params)
 }

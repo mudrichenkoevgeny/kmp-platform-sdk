@@ -16,7 +16,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolic
  * @param openSecuritySettingsRepository Source of the active password policy.
  * @param passwordPolicyValidator Foundation validator implementation.
  */
-open class ValidatePasswordUseCase(
+public open class ValidatePasswordUseCase(
     private val openSecuritySettingsRepository: OpenSecuritySettingsRepository,
     private val passwordPolicyValidator: PasswordPolicyValidator
 ) {
@@ -25,7 +25,7 @@ open class ValidatePasswordUseCase(
      * @return [AppResult.Success] when the password satisfies the policy, or [AppResult.Error] with a
      * [SecurityError] describing the first failed rule.
      */
-    open suspend operator fun invoke(password: String): AppResult<Unit> {
+    public open suspend operator fun invoke(password: String): AppResult<Unit> {
         val securitySettingsResult = openSecuritySettingsRepository.getOpenSecuritySettings()
         val passwordPolicy = when (securitySettingsResult) {
             is AppResult.Success -> securitySettingsResult.data.passwordPolicy

@@ -6,23 +6,26 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
+/**
+ * Mock implementation of [UserStorage] for testing.
+ */
 @InternalApi
-class UserStorageMock : UserStorage {
+public class UserStorageMock : UserStorage {
 
     private val currentUserFlow = MutableStateFlow<UserPrivate?>(null)
 
-    var isCleared = false
+    public var isCleared: Boolean = false
         private set
 
-    override suspend fun getCurrentUser(): UserPrivate? = currentUserFlow.value
+    public override suspend fun getCurrentUser(): UserPrivate? = currentUserFlow.value
 
-    override fun observeCurrentUser(): Flow<UserPrivate?> = currentUserFlow
+    public override fun observeCurrentUser(): Flow<UserPrivate?> = currentUserFlow
 
-    override suspend fun updateCurrentUser(currentUser: UserPrivate) {
+    public override suspend fun updateCurrentUser(currentUser: UserPrivate) {
         currentUserFlow.value = currentUser
     }
 
-    override suspend fun clear() {
+    public override suspend fun clear() {
         currentUserFlow.value = null
         isCleared = true
     }

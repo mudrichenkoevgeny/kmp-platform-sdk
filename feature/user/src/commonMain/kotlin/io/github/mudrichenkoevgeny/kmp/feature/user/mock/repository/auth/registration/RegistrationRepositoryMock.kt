@@ -7,14 +7,17 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.registration
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
 
+/**
+ * Mock implementation of [RegistrationRepository] for testing.
+ */
 @InternalApi
-class RegistrationRepositoryMock : RegistrationRepository {
+public class RegistrationRepositoryMock : RegistrationRepository {
 
-    var lastEmail: String? = null
-    var lastPassword: String? = null
-    var lastConfirmationCode: String? = null
+    public var lastEmail: String? = null
+    public var lastPassword: String? = null
+    public var lastConfirmationCode: String? = null
 
-    var authDataResultProvider: () -> AppResult<AuthData> = {
+    public var authDataResultProvider: () -> AppResult<AuthData> = {
         AppResult.Error(
             CommonError.ContractViolation(
                 throwable = IllegalStateException("No mock AuthData provided.")
@@ -22,7 +25,7 @@ class RegistrationRepositoryMock : RegistrationRepository {
         )
     }
 
-    var otpConfirmationResultProvider: () -> AppResult<OtpConfirmation> = {
+    public var otpConfirmationResultProvider: () -> AppResult<OtpConfirmation> = {
         AppResult.Error(
             CommonError.ContractViolation(
                 throwable = IllegalStateException("No mock OtpConfirmation provided.")
@@ -30,9 +33,9 @@ class RegistrationRepositoryMock : RegistrationRepository {
         )
     }
 
-    var remainingDelayProvider: (email: String) -> Int = { 0 }
+    public var remainingDelayProvider: (email: String) -> Int = { 0 }
 
-    override suspend fun registerByEmail(
+    public override suspend fun registerByEmail(
         email: String,
         password: String,
         confirmationCode: String
@@ -43,11 +46,11 @@ class RegistrationRepositoryMock : RegistrationRepository {
         return authDataResultProvider()
     }
 
-    override suspend fun sendRegistrationConfirmationToEmail(email: String): AppResult<OtpConfirmation> {
+    public override suspend fun sendRegistrationConfirmationToEmail(email: String): AppResult<OtpConfirmation> {
         lastEmail = email
         return otpConfirmationResultProvider()
     }
 
-    override fun getRemainingRegistrationConfirmationDelayInSeconds(email: String): Int =
+    public override fun getRemainingRegistrationConfirmationDelayInSeconds(email: String): Int =
         remainingDelayProvider(email)
 }

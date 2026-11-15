@@ -7,17 +7,20 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.securit
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.SetupTotpUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totpsetup.TotpSetup
 
+/**
+ * Mock implementation of [SetupTotpUseCase] for testing.
+ */
 @InternalApi
-class SetupTotpUseCaseMock : SetupTotpUseCase(
+public class SetupTotpUseCaseMock : SetupTotpUseCase(
     userSecurityRepository = UserSecurityRepositoryMock()
 ) {
-    var executeCalls: Int = 0
+    public var executeCalls: Int = 0
 
-    var resultProvider: () -> AppResult<TotpSetup> = {
+    public var resultProvider: () -> AppResult<TotpSetup> = {
         AppResult.Error(CommonError.Unknown())
     }
 
-    override suspend fun invoke(): AppResult<TotpSetup> {
+    public override suspend fun invoke(): AppResult<TotpSetup> {
         executeCalls++
         return resultProvider()
     }

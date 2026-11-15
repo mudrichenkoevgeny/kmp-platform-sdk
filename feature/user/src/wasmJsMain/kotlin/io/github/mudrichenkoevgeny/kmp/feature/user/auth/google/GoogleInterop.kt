@@ -1,4 +1,5 @@
 @file:OptIn(ExperimentalWasmJsInterop::class)
+@file:Suppress("ClassNaming", "UnusedParameter")
 
 package io.github.mudrichenkoevgeny.kmp.feature.user.auth.google
 
@@ -32,7 +33,10 @@ external object google {
              * @param email The email address of the user whose grant is being revoked.
              * @param done Callback invoked when the revocation process is complete.
              */
-            fun revoke(email: String, done: (JsAny) -> Unit)
+            fun revoke(
+                email: String,
+                done: (JsAny) -> Unit
+            )
         }
     }
 }
@@ -43,8 +47,10 @@ external object google {
 external interface PromptMomentNotification : JsAny {
     /** @return true if the prompt was not displayed to the user. */
     fun isNotDisplayed(): Boolean
+
     /** @return true if the user skipped or dismissed the prompt. */
     fun isSkippedMoment(): Boolean
+
     /** @return A string explanation of why the prompt was not displayed, if applicable. */
     fun getNotDisplayedReason(): String?
 }
@@ -56,7 +62,10 @@ external interface PromptMomentNotification : JsAny {
  * @param callback The function to be executed when a credential (ID Token) is returned.
  * @return A [JsAny] object formatted as `{ client_id, callback }`.
  */
-fun createGoogleConfig(clientId: String, callback: (JsAny) -> Unit): JsAny =
+fun createGoogleConfig(
+    clientId: String,
+    callback: (JsAny) -> Unit
+): JsAny =
     js("({ client_id: clientId, callback: callback })")
 
 /**

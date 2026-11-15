@@ -11,7 +11,7 @@ import kotlin.time.Duration.Companion.seconds
  * @param interval Tick interval (defaults to 1 second).
  * @param onTick Callback invoked on each tick with the remaining seconds.
  */
-suspend fun resendCountdown(
+public suspend fun resendCountdown(
     totalSeconds: Int,
     interval: Duration = 1.seconds,
     onTick: (remainingSeconds: Int) -> Unit

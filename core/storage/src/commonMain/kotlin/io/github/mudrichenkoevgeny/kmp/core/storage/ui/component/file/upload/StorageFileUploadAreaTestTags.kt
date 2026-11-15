@@ -3,17 +3,22 @@ package io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload
 /**
  * Test tags dictionary for [StorageFileUploadArea].
  */
-object StorageFileUploadAreaTestTags {
+public object StorageFileUploadAreaTestTags {
     /** Test tag for the dropzone container element. */
-    const val DROPZONE = "StorageFileUploadArea_Dropzone"
+    public const val DROPZONE: String = "StorageFileUploadArea_Dropzone"
+
     /** Test tag for the submit button element. */
-    const val SUBMIT_BUTTON = "StorageFileUploadArea_SubmitButton"
+    public const val SUBMIT_BUTTON: String = "StorageFileUploadArea_SubmitButton"
+
     /** Test tag for the error message text container. */
-    const val ERROR_TEXT = "StorageFileUploadArea_ErrorText"
+    public const val ERROR_TEXT: String = "StorageFileUploadArea_ErrorText"
+
     /** Test tag for an individual queue item element. */
-    const val QUEUE_ITEM = "StorageFileUploadArea_QueueItem"
+    public const val QUEUE_ITEM: String = "StorageFileUploadArea_QueueItem"
+
     /** Test tag for the remove item button element. */
-    const val REMOVE_ITEM_BUTTON = "StorageFileUploadArea_RemoveItemButton"
+    public const val REMOVE_ITEM_BUTTON: String = "StorageFileUploadArea_RemoveItemButton"
+
     /** Test tag for the category dropdown selector element. */
-    const val CATEGORY_SELECT = "StorageFileUploadArea_CategorySelect"
+    public const val CATEGORY_SELECT: String = "StorageFileUploadArea_CategorySelect"
 }

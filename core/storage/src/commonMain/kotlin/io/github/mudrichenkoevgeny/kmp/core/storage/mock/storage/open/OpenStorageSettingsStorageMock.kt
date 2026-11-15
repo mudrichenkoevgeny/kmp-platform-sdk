@@ -4,17 +4,20 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.storage.storage.open.OpenStorageSettingsStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.storagesettings.OpenStorageSettings
 
+/**
+ * Mock implementation of [OpenStorageSettingsStorage] for testing.
+ */
 @InternalApi
-class OpenStorageSettingsStorageMock : OpenStorageSettingsStorage {
-    var stored: OpenStorageSettings? = null
+public class OpenStorageSettingsStorageMock : OpenStorageSettingsStorage {
+    public var stored: OpenStorageSettings? = null
 
-    override suspend fun getOpenStorageSettings(): OpenStorageSettings? = stored
+    public override suspend fun getOpenStorageSettings(): OpenStorageSettings? = stored
 
-    override suspend fun updateOpenStorageSettings(openStorageSettings: OpenStorageSettings) {
+    public override suspend fun updateOpenStorageSettings(openStorageSettings: OpenStorageSettings) {
         stored = openStorageSettings
     }
 
-    override suspend fun clearOpenStorageSettings() {
+    public override suspend fun clearOpenStorageSettings() {
         stored = null
     }
 }

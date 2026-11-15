@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.tools.detekt
+package io.github.mudrichenkoevgeny.kmp.tools.detektrules
 
 import dev.detekt.api.RuleSet
 import dev.detekt.api.RuleSetId

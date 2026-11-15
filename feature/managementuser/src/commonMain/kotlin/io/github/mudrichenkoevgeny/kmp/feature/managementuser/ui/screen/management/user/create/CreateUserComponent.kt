@@ -3,21 +3,21 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.SelectedFilePayload
 
-interface CreateUserComponent {
-    val state: Value<CreateUserScreenState>
+public interface CreateUserComponent {
+    public val state: Value<CreateUserScreenState>
 
-    fun onEmailChanged(value: String)
-    fun onPasswordChanged(value: String)
-    fun onNicknameChanged(value: String)
-    fun onDisplayNameChanged(value: String)
-    fun onAvatarFileSelected(payload: SelectedFilePayload)
-    fun onBirthdateChanged(value: String)
-    fun onRoleChanged(value: String)
-    fun onStatusChanged(value: String)
-    fun onAuthorityLevelChanged(value: String)
-    fun onQuotaBytesChanged(value: String)
-    fun onMaxUploadSizeBytesChanged(value: String)
-    fun onMaxPendingUploadsChanged(value: String)
-    fun onCreateClick()
-    fun onBackClick()
+    public fun onEmailChanged(value: String)
+    public fun onPasswordChanged(value: String)
+    public fun onNicknameChanged(value: String)
+    public fun onDisplayNameChanged(value: String)
+    public fun onAvatarFileSelected(payload: SelectedFilePayload)
+    public fun onBirthdateChanged(value: String)
+    public fun onRoleChanged(value: String)
+    public fun onStatusChanged(value: String)
+    public fun onAuthorityLevelChanged(value: String)
+    public fun onQuotaBytesChanged(value: String)
+    public fun onMaxUploadSizeBytesChanged(value: String)
+    public fun onMaxPendingUploadsChanged(value: String)
+    public fun onCreateClick()
+    public fun onBackClick()
 }

@@ -11,17 +11,17 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 /**
  * Universal screen state hierarchy for session list screens (client and management).
  */
-sealed interface SessionListScreenState {
+public sealed interface SessionListScreenState {
 
     /** Initial loading state. */
-    object Loading : SessionListScreenState
+    public data object Loading : SessionListScreenState
 
     /**
      * Global error state.
      *
      * @property error The application error that occurred during initialization or fetch.
      */
-    data class Error(val error: AppError) : SessionListScreenState
+    public data class Error(val error: AppError) : SessionListScreenState
 
     /**
      * Active content state displaying paginated sessions with optional filter/sort options.
@@ -35,7 +35,7 @@ sealed interface SessionListScreenState {
      * @property actionLoading Whether an async action (such as session revocation) is in progress.
      * @property actionError Error resulting from an async action attempt.
      */
-    data class Content(
+    public data class Content(
         val paging: PaginationState<UserSessionSummary> = PaginationState(),
         val currentSessionId: UserSessionId? = null,
         val currentUserId: UserId? = null,

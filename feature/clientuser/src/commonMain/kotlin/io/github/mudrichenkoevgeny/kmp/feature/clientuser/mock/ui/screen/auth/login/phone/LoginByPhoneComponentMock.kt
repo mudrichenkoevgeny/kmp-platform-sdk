@@ -9,14 +9,20 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.p
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.phone.LoginByPhoneScreenState
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.phone.LoginByPhoneStepConfig
 
+/**
+ * Mock implementation of [LoginByPhoneComponent] for testing and Compose previews.
+ *
+ * @param initialState Initial screen state to initialize the mock with.
+ */
 @InternalApi
-class LoginByPhoneComponentMock(
+public class LoginByPhoneComponentMock(
     initialState: LoginByPhoneScreenState = LoginByPhoneScreenState()
 ) : LoginByPhoneComponent {
 
-    override val stackNavigation = StackNavigation<LoginByPhoneStepConfig>()
+    override val stackNavigation: StackNavigation<LoginByPhoneStepConfig> = StackNavigation<LoginByPhoneStepConfig>()
 
-    private val defaultStepConfig: LoginByPhoneStepConfig = LoginByPhoneStepConfig.PhoneInput(initialPhone = initialState.phoneNumber)
+    private val defaultStepConfig: LoginByPhoneStepConfig =
+        LoginByPhoneStepConfig.PhoneInput(initialPhone = initialState.phoneNumber)
 
     private val _stack = MutableValue(
         ChildStack(
@@ -29,14 +35,19 @@ class LoginByPhoneComponentMock(
     private val _state = MutableValue(initialState)
     override val state: Value<LoginByPhoneScreenState> = _state
 
-    var sendCodeCalls = 0
-    var confirmCodeCalls = 0
-    var resetPhoneCalls = 0
-    var backCalls = 0
-    var lastPhoneChanged: String? = null
-    var lastCodeChanged: String? = null
+    public var sendCodeCalls: Int = 0
+    public var confirmCodeCalls: Int = 0
+    public var resetPhoneCalls: Int = 0
+    public var backCalls: Int = 0
+    public var lastPhoneChanged: String? = null
+    public var lastCodeChanged: String? = null
 
-    fun setStep(config: LoginByPhoneStepConfig) {
+    /**
+     * Updates the current active step configuration in the Decompose child stack.
+     *
+     * @param config Target step configuration to push onto the stack.
+     */
+    public fun setStep(config: LoginByPhoneStepConfig) {
         _stack.value = ChildStack(
             configuration = config,
             instance = createChild(config)
@@ -48,7 +59,12 @@ class LoginByPhoneComponentMock(
         is LoginByPhoneStepConfig.CodeInput -> LoginByPhoneComponent.Child.CodeInput(config.phone)
     }
 
-    fun updateState(state: LoginByPhoneScreenState) {
+    /**
+     * Updates the current screen state emitted by [state].
+     *
+     * @param state New screen state to emit.
+     */
+    public fun updateState(state: LoginByPhoneScreenState) {
         _state.value = state
     }
 

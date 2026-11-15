@@ -26,18 +26,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_add
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
 import io.github.mudrichenkoevgeny.kmp.core.storage.mock.ui.component.file.upload.StorageFileUploadComponentMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.ui.component.fileupload.StorageFileUploadUiConfig
 import org.jetbrains.compose.resources.painterResource
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
 /**
  * Embedded component providing a dropzone and queue list for multi-file upload.
@@ -50,7 +50,7 @@ import org.jetbrains.compose.resources.painterResource
  * @param enabled Whether UI controls and selection are active.
  */
 @Composable
-fun StorageFileUploadArea(
+public fun StorageFileUploadArea(
     component: StorageFileUploadComponent,
     onSelectFilesClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -68,7 +68,6 @@ fun StorageFileUploadArea(
             .padding(CoreTheme.dimens.paddingMedium),
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
-        // Dropzone area
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -109,7 +108,6 @@ fun StorageFileUploadArea(
             }
         }
 
-        // Queue Items
         if (state.queueItems.isNotEmpty()) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
@@ -127,7 +125,6 @@ fun StorageFileUploadArea(
             }
         }
 
-        // Submit Button
         if (!state.config.autoSubmit && state.hasPending) {
             CoreButton(
                 text = storageUi.uploadFileAction,
@@ -189,21 +186,21 @@ private fun StorageFileUploadAreaStatesPreview(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun StorageFileUploadAreaComponentSizePreview() {
     StorageFileUploadAreaPreviewContent(state = defaultStorageFileUploadAreaPreviewState)
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun StorageFileUploadAreaThemePreview() {
     StorageFileUploadAreaPreviewContent(state = defaultStorageFileUploadAreaPreviewState)
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun StorageFileUploadAreaFontScalePreview() {
     StorageFileUploadAreaPreviewContent(state = defaultStorageFileUploadAreaPreviewState)

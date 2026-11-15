@@ -21,9 +21,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessa
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
@@ -31,19 +31,21 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
  * Shows a loading indicator or an error with a retry button based on [state].
  *
  * @param state Current [PaginationState] of the list.
+ * @param modifier [Modifier] to be applied to the footer.
  * @param onRetry Callback invoked when the retry button is clicked.
  */
 @Composable
-fun PagingFooter(
+public fun PagingFooter(
     state: PaginationState<*>,
-    onRetry: () -> Unit
+    modifier: Modifier = Modifier,
+    onRetry: () -> Unit = {}
 ) {
     if (state.items.isEmpty()) {
         return
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(CoreTheme.dimens.paddingMedium),
         contentAlignment = Alignment.Center
@@ -61,11 +63,13 @@ fun PagingFooter(
 
 /**
  * Simple loading indicator for the bottom of the list.
+ *
+ * @param modifier [Modifier] to be applied to the loading indicator.
  */
 @Composable
-fun PagingLoadingFooter() {
+public fun PagingLoadingFooter(modifier: Modifier = Modifier) {
     CircularProgressIndicator(
-        modifier = Modifier.size(CoreTheme.dimens.progressIndicatorSizeSmall),
+        modifier = modifier.size(CoreTheme.dimens.progressIndicatorSizeSmall),
         strokeWidth = CoreTheme.dimens.progressIndicatorStrokeWidthSmall,
         color = MaterialTheme.colorScheme.primary
     )
@@ -73,13 +77,21 @@ fun PagingLoadingFooter() {
 
 /**
  * Error message and retry button for the bottom of the list.
+ *
+ * @param error Error to display.
+ * @param modifier [Modifier] to be applied to the error footer.
+ * @param onRetry Callback invoked when the retry button is clicked.
  */
 @Composable
-fun PagingErrorFooter(
+public fun PagingErrorFooter(
     error: AppError,
-    onRetry: () -> Unit
+    modifier: Modifier = Modifier,
+    onRetry: () -> Unit = {}
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             text = error.toLocalizedMessage(),
             style = MaterialTheme.typography.bodySmall,
@@ -96,7 +108,7 @@ fun PagingErrorFooter(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun PagingLoadingFooterComponentSizePreview() {
     CoreTheme {
@@ -107,7 +119,7 @@ private fun PagingLoadingFooterComponentSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun PagingLoadingFooterThemePreview() {
     CoreTheme {
@@ -118,7 +130,7 @@ private fun PagingLoadingFooterThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun PagingLoadingFooterFontScalePreview() {
     CoreTheme {

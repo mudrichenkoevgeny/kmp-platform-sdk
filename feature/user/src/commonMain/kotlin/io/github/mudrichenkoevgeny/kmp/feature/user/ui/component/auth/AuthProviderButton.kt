@@ -18,9 +18,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_apple
@@ -41,7 +41,7 @@ import org.jetbrains.compose.resources.painterResource
  * @param mode button text mode (defaults to [AuthProviderButtonMode.SIGN_IN]).
  */
 @Composable
-fun AuthProviderButton(
+public fun AuthProviderButton(
     authProvider: UserAuthProvider,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -83,6 +83,7 @@ fun AuthProviderButton(
                 UserAuthProvider.GOOGLE -> userUi.signInWithGoogle
                 UserAuthProvider.APPLE -> userUi.signInWithApple
             }
+
             AuthProviderButtonMode.ADD -> when (authProvider) {
                 UserAuthProvider.EMAIL -> userUi.identifierAddEmail
                 UserAuthProvider.PHONE -> userUi.identifierAddPhone
@@ -130,21 +131,21 @@ private fun AuthProviderButtonStatesPreview(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun AuthProviderButtonComponentSizePreview() {
     AuthProviderButtonPreviewContent(provider = defaultAuthProviderButtonPreviewState)
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     AuthProviderButtonPreviewContent(provider = defaultAuthProviderButtonPreviewState)
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     AuthProviderButtonPreviewContent(provider = defaultAuthProviderButtonPreviewState)

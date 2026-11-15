@@ -9,31 +9,36 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+/**
+ * Mock implementation of [ManagementAuthSettingsRepository] for testing.
+ */
 @InternalApi
-class ManagementAuthSettingsRepositoryMock : ManagementAuthSettingsRepository {
+public class ManagementAuthSettingsRepositoryMock : ManagementAuthSettingsRepository {
 
     private val authSettingsFlow = MutableStateFlow<ManagementAuthSettings?>(null)
 
-    var resultProvider: () -> AppResult<ManagementAuthSettings> = {
+    public var resultProvider: () -> AppResult<ManagementAuthSettings> = {
         authSettingsFlow.value?.let { AppResult.Success(it) }
             ?: AppResult.Error(
                 CommonError.ContractViolation(
-                    throwable = IllegalStateException("No mock settings provided. Call emit() or updateAuthSettings() first.")
+                    throwable = IllegalStateException(
+                        "No mock settings provided. Call emit() or updateAuthSettings() first."
+                    )
                 )
             )
     }
 
-    var saveResultProvider: (ManagementAuthSettings) -> AppResult<ManagementAuthSettings> = {
+    public var saveResultProvider: (ManagementAuthSettings) -> AppResult<ManagementAuthSettings> = {
         AppResult.Success(it)
     }
 
-    var resetResultProvider: () -> AppResult<ManagementAuthSettings> = { resultProvider() }
+    public var resetResultProvider: () -> AppResult<ManagementAuthSettings> = { resultProvider() }
 
-    override suspend fun getManagementAuthSettings(): AppResult<ManagementAuthSettings> = resultProvider()
+    public override suspend fun getManagementAuthSettings(): AppResult<ManagementAuthSettings> = resultProvider()
 
-    override suspend fun refreshManagementAuthSettings(): AppResult<ManagementAuthSettings> = resultProvider()
+    public override suspend fun refreshManagementAuthSettings(): AppResult<ManagementAuthSettings> = resultProvider()
 
-    override suspend fun resetRemoteManagementAuthSettings(): AppResult<ManagementAuthSettings> {
+    public override suspend fun resetRemoteManagementAuthSettings(): AppResult<ManagementAuthSettings> {
         val result = resetResultProvider()
         if (result is AppResult.Success) {
             authSettingsFlow.value = result.data
@@ -41,7 +46,7 @@ class ManagementAuthSettingsRepositoryMock : ManagementAuthSettingsRepository {
         return result
     }
 
-    override suspend fun saveRemoteManagementAuthSettings(authSettings: ManagementAuthSettings): AppResult<ManagementAuthSettings> {
+    public override suspend fun saveRemoteManagementAuthSettings(authSettings: ManagementAuthSettings): AppResult<ManagementAuthSettings> {
         val result = saveResultProvider(authSettings)
         if (result is AppResult.Success) {
             authSettingsFlow.value = result.data
@@ -49,13 +54,14 @@ class ManagementAuthSettingsRepositoryMock : ManagementAuthSettingsRepository {
         return result
     }
 
-    override suspend fun updateManagementAuthSettings(authSettings: ManagementAuthSettings) {
+    public override suspend fun updateManagementAuthSettings(authSettings: ManagementAuthSettings) {
         authSettingsFlow.value = authSettings
     }
 
-    override fun observeManagementAuthSettings(): Flow<ManagementAuthSettings?> = authSettingsFlow.asStateFlow()
+    public override fun observeManagementAuthSettings(): Flow<ManagementAuthSettings?> = authSettingsFlow.asStateFlow()
 
-    fun emit(authSettings: ManagementAuthSettings) {
+    /** Emits a new [ManagementAuthSettings] value for subscribers. */
+    public fun emit(authSettings: ManagementAuthSettings) {
         authSettingsFlow.value = authSettings
     }
 }

@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
@@ -26,7 +26,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
  * @param backgroundColor Overlay color.
  */
 @Composable
-fun BoxScope.FullscreenOverlayLoading(
+public fun BoxScope.FullscreenOverlayLoading(
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
 ) {
@@ -49,7 +49,7 @@ fun BoxScope.FullscreenOverlayLoading(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun FullscreenOverlayLoadingComponentSizePreview() {
     CoreTheme {
@@ -62,7 +62,7 @@ private fun FullscreenOverlayLoadingComponentSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun FullscreenOverlayLoadingThemePreview() {
     CoreTheme {

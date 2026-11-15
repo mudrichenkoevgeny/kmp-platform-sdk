@@ -8,16 +8,21 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.unlock.s
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.root.UnlockRootComponent
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientAuthNavigation
 
+/**
+ * Mock implementation of [UnlockRootComponent] for Compose previews and testing.
+ */
 @InternalApi
-class UnlockRootComponentMock(
-    initialChild: UnlockRootComponent.Child = UnlockRootComponent.Child.MethodSelection(UnlockMethodSelectionComponentMock())
+public class UnlockRootComponentMock(
+    initialChild: UnlockRootComponent.Child = UnlockRootComponent.Child.MethodSelection(
+        UnlockMethodSelectionComponentMock()
+    )
 ) : UnlockRootComponent {
-    override val stack: Value<ChildStack<ClientAuthNavigation, UnlockRootComponent.Child>> = MutableValue(
+    public override val stack: Value<ChildStack<ClientAuthNavigation, UnlockRootComponent.Child>> = MutableValue(
         ChildStack(
             configuration = ClientAuthNavigation.UnlockMethodSelection(),
             instance = initialChild
         )
     )
 
-    override fun onDismiss() {}
+    public override fun onDismiss(): Unit = Unit
 }

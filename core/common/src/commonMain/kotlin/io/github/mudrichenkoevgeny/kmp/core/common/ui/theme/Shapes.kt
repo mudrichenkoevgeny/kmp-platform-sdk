@@ -7,7 +7,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.tokens.GeneratedDesi
 /**
  * Custom shape definitions for the SDK components.
  */
-val CoreShapes: Shapes = Shapes(
+public val CoreShapes: Shapes = Shapes(
     extraSmall = RoundedCornerShape(GeneratedDesignTokens.Radius.extraSmall),
     small = RoundedCornerShape(GeneratedDesignTokens.Radius.small),
     medium = RoundedCornerShape(GeneratedDesignTokens.Radius.medium),

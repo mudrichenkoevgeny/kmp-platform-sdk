@@ -53,12 +53,13 @@ class ClientMainScreenComponentImpl(
             childFactory = ::createChild
         )
 
-    override val loginDialogSlot: Value<ChildSlot<MainScreenComponent.DialogConfig, ClientLoginRootComponent>> = childSlot(
-        source = dialogSlotNavigation,
-        serializer = MainScreenComponent.DialogConfig.serializer(),
-        handleBackButton = true,
-        childFactory = ::createDialogChild
-    )
+    override val loginDialogSlot: Value<ChildSlot<MainScreenComponent.DialogConfig, ClientLoginRootComponent>> =
+        childSlot(
+            source = dialogSlotNavigation,
+            serializer = MainScreenComponent.DialogConfig.serializer(),
+            handleBackButton = true,
+            childFactory = ::createDialogChild
+        )
 
     private var pendingRoute: ClientAppDeepLinkRoute? = null
 
@@ -123,6 +124,7 @@ class ClientMainScreenComponentImpl(
                 dialogSlotNavigation.activate(MainScreenComponent.DialogConfig.Login())
                 loginDialogSlot.value.child?.instance?.navigateTo(route.destination)
             }
+
             is ClientAppDeepLinkRoute.User -> {
                 if (targetChild is MainScreenComponent.Child.UserChild) {
                     targetChild.component.navigateTo(route.destination)

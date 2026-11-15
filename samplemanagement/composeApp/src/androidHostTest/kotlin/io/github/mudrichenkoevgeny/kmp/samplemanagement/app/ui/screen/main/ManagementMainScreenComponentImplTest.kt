@@ -49,7 +49,8 @@ class ManagementMainScreenComponentImplTest {
         val app = managementAppComponentMock(platformContext = context)
         val main = ManagementMainScreenComponentImpl(componentContext = ctx, managementAppComponent = app)
 
-        main.handleDeepLink(ManagementAppDeepLinkRoute.Management(destination = ManagementMainNavigation.Main, requiresAuth = false))
+        main.handleDeepLink(
+            ManagementAppDeepLinkRoute.Management(destination = ManagementMainNavigation.Main, requiresAuth = false))
 
         val active = main.stack.value.active
         assertIs<MainScreenComponent.Config.Management>(active.configuration)

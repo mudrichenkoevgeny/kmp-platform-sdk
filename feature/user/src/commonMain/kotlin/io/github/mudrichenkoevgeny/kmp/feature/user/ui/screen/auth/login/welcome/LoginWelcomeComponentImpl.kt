@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
  * @param onNavigateToPendingDeletion Opens the pending deletion restoration screen on the parent stack.
  * @param onFinished Completes the flow when sign-in succeeds (e.g. Google).
  */
-class LoginWelcomeComponentImpl(
+public class LoginWelcomeComponentImpl(
     componentContext: ComponentContext,
     private val externalLauncher: ExternalLauncher,
     private val getOpenGlobalSettingsUseCase: GetOpenGlobalSettingsUseCase,
@@ -61,7 +61,7 @@ class LoginWelcomeComponentImpl(
     private val _state = MutableValue<LoginWelcomeScreenState>(
         LoginWelcomeScreenState.Loading
     )
-    override val state: Value<LoginWelcomeScreenState> = _state
+    public override val state: Value<LoginWelcomeScreenState> = _state
 
     init {
         initScreen()
@@ -94,11 +94,12 @@ class LoginWelcomeComponentImpl(
         }
     }
 
-    override fun onRetryInitClick() {
+    public override fun onRetryInitClick() {
         initScreen()
     }
 
-    override fun onLoginClick(authProvider: UserAuthProvider) {
+    @Suppress("ForbiddenComment")
+    public override fun onLoginClick(authProvider: UserAuthProvider) {
         if (isActionStateLoading()) {
             return
         }
@@ -109,13 +110,16 @@ class LoginWelcomeComponentImpl(
                 onNavigateToLoginByEmail()
                 stopActionState()
             }
+
             UserAuthProvider.PHONE -> {
                 onNavigateToLoginByPhone()
                 stopActionState()
             }
+
             UserAuthProvider.GOOGLE -> {
                 loginByGoogle()
             }
+
             UserAuthProvider.APPLE -> {
                 // TODO: [IOS] Implement Apple Sign-In (loginByApple) when starting iOS development
                 stopActionState(
@@ -170,7 +174,7 @@ class LoginWelcomeComponentImpl(
         }
     }
 
-    override fun onPrivacyPolicyClick() {
+    public override fun onPrivacyPolicyClick() {
         if (isActionStateLoading()) {
             return
         }
@@ -183,7 +187,7 @@ class LoginWelcomeComponentImpl(
         }
     }
 
-    override fun onTermsOfServiceClick() {
+    public override fun onTermsOfServiceClick() {
         if (isActionStateLoading()) {
             return
         }

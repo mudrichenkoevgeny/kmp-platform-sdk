@@ -8,48 +8,51 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.settings.OpenAuthSettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.auth.settings.createTestOpenAuthSettingsPayload
 
+/**
+ * Mock implementation of [ManagementAuthSettingsApi] for testing.
+ */
 @InternalApi
-class ManagementAuthSettingsApiMock : ManagementAuthSettingsApi {
+public class ManagementAuthSettingsApiMock : ManagementAuthSettingsApi {
 
-    var lastRequest: ManagementAuthSettingsPayload? = null
-    var getCallCount = 0
-    var getOpenCallCount = 0
-    var updateCallCount = 0
-    var resetCallCount = 0
+    public var lastRequest: ManagementAuthSettingsPayload? = null
+    public var getCallCount: Int = 0
+    public var getOpenCallCount: Int = 0
+    public var updateCallCount: Int = 0
+    public var resetCallCount: Int = 0
 
-    var getResultProvider: () -> AppResult<ManagementAuthSettingsPayload> = {
+    public var getResultProvider: () -> AppResult<ManagementAuthSettingsPayload> = {
         AppResult.Error(CommonError.Unknown(isRetryable = false))
     }
 
-    var getOpenResultProvider: () -> AppResult<OpenAuthSettingsPayload> = {
+    public var getOpenResultProvider: () -> AppResult<OpenAuthSettingsPayload> = {
         AppResult.Success(createTestOpenAuthSettingsPayload())
     }
 
-    var updateResultProvider: () -> AppResult<ManagementAuthSettingsPayload> = {
+    public var updateResultProvider: () -> AppResult<ManagementAuthSettingsPayload> = {
         getResultProvider()
     }
 
-    var resetResultProvider: () -> AppResult<ManagementAuthSettingsPayload> = {
+    public var resetResultProvider: () -> AppResult<ManagementAuthSettingsPayload> = {
         getResultProvider()
     }
 
-    override suspend fun getManagementAuthSettings(): AppResult<ManagementAuthSettingsPayload> {
+    public override suspend fun getManagementAuthSettings(): AppResult<ManagementAuthSettingsPayload> {
         getCallCount++
         return getResultProvider()
     }
 
-    override suspend fun getOpenAuthSettings(): AppResult<OpenAuthSettingsPayload> {
+    public override suspend fun getOpenAuthSettings(): AppResult<OpenAuthSettingsPayload> {
         getOpenCallCount++
         return getOpenResultProvider()
     }
 
-    override suspend fun updateManagementAuthSettings(request: ManagementAuthSettingsPayload): AppResult<ManagementAuthSettingsPayload> {
+    public override suspend fun updateManagementAuthSettings(request: ManagementAuthSettingsPayload): AppResult<ManagementAuthSettingsPayload> {
         updateCallCount++
         lastRequest = request
         return updateResultProvider()
     }
 
-    override suspend fun resetManagementAuthSettings(): AppResult<ManagementAuthSettingsPayload> {
+    public override suspend fun resetManagementAuthSettings(): AppResult<ManagementAuthSettingsPayload> {
         resetCallCount++
         return resetResultProvider()
     }

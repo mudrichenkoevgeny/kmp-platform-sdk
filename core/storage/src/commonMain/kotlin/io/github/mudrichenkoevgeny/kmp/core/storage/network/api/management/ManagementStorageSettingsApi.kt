@@ -7,20 +7,20 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.model.
 /**
  * Fetch and update storage settings via the management API.
  */
-interface ManagementStorageSettingsApi {
+public interface ManagementStorageSettingsApi {
     /**
      * Fetches storage settings for management.
      *
      * @return [AppResult.Success] containing [ManagementStorageSettingsPayload] or [AppResult.Error].
      */
-    suspend fun getManagementStorageSettings(): AppResult<ManagementStorageSettingsPayload>
+    public suspend fun getManagementStorageSettings(): AppResult<ManagementStorageSettingsPayload>
 
     /**
      * Fetches open (public) storage settings for unauthenticated management users.
      *
      * @return [AppResult.Success] containing [OpenStorageSettingsPayload] or [AppResult.Error].
      */
-    suspend fun getOpenStorageSettings(): AppResult<OpenStorageSettingsPayload>
+    public suspend fun getOpenStorageSettings(): AppResult<OpenStorageSettingsPayload>
 
     /**
      * Updates platform-wide storage settings and policies.
@@ -28,12 +28,14 @@ interface ManagementStorageSettingsApi {
      * @param request New storage settings payload.
      * @return [AppResult.Success] containing updated [ManagementStorageSettingsPayload], or a mapped failure.
      */
-    suspend fun updateManagementStorageSettings(request: ManagementStorageSettingsPayload): AppResult<ManagementStorageSettingsPayload>
+    public suspend fun updateManagementStorageSettings(
+        request: ManagementStorageSettingsPayload
+    ): AppResult<ManagementStorageSettingsPayload>
 
     /**
      * Resets global storage settings and policies to default values.
      *
      * @return Fresh default [ManagementStorageSettingsPayload], or a mapped failure.
      */
-    suspend fun resetManagementStorageSettings(): AppResult<ManagementStorageSettingsPayload>
+    public suspend fun resetManagementStorageSettings(): AppResult<ManagementStorageSettingsPayload>
 }

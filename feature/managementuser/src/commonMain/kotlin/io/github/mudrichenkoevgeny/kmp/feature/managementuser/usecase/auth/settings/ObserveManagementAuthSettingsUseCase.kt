@@ -9,13 +9,12 @@ import kotlinx.coroutines.flow.Flow
  *
  * @param managementAuthSettingsRepository Remote management auth settings API.
  */
-class ObserveManagementAuthSettingsUseCase(
+public class ObserveManagementAuthSettingsUseCase(
     private val managementAuthSettingsRepository: ManagementAuthSettingsRepository
 ) {
     /**
      * @return [Flow] of the current [ManagementAuthSettings] or `null`.
      */
-    operator fun invoke(): Flow<ManagementAuthSettings?> {
-        return managementAuthSettingsRepository.observeManagementAuthSettings()
-    }
+    public operator fun invoke(): Flow<ManagementAuthSettings?> =
+        managementAuthSettingsRepository.observeManagementAuthSettings()
 }

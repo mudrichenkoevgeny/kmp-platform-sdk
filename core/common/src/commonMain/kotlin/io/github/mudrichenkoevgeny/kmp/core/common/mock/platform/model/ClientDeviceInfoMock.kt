@@ -16,14 +16,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.cl
  * @param operationSystemVersion OS version string.
  */
 @InternalApi
-fun clientDeviceInfoMock(
+public fun clientDeviceInfoMock(
     deviceId: ClientDeviceId = ClientDeviceId.generate(),
     deviceName: String = "KMP Mock Device",
     clientType: ClientType = ClientType.ANDROID,
     language: String = "en",
     appVersion: String = "1.0.0-debug",
     operationSystemVersion: String = "16"
-) = ClientDeviceInfo(
+): ClientDeviceInfo = ClientDeviceInfo(
     clientType = clientType,
     deviceId = deviceId,
     deviceName = deviceName,

@@ -44,8 +44,8 @@ class UserItemTest {
         }
 
         onNodeWithText(user.id.value.toString(), substring = true).assertIsDisplayed()
-        onNodeWithText(user.role.name, substring = true).assertIsDisplayed()
-        onNodeWithText(user.accountStatus.name, substring = true).assertIsDisplayed()
+        onNodeWithText(user.role.value, substring = true).assertIsDisplayed()
+        onNodeWithText(user.accountStatus.value, substring = true).assertIsDisplayed()
 
         onNodeWithTag(GlobalUserListTestTags.USER_ITEM_PREFIX + user.id.value).performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, clicks)

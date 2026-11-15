@@ -9,13 +9,12 @@ import kotlinx.coroutines.flow.Flow
  *
  * @param openStorageSettingsRepository Open storage settings repository.
  */
-class ObserveOpenStorageSettingsUseCase(
+public class ObserveOpenStorageSettingsUseCase(
     private val openStorageSettingsRepository: OpenStorageSettingsRepository
 ) {
     /**
      * @return Cold [Flow] emitting the latest [OpenStorageSettings] or `null`.
      */
-    operator fun invoke(): Flow<OpenStorageSettings?> {
-        return openStorageSettingsRepository.observeOpenStorageSettings()
-    }
+    public operator fun invoke(): Flow<OpenStorageSettings?> =
+        openStorageSettingsRepository.observeOpenStorageSettings()
 }

@@ -7,13 +7,13 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Global application settings repository for management: fetch, push updates, refresh, and observe.
  */
-interface ManagementGlobalSettingsRepository {
+public interface ManagementGlobalSettingsRepository {
     /**
      * Returns cached settings when already loaded or stored; otherwise loads from network or storage.
      *
      * @return [AppResult.Success] with [ManagementGlobalSettings], or [AppResult.Error] on failure.
      */
-    suspend fun getManagementGlobalSettings(): AppResult<ManagementGlobalSettings>
+    public suspend fun getManagementGlobalSettings(): AppResult<ManagementGlobalSettings>
 
     /**
      * Pushes [globalSettings] to the remote server and updates local state on success.
@@ -21,33 +21,33 @@ interface ManagementGlobalSettingsRepository {
      * @param globalSettings New global configuration payload to apply.
      * @return Updated [ManagementGlobalSettings] on success, or an error result when update fails.
      */
-    suspend fun saveRemoteManagementGlobalSettings(globalSettings: ManagementGlobalSettings): AppResult<ManagementGlobalSettings>
+    public suspend fun saveRemoteManagementGlobalSettings(globalSettings: ManagementGlobalSettings): AppResult<ManagementGlobalSettings>
 
     /**
      * Resets global settings on the remote server to default values and updates local state.
      *
      * @return Fresh [ManagementGlobalSettings] on success, or an error result when the remote reset fails.
      */
-    suspend fun resetRemoteManagementGlobalSettings(): AppResult<ManagementGlobalSettings>
+    public suspend fun resetRemoteManagementGlobalSettings(): AppResult<ManagementGlobalSettings>
 
     /**
      * Forces a network reload and updates the observable snapshot on success.
      *
      * @return Fresh [ManagementGlobalSettings] on success, or an error result when the request fails.
      */
-    suspend fun refreshManagementGlobalSettings(): AppResult<ManagementGlobalSettings>
+    public suspend fun refreshManagementGlobalSettings(): AppResult<ManagementGlobalSettings>
 
     /**
      * Persists [globalSettings] locally and publishes them to observers.
      *
      * @param globalSettings Complete settings payload to apply.
      */
-    suspend fun updateManagementGlobalSettings(globalSettings: ManagementGlobalSettings)
+    public suspend fun updateManagementGlobalSettings(globalSettings: ManagementGlobalSettings)
 
     /**
      * Observes the in-memory settings snapshot.
      *
      * @return [Flow] of the current [ManagementGlobalSettings] or `null`.
      */
-    fun observeManagementGlobalSettings(): Flow<ManagementGlobalSettings?>
+    public fun observeManagementGlobalSettings(): Flow<ManagementGlobalSettings?>
 }

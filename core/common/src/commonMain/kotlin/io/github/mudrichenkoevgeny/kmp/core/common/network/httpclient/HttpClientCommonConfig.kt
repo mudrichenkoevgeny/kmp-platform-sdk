@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.model.Api
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.contract.CommonHttpHeaders
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 import io.ktor.client.HttpClientConfig
+import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.ResponseException
@@ -20,7 +21,10 @@ import io.ktor.client.request.HttpRequestPipeline
 import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import io.ktor.serialization.ContentConvertException
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.io.IOException
+import kotlinx.serialization.SerializationException
 import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.Uuid
 
@@ -40,7 +44,7 @@ private const val LOGGER_RESPONSE_VALIDATOR_PREFIX = "Response validator"
  * Feature modules can extend/override behavior by providing [HttpClientConfigPlugin] implementations
  * passed from the host app into `CommonComponent`.
  */
-fun HttpClientConfig<*>.setupCommonConfig(
+public fun HttpClientConfig<*>.setupCommonConfig(
     baseUrl: String,
     networkLogger: Logger,
     clientDeviceInfo: ClientDeviceInfo
@@ -89,13 +93,32 @@ fun HttpClientConfig<*>.setupCommonConfig(
 
             val apiErrorResponse = try {
                 response.body<ApiErrorResponse>()
-            } catch (e: Exception) {
-                networkLogger.log("$LOGGER_RESPONSE_VALIDATOR_PREFIX: Failed to parse error response from $requestUrl: $e")
+            } catch (e: ContentConvertException) {
+                networkLogger.log(
+                    "$LOGGER_RESPONSE_VALIDATOR_PREFIX: Failed to parse error response from $requestUrl: $e"
+                )
+                null
+            } catch (e: NoTransformationFoundException) {
+                networkLogger.log(
+                    "$LOGGER_RESPONSE_VALIDATOR_PREFIX: Failed to parse error response from $requestUrl: $e"
+                )
+                null
+            } catch (e: SerializationException) {
+                networkLogger.log(
+                    "$LOGGER_RESPONSE_VALIDATOR_PREFIX: Failed to parse error response from $requestUrl: $e"
+                )
+                null
+            } catch (e: IOException) {
+                networkLogger.log(
+                    "$LOGGER_RESPONSE_VALIDATOR_PREFIX: Failed to read error response from $requestUrl: $e"
+                )
                 null
             }
 
             if (apiErrorResponse != null) {
-                networkLogger.log("$LOGGER_RESPONSE_VALIDATOR_PREFIX: API Error [Code: ${apiErrorResponse.code}] at $requestUrl. ID: ${apiErrorResponse.id}")
+                networkLogger.log(
+                    "$LOGGER_RESPONSE_VALIDATOR_PREFIX: API Error [Code: ${apiErrorResponse.code}] at $requestUrl. ID: ${apiErrorResponse.id}"
+                )
                 throw ApiException(apiErrorResponse)
             } else {
                 networkLogger.log("$LOGGER_RESPONSE_VALIDATOR_PREFIX: Generic HTTP Error [$statusCode] at $requestUrl")

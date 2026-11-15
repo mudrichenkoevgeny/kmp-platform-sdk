@@ -57,14 +57,12 @@ class StorageFilePreviewScreenshotTest(
         @Suppress("Unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
-        fun data(): Collection<Array<Any?>> {
-            return listOf(
-                arrayOf("Image", StorageCategory.IMAGE),
-                arrayOf("Video", StorageCategory.VIDEO),
-                arrayOf("Audio", StorageCategory.AUDIO),
-                arrayOf("Document", StorageCategory.DOCUMENT),
-                arrayOf("Other", StorageCategory.OTHER)
-            )
-        }
+        fun data(): Collection<Array<Any?>> = listOf(
+            arrayOf("Image", StorageCategory.IMAGE),
+            arrayOf("Video", StorageCategory.VIDEO),
+            arrayOf("Audio", StorageCategory.AUDIO),
+            arrayOf("Document", StorageCategory.DOCUMENT),
+            arrayOf("Other", StorageCategory.OTHER)
+        )
     }
 }

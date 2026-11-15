@@ -9,11 +9,9 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
  *
  * @param managementUserSecurityApi Administrative HTTP endpoints for user accounts security operations.
  */
-class ManagementUserSecurityRepositoryImpl(
+public class ManagementUserSecurityRepositoryImpl(
     private val managementUserSecurityApi: ManagementUserSecurityApi
 ) : ManagementUserSecurityRepository {
 
-    override suspend fun disableTotp(userId: UserId): AppResult<Unit> {
-        return managementUserSecurityApi.disableTotp(userId)
-    }
+    override suspend fun disableTotp(userId: UserId): AppResult<Unit> = managementUserSecurityApi.disableTotp(userId)
 }

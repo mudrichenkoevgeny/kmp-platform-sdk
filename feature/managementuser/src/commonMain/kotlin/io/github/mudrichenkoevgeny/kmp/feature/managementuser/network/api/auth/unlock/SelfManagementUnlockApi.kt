@@ -6,7 +6,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
 
 /** Self-service account unlock flows for management users. */
-interface SelfManagementUnlockApi {
+public interface SelfManagementUnlockApi {
 
     /**
      * Sends an account unlock confirmation code (OTP) to the specified management email address.
@@ -14,7 +14,7 @@ interface SelfManagementUnlockApi {
      * @param request Target email address request payload.
      * @return Confirmation dispatch result, or a mapped failure.
      */
-    suspend fun sendUnlockEmailConfirmation(
+    public suspend fun sendUnlockEmailConfirmation(
         request: SendConfirmationToEmailRequest
     ): AppResult<OtpConfirmationPayload>
 
@@ -24,7 +24,7 @@ interface SelfManagementUnlockApi {
      * @param request Unlock payload containing email and confirmation code.
      * @return Unit result on success, or a mapped failure.
      */
-    suspend fun unlockByEmail(
+    public suspend fun unlockByEmail(
         request: UnlockByEmailConfirmationRequest
     ): AppResult<Unit>
 }

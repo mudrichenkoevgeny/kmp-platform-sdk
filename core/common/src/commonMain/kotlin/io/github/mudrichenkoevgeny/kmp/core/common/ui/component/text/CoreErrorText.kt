@@ -15,9 +15,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
@@ -32,7 +32,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
  * @param textAlign Text alignment. Defaults to [TextAlign.Start].
  */
 @Composable
-fun CoreErrorText(
+public fun CoreErrorText(
     text: String?,
     modifier: Modifier = Modifier,
     visible: Boolean = !text.isNullOrBlank(),
@@ -71,7 +71,7 @@ fun CoreErrorText(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun CoreErrorTextComponentSizePreview() {
     CoreTheme {
@@ -84,7 +84,7 @@ private fun CoreErrorTextComponentSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun CoreErrorTextThemePreview() {
     CoreTheme {
@@ -97,7 +97,7 @@ private fun CoreErrorTextThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun CoreErrorTextFontScalePreview() {
     CoreTheme {

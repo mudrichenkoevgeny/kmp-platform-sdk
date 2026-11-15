@@ -12,13 +12,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.model.
  *
  * @param encryptedSettings Host-provided encrypted settings.
  */
-class EncryptedOpenStorageSettingsStorage(
+public class EncryptedOpenStorageSettingsStorage(
     private val encryptedSettings: EncryptedSettings
 ) : OpenStorageSettingsStorage {
 
     private val json = FoundationJson
 
-    override suspend fun getOpenStorageSettings(): OpenStorageSettings? {
+    public override suspend fun getOpenStorageSettings(): OpenStorageSettings? {
         val data = encryptedSettings.get(KEY_OPEN_STORAGE_SETTINGS) ?: return null
         return try {
             json.decodeFromString<OpenStorageSettingsPayload>(data).toOpenStorageSettings()
@@ -28,17 +28,17 @@ class EncryptedOpenStorageSettingsStorage(
         }
     }
 
-    override suspend fun updateOpenStorageSettings(openStorageSettings: OpenStorageSettings) {
+    public override suspend fun updateOpenStorageSettings(openStorageSettings: OpenStorageSettings) {
         val payload = openStorageSettings.toOpenStorageSettingsPayload()
         val data = json.encodeToString(payload)
         encryptedSettings.put(KEY_OPEN_STORAGE_SETTINGS, data)
     }
 
-    override suspend fun clearOpenStorageSettings() {
+    public override suspend fun clearOpenStorageSettings() {
         encryptedSettings.remove(KEY_OPEN_STORAGE_SETTINGS)
     }
 
-    companion object {
+    public companion object {
         private const val KEY_OPEN_STORAGE_SETTINGS = "storage_open_settings"
     }
 }

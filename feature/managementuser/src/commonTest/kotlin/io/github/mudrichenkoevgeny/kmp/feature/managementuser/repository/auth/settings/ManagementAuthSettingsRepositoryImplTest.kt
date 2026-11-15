@@ -5,14 +5,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.websocket.servic
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.network.api.auth.settings.ManagementAuthSettingsApiMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.storage.auth.settings.ManagementAuthSettingsStorageMock
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.network.model.websocket.createTestSocketFrame
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.auth.settings.createTestManagementAuthSettings
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.auth.settings.createTestManagementAuthSettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.ManagementAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.settings.toManagementAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserWebSocketEventTypes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.settings.ManagementAuthSettingsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.network.model.websocket.createTestSocketFrame
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.auth.settings.createTestManagementAuthSettings
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.auth.settings.createTestManagementAuthSettingsPayload
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -98,7 +98,8 @@ class ManagementAuthSettingsRepositoryImplTest {
         val frame = createTestSocketFrame(
             type = UserWebSocketEventTypes.MANAGEMENT_AUTH_SETTINGS_UPDATED,
             payload = FoundationJson.encodeToJsonElement(
-                ManagementAuthSettingsPayload.serializer(), pushed
+                ManagementAuthSettingsPayload.serializer(),
+                pushed
             )
         )
         sockets.emit(frame)

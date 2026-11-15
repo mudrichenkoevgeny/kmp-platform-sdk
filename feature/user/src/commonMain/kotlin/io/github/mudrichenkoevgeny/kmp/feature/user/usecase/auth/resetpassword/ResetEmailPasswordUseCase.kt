@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
  *
  * @param resetPasswordRepository Remote reset password API.
  */
-open class ResetEmailPasswordUseCase(
+public open class ResetEmailPasswordUseCase(
     private val resetPasswordRepository: ResetPasswordRepository
 ) {
     /**
@@ -18,15 +18,13 @@ open class ResetEmailPasswordUseCase(
      * @param confirmationCode Verification code delivered to email.
      * @return [UserIdentifierPrivate] context on success, or an error result when reset is rejected.
      */
-    open suspend fun execute(
+    public open suspend fun execute(
         email: String,
         newPassword: String,
         confirmationCode: String
-    ): AppResult<UserIdentifierPrivate> {
-        return resetPasswordRepository.resetPassword(
-            email = email,
-            newPassword = newPassword,
-            confirmationCode = confirmationCode
-        )
-    }
+    ): AppResult<UserIdentifierPrivate> = resetPasswordRepository.resetPassword(
+        email = email,
+        newPassword = newPassword,
+        confirmationCode = confirmationCode
+    )
 }

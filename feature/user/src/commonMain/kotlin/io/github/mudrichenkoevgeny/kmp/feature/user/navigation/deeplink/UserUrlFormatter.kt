@@ -4,10 +4,13 @@ import io.github.mudrichenkoevgeny.kmp.core.common.navigation.deeplink.UrlFormat
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.toFullUrl
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientUserNavigation
 
-class UserUrlFormatter(
+/**
+ * Formats [ClientUserNavigation] destinations into full URL strings.
+ *
+ * @param baseHost Base host string for deep link routing.
+ */
+public class UserUrlFormatter(
     private val baseHost: String
 ) : UrlFormatter<ClientUserNavigation> {
-    override fun format(destination: ClientUserNavigation): String {
-        return destination.toFullUrl(baseHost)
-    }
+    public override fun format(destination: ClientUserNavigation): String = destination.toFullUrl(baseHost)
 }

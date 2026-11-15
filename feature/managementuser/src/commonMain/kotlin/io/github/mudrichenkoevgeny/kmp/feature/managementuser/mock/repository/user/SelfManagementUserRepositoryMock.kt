@@ -10,16 +10,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+/**
+ * Mock implementation of [UserRepository] for testing.
+ */
 @InternalApi
-open class SelfManagementUserRepositoryMock : UserRepository {
+public open class SelfManagementUserRepositoryMock : UserRepository {
 
     private val _currentUser = MutableStateFlow<UserPrivate?>(null)
 
-    var currentUserProvider: () -> Flow<UserPrivate?> = { _currentUser.asStateFlow() }
+    public var currentUserProvider: () -> Flow<UserPrivate?> = { _currentUser.asStateFlow() }
 
-    override val currentUser: Flow<UserPrivate?> get() = currentUserProvider()
+    public override val currentUser: Flow<UserPrivate?> get() = currentUserProvider()
 
-    var resultProvider: () -> AppResult<UserPrivate> = {
+    public var resultProvider: () -> AppResult<UserPrivate> = {
         _currentUser.value?.let { AppResult.Success(it) }
             ?: AppResult.Error(
                 CommonError.ContractViolation(
@@ -28,25 +31,25 @@ open class SelfManagementUserRepositoryMock : UserRepository {
             )
     }
 
-    override suspend fun refreshCurrentUser(): AppResult<UserPrivate> = handleUpdate()
+    public override suspend fun refreshCurrentUser(): AppResult<UserPrivate> = handleUpdate()
 
-    override suspend fun scheduleUserDeletion(): AppResult<UserPrivate> = AppResult.Error(
+    public override suspend fun scheduleUserDeletion(): AppResult<UserPrivate> = AppResult.Error(
         CommonError.ContractViolation(
             throwable = IllegalStateException("Self-schedule user deletion for Management User are not supported.")
         )
     )
 
-    override suspend fun restoreUser(): AppResult<UserPrivate> = AppResult.Error(
+    public override suspend fun restoreUser(): AppResult<UserPrivate> = AppResult.Error(
         CommonError.ContractViolation(
             throwable = IllegalStateException("Self-restore user deletion for Management User are not supported.")
         )
     )
 
-    override suspend fun selfUpdateUser(
+    public override suspend fun selfUpdateUser(
         params: UpdateUserParams
     ): AppResult<UserPrivate> = handleUpdate()
 
-    override suspend fun clearSession() {
+    public override suspend fun clearSession() {
         _currentUser.value = null
     }
 
@@ -58,7 +61,8 @@ open class SelfManagementUserRepositoryMock : UserRepository {
         return result
     }
 
-    fun emit(user: UserPrivate?) {
+    /** Emits a new [UserPrivate] value for subscribers. */
+    public fun emit(user: UserPrivate?) {
         _currentUser.value = user
     }
 }

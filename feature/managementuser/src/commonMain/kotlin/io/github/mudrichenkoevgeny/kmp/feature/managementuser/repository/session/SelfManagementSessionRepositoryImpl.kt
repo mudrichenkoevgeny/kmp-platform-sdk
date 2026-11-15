@@ -24,7 +24,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  * @param userStorage Local persistent storage cache for user snapshots.
  * @param authStorage Auth storage for tokens.
  */
-class SelfManagementSessionRepositoryImpl(
+public class SelfManagementSessionRepositoryImpl(
     private val selfManagementSessionApi: SessionApi,
     private val userStorage: UserStorage,
     private val authStorage: AuthStorage
@@ -32,37 +32,40 @@ class SelfManagementSessionRepositoryImpl(
 
     override suspend fun getSessions(
         params: SelfSessionListParams?
-    ): AppResult<PagedResult<UserSessionSummary>> {
-        return selfManagementSessionApi.getSessions(params).mapSuccess { pagedPayload ->
-            pagedPayload.mapItems { it.toUserSessionSummary() }
+    ): AppResult<PagedResult<UserSessionSummary>> = selfManagementSessionApi.getSessions(
+        params
+    ).mapSuccess { pagedPayload ->
+        pagedPayload.mapItems { it.toUserSessionSummary() }
+    }
+
+    override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivate> =
+        selfManagementSessionApi.getSession(
+            userSessionId
+        ).mapSuccess {
+            it.toUserSessionPrivate()
         }
+
+    override suspend fun logout(): AppResult<Unit> = selfManagementSessionApi.logout().onSuccess {
+        userStorage.clear()
+        authStorage.clearTokens()
     }
 
-    override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivate> {
-        return selfManagementSessionApi.getSession(userSessionId).mapSuccess { it.toUserSessionPrivate() }
-    }
-
-    override suspend fun logout(): AppResult<Unit> {
-        return selfManagementSessionApi.logout().onSuccess {
-            userStorage.clear()
-            authStorage.clearTokens()
-        }
-    }
-
-    override suspend fun deleteSession(userSessionId: UserSessionId): AppResult<Unit> {
-        return selfManagementSessionApi.deleteSession(userSessionId)
-    }
-
-    override suspend fun deleteAllOtherSessions(): AppResult<Unit> {
-        return selfManagementSessionApi.deleteAllOtherSessions().mapSuccess { }
-    }
-
-    override suspend fun reauthenticateSession(mfaToken: String, code: String): AppResult<Unit> {
-        return selfManagementSessionApi.reauthenticateSession(
-            VerifyTotpPayload(
-                mfaToken = mfaToken,
-                code = code
-            )
+    override suspend fun deleteSession(userSessionId: UserSessionId): AppResult<Unit> =
+        selfManagementSessionApi.deleteSession(
+            userSessionId
         )
-    }
+
+    override suspend fun deleteAllOtherSessions(): AppResult<Unit> =
+        selfManagementSessionApi.deleteAllOtherSessions().mapSuccess {
+        }
+
+    override suspend fun reauthenticateSession(
+        mfaToken: String,
+        code: String
+    ): AppResult<Unit> = selfManagementSessionApi.reauthenticateSession(
+        VerifyTotpPayload(
+            mfaToken = mfaToken,
+            code = code
+        )
+    )
 }

@@ -8,9 +8,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.LogoutUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.RestoreUserUseCaseMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals

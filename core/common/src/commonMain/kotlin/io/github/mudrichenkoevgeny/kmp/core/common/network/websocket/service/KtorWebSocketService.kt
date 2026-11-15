@@ -14,8 +14,8 @@ import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.http.HttpMethod
 import io.ktor.websocket.Frame
 import io.ktor.websocket.WebSocketSession
-import io.ktor.websocket.readText
 import io.ktor.websocket.close
+import io.ktor.websocket.readText
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlin.time.Clock
@@ -44,7 +45,7 @@ import kotlin.uuid.Uuid
  * The service restarts the connection automatically when access token changes
  * (see [AccessTokenProvider.accessTokenFlow]).
  */
-class KtorWebSocketService(
+public class KtorWebSocketService(
     private val httpClient: HttpClient,
     private val baseUrl: String,
     private val webSocketPath: String,
@@ -57,16 +58,22 @@ class KtorWebSocketService(
     private var connectionJob: Job? = null
 
     private var isConnectionStarted = false
-    private val _events = MutableSharedFlow<SocketFrame>()
+    private val eventsFlow = MutableSharedFlow<SocketFrame>()
     private val outgoingChannel = Channel<SocketFrame>(Channel.BUFFERED)
 
     private var webSocketMessageHandlers: List<WebSocketMessageHandler> = emptyList()
+
+    private val socketExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        if (isConnectionStarted) {
+            networkLogger.log("$LOGGER_SOCKET_PREFIX: Socket coroutine exception: ${throwable.message}")
+        }
+    }
 
     init {
         observeTokenChanges()
     }
 
-    override fun connect() {
+    public override fun connect() {
         if (isConnectionStarted) {
             networkLogger.log("$LOGGER_SOCKET_PREFIX: Already started")
             return
@@ -76,14 +83,14 @@ class KtorWebSocketService(
         startConnection()
     }
 
-    override fun disconnect() {
+    public override fun disconnect() {
         networkLogger.log("$LOGGER_SOCKET_PREFIX: Disconnecting...")
         isConnectionStarted = false
         connectionJob?.cancel()
         connectionJob = null
     }
 
-    override fun restart() {
+    public override fun restart() {
         if (!isConnectionStarted) {
             networkLogger.log("$LOGGER_SOCKET_PREFIX: Cannot restart, service not started")
             return
@@ -91,15 +98,15 @@ class KtorWebSocketService(
         restartConnection()
     }
 
-    override fun observeEvents(): Flow<SocketFrame> = _events.asSharedFlow()
+    public override fun observeEvents(): Flow<SocketFrame> = eventsFlow.asSharedFlow()
 
-    override fun updateWebSocketMessageHandlers(
+    public override fun updateWebSocketMessageHandlers(
         webSocketMessageHandlers: List<WebSocketMessageHandler>
     ) {
         this.webSocketMessageHandlers = webSocketMessageHandlers
     }
 
-    override suspend fun sendEvent(
+    public override suspend fun sendEvent(
         type: String,
         payload: JsonElement?,
         metadata: Map<String, String>
@@ -114,14 +121,8 @@ class KtorWebSocketService(
         outgoingChannel.send(frame)
     }
 
-    override suspend fun sendPing(metadata: Map<String, String>) {
+    public override suspend fun sendPing(metadata: Map<String, String>) {
         sendEvent(CommonWebSocketEventTypes.PING, payload = null, metadata)
-    }
-
-    private val socketExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        if (isConnectionStarted) {
-            networkLogger.log("$LOGGER_SOCKET_PREFIX: Socket coroutine exception: ${throwable.message}")
-        }
     }
 
     private fun startConnection() {
@@ -163,15 +164,14 @@ class KtorWebSocketService(
 
                             readJob.join()
                             writeJob.cancel()
-                        } catch (e: Throwable) {
-                            if (e is CancellationException) {
-                                throw e
-                            }
+                        } catch (e: CancellationException) {
+                            throw e
+                        } catch (@Suppress("TooGenericExceptionCaught") e: Throwable) {
                             networkLogger.log("$LOGGER_SOCKET_PREFIX: Session error: ${e.message}")
                         } finally {
                             try {
                                 close()
-                            } catch (_: Throwable) {
+                            } catch (@Suppress("TooGenericExceptionCaught", "SwallowedException") _: Throwable) {
                             }
                         }
 
@@ -180,10 +180,9 @@ class KtorWebSocketService(
                             currentDelay = INITIAL_RECONNECT_DELAY_MS
                         }
                     }
-                } catch (e: Throwable) {
-                    if (e is CancellationException) {
-                        throw e
-                    }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (@Suppress("TooGenericExceptionCaught") e: Throwable) {
                     if (isActive && isConnectionStarted) {
                         networkLogger.log("$LOGGER_SOCKET_PREFIX: Connection error: ${e.message}")
                     }
@@ -213,7 +212,10 @@ class KtorWebSocketService(
 
                     val socketFrame = try {
                         FoundationJson.decodeFromString<SocketFrame>(text)
-                    } catch (e: Exception) {
+                    } catch (e: SerializationException) {
+                        networkLogger.log("$LOGGER_SOCKET_PREFIX: Failed to parse frame: ${e.message}")
+                        continue
+                    } catch (e: IllegalArgumentException) {
                         networkLogger.log("$LOGGER_SOCKET_PREFIX: Failed to parse frame: ${e.message}")
                         continue
                     }
@@ -221,10 +223,12 @@ class KtorWebSocketService(
                     processSocketFrame(socketFrame)
                 }
             }
-        } catch (e: Exception) {
-            if (e !is ClosedReceiveChannelException) {
-                networkLogger.log("$LOGGER_SOCKET_PREFIX: Receiving loop stopped: ${e.message}")
-            }
+        } catch (e: ClosedReceiveChannelException) {
+            networkLogger.log("$LOGGER_SOCKET_PREFIX: Incoming channel closed: ${e.message}")
+        } catch (e: CancellationException) {
+            throw e
+        } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
+            networkLogger.log("$LOGGER_SOCKET_PREFIX: Receiving loop stopped: ${e.message}")
         }
     }
 
@@ -242,7 +246,7 @@ class KtorWebSocketService(
         }
 
         if (!isHandled) {
-            _events.emit(socketFrame)
+            eventsFlow.emit(socketFrame)
         }
     }
 
@@ -251,9 +255,11 @@ class KtorWebSocketService(
             is WebSocketMessageHandlerResult.SendSocketFrame -> {
                 outgoingChannel.send(result.socketFrame)
             }
+
             is WebSocketMessageHandlerResult.Error -> {
                 networkLogger.log("$LOGGER_SOCKET_PREFIX: Handler error: ${result.appError}")
             }
+
             else -> Unit
         }
     }
@@ -264,7 +270,9 @@ class KtorWebSocketService(
                 val jsonText = FoundationJson.encodeToString(socketFrame)
                 send(Frame.Text(jsonText))
             }
-        } catch (e: Exception) {
+        } catch (e: CancellationException) {
+            throw e
+        } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
             networkLogger.log("$LOGGER_SOCKET_PREFIX: Sending loop stopped: ${e.message}")
         }
     }
@@ -292,7 +300,7 @@ class KtorWebSocketService(
         )
     }
 
-    companion object {
+    public companion object {
         private const val INITIAL_RECONNECT_DELAY_MS = 2000L
         private const val MAX_RECONNECT_DELAY_MS = 60000L
         private const val MIN_SESSION_DURATION_MS = 5000L

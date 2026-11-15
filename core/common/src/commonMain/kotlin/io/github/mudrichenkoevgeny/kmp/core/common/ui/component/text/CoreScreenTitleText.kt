@@ -9,9 +9,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
@@ -24,7 +24,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
  * @param overflow [TextOverflow] strategy when text exceeds available space.
  */
 @Composable
-fun CoreScreenTitleText(
+public fun CoreScreenTitleText(
     text: String,
     modifier: Modifier = Modifier,
     style: TextStyle = MaterialTheme.typography.titleLarge,
@@ -41,7 +41,7 @@ fun CoreScreenTitleText(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun CoreScreenTitleTextComponentSizePreview() {
     CoreTheme {
@@ -54,7 +54,7 @@ private fun CoreScreenTitleTextComponentSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun CoreScreenTitleTextThemePreview() {
     CoreTheme {
@@ -67,7 +67,7 @@ private fun CoreScreenTitleTextThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun CoreScreenTitleTextFontScalePreview() {
     CoreTheme {

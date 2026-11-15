@@ -16,7 +16,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  * @param managementGetIdentifiersUseCase Use case fetching global management identifiers.
  * @param managementGetUserIdentifiersUseCase Optional use case fetching identifiers for a specific user.
  */
-class ManagementIdentifierListDataSource(
+public class ManagementIdentifierListDataSource public constructor(
     private val managementGetIdentifiersUseCase: ManagementGetIdentifiersUseCase,
     private val managementGetUserIdentifiersUseCase: ManagementGetUserIdentifiersUseCase? = null
 ) : IdentifierListDataSource {

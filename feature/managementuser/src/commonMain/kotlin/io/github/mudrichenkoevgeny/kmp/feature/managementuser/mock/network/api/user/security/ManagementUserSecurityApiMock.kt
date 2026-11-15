@@ -6,9 +6,12 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user.security.ManagementUserSecurityApi
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
 
+/**
+ * Mock implementation of [ManagementUserSecurityApi] for testing.
+ */
 @InternalApi
-class ManagementUserSecurityApiMock : ManagementUserSecurityApi {
-    var disableTotpResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
+public class ManagementUserSecurityApiMock : ManagementUserSecurityApi {
+    public var disableTotpResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
 
-    override suspend fun disableTotp(userId: UserId): AppResult<Unit> = disableTotpResult
+    public override suspend fun disableTotp(userId: UserId): AppResult<Unit> = disableTotpResult
 }

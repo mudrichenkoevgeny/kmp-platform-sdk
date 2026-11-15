@@ -8,39 +8,39 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 /**
  * Manages all platform users globally: paginated listing with filters/sort and navigation to user detail/create screens.
  */
-interface GlobalUserListComponent : UserListOwner {
+public interface GlobalUserListComponent : UserListOwner {
 
     /** Reactive UI state. */
-    val state: Value<GlobalUserListScreenState>
+    public val state: Value<GlobalUserListScreenState>
 
     /** Refreshes the user list. */
-    fun onRefresh()
+    public fun onRefresh()
 
     /**
      * Navigates to user detail screen for the specified user.
      *
      * @param userId Target user ID.
      */
-    fun onUserClick(userId: UserId)
+    public fun onUserClick(userId: UserId)
 
     /** Navigates to user creation form screen. */
-    fun onCreateUserClick()
+    public fun onCreateUserClick()
 
     /** Requests the next page of users if available. */
-    fun onLoadNextPage()
+    public fun onLoadNextPage()
 
     /** Navigates back. */
-    fun onBackClick()
+    public fun onBackClick()
 
     /** Toggles the filter/sort panel visibility. */
-    fun onToggleFilterPanel()
+    public fun onToggleFilterPanel()
 
     /**
      * Applies a new sort state.
      *
      * @param sortState New sort option applied.
      */
-    fun onSortChanged(sortState: ListingSortState)
+    public fun onSortChanged(sortState: ListingSortState)
 
     /**
      * Applies a new filter state for a specific filter ID.
@@ -48,8 +48,11 @@ interface GlobalUserListComponent : UserListOwner {
      * @param filterId ID of the target filter field.
      * @param filterState New filter value, or null to clear the filter.
      */
-    fun onFilterChanged(filterId: String, filterState: ListingFilterState?)
+    public fun onFilterChanged(
+        filterId: String,
+        filterState: ListingFilterState?
+    )
 
     /** Confirms and applies current filters and sort options. */
-    fun onApplyFilters()
+    public fun onApplyFilters()
 }

@@ -11,8 +11,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientAuthNavigation
 
+/**
+ * Mock implementation of [ClientLoginRootComponent] for unit testing and Compose previews.
+ */
 @InternalApi
-open class ClientLoginRootComponentMock : ClientLoginRootComponent {
+public open class ClientLoginRootComponentMock : ClientLoginRootComponent {
 
     override val stack: Value<ChildStack<ClientAuthNavigation, ClientLoginRootComponent.Child>> = MutableValue(
         ChildStack(
@@ -30,7 +33,7 @@ open class ClientLoginRootComponentMock : ClientLoginRootComponent {
         )
     )
 
-    override fun navigateTo(destination: ClientAuthNavigation) {}
+    override fun navigateTo(destination: ClientAuthNavigation): Unit = Unit
 
-    override fun onDismiss() {}
+    override fun onDismiss(): Unit = Unit
 }

@@ -17,7 +17,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 
 /** [ManagementIdentifierApi] backed by [HttpClient]. */
-class KtorManagementIdentifierApi(
+public class KtorManagementIdentifierApi(
     private val client: HttpClient
 ) : ManagementIdentifierApi {
 

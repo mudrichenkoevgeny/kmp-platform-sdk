@@ -6,12 +6,12 @@ import kotlinx.serialization.Serializable
  * Serializable configurations driving the Decompose navigation stack for the TOTP setup and status wizard.
  */
 @Serializable
-sealed interface TotpStepConfig {
+public sealed interface TotpStepConfig {
     /**
      * Shows current TOTP status (Enabled summary or Disabled summary with "Set up 2FA" action).
      */
     @Serializable
-    data object Status : TotpStepConfig
+    public data object Status : TotpStepConfig
 
     /**
      * Active setup step: displaying QR code, secret key, and code verification field.
@@ -21,7 +21,7 @@ sealed interface TotpStepConfig {
      * @param secretKey Base32 encoded TOTP secret key for manual entry.
      */
     @Serializable
-    data class Setup(
+    public data class Setup(
         val mfaToken: String,
         val otpAuthUrl: String,
         val secretKey: String
@@ -32,8 +32,8 @@ sealed interface TotpStepConfig {
  * Serializable configurations driving the Decompose child slot for TOTP modal dialogs.
  */
 @Serializable
-sealed interface TotpDialogConfig {
+public sealed interface TotpDialogConfig {
     /** Modal dialog confirming TOTP disabling for the account. */
     @Serializable
-    data object ConfirmDisable : TotpDialogConfig
+    public data object ConfirmDisable : TotpDialogConfig
 }

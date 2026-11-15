@@ -11,26 +11,38 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
 
+/**
+ * Mock implementation of [ManagementIdentifierApi] for testing.
+ */
 @InternalApi
-class ManagementIdentifierApiMock : ManagementIdentifierApi {
+public class ManagementIdentifierApiMock : ManagementIdentifierApi {
 
-    var getIdentifiersResult: AppResult<PagedResult<UserIdentifierSummaryPayload>> = AppResult.Error(CommonError.Unknown())
-    var getUserIdentifiersResult: AppResult<PagedResult<UserIdentifierSummaryPayload>> = AppResult.Error(CommonError.Unknown())
-    var getIdentifierResult: AppResult<UserIdentifierPrivatePayload> = AppResult.Error(CommonError.Unknown())
-    var deleteIdentifierResult: AppResult<Unit> = AppResult.Success(Unit)
-    var deleteIdentifierPasswordResult: AppResult<Unit> = AppResult.Success(Unit)
+    public var getIdentifiersResult: AppResult<PagedResult<UserIdentifierSummaryPayload>> =
+        AppResult.Error(CommonError.Unknown())
+    public var getUserIdentifiersResult: AppResult<PagedResult<UserIdentifierSummaryPayload>> =
+        AppResult.Error(CommonError.Unknown())
+    public var getIdentifierResult: AppResult<UserIdentifierPrivatePayload> = AppResult.Error(CommonError.Unknown())
+    public var deleteIdentifierResult: AppResult<Unit> = AppResult.Success(Unit)
+    public var deleteIdentifierPasswordResult: AppResult<Unit> = AppResult.Success(Unit)
 
-    override suspend fun getIdentifiers(
+    public override suspend fun getIdentifiers(
         params: ManagementGlobalIdentifierListParams?
     ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = getIdentifiersResult
 
-    override suspend fun getUserIdentifiers(
+    public override suspend fun getUserIdentifiers(
         params: ManagementUserIdentifierListParams
     ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = getUserIdentifiersResult
 
-    override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivatePayload> = getIdentifierResult
+    public override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivatePayload> =
+        getIdentifierResult
 
-    override suspend fun deleteIdentifier(userId: UserId, identifierId: String): AppResult<Unit> = deleteIdentifierResult
+    public override suspend fun deleteIdentifier(
+        userId: UserId,
+        identifierId: String
+    ): AppResult<Unit> = deleteIdentifierResult
 
-    override suspend fun deleteIdentifierPassword(userId: UserId, identifierId: String): AppResult<Unit> = deleteIdentifierPasswordResult
+    public override suspend fun deleteIdentifierPassword(
+        userId: UserId,
+        identifierId: String
+    ): AppResult<Unit> = deleteIdentifierPasswordResult
 }

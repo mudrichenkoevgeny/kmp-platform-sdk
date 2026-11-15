@@ -7,7 +7,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
  * Administrative repository for managing security configurations and multifactor authentication overrides
  * across all user accounts.
  */
-interface ManagementUserSecurityRepository {
+public interface ManagementUserSecurityRepository {
 
     /**
      * Administratively disables TOTP (2FA) for a specific user.
@@ -15,5 +15,5 @@ interface ManagementUserSecurityRepository {
      * @param userId Unique identifier of the target user.
      * @return Empty success indicator, or a mapped failure.
      */
-    suspend fun disableTotp(userId: UserId): AppResult<Unit>
+    public suspend fun disableTotp(userId: UserId): AppResult<Unit>
 }

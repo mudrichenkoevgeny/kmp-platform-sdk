@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.decodeFromJsonElement
 
 /**
@@ -33,14 +34,14 @@ import kotlinx.serialization.json.decodeFromJsonElement
  * @param webSocketService WebSocket service for real-time file updates.
  * @param repositoryScope Scope used to collect WebSocket events.
  */
-class SelfManagementStorageRepositoryImpl(
+public class SelfManagementStorageRepositoryImpl(
     private val selfManagementStorageApi: StorageApi,
     private val directFileUploader: DirectFileUploader,
     private val webSocketService: WebSocketService,
     repositoryScope: CoroutineScope
 ) : StorageRepository {
 
-    private val _fileUpdates = MutableSharedFlow<StorageFilePrivate>()
+    private val fileUpdatesFlow = MutableSharedFlow<StorageFilePrivate>()
 
     init {
         repositoryScope.launch {
@@ -52,26 +53,33 @@ class SelfManagementStorageRepositoryImpl(
                             FoundationJson.decodeFromJsonElement<StorageFilePrivatePayload>(it)
                         }
                         if (payload != null) {
-                            _fileUpdates.emit(payload.toStorageFilePrivate())
+                            fileUpdatesFlow.emit(payload.toStorageFilePrivate())
                         } else {
                             Logger.w { "Received STORAGE_FILE_UPDATED with invalid payload" }
                         }
-                    } catch (e: Exception) {
+                    } catch (e: SerializationException) {
+                        Logger.e(e) { "Failed to process WebSocket event in SelfManagementStorageRepositoryImpl" }
+                    } catch (e: IllegalArgumentException) {
+                        Logger.e(e) { "Failed to process WebSocket event in SelfManagementStorageRepositoryImpl" }
+                    } catch (e: IllegalStateException) {
                         Logger.e(e) { "Failed to process WebSocket event in SelfManagementStorageRepositoryImpl" }
                     }
                 }
         }
     }
 
-    override suspend fun getFiles(params: SelfStorageFileListParams?): AppResult<PagedResult<StorageFileSummary>> {
-        return selfManagementStorageApi.getFiles(params)
-    }
+    public override suspend fun getFiles(
+        params: SelfStorageFileListParams?
+    ): AppResult<PagedResult<StorageFileSummary>> = selfManagementStorageApi.getFiles(
+        params
+    )
 
-    override suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate> {
-        return selfManagementStorageApi.getFileDetail(fileId)
-    }
+    public override suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate> =
+        selfManagementStorageApi.getFileDetail(
+            fileId
+        )
 
-    override suspend fun uploadFile(
+    public override suspend fun uploadFile(
         request: PresignedUrlRequest,
         openReadChannel: suspend () -> ByteReadChannel,
         onProgress: ((percent: Int) -> Unit)?
@@ -96,13 +104,14 @@ class SelfManagementStorageRepositoryImpl(
         return selfManagementStorageApi.confirmUpload(presigned.fileId.asHexDashString())
     }
 
-    override suspend fun deleteFile(fileId: String): AppResult<Unit> {
-        return selfManagementStorageApi.deleteFile(fileId)
-    }
+    public override suspend fun deleteFile(fileId: String): AppResult<Unit> = selfManagementStorageApi.deleteFile(
+        fileId
+    )
 
-    override suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit> {
-        return selfManagementStorageApi.deleteFilesBatch(request)
-    }
+    public override suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit> =
+        selfManagementStorageApi.deleteFilesBatch(
+            request
+        )
 
-    override fun observeFileUpdates(): Flow<StorageFilePrivate> = _fileUpdates.asSharedFlow()
+    public override fun observeFileUpdates(): Flow<StorageFilePrivate> = fileUpdatesFlow.asSharedFlow()
 }

@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.core.storage.storage.storagesettings.management
+package io.github.mudrichenkoevgeny.kmp.core.storage.storage.storagesettings
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.storage.EncryptedSettingsMock

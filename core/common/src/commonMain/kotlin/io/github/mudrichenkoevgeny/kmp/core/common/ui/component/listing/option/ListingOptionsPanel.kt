@@ -51,19 +51,30 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.option
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortDefinition
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Panel component presenting sorting and filtering options for listings.
+ *
+ * @param config Configuration specifying available sort definitions and filter definitions.
+ * @param sortState Current sorting state, or null if unsorted.
+ * @param filterStates Map of filter identifiers to their current states.
+ * @param onSortChanged Callback invoked when the sort selection changes.
+ * @param onFilterChanged Callback invoked when a filter state changes.
+ * @param onApplyClick Callback invoked when the apply button is pressed.
+ * @param modifier Modifier to be applied to the panel layout.
+ */
 @Composable
-fun ListingOptionsPanel(
+public fun ListingOptionsPanel(
     config: ListingOptionsConfig,
     sortState: ListingSortState?,
     filterStates: Map<String, ListingFilterState>,
-    onSortChanged: (ListingSortState) -> Unit,
-    onFilterChanged: (String, ListingFilterState?) -> Unit,
+    onSortChange: (ListingSortState) -> Unit,
+    onFilterChange: (String, ListingFilterState?) -> Unit,
     onApplyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -89,14 +100,14 @@ fun ListingOptionsPanel(
                 ListingSortSection(
                     options = config.sortOptions,
                     currentState = sortState,
-                    onSortChanged = onSortChanged
+                    onSortChange = onSortChange
                 )
             }
             if (config.filters.isNotEmpty()) {
                 ListingFiltersSection(
                     filters = config.filters,
                     states = filterStates,
-                    onFilterChanged = onFilterChanged
+                    onFilterChange = onFilterChange
                 )
             }
             Button(
@@ -114,7 +125,7 @@ fun ListingOptionsPanel(
 private fun ListingSortSection(
     options: List<ListingSortDefinition>,
     currentState: ListingSortState?,
-    onSortChanged: (ListingSortState) -> Unit
+    onSortChange: (ListingSortState) -> Unit
 ) {
     var isExpanded by remember { mutableStateOf(false) }
     val selectedOption = options.find { it.id == currentState?.optionId } ?: options.first()
@@ -154,7 +165,7 @@ private fun ListingSortSection(
                         DropdownMenuItem(
                             text = { Text(text = option.title) },
                             onClick = {
-                                onSortChanged(
+                                onSortChange(
                                     ListingSortState(
                                         optionId = option.id,
                                         isAscending = isAscending
@@ -170,7 +181,7 @@ private fun ListingSortSection(
         FilterChip(
             selected = isAscending,
             onClick = {
-                onSortChanged(
+                onSortChange(
                     ListingSortState(
                         optionId = selectedOption.id,
                         isAscending = true
@@ -182,7 +193,7 @@ private fun ListingSortSection(
         FilterChip(
             selected = !isAscending,
             onClick = {
-                onSortChanged(
+                onSortChange(
                     ListingSortState(
                         optionId = selectedOption.id,
                         isAscending = false
@@ -198,7 +209,7 @@ private fun ListingSortSection(
 private fun ListingFiltersSection(
     filters: List<ListingFilterDefinition>,
     states: Map<String, ListingFilterState>,
-    onFilterChanged: (String, ListingFilterState?) -> Unit
+    onFilterChange: (String, ListingFilterState?) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium),
@@ -208,8 +219,8 @@ private fun ListingFiltersSection(
             ListingFilterItem(
                 filter = filter,
                 state = states[filter.id],
-                onFilterChanged = { newState ->
-                    onFilterChanged(filter.id, newState)
+                onFilterChange = { newState ->
+                    onFilterChange(filter.id, newState)
                 }
             )
         }
@@ -220,13 +231,14 @@ private fun ListingFiltersSection(
 private fun ListingFilterItem(
     filter: ListingFilterDefinition,
     state: ListingFilterState?,
-    onFilterChanged: (ListingFilterState?) -> Unit
+    onFilterChange: (ListingFilterState?) -> Unit
 ) {
     val isFilterActive = when (filter) {
         is NumberListingFilterDefinition -> {
             val numberState = state as? NumberListingFilterState
             numberState != null && numberState.value != filter.defaultValueOnFocusLost
         }
+
         else -> state != null
     }
 
@@ -245,7 +257,7 @@ private fun ListingFilterItem(
             )
             if (isFilterActive) {
                 TextButton(
-                    onClick = { onFilterChanged(null) }
+                    onClick = { onFilterChange(null) }
                 ) {
                     Text(
                         text = LocalCommonStrings.current.ui.clearAll,
@@ -256,150 +268,195 @@ private fun ListingFilterItem(
         }
 
         when (filter) {
-            is TextListingFilterDefinition -> {
-                val textState = state as? TextListingFilterState
-                OutlinedTextField(
-                    value = textState?.value ?: "",
-                    onValueChange = { newValue ->
-                        if (newValue.isEmpty()) {
-                            onFilterChanged(null)
-                        } else {
-                            onFilterChanged(TextListingFilterState(newValue))
-                        }
-                    },
-                    placeholder = { Text(text = filter.placeholder) },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-            is NumberListingFilterDefinition -> {
-                val numberState = state as? NumberListingFilterState
-                var rawText by remember {
-                    mutableStateOf(numberState?.value?.toString() ?: "")
-                }
-                var isFocused by remember { mutableStateOf(false) }
+            is TextListingFilterDefinition -> TextFilterItem(
+                filter = filter,
+                state = state as? TextListingFilterState,
+                onFilterChange = onFilterChange
+            )
 
-                LaunchedEffect(numberState) {
-                    if (!isFocused) {
-                        rawText = numberState?.value?.toString() ?: ""
-                    }
-                }
+            is NumberListingFilterDefinition -> NumberFilterItem(
+                filter = filter,
+                state = state as? NumberListingFilterState,
+                onFilterChange = onFilterChange
+            )
 
-                OutlinedTextField(
-                    value = rawText,
-                    onValueChange = { newValue ->
-                        if (newValue.isEmpty()) {
-                            rawText = ""
-                            onFilterChanged(null)
-                        } else {
-                            val parsed = newValue.toLongOrNull()
-                            if (parsed != null) {
-                                val clamped = if (filter.minValue != null && filter.maxValue != null) {
-                                    parsed.coerceIn(filter.minValue, filter.maxValue)
-                                } else if (filter.minValue != null) {
-                                    parsed.coerceAtLeast(filter.minValue)
-                                } else if (filter.maxValue != null) {
-                                    parsed.coerceAtMost(filter.maxValue)
-                                } else {
-                                    parsed
-                                }
-                                rawText = clamped.toString()
-                                onFilterChanged(NumberListingFilterState(clamped))
-                            }
-                        }
-                    },
-                    placeholder = { Text(text = filter.placeholder) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onFocusChanged { focusState ->
-                            isFocused = focusState.isFocused
-                            if (!focusState.isFocused && rawText.isEmpty() && filter.defaultValueOnFocusLost != null) {
-                                rawText = filter.defaultValueOnFocusLost.toString()
-                                onFilterChanged(NumberListingFilterState(filter.defaultValueOnFocusLost))
-                            }
-                        }
-                )
+            is BooleanListingFilterDefinition -> BooleanFilterItem(
+                filter = filter,
+                state = state as? BooleanListingFilterState,
+                onFilterChange = onFilterChange
+            )
+
+            is ChoiceListingFilterDefinition -> ChoiceFilterItem(
+                filter = filter,
+                state = state as? ChoiceListingFilterState,
+                onFilterChange = onFilterChange
+            )
+        }
+    }
+}
+
+@Composable
+private fun TextFilterItem(
+    filter: TextListingFilterDefinition,
+    state: TextListingFilterState?,
+    onFilterChange: (ListingFilterState?) -> Unit
+) {
+    OutlinedTextField(
+        value = state?.value ?: "",
+        onValueChange = { newValue ->
+            if (newValue.isEmpty()) {
+                onFilterChange(null)
+            } else {
+                onFilterChange(TextListingFilterState(newValue))
             }
-            is BooleanListingFilterDefinition -> {
-                val booleanState = state as? BooleanListingFilterState
-                val trueLabel = if (filter.trueLabelRes != null) {
-                    stringResource(filter.trueLabelRes)
-                } else {
-                    LocalCommonStrings.current.ui.yes
-                }
-                val falseLabel = if (filter.falseLabelRes != null) {
-                    stringResource(filter.falseLabelRes)
-                } else {
-                    LocalCommonStrings.current.ui.no
-                }
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
-                ) {
-                    FilterChip(
-                        selected = booleanState?.value == true,
-                        onClick = {
-                            if (booleanState?.value == true) {
-                                onFilterChanged(null)
-                            } else {
-                                onFilterChanged(BooleanListingFilterState(true))
-                            }
-                        },
-                        label = { Text(text = trueLabel) }
-                    )
-                    FilterChip(
-                        selected = booleanState?.value == false,
-                        onClick = {
-                            if (booleanState?.value == false) {
-                                onFilterChanged(null)
-                            } else {
-                                onFilterChanged(BooleanListingFilterState(false))
-                            }
-                        },
-                        label = { Text(text = falseLabel) }
-                    )
-                }
-            }
-            is ChoiceListingFilterDefinition -> {
-                val choiceState = state as? ChoiceListingFilterState
-                val selectedIds = choiceState?.selectedIds ?: emptySet()
-                val effectiveStyle = when (filter.presentationStyle) {
-                    ChoiceFilterPresentationStyle.AUTO -> if (filter.options.size <= 4) {
-                        ChoiceFilterPresentationStyle.CHIPS
+        },
+        placeholder = { Text(text = filter.placeholder) },
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+private fun NumberFilterItem(
+    filter: NumberListingFilterDefinition,
+    state: NumberListingFilterState?,
+    onFilterChange: (ListingFilterState?) -> Unit
+) {
+    var rawText by remember {
+        mutableStateOf(state?.value?.toString() ?: "")
+    }
+    var isFocused by remember { mutableStateOf(false) }
+
+    LaunchedEffect(state) {
+        if (!isFocused) {
+            rawText = state?.value?.toString() ?: ""
+        }
+    }
+
+    OutlinedTextField(
+        value = rawText,
+        onValueChange = { newValue ->
+            if (newValue.isEmpty()) {
+                rawText = ""
+                onFilterChange(null)
+            } else {
+                val parsed = newValue.toLongOrNull()
+                if (parsed != null) {
+                    val clamped = if (filter.minValue != null && filter.maxValue != null) {
+                        parsed.coerceIn(filter.minValue, filter.maxValue)
+                    } else if (filter.minValue != null) {
+                        parsed.coerceAtLeast(filter.minValue)
+                    } else if (filter.maxValue != null) {
+                        parsed.coerceAtMost(filter.maxValue)
                     } else {
-                        ChoiceFilterPresentationStyle.DROPDOWN
+                        parsed
                     }
-                    else -> filter.presentationStyle
-                }
-
-                when (effectiveStyle) {
-                    ChoiceFilterPresentationStyle.CHIPS -> {
-                        ListingChoiceChips(
-                            filter = filter,
-                            selectedIds = selectedIds,
-                            onSelectionChanged = { newSelection ->
-                                if (newSelection.isEmpty()) {
-                                    onFilterChanged(null)
-                                } else {
-                                    onFilterChanged(ChoiceListingFilterState(newSelection))
-                                }
-                            }
-                        )
-                    }
-                    else -> {
-                        ListingChoiceDropdown(
-                            filter = filter,
-                            selectedIds = selectedIds,
-                            onSelectionChanged = { newSelection ->
-                                if (newSelection.isEmpty()) {
-                                    onFilterChanged(null)
-                                } else {
-                                    onFilterChanged(ChoiceListingFilterState(newSelection))
-                                }
-                            }
-                        )
-                    }
+                    rawText = clamped.toString()
+                    onFilterChange(NumberListingFilterState(clamped))
                 }
             }
+        },
+        placeholder = { Text(text = filter.placeholder) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier
+            .fillMaxWidth()
+            .onFocusChanged { focusState ->
+                isFocused = focusState.isFocused
+                if (!focusState.isFocused && rawText.isEmpty() && filter.defaultValueOnFocusLost != null) {
+                    rawText = filter.defaultValueOnFocusLost.toString()
+                    onFilterChange(NumberListingFilterState(filter.defaultValueOnFocusLost))
+                }
+            }
+    )
+}
+
+@Composable
+private fun BooleanFilterItem(
+    filter: BooleanListingFilterDefinition,
+    state: BooleanListingFilterState?,
+    onFilterChange: (ListingFilterState?) -> Unit
+) {
+    val trueLabel = if (filter.trueLabelRes != null) {
+        stringResource(filter.trueLabelRes)
+    } else {
+        LocalCommonStrings.current.ui.yes
+    }
+    val falseLabel = if (filter.falseLabelRes != null) {
+        stringResource(filter.falseLabelRes)
+    } else {
+        LocalCommonStrings.current.ui.no
+    }
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
+    ) {
+        FilterChip(
+            selected = state?.value == true,
+            onClick = {
+                if (state?.value == true) {
+                    onFilterChange(null)
+                } else {
+                    onFilterChange(BooleanListingFilterState(true))
+                }
+            },
+            label = { Text(text = trueLabel) }
+        )
+        FilterChip(
+            selected = state?.value == false,
+            onClick = {
+                if (state?.value == false) {
+                    onFilterChange(null)
+                } else {
+                    onFilterChange(BooleanListingFilterState(false))
+                }
+            },
+            label = { Text(text = falseLabel) }
+        )
+    }
+}
+
+@Composable
+private fun ChoiceFilterItem(
+    filter: ChoiceListingFilterDefinition,
+    state: ChoiceListingFilterState?,
+    onFilterChange: (ListingFilterState?) -> Unit
+) {
+    val selectedIds = state?.selectedIds ?: emptySet()
+    val effectiveStyle = when (filter.presentationStyle) {
+        ChoiceFilterPresentationStyle.AUTO -> if (filter.options.size <= 4) {
+            ChoiceFilterPresentationStyle.CHIPS
+        } else {
+            ChoiceFilterPresentationStyle.DROPDOWN
+        }
+
+        else -> filter.presentationStyle
+    }
+
+    when (effectiveStyle) {
+        ChoiceFilterPresentationStyle.CHIPS -> {
+            ListingChoiceChips(
+                filter = filter,
+                selectedIds = selectedIds,
+                onSelectionChange = { newSelection ->
+                    if (newSelection.isEmpty()) {
+                        onFilterChange(null)
+                    } else {
+                        onFilterChange(ChoiceListingFilterState(newSelection))
+                    }
+                }
+            )
+        }
+
+        else -> {
+            ListingChoiceDropdown(
+                filter = filter,
+                selectedIds = selectedIds,
+                onSelectionChange = { newSelection ->
+                    if (newSelection.isEmpty()) {
+                        onFilterChange(null)
+                    } else {
+                        onFilterChange(ChoiceListingFilterState(newSelection))
+                    }
+                }
+            )
         }
     }
 }
@@ -409,7 +466,7 @@ private fun ListingFilterItem(
 private fun ListingChoiceChips(
     filter: ChoiceListingFilterDefinition,
     selectedIds: Set<String>,
-    onSelectionChanged: (Set<String>) -> Unit
+    onSelectionChange: (Set<String>) -> Unit
 ) {
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall),
@@ -430,7 +487,7 @@ private fun ListingChoiceChips(
                             setOf(option.id)
                         }
                     }
-                    onSelectionChanged(newSelection)
+                    onSelectionChange(newSelection)
                 },
                 label = { Text(text = option.title) }
             )
@@ -438,7 +495,7 @@ private fun ListingChoiceChips(
     }
 }
 
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun ListingOptionsPanelComponentSizePreview() {
     CoreTheme {
@@ -461,15 +518,15 @@ private fun ListingOptionsPanelComponentSizePreview() {
                 ),
                 sortState = ListingSortState(ListingOptionsPanelTestData.SORT_ID_CREATED_AT, false),
                 filterStates = emptyMap(),
-                onSortChanged = {},
-                onFilterChanged = { _, _ -> },
+                onSortChange = {},
+                onFilterChange = { _, _ -> },
                 onApplyClick = {}
             )
         }
     }
 }
 
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ListingOptionsPanelThemePreview() {
     CoreTheme {
@@ -492,15 +549,15 @@ private fun ListingOptionsPanelThemePreview() {
                 ),
                 sortState = ListingSortState(ListingOptionsPanelTestData.SORT_ID_CREATED_AT, false),
                 filterStates = emptyMap(),
-                onSortChanged = {},
-                onFilterChanged = { _, _ -> },
+                onSortChange = {},
+                onFilterChange = { _, _ -> },
                 onApplyClick = {}
             )
         }
     }
 }
 
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun ListingOptionsPanelFontScalePreview() {
     CoreTheme {
@@ -523,8 +580,8 @@ private fun ListingOptionsPanelFontScalePreview() {
                 ),
                 sortState = ListingSortState(ListingOptionsPanelTestData.SORT_ID_CREATED_AT, false),
                 filterStates = emptyMap(),
-                onSortChanged = {},
-                onFilterChanged = { _, _ -> },
+                onSortChange = {},
+                onFilterChange = { _, _ -> },
                 onApplyClick = {}
             )
         }

@@ -7,10 +7,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
 /**
  * UI state for TOTP login: supports either time-based code entry or a static recovery code.
  */
-sealed interface LoginByTotpScreenState {
+public sealed interface LoginByTotpScreenState {
 
     /** Reserved for a dedicated loading phase. */
-    data object Loading : LoginByTotpScreenState
+    public data object Loading : LoginByTotpScreenState
 
     /**
      * MFA code entry form.
@@ -21,7 +21,7 @@ sealed interface LoginByTotpScreenState {
      * @param actionLoading while true, shows overlay during sign-in.
      * @param actionError server error from the last login attempt.
      */
-    data class Content(
+    public data class Content(
         val mfaToken: String,
         val code: String = "",
         val mode: LoginByTotpMode = LoginByTotpMode.TOTP,
@@ -30,11 +30,11 @@ sealed interface LoginByTotpScreenState {
     ) : LoginByTotpScreenState {
 
         /** Standard digit-length rule for TOTP; basic presence check for recovery codes. */
-        val isCodeValid: Boolean = when (mode) {
+        public val isCodeValid: Boolean = when (mode) {
             LoginByTotpMode.TOTP -> code.length == FieldValidator.TOTP_CODE_LENGTH && code.all { it.isDigit() }
             LoginByTotpMode.RECOVERY_CODE -> code.isNotBlank()
         }
 
-        val canSubmit: Boolean = isCodeValid && !actionLoading
+        public val canSubmit: Boolean = isCodeValid && !actionLoading
     }
 }

@@ -51,11 +51,9 @@ class CoreBackButtonScreenshotTest(
         @Suppress("Unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
-        fun data(): Collection<Array<Any>> {
-            return listOf(
-                arrayOf("Enabled", true),
-                arrayOf("Disabled", false)
-            )
-        }
+        fun data(): Collection<Array<Any>> = listOf(
+            arrayOf("Enabled", true),
+            arrayOf("Disabled", false)
+        )
     }
 }

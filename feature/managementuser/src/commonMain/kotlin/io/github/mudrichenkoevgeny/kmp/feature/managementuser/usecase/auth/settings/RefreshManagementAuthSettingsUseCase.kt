@@ -9,13 +9,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
  *
  * @param managementAuthSettingsRepository Auth settings aggregate.
  */
-class RefreshManagementAuthSettingsUseCase(
+public class RefreshManagementAuthSettingsUseCase(
     private val managementAuthSettingsRepository: ManagementAuthSettingsRepository
 ) {
     /**
      * @return Fresh [ManagementAuthSettings] on success, or an error result when the refresh request fails.
      */
-    suspend operator fun invoke(): AppResult<ManagementAuthSettings> {
-        return managementAuthSettingsRepository.refreshManagementAuthSettings()
-    }
+    public suspend operator fun invoke(): AppResult<ManagementAuthSettings> =
+        managementAuthSettingsRepository.refreshManagementAuthSettings()
 }

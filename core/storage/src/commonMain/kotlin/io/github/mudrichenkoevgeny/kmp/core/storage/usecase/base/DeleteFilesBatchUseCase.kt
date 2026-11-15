@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.reques
  *
  * @param storageRepository Storage repository for file operations.
  */
-class DeleteFilesBatchUseCase(
+public class DeleteFilesBatchUseCase(
     private val storageRepository: StorageRepository
 ) {
     /**
@@ -18,7 +18,8 @@ class DeleteFilesBatchUseCase(
      * @param request Batch deletion request containing array of file identifiers.
      * @return [AppResult.Success] containing [Unit], or [AppResult.Error] on failure.
      */
-    suspend operator fun invoke(request: DeleteFilesBatchRequest): AppResult<Unit> {
-        return storageRepository.deleteFilesBatch(request)
-    }
+    public suspend operator fun invoke(request: DeleteFilesBatchRequest): AppResult<Unit> =
+        storageRepository.deleteFilesBatch(
+            request
+        )
 }

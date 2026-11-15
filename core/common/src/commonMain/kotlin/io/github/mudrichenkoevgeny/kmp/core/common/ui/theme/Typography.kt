@@ -19,11 +19,13 @@ import org.jetbrains.compose.resources.Font
  * @return The configured [FontFamily] containing regular, bold, italic, and bold-italic styles.
  */
 @Composable
-fun ptSansFontFamily(): FontFamily {
+public fun ptSansFontFamily(): FontFamily {
     val regularWeight = FontWeight(GeneratedDesignTokens.Typography.fontWeightRegular)
     val boldWeight = FontWeight(GeneratedDesignTokens.Typography.fontWeightBold)
-    val normalStyle = if (GeneratedDesignTokens.Typography.fontStyleNormal == "italic") FontStyle.Italic else FontStyle.Normal
-    val italicStyle = if (GeneratedDesignTokens.Typography.fontStyleItalic == "italic") FontStyle.Italic else FontStyle.Normal
+    val normalStyle =
+        if (GeneratedDesignTokens.Typography.fontStyleNormal == "italic") FontStyle.Italic else FontStyle.Normal
+    val italicStyle =
+        if (GeneratedDesignTokens.Typography.fontStyleItalic == "italic") FontStyle.Italic else FontStyle.Normal
 
     return FontFamily(
         Font(Res.font.pt_sans_regular, regularWeight, normalStyle),
@@ -39,7 +41,7 @@ fun ptSansFontFamily(): FontFamily {
  * @return Configured Material 3 [Typography] instance.
  */
 @Composable
-fun createCoreTypography(): Typography {
+public fun createCoreTypography(): Typography {
     val fontFamily = ptSansFontFamily()
     val defaultTypography = Typography()
 
@@ -65,6 +67,6 @@ fun createCoreTypography(): Typography {
 /**
  * Default typography definition for [CoreTheme].
  */
-val CoreTypography: Typography
+public val CoreTypography: Typography
     @Composable
     get() = createCoreTypography()

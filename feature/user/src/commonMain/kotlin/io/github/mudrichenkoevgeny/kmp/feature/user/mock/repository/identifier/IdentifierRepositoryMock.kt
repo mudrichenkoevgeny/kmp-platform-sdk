@@ -14,54 +14,59 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domai
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 
+/**
+ * Mock implementation of [IdentifierRepository] for testing.
+ */
 @InternalApi
-open class IdentifierRepositoryMock : IdentifierRepository {
+public open class IdentifierRepositoryMock : IdentifierRepository {
 
-    var getUserIdentifierResultProvider: (UserIdentifierId) -> AppResult<UserIdentifierPrivate> = {
+    public var getUserIdentifierResultProvider: (UserIdentifierId) -> AppResult<UserIdentifierPrivate> = {
         AppResult.Success(createTestUserIdentifierPrivate())
     }
 
-    var getUserIdentifiersResultProvider: () -> AppResult<PagedResult<UserIdentifierSummary>> = {
+    public var getUserIdentifiersResultProvider: () -> AppResult<PagedResult<UserIdentifierSummary>> = {
         AppResult.Success(createTestPagedResult(listOf(createTestUserIdentifierSummary())))
     }
 
-    var deleteUserIdentifierResultProvider: (UserIdentifierId) -> AppResult<Unit> = { _ -> AppResult.Success(Unit) }
+    public var deleteUserIdentifierResultProvider: (UserIdentifierId) -> AppResult<Unit> = { _ ->
+        AppResult.Success(Unit)
+    }
 
-    var addUserIdentifierResultProvider: () -> AppResult<UserIdentifierPrivate> = {
+    public var addUserIdentifierResultProvider: () -> AppResult<UserIdentifierPrivate> = {
         AppResult.Success(createTestUserIdentifierPrivate())
     }
 
-    var otpConfirmationResultProvider: () -> AppResult<OtpConfirmation> = {
+    public var otpConfirmationResultProvider: () -> AppResult<OtpConfirmation> = {
         AppResult.Success(createTestOtpConfirmation())
     }
 
-    var emailChangePasswordResultProvider: () -> AppResult<Unit> = { AppResult.Success(Unit) }
+    public var emailChangePasswordResultProvider: () -> AppResult<Unit> = { AppResult.Success(Unit) }
 
-    var lastIdentifierId: UserIdentifierId? = null
-    var lastEmail: String? = null
-    var lastPassword: String? = null
-    var lastConfirmationCode: String? = null
-    var lastPhoneNumber: String? = null
-    var lastAuthProvider: String? = null
-    var lastToken: String? = null
-    var lastOldPassword: String? = null
-    var lastNewPassword: String? = null
+    public var lastIdentifierId: UserIdentifierId? = null
+    public var lastEmail: String? = null
+    public var lastPassword: String? = null
+    public var lastConfirmationCode: String? = null
+    public var lastPhoneNumber: String? = null
+    public var lastAuthProvider: String? = null
+    public var lastToken: String? = null
+    public var lastOldPassword: String? = null
+    public var lastNewPassword: String? = null
 
-    override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> {
+    public override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> {
         lastIdentifierId = userIdentifierId
         return getUserIdentifierResultProvider(userIdentifierId)
     }
 
-    override suspend fun getUserIdentifiers(
+    public override suspend fun getUserIdentifiers(
         params: SelfIdentifierListParams?
     ): AppResult<PagedResult<UserIdentifierSummary>> = getUserIdentifiersResultProvider()
 
-    override suspend fun deleteUserIdentifier(identifierId: UserIdentifierId): AppResult<Unit> {
+    public override suspend fun deleteUserIdentifier(identifierId: UserIdentifierId): AppResult<Unit> {
         lastIdentifierId = identifierId
         return deleteUserIdentifierResultProvider(identifierId)
     }
 
-    override suspend fun addUserIdentifierEmail(
+    public override suspend fun addUserIdentifierEmail(
         email: String,
         password: String,
         confirmationCode: String
@@ -72,7 +77,7 @@ open class IdentifierRepositoryMock : IdentifierRepository {
         return addUserIdentifierResultProvider()
     }
 
-    override suspend fun addUserIdentifierPhone(
+    public override suspend fun addUserIdentifierPhone(
         phoneNumber: String,
         confirmationCode: String
     ): AppResult<UserIdentifierPrivate> {
@@ -81,7 +86,7 @@ open class IdentifierRepositoryMock : IdentifierRepository {
         return addUserIdentifierResultProvider()
     }
 
-    override suspend fun addUserIdentifierExternalAuthProvider(
+    public override suspend fun addUserIdentifierExternalAuthProvider(
         authProvider: String,
         externalProviderToken: String
     ): AppResult<UserIdentifierPrivate> {
@@ -90,17 +95,17 @@ open class IdentifierRepositoryMock : IdentifierRepository {
         return addUserIdentifierResultProvider()
     }
 
-    override suspend fun sendAddEmailIdentifierConfirmation(email: String): AppResult<OtpConfirmation> {
+    public override suspend fun sendAddEmailIdentifierConfirmation(email: String): AppResult<OtpConfirmation> {
         lastEmail = email
         return otpConfirmationResultProvider()
     }
 
-    override suspend fun sendAddPhoneIdentifierConfirmation(phoneNumber: String): AppResult<OtpConfirmation> {
+    public override suspend fun sendAddPhoneIdentifierConfirmation(phoneNumber: String): AppResult<OtpConfirmation> {
         lastPhoneNumber = phoneNumber
         return otpConfirmationResultProvider()
     }
 
-    override suspend fun emailChangePassword(
+    public override suspend fun emailChangePassword(
         userIdentifierId: UserIdentifierId,
         oldPassword: String,
         newPassword: String
@@ -111,7 +116,7 @@ open class IdentifierRepositoryMock : IdentifierRepository {
         return emailChangePasswordResultProvider()
     }
 
-    override fun getRemainingEmailConfirmationDelayInSeconds(email: String): Int = 0
+    public override fun getRemainingEmailConfirmationDelayInSeconds(email: String): Int = 0
 
-    override fun getRemainingPhoneNumberConfirmationDelayInSeconds(phoneNumber: String): Int = 0
+    public override fun getRemainingPhoneNumberConfirmationDelayInSeconds(phoneNumber: String): Int = 0
 }

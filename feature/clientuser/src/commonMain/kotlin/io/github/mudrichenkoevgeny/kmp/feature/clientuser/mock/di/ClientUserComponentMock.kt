@@ -37,13 +37,11 @@ fun clientUserComponentMock(
     storageComponent: StorageComponent = storageComponentMock(),
     authStorage: AuthStorage = AuthStorageMock(),
     authServices: UserAuthServices = UserAuthServicesMock()
-): ClientUserComponent {
-    return ClientUserComponent(
-        commonComponent = commonComponent,
-        settingsComponent = settingsComponent,
-        securityComponent = securityComponent,
-        storageComponent = storageComponent,
-        authStorage = authStorage,
-        authServices = authServices
-    )
-}
+): ClientUserComponent = ClientUserComponent(
+    commonComponent = commonComponent,
+    settingsComponent = settingsComponent,
+    securityComponent = securityComponent,
+    storageComponent = storageComponent,
+    authStorage = authStorage,
+    authServices = authServices
+)

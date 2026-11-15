@@ -14,17 +14,17 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.f
  * - Transitions to [Content] on initial fetch success, or [Error] on failure.
  * - Subsequent page loads or local actions update fields in [Content] without dropping state.
  */
-sealed interface StorageFileListScreenState {
+public sealed interface StorageFileListScreenState {
 
     /** Loading state while initial file list is being fetched. */
-    data object Loading : StorageFileListScreenState
+    public data object Loading : StorageFileListScreenState
 
     /**
      * Error state when loading initial file list failed.
      *
      * @param error Underlying application error.
      */
-    data class Error(val error: AppError) : StorageFileListScreenState
+    public data class Error(public val error: AppError) : StorageFileListScreenState
 
     /**
      * Content state holding paged file items and active filters/selections.
@@ -39,15 +39,15 @@ sealed interface StorageFileListScreenState {
      * @param fileIdToDelete File ID pending single deletion confirmation dialog, or null if none.
      * @param showBatchDeleteConfirmation Whether the batch delete confirmation dialog is shown.
      */
-    data class Content(
-        val paging: PaginationState<StorageFileSummary> = PaginationState(),
-        val selectedFileIds: Set<String> = emptySet(),
-        val isFilterPanelExpanded: Boolean = false,
-        val sortState: ListingSortState? = null,
-        val filterStates: Map<String, ListingFilterState> = emptyMap(),
-        val actionLoading: Boolean = false,
-        val actionError: AppError? = null,
-        val fileIdToDelete: String? = null,
-        val showBatchDeleteConfirmation: Boolean = false
+    public data class Content(
+        public val paging: PaginationState<StorageFileSummary> = PaginationState(),
+        public val selectedFileIds: Set<String> = emptySet(),
+        public val isFilterPanelExpanded: Boolean = false,
+        public val sortState: ListingSortState? = null,
+        public val filterStates: Map<String, ListingFilterState> = emptyMap(),
+        public val actionLoading: Boolean = false,
+        public val actionError: AppError? = null,
+        public val fileIdToDelete: String? = null,
+        public val showBatchDeleteConfirmation: Boolean = false
     ) : StorageFileListScreenState
 }

@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
  * @param resetRemoteSecuritySettingsUseCase Resets security settings to defaults.
  * @param onBack Pops this screen from the navigation stack.
  */
-class EditSecuritySettingsComponentImpl(
+public class EditSecuritySettingsComponentImpl public constructor(
     componentContext: ComponentContext,
     initialDialogConfig: SettingsDialogConfig? = null,
     private val getManagementSecuritySettingsUseCase: GetManagementSecuritySettingsUseCase,
@@ -45,7 +45,7 @@ class EditSecuritySettingsComponentImpl(
     private val _state = MutableValue<EditSecuritySettingsScreenState>(EditSecuritySettingsScreenState.Loading)
     override val state: Value<EditSecuritySettingsScreenState> = _state
 
-    override val dialogSlotNavigation = SlotNavigation<SettingsDialogConfig>()
+    override val dialogSlotNavigation: SlotNavigation<SettingsDialogConfig> = SlotNavigation<SettingsDialogConfig>()
 
     override val dialogSlot: Value<ChildSlot<SettingsDialogConfig, SettingsDialogChild>> =
         childSlot(
@@ -78,8 +78,10 @@ class EditSecuritySettingsComponentImpl(
                 is AppResult.Success -> {
                     val settings = result.data
                     EditSecuritySettingsScreenState.Content(
-                        recentAuthenticationValiditySecondsForOpenUser = settings.recentAuthenticationValiditySecondsForOpenUser.toString(),
-                        recentAuthenticationValiditySecondsForManagementUser = settings.recentAuthenticationValiditySecondsForManagementUser.toString(),
+                        recentAuthenticationValiditySecondsForOpenUser =
+                            settings.recentAuthenticationValiditySecondsForOpenUser.toString(),
+                        recentAuthenticationValiditySecondsForManagementUser =
+                            settings.recentAuthenticationValiditySecondsForManagementUser.toString(),
                         mfaTokenExpirationSeconds = settings.mfaTokenExpirationSeconds.toString(),
                         passwordMinLength = settings.passwordPolicy.minLength.toString(),
                         passwordRequireLetter = settings.passwordPolicy.requireLetter,
@@ -88,15 +90,24 @@ class EditSecuritySettingsComponentImpl(
                         passwordRequireDigit = settings.passwordPolicy.requireDigit,
                         passwordRequireSpecialChar = settings.passwordPolicy.requireSpecialChar,
                         commonPasswords = settings.passwordPolicy.commonPasswords.joinToString(","),
-                        accountLockoutMaxFailedPasswordAttempts = settings.accountLockoutPolicy.maxFailedPasswordAttempts.toString(),
-                        accountLockoutMaxFailedOtpAttempts = settings.accountLockoutPolicy.maxFailedOtpAttempts.toString(),
-                        accountLockoutMaxFailedTotpAttempts = settings.accountLockoutPolicy.maxFailedTotpAttempts.toString(),
-                        accountLockoutFailedAttemptsWindowSeconds = settings.accountLockoutPolicy.failedAttemptsWindowSeconds.toString(),
-                        accountLockoutDurationSeconds = settings.accountLockoutPolicy.lockoutDurationSeconds.toString(),
-                        accountLockoutIndefiniteLockoutThreshold = settings.accountLockoutPolicy.indefiniteLockoutThreshold.toString(),
-                        accountLockoutIsSelfServiceUnlockEnabled = settings.accountLockoutPolicy.isSelfServiceUnlockEnabled,
-                        accountLockoutCheckIntervalSeconds = settings.accountLockoutCheckIntervalSeconds.toString(),
-                        refreshTokenRotationGracePeriodSeconds = settings.refreshTokenRotationGracePeriodSeconds.toString(),
+                        accountLockoutMaxFailedPasswordAttempts =
+                            settings.accountLockoutPolicy.maxFailedPasswordAttempts.toString(),
+                        accountLockoutMaxFailedOtpAttempts =
+                            settings.accountLockoutPolicy.maxFailedOtpAttempts.toString(),
+                        accountLockoutMaxFailedTotpAttempts =
+                            settings.accountLockoutPolicy.maxFailedTotpAttempts.toString(),
+                        accountLockoutFailedAttemptsWindowSeconds =
+                            settings.accountLockoutPolicy.failedAttemptsWindowSeconds.toString(),
+                        accountLockoutDurationSeconds =
+                            settings.accountLockoutPolicy.lockoutDurationSeconds.toString(),
+                        accountLockoutIndefiniteLockoutThreshold =
+                            settings.accountLockoutPolicy.indefiniteLockoutThreshold.toString(),
+                        accountLockoutIsSelfServiceUnlockEnabled =
+                            settings.accountLockoutPolicy.isSelfServiceUnlockEnabled,
+                        accountLockoutCheckIntervalSeconds =
+                            settings.accountLockoutCheckIntervalSeconds.toString(),
+                        refreshTokenRotationGracePeriodSeconds =
+                            settings.refreshTokenRotationGracePeriodSeconds.toString(),
                         openIpBlacklistEnabled = settings.openIpRestrictionPolicy.isBlacklistEnabled,
                         openIpBlacklist = settings.openIpRestrictionPolicy.blacklist.joinToString(","),
                         openIpWhitelistEnabled = settings.openIpRestrictionPolicy.isWhitelistEnabled,
@@ -112,6 +123,7 @@ class EditSecuritySettingsComponentImpl(
                         rateLimitPeriodSeconds = settings.rateLimitPeriodSeconds.toString()
                     )
                 }
+
                 is AppResult.Error -> EditSecuritySettingsScreenState.Error(result.error)
             }
             _state.value = nextState
@@ -246,7 +258,9 @@ class EditSecuritySettingsComponentImpl(
         updateContent { copy(rateLimitPeriodSeconds = value, saveError = null) }
     }
 
-    private inline fun updateContent(transform: EditSecuritySettingsScreenState.Content.() -> EditSecuritySettingsScreenState.Content) {
+    private inline fun updateContent(
+        transform: EditSecuritySettingsScreenState.Content.() -> EditSecuritySettingsScreenState.Content
+    ) {
         val current = _state.value as? EditSecuritySettingsScreenState.Content ?: return
         _state.value = current.transform()
     }
@@ -256,50 +270,7 @@ class EditSecuritySettingsComponentImpl(
         scope.launch {
             _state.value = current.copy(isSaving = true, saveError = null)
 
-            val settings = ManagementSecuritySettings(
-                recentAuthenticationValiditySecondsForOpenUser = current.recentAuthenticationValiditySecondsForOpenUser.toIntOrNull() ?: 86400,
-                recentAuthenticationValiditySecondsForManagementUser = current.recentAuthenticationValiditySecondsForManagementUser.toIntOrNull() ?: 86400,
-                passwordPolicy = ManagementPasswordPolicy(
-                    minLength = current.passwordMinLength.toIntOrNull() ?: 8,
-                    requireLetter = current.passwordRequireLetter,
-                    requireUpperCase = current.passwordRequireUpperCase,
-                    requireLowerCase = current.passwordRequireLowerCase,
-                    requireDigit = current.passwordRequireDigit,
-                    requireSpecialChar = current.passwordRequireSpecialChar,
-                    commonPasswords = current.commonPasswords.split(",").map { it.trim() }.filter { it.isNotBlank() }.toSet()
-                ),
-                otpConfirmation = OtpConfirmation(
-                    retryAfterSeconds = current.otpRetryAfterSeconds.toIntOrNull() ?: 60,
-                    numberOfSymbols = current.otpNumberOfSymbols.toIntOrNull() ?: 6,
-                    expirationSeconds = current.otpExpirationSeconds.toIntOrNull() ?: 300
-                ),
-                accountLockoutPolicy = AccountLockoutPolicy(
-                    maxFailedPasswordAttempts = current.accountLockoutMaxFailedPasswordAttempts.toIntOrNull() ?: 5,
-                    maxFailedOtpAttempts = current.accountLockoutMaxFailedOtpAttempts.toIntOrNull() ?: 5,
-                    maxFailedTotpAttempts = current.accountLockoutMaxFailedTotpAttempts.toIntOrNull() ?: 5,
-                    failedAttemptsWindowSeconds = current.accountLockoutFailedAttemptsWindowSeconds.toIntOrNull() ?: 300,
-                    lockoutDurationSeconds = current.accountLockoutDurationSeconds.toIntOrNull() ?: 300,
-                    indefiniteLockoutThreshold = current.accountLockoutIndefiniteLockoutThreshold.toIntOrNull() ?: 3,
-                    isSelfServiceUnlockEnabled = current.accountLockoutIsSelfServiceUnlockEnabled
-                ),
-                accountLockoutCheckIntervalSeconds = current.accountLockoutCheckIntervalSeconds.toIntOrNull() ?: 60,
-                openIpRestrictionPolicy = IpRestrictionPolicy(
-                    isBlacklistEnabled = current.openIpBlacklistEnabled,
-                    blacklist = current.openIpBlacklist.split(",").map { it.trim() }.filter { it.isNotBlank() },
-                    isWhitelistEnabled = current.openIpWhitelistEnabled,
-                    whitelist = current.openIpWhitelist.split(",").map { it.trim() }.filter { it.isNotBlank() }
-                ),
-                managementIpRestrictionPolicy = IpRestrictionPolicy(
-                    isBlacklistEnabled = current.managementIpBlacklistEnabled,
-                    blacklist = current.managementIpBlacklist.split(",").map { it.trim() }.filter { it.isNotBlank() },
-                    isWhitelistEnabled = current.managementIpWhitelistEnabled,
-                    whitelist = current.managementIpWhitelist.split(",").map { it.trim() }.filter { it.isNotBlank() }
-                ),
-                mfaTokenExpirationSeconds = current.mfaTokenExpirationSeconds.toIntOrNull() ?: 180,
-                maxRequestsPerPeriod = current.maxRequestsPerPeriod.toIntOrNull() ?: 100,
-                rateLimitPeriodSeconds = current.rateLimitPeriodSeconds.toIntOrNull() ?: 60,
-                refreshTokenRotationGracePeriodSeconds = current.refreshTokenRotationGracePeriodSeconds.toIntOrNull() ?: 30
-            )
+            val settings = current.toManagementSecuritySettings()
 
             val saveResult = saveRemoteSecuritySettingsUseCase(settings)
             val nextState = when (saveResult) {
@@ -307,6 +278,7 @@ class EditSecuritySettingsComponentImpl(
                     onBack()
                     current.copy(isSaving = false)
                 }
+
                 is AppResult.Error -> current.copy(isSaving = false, saveError = saveResult.error)
             }
             _state.value = nextState
@@ -328,6 +300,7 @@ class EditSecuritySettingsComponentImpl(
                     onBack()
                     current.copy(isSaving = false)
                 }
+
                 is AppResult.Error -> current.copy(isSaving = false, saveError = result.error)
             }
             _state.value = nextState
@@ -342,3 +315,72 @@ class EditSecuritySettingsComponentImpl(
         onBack()
     }
 }
+
+private fun EditSecuritySettingsScreenState.Content.toManagementSecuritySettings(): ManagementSecuritySettings =
+    ManagementSecuritySettings(
+        recentAuthenticationValiditySecondsForOpenUser =
+            recentAuthenticationValiditySecondsForOpenUser.toIntOrNull() ?: 86400,
+        recentAuthenticationValiditySecondsForManagementUser =
+            recentAuthenticationValiditySecondsForManagementUser.toIntOrNull() ?: 86400,
+        passwordPolicy = toPasswordPolicy(),
+        otpConfirmation = toOtpConfirmation(),
+        accountLockoutPolicy = toAccountLockoutPolicy(),
+        accountLockoutCheckIntervalSeconds = accountLockoutCheckIntervalSeconds.toIntOrNull() ?: 60,
+        openIpRestrictionPolicy = toOpenIpRestrictionPolicy(),
+        managementIpRestrictionPolicy = toManagementIpRestrictionPolicy(),
+        mfaTokenExpirationSeconds = mfaTokenExpirationSeconds.toIntOrNull() ?: 180,
+        maxRequestsPerPeriod = maxRequestsPerPeriod.toIntOrNull() ?: 100,
+        rateLimitPeriodSeconds = rateLimitPeriodSeconds.toIntOrNull() ?: 60,
+        refreshTokenRotationGracePeriodSeconds = refreshTokenRotationGracePeriodSeconds.toIntOrNull() ?: 30
+    )
+
+private fun EditSecuritySettingsScreenState.Content.toPasswordPolicy(): ManagementPasswordPolicy =
+    ManagementPasswordPolicy(
+        minLength = passwordMinLength.toIntOrNull() ?: 8,
+        requireLetter = passwordRequireLetter,
+        requireUpperCase = passwordRequireUpperCase,
+        requireLowerCase = passwordRequireLowerCase,
+        requireDigit = passwordRequireDigit,
+        requireSpecialChar = passwordRequireSpecialChar,
+        commonPasswords = parseCommaSeparatedSet(commonPasswords)
+    )
+
+private fun EditSecuritySettingsScreenState.Content.toOtpConfirmation(): OtpConfirmation =
+    OtpConfirmation(
+        retryAfterSeconds = otpRetryAfterSeconds.toIntOrNull() ?: 60,
+        numberOfSymbols = otpNumberOfSymbols.toIntOrNull() ?: 6,
+        expirationSeconds = otpExpirationSeconds.toIntOrNull() ?: 300
+    )
+
+private fun EditSecuritySettingsScreenState.Content.toAccountLockoutPolicy(): AccountLockoutPolicy =
+    AccountLockoutPolicy(
+        maxFailedPasswordAttempts = accountLockoutMaxFailedPasswordAttempts.toIntOrNull() ?: 5,
+        maxFailedOtpAttempts = accountLockoutMaxFailedOtpAttempts.toIntOrNull() ?: 5,
+        maxFailedTotpAttempts = accountLockoutMaxFailedTotpAttempts.toIntOrNull() ?: 5,
+        failedAttemptsWindowSeconds = accountLockoutFailedAttemptsWindowSeconds.toIntOrNull() ?: 300,
+        lockoutDurationSeconds = accountLockoutDurationSeconds.toIntOrNull() ?: 300,
+        indefiniteLockoutThreshold = accountLockoutIndefiniteLockoutThreshold.toIntOrNull() ?: 3,
+        isSelfServiceUnlockEnabled = accountLockoutIsSelfServiceUnlockEnabled
+    )
+
+private fun EditSecuritySettingsScreenState.Content.toOpenIpRestrictionPolicy(): IpRestrictionPolicy =
+    IpRestrictionPolicy(
+        isBlacklistEnabled = openIpBlacklistEnabled,
+        blacklist = parseCommaSeparatedList(openIpBlacklist),
+        isWhitelistEnabled = openIpWhitelistEnabled,
+        whitelist = parseCommaSeparatedList(openIpWhitelist)
+    )
+
+private fun EditSecuritySettingsScreenState.Content.toManagementIpRestrictionPolicy(): IpRestrictionPolicy =
+    IpRestrictionPolicy(
+        isBlacklistEnabled = managementIpBlacklistEnabled,
+        blacklist = parseCommaSeparatedList(managementIpBlacklist),
+        isWhitelistEnabled = managementIpWhitelistEnabled,
+        whitelist = parseCommaSeparatedList(managementIpWhitelist)
+    )
+
+private fun parseCommaSeparatedList(value: String): List<String> = value.split(",").map {
+    it.trim()
+}.filter { it.isNotBlank() }
+
+private fun parseCommaSeparatedSet(value: String): Set<String> = parseCommaSeparatedList(value).toSet()

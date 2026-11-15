@@ -8,13 +8,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.reques
 /**
  * Data source abstraction providing file fetch and deletion capabilities for storage file list UI screens.
  */
-interface StorageFileListDataSource {
+public interface StorageFileListDataSource {
 
     /** Whether single file deletion is available in this data source contour. */
-    val isSingleDeleteAvailable: Boolean
+    public val isSingleDeleteAvailable: Boolean
 
     /** Whether batch file deletion is available in this data source contour. */
-    val isBatchDeleteAvailable: Boolean
+    public val isBatchDeleteAvailable: Boolean
 
     /**
      * Fetches a paginated list of storage files according to [query].
@@ -22,7 +22,7 @@ interface StorageFileListDataSource {
      * @param query Filtering, sorting, and pagination parameters.
      * @return [AppResult] containing a [PagedResult] of [StorageFileSummary].
      */
-    suspend fun getFiles(query: StorageFileListQuery): AppResult<PagedResult<StorageFileSummary>>
+    public suspend fun getFiles(query: StorageFileListQuery): AppResult<PagedResult<StorageFileSummary>>
 
     /**
      * Deletes a single storage file by ID.
@@ -30,7 +30,7 @@ interface StorageFileListDataSource {
      * @param fileId Target file ID to delete.
      * @return [AppResult] indicating success or failure error.
      */
-    suspend fun deleteFile(fileId: String): AppResult<Unit>
+    public suspend fun deleteFile(fileId: String): AppResult<Unit>
 
     /**
      * Deletes multiple storage files in batch.
@@ -38,5 +38,5 @@ interface StorageFileListDataSource {
      * @param request Batch deletion request containing list of file IDs.
      * @return [AppResult] indicating success or failure error.
      */
-    suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit>
+    public suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit>
 }

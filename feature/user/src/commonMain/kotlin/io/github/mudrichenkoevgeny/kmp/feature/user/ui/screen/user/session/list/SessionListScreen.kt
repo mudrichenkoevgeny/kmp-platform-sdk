@@ -48,17 +48,17 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackB
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingEmptyState
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingHeaderBar
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReach
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.scrollbar.CoreLazyColumnScrollbar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.session.SessionListComponentMock
@@ -77,7 +77,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SessionListScreen(
+public fun SessionListScreen(
     component: SessionListComponent,
     modifier: Modifier = Modifier
 ) {
@@ -149,6 +149,7 @@ fun SessionListScreen(
                         )
                     }
                 }
+
                 is SessionListScreenState.Error -> {
                     CoreErrorText(
                         text = currentState.error.toLocalizedMessage(),
@@ -171,7 +172,7 @@ private fun Content(
     val listState = rememberLazyListState()
     val userUi = LocalUserStrings.current.ui
 
-    listState.OnBottomReached {
+    listState.OnBottomReach {
         onLoadNextPage()
     }
 
@@ -222,13 +223,18 @@ private fun Content(
                 ) {
                     items(state.paging.items, key = { it.id.value }) { session ->
                         val isCurrentSession = state.currentSessionId != null && session.id == state.currentSessionId
-                        val canRevoke = component.isRevokeAvailable && (!isCurrentSession || component.includeFilterPanel)
+                        val canRevoke =
+                            component.isRevokeAvailable && (!isCurrentSession || component.includeFilterPanel)
 
                         SessionItem(
                             session = session,
                             enabled = !state.actionLoading,
                             isCurrentSession = isCurrentSession,
-                            onRevokeClick = if (canRevoke) { { onRevokeSession(session.id) } } else null,
+                            onRevokeClick = if (canRevoke) {
+                                { onRevokeSession(session.id) }
+                            } else {
+                                null
+                            },
                             onSessionClick = { component.onSessionClick(session) }
                         )
                     }
@@ -273,7 +279,10 @@ private fun Content(
 }
 
 @Composable
-private fun ErrorText(error: AppError?, testTag: String) {
+private fun ErrorText(
+    error: AppError?,
+    testTag: String
+) {
     AnimatedVisibility(
         visible = error != null,
         enter = fadeIn() + expandVertically(),
@@ -296,7 +305,7 @@ private fun ErrorText(error: AppError?, testTag: String) {
  * Preview parameter provider delivering various [SessionListScreenState] configurations for Compose previews.
  */
 @InternalApi
-class SessionListPreviewProvider : PreviewParameterProvider<SessionListScreenState> {
+public class SessionListPreviewProvider : PreviewParameterProvider<SessionListScreenState> {
     private val defaultSessions = createTestUserSessionSummaryList(count = 2)
     private val currentSession = defaultSessions.first()
 
@@ -327,7 +336,7 @@ class SessionListPreviewProvider : PreviewParameterProvider<SessionListScreenSta
         "Fullscreen Loading" to SessionListScreenState.Loading
     )
 
-    override val values: Sequence<SessionListScreenState> = items.asSequence().map { it.second }
+    public override val values: Sequence<SessionListScreenState> = items.asSequence().map { it.second }
 
     override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
 }
@@ -359,7 +368,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
@@ -368,7 +377,7 @@ private fun ScreenSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -377,7 +386,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {
@@ -388,28 +397,28 @@ private fun FontScalePreview() {
 /**
  * Test tags dictionary for [SessionListScreen].
  */
-object SessionListTestTags {
+public object SessionListTestTags {
     /** Test tag for the screen title text node. */
-    const val TITLE = "SessionList_Title"
+    public const val TITLE: String = "SessionList_Title"
 
     /** Test tag for the top bar back button. */
-    const val BACK_BUTTON = "SessionList_BackButton"
+    public const val BACK_BUTTON: String = "SessionList_BackButton"
 
     /** Test tag for the filter panel toggle button. */
-    const val FILTER_BUTTON = "SessionList_FilterButton"
+    public const val FILTER_BUTTON: String = "SessionList_FilterButton"
 
     /** Test tag for the refresh button. */
-    const val REFRESH_BUTTON = "SessionList_RefreshButton"
+    public const val REFRESH_BUTTON: String = "SessionList_RefreshButton"
 
     /** Test tag for the global error text node. */
-    const val GLOBAL_ERROR_TEXT = "SessionList_GlobalErrorText"
+    public const val GLOBAL_ERROR_TEXT: String = "SessionList_GlobalErrorText"
 
     /** Test tag for the lazy column displaying active user sessions. */
-    const val SESSION_LIST = "SessionList_List"
+    public const val SESSION_LIST: String = "SessionList_List"
 
     /** Test tag for the button revoking all other sessions. */
-    const val REVOKE_ALL_OTHERS_BUTTON = "SessionList_RevokeAllOthersButton"
+    public const val REVOKE_ALL_OTHERS_BUTTON: String = "SessionList_RevokeAllOthersButton"
 
     /** Test tag for action error message text node. */
-    const val ACTION_ERROR_TEXT = "SessionList_ActionErrorText"
+    public const val ACTION_ERROR_TEXT: String = "SessionList_ActionErrorText"
 }

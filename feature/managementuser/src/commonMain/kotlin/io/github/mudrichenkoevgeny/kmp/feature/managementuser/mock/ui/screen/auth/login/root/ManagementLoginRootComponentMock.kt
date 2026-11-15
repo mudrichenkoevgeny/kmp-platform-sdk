@@ -11,26 +11,30 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.management.ManagementAuthNavigation
 
+/**
+ * Mock implementation of [ManagementLoginRootComponent] for testing.
+ */
 @InternalApi
-open class ManagementLoginRootComponentMock : ManagementLoginRootComponent {
+public open class ManagementLoginRootComponentMock : ManagementLoginRootComponent {
 
-    override val stack: Value<ChildStack<ManagementAuthNavigation, ManagementLoginRootComponent.Child>> = MutableValue(
-        ChildStack(
-            configuration = ManagementAuthNavigation.Main,
-            instance = ManagementLoginRootComponent.Child.Welcome(
-                LoginWelcomeComponentMock(
-                    initialState = LoginWelcomeScreenState.Content(
-                        availableAuthProviders = AvailableAuthProviders(
-                            primary = listOf(UserAuthProvider.EMAIL),
-                            secondary = emptyList()
+    public override val stack: Value<ChildStack<ManagementAuthNavigation, ManagementLoginRootComponent.Child>> =
+        MutableValue(
+            ChildStack(
+                configuration = ManagementAuthNavigation.Main,
+                instance = ManagementLoginRootComponent.Child.Welcome(
+                    LoginWelcomeComponentMock(
+                        initialState = LoginWelcomeScreenState.Content(
+                            availableAuthProviders = AvailableAuthProviders(
+                                primary = listOf(UserAuthProvider.EMAIL),
+                                secondary = emptyList()
+                            )
                         )
                     )
                 )
             )
         )
-    )
 
-    override fun navigateTo(destination: ManagementAuthNavigation) {}
+    public override fun navigateTo(destination: ManagementAuthNavigation): Unit = Unit
 
-    override fun onDismiss() {}
+    public override fun onDismiss(): Unit = Unit
 }

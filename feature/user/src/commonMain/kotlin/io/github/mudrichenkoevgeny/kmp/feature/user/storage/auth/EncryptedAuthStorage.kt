@@ -19,13 +19,13 @@ import kotlin.time.Clock
  * @param encryptedSettings Host-provided encrypted settings.
  * @param scope [CoroutineScope] used to load the initial access token from storage on construction (updates [accessTokenFlow]).
  */
-class EncryptedAuthStorage(
+public class EncryptedAuthStorage(
     private val encryptedSettings: EncryptedSettings,
     scope: CoroutineScope
 ) : AuthStorage, AccessTokenProvider {
 
     private val _accessTokenFlow = MutableStateFlow<String?>(null)
-    override val accessTokenFlow: StateFlow<String?> = _accessTokenFlow.asStateFlow()
+    public override val accessTokenFlow: StateFlow<String?> = _accessTokenFlow.asStateFlow()
 
     init {
         scope.launch {
@@ -40,7 +40,7 @@ class EncryptedAuthStorage(
         }
     }
 
-    override suspend fun getAccessToken(): AccessToken? {
+    public override suspend fun getAccessToken(): AccessToken? {
         val expiresAt = getExpiresAt()
         val now = Clock.System.now().toEpochMilliseconds()
         if (expiresAt in 1..now) {
@@ -50,21 +50,17 @@ class EncryptedAuthStorage(
         return encryptedSettings.get(KEY_ACCESS_TOKEN)?.let { AccessToken(it) }
     }
 
-    override suspend fun getRefreshToken(): RefreshToken? =
+    public override suspend fun getRefreshToken(): RefreshToken? =
         encryptedSettings.get(KEY_REFRESH_TOKEN)?.let { RefreshToken(it) }
 
-    override suspend fun getExpiresAt(): Long =
+    public override suspend fun getExpiresAt(): Long =
         encryptedSettings.get(KEY_EXPIRES_AT)?.toLongOrNull() ?: 0L
 
-    override suspend fun getSessionId(): String? {
-        return encryptedSettings.get(KEY_SESSION_ID)
-    }
+    public override suspend fun getSessionId(): String? = encryptedSettings.get(KEY_SESSION_ID)
 
-    override suspend fun getIdentifierId(): String? {
-        return encryptedSettings.get(KEY_IDENTIFIER_ID)
-    }
+    public override suspend fun getIdentifierId(): String? = encryptedSettings.get(KEY_IDENTIFIER_ID)
 
-    override suspend fun updateTokens(sessionToken: SessionToken) {
+    public override suspend fun updateTokens(sessionToken: SessionToken) {
         encryptedSettings.put(KEY_ACCESS_TOKEN, sessionToken.accessToken.value)
         encryptedSettings.put(KEY_REFRESH_TOKEN, sessionToken.refreshToken.value)
         encryptedSettings.put(KEY_EXPIRES_AT, sessionToken.expiresAt.toEpochMilliseconds().toString())
@@ -73,7 +69,7 @@ class EncryptedAuthStorage(
         _accessTokenFlow.value = sessionToken.accessToken.value
     }
 
-    override suspend fun clearTokens() {
+    public override suspend fun clearTokens() {
         encryptedSettings.remove(KEY_ACCESS_TOKEN)
         encryptedSettings.remove(KEY_REFRESH_TOKEN)
         encryptedSettings.remove(KEY_EXPIRES_AT)
@@ -84,7 +80,7 @@ class EncryptedAuthStorage(
         }
     }
 
-    companion object {
+    private companion object {
         private const val KEY_ACCESS_TOKEN = "auth_access_token"
         private const val KEY_REFRESH_TOKEN = "auth_refresh_token"
         private const val KEY_EXPIRES_AT = "auth_expires_at"

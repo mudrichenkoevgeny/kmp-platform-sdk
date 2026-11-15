@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.Flow
  *
  * @param managementSecuritySettingsRepository Management security settings repository.
  */
-class ObserveManagementSecuritySettingsUseCase(
+public class ObserveManagementSecuritySettingsUseCase(
     private val managementSecuritySettingsRepository: ManagementSecuritySettingsRepository
 ) {
-    operator fun invoke(): Flow<ManagementSecuritySettings?> {
-        return managementSecuritySettingsRepository.observeManagementSecuritySettings()
-    }
+    /** Observes management security settings updates. */
+    public operator fun invoke(): Flow<ManagementSecuritySettings?> =
+        managementSecuritySettingsRepository.observeManagementSecuritySettings()
 }

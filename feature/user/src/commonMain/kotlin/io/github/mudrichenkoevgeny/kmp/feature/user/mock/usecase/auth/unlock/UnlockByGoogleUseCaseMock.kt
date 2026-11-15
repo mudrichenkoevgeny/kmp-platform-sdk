@@ -5,8 +5,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.auth.google.GoogleAuthS
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.unlock.UnlockRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockByGoogleUseCase
 
+/**
+ * Mock implementation of [UnlockByGoogleUseCase] for testing.
+ */
 @InternalApi
-class UnlockByGoogleUseCaseMock : UnlockByGoogleUseCase(
+public class UnlockByGoogleUseCaseMock : UnlockByGoogleUseCase(
     authService = GoogleAuthServiceMock(),
     unlockRepository = UnlockRepositoryMock()
 )

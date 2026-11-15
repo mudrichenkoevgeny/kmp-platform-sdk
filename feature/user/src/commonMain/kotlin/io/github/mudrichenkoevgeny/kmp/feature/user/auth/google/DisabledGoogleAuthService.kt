@@ -10,18 +10,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
  *
  * Used when [UserAuthServices.googleAuth] is absent and the use case substitutes a safe default instead of null.
  */
-class DisabledGoogleAuthService : GoogleAuthService {
+public class DisabledGoogleAuthService : GoogleAuthService {
 
-    private fun error() = AppResult.Error(
+    private fun error(): AppResult.Error = AppResult.Error(
         UserError.ExternalAuthFailed(
             Exception("Google Auth is not supported")
         )
     )
-    override suspend fun signIn(): AppResult<LoginByExternalAuthProviderRequest> {
-        return error()
-    }
 
-    override suspend fun signOut(): AppResult<Unit> {
-        return error()
-    }
+    public override suspend fun signIn(): AppResult<LoginByExternalAuthProviderRequest> = error()
+
+    public override suspend fun signOut(): AppResult<Unit> = error()
 }

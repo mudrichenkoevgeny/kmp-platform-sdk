@@ -13,7 +13,7 @@ import java.util.Locale
  *
  * @param context Any application context used for package metadata.
  */
-class AndroidClientDeviceInfoProvider(
+public class AndroidClientDeviceInfoProvider(
     private val context: Context
 ) : ClientDeviceInfoProvider {
     /**

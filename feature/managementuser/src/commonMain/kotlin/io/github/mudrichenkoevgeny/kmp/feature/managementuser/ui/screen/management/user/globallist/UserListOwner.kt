@@ -6,24 +6,24 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 /**
  * Interface for components or child wrappers that manage an active list of platform users.
  */
-interface UserListOwner {
+public interface UserListOwner {
     /**
      * Removes the deleted user from the active list state.
      *
      * @param userId The [UserId] of the deleted user.
      */
-    fun onUserDeleted(userId: UserId)
+    public fun onUserDeleted(userId: UserId)
 
     /**
      * Refreshes the user list when a new user is created.
      */
-    fun onUserCreated()
+    public fun onUserCreated()
 }
 
 /**
  * Finds active or previous [UserListOwner] instances in the [ChildStack] and notifies them of user deletion.
  */
-fun ChildStack<*, *>.notifyUserDeleted(userId: UserId) {
+public fun ChildStack<*, *>.notifyUserDeleted(userId: UserId) {
     items
         .map { it.instance }
         .filterIsInstance<UserListOwner>()
@@ -33,7 +33,7 @@ fun ChildStack<*, *>.notifyUserDeleted(userId: UserId) {
 /**
  * Finds active or previous [UserListOwner] instances in the [ChildStack] and notifies them of user creation.
  */
-fun ChildStack<*, *>.notifyUserCreated() {
+public fun ChildStack<*, *>.notifyUserCreated() {
     items
         .map { it.instance }
         .filterIsInstance<UserListOwner>()

@@ -9,10 +9,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
  *
  * @param managementSecuritySettingsRepository Management security settings API.
  */
-class GetManagementSecuritySettingsUseCase(
+public class GetManagementSecuritySettingsUseCase(
     private val managementSecuritySettingsRepository: ManagementSecuritySettingsRepository
 ) {
-    suspend operator fun invoke(): AppResult<ManagementSecuritySettings> {
-        return managementSecuritySettingsRepository.getManagementSecuritySettings()
-    }
+    /** Retrieves management security settings. */
+    public suspend operator fun invoke(): AppResult<ManagementSecuritySettings> =
+        managementSecuritySettingsRepository.getManagementSecuritySettings()
 }

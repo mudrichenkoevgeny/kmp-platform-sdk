@@ -15,8 +15,8 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.ObserveMa
 import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.RefreshManagementStorageSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.ResetRemoteManagementStorageSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.UpdateManagementStorageSettingsUseCase
-import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.open.ObserveOpenStorageSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.open.GetOpenStorageSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.open.ObserveOpenStorageSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.open.RefreshOpenStorageSettingsUseCase
 
 /**
@@ -43,31 +43,6 @@ internal class StorageUseCaseModule(
     /** Observes open storage settings flow use case. */
     val observeOpenStorageSettingsUseCase by lazy {
         ObserveOpenStorageSettingsUseCase(repositoryModule.openStorageSettingsRepository)
-    }
-
-    /** Creates an [UploadFileUseCase] instance bound to the provided [storageRepository]. */
-    fun createUploadFileUseCase(storageRepository: StorageRepository): UploadFileUseCase {
-        return UploadFileUseCase(storageRepository = storageRepository)
-    }
-
-    /** Creates a [GetFilesUseCase] instance bound to the provided [storageRepository]. */
-    fun createGetFilesUseCase(storageRepository: StorageRepository): GetFilesUseCase {
-        return GetFilesUseCase(storageRepository)
-    }
-
-    /** Creates a [GetFileDetailUseCase] instance bound to the provided [storageRepository]. */
-    fun createGetFileDetailUseCase(storageRepository: StorageRepository): GetFileDetailUseCase {
-        return GetFileDetailUseCase(storageRepository)
-    }
-
-    /** Creates a [DeleteFileUseCase] instance bound to the provided [storageRepository]. */
-    fun createDeleteFileUseCase(storageRepository: StorageRepository): DeleteFileUseCase {
-        return DeleteFileUseCase(storageRepository)
-    }
-
-    /** Creates a [DeleteFilesBatchUseCase] instance bound to the provided [storageRepository]. */
-    fun createDeleteFilesBatchUseCase(storageRepository: StorageRepository): DeleteFilesBatchUseCase {
-        return DeleteFilesBatchUseCase(storageRepository)
     }
 
     /** Administrative file listing use case. */
@@ -114,4 +89,30 @@ internal class StorageUseCaseModule(
     val observeManagementStorageSettingsUseCase by lazy {
         ObserveManagementStorageSettingsUseCase(repositoryModule.managementStorageSettingsRepository)
     }
+
+    /** Creates an [UploadFileUseCase] instance bound to the provided [storageRepository]. */
+    fun createUploadFileUseCase(storageRepository: StorageRepository): UploadFileUseCase = UploadFileUseCase(
+        storageRepository = storageRepository
+    )
+
+    /** Creates a [GetFilesUseCase] instance bound to the provided [storageRepository]. */
+    fun createGetFilesUseCase(storageRepository: StorageRepository): GetFilesUseCase = GetFilesUseCase(
+        storageRepository
+    )
+
+    /** Creates a [GetFileDetailUseCase] instance bound to the provided [storageRepository]. */
+    fun createGetFileDetailUseCase(storageRepository: StorageRepository): GetFileDetailUseCase = GetFileDetailUseCase(
+        storageRepository
+    )
+
+    /** Creates a [DeleteFileUseCase] instance bound to the provided [storageRepository]. */
+    fun createDeleteFileUseCase(storageRepository: StorageRepository): DeleteFileUseCase = DeleteFileUseCase(
+        storageRepository
+    )
+
+    /** Creates a [DeleteFilesBatchUseCase] instance bound to the provided [storageRepository]. */
+    fun createDeleteFilesBatchUseCase(storageRepository: StorageRepository): DeleteFilesBatchUseCase =
+        DeleteFilesBatchUseCase(
+            storageRepository
+        )
 }

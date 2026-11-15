@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
  *
  * @param identifierRepository Identifiers repository.
  */
-open class AddUserIdentifierEmailUseCase(
+public open class AddUserIdentifierEmailUseCase(
     private val identifierRepository: IdentifierRepository
 ) {
     /**
@@ -18,15 +18,13 @@ open class AddUserIdentifierEmailUseCase(
      * @param confirmationCode One-time code sent to email.
      * @return New [UserIdentifierPrivate] on success, or a mapped failure.
      */
-    open suspend operator fun invoke(
+    public open suspend operator fun invoke(
         email: String,
         password: String,
         confirmationCode: String
-    ): AppResult<UserIdentifierPrivate> {
-        return identifierRepository.addUserIdentifierEmail(
-            email = email,
-            password = password,
-            confirmationCode = confirmationCode
-        )
-    }
+    ): AppResult<UserIdentifierPrivate> = identifierRepository.addUserIdentifierEmail(
+        email = email,
+        password = password,
+        confirmationCode = confirmationCode
+    )
 }

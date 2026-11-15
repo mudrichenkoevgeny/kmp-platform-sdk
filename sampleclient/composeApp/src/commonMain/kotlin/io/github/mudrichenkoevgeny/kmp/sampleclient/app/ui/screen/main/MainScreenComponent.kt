@@ -60,7 +60,8 @@ interface MainScreenComponent {
      */
     @Serializable
     sealed class Config {
-        @Serializable object User : Config()
+        @Serializable
+        object User : Config()
     }
 
     /**
@@ -68,7 +69,8 @@ interface MainScreenComponent {
      */
     @Serializable
     sealed class DialogConfig {
-        @Serializable data class Login(
+        @Serializable
+        data class Login(
             val isDismissible: Boolean = true
         ) : DialogConfig()
     }

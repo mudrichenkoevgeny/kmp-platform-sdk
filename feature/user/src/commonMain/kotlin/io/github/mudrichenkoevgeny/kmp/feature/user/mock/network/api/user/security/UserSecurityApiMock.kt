@@ -8,22 +8,29 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.totpsetup.TotpSetupPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.verifytotp.VerifyTotpPayload
 
+/**
+ * Mock implementation of [UserSecurityApi] for testing.
+ */
 @InternalApi
-open class UserSecurityApiMock : UserSecurityApi {
+public open class UserSecurityApiMock : UserSecurityApi {
 
-    var setupTotpResult: AppResult<TotpSetupPayload> = AppResult.Error(CommonError.Unknown())
-    var enableTotpResult: AppResult<TotpRecoveryCodesPayload> = AppResult.Error(CommonError.Unknown())
-    var disableTotpResult: AppResult<Unit> = AppResult.Success(Unit)
-    var getRecoveryCodesResult: AppResult<TotpRecoveryCodesPayload> = AppResult.Error(CommonError.Unknown())
-    var regenerateRecoveryCodesResult: AppResult<TotpRecoveryCodesPayload> = AppResult.Error(CommonError.Unknown())
+    public var setupTotpResult: AppResult<TotpSetupPayload> = AppResult.Error(CommonError.Unknown())
+    public var enableTotpResult: AppResult<TotpRecoveryCodesPayload> = AppResult.Error(CommonError.Unknown())
+    public var disableTotpResult: AppResult<Unit> = AppResult.Success(Unit)
+    public var getRecoveryCodesResult: AppResult<TotpRecoveryCodesPayload> = AppResult.Error(CommonError.Unknown())
+    public var regenerateRecoveryCodesResult: AppResult<TotpRecoveryCodesPayload> = AppResult.Error(
+        CommonError.Unknown()
+    )
 
-    override suspend fun setupTotp(): AppResult<TotpSetupPayload> = setupTotpResult
+    public override suspend fun setupTotp(): AppResult<TotpSetupPayload> = setupTotpResult
 
-    override suspend fun enableTotp(request: VerifyTotpPayload): AppResult<TotpRecoveryCodesPayload> = enableTotpResult
+    public override suspend fun enableTotp(request: VerifyTotpPayload): AppResult<TotpRecoveryCodesPayload> =
+        enableTotpResult
 
-    override suspend fun disableTotp(): AppResult<Unit> = disableTotpResult
+    public override suspend fun disableTotp(): AppResult<Unit> = disableTotpResult
 
-    override suspend fun getRecoveryCodes(): AppResult<TotpRecoveryCodesPayload> = getRecoveryCodesResult
+    public override suspend fun getRecoveryCodes(): AppResult<TotpRecoveryCodesPayload> = getRecoveryCodesResult
 
-    override suspend fun regenerateRecoveryCodes(): AppResult<TotpRecoveryCodesPayload> = regenerateRecoveryCodesResult
+    public override suspend fun regenerateRecoveryCodes(): AppResult<TotpRecoveryCodesPayload> =
+        regenerateRecoveryCodesResult
 }

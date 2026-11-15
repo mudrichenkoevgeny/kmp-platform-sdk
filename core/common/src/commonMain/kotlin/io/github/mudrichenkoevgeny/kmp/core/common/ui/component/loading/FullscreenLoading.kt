@@ -14,8 +14,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
@@ -29,7 +29,7 @@ import kotlin.time.Duration.Companion.milliseconds
  * @param delayMillis Delay before the indicator becomes visible.
  */
 @Composable
-fun FullscreenLoading(
+public fun FullscreenLoading(
     modifier: Modifier = Modifier,
     delayMillis: Long = FullscreenLoadingConfig.DELAY_MILLIS
 ) {
@@ -59,15 +59,15 @@ fun FullscreenLoading(
 /**
  * Configuration defaults for the loading screen.
  */
-object FullscreenLoadingConfig {
+public object FullscreenLoadingConfig {
     /**
      * Default delay to prevent flickering for fast operations.
      */
-    const val DELAY_MILLIS = 250L
+    public const val DELAY_MILLIS: Long = 250L
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun FullscreenLoadingComponentSizePreview() {
     CoreTheme {
@@ -78,7 +78,7 @@ private fun FullscreenLoadingComponentSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun FullscreenLoadingThemePreview() {
     CoreTheme {

@@ -52,14 +52,18 @@ interface MainScreenComponent {
     /** Serializable tab keys for the main stack. */
     @Serializable
     sealed class Config {
-        @Serializable object Management : Config()
-        @Serializable object User : Config()
+        @Serializable
+        object Management : Config()
+
+        @Serializable
+        object User : Config()
     }
 
     /** Serializable keys for dialog-slot children. */
     @Serializable
     sealed class DialogConfig {
-        @Serializable data class Login(
+        @Serializable
+        data class Login(
             val isDismissible: Boolean = true
         ) : DialogConfig()
     }

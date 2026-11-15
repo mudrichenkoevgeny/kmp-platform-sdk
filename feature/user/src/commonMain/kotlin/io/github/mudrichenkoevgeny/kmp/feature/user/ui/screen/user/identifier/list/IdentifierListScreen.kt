@@ -50,7 +50,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreEmailT
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlinedTextField
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingEmptyState
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingHeaderBar
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReach
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
@@ -61,10 +61,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorTe
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreSmallText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.identifier.IdentifierListComponentMock
@@ -85,7 +85,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IdentifierListScreen(
+public fun IdentifierListScreen(
     component: IdentifierListComponent,
     modifier: Modifier = Modifier
 ) {
@@ -186,6 +186,7 @@ fun IdentifierListScreen(
                         }
                     }
                 }
+
                 is IdentifierListScreenState.Error -> {
                     CoreErrorText(
                         text = currentState.error.toLocalizedMessage(),
@@ -221,133 +222,23 @@ private fun AddIdentifierDialog(
                 ) {
                     when (dialogChild) {
                         is IdentifierListComponent.AddIdentifierDialogChild.ProviderSelection -> {
-                            val availableProviders = contentState.availableAuthProviders
-                            if (availableProviders != null) {
-                                availableProviders.primary.forEach { provider ->
-                                    AuthProviderButton(
-                                        authProvider = provider,
-                                        onClick = { component.onAddIdentifierSelectProvider(provider) },
-                                        mode = AuthProviderButtonMode.ADD,
-                                        modifier = Modifier.fillMaxWidth()
-                                    )
-                                }
-
-                                if (availableProviders.secondary.isNotEmpty()) {
-                                    AuthProviderGrid(
-                                        authProviders = availableProviders.secondary,
-                                        onProviderClick = component::onAddIdentifierSelectProvider,
-                                        modifier = Modifier.fillMaxWidth()
-                                    )
-                                }
-                            }
+                            AddIdentifierProviderSelectionContent(contentState, component)
                         }
+
                         is IdentifierListComponent.AddIdentifierDialogChild.EmailInput -> {
-                            CoreEmailTextField(
-                                value = contentState.addEmail,
-                                onValueChange = component::onAddIdentifierEmailChanged,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-
-                            CoreButton(
-                                text = userUi.sendCode,
-                                onClick = component::onAddIdentifierSendCode,
-                                enabled = contentState.isAddEmailValid && !contentState.actionLoading,
-                                modifier = Modifier.fillMaxWidth()
-                            )
+                            AddIdentifierEmailInputContent(contentState, component)
                         }
+
                         is IdentifierListComponent.AddIdentifierDialogChild.EmailConfirm -> {
-                            CoreBodyText(userUi.codeSentTo(dialogChild.email))
-
-                            CoreCodeTextField(
-                                value = contentState.addCode,
-                                onValueChange = component::onAddIdentifierCodeChanged,
-                                label = { CoreBodyText(userUi.confirmationCode) },
-                                placeholder = { CoreBodyText(userUi.enterConfirmationCode) },
-                                modifier = Modifier.fillMaxWidth()
-                            )
-
-                            Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
-
-                            CoreOutlinedTextField(
-                                value = contentState.addPassword,
-                                onValueChange = component::onAddIdentifierPasswordChanged,
-                                label = { CoreBodyText(userUi.password) },
-                                placeholder = { CoreBodyText(userUi.password) },
-                                modifier = Modifier.fillMaxWidth()
-                            )
-
-                            if (contentState.addResendTimerSeconds > 0) {
-                                CoreSmallText(userUi.resendCodeTimer(contentState.addResendTimerSeconds))
-                            } else {
-                                CoreTextButton(
-                                    text = userUi.resendCode,
-                                    onClick = component::onAddIdentifierSendCode,
-                                    enabled = contentState.canResendCode
-                                )
-                            }
-
-                            CoreButton(
-                                text = userUi.addIdentifier,
-                                onClick = component::onAddIdentifierSubmit,
-                                enabled = contentState.canSubmitAddEmail,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-
-                            CoreTextButton(
-                                text = userUi.changeEmail,
-                                onClick = component::onAddIdentifierDialogBack
-                            )
+                            AddIdentifierEmailConfirmContent(dialogChild.email, contentState, component)
                         }
+
                         is IdentifierListComponent.AddIdentifierDialogChild.PhoneInput -> {
-                            CoreOutlinedTextField(
-                                value = contentState.addPhone,
-                                onValueChange = component::onAddIdentifierPhoneChanged,
-                                label = { CoreBodyText(userUi.phoneNumber) },
-                                placeholder = { CoreBodyText(userUi.phoneNumber) },
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                                singleLine = true,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-
-                            CoreButton(
-                                text = userUi.sendCode,
-                                onClick = component::onAddIdentifierSendCode,
-                                enabled = contentState.isAddPhoneValid && !contentState.actionLoading,
-                                modifier = Modifier.fillMaxWidth()
-                            )
+                            AddIdentifierPhoneInputContent(contentState, component)
                         }
+
                         is IdentifierListComponent.AddIdentifierDialogChild.PhoneConfirm -> {
-                            CoreBodyText(userUi.codeSentTo(dialogChild.phone))
-
-                            CoreCodeTextField(
-                                value = contentState.addCode,
-                                onValueChange = component::onAddIdentifierCodeChanged,
-                                label = { CoreBodyText(userUi.confirmationCode) },
-                                placeholder = { CoreBodyText(userUi.enterConfirmationCode) },
-                                modifier = Modifier.fillMaxWidth()
-                            )
-
-                            if (contentState.addResendTimerSeconds > 0) {
-                                CoreSmallText(userUi.resendCodeTimer(contentState.addResendTimerSeconds))
-                            } else {
-                                CoreTextButton(
-                                    text = userUi.resendCode,
-                                    onClick = component::onAddIdentifierSendCode,
-                                    enabled = contentState.canResendCode
-                                )
-                            }
-
-                            CoreButton(
-                                text = userUi.addIdentifier,
-                                onClick = component::onAddIdentifierSubmit,
-                                enabled = contentState.canSubmitAddPhone,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-
-                            CoreTextButton(
-                                text = userUi.changePhoneNumber,
-                                onClick = component::onAddIdentifierDialogBack
-                            )
+                            AddIdentifierPhoneConfirmContent(dialogChild.phone, contentState, component)
                         }
                     }
 
@@ -375,6 +266,166 @@ private fun AddIdentifierDialog(
 }
 
 @Composable
+private fun AddIdentifierProviderSelectionContent(
+    contentState: IdentifierListScreenState.Content,
+    component: IdentifierListComponent
+) {
+    val availableProviders = contentState.availableAuthProviders
+    if (availableProviders != null) {
+        availableProviders.primary.forEach { provider ->
+            AuthProviderButton(
+                authProvider = provider,
+                onClick = { component.onAddIdentifierSelectProvider(provider) },
+                mode = AuthProviderButtonMode.ADD,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        if (availableProviders.secondary.isNotEmpty()) {
+            AuthProviderGrid(
+                authProviders = availableProviders.secondary,
+                onProviderClick = component::onAddIdentifierSelectProvider,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Composable
+private fun AddIdentifierEmailInputContent(
+    contentState: IdentifierListScreenState.Content,
+    component: IdentifierListComponent
+) {
+    val userUi = LocalUserStrings.current.ui
+    CoreEmailTextField(
+        value = contentState.addEmail,
+        onValueChange = component::onAddIdentifierEmailChanged,
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    CoreButton(
+        text = userUi.sendCode,
+        onClick = component::onAddIdentifierSendCode,
+        enabled = contentState.isAddEmailValid && !contentState.actionLoading,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+private fun AddIdentifierEmailConfirmContent(
+    email: String,
+    contentState: IdentifierListScreenState.Content,
+    component: IdentifierListComponent
+) {
+    val userUi = LocalUserStrings.current.ui
+    CoreBodyText(userUi.codeSentTo(email))
+
+    CoreCodeTextField(
+        value = contentState.addCode,
+        onValueChange = component::onAddIdentifierCodeChanged,
+        label = { CoreBodyText(userUi.confirmationCode) },
+        placeholder = { CoreBodyText(userUi.enterConfirmationCode) },
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+
+    CoreOutlinedTextField(
+        value = contentState.addPassword,
+        onValueChange = component::onAddIdentifierPasswordChanged,
+        label = { CoreBodyText(userUi.password) },
+        placeholder = { CoreBodyText(userUi.password) },
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    if (contentState.addResendTimerSeconds > 0) {
+        CoreSmallText(userUi.resendCodeTimer(contentState.addResendTimerSeconds))
+    } else {
+        CoreTextButton(
+            text = userUi.resendCode,
+            onClick = component::onAddIdentifierSendCode,
+            enabled = contentState.canResendCode
+        )
+    }
+
+    CoreButton(
+        text = userUi.addIdentifier,
+        onClick = component::onAddIdentifierSubmit,
+        enabled = contentState.canSubmitAddEmail,
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    CoreTextButton(
+        text = userUi.changeEmail,
+        onClick = component::onAddIdentifierDialogBack
+    )
+}
+
+@Composable
+private fun AddIdentifierPhoneInputContent(
+    contentState: IdentifierListScreenState.Content,
+    component: IdentifierListComponent
+) {
+    val userUi = LocalUserStrings.current.ui
+    CoreOutlinedTextField(
+        value = contentState.addPhone,
+        onValueChange = component::onAddIdentifierPhoneChanged,
+        label = { CoreBodyText(userUi.phoneNumber) },
+        placeholder = { CoreBodyText(userUi.phoneNumber) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    CoreButton(
+        text = userUi.sendCode,
+        onClick = component::onAddIdentifierSendCode,
+        enabled = contentState.isAddPhoneValid && !contentState.actionLoading,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+private fun AddIdentifierPhoneConfirmContent(
+    phone: String,
+    contentState: IdentifierListScreenState.Content,
+    component: IdentifierListComponent
+) {
+    val userUi = LocalUserStrings.current.ui
+    CoreBodyText(userUi.codeSentTo(phone))
+
+    CoreCodeTextField(
+        value = contentState.addCode,
+        onValueChange = component::onAddIdentifierCodeChanged,
+        label = { CoreBodyText(userUi.confirmationCode) },
+        placeholder = { CoreBodyText(userUi.enterConfirmationCode) },
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    if (contentState.addResendTimerSeconds > 0) {
+        CoreSmallText(userUi.resendCodeTimer(contentState.addResendTimerSeconds))
+    } else {
+        CoreTextButton(
+            text = userUi.resendCode,
+            onClick = component::onAddIdentifierSendCode,
+            enabled = contentState.canResendCode
+        )
+    }
+
+    CoreButton(
+        text = userUi.addIdentifier,
+        onClick = component::onAddIdentifierSubmit,
+        enabled = contentState.canSubmitAddPhone,
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    CoreTextButton(
+        text = userUi.changePhoneNumber,
+        onClick = component::onAddIdentifierDialogBack
+    )
+}
+
+@Composable
 private fun Content(
     state: IdentifierListScreenState.Content,
     component: IdentifierListComponent,
@@ -383,7 +434,7 @@ private fun Content(
 ) {
     val listState = rememberLazyListState()
 
-    listState.OnBottomReached {
+    listState.OnBottomReach {
         onLoadNextPage()
     }
 
@@ -477,7 +528,7 @@ private fun Content(
  * Preview parameter provider delivering various [IdentifierListScreenState] configurations for Compose previews.
  */
 @InternalApi
-class IdentifierListPreviewProvider : PreviewParameterProvider<IdentifierListScreenState> {
+public class IdentifierListPreviewProvider : PreviewParameterProvider<IdentifierListScreenState> {
     private val items: List<Pair<String, IdentifierListScreenState>> = listOf(
         "Content List" to IdentifierListScreenState.Content(
             paging = PaginationState(
@@ -494,7 +545,7 @@ class IdentifierListPreviewProvider : PreviewParameterProvider<IdentifierListScr
         "Fullscreen Loading" to IdentifierListScreenState.Loading
     )
 
-    override val values: Sequence<IdentifierListScreenState> = items.asSequence().map { it.second }
+    public override val values: Sequence<IdentifierListScreenState> = items.asSequence().map { it.second }
 
     override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
 }
@@ -527,7 +578,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
@@ -536,7 +587,7 @@ private fun ScreenSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -545,7 +596,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {
@@ -556,34 +607,34 @@ private fun FontScalePreview() {
 /**
  * Test tags dictionary for [IdentifierListScreen].
  */
-object IdentifierListTestTags {
+public object IdentifierListTestTags {
     /** Test tag for the screen title text node. */
-    const val TITLE = "IdentifierList_Title"
+    public const val TITLE: String = "IdentifierList_Title"
 
     /** Test tag for the top bar back button. */
-    const val BACK_BUTTON = "IdentifierList_BackButton"
+    public const val BACK_BUTTON: String = "IdentifierList_BackButton"
 
     /** Test tag for the filter panel toggle button. */
-    const val FILTER_BUTTON = "IdentifierList_FilterButton"
+    public const val FILTER_BUTTON: String = "IdentifierList_FilterButton"
 
     /** Test tag for the refresh button. */
-    const val REFRESH_BUTTON = "IdentifierList_RefreshButton"
+    public const val REFRESH_BUTTON: String = "IdentifierList_RefreshButton"
 
     /** Test tag for the global error text node. */
-    const val GLOBAL_ERROR_TEXT = "IdentifierList_GlobalErrorText"
+    public const val GLOBAL_ERROR_TEXT: String = "IdentifierList_GlobalErrorText"
 
     /** Test tag for the lazy column displaying user identifiers. */
-    const val IDENTIFIER_LIST = "IdentifierList_List"
+    public const val IDENTIFIER_LIST: String = "IdentifierList_List"
 
     /** Test tag prefix for individual user identifier list item cards. */
-    const val IDENTIFIER_ITEM_PREFIX = "IdentifierList_Item_"
+    public const val IDENTIFIER_ITEM_PREFIX: String = "IdentifierList_Item_"
 
     /** Test tag for the add identifier trigger button. */
-    const val ADD_IDENTIFIER_BUTTON = "IdentifierList_AddIdentifierButton"
+    public const val ADD_IDENTIFIER_BUTTON: String = "IdentifierList_AddIdentifierButton"
 
     /** Test tag for the add identifier modal dialog title. */
-    const val ADD_IDENTIFIER_DIALOG_TITLE = "IdentifierList_AddIdentifierDialogTitle"
+    public const val ADD_IDENTIFIER_DIALOG_TITLE: String = "IdentifierList_AddIdentifierDialogTitle"
 
     /** Test tag for action error message text node. */
-    const val ACTION_ERROR_TEXT = "IdentifierList_ActionErrorText"
+    public const val ACTION_ERROR_TEXT: String = "IdentifierList_ActionErrorText"
 }

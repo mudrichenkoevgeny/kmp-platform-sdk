@@ -8,28 +8,31 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.otpconfirmation.createTestOtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierPrivate
 
+/**
+ * Mock implementation of [ResetPasswordRepository] for testing.
+ */
 @InternalApi
-class ResetPasswordRepositoryMock : ResetPasswordRepository {
-    var remainingDelaySeconds: Int = 10
-    var sendResult: AppResult<OtpConfirmation> =
+public class ResetPasswordRepositoryMock : ResetPasswordRepository {
+    public var remainingDelaySeconds: Int = 10
+    public var sendResult: AppResult<OtpConfirmation> =
         AppResult.Success(createTestOtpConfirmation(retryAfterSeconds = remainingDelaySeconds))
-    var resetResult: AppResult<UserIdentifierPrivate> =
+    public var resetResult: AppResult<UserIdentifierPrivate> =
         AppResult.Success(createTestUserIdentifierPrivate())
 
-    var lastSendEmail: String? = null
-    var lastResetEmail: String? = null
-    var lastResetPassword: String? = null
-    var lastResetCode: String? = null
+    public var lastSendEmail: String? = null
+    public var lastResetEmail: String? = null
+    public var lastResetPassword: String? = null
+    public var lastResetCode: String? = null
 
-    override fun getRemainingResetPasswordConfirmationDelayInSeconds(email: String): Int =
+    public override fun getRemainingResetPasswordConfirmationDelayInSeconds(email: String): Int =
         remainingDelaySeconds
 
-    override suspend fun sendResetPasswordConfirmationToEmail(email: String): AppResult<OtpConfirmation> {
+    public override suspend fun sendResetPasswordConfirmationToEmail(email: String): AppResult<OtpConfirmation> {
         lastSendEmail = email
         return sendResult
     }
 
-    override suspend fun resetPassword(
+    public override suspend fun resetPassword(
         email: String,
         newPassword: String,
         confirmationCode: String

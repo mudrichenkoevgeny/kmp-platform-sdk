@@ -14,7 +14,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
  * @param content The composable content to render inside the dialog surface.
  */
 @Composable
-fun DialogPreviewContainer(
+public fun DialogPreviewContainer(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {

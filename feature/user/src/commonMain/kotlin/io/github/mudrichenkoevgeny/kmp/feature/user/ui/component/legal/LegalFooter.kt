@@ -16,9 +16,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 
@@ -34,7 +34,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserString
  * @param onTermsOfServiceClick invoked when the terms of service link is activated.
  */
 @Composable
-fun LegalFooter(
+public fun LegalFooter(
     isPrivacyPolicyVisible: Boolean,
     isTermsOfServiceVisible: Boolean,
     onPrivacyPolicyClick: () -> Unit,
@@ -87,6 +87,7 @@ fun LegalFooter(
                     modifier = Modifier.clickable { onTermsOfServiceClick() }
                 )
             }
+
             isPrivacyPolicyVisible -> {
                 Text(
                     text = privacyText,
@@ -94,6 +95,7 @@ fun LegalFooter(
                     modifier = Modifier.clickable { onPrivacyPolicyClick() }
                 )
             }
+
             isTermsOfServiceVisible -> {
                 Text(
                     text = termsText,
@@ -168,21 +170,21 @@ private fun LegalFooterStatesPreview(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun LegalFooterComponentSizePreview() {
     LegalFooterPreviewContent(state = defaultLegalFooterPreviewState)
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun LegalFooterThemePreview() {
     LegalFooterPreviewContent(state = defaultLegalFooterPreviewState)
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun LegalFooterFontScalePreview() {
     LegalFooterPreviewContent(state = defaultLegalFooterPreviewState)

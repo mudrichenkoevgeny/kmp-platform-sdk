@@ -20,7 +20,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
 /** [SessionApi] backed by [HttpClient]. */
-class KtorSelfManagementSessionApi(
+public class KtorSelfManagementSessionApi(
     private val client: HttpClient
 ) : SessionApi {
 

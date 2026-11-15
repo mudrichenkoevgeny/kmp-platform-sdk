@@ -2,6 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.core.common.result
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Executes [block] when this [AppResult] is [AppResult.Success].
@@ -10,7 +11,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
  *
  * @param block Function to execute with the successful data.
  */
-inline fun <T> AppResult<T>.onSuccess(block: (T) -> Unit): AppResult<T> {
+public inline fun <T> AppResult<T>.onSuccess(block: (T) -> Unit): AppResult<T> {
     if (this is AppResult.Success) {
         block(data)
     }
@@ -24,7 +25,7 @@ inline fun <T> AppResult<T>.onSuccess(block: (T) -> Unit): AppResult<T> {
  *
  * @param block Function to execute with the error details.
  */
-inline fun <T> AppResult<T>.onError(block: (AppError) -> Unit): AppResult<T> {
+public inline fun <T> AppResult<T>.onError(block: (AppError) -> Unit): AppResult<T> {
     if (this is AppResult.Error) {
         block(error)
     }
@@ -36,11 +37,9 @@ inline fun <T> AppResult<T>.onError(block: (AppError) -> Unit): AppResult<T> {
  *
  * @param transform Function to apply to the successful data.
  */
-inline fun <T, R> AppResult<T>.flatMap(transform: (T) -> AppResult<R>): AppResult<R> {
-    return when (this) {
-        is AppResult.Success -> transform(data)
-        is AppResult.Error -> AppResult.Error(this.error)
-    }
+public inline fun <T, R> AppResult<T>.flatMap(transform: (T) -> AppResult<R>): AppResult<R> = when (this) {
+    is AppResult.Success -> transform(data)
+    is AppResult.Error -> AppResult.Error(this.error)
 }
 
 /**
@@ -50,17 +49,18 @@ inline fun <T, R> AppResult<T>.flatMap(transform: (T) -> AppResult<R>): AppResul
  *
  * @param transform Function to apply to the successful data.
  */
-inline fun <T, R> AppResult<T>.mapSuccess(transform: (T) -> R): AppResult<R> {
-    return when (this) {
-        is AppResult.Success -> {
-            try {
-                AppResult.Success(transform(data))
-            } catch (e: Exception) {
-                AppResult.Error(CommonError.ContractViolation(e))
-            }
+public inline fun <T, R> AppResult<T>.mapSuccess(transform: (T) -> R): AppResult<R> = when (this) {
+    is AppResult.Success -> {
+        try {
+            AppResult.Success(transform(data))
+        } catch (e: CancellationException) {
+            throw e
+        } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
+            AppResult.Error(CommonError.ContractViolation(e))
         }
-        is AppResult.Error -> AppResult.Error(error)
     }
+
+    is AppResult.Error -> AppResult.Error(error)
 }
 
 /**
@@ -68,9 +68,7 @@ inline fun <T, R> AppResult<T>.mapSuccess(transform: (T) -> R): AppResult<R> {
  *
  * @param transform Function to apply to the successful data.
  */
-inline fun <T, R> AppResult<T>.flatMapSuccess(transform: (T) -> AppResult<R>): AppResult<R> {
-    return when (this) {
-        is AppResult.Success -> transform(data)
-        is AppResult.Error -> AppResult.Error(error)
-    }
+public inline fun <T, R> AppResult<T>.flatMapSuccess(transform: (T) -> AppResult<R>): AppResult<R> = when (this) {
+    is AppResult.Success -> transform(data)
+    is AppResult.Error -> AppResult.Error(error)
 }

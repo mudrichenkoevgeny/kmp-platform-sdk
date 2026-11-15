@@ -9,19 +9,22 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByExternalAuthProviderRequest
 
+/**
+ * Mock implementation of [LoginRepository] for testing.
+ */
 @InternalApi
-class LoginRepositoryMock : LoginRepository {
+public class LoginRepositoryMock : LoginRepository {
 
-    var lastEmail: String? = null
-    var lastPassword: String? = null
-    var lastPhoneNumber: String? = null
-    var lastConfirmationCode: String? = null
-    var lastAuthProvider: UserAuthProvider? = null
-    var lastToken: String? = null
-    var lastMfaToken: String? = null
-    var lastCode: String? = null
+    public var lastEmail: String? = null
+    public var lastPassword: String? = null
+    public var lastPhoneNumber: String? = null
+    public var lastConfirmationCode: String? = null
+    public var lastAuthProvider: UserAuthProvider? = null
+    public var lastToken: String? = null
+    public var lastMfaToken: String? = null
+    public var lastCode: String? = null
 
-    var authDataResultProvider: () -> AppResult<AuthData> = {
+    public var authDataResultProvider: () -> AppResult<AuthData> = {
         AppResult.Error(
             CommonError.ContractViolation(
                 throwable = IllegalStateException("No mock AuthData provided.")
@@ -29,7 +32,7 @@ class LoginRepositoryMock : LoginRepository {
         )
     }
 
-    var otpConfirmationResultProvider: () -> AppResult<OtpConfirmation> = {
+    public var otpConfirmationResultProvider: () -> AppResult<OtpConfirmation> = {
         AppResult.Error(
             CommonError.ContractViolation(
                 throwable = IllegalStateException("No mock OtpConfirmation provided.")
@@ -37,21 +40,27 @@ class LoginRepositoryMock : LoginRepository {
         )
     }
 
-    var remainingDelayProvider: (phoneNumber: String) -> Int = { 0 }
+    public var remainingDelayProvider: (phoneNumber: String) -> Int = { 0 }
 
-    override suspend fun loginByEmail(email: String, password: String): AppResult<AuthData> {
+    public override suspend fun loginByEmail(
+        email: String,
+        password: String
+    ): AppResult<AuthData> {
         lastEmail = email
         lastPassword = password
         return authDataResultProvider()
     }
 
-    override suspend fun loginByPhone(phoneNumber: String, confirmationCode: String): AppResult<AuthData> {
+    public override suspend fun loginByPhone(
+        phoneNumber: String,
+        confirmationCode: String
+    ): AppResult<AuthData> {
         lastPhoneNumber = phoneNumber
         lastConfirmationCode = confirmationCode
         return authDataResultProvider()
     }
 
-    override suspend fun loginByExternalAuthProvider(
+    public override suspend fun loginByExternalAuthProvider(
         loginByExternalAuthProviderRequest: LoginByExternalAuthProviderRequest
     ): AppResult<AuthData> {
         lastAuthProvider = UserAuthProvider.fromValueOrNull(loginByExternalAuthProviderRequest.authProvider)
@@ -59,23 +68,29 @@ class LoginRepositoryMock : LoginRepository {
         return authDataResultProvider()
     }
 
-    override suspend fun loginByTotp(mfaToken: String, code: String): AppResult<AuthData> {
+    public override suspend fun loginByTotp(
+        mfaToken: String,
+        code: String
+    ): AppResult<AuthData> {
         lastMfaToken = mfaToken
         lastCode = code
         return authDataResultProvider()
     }
 
-    override suspend fun loginByTotpRecoveryCode(mfaToken: String, code: String): AppResult<AuthData> {
+    public override suspend fun loginByTotpRecoveryCode(
+        mfaToken: String,
+        code: String
+    ): AppResult<AuthData> {
         lastMfaToken = mfaToken
         lastCode = code
         return authDataResultProvider()
     }
 
-    override suspend fun sendLoginConfirmationToPhone(phoneNumber: String): AppResult<OtpConfirmation> {
+    public override suspend fun sendLoginConfirmationToPhone(phoneNumber: String): AppResult<OtpConfirmation> {
         lastPhoneNumber = phoneNumber
         return otpConfirmationResultProvider()
     }
 
-    override fun getRemainingLoginConfirmationDelayInSeconds(phoneNumber: String): Int =
+    public override fun getRemainingLoginConfirmationDelayInSeconds(phoneNumber: String): Int =
         remainingDelayProvider(phoneNumber)
 }

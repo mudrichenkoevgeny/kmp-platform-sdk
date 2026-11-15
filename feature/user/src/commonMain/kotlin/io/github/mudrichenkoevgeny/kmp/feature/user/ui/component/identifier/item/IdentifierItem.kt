@@ -20,9 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListTestTags
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
@@ -39,7 +39,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain
  * @param isSelfIdentifier Indicates if this identifier belongs to the logged-in manager's own account.
  */
 @Composable
-fun IdentifierItem(
+public fun IdentifierItem(
     identifier: UserIdentifierSummary,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -71,7 +71,7 @@ fun IdentifierItem(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = identifier.userAuthProvider.name,
+                    text = identifier.userAuthProvider.value,
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -136,21 +136,21 @@ private fun IdentifierItemStatesPreview(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun IdentifierItemComponentSizePreview() {
     IdentifierItemPreviewContent(state = defaultIdentifierItemPreviewState)
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun IdentifierItemThemePreview() {
     IdentifierItemPreviewContent(state = defaultIdentifierItemPreviewState)
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun IdentifierItemFontScalePreview() {
     IdentifierItemPreviewContent(state = defaultIdentifierItemPreviewState)

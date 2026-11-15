@@ -27,10 +27,16 @@ private class WasmFilePickerLauncher(
     }
 }
 
+/**
+ * Remembers a [FilePickerLauncher] instance for selecting multiple files on Wasm/JS.
+ *
+ * @param onFilesSelect Callback invoked when user selects one or more files.
+ * @return A remembered [FilePickerLauncher].
+ */
 @OptIn(ExperimentalWasmJsInterop::class)
 @Composable
 actual fun rememberFilePickerLauncher(
-    onFilesSelected: (List<SelectedFilePayload>) -> Unit
+    onFilesSelect: (List<SelectedFilePayload>) -> Unit
 ): FilePickerLauncher {
 
     fun processJsFiles(files: List<File>) {
@@ -54,7 +60,7 @@ actual fun rememberFilePickerLauncher(
                 }
             )
         }
-        onFilesSelected(payloads)
+        onFilesSelect(payloads)
     }
 
     DisposableEffect(Unit) {

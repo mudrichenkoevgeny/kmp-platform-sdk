@@ -7,10 +7,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
 /**
  * Data source abstraction providing identifier fetch capabilities for identifier list UI screens.
  */
-interface IdentifierListDataSource {
+public interface IdentifierListDataSource {
 
     /** Whether adding a new identifier is available in this data source contour. */
-    val isAddIdentifierSupported: Boolean
+    public val isAddIdentifierSupported: Boolean
 
     /**
      * Fetches a paginated list of user identifiers according to [query].
@@ -18,5 +18,5 @@ interface IdentifierListDataSource {
      * @param query Filtering, sorting, and pagination parameters.
      * @return [AppResult] containing a [PagedResult] of [UserIdentifierSummary].
      */
-    suspend fun getIdentifiers(query: IdentifierListQuery): AppResult<PagedResult<UserIdentifierSummary>>
+    public suspend fun getIdentifiers(query: IdentifierListQuery): AppResult<PagedResult<UserIdentifierSummary>>
 }

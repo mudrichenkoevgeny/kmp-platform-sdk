@@ -22,9 +22,18 @@ import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalCommonComponent
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
+/**
+ * Root container layout for login authentication flows, presenting content as full screen, bottom sheet, or dialog based on platform device type.
+ *
+ * @param stack Decompose child stack driving active login screen child.
+ * @param onDismiss Callback invoked when container is dismissed.
+ * @param isDismissible Whether back press or click outside can dismiss the container.
+ * @param isFullScreen Force full screen mode regardless of device type.
+ * @param content Composable slot rendering the active child screen.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <C : Any, T : Any> LoginRootContainer(
+public fun <C : Any, T : Any> LoginRootContainer(
     stack: Value<ChildStack<C, T>>,
     onDismiss: () -> Unit,
     isDismissible: Boolean = true,
@@ -32,7 +41,11 @@ fun <C : Any, T : Any> LoginRootContainer(
     content: @Composable (T) -> Unit
 ) {
     val commonComponent = LocalCommonComponent.current
-    val handleDismiss = if (isDismissible) onDismiss else { {} }
+    val handleDismiss = if (isDismissible) {
+        onDismiss
+    } else {
+        {}
+    }
 
     if (isFullScreen) {
         Surface(

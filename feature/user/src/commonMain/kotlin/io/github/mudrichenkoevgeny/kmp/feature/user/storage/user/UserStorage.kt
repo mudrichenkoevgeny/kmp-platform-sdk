@@ -8,16 +8,16 @@ import kotlinx.coroutines.flow.Flow
  *
  * Implementations typically encrypt at rest via the `EncryptedSettings` abstraction from `core:common`.
  */
-interface UserStorage {
+public interface UserStorage {
     /** @return Cached [UserPrivate], or null if none has been stored. */
-    suspend fun getCurrentUser(): UserPrivate?
+    public suspend fun getCurrentUser(): UserPrivate?
 
     /** Hot stream of the cached user; emits null until a user is written or after [clear]. */
-    fun observeCurrentUser(): Flow<UserPrivate?>
+    public fun observeCurrentUser(): Flow<UserPrivate?>
 
     /** @param currentUser Serialized snapshot to persist as the active user. */
-    suspend fun updateCurrentUser(currentUser: UserPrivate)
+    public suspend fun updateCurrentUser(currentUser: UserPrivate)
 
     /** Drops all user-scoped cached entries managed by this storage. */
-    suspend fun clear()
+    public suspend fun clear()
 }

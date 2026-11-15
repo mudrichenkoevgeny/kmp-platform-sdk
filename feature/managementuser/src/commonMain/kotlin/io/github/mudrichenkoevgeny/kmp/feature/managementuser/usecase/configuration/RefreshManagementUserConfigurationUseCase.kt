@@ -20,7 +20,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.configu
  * @param openStorageSettingsRepository Persists open storage settings from the bundle.
  * @param openAuthSettingsRepository Persists open auth settings from the bundle.
  */
-class RefreshManagementUserConfigurationUseCase(
+public class RefreshManagementUserConfigurationUseCase(
     private val managementUserConfigurationApi: ManagementUserConfigurationApi,
     private val openGlobalSettingsRepository: OpenGlobalSettingsRepository,
     private val openSecuritySettingsRepository: OpenSecuritySettingsRepository,
@@ -31,7 +31,7 @@ class RefreshManagementUserConfigurationUseCase(
      * @return Mapped [OpenUserConfiguration] on success after open repositories are updated; the same error
      * result as the API when the fetch fails—no repository writes occur on failure.
      */
-    suspend operator fun invoke(): AppResult<OpenUserConfiguration> {
+    public suspend operator fun invoke(): AppResult<OpenUserConfiguration> {
         val userConfigurationResult = managementUserConfigurationApi.getOpenUserConfiguration()
             .mapSuccess { userConfigurationResponse ->
                 userConfigurationResponse.toOpenUserConfiguration()

@@ -9,13 +9,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
  *
  * @param openSecuritySettingsRepository Repository performing the network refresh and persistence.
  */
-class RefreshOpenSecuritySettingsUseCase(
+public class RefreshOpenSecuritySettingsUseCase(
     private val openSecuritySettingsRepository: OpenSecuritySettingsRepository
 ) {
     /**
      * @return [AppResult.Success] with refreshed [OpenSecuritySettings], or [AppResult.Error] on failure.
      */
-    suspend operator fun invoke(): AppResult<OpenSecuritySettings> {
-        return openSecuritySettingsRepository.refreshOpenSecuritySettings()
-    }
+    public suspend operator fun invoke(): AppResult<OpenSecuritySettings> =
+        openSecuritySettingsRepository.refreshOpenSecuritySettings()
 }

@@ -5,37 +5,40 @@ import com.arkivanov.decompose.value.Value
 /**
  * Manages the user identifier detail screen lifecycle: loading identifier info and performing actions.
  */
-interface IdentifierDetailComponent {
+public interface IdentifierDetailComponent {
     /** Reactive UI state. */
-    val state: Value<IdentifierDetailScreenState>
+    public val state: Value<IdentifierDetailScreenState>
 
     /** Shows delete confirmation dialog. */
-    fun onDeleteIdentifierRequested()
+    public fun onDeleteIdentifierRequested()
 
     /** Dismisses delete confirmation dialog. */
-    fun onDismissDeleteIdentifierDialog()
+    public fun onDismissDeleteIdentifierDialog()
 
     /** Deletes the current displayed identifier if permitted. */
-    fun onDeleteIdentifierClick()
+    public fun onDeleteIdentifierClick()
 
     /** Opens change password dialog. */
-    fun onChangePasswordClick()
+    public fun onChangePasswordClick()
 
     /** Confirms password change. */
-    fun onConfirmChangePasswordClick(oldPassword: String, newPassword: String)
+    public fun onConfirmChangePasswordClick(
+        oldPassword: String,
+        newPassword: String
+    )
 
     /** Dismisses change password dialog. */
-    fun onDismissChangePasswordDialog()
+    public fun onDismissChangePasswordDialog()
 
     /** Deletes the password credential. */
-    fun onDeletePasswordClick()
+    public fun onDeletePasswordClick()
 
     /** Retries loading the identifier details on error. */
-    fun onRetry()
+    public fun onRetry()
 
     /** Navigates back. */
-    fun onBackClick()
+    public fun onBackClick()
 
     /** Navigates to user detail screen. */
-    fun onUserClick()
+    public fun onUserClick()
 }

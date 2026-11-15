@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
  *
  * @param identifierRepository Identifiers repository.
  */
-open class AddUserIdentifierPhoneUseCase(
+public open class AddUserIdentifierPhoneUseCase(
     private val identifierRepository: IdentifierRepository
 ) {
     /**
@@ -17,13 +17,11 @@ open class AddUserIdentifierPhoneUseCase(
      * @param confirmationCode Verification code delivered to phone.
      * @return New [UserIdentifierPrivate] on success, or a mapped failure.
      */
-    open suspend operator fun invoke(
+    public open suspend operator fun invoke(
         phoneNumber: String,
         confirmationCode: String
-    ): AppResult<UserIdentifierPrivate> {
-        return identifierRepository.addUserIdentifierPhone(
-            phoneNumber = phoneNumber,
-            confirmationCode = confirmationCode
-        )
-    }
+    ): AppResult<UserIdentifierPrivate> = identifierRepository.addUserIdentifierPhone(
+        phoneNumber = phoneNumber,
+        confirmationCode = confirmationCode
+    )
 }

@@ -7,7 +7,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 /**
  * Email-based registration: confirm address, then complete sign-up and receive auth material.
  */
-interface RegistrationRepository {
+public interface RegistrationRepository {
     /**
      * Registers a new account with [email], [password], and [confirmationCode] from the email step.
      *
@@ -16,7 +16,11 @@ interface RegistrationRepository {
      * @param confirmationCode One-time code sent to [email].
      * @return [AuthData] on success, or an error result.
      */
-    suspend fun registerByEmail(email: String, password: String, confirmationCode: String): AppResult<AuthData>
+    public suspend fun registerByEmail(
+        email: String,
+        password: String,
+        confirmationCode: String
+    ): AppResult<AuthData>
 
     /**
      * Sends a registration confirmation code to [email], respecting client-side rate limits.
@@ -25,11 +29,11 @@ interface RegistrationRepository {
      * @return [OtpConfirmation] with retry metadata on success, or an error result (including
      * when throttled before the network call).
      */
-    suspend fun sendRegistrationConfirmationToEmail(email: String): AppResult<OtpConfirmation>
+    public suspend fun sendRegistrationConfirmationToEmail(email: String): AppResult<OtpConfirmation>
 
     /**
      * @param email Same email key as used for registration confirmation sends.
      * @return Remaining client-side cooldown in seconds before another send is allowed, or `0`.
      */
-    fun getRemainingRegistrationConfirmationDelayInSeconds(email: String): Int
+    public fun getRemainingRegistrationConfirmationDelayInSeconds(email: String): Int
 }

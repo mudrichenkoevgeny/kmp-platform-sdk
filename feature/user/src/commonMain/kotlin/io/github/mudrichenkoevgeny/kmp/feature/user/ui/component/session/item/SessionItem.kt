@@ -30,9 +30,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.time.formatInstantToDateTime
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_apple
@@ -57,7 +57,7 @@ import org.jetbrains.compose.resources.painterResource
  * @param onSessionClick Optional callback invoked when the item card is tapped.
  */
 @Composable
-fun SessionItem(
+public fun SessionItem(
     session: UserSessionSummary,
     enabled: Boolean,
     onRevokeClick: (() -> Unit)? = null,
@@ -203,26 +203,26 @@ private fun SessionItemStatesPreview(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun SessionItemComponentSizePreview() {
     SessionItemPreviewContent(state = defaultSessionItemPreviewState)
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun SessionItemThemePreview() {
     SessionItemPreviewContent(state = defaultSessionItemPreviewState)
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun SessionItemFontScalePreview() {
     SessionItemPreviewContent(state = defaultSessionItemPreviewState)
 }
 
-object SessionItemTestTags {
-    const val ITEM_PREFIX = "SessionItem_"
+public object SessionItemTestTags {
+    public const val ITEM_PREFIX: String = "SessionItem_"
 }

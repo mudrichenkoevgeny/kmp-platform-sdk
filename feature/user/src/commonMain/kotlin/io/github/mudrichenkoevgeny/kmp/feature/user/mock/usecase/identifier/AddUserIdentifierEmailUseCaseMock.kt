@@ -8,12 +8,15 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.Identi
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierEmailUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 
+/**
+ * Mock implementation of [AddUserIdentifierEmailUseCase] for testing.
+ */
 @InternalApi
-class AddUserIdentifierEmailUseCaseMock(
+public class AddUserIdentifierEmailUseCaseMock(
     identifierRepository: IdentifierRepository = IdentifierRepositoryMock()
 ) : AddUserIdentifierEmailUseCase(identifierRepository) {
 
-    var resultProvider: (String, String, String) -> AppResult<UserIdentifierPrivate> = { _, _, _ ->
+    public var resultProvider: (String, String, String) -> AppResult<UserIdentifierPrivate> = { _, _, _ ->
         AppResult.Error(
             CommonError.ContractViolation(
                 throwable = IllegalStateException("No mock result provided for AddUserIdentifierEmailUseCaseMock.")
@@ -21,11 +24,9 @@ class AddUserIdentifierEmailUseCaseMock(
         )
     }
 
-    override suspend fun invoke(
+    public override suspend fun invoke(
         email: String,
         password: String,
         confirmationCode: String
-    ): AppResult<UserIdentifierPrivate> {
-        return resultProvider(email, password, confirmationCode)
-    }
+    ): AppResult<UserIdentifierPrivate> = resultProvider(email, password, confirmationCode)
 }

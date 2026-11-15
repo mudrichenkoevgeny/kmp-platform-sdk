@@ -5,13 +5,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.model.
 /**
  * Persistence port for [ManagementGlobalSettings].
  */
-interface ManagementGlobalSettingsStorage {
+public interface ManagementGlobalSettingsStorage {
     /** @return Stored [ManagementGlobalSettings], or `null` if none are persisted yet. */
-    suspend fun getManagementGlobalSettings(): ManagementGlobalSettings?
+    public suspend fun getManagementGlobalSettings(): ManagementGlobalSettings?
 
     /** @param managementGlobalSettings Snapshot to serialize and persist. */
-    suspend fun updateManagementGlobalSettings(managementGlobalSettings: ManagementGlobalSettings)
+    public suspend fun updateManagementGlobalSettings(managementGlobalSettings: ManagementGlobalSettings)
 
     /** Removes persisted management global settings, if any. */
-    suspend fun clearManagementGlobalSettings()
+    public suspend fun clearManagementGlobalSettings()
 }

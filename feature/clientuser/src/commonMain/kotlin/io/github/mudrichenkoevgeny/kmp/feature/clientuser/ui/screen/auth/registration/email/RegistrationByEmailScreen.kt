@@ -39,21 +39,30 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorTe
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreSmallText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.ui.screen.auth.registration.email.RegistrationByEmailComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 
+/**
+ * Composable screen for user registration via email and confirmation code.
+ *
+ * @param component Component managing email registration UI state and navigation stack.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationByEmailScreen(component: RegistrationByEmailComponent) {
+public fun RegistrationByEmailScreen(
+    component: RegistrationByEmailComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {
@@ -84,16 +93,17 @@ fun RegistrationByEmailScreen(component: RegistrationByEmailComponent) {
                     is RegistrationByEmailComponent.Child.EmailInput -> {
                         EmailInputContent(
                             state = state,
-                            onEmailChanged = component::onEmailChanged,
+                            onEmailChange = component::onEmailChanged,
                             onSendCodeClick = component::onSendCodeClick
                         )
                     }
+
                     is RegistrationByEmailComponent.Child.ConfirmInput -> {
                         RegistrationInputContent(
                             state = state,
                             email = activeChild.email,
-                            onCodeChanged = component::onCodeChanged,
-                            onPasswordChanged = component::onPasswordChanged,
+                            onCodeChange = component::onCodeChanged,
+                            onPasswordChange = component::onPasswordChanged,
                             onTogglePasswordVisibility = component::onTogglePasswordVisibility,
                             onRegisterClick = component::onRegisterClick,
                             onResendClick = component::onSendCodeClick
@@ -114,12 +124,13 @@ fun RegistrationByEmailScreen(component: RegistrationByEmailComponent) {
 @Composable
 private fun EmailInputContent(
     state: RegistrationByEmailScreenState,
-    onEmailChanged: (String) -> Unit,
-    onSendCodeClick: () -> Unit
+    onEmailChange: (String) -> Unit,
+    onSendCodeClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val userUi = LocalUserStrings.current.ui
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(CoreTheme.dimens.paddingLarge)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -133,7 +144,7 @@ private fun EmailInputContent(
         ) {
             CoreEmailTextField(
                 value = state.email,
-                onValueChange = onEmailChanged,
+                onValueChange = onEmailChange,
                 modifier = Modifier.testTag(RegistrationByEmailTestTags.EMAIL_INPUT),
                 isError = state.actionError != null
             )
@@ -159,15 +170,16 @@ private fun EmailInputContent(
 private fun RegistrationInputContent(
     state: RegistrationByEmailScreenState,
     email: String,
-    onCodeChanged: (String) -> Unit,
-    onPasswordChanged: (String) -> Unit,
+    onCodeChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
     onTogglePasswordVisibility: () -> Unit,
     onRegisterClick: () -> Unit,
-    onResendClick: () -> Unit
+    onResendClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val userUi = LocalUserStrings.current.ui
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(CoreTheme.dimens.paddingLarge)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -191,7 +203,7 @@ private fun RegistrationInputContent(
         ) {
             CoreCodeTextField(
                 value = state.code,
-                onValueChange = onCodeChanged,
+                onValueChange = onCodeChange,
                 label = { CoreBodyText(userUi.confirmationCode) },
                 placeholder = { CoreBodyText(userUi.enterConfirmationCode) },
                 modifier = Modifier.testTag(RegistrationByEmailTestTags.CODE_INPUT),
@@ -202,7 +214,7 @@ private fun RegistrationInputContent(
 
             CorePasswordTextField(
                 value = state.password,
-                onValueChange = onPasswordChanged,
+                onValueChange = onPasswordChange,
                 isPasswordVisible = state.isPasswordVisible,
                 onTogglePasswordVisibility = onTogglePasswordVisibility,
                 label = { CoreBodyText(userUi.password) },
@@ -323,7 +335,7 @@ private val defaultPreviewState = RegistrationByEmailScreenState(
 )
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun StatesPreview(
     @PreviewParameter(RegistrationByEmailPreviewProvider::class) state: RegistrationByEmailScreenState
@@ -334,7 +346,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun AdaptivePreview() {
     ScreenPreviewContainer {
@@ -343,7 +355,7 @@ private fun AdaptivePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -352,7 +364,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {

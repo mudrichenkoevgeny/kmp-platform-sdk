@@ -6,23 +6,31 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.otp.UnlockOtpComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.otp.UnlockOtpScreenState
 
+/**
+ * Mock implementation of [UnlockOtpComponent] for Compose previews and testing.
+ */
 @InternalApi
-open class UnlockOtpComponentMock(
+public open class UnlockOtpComponentMock(
     initialState: UnlockOtpScreenState = UnlockOtpScreenState()
 ) : UnlockOtpComponent {
 
     private val mutableState = MutableValue(initialState)
-    override val state: Value<UnlockOtpScreenState> = mutableState
+    public override val state: Value<UnlockOtpScreenState> = mutableState
 
-    fun updateState(state: UnlockOtpScreenState) {
+    /**
+     * Updates the component state value.
+     *
+     * @param state The new state value.
+     */
+    public fun updateState(state: UnlockOtpScreenState) {
         mutableState.value = state
     }
 
-    override fun onCodeChanged(code: String) {
+    public override fun onCodeChanged(code: String) {
         mutableState.value = mutableState.value.copy(codeInput = code)
     }
 
-    override fun onUnlockClick() {}
-    override fun onResendCodeClick() {}
-    override fun onBackClick() {}
+    public override fun onUnlockClick(): Unit = Unit
+    public override fun onResendCodeClick(): Unit = Unit
+    public override fun onBackClick(): Unit = Unit
 }

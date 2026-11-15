@@ -7,11 +7,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 /**
  * Schedules current user account for deletion.
  */
-open class ScheduleUserDeletionUseCase(
+public open class ScheduleUserDeletionUseCase(
     private val userRepository: UserRepository
 ) {
 
-    open suspend operator fun invoke(): AppResult<UserPrivate> {
-        return userRepository.scheduleUserDeletion()
-    }
+    /**
+     * Executes scheduling of the current user account for deletion.
+     *
+     * @return [AppResult] containing updated [UserPrivate] data on success.
+     */
+    public open suspend operator fun invoke(): AppResult<UserPrivate> = userRepository.scheduleUserDeletion()
 }

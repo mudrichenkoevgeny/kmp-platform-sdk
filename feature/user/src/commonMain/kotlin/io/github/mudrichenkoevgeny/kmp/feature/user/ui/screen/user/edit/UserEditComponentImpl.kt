@@ -38,7 +38,7 @@ import kotlin.time.Instant
  * @param uploadFileUseCase Optional direct file uploader for new avatar images.
  * @param onBack Callback invoked on back navigation or successful save.
  */
-class UserEditComponentImpl(
+public class UserEditComponentImpl(
     componentContext: ComponentContext,
     private val userRepository: UserRepository,
     private val selfUpdateUserUseCase: SelfUpdateUserUseCase,
@@ -50,13 +50,13 @@ class UserEditComponentImpl(
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue<UserEditScreenState>(UserEditScreenState.Loading)
-    override val state: Value<UserEditScreenState> = _state
+    public override val state: Value<UserEditScreenState> = _state
 
     init {
         loadData()
     }
 
-    override fun onNicknameChanged(value: String) {
+    public override fun onNicknameChanged(value: String) {
         val currentContent = _state.value as? UserEditScreenState.Content ?: return
         _state.value = currentContent.copy(
             nicknameInput = value,
@@ -65,7 +65,7 @@ class UserEditComponentImpl(
         )
     }
 
-    override fun onDisplayNameChanged(value: String) {
+    public override fun onDisplayNameChanged(value: String) {
         val currentContent = _state.value as? UserEditScreenState.Content ?: return
         _state.value = currentContent.copy(
             displayNameInput = value,
@@ -74,7 +74,7 @@ class UserEditComponentImpl(
         )
     }
 
-    override fun onAvatarFileSelected(payload: SelectedFilePayload) {
+    public override fun onAvatarFileSelected(payload: SelectedFilePayload) {
         val currentContent = _state.value as? UserEditScreenState.Content ?: return
         _state.value = currentContent.copy(
             selectedAvatarPayload = payload,
@@ -82,7 +82,7 @@ class UserEditComponentImpl(
         )
     }
 
-    override fun onBirthdateChanged(value: String) {
+    public override fun onBirthdateChanged(value: String) {
         val currentContent = _state.value as? UserEditScreenState.Content ?: return
         _state.value = currentContent.copy(
             birthdateInput = value,
@@ -90,7 +90,7 @@ class UserEditComponentImpl(
         )
     }
 
-    override fun onSaveClick() {
+    public override fun onSaveClick() {
         val currentContent = _state.value as? UserEditScreenState.Content ?: return
         if (currentContent.isSaving) {
             return
@@ -142,6 +142,7 @@ class UserEditComponentImpl(
                         is AppResult.Success -> {
                             avatarUpdateField = UpdateField.Set(uploadResult.data.id)
                         }
+
                         is AppResult.Error -> {
                             _state.value = currentContent.copy(
                                 isSaving = false,
@@ -159,11 +160,12 @@ class UserEditComponentImpl(
                 UpdateField.Ignore
             }
 
-            val displayNameUpdateField = if (currentContent.displayNameInput != (currentContent.user.displayName ?: "")) {
-                UpdateField.Set(currentContent.displayNameInput.takeIf { it.isNotBlank() })
-            } else {
-                UpdateField.Ignore
-            }
+            val displayNameUpdateField =
+                if (currentContent.displayNameInput != (currentContent.user.displayName ?: "")) {
+                    UpdateField.Set(currentContent.displayNameInput.takeIf { it.isNotBlank() })
+                } else {
+                    UpdateField.Ignore
+                }
 
             val initialBirthdateString = currentContent.user.birthdate?.toEpochMilliseconds()?.toString() ?: ""
             val birthdateUpdateField = if (currentContent.birthdateInput != initialBirthdateString) {
@@ -195,11 +197,11 @@ class UserEditComponentImpl(
         }
     }
 
-    override fun onRetry() {
+    public override fun onRetry() {
         loadData()
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         onBack()
     }
 

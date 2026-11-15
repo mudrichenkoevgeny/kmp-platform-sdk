@@ -4,7 +4,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.mfa
  * Handles MFA (Multi-Factor Authentication) challenges requested by the backend
  * when performing sensitive operations (Step-Up Authentication).
  */
-interface MfaChallengeHandler {
+public interface MfaChallengeHandler {
 
     /**
      * Called by the networking layer when a sensitive operation is blocked,
@@ -15,5 +15,5 @@ interface MfaChallengeHandler {
      * @param mfaToken The temporary opaque token identifying the challenge session.
      * @return The verification code entered by the user, or null if the user cancelled the flow.
      */
-    suspend fun onRequestMfaCode(mfaToken: String): String?
+    public suspend fun onRequestMfaCode(mfaToken: String): String?
 }

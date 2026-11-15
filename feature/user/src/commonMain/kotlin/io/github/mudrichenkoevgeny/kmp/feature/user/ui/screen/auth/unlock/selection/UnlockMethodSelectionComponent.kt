@@ -3,23 +3,23 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.selec
 import com.arkivanov.decompose.value.Value
 
 /** Component for choosing an unlock method (email, phone, or external provider). */
-interface UnlockMethodSelectionComponent {
+public interface UnlockMethodSelectionComponent {
 
     /** Current screen state. */
-    val state: Value<UnlockMethodSelectionScreenState>
+    public val state: Value<UnlockMethodSelectionScreenState>
 
     /** Navigates to email input for email unlock. */
-    fun onSelectEmailUnlock()
+    public fun onSelectEmailUnlock()
 
     /** Navigates to phone input for phone unlock. */
-    fun onSelectPhoneUnlock()
+    public fun onSelectPhoneUnlock()
 
     /** Triggers unlock via Google OAuth token. */
-    fun onSelectGoogleUnlock()
+    public fun onSelectGoogleUnlock()
 
     /** Triggers unlock via Apple OAuth token. */
-    fun onSelectAppleUnlock()
+    public fun onSelectAppleUnlock()
 
     /** Navigates back. */
-    fun onBackClick()
+    public fun onBackClick()
 }

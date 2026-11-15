@@ -8,19 +8,22 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.configuration.createTestManagementUserConfigurationPayload
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.network.model.configuration.createTestOpenUserConfigurationPayload
 
+/**
+ * Mock implementation of [ManagementUserConfigurationApi] for testing.
+ */
 @InternalApi
-class ManagementUserConfigurationApiMock(
-    var getManagementUserConfigurationResult: AppResult<ManagementUserConfigurationPayload> = AppResult.Success(
+public class ManagementUserConfigurationApiMock(
+    public var getManagementUserConfigurationResult: AppResult<ManagementUserConfigurationPayload> = AppResult.Success(
         createTestManagementUserConfigurationPayload()
     ),
-    var getOpenUserConfigurationResult: AppResult<OpenUserConfigurationPayload> = AppResult.Success(
+    public var getOpenUserConfigurationResult: AppResult<OpenUserConfigurationPayload> = AppResult.Success(
         createTestOpenUserConfigurationPayload()
     )
 ) : ManagementUserConfigurationApi {
 
-    override suspend fun getManagementUserConfiguration(): AppResult<ManagementUserConfigurationPayload> =
+    public override suspend fun getManagementUserConfiguration(): AppResult<ManagementUserConfigurationPayload> =
         getManagementUserConfigurationResult
 
-    override suspend fun getOpenUserConfiguration(): AppResult<OpenUserConfigurationPayload> =
+    public override suspend fun getOpenUserConfiguration(): AppResult<OpenUserConfigurationPayload> =
         getOpenUserConfigurationResult
 }

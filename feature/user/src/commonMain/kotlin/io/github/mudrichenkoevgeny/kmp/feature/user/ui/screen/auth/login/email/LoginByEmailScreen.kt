@@ -41,9 +41,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyTex
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewDialogSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.email.LoginByEmailComponentMock
@@ -54,7 +54,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.em
  * @param component Decompose component providing state and callbacks.
  */
 @Composable
-fun LoginByEmailScreen(component: LoginByEmailComponent) {
+public fun LoginByEmailScreen(component: LoginByEmailComponent) {
     val state by component.state.subscribeAsState()
 
     Box(
@@ -65,6 +65,7 @@ fun LoginByEmailScreen(component: LoginByEmailComponent) {
             is LoginByEmailScreenState.Loading -> {
                 FullscreenLoading()
             }
+
             is LoginByEmailScreenState.Content -> {
                 LoginByEmailContent(
                     state = currentState,
@@ -204,16 +205,16 @@ private fun ErrorText(error: AppError?) {
     }
 }
 
-internal object LoginByEmailTestTags {
-    const val BACK_BUTTON = "LoginByEmail_BackButton"
-    const val TITLE = "LoginByEmail_Title"
-    const val EMAIL_INPUT = "LoginByEmail_EmailInput"
-    const val PASSWORD_INPUT = "LoginByEmail_PasswordInput"
-    const val TOGGLE_PASSWORD_VISIBILITY_BUTTON = "LoginByEmail_TogglePasswordVisibilityButton"
-    const val FORGOT_PASSWORD_BUTTON = "LoginByEmail_ForgotPasswordButton"
-    const val LOGIN_BUTTON = "LoginByEmail_LoginButton"
-    const val REGISTRATION_BUTTON = "LoginByEmail_RegistrationButton"
-    const val ERROR_TEXT = "LoginByEmail_ErrorText"
+public object LoginByEmailTestTags {
+    public const val BACK_BUTTON: String = "LoginByEmail_BackButton"
+    public const val TITLE: String = "LoginByEmail_Title"
+    public const val EMAIL_INPUT: String = "LoginByEmail_EmailInput"
+    public const val PASSWORD_INPUT: String = "LoginByEmail_PasswordInput"
+    public const val TOGGLE_PASSWORD_VISIBILITY_BUTTON: String = "LoginByEmail_TogglePasswordVisibilityButton"
+    public const val FORGOT_PASSWORD_BUTTON: String = "LoginByEmail_ForgotPasswordButton"
+    public const val LOGIN_BUTTON: String = "LoginByEmail_LoginButton"
+    public const val REGISTRATION_BUTTON: String = "LoginByEmail_RegistrationButton"
+    public const val ERROR_TEXT: String = "LoginByEmail_ErrorText"
 }
 
 @InternalApi
@@ -282,7 +283,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@DialogSizePreviews
+@PreviewDialogSizes
 @Composable
 private fun DialogSizePreview() {
     DialogPreviewContainer {
@@ -291,7 +292,7 @@ private fun DialogSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     DialogPreviewContainer {
@@ -300,7 +301,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     DialogPreviewContainer {

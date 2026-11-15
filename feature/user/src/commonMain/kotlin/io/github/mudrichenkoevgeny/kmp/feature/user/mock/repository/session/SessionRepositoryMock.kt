@@ -12,48 +12,56 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
 
+/**
+ * Mock implementation of [SessionRepository] for testing.
+ */
 @InternalApi
-open class SessionRepositoryMock : SessionRepository {
+public open class SessionRepositoryMock : SessionRepository {
 
-    var getSessionsResultProvider: () -> AppResult<PagedResult<UserSessionSummary>> = {
+    public var getSessionsResultProvider: () -> AppResult<PagedResult<UserSessionSummary>> = {
         AppResult.Success(createTestPagedResult(listOf(createTestUserSessionSummary())))
     }
 
-    var getSessionResultProvider: (UserSessionId) -> AppResult<UserSessionPrivate> = {
+    public var getSessionResultProvider: (UserSessionId) -> AppResult<UserSessionPrivate> = {
         AppResult.Success(createTestUserSessionPrivate())
     }
 
-    var logoutResultProvider: () -> AppResult<Unit> = { AppResult.Success(Unit) }
+    public var logoutResultProvider: () -> AppResult<Unit> = { AppResult.Success(Unit) }
 
-    var deleteSessionResultProvider: (UserSessionId) -> AppResult<Unit> = { _ -> AppResult.Success(Unit) }
+    public var deleteSessionResultProvider: (UserSessionId) -> AppResult<Unit> = { _ -> AppResult.Success(Unit) }
 
-    var deleteAllOtherSessionsResultProvider: () -> AppResult<Unit> = { AppResult.Success(Unit) }
+    public var deleteAllOtherSessionsResultProvider: () -> AppResult<Unit> = { AppResult.Success(Unit) }
 
-    var reauthenticateSessionResultProvider: (String, String) -> AppResult<Unit> = { _, _ -> AppResult.Success(Unit) }
+    public var reauthenticateSessionResultProvider: (String, String) -> AppResult<Unit> = { _, _ ->
+        AppResult.Success(Unit)
+    }
 
-    var lastSessionId: UserSessionId? = null
-    var lastMfaToken: String? = null
-    var lastCode: String? = null
+    public var lastSessionId: UserSessionId? = null
+    public var lastMfaToken: String? = null
+    public var lastCode: String? = null
 
-    override suspend fun getSessions(
+    public override suspend fun getSessions(
         params: SelfSessionListParams?
     ): AppResult<PagedResult<UserSessionSummary>> = getSessionsResultProvider()
 
-    override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivate> {
+    public override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivate> {
         lastSessionId = userSessionId
         return getSessionResultProvider(userSessionId)
     }
 
-    override suspend fun logout(): AppResult<Unit> = logoutResultProvider()
+    public override suspend fun logout(): AppResult<Unit> = logoutResultProvider()
 
-    override suspend fun deleteSession(userSessionId: UserSessionId): AppResult<Unit> {
+    public override suspend fun deleteSession(userSessionId: UserSessionId): AppResult<Unit> {
         lastSessionId = userSessionId
         return deleteSessionResultProvider(userSessionId)
     }
 
-    override suspend fun deleteAllOtherSessions(): AppResult<Unit> = deleteAllOtherSessionsResultProvider()
+    public override suspend fun deleteAllOtherSessions(): AppResult<Unit> = deleteAllOtherSessionsResultProvider()
 
-    override suspend fun reauthenticateSession(mfaToken: String, code: String): AppResult<Unit> {
+    public override suspend fun reauthenticateSession(
+        mfaToken: String,
+        code: String
+    ): AppResult<Unit> {
         lastMfaToken = mfaToken
         lastCode = code
         return reauthenticateSessionResultProvider(mfaToken, code)

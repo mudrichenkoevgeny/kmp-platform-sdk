@@ -9,31 +9,41 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+/**
+ * Mock implementation of [OpenAuthSettingsRepository] for testing.
+ */
 @InternalApi
-class OpenAuthSettingsRepositoryMock : OpenAuthSettingsRepository {
+public class OpenAuthSettingsRepositoryMock : OpenAuthSettingsRepository {
 
     private val authSettingsFlow = MutableStateFlow<OpenAuthSettings?>(null)
 
-    var resultProvider: () -> AppResult<OpenAuthSettings> = {
+    public var resultProvider: () -> AppResult<OpenAuthSettings> = {
         authSettingsFlow.value?.let { AppResult.Success(it) }
             ?: AppResult.Error(
                 CommonError.ContractViolation(
-                    throwable = IllegalStateException("No mock settings provided. Call emit() or updateOpenAuthSettings() first.")
+                    throwable = IllegalStateException(
+                        "No mock settings provided. Call emit() or updateOpenAuthSettings() first."
+                    )
                 )
             )
     }
 
-    override suspend fun getOpenAuthSettings(): AppResult<OpenAuthSettings> = resultProvider()
+    public override suspend fun getOpenAuthSettings(): AppResult<OpenAuthSettings> = resultProvider()
 
-    override suspend fun refreshOpenAuthSettings(): AppResult<OpenAuthSettings> = resultProvider()
+    public override suspend fun refreshOpenAuthSettings(): AppResult<OpenAuthSettings> = resultProvider()
 
-    override suspend fun updateOpenAuthSettings(authSettings: OpenAuthSettings) {
+    public override suspend fun updateOpenAuthSettings(authSettings: OpenAuthSettings) {
         authSettingsFlow.value = authSettings
     }
 
-    override fun observeOpenAuthSettings(): Flow<OpenAuthSettings?> = authSettingsFlow.asStateFlow()
+    public override fun observeOpenAuthSettings(): Flow<OpenAuthSettings?> = authSettingsFlow.asStateFlow()
 
-    fun emit(authSettings: OpenAuthSettings) {
+    /**
+     * Emits open auth settings to subscribers.
+     *
+     * @param authSettings The settings to emit.
+     */
+    public fun emit(authSettings: OpenAuthSettings) {
         authSettingsFlow.value = authSettings
     }
 }

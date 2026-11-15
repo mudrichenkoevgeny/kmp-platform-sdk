@@ -5,13 +5,13 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.Sto
 /**
  * Presentation logic controller (Decompose component) for the full storage file upload screen.
  */
-interface StorageFileUploadScreenComponent {
+public interface StorageFileUploadScreenComponent {
     /** Embedded upload area component controller. */
-    val uploadComponent: StorageFileUploadComponent
+    public val uploadComponent: StorageFileUploadComponent
 
     /** Handles click on screen back button. */
-    fun onBackClick()
+    public fun onBackClick()
 
     /** Handles click on dropzone to trigger system file picker. */
-    fun onSelectFilesClick()
+    public fun onSelectFilesClick()
 }

@@ -10,18 +10,26 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.mapper.totpre
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.mapper.totpsetup.toTotpSetup
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.verifytotp.VerifyTotpPayload
 
-class UserSecurityRepositoryImpl(
+/**
+ * Implementation of [UserSecurityRepository] managing TOTP setup and recovery codes.
+ *
+ * @param userSecurityApi Network API client for user security operations.
+ * @param userStorage Encrypted storage for caching user configuration.
+ */
+public class UserSecurityRepositoryImpl(
     private val userSecurityApi: UserSecurityApi,
     private val userStorage: UserStorage
 ) : UserSecurityRepository {
 
-    override suspend fun setupTotp(): AppResult<TotpSetup> {
-        return userSecurityApi.setupTotp().mapSuccess { totpSetupPayload ->
+    public override suspend fun setupTotp(): AppResult<TotpSetup> =
+        userSecurityApi.setupTotp().mapSuccess { totpSetupPayload ->
             totpSetupPayload.toTotpSetup()
         }
-    }
 
-    override suspend fun enableTotp(mfaToken: String, code: String): AppResult<TotpRecoveryCodes> {
+    public override suspend fun enableTotp(
+        mfaToken: String,
+        code: String
+    ): AppResult<TotpRecoveryCodes> {
         val request = VerifyTotpPayload(
             mfaToken = mfaToken,
             code = code
@@ -32,23 +40,19 @@ class UserSecurityRepositoryImpl(
         }
     }
 
-    override suspend fun disableTotp(): AppResult<Unit> {
-        return userSecurityApi.disableTotp().mapSuccess {
-            updateTotpStatusInStorage(isEnabled = false)
-        }
+    public override suspend fun disableTotp(): AppResult<Unit> = userSecurityApi.disableTotp().mapSuccess {
+        updateTotpStatusInStorage(isEnabled = false)
     }
 
-    override suspend fun getRecoveryCodes(): AppResult<TotpRecoveryCodes> {
-        return userSecurityApi.getRecoveryCodes().mapSuccess { totpRecoveryCodesPayload ->
+    public override suspend fun getRecoveryCodes(): AppResult<TotpRecoveryCodes> =
+        userSecurityApi.getRecoveryCodes().mapSuccess { totpRecoveryCodesPayload ->
             totpRecoveryCodesPayload.toTotpRecoveryCodes()
         }
-    }
 
-    override suspend fun regenerateRecoveryCodes(): AppResult<TotpRecoveryCodes> {
-        return userSecurityApi.regenerateRecoveryCodes().mapSuccess { totpRecoveryCodesPayload ->
+    public override suspend fun regenerateRecoveryCodes(): AppResult<TotpRecoveryCodes> =
+        userSecurityApi.regenerateRecoveryCodes().mapSuccess { totpRecoveryCodesPayload ->
             totpRecoveryCodesPayload.toTotpRecoveryCodes()
         }
-    }
 
     private suspend fun updateTotpStatusInStorage(isEnabled: Boolean) {
         val currentUser = userStorage.getCurrentUser()

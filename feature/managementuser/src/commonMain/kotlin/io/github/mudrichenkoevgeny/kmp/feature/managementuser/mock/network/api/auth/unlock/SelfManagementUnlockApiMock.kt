@@ -8,23 +8,28 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.unlock.UnlockByEmailConfirmationRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
 
+/**
+ * Mock implementation of [SelfManagementUnlockApi] for testing.
+ */
 @InternalApi
-open class SelfManagementUnlockApiMock : SelfManagementUnlockApi {
+public open class SelfManagementUnlockApiMock : SelfManagementUnlockApi {
 
-    var sendUnlockEmailConfirmationResult: AppResult<OtpConfirmationPayload> = AppResult.Error(CommonError.Unknown())
-    var unlockByEmailResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
+    public var sendUnlockEmailConfirmationResult: AppResult<OtpConfirmationPayload> = AppResult.Error(
+        CommonError.Unknown()
+    )
+    public var unlockByEmailResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
 
-    var lastSendUnlockEmailConfirmationRequest: SendConfirmationToEmailRequest? = null
-    var lastUnlockByEmailRequest: UnlockByEmailConfirmationRequest? = null
+    public var lastSendUnlockEmailConfirmationRequest: SendConfirmationToEmailRequest? = null
+    public var lastUnlockByEmailRequest: UnlockByEmailConfirmationRequest? = null
 
-    override suspend fun sendUnlockEmailConfirmation(
+    public override suspend fun sendUnlockEmailConfirmation(
         request: SendConfirmationToEmailRequest
     ): AppResult<OtpConfirmationPayload> {
         lastSendUnlockEmailConfirmationRequest = request
         return sendUnlockEmailConfirmationResult
     }
 
-    override suspend fun unlockByEmail(
+    public override suspend fun unlockByEmail(
         request: UnlockByEmailConfirmationRequest
     ): AppResult<Unit> {
         lastUnlockByEmailRequest = request

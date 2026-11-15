@@ -10,14 +10,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
  *
  * @param identifierRepository Identifiers repository.
  */
-open class GetUserIdentifierUseCase(
+public open class GetUserIdentifierUseCase(
     private val identifierRepository: IdentifierRepository
 ) {
     /**
      * @param userIdentifierId Identifier unique ID.
      * @return [UserIdentifierPrivate] on success, or a mapped failure.
      */
-    open suspend operator fun invoke(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> {
-        return identifierRepository.getUserIdentifier(userIdentifierId)
-    }
+    public open suspend operator fun invoke(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> =
+        identifierRepository.getUserIdentifier(
+            userIdentifierId
+        )
 }

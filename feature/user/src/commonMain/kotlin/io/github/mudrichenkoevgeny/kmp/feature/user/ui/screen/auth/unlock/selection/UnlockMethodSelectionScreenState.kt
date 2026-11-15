@@ -6,7 +6,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 
 /** UI state for selecting an account unlock channel. */
-data class UnlockMethodSelectionScreenState(
+public data class UnlockMethodSelectionScreenState(
     val lockoutType: AccountLockoutType? = null,
     val lockoutUntil: Long? = null,
     val knownIdentifiers: List<UserIdentifierSummary> = emptyList(),
@@ -14,18 +14,18 @@ data class UnlockMethodSelectionScreenState(
     val actionError: AppError? = null
 ) {
     /** True if email unlock is applicable (either user has email identifier or list is empty/unauthenticated). */
-    val isEmailAvailable: Boolean
+    public val isEmailAvailable: Boolean
         get() = knownIdentifiers.isEmpty() || knownIdentifiers.any { it.userAuthProvider == UserAuthProvider.EMAIL }
 
     /** True if phone unlock is applicable (either user has phone identifier or list is empty/unauthenticated). */
-    val isPhoneAvailable: Boolean
+    public val isPhoneAvailable: Boolean
         get() = knownIdentifiers.isEmpty() || knownIdentifiers.any { it.userAuthProvider == UserAuthProvider.PHONE }
 
     /** True if Google unlock is applicable (either user has Google identifier or list is empty/unauthenticated). */
-    val isGoogleAvailable: Boolean
+    public val isGoogleAvailable: Boolean
         get() = knownIdentifiers.isEmpty() || knownIdentifiers.any { it.userAuthProvider == UserAuthProvider.GOOGLE }
 
     /** True if Apple unlock is applicable (either user has Apple identifier or list is empty/unauthenticated). */
-    val isAppleAvailable: Boolean
+    public val isAppleAvailable: Boolean
         get() = knownIdentifiers.isEmpty() || knownIdentifiers.any { it.userAuthProvider == UserAuthProvider.APPLE }
 }

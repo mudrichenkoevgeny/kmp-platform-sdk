@@ -12,17 +12,17 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 /**
  * Universal screen state hierarchy for identifier list screens (client and management).
  */
-sealed interface IdentifierListScreenState {
+public sealed interface IdentifierListScreenState {
 
     /** Initial loading state. */
-    object Loading : IdentifierListScreenState
+    public data object Loading : IdentifierListScreenState
 
     /**
      * Global error state.
      *
      * @property error The application error that occurred during initialization or fetch.
      */
-    data class Error(val error: AppError) : IdentifierListScreenState
+    public data class Error(val error: AppError) : IdentifierListScreenState
 
     /**
      * Active content state displaying paginated user identifiers with optional filter/sort options.
@@ -47,7 +47,7 @@ sealed interface IdentifierListScreenState {
      * @property actionLoading Whether an async action (such as adding an identifier) is in progress.
      * @property actionError Error resulting from an async action attempt.
      */
-    data class Content(
+    public data class Content(
         val paging: PaginationState<UserIdentifierSummary> = PaginationState(),
         val currentIdentifierId: UserIdentifierId? = null,
         val currentUserId: UserId? = null,
@@ -70,15 +70,15 @@ sealed interface IdentifierListScreenState {
     ) : IdentifierListScreenState {
 
         /** Whether the confirmation code can be resent. */
-        val canResendCode: Boolean
+        public val canResendCode: Boolean
             get() = addResendTimerSeconds <= 0 && !actionLoading
 
         /** Whether the add email identifier form can be submitted. */
-        val canSubmitAddEmail: Boolean
+        public val canSubmitAddEmail: Boolean
             get() = isAddEmailValid && isAddPasswordValid && addCode.isNotBlank() && !actionLoading
 
         /** Whether the add phone identifier form can be submitted. */
-        val canSubmitAddPhone: Boolean
+        public val canSubmitAddPhone: Boolean
             get() = isAddPhoneValid && addCode.isNotBlank() && !actionLoading
     }
 }

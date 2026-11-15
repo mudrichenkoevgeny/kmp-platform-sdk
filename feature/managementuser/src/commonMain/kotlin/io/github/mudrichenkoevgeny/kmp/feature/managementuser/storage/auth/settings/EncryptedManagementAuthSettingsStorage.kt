@@ -12,7 +12,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
  *
  * @param encryptedSettings Host-provided encrypted settings.
  */
-class EncryptedManagementAuthSettingsStorage(
+public class EncryptedManagementAuthSettingsStorage(
     private val encryptedSettings: EncryptedSettings
 ) : ManagementAuthSettingsStorage {
 
@@ -38,7 +38,7 @@ class EncryptedManagementAuthSettingsStorage(
         encryptedSettings.remove(KEY_MANAGEMENT_AUTH_SETTINGS)
     }
 
-    companion object {
-        private const val KEY_MANAGEMENT_AUTH_SETTINGS = "auth_management_settings"
+    public companion object {
+        private const val KEY_MANAGEMENT_AUTH_SETTINGS: String = "auth_management_settings"
     }
 }

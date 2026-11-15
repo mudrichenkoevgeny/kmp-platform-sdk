@@ -11,17 +11,21 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 
+/**
+ * Mock implementation of [GetUserIdentifiersUseCase] for testing.
+ */
 @InternalApi
-class GetUserIdentifiersUseCaseMock(
+public class GetUserIdentifiersUseCaseMock(
     identifierRepository: IdentifierRepository = IdentifierRepositoryMock()
 ) : GetUserIdentifiersUseCase(identifierRepository) {
 
-    var executeCalls = 0
-    var resultProvider: (params: SelfIdentifierListParams?) -> AppResult<PagedResult<UserIdentifierSummary>> = { _ ->
-        AppResult.Success(createTestPagedResult(listOf(createTestUserIdentifierSummary())))
-    }
+    public var executeCalls: Int = 0
+    public var resultProvider: (params: SelfIdentifierListParams?) -> AppResult<PagedResult<UserIdentifierSummary>> =
+        { _ ->
+            AppResult.Success(createTestPagedResult(listOf(createTestUserIdentifierSummary())))
+        }
 
-    override suspend fun invoke(
+    public override suspend fun invoke(
         params: SelfIdentifierListParams?
     ): AppResult<PagedResult<UserIdentifierSummary>> {
         executeCalls++

@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
  * @param onNavigateBack Callback for back navigation.
  * @param initialDialogConfig Optional initial modal dialog configuration.
  */
-class StorageFileDetailComponentImpl(
+public class StorageFileDetailComponentImpl(
     componentContext: ComponentContext,
     private val params: StorageFileDetailParams,
     private val dataSource: StorageFileDetailDataSource,
@@ -39,16 +39,17 @@ class StorageFileDetailComponentImpl(
     initialDialogConfig: StorageFileDetailDialogConfig? = null
 ) : StorageFileDetailComponent, ComponentContext by componentContext {
 
-    override val isDeleteAvailable: Boolean
+    public override val isDeleteAvailable: Boolean
         get() = dataSource.isDeleteAvailable
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue<StorageFileDetailScreenState>(StorageFileDetailScreenState.Loading)
-    override val state: Value<StorageFileDetailScreenState> = _state
+    public override val state: Value<StorageFileDetailScreenState> = _state
 
-    override val dialogSlotNavigation = SlotNavigation<StorageFileDetailDialogConfig>()
+    public override val dialogSlotNavigation: SlotNavigation<StorageFileDetailDialogConfig> =
+        SlotNavigation<StorageFileDetailDialogConfig>()
 
-    override val dialogSlot: Value<ChildSlot<StorageFileDetailDialogConfig, StorageFileDetailDialogChild>> =
+    public override val dialogSlot: Value<ChildSlot<StorageFileDetailDialogConfig, StorageFileDetailDialogChild>> =
         childSlot(
             source = dialogSlotNavigation,
             serializer = StorageFileDetailDialogConfig.serializer(),
@@ -72,11 +73,11 @@ class StorageFileDetailComponentImpl(
         }
     }
 
-    override fun onRetry() {
+    public override fun onRetry() {
         initScreen()
     }
 
-    override fun onDeleteClick() {
+    public override fun onDeleteClick() {
         val current = _state.value as? StorageFileDetailScreenState.Content ?: return
         if (current.isDeleting || !isDeleteAvailable) {
             return
@@ -84,11 +85,11 @@ class StorageFileDetailComponentImpl(
         dialogSlotNavigation.activate(StorageFileDetailDialogConfig.ConfirmDeleteFile(params.fileId))
     }
 
-    override fun onDismissDeleteDialog() {
+    public override fun onDismissDeleteDialog() {
         dialogSlotNavigation.dismiss()
     }
 
-    override fun onConfirmDelete() {
+    public override fun onConfirmDelete() {
         dialogSlotNavigation.dismiss()
         val current = _state.value as? StorageFileDetailScreenState.Content ?: return
         if (current.isDeleting || !isDeleteAvailable) {
@@ -102,6 +103,7 @@ class StorageFileDetailComponentImpl(
                 is AppResult.Success -> {
                     onNavigateBack()
                 }
+
                 is AppResult.Error -> {
                     val latest = _state.value as? StorageFileDetailScreenState.Content ?: return@launch
                     _state.value = latest.copy(
@@ -113,7 +115,7 @@ class StorageFileDetailComponentImpl(
         }
     }
 
-    override fun onUserClick() {
+    public override fun onUserClick() {
         val current = _state.value as? StorageFileDetailScreenState.Content ?: return
         val rawOwnerUserId = current.file.ownerUserId?.trim() ?: return
         val typedOwnerUserId = rawOwnerUserId.toUserIdOrNull() ?: return
@@ -125,7 +127,7 @@ class StorageFileDetailComponentImpl(
         }
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         onNavigateBack()
     }
 
@@ -146,6 +148,7 @@ class StorageFileDetailComponentImpl(
                             deleteError = null
                         )
                     }
+
                     is AppResult.Error -> {
                         _state.value = StorageFileDetailScreenState.Error(result.error)
                     }

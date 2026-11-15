@@ -8,7 +8,6 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpStepConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
@@ -16,6 +15,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.totp.Tot
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpMainScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpMainScreenState
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpMainTestTags
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpStepConfig
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totpsetup.TotpSetup
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -74,11 +74,13 @@ class TotpMainScreenTest {
         onNodeWithTag(TotpMainTestTags.STEP1_DESC).assertIsDisplayed()
         onNodeWithTag(TotpMainTestTags.QR_CODE_BOX).assertIsDisplayed()
         onNodeWithTag(TotpMainTestTags.MANUAL_KEY_LABEL).performScrollTo().assertIsDisplayed()
-        onNodeWithTag(TotpMainTestTags.SECRET_KEY_TEXT).performScrollTo().assertIsDisplayed().assertTextContains(SECRET_KEY)
+        onNodeWithTag(TotpMainTestTags.SECRET_KEY_TEXT).performScrollTo().assertIsDisplayed()
+            .assertTextContains(SECRET_KEY)
         onNodeWithTag(TotpMainTestTags.COPY_SECRET_KEY_BUTTON).performScrollTo().assertIsDisplayed()
         onNodeWithTag(TotpMainTestTags.STEP2_TITLE).performScrollTo().assertIsDisplayed()
         onNodeWithTag(TotpMainTestTags.STEP2_DESC).performScrollTo().assertIsDisplayed()
-        onNodeWithTag(TotpMainTestTags.CODE_INPUT).performScrollTo().assertIsDisplayed().assertTextContains(CODE_SIX_DIGITS)
+        onNodeWithTag(TotpMainTestTags.CODE_INPUT).performScrollTo().assertIsDisplayed()
+            .assertTextContains(CODE_SIX_DIGITS)
         onNodeWithTag(TotpMainTestTags.CONFIRM_SETUP_BUTTON).performScrollTo().assertIsDisplayed().performClick()
         assertEquals(EXPECTED_SINGLE_CALLBACK, component.confirmSetupCalls)
     }

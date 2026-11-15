@@ -11,10 +11,10 @@ import io.ktor.utils.io.ByteReadChannel
  * @property localUri Local platform URI string for previewing the file.
  * @property openReadChannel Suspending function to defer opening a [ByteReadChannel] stream for reading binary content.
  */
-class SelectedFilePayload(
-    val fileName: String,
-    val fileSizeBytes: Long,
-    val mimeType: String,
-    val localUri: String?,
-    val openReadChannel: suspend () -> ByteReadChannel
+public class SelectedFilePayload(
+    public val fileName: String,
+    public val fileSizeBytes: Long,
+    public val mimeType: String,
+    public val localUri: String?,
+    public val openReadChannel: suspend () -> ByteReadChannel
 )

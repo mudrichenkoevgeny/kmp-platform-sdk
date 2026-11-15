@@ -18,7 +18,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
  * @param authStorage Encrypted token storage updated after a successful login.
  * @param userStorage User snapshot storage updated after a successful login.
  */
-class LoginByGoogleUseCase(
+public class LoginByGoogleUseCase(
     private val authService: GoogleAuthService,
     private val loginRepository: LoginRepository,
     private val authStorage: AuthStorage,
@@ -28,14 +28,12 @@ class LoginByGoogleUseCase(
      * @return [AuthData] after successful Google sign-in, backend login, and local persistence; or
      * an error result from the auth service, login API, or validation—storage is not updated on failure.
      */
-    suspend fun execute(): AppResult<AuthData> {
-        return authService.signIn()
-            .flatMap { loginByExternalAuthProviderRequest ->
-                loginRepository.loginByExternalAuthProvider(loginByExternalAuthProviderRequest)
-            }
-            .onSuccess { authData ->
-                authStorage.updateTokens(authData.sessionToken)
-                userStorage.updateCurrentUser(authData.userPrivate)
-            }
-    }
+    public suspend fun execute(): AppResult<AuthData> = authService.signIn()
+        .flatMap { loginByExternalAuthProviderRequest ->
+            loginRepository.loginByExternalAuthProvider(loginByExternalAuthProviderRequest)
+        }
+        .onSuccess { authData ->
+            authStorage.updateTokens(authData.sessionToken)
+            userStorage.updateCurrentUser(authData.userPrivate)
+        }
 }

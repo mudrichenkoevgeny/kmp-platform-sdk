@@ -6,10 +6,13 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.refreshtoken.RefreshTokenRepository
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
 
+/**
+ * Mock implementation of [RefreshTokenRepository] for unit and UI testing.
+ */
 @InternalApi
-class RefreshTokenRepositoryMock : RefreshTokenRepository {
+public class RefreshTokenRepositoryMock : RefreshTokenRepository {
 
-    var resultProvider: (String) -> AppResult<SessionToken> = {
+    public var resultProvider: (String) -> AppResult<SessionToken> = {
         AppResult.Error(
             CommonError.ContractViolation(
                 throwable = IllegalStateException("RefreshTokenRepositoryMock: result not provided")

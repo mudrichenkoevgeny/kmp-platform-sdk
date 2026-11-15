@@ -17,7 +17,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 
 /** [ManagementSessionApi] backed by [HttpClient]. */
-class KtorManagementSessionApi(
+public class KtorManagementSessionApi(
     private val client: HttpClient
 ) : ManagementSessionApi {
 
@@ -49,7 +49,10 @@ class KtorManagementSessionApi(
         }
     }
 
-    override suspend fun deleteSession(userId: UserId, sessionId: String): AppResult<Unit> = client.callResult {
+    override suspend fun deleteSession(
+        userId: UserId,
+        sessionId: String
+    ): AppResult<Unit> = client.callResult {
         delete(ManagementSessionsRoutes.DELETE_SESSION) {
             parameter(UserApiPaths.USER_ID, userId.value)
             parameter(UserApiPaths.SESSION_ID, sessionId)

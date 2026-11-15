@@ -27,17 +27,25 @@ import androidx.compose.ui.Modifier
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ChoiceListingFilterDefinition
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterChoiceOption
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
+/**
+ * Dropdown component for selecting options in a [ChoiceListingFilterDefinition].
+ *
+ * @param filter The definition of the choice listing filter.
+ * @param selectedIds Set of currently selected option identifiers.
+ * @param onSelectionChange Callback invoked when option selection changes.
+ * @param modifier Modifier to be applied to the dropdown layout.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListingChoiceDropdown(
+public fun ListingChoiceDropdown(
     filter: ChoiceListingFilterDefinition,
     selectedIds: Set<String>,
-    onSelectionChanged: (Set<String>) -> Unit,
+    onSelectionChange: (Set<String>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var isExpanded by remember { mutableStateOf(false) }
@@ -105,7 +113,7 @@ fun ListingChoiceDropdown(
                     ) {
                         TextButton(
                             onClick = {
-                                onSelectionChanged(filter.options.map { it.id }.toSet())
+                                onSelectionChange(filter.options.map { it.id }.toSet())
                             }
                         ) {
                             Text(
@@ -115,7 +123,7 @@ fun ListingChoiceDropdown(
                         }
                         TextButton(
                             onClick = {
-                                onSelectionChanged(emptySet())
+                                onSelectionChange(emptySet())
                             }
                         ) {
                             Text(
@@ -150,9 +158,9 @@ fun ListingChoiceDropdown(
                                 } else {
                                     selectedIds + option.id
                                 }
-                                onSelectionChanged(newSelection)
+                                onSelectionChange(newSelection)
                             } else {
-                                onSelectionChanged(setOf(option.id))
+                                onSelectionChange(setOf(option.id))
                                 isExpanded = false
                                 searchQuery = ""
                             }
@@ -164,7 +172,7 @@ fun ListingChoiceDropdown(
     }
 }
 
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun ListingChoiceDropdownComponentSizePreview() {
     CoreTheme {
@@ -185,13 +193,13 @@ private fun ListingChoiceDropdownComponentSizePreview() {
                     )
                 ),
                 selectedIds = setOf(ListingChoiceDropdownTestData.OPTION_ACTIVE_ID),
-                onSelectionChanged = {}
+                onSelectionChange = {}
             )
         }
     }
 }
 
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ListingChoiceDropdownThemePreview() {
     CoreTheme {
@@ -212,13 +220,13 @@ private fun ListingChoiceDropdownThemePreview() {
                     )
                 ),
                 selectedIds = setOf(ListingChoiceDropdownTestData.OPTION_ACTIVE_ID),
-                onSelectionChanged = {}
+                onSelectionChange = {}
             )
         }
     }
 }
 
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun ListingChoiceDropdownFontScalePreview() {
     CoreTheme {
@@ -239,7 +247,7 @@ private fun ListingChoiceDropdownFontScalePreview() {
                     )
                 ),
                 selectedIds = setOf(ListingChoiceDropdownTestData.OPTION_ACTIVE_ID),
-                onSelectionChanged = {}
+                onSelectionChange = {}
             )
         }
     }

@@ -9,14 +9,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.eve
  *
  * @param managementAuditRepository Administrative audit repository.
  */
-class GetAuditEventUseCase(
+public class GetAuditEventUseCase(
     private val managementAuditRepository: ManagementAuditRepository
 ) {
     /**
      * @param eventId Unique audit event identifier string.
      * @return Detailed audit event model, or a failure.
      */
-    suspend operator fun invoke(eventId: String): AppResult<AuditEventPrivate> {
-        return managementAuditRepository.getAuditEvent(eventId)
-    }
+    public suspend operator fun invoke(eventId: String): AppResult<AuditEventPrivate> =
+        managementAuditRepository.getAuditEvent(
+            eventId
+        )
 }

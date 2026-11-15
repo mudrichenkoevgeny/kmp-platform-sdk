@@ -17,7 +17,7 @@ import io.ktor.client.request.get
  *
  * @param client Shared [HttpClient].
  */
-class KtorManagementAuditApi(
+public class KtorManagementAuditApi(
     private val client: HttpClient
 ) : ManagementAuditApi {
     override suspend fun getAuditEvents(

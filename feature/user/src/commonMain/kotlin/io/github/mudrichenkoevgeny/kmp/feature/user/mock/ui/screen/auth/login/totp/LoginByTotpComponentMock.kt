@@ -10,35 +10,40 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.Lo
  * Mock [LoginByTotpComponent] for Compose previews and testing.
  */
 @InternalApi
-class LoginByTotpComponentMock(
+public class LoginByTotpComponentMock(
     initialState: LoginByTotpScreenState = LoginByTotpScreenState.Content(mfaToken = "mock_token")
 ) : LoginByTotpComponent {
 
     private val _state = MutableValue(initialState)
-    override val state: Value<LoginByTotpScreenState> = _state
+    public override val state: Value<LoginByTotpScreenState> = _state
 
-    var submitCalls = 0
-    var toggleModeCalls = 0
-    var backCalls = 0
-    var lastCodeChanged: String? = null
+    public var submitCalls: Int = 0
+    public var toggleModeCalls: Int = 0
+    public var backCalls: Int = 0
+    public var lastCodeChanged: String? = null
 
-    fun updateState(state: LoginByTotpScreenState) {
+    /**
+     * Updates the component state value.
+     *
+     * @param state The new state value.
+     */
+    public fun updateState(state: LoginByTotpScreenState) {
         _state.value = state
     }
 
-    override fun onCodeChanged(code: String) {
+    public override fun onCodeChanged(code: String) {
         lastCodeChanged = code
     }
 
-    override fun onToggleModeClick() {
+    public override fun onToggleModeClick() {
         toggleModeCalls++
     }
 
-    override fun onSubmitClick() {
+    public override fun onSubmitClick() {
         submitCalls++
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         backCalls++
     }
 }

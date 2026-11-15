@@ -1,9 +1,14 @@
 package io.github.mudrichenkoevgeny.kmp.core.settings.di
 
+import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandler
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
 import io.github.mudrichenkoevgeny.kmp.core.settings.network.globalsettings.OpenGlobalSettingsApi
+import io.github.mudrichenkoevgeny.kmp.core.settings.repository.OpenGlobalSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.core.settings.storage.globalsettings.OpenGlobalSettingsStorage
+import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.GetOpenGlobalSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.ObserveOpenGlobalSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.core.settings.usecase.RefreshOpenGlobalSettingsUseCase
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +24,7 @@ import kotlinx.coroutines.SupervisorJob
  * - [EncryptedSettings]: backing store for encrypted global settings persistence.
  * - `parentScope`: optional scope for repository coroutines; if null, a supervisor scope on the default dispatcher is created.
  */
-class SettingsComponent(
+public class SettingsComponent(
     webSocketService: WebSocketService,
     httpClient: HttpClient,
     encryptedSettings: EncryptedSettings,
@@ -34,7 +39,7 @@ class SettingsComponent(
             encryptedSettings
         )
     }
-    val globalSettingsStorage get() = storageModule.openGlobalSettingsStorage
+    public val globalSettingsStorage: OpenGlobalSettingsStorage get() = storageModule.openGlobalSettingsStorage
 
     private val networkModule by lazy {
         SettingsNetworkModule(httpClient)
@@ -48,20 +53,25 @@ class SettingsComponent(
             repositoryScope = componentScope
         )
     }
-    val globalSettingsRepository get() = repositoryModule.openGlobalSettingsRepository
+    public val globalSettingsRepository: OpenGlobalSettingsRepository
+        get() =
+            repositoryModule.openGlobalSettingsRepository
 
     private val webSocketsModule by lazy {
         SettingsWebSocketsModule()
     }
-    val settingsWebSocketMessageHandler get() = webSocketsModule.settingsWebSocketMessageHandler
-
+    public val settingsWebSocketMessageHandler: WebSocketMessageHandler
+        get() = webSocketsModule.settingsWebSocketMessageHandler
 
     private val useCaseModule by lazy {
         SettingsUseCaseModule(
             openGlobalSettingsRepository = globalSettingsRepository
         )
     }
-    val refreshGlobalSettingsUseCase get() = useCaseModule.refreshOpenGlobalSettingsUseCase
-    val getGlobalSettingsUseCase get() = useCaseModule.getOpenGlobalSettingsUseCase
-    val observeGlobalSettingsUseCase get() = useCaseModule.observeOpenGlobalSettingsUseCase
+    public val refreshGlobalSettingsUseCase: RefreshOpenGlobalSettingsUseCase
+        get() = useCaseModule.refreshOpenGlobalSettingsUseCase
+    public val getGlobalSettingsUseCase: GetOpenGlobalSettingsUseCase
+        get() = useCaseModule.getOpenGlobalSettingsUseCase
+    public val observeGlobalSettingsUseCase: ObserveOpenGlobalSettingsUseCase
+        get() = useCaseModule.observeOpenGlobalSettingsUseCase
 }

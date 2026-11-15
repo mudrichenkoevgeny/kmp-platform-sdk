@@ -13,14 +13,14 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Common repository contract for self-service file storage operations.
  */
-interface StorageRepository {
+public interface StorageRepository {
     /**
      * Fetches a paginated list of storage files based on parameters.
      *
      * @param params Optional query parameters DTO for filtering and pagination.
      * @return [AppResult.Success] containing a [PagedResult] of [StorageFileSummary] or [AppResult.Error].
      */
-    suspend fun getFiles(params: SelfStorageFileListParams? = null): AppResult<PagedResult<StorageFileSummary>>
+    public suspend fun getFiles(params: SelfStorageFileListParams? = null): AppResult<PagedResult<StorageFileSummary>>
 
     /**
      * Retrieves detailed private view of a specific file.
@@ -28,7 +28,7 @@ interface StorageRepository {
      * @param fileId Unique identifier of the target file.
      * @return [AppResult.Success] containing [StorageFilePrivate] or [AppResult.Error].
      */
-    suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate>
+    public suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate>
 
     /**
      * Performs direct S3 upload flow and confirms file creation.
@@ -38,7 +38,7 @@ interface StorageRepository {
      * @param onProgress Optional callback tracking upload completion percentage (0 to 100).
      * @return [AppResult.Success] containing confirmed [StorageFilePrivate] or [AppResult.Error].
      */
-    suspend fun uploadFile(
+    public suspend fun uploadFile(
         request: PresignedUrlRequest,
         openReadChannel: suspend () -> ByteReadChannel,
         onProgress: ((percent: Int) -> Unit)? = null
@@ -50,7 +50,7 @@ interface StorageRepository {
      * @param fileId Unique identifier of the file to delete.
      * @return [AppResult.Success] containing [Unit] or [AppResult.Error].
      */
-    suspend fun deleteFile(fileId: String): AppResult<Unit>
+    public suspend fun deleteFile(fileId: String): AppResult<Unit>
 
     /**
      * Deletes multiple files in a single batch operation.
@@ -58,10 +58,10 @@ interface StorageRepository {
      * @param request Batch deletion request object containing target file identifiers.
      * @return [AppResult.Success] containing [Unit] or [AppResult.Error].
      */
-    suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit>
+    public suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit>
 
     /**
      * Observes real-time storage file updates (e.g. from WebSocket push events).
      */
-    fun observeFileUpdates(): Flow<StorageFilePrivate>
+    public fun observeFileUpdates(): Flow<StorageFilePrivate>
 }

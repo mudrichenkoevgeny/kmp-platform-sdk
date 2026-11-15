@@ -7,11 +7,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 /**
  * Retrieves and refreshes current authenticated user data.
  */
-class GetUserUseCase(
+public class GetUserUseCase(
     private val userRepository: UserRepository
 ) {
 
-    suspend operator fun invoke(): AppResult<UserPrivate> {
-        return userRepository.refreshCurrentUser()
-    }
+    /**
+     * Executes fetching and refreshing of current authenticated user data.
+     *
+     * @return [AppResult] containing [UserPrivate] data on success.
+     */
+    public suspend operator fun invoke(): AppResult<UserPrivate> = userRepository.refreshCurrentUser()
 }

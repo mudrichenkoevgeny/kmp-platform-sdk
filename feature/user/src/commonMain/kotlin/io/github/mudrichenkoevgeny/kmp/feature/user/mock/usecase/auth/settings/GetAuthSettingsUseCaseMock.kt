@@ -5,7 +5,12 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.setting
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAuthSettingsUseCase
 
+/**
+ * Creates a mock implementation of [GetAuthSettingsUseCase] for testing.
+ *
+ * @param openAuthSettingsRepository The mock repository instance.
+ */
 @InternalApi
-fun createGetAuthSettingsUseCaseMock(
+public fun createGetAuthSettingsUseCaseMock(
     openAuthSettingsRepository: OpenAuthSettingsRepository = OpenAuthSettingsRepositoryMock()
 ): GetAuthSettingsUseCase = GetAuthSettingsUseCase(openAuthSettingsRepository)

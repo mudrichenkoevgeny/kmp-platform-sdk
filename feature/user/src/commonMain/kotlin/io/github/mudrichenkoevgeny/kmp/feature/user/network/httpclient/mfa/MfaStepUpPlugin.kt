@@ -7,6 +7,8 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.error.naming.
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.verifytotp.VerifyTotpPayload
 import io.ktor.client.call.body
 import io.ktor.client.call.save
+import io.ktor.client.plugins.api.ClientPlugin
+import io.ktor.client.plugins.api.Send
 import io.ktor.client.plugins.api.createClientPlugin
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.post
@@ -22,14 +24,17 @@ private const val MFA_STEP_UP_PLUGIN_NAME = "MfaStepUpPlugin"
  * performs re-authentication via [MfaStepUpConfig.reauthenticateAction] or [MfaStepUpConfig.reauthenticateRoute],
  * and retries the original request upon success.
  */
-val MfaStepUpPlugin = createClientPlugin(MFA_STEP_UP_PLUGIN_NAME, ::MfaStepUpConfig) {
+public val MfaStepUpPlugin: ClientPlugin<MfaStepUpConfig> = createClientPlugin(
+    MFA_STEP_UP_PLUGIN_NAME,
+    ::MfaStepUpConfig
+) {
     val baseUrl = pluginConfig.baseUrl
     val reauthenticateRoute = pluginConfig.reauthenticateRoute
     val mfaChallengeHandler = pluginConfig.mfaChallengeHandler
     val authClientProvider = pluginConfig.authClientProvider
     val reauthenticateAction = pluginConfig.reauthenticateAction
 
-    on(io.ktor.client.plugins.api.Send) { request ->
+    on(Send) { request ->
         val originalCall = proceed(request)
         val response = originalCall.response
 

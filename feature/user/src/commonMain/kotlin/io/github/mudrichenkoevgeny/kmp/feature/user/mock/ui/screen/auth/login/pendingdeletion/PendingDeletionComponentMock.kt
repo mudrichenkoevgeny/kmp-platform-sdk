@@ -6,26 +6,34 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.pendingdeletion.PendingDeletionComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.pendingdeletion.PendingDeletionScreenState
 
+/**
+ * Mock implementation of [PendingDeletionComponent] for Compose previews and testing.
+ */
 @InternalApi
-class PendingDeletionComponentMock(
+public class PendingDeletionComponentMock(
     initialState: PendingDeletionScreenState = PendingDeletionScreenState()
 ) : PendingDeletionComponent {
 
     private val _state = MutableValue(initialState)
-    override val state: Value<PendingDeletionScreenState> = _state
+    public override val state: Value<PendingDeletionScreenState> = _state
 
-    var restoreAccountCalls: Int = 0
-    var signOutCalls: Int = 0
+    public var restoreAccountCalls: Int = 0
+    public var signOutCalls: Int = 0
 
-    fun updateState(state: PendingDeletionScreenState) {
+    /**
+     * Updates the component state value.
+     *
+     * @param state The new state value.
+     */
+    public fun updateState(state: PendingDeletionScreenState) {
         _state.value = state
     }
 
-    override fun onRestoreAccountClick() {
+    public override fun onRestoreAccountClick() {
         restoreAccountCalls++
     }
 
-    override fun onSignOutClick() {
+    public override fun onSignOutClick() {
         signOutCalls++
     }
 }

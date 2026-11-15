@@ -21,7 +21,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
 /** [ManagementUserApi] backed by [HttpClient]. */
-class KtorManagementUserApi(
+public class KtorManagementUserApi(
     private val client: HttpClient
 ) : ManagementUserApi {
 
@@ -45,7 +45,10 @@ class KtorManagementUserApi(
         }
     }
 
-    override suspend fun updateUser(userId: UserId, request: ManagementUpdateUserRequest): AppResult<Unit> = client.callResult {
+    override suspend fun updateUser(
+        userId: UserId,
+        request: ManagementUpdateUserRequest
+    ): AppResult<Unit> = client.callResult {
         patch(ManagementUsersRoutes.UPDATE_USER) {
             parameter(UserApiPaths.USER_ID, userId.value)
             setBody(request)

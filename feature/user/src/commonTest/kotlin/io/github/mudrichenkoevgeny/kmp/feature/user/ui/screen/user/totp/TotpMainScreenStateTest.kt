@@ -2,7 +2,6 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpMainScreenState
-import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totpsetup.TotpSetup
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.totpsetup.createTestTotpSetup
 import kotlin.test.Test
 import kotlin.test.assertFalse

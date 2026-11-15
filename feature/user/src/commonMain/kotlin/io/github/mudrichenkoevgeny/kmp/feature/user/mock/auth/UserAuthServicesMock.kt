@@ -11,6 +11,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.auth.google.GoogleAuthS
  * @param googleAuth Google delegate; replace with a custom [GoogleAuthServiceMock] to simulate failures or tokens.
  */
 @InternalApi
-class UserAuthServicesMock(
-    override val googleAuth: GoogleAuthService = GoogleAuthServiceMock()
+public class UserAuthServicesMock(
+    public override val googleAuth: GoogleAuthService = GoogleAuthServiceMock()
 ) : UserAuthServices

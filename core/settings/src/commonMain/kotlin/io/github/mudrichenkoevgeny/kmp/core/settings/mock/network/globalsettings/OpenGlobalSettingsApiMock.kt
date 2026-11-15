@@ -6,13 +6,16 @@ import io.github.mudrichenkoevgeny.kmp.core.settings.network.globalsettings.Open
 import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.model.globalsettings.OpenGlobalSettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.settings.network.model.globalsettings.createTestOpenGlobalSettingsPayload
 
+/**
+ * Mock implementation of [OpenGlobalSettingsApi] for testing purposes.
+ */
 @InternalApi
-class OpenGlobalSettingsApiMock(
-    var result: AppResult<OpenGlobalSettingsPayload> = AppResult.Success(createTestOpenGlobalSettingsPayload())
+public class OpenGlobalSettingsApiMock(
+    public var result: AppResult<OpenGlobalSettingsPayload> = AppResult.Success(createTestOpenGlobalSettingsPayload())
 ) : OpenGlobalSettingsApi {
-    var getGlobalSettingsCallCount = 0
+    public var getGlobalSettingsCallCount: Int = 0
 
-    override suspend fun getOpenGlobalSettings(): AppResult<OpenGlobalSettingsPayload> {
+    public override suspend fun getOpenGlobalSettings(): AppResult<OpenGlobalSettingsPayload> {
         getGlobalSettingsCallCount++
         return result
     }

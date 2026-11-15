@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
  * @param onNavigateToUserDetail Callback to navigate to user detail screen.
  * @param onBack Callback to pop this screen from the navigation stack.
  */
-class SessionDetailComponentImpl(
+public class SessionDetailComponentImpl(
     componentContext: ComponentContext,
     private val params: SessionDetailParams,
     private val userRepository: UserRepository? = null,
@@ -52,10 +52,27 @@ class SessionDetailComponentImpl(
     private val onBack: () -> Unit
 ) : SessionDetailComponent, ComponentContext by componentContext {
 
+    private val sessionId: UserSessionId? get() = params.typedSessionId
+
+    private val scope = componentCoroutineScope()
+    private val _state = MutableValue<SessionDetailScreenState>(SessionDetailScreenState.Loading)
+    public override val state: Value<SessionDetailScreenState> = _state
+
+    private var currentUserId: UserId? = null
+
+    init {
+        scope.launch {
+            userRepository?.currentUser?.collect { user ->
+                currentUserId = user?.id
+            }
+        }
+        initializeSession()
+    }
+
     /**
      * Convenience secondary constructor for standard self-session management workflows using UseCases.
      */
-    constructor(
+    public constructor(
         componentContext: ComponentContext,
         params: SessionDetailParams,
         userRepository: UserRepository? = null,
@@ -81,24 +98,7 @@ class SessionDetailComponentImpl(
         onBack = onBack
     )
 
-    private val sessionId: UserSessionId? get() = params.typedSessionId
-
-    private val scope = componentCoroutineScope()
-    private val _state = MutableValue<SessionDetailScreenState>(SessionDetailScreenState.Loading)
-    override val state: Value<SessionDetailScreenState> = _state
-
-    private var currentUserId: UserId? = null
-
-    init {
-        scope.launch {
-            userRepository?.currentUser?.collect { user ->
-                currentUserId = user?.id
-            }
-        }
-        initializeSession()
-    }
-
-    override fun onRevokeSessionClick() {
+    public override fun onRevokeSessionClick() {
         val current = _state.value as? SessionDetailScreenState.Content ?: return
         val targetId = sessionId ?: current.session.id
         if (revokeSession == null) {
@@ -118,22 +118,22 @@ class SessionDetailComponentImpl(
         }
     }
 
-    override fun onRetry() {
+    public override fun onRetry() {
         initializeSession()
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         if ((backHandler as? BackDispatcher)?.back() != true) {
             onBack()
         }
     }
 
-    override fun onIdentifierClick() {
+    public override fun onIdentifierClick() {
         val current = _state.value as? SessionDetailScreenState.Content ?: return
         onNavigateToIdentifierDetail?.invoke(current.session.identifierId)
     }
 
-    override fun onUserClick() {
+    public override fun onUserClick() {
         val current = _state.value as? SessionDetailScreenState.Content ?: return
         onNavigateToUserDetail?.invoke(current.session.userId)
     }

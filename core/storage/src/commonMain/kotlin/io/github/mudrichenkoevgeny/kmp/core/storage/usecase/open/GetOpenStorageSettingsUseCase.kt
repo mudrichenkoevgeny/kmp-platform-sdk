@@ -9,13 +9,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.s
  *
  * @param openStorageSettingsRepository Source of truth for cached or network-backed settings.
  */
-class GetOpenStorageSettingsUseCase(
+public class GetOpenStorageSettingsUseCase(
     private val openStorageSettingsRepository: OpenStorageSettingsRepository
 ) {
     /**
      * @return [AppResult.Success] with [OpenStorageSettings], or [AppResult.Error] when none can be loaded.
      */
-    suspend operator fun invoke(): AppResult<OpenStorageSettings> {
-        return openStorageSettingsRepository.getOpenStorageSettings()
-    }
+    public suspend operator fun invoke(): AppResult<OpenStorageSettings> =
+        openStorageSettingsRepository.getOpenStorageSettings()
 }

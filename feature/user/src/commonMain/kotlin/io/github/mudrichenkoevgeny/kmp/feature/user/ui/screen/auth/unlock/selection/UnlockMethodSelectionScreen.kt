@@ -40,10 +40,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButto
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.unlock.selection.UnlockMethodSelectionComponentMock
@@ -51,9 +51,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 
+/**
+ * Screen for selecting an account unlock method (e.g. Email, Phone, Google, Apple).
+ *
+ * @param component Component driving unlock method selection state and callbacks.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UnlockMethodSelectionScreen(component: UnlockMethodSelectionComponent) {
+public fun UnlockMethodSelectionScreen(component: UnlockMethodSelectionComponent) {
     val state by component.state.subscribeAsState()
     val userStrings = LocalUserStrings.current
     val userUi = userStrings.ui
@@ -103,9 +108,11 @@ fun UnlockMethodSelectionScreen(component: UnlockMethodSelectionComponent) {
                                 userStrings.errors.lockedWithoutArgs
                             }
                         }
+
                         state.lockoutType != null && state.lockoutType != AccountLockoutType.NONE -> {
                             userStrings.errors.lockedWithoutArgs
                         }
+
                         else -> null
                     }
 
@@ -193,15 +200,15 @@ private fun ErrorText(error: AppError?) {
     }
 }
 
-internal object UnlockMethodSelectionTestTags {
-    const val TITLE = "UnlockMethodSelection_Title"
-    const val BACK_BUTTON = "UnlockMethodSelection_BackButton"
-    const val LOCKOUT_INFO_TEXT = "UnlockMethodSelection_LockoutInfoText"
-    const val UNLOCK_EMAIL_BUTTON = "UnlockMethodSelection_UnlockEmailButton"
-    const val UNLOCK_PHONE_BUTTON = "UnlockMethodSelection_UnlockPhoneButton"
-    const val UNLOCK_GOOGLE_BUTTON = "UnlockMethodSelection_UnlockGoogleButton"
-    const val UNLOCK_APPLE_BUTTON = "UnlockMethodSelection_UnlockAppleButton"
-    const val ACTION_ERROR_TEXT = "UnlockMethodSelection_ActionErrorText"
+public object UnlockMethodSelectionTestTags {
+    public const val TITLE: String = "UnlockMethodSelection_Title"
+    public const val BACK_BUTTON: String = "UnlockMethodSelection_BackButton"
+    public const val LOCKOUT_INFO_TEXT: String = "UnlockMethodSelection_LockoutInfoText"
+    public const val UNLOCK_EMAIL_BUTTON: String = "UnlockMethodSelection_UnlockEmailButton"
+    public const val UNLOCK_PHONE_BUTTON: String = "UnlockMethodSelection_UnlockPhoneButton"
+    public const val UNLOCK_GOOGLE_BUTTON: String = "UnlockMethodSelection_UnlockGoogleButton"
+    public const val UNLOCK_APPLE_BUTTON: String = "UnlockMethodSelection_UnlockAppleButton"
+    public const val ACTION_ERROR_TEXT: String = "UnlockMethodSelection_ActionErrorText"
 }
 
 @InternalApi
@@ -225,7 +232,10 @@ internal class UnlockMethodSelectionPreviewProvider :
         ),
         "Email Only Identifier" to UnlockMethodSelectionScreenState(
             knownIdentifiers = listOf(
-                createTestUserIdentifierSummary(userAuthProvider = UserAuthProvider.EMAIL, identifier = "user@example.com")
+                createTestUserIdentifierSummary(
+                    userAuthProvider = UserAuthProvider.EMAIL,
+                    identifier = "user@example.com"
+                )
             )
         )
     )
@@ -263,7 +273,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun AdaptivePreview() {
     ScreenPreviewContainer {
@@ -272,7 +282,7 @@ private fun AdaptivePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -281,7 +291,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {

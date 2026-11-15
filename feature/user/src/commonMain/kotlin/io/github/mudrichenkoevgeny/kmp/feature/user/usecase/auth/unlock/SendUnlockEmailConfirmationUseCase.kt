@@ -5,7 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.unlock.Unloc
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 
 /** Sends an account unlock confirmation code to the target email. */
-open class SendUnlockEmailConfirmationUseCase(
+public open class SendUnlockEmailConfirmationUseCase(
     private val unlockRepository: UnlockRepository
 ) {
     /**
@@ -14,7 +14,8 @@ open class SendUnlockEmailConfirmationUseCase(
      * @param email Target email address.
      * @return [OtpConfirmation] on success, or an error result.
      */
-    open suspend fun execute(email: String): AppResult<OtpConfirmation> {
-        return unlockRepository.sendUnlockEmailConfirmation(email)
-    }
+    public open suspend fun execute(email: String): AppResult<OtpConfirmation> =
+        unlockRepository.sendUnlockEmailConfirmation(
+            email
+        )
 }

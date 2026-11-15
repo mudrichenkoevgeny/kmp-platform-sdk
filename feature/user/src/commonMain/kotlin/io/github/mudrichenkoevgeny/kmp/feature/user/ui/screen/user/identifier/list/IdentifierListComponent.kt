@@ -11,86 +11,89 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
 /**
  * Universal Decompose component contract for user identifiers listing screens (client & management).
  */
-interface IdentifierListComponent : IdentifierListOwner {
+public interface IdentifierListComponent : IdentifierListOwner {
 
     /** Observable screen state flow. */
-    val state: Value<IdentifierListScreenState>
+    public val state: Value<IdentifierListScreenState>
 
     /** Decompose child slot for the "Add Identifier" dialog wizard. */
-    val addIdentifierDialogSlot: Value<ChildSlot<AddIdentifierDialogConfig, AddIdentifierDialogChild>>
+    public val addIdentifierDialogSlot: Value<ChildSlot<AddIdentifierDialogConfig, AddIdentifierDialogChild>>
 
     /** Slot navigator for the add identifier dialog. */
-    val addIdentifierDialogSlotNavigation: SlotNavigation<AddIdentifierDialogConfig>
+    public val addIdentifierDialogSlotNavigation: SlotNavigation<AddIdentifierDialogConfig>
 
     /** Dialog child instances corresponding to each configuration step. */
-    sealed interface AddIdentifierDialogChild {
-        data object ProviderSelection : AddIdentifierDialogChild
-        data class EmailInput(val initialEmail: String) : AddIdentifierDialogChild
-        data class EmailConfirm(val email: String) : AddIdentifierDialogChild
-        data class PhoneInput(val initialPhone: String) : AddIdentifierDialogChild
-        data class PhoneConfirm(val phone: String) : AddIdentifierDialogChild
+    public sealed interface AddIdentifierDialogChild {
+        public data object ProviderSelection : AddIdentifierDialogChild
+        public data class EmailInput(val initialEmail: String) : AddIdentifierDialogChild
+        public data class EmailConfirm(val email: String) : AddIdentifierDialogChild
+        public data class PhoneInput(val initialPhone: String) : AddIdentifierDialogChild
+        public data class PhoneConfirm(val phone: String) : AddIdentifierDialogChild
     }
 
     /** Whether adding a new identifier is available for this contour. */
-    val isAddIdentifierSupported: Boolean
+    public val isAddIdentifierSupported: Boolean
 
     /** Whether filter panel features are included (administrative mode). */
-    val includeFilterPanel: Boolean
+    public val includeFilterPanel: Boolean
 
     /** Navigates back to previous screen. */
-    fun onBackClick()
+    public fun onBackClick()
 
     /** Refreshes current identifier list page. */
-    fun onRefresh()
+    public fun onRefresh()
 
     /** Triggers loading next page. */
-    fun onLoadNextPage()
+    public fun onLoadNextPage()
 
     /** Toggles expansion state of filter options panel. */
-    fun onToggleFilterPanel()
+    public fun onToggleFilterPanel()
 
     /** Called when active sort state changes. */
-    fun onSortChanged(sortState: ListingSortState)
+    public fun onSortChanged(sortState: ListingSortState)
 
     /** Called when an individual filter state changes. */
-    fun onFilterChanged(filterId: String, filterState: ListingFilterState?)
+    public fun onFilterChanged(
+        filterId: String,
+        filterState: ListingFilterState?
+    )
 
     /** Applies selected filters and re-fetches list. */
-    fun onApplyFilters()
+    public fun onApplyFilters()
 
     /** Navigates to identifier detail screen. */
-    fun onIdentifierClick(identifierId: UserIdentifierId)
+    public fun onIdentifierClick(identifierId: UserIdentifierId)
 
     /** Opens the add identifier dialog. */
-    fun onAddIdentifierClick()
+    public fun onAddIdentifierClick()
 
     /** Selects an auth provider from the dialog. */
-    fun onAddIdentifierSelectProvider(authProvider: UserAuthProvider)
+    public fun onAddIdentifierSelectProvider(authProvider: UserAuthProvider)
 
     /** Updates email input in dialog. */
-    fun onAddIdentifierEmailChanged(email: String)
+    public fun onAddIdentifierEmailChanged(email: String)
 
     /** Updates password input in dialog. */
-    fun onAddIdentifierPasswordChanged(password: String)
+    public fun onAddIdentifierPasswordChanged(password: String)
 
     /** Toggles password visibility in dialog. */
-    fun onAddIdentifierTogglePasswordVisibility()
+    public fun onAddIdentifierTogglePasswordVisibility()
 
     /** Updates phone number input in dialog. */
-    fun onAddIdentifierPhoneChanged(phone: String)
+    public fun onAddIdentifierPhoneChanged(phone: String)
 
     /** Updates confirmation code input in dialog. */
-    fun onAddIdentifierCodeChanged(code: String)
+    public fun onAddIdentifierCodeChanged(code: String)
 
     /** Sends confirmation code for the active dialog flow. */
-    fun onAddIdentifierSendCode()
+    public fun onAddIdentifierSendCode()
 
     /** Submits adding the identifier with confirmed code/password. */
-    fun onAddIdentifierSubmit()
+    public fun onAddIdentifierSubmit()
 
     /** Goes back to provider selection or closes dialog. */
-    fun onAddIdentifierDialogBack()
+    public fun onAddIdentifierDialogBack()
 
     /** Closes the add identifier dialog. */
-    fun onAddIdentifierDialogDismiss()
+    public fun onAddIdentifierDialogDismiss()
 }

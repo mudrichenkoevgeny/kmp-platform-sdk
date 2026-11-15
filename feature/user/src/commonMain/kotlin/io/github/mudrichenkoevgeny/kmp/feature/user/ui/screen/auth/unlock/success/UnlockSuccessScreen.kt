@@ -21,15 +21,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 
+/**
+ * Screen displaying confirmation message upon successful completion of account unlock.
+ *
+ * @param onFinished Callback invoked when the user confirms completion of the unlock flow.
+ */
 @Composable
-fun UnlockSuccessScreen(onFinished: () -> Unit) {
+public fun UnlockSuccessScreen(onFinished: () -> Unit) {
     val userUi = LocalUserStrings.current.ui
 
     Column(
@@ -64,10 +69,10 @@ fun UnlockSuccessScreen(onFinished: () -> Unit) {
     }
 }
 
-internal object UnlockSuccessTestTags {
-    const val TITLE = "UnlockSuccess_Title"
-    const val DESC = "UnlockSuccess_Desc"
-    const val FINISH_BUTTON = "UnlockSuccess_FinishButton"
+public object UnlockSuccessTestTags {
+    public const val TITLE: String = "UnlockSuccess_Title"
+    public const val DESC: String = "UnlockSuccess_Desc"
+    public const val FINISH_BUTTON: String = "UnlockSuccess_FinishButton"
 }
 
 @InternalApi
@@ -90,7 +95,7 @@ private fun DefaultPreview() {
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun AdaptivePreview() {
     ScreenPreviewContainer {
@@ -99,7 +104,7 @@ private fun AdaptivePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -108,7 +113,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {

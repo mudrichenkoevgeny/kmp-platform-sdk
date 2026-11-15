@@ -6,7 +6,6 @@ import com.arkivanov.essenty.lifecycle.destroy
 import com.arkivanov.essenty.lifecycle.resume
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.ListingConstants
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.session.DeleteAllOtherSessionsUseCaseMock
@@ -171,7 +170,8 @@ class SessionListComponentImplTest {
         val getSessionsUseCase = GetSessionsUseCaseMock().apply {
             resultProvider = { params ->
                 val page = params?.pageNumber ?: 1
-                val items = if (page == ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER) initialSessions else nextSessions
+                val items =
+                    if (page == ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER) initialSessions else nextSessions
                 AppResult.Success(
                     createTestPagedResult(
                         items = items,

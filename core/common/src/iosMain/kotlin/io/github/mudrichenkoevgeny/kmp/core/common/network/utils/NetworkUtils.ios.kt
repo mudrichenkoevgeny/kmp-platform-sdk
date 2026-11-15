@@ -6,6 +6,12 @@ import platform.Foundation.NSURLErrorNetworkConnectionLost
 import platform.Foundation.NSURLErrorNotConnectedToInternet
 import platform.Foundation.NSURLErrorTimedOut
 
+/**
+ * Checks whether the given exception indicates a lack of network connectivity on iOS platform.
+ *
+ * @param e The exception to check.
+ * @return True if the exception represents a network connectivity failure, false otherwise.
+ */
 actual fun isNoInternetException(e: Throwable): Boolean {
     val origin = (e as? DarwinHttpRequestException)?.origin
 
@@ -18,6 +24,6 @@ actual fun isNoInternetException(e: Throwable): Boolean {
         }
     } else {
         e is kotlinx.coroutines.CancellationException ||
-                e.message?.contains("Unable to resolve host") == true
+            e.message?.contains("Unable to resolve host") == true
     }
 }

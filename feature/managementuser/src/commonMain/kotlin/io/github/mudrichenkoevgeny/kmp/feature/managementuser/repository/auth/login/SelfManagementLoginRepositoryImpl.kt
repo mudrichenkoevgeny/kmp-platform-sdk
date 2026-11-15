@@ -17,63 +17,54 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
  *
  * @param selfManagementLoginApi HTTP endpoints for all login variants.
  */
-class SelfManagementLoginRepositoryImpl(
+public class SelfManagementLoginRepositoryImpl(
     private val selfManagementLoginApi: SelfManagementLoginApi
 ) : LoginRepository {
 
     override suspend fun loginByEmail(
         email: String,
         password: String
-    ): AppResult<AuthData> {
-        return selfManagementLoginApi.loginByEmail(LoginByEmailRequest(email, password))
-            .mapSuccess { authDataPayload ->
-                authDataPayload.toAuthData()
-            }
-    }
+    ): AppResult<AuthData> = selfManagementLoginApi.loginByEmail(LoginByEmailRequest(email, password))
+        .mapSuccess { authDataPayload ->
+            authDataPayload.toAuthData()
+        }
 
     override suspend fun loginByPhone(
         phoneNumber: String,
         confirmationCode: String
-    ): AppResult<AuthData> {
-        return methodNotSupported()
-    }
+    ): AppResult<AuthData> = methodNotSupported()
 
     override suspend fun loginByExternalAuthProvider(
         loginByExternalAuthProviderRequest: LoginByExternalAuthProviderRequest
-    ): AppResult<AuthData> {
-        return methodNotSupported()
-    }
+    ): AppResult<AuthData> = methodNotSupported()
 
-    override suspend fun loginByTotp(mfaToken: String, code: String): AppResult<AuthData> {
-        return selfManagementLoginApi.loginByTotp(
-            VerifyTotpPayload(
-                mfaToken = mfaToken,
-                code = code
-            )
-        ).mapSuccess { authDataPayload ->
-            authDataPayload.toAuthData()
-        }
+    override suspend fun loginByTotp(
+        mfaToken: String,
+        code: String
+    ): AppResult<AuthData> = selfManagementLoginApi.loginByTotp(
+        VerifyTotpPayload(
+            mfaToken = mfaToken,
+            code = code
+        )
+    ).mapSuccess { authDataPayload ->
+        authDataPayload.toAuthData()
     }
 
     override suspend fun loginByTotpRecoveryCode(
         mfaToken: String,
         code: String
-    ): AppResult<AuthData> {
-        return selfManagementLoginApi.loginByTotp(
-            VerifyTotpPayload(
-                mfaToken = mfaToken,
-                code = code
-            )
-        ).mapSuccess { authDataPayload ->
-            authDataPayload.toAuthData()
-        }
+    ): AppResult<AuthData> = selfManagementLoginApi.loginByTotp(
+        VerifyTotpPayload(
+            mfaToken = mfaToken,
+            code = code
+        )
+    ).mapSuccess { authDataPayload ->
+        authDataPayload.toAuthData()
     }
 
     override suspend fun sendLoginConfirmationToPhone(
         phoneNumber: String
-    ): AppResult<OtpConfirmation> {
-        return methodNotSupported()
-    }
+    ): AppResult<OtpConfirmation> = methodNotSupported()
 
     override fun getRemainingLoginConfirmationDelayInSeconds(phoneNumber: String): Int = 0
 

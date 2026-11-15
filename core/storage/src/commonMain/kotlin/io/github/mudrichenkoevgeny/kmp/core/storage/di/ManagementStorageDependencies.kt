@@ -15,10 +15,10 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.Managemen
  * @property deleteFileUseCase Administrative use case deleting a single storage file.
  * @property deleteFilesBatchUseCase Administrative use case deleting storage files in batch.
  */
-data class ManagementStorageDependencies(
-    val getFilesUseCase: ManagementGetFilesUseCase,
-    val getFileDetailUseCase: ManagementGetFileDetailUseCase,
-    val uploadFileUseCase: UploadFileUseCase,
-    val deleteFileUseCase: ManagementDeleteFileUseCase,
-    val deleteFilesBatchUseCase: ManagementDeleteFilesBatchUseCase
+public data class ManagementStorageDependencies(
+    public val getFilesUseCase: ManagementGetFilesUseCase,
+    public val getFileDetailUseCase: ManagementGetFileDetailUseCase,
+    public val uploadFileUseCase: UploadFileUseCase,
+    public val deleteFileUseCase: ManagementDeleteFileUseCase,
+    public val deleteFilesBatchUseCase: ManagementDeleteFilesBatchUseCase
 )

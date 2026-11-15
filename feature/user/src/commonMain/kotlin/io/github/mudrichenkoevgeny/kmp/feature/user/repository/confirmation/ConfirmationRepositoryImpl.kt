@@ -3,9 +3,9 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.ConfirmationKey
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.ConfirmationType
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.confirmation.ConfirmationKey
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.confirmation.ConfirmationType
 import kotlin.time.Clock
 
 /**
@@ -14,13 +14,13 @@ import kotlin.time.Clock
  *
  * @param clock Source of current time for computing cooldown expiry.
  */
-class ConfirmationRepositoryImpl(
+public class ConfirmationRepositoryImpl(
     private val clock: Clock
 ) : ConfirmationRepository {
 
     private val blockedUntilMap = mutableMapOf<ConfirmationKey, Long>()
 
-    override suspend fun <T> executeWithTimer(
+    public override suspend fun <T> executeWithTimer(
         type: ConfirmationType,
         identifier: String,
         action: suspend () -> AppResult<T>
@@ -47,7 +47,10 @@ class ConfirmationRepositoryImpl(
         }
     }
 
-    override fun getRemainingDelay(type: ConfirmationType, identifier: String): Int {
+    public override fun getRemainingDelay(
+        type: ConfirmationType,
+        identifier: String
+    ): Int {
         val key = ConfirmationKey(type, identifier)
         val blockedUntil = blockedUntilMap[key] ?: return 0
         val now = clock.now().toEpochMilliseconds()

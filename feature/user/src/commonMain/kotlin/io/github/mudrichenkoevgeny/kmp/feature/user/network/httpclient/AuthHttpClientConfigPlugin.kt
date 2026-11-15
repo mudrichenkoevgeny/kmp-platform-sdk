@@ -16,13 +16,13 @@ import io.ktor.client.plugins.logging.Logger
  * @param authStorage Source of access/refresh tokens and related auth state for the plugin.
  * @param refreshTokenRoute Explicit route path for token refresh operations.
  */
-class AuthHttpClientConfigPlugin(
+public class AuthHttpClientConfigPlugin(
     private val baseUrl: String,
     private val authStorage: AuthStorage,
     private val refreshTokenRoute: String,
     private val onSessionCleared: (suspend () -> Unit)? = null
 ) : HttpClientConfigPlugin {
-    override fun install(
+    public override fun install(
         config: HttpClientConfig<out HttpClientEngineConfig>,
         networkLogger: Logger
     ) {

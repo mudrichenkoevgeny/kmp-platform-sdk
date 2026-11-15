@@ -7,12 +7,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 /**
  * State hierarchy for the user edit screen.
  */
-sealed interface UserEditScreenState {
+public sealed interface UserEditScreenState {
     /** Loading state while initial user details and settings are fetched. */
-    data object Loading : UserEditScreenState
+    public data object Loading : UserEditScreenState
 
     /** Content state displaying edit fields and validation errors. */
-    data class Content(
+    public data class Content(
         val user: UserPrivate,
         val nicknameInput: String,
         val displayNameInput: String,
@@ -26,5 +26,5 @@ sealed interface UserEditScreenState {
     ) : UserEditScreenState
 
     /** Error state when loading initial user fails. */
-    data class Error(val error: AppError) : UserEditScreenState
+    public data class Error(val error: AppError) : UserEditScreenState
 }

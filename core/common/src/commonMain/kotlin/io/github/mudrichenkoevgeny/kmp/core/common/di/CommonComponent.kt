@@ -6,10 +6,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.CommonErrorParse
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.network.httpclient.HttpClientConfigPlugin
 import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenProvider
+import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandler
+import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.core.common.platform.externallauncher.ExternalLauncher
+import io.github.mudrichenkoevgeny.kmp.core.common.repository.platform.PlatformRepository
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.common.CommonStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceInfo
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -30,10 +34,10 @@ import kotlinx.coroutines.CoroutineScope
  * - `platformContext`: optional platform handle for abstractions such as [ExternalLauncher]; may be null.
  * Host apps (see `sample/`) must call [init] before accessing [appErrorParser].
  */
-class CommonComponent(
-    val encryptedSettings: EncryptedSettings,
+public class CommonComponent(
+    public val encryptedSettings: EncryptedSettings,
     clientDeviceInfo: ClientDeviceInfo,
-    val baseUrl: String,
+    public val baseUrl: String,
     webSocketPath: String,
     httpClientConfigPlugins: List<HttpClientConfigPlugin> = emptyList(),
     private val accessTokenProvider: AccessTokenProvider,
@@ -41,8 +45,42 @@ class CommonComponent(
     platformContext: Any? = null
 ) {
 
+    private var _appErrorParser: AppErrorParser? = null
+    public val appErrorParser: AppErrorParser
+        get() = _appErrorParser ?: throw IllegalStateException(
+            "AppErrorParser not initialized! Call init() first."
+        )
+
+    private val storageModule: CommonStorageModule by lazy { CommonStorageModule(encryptedSettings) }
+    public val commonStorage: CommonStorage get() = storageModule.commonStorage
+
+    private val platformModule: CommonPlatformModule by lazy { CommonPlatformModule(platformContext) }
+    public val externalLauncher: ExternalLauncher get() = platformModule.externalLauncher
+
+    private val repositoryModule: CommonRepositoryModule by lazy {
+        CommonRepositoryModule(
+            clientDeviceInfo
+        )
+    }
+    public val platformRepository: PlatformRepository get() = repositoryModule.platformRepository
+
+    private val networkModule: CommonNetworkModule by lazy {
+        CommonNetworkModule(
+            baseUrl = baseUrl,
+            webSocketPath = webSocketPath,
+            httpClientConfigPlugins = httpClientConfigPlugins,
+            accessTokenProvider = accessTokenProvider,
+            platformRepository = platformRepository,
+            appScope = appScope
+        )
+    }
+    public val httpClient: HttpClient get() = networkModule.httpClient
+    public val webSocketService: WebSocketService get() = networkModule.webSocketService
+    public val commonWebSocketMessageHandler: WebSocketMessageHandler
+        get() = networkModule.commonWebSocketMessageHandler
+
     @InternalApi
-    constructor(
+    public constructor(
         encryptedSettings: EncryptedSettings,
         clientDeviceInfo: ClientDeviceInfo,
         baseUrl: String,
@@ -61,46 +99,13 @@ class CommonComponent(
         platformContext
     )
 
-    private var _appErrorParser: AppErrorParser? = null
-    val appErrorParser: AppErrorParser
-        get() = _appErrorParser ?: throw IllegalStateException(
-            "AppErrorParser not initialized! Call init() first."
-        )
-
-    private val storageModule by lazy { CommonStorageModule(encryptedSettings) }
-    val commonStorage get() = storageModule.commonStorage
-
-    private val platformModule by lazy { CommonPlatformModule(platformContext) }
-    val externalLauncher get() = platformModule.externalLauncher
-
-    private val repositoryModule by lazy {
-        CommonRepositoryModule(
-            clientDeviceInfo
-        )
-    }
-    val platformRepository get() = repositoryModule.platformRepository
-
-    private val networkModule by lazy {
-        CommonNetworkModule(
-            baseUrl = baseUrl,
-            webSocketPath = webSocketPath,
-            httpClientConfigPlugins = httpClientConfigPlugins,
-            accessTokenProvider = accessTokenProvider,
-            platformRepository = platformRepository,
-            appScope = appScope
-        )
-    }
-    val httpClient get() = networkModule.httpClient
-    val webSocketService get() = networkModule.webSocketService
-    val commonWebSocketMessageHandler get() = networkModule.commonWebSocketMessageHandler
-
     /**
      * Builds and installs the root [AppErrorParser] chain used by composition locals and UI.
      *
      * @param appErrorParserCommonParser Parser used when no feature parser handles an error (defaults to [CommonErrorParser]).
      * @param appErrorParserSpecificParsers Feature parsers consulted before the common parser.
      */
-    fun init(
+    public fun init(
         appErrorParserCommonParser: AppErrorParser = CommonErrorParser,
         appErrorParserSpecificParsers: List<AppErrorParser> = emptyList()
     ) {

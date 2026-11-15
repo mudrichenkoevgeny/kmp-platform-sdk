@@ -6,11 +6,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model
 /**
  * Direct HTTP API for fetching open security settings.
  */
-interface OpenSecuritySettingsApi {
+public interface OpenSecuritySettingsApi {
     /**
      * Fetches the active open security settings payload from the server.
      *
      * @return [AppResult.Success] containing [OpenSecuritySettingsPayload] or [AppResult.Error].
      */
-    suspend fun getSecuritySettings(): AppResult<OpenSecuritySettingsPayload>
+    public suspend fun getSecuritySettings(): AppResult<OpenSecuritySettingsPayload>
 }

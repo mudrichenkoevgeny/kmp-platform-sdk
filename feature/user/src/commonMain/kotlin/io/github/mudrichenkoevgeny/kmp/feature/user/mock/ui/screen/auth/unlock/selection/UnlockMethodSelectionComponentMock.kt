@@ -5,29 +5,32 @@ import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.selection.UnlockMethodSelectionComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.unlock.selection.UnlockMethodSelectionScreenState
 
-open class UnlockMethodSelectionComponentMock(
+/**
+ * Mock implementation of [UnlockMethodSelectionComponent] for Compose previews and testing.
+ */
+public open class UnlockMethodSelectionComponentMock(
     initialState: UnlockMethodSelectionScreenState = UnlockMethodSelectionScreenState()
 ) : UnlockMethodSelectionComponent {
 
     private val mutableState = MutableValue(initialState)
-    override val state: Value<UnlockMethodSelectionScreenState> = mutableState
+    public override val state: Value<UnlockMethodSelectionScreenState> = mutableState
 
-    fun updateState(state: UnlockMethodSelectionScreenState) {
+    /**
+     * Updates the component state value.
+     *
+     * @param state The new state value.
+     */
+    public fun updateState(state: UnlockMethodSelectionScreenState) {
         mutableState.value = state
     }
 
-    override fun onSelectEmailUnlock() {
-    }
+    public override fun onSelectEmailUnlock(): Unit = Unit
 
-    override fun onSelectPhoneUnlock() {
-    }
+    public override fun onSelectPhoneUnlock(): Unit = Unit
 
-    override fun onSelectGoogleUnlock() {
-    }
+    public override fun onSelectGoogleUnlock(): Unit = Unit
 
-    override fun onSelectAppleUnlock() {
-    }
+    public override fun onSelectAppleUnlock(): Unit = Unit
 
-    override fun onBackClick() {
-    }
+    public override fun onBackClick(): Unit = Unit
 }

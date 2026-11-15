@@ -10,16 +10,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+/**
+ * Mock implementation of [UserRepository] for unit and UI testing.
+ */
 @InternalApi
-class UserRepositoryMock : UserRepository {
+public class UserRepositoryMock : UserRepository {
 
     private val _currentUser = MutableStateFlow<UserPrivate?>(null)
 
-    var currentUserProvider: () -> Flow<UserPrivate?> = { _currentUser.asStateFlow() }
+    public var currentUserProvider: () -> Flow<UserPrivate?> = { _currentUser.asStateFlow() }
 
     override val currentUser: Flow<UserPrivate?> get() = currentUserProvider()
 
-    var resultProvider: () -> AppResult<UserPrivate> = {
+    public var resultProvider: () -> AppResult<UserPrivate> = {
         AppResult.Error(
             CommonError.ContractViolation(
                 throwable = IllegalStateException("No mock result provided for UserRepositoryMock.")
@@ -49,7 +52,12 @@ class UserRepositoryMock : UserRepository {
         return result
     }
 
-    fun emit(user: UserPrivate?) {
+    /**
+     * Emits a new user state to subscribers.
+     *
+     * @param user The user instance to emit, or null to clear the user.
+     */
+    public fun emit(user: UserPrivate?) {
         _currentUser.value = user
     }
 }

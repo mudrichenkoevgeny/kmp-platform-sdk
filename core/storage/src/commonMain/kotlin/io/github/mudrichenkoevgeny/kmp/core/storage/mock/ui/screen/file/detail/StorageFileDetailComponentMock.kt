@@ -15,53 +15,57 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.core.storage.domain
  * Mock implementation of [StorageFileDetailComponent] for testing and Compose previews.
  */
 @InternalApi
-class StorageFileDetailComponentMock(
+public class StorageFileDetailComponentMock(
     initialState: StorageFileDetailScreenState = StorageFileDetailScreenState.Content(
         file = createTestStorageFilePrivate()
     ),
-    override val isDeleteAvailable: Boolean = true,
+    public override val isDeleteAvailable: Boolean = true,
     initialDialogSlot: ChildSlot<StorageFileDetailDialogConfig, StorageFileDetailDialogChild>? = null
 ) : StorageFileDetailComponent {
 
     private val _state = MutableValue(initialState)
-    override val state: Value<StorageFileDetailScreenState> = _state
+    public override val state: Value<StorageFileDetailScreenState> = _state
 
-    override val dialogSlotNavigation = SlotNavigation<StorageFileDetailDialogConfig>()
-    override val dialogSlot: Value<ChildSlot<StorageFileDetailDialogConfig, StorageFileDetailDialogChild>> =
+    public override val dialogSlotNavigation: SlotNavigation<StorageFileDetailDialogConfig> =
+        SlotNavigation<StorageFileDetailDialogConfig>()
+    public override val dialogSlot: Value<ChildSlot<StorageFileDetailDialogConfig, StorageFileDetailDialogChild>> =
         MutableValue(initialDialogSlot ?: ChildSlot())
 
-    var retryCalls = 0
-    var deleteCalls = 0
-    var confirmDeleteCalls = 0
-    var dismissDeleteDialogCalls = 0
-    var userClickCalls = 0
-    var backCalls = 0
+    public var retryCalls: Int = 0
+    public var deleteCalls: Int = 0
+    public var confirmDeleteCalls: Int = 0
+    public var dismissDeleteDialogCalls: Int = 0
+    public var userClickCalls: Int = 0
+    public var backCalls: Int = 0
 
-    override fun onRetry() {
+    public override fun onRetry() {
         retryCalls++
     }
 
-    override fun onDeleteClick() {
+    public override fun onDeleteClick() {
         deleteCalls++
     }
 
-    override fun onDismissDeleteDialog() {
+    public override fun onDismissDeleteDialog() {
         dismissDeleteDialogCalls++
     }
 
-    override fun onConfirmDelete() {
+    public override fun onConfirmDelete() {
         confirmDeleteCalls++
     }
 
-    override fun onUserClick() {
+    public override fun onUserClick() {
         userClickCalls++
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         backCalls++
     }
 
-    fun emitState(newState: StorageFileDetailScreenState) {
+    /**
+     * Emits a new [newState] to [state] for testing purposes.
+     */
+    public fun emitState(newState: StorageFileDetailScreenState) {
         _state.value = newState
     }
 }

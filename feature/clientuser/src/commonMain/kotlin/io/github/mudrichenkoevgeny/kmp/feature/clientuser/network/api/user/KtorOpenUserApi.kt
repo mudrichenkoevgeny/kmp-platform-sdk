@@ -21,11 +21,12 @@ class KtorOpenUserApi(
         get(OpenUserRoutes.GET_USER)
     }
 
-    override suspend fun selfUpdateUser(request: SelfUpdateUserRequest): AppResult<UserPrivatePayload> = client.callResult {
-        patch(OpenUserRoutes.UPDATE_USER) {
-            setBody(request)
+    override suspend fun selfUpdateUser(request: SelfUpdateUserRequest): AppResult<UserPrivatePayload> =
+        client.callResult {
+            patch(OpenUserRoutes.UPDATE_USER) {
+                setBody(request)
+            }
         }
-    }
 
     override suspend fun scheduleUserDeletion(): AppResult<UserPrivatePayload> = client.callResult {
         delete(OpenUserRoutes.SCHEDULE_DELETION)

@@ -5,10 +5,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.network.api.auth.registration.OpenRegistrationApiMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.confirmation.ConfirmationRepositoryMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.ConfirmationType
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.mapper.otpconfirmation.toOtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.confirmation.ConfirmationType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.registration.RegistrationByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
@@ -32,13 +32,17 @@ class OpenRegistrationRepositoryImplTest {
 
         val success = assertIs<AppResult.Success<AuthData>>(registerResult)
         assertEquals(wire.toAuthData(), success.data)
-        assertEquals(RegistrationByEmailRequest(REGISTER_EMAIL, REGISTER_PASSWORD, REGISTER_CODE), api.lastRegisterByEmailRequest)
+        assertEquals(
+            RegistrationByEmailRequest(REGISTER_EMAIL, REGISTER_PASSWORD, REGISTER_CODE),
+            api.lastRegisterByEmailRequest
+        )
     }
 
     @Test
     fun sendRegistrationConfirmationToEmail_usesRegistrationEmailTimer() = runTest {
         val wire = createTestOtpConfirmationPayload(retryAfterSeconds = CONFIRMATION_RETRY_AFTER_SECONDS)
-        val api = OpenRegistrationApiMock().apply { sendRegistrationConfirmationToEmailResult = AppResult.Success(wire) }
+        val api =
+            OpenRegistrationApiMock().apply { sendRegistrationConfirmationToEmailResult = AppResult.Success(wire) }
         val confirmationMock = ConfirmationRepositoryMock()
         val repo = OpenRegistrationRepositoryImpl(api, confirmationMock)
 

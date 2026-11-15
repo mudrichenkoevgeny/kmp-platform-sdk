@@ -5,10 +5,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 /**
  * UI state for email login: optional transient loading shell or the main form with validation and submit feedback.
  */
-sealed interface LoginByEmailScreenState {
+public sealed interface LoginByEmailScreenState {
 
     /** Reserved for a dedicated loading phase; the implementation currently starts in [Content]. */
-    data object Loading : LoginByEmailScreenState
+    public data object Loading : LoginByEmailScreenState
 
     /**
      * Email and password fields with visibility toggle, inline validation, and login action state.
@@ -21,7 +21,7 @@ sealed interface LoginByEmailScreenState {
      * @param actionLoading while true, shows overlay during sign-in.
      * @param actionError server or validation error from the last login attempt.
      */
-    data class Content(
+    public data class Content(
         val email: String = "",
         val isEmailValid: Boolean = false,
         val password: String = "",
@@ -32,6 +32,6 @@ sealed interface LoginByEmailScreenState {
         val actionError: AppError? = null
     ) : LoginByEmailScreenState {
 
-        val canLogin: Boolean = isEmailValid && isPasswordValid && !actionLoading
+        public val canLogin: Boolean = isEmailValid && isPasswordValid && !actionLoading
     }
 }

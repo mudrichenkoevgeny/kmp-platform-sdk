@@ -5,22 +5,22 @@ import com.arkivanov.decompose.value.Value
 /**
  * Manages the single user session detail screen lifecycle: loading session info and revoking session.
  */
-interface SessionDetailComponent {
+public interface SessionDetailComponent {
     /** Reactive UI state. */
-    val state: Value<SessionDetailScreenState>
+    public val state: Value<SessionDetailScreenState>
 
     /** Revokes the current displayed session if permitted. */
-    fun onRevokeSessionClick()
+    public fun onRevokeSessionClick()
 
     /** Retries loading the session details on error. */
-    fun onRetry()
+    public fun onRetry()
 
     /** Navigates back. */
-    fun onBackClick()
+    public fun onBackClick()
 
     /** Navigates to identifier detail screen. */
-    fun onIdentifierClick()
+    public fun onIdentifierClick()
 
     /** Navigates to user detail screen. */
-    fun onUserClick()
+    public fun onUserClick()
 }

@@ -60,7 +60,16 @@ class UserEditScreenScreenshotTest(
             return provider.values.mapIndexed { index, state ->
                 val name = when (state) {
                     is UserEditScreenState.Loading -> "Loading"
-                    is UserEditScreenState.Content -> if (state.isSaving) "Saving" else if (state.nicknameError != null) "ValidationError" else "Content"
+                    is UserEditScreenState.Content -> if (state.isSaving) {
+                        "Saving"
+                    } else if (state.nicknameError !=
+                        null
+                    ) {
+                        "ValidationError"
+                    } else {
+                        "Content"
+                    }
+
                     is UserEditScreenState.Error -> "Error"
                 } + "_$index"
                 arrayOf(name, state)

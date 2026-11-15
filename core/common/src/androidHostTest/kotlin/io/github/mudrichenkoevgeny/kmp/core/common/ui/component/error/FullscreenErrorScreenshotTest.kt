@@ -57,11 +57,9 @@ class FullscreenErrorScreenshotTest(
         @Suppress("Unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
-        fun data(): Collection<Array<Any>> {
-            return listOf(
-                arrayOf("Non_Retryable", false),
-                arrayOf("Retryable", true)
-            )
-        }
+        fun data(): Collection<Array<Any>> = listOf(
+            arrayOf("Non_Retryable", false),
+            arrayOf("Retryable", true)
+        )
     }
 }

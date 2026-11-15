@@ -55,7 +55,7 @@ class ListingChoiceDropdownScreenshotTest(
                         ListingChoiceDropdown(
                             filter = filter,
                             selectedIds = selectedIds,
-                            onSelectionChanged = {}
+                            onSelectionChange = {}
                         )
                     }
                 }
@@ -72,11 +72,9 @@ class ListingChoiceDropdownScreenshotTest(
         @Suppress("Unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
-        fun data(): Collection<Array<Any>> {
-            return listOf(
-                arrayOf("Selected", setOf(ListingChoiceDropdownTestData.OPTION_ACTIVE_ID)),
-                arrayOf("Empty", emptySet<String>())
-            )
-        }
+        fun data(): Collection<Array<Any>> = listOf(
+            arrayOf("Selected", setOf(ListingChoiceDropdownTestData.OPTION_ACTIVE_ID)),
+            arrayOf("Empty", emptySet<String>())
+        )
     }
 }

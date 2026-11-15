@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.f
  *
  * @param managementStorageRepository Management storage repository for administrative file operations.
  */
-class ManagementGetFileDetailUseCase(
+public class ManagementGetFileDetailUseCase(
     private val managementStorageRepository: ManagementStorageRepository
 ) {
     /**
@@ -18,7 +18,6 @@ class ManagementGetFileDetailUseCase(
      * @param fileId Unique identifier of the target file.
      * @return [AppResult.Success] containing [StorageFilePrivate], or [AppResult.Error] on failure.
      */
-    suspend operator fun invoke(fileId: String): AppResult<StorageFilePrivate> {
-        return managementStorageRepository.getFileDetail(fileId)
-    }
+    public suspend operator fun invoke(fileId: String): AppResult<StorageFilePrivate> =
+        managementStorageRepository.getFileDetail(fileId)
 }

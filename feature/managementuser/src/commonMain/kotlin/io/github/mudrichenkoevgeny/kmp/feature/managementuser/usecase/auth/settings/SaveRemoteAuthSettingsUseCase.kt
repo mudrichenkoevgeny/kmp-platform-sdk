@@ -9,14 +9,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
  *
  * @param managementAuthSettingsRepository Remote management auth settings API.
  */
-class SaveRemoteAuthSettingsUseCase(
+public class SaveRemoteAuthSettingsUseCase(
     private val managementAuthSettingsRepository: ManagementAuthSettingsRepository
 ) {
     /**
      * @param authSettings New configuration payload to apply.
      * @return Updated [ManagementAuthSettings] on success, or an error result when the remote update fails.
      */
-    suspend operator fun invoke(authSettings: ManagementAuthSettings): AppResult<ManagementAuthSettings> {
-        return managementAuthSettingsRepository.saveRemoteManagementAuthSettings(authSettings)
-    }
+    public suspend operator fun invoke(authSettings: ManagementAuthSettings): AppResult<ManagementAuthSettings> =
+        managementAuthSettingsRepository.saveRemoteManagementAuthSettings(
+            authSettings
+        )
 }

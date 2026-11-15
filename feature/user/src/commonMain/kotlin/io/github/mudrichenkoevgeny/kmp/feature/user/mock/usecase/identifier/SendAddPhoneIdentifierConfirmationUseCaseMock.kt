@@ -6,11 +6,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.identifier.I
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.SendAddPhoneIdentifierConfirmationUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 
+/**
+ * Mock implementation of [SendAddPhoneIdentifierConfirmationUseCase] for testing.
+ */
 @InternalApi
-class SendAddPhoneIdentifierConfirmationUseCaseMock : SendAddPhoneIdentifierConfirmationUseCase(
+public class SendAddPhoneIdentifierConfirmationUseCaseMock : SendAddPhoneIdentifierConfirmationUseCase(
     identifierRepository = IdentifierRepositoryMock()
 ) {
-    var resultProvider: (String) -> AppResult<OtpConfirmation> = {
+    public var resultProvider: (String) -> AppResult<OtpConfirmation> = {
         AppResult.Success(
             OtpConfirmation(
                 retryAfterSeconds = 60,
@@ -19,9 +22,9 @@ class SendAddPhoneIdentifierConfirmationUseCaseMock : SendAddPhoneIdentifierConf
             )
         )
     }
-    var executeCalls = 0
+    public var executeCalls: Int = 0
 
-    override suspend fun invoke(phoneNumber: String): AppResult<OtpConfirmation> {
+    public override suspend fun invoke(phoneNumber: String): AppResult<OtpConfirmation> {
         executeCalls++
         return resultProvider(phoneNumber)
     }

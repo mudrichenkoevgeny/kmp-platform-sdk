@@ -10,32 +10,32 @@ import kotlinx.coroutines.flow.StateFlow
  * Persists session tokens for the user feature. Implementations are supplied by the host
  * (e.g. encrypted DataStore) and are read by the user HTTP client auth setup and use cases.
  */
-interface AuthStorage : AccessTokenProvider {
+public interface AuthStorage : AccessTokenProvider {
     /** Raw access token string for observers; mirrors the latest non-null session token value. */
-    override val accessTokenFlow: StateFlow<String?>
+    public override val accessTokenFlow: StateFlow<String?>
 
     /** @return Parsed access token, or null if absent. */
-    suspend fun getAccessToken(): AccessToken?
+    public suspend fun getAccessToken(): AccessToken?
 
     /** @return Parsed refresh token, or null if absent. */
-    suspend fun getRefreshToken(): RefreshToken?
+    public suspend fun getRefreshToken(): RefreshToken?
 
     /** @return Access token expiry instant as epoch milliseconds. */
-    suspend fun getExpiresAt(): Long
+    public suspend fun getExpiresAt(): Long
 
     /** @return The current active session ID, or null if absent. */
-    suspend fun getSessionId(): String?
+    public suspend fun getSessionId(): String?
 
     /** @return The identifier ID used to authorize this session, or null if absent. */
-    suspend fun getIdentifierId(): String?
+    public suspend fun getIdentifierId(): String?
 
     /**
      * Persists a new session after login or refresh.
      *
      * @param sessionToken New session token containing access/refresh tokens and session IDs.
      */
-    suspend fun updateTokens(sessionToken: SessionToken)
+    public suspend fun updateTokens(sessionToken: SessionToken)
 
     /** Removes tokens from storage (logout / invalid session). */
-    suspend fun clearTokens()
+    public suspend fun clearTokens()
 }

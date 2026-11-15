@@ -68,7 +68,7 @@ class LoginByPhoneComponentImpl(
             serializer = LoginByPhoneStepConfig.serializer(),
             initialConfiguration = LoginByPhoneStepConfig.PhoneInput(initialPhone = params.phone ?: ""),
             handleBackButton = true,
-            childFactory = ::createChild
+            childFactory = { config, _ -> createChild(config) }
         )
 
     private val _state = MutableValue(
@@ -79,8 +79,7 @@ class LoginByPhoneComponentImpl(
     override val state: Value<LoginByPhoneScreenState> = _state
 
     private fun createChild(
-        config: LoginByPhoneStepConfig,
-        context: ComponentContext
+        config: LoginByPhoneStepConfig
     ): LoginByPhoneComponent.Child = when (config) {
         is LoginByPhoneStepConfig.PhoneInput -> LoginByPhoneComponent.Child.PhoneInput(config.initialPhone)
         is LoginByPhoneStepConfig.CodeInput -> LoginByPhoneComponent.Child.CodeInput(config.phone)
@@ -195,7 +194,10 @@ class LoginByPhoneComponentImpl(
         }
     }
 
-    private fun moveToCodeInput(phone: String, seconds: Int) {
+    private fun moveToCodeInput(
+        phone: String,
+        seconds: Int
+    ) {
         _state.value = _state.value.copy(
             phoneNumber = phone,
             resendTimerSeconds = seconds,

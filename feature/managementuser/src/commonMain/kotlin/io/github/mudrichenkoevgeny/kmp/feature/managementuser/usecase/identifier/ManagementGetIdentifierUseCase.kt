@@ -9,14 +9,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
  *
  * @param managementIdentifierRepository Administrative identifier management API.
  */
-class ManagementGetIdentifierUseCase(
+public class ManagementGetIdentifierUseCase(
     private val managementIdentifierRepository: ManagementIdentifierRepository
 ) {
     /**
      * @param identifierId Unique identifier record ID.
      * @return Detailed information of the target identifier, or a mapped failure.
      */
-    suspend operator fun invoke(identifierId: String): AppResult<UserIdentifierPrivate> {
-        return managementIdentifierRepository.getIdentifier(identifierId)
-    }
+    public suspend operator fun invoke(identifierId: String): AppResult<UserIdentifierPrivate> =
+        managementIdentifierRepository.getIdentifier(
+            identifierId
+        )
 }

@@ -64,7 +64,8 @@ class TotpRecoveryCodesScreenTest {
         onNodeWithTag(TotpRecoveryCodesTestTags.RECOVERY_CODES_CONTAINER).assertIsDisplayed()
         onNodeWithTag(TotpRecoveryCodesTestTags.COPY_ALL_RECOVERY_CODES_BUTTON).assertIsDisplayed()
 
-        onNodeWithTag(TotpRecoveryCodesTestTags.REGENERATE_RECOVERY_CODES_BUTTON).performScrollTo().assertIsDisplayed().performClick()
+        onNodeWithTag(TotpRecoveryCodesTestTags.REGENERATE_RECOVERY_CODES_BUTTON).performScrollTo().assertIsDisplayed()
+            .performClick()
         assertEquals(true, regenerateClicked)
     }
 

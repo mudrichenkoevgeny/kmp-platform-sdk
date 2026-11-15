@@ -66,7 +66,11 @@ class UserSessionListScreenTest {
 
     @Test
     fun content_clickBack_invokesCallback() = runComposeUiTest {
-        val component = SessionListComponentMock(initialState = SessionListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
+        val component = SessionListComponentMock(
+            initialState = SessionListScreenState.Content(
+                paging = PaginationState(emptyList(), isInitialLoading = false)
+            )
+        )
         setContent {
             ComponentTestHarness {
                 SessionListScreen(component)
@@ -78,7 +82,11 @@ class UserSessionListScreenTest {
 
     @Test
     fun content_clickRefresh_invokesCallback() = runComposeUiTest {
-        val component = SessionListComponentMock(initialState = SessionListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
+        val component = SessionListComponentMock(
+            initialState = SessionListScreenState.Content(
+                paging = PaginationState(emptyList(), isInitialLoading = false)
+            )
+        )
         setContent {
             ComponentTestHarness {
                 SessionListScreen(component)

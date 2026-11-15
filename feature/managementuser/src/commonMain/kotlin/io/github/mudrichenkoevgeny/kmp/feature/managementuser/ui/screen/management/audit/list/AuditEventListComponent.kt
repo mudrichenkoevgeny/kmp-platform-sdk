@@ -8,31 +8,34 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.eve
 /**
  * Manages the audit events listing lifecycle and navigation.
  */
-interface AuditEventListComponent {
+public interface AuditEventListComponent {
     /** Reactive UI state. */
-    val state: Value<AuditEventListScreenState>
+    public val state: Value<AuditEventListScreenState>
 
     /** Refreshes the audit events list. */
-    fun onRefresh()
+    public fun onRefresh()
 
     /** Navigates to a specific audit event detail view. */
-    fun onEventClick(eventId: AuditEventId)
+    public fun onEventClick(eventId: AuditEventId)
 
     /** Requests the next page of audit events if available. */
-    fun onLoadNextPage()
+    public fun onLoadNextPage()
 
     /** Navigates back. */
-    fun onBackClick()
+    public fun onBackClick()
 
     /** Toggles the filter/sort panel visibility. */
-    fun onToggleFilterPanel()
+    public fun onToggleFilterPanel()
 
     /** Updates current sort state and reloads events. */
-    fun onSortChanged(sortState: ListingSortState)
+    public fun onSortChanged(sortState: ListingSortState)
 
     /** Updates current filter state and reloads events. */
-    fun onFilterChanged(filterId: String, filterState: ListingFilterState?)
+    public fun onFilterChanged(
+        filterId: String,
+        filterState: ListingFilterState?
+    )
 
     /** Applies current filters and reloads events. */
-    fun onApplyFilters()
+    public fun onApplyFilters()
 }

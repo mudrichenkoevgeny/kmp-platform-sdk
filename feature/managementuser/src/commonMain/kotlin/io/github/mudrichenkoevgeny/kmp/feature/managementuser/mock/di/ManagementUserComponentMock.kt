@@ -28,20 +28,18 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
  */
 
 @InternalApi
-fun managementUserComponentMock(
+public fun managementUserComponentMock(
     commonComponent: CommonComponent = commonComponentMock(),
     settingsComponent: SettingsComponent = settingsComponentMock(),
     securityComponent: SecurityComponent = securityComponentMock(),
     storageComponent: StorageComponent = storageComponentMock(),
     authStorage: AuthStorage = AuthStorageMock(),
     authServices: UserAuthServices = UserAuthServicesMock()
-): ManagementUserComponent {
-    return ManagementUserComponent(
-        commonComponent = commonComponent,
-        settingsComponent = settingsComponent,
-        securityComponent = securityComponent,
-        storageComponent = storageComponent,
-        authStorage = authStorage,
-        authServices = authServices
-    )
-}
+): ManagementUserComponent = ManagementUserComponent(
+    commonComponent = commonComponent,
+    settingsComponent = settingsComponent,
+    securityComponent = securityComponent,
+    storageComponent = storageComponent,
+    authStorage = authStorage,
+    authServices = authServices
+)

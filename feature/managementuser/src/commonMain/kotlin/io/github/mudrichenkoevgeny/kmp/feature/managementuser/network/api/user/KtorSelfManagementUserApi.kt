@@ -11,7 +11,7 @@ import io.ktor.client.request.patch
 import io.ktor.client.request.setBody
 
 /** [SelfManagementUserApi] backed by [HttpClient]. */
-class KtorSelfManagementUserApi(
+public class KtorSelfManagementUserApi(
     private val client: HttpClient
 ) : SelfManagementUserApi {
 
@@ -19,9 +19,10 @@ class KtorSelfManagementUserApi(
         get(SelfManagementUserRoutes.GET_USER)
     }
 
-    override suspend fun selfUpdateUser(request: SelfUpdateUserRequest): AppResult<UserPrivatePayload> = client.callResult {
-        patch(SelfManagementUserRoutes.UPDATE_USER) {
-            setBody(request)
+    override suspend fun selfUpdateUser(request: SelfUpdateUserRequest): AppResult<UserPrivatePayload> =
+        client.callResult {
+            patch(SelfManagementUserRoutes.UPDATE_USER) {
+                setBody(request)
+            }
         }
-    }
 }

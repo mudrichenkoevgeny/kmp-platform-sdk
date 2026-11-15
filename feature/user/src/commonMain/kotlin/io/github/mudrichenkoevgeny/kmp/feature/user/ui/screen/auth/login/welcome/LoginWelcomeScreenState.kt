@@ -6,9 +6,9 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 /**
  * UI state for the login welcome screen: initial load, recoverable init failure, or interactive content.
  */
-sealed interface LoginWelcomeScreenState {
+public sealed interface LoginWelcomeScreenState {
     /** Providers and legal URLs are being loaded. */
-    data object Loading : LoginWelcomeScreenState
+    public data object Loading : LoginWelcomeScreenState
 
     /**
      * Ready to show auth provider buttons, optional legal footer, and inline action errors / loading overlay.
@@ -19,18 +19,18 @@ sealed interface LoginWelcomeScreenState {
      * @param actionError error from OAuth or opening legal URLs; shown inline when non-null.
      * @param actionLoading when true, shows a blocking overlay while an async action runs.
      */
-    data class Content(
+    public data class Content(
         val availableAuthProviders: AvailableAuthProviders,
         val privacyPolicyUrl: String? = null,
         val termsOfServiceUrl: String? = null,
         val actionError: AppError? = null,
         val actionLoading: Boolean = false
     ) : LoginWelcomeScreenState {
-        val validPrivacyPolicyUrl: String? get() = privacyPolicyUrl?.takeIf { it.isNotBlank() }
-        val validTermsOfServiceUrl: String? get() = termsOfServiceUrl?.takeIf { it.isNotBlank() }
+        public val validPrivacyPolicyUrl: String? get() = privacyPolicyUrl?.takeIf { it.isNotBlank() }
+        public val validTermsOfServiceUrl: String? get() = termsOfServiceUrl?.takeIf { it.isNotBlank() }
 
-        val hasPrivacyPolicy: Boolean get() = validPrivacyPolicyUrl != null
-        val hasTermsOfService: Boolean get() = validTermsOfServiceUrl != null
+        public val hasPrivacyPolicy: Boolean get() = validPrivacyPolicyUrl != null
+        public val hasTermsOfService: Boolean get() = validTermsOfServiceUrl != null
     }
 
     /**
@@ -38,7 +38,7 @@ sealed interface LoginWelcomeScreenState {
      *
      * @param error error to display via [AppError] localization.
      */
-    data class InitializationError(
+    public data class InitializationError(
         val error: AppError
     ) : LoginWelcomeScreenState
 }

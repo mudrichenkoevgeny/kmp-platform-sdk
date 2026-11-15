@@ -67,7 +67,8 @@ class GlobalIdentifierListComponentImplTest {
     @Test
     fun onApplyFilters_appliesFiltersAndReloads() = runComponentTest {
         val repository = ManagementIdentifierRepositoryMock()
-        val context = createTestContext(repository = repository, identifiers = listOf(createTestUserIdentifierSummary()))
+        val context =
+            createTestContext(repository = repository, identifiers = listOf(createTestUserIdentifierSummary()))
         advanceUntilIdle()
 
         context.component.onFilterChanged(
@@ -83,10 +84,13 @@ class GlobalIdentifierListComponentImplTest {
     @Test
     fun onSortChanged_appliesSortAndReloads() = runComponentTest {
         val repository = ManagementIdentifierRepositoryMock()
-        val context = createTestContext(repository = repository, identifiers = listOf(createTestUserIdentifierSummary()))
+        val context =
+            createTestContext(repository = repository, identifiers = listOf(createTestUserIdentifierSummary()))
         advanceUntilIdle()
 
-        context.component.onSortChanged(ListingSortState(optionId = UserIdentifierSortBy.CREATED_AT.value, isAscending = false))
+        context.component.onSortChanged(
+            ListingSortState(optionId = UserIdentifierSortBy.CREATED_AT.value, isAscending = false)
+        )
         advanceUntilIdle()
 
         assertEquals(UserIdentifierSortBy.CREATED_AT, repository.lastSortBy)

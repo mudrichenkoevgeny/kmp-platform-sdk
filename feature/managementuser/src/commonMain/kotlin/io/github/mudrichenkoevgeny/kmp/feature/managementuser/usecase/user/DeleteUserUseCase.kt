@@ -9,14 +9,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
  *
  * @param managementUserRepository Administrative user management API.
  */
-class DeleteUserUseCase(
+public class DeleteUserUseCase(
     private val managementUserRepository: ManagementUserRepository
 ) {
     /**
      * @param userId Unique account identifier to remove.
      * @return Empty success indicator, or a mapped failure.
      */
-    suspend operator fun invoke(userId: UserId): AppResult<Unit> {
-        return managementUserRepository.deleteUser(userId)
-    }
+    public suspend operator fun invoke(userId: UserId): AppResult<Unit> = managementUserRepository.deleteUser(userId)
 }

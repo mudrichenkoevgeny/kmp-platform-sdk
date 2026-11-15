@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
  *
  * Use this for developer diagnostics.
  */
-fun AppError.log() {
+public fun AppError.log() {
     Logger.e(null) { this.getLogMessage() }
 }
 
@@ -27,16 +27,20 @@ private fun StringBuilder.appendThrowableSuffix(appError: AppError) {
     when (appError) {
         is CommonError.Internal ->
             append(", cause=").append(appError.throwable.stackTraceToString())
+
         is CommonError.NoInternetConnection ->
             append(", cause=").append(appError.throwable.stackTraceToString())
+
         is CommonError.Network ->
             append(", cause=").append(appError.throwable.stackTraceToString())
+
         is CommonError.ContractViolation -> {
             val cause = appError.throwable
             if (cause != null) {
                 append(", cause=").append(cause.stackTraceToString())
             }
         }
+
         else -> Unit
     }
 }

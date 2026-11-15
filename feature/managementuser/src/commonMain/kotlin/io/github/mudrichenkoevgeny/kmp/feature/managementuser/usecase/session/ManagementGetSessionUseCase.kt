@@ -9,14 +9,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
  *
  * @param managementSessionRepository Administrative session management API.
  */
-class ManagementGetSessionUseCase(
+public class ManagementGetSessionUseCase(
     private val managementSessionRepository: ManagementSessionRepository
 ) {
     /**
      * @param sessionId Unique session identifier.
      * @return Detailed information of the target session model, or a mapped failure.
      */
-    suspend operator fun invoke(sessionId: String): AppResult<UserSessionPrivate> {
-        return managementSessionRepository.getSession(sessionId)
-    }
+    public suspend operator fun invoke(sessionId: String): AppResult<UserSessionPrivate> =
+        managementSessionRepository.getSession(
+            sessionId
+        )
 }

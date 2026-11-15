@@ -7,7 +7,7 @@ import io.ktor.utils.io.ByteReadChannel
 /**
  * Uploader interface for executing direct binary uploads to S3 or object storage via presigned URLs.
  */
-interface DirectFileUploader {
+public interface DirectFileUploader {
     /**
      * Uploads binary content directly to storage via a presigned URL.
      *
@@ -18,7 +18,7 @@ interface DirectFileUploader {
      * @param onProgress Optional callback tracking upload completion percentage (0 to 100).
      * @return [AppResult.Success] containing [Unit] on success, or [AppResult.Error] on failure.
      */
-    suspend fun uploadFile(
+    public suspend fun uploadFile(
         uploadUrl: String,
         contentLength: Long,
         openReadChannel: suspend () -> ByteReadChannel,
@@ -26,8 +26,8 @@ interface DirectFileUploader {
         onProgress: ((percent: Int) -> Unit)? = null
     ): AppResult<Unit>
 
-    companion object {
+    public companion object {
         /** Default fallback MIME type when no specific type is provided. */
-        val DEFAULT_MIME_TYPE: String = ContentType.Application.OctetStream.toString()
+        public val DEFAULT_MIME_TYPE: String = ContentType.Application.OctetStream.toString()
     }
 }

@@ -10,15 +10,22 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.f
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.screen.management.list.ManagementStorageFileListParams
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.request.file.DeleteFilesBatchRequest
 
+/**
+ * Mock implementation of [ManagementStorageApi] for testing.
+ */
 @InternalApi
-class ManagementStorageApiMock : ManagementStorageApi {
-    var getFilesResult: AppResult<PagedResult<StorageFileSummary>> = AppResult.Error(CommonError.Unknown())
-    var getFileDetailResult: AppResult<StorageFilePrivate> = AppResult.Error(CommonError.Unknown())
-    var deleteFileResult: AppResult<Unit> = AppResult.Success(Unit)
-    var deleteFilesBatchResult: AppResult<Unit> = AppResult.Success(Unit)
+public class ManagementStorageApiMock : ManagementStorageApi {
+    public var getFilesResult: AppResult<PagedResult<StorageFileSummary>> = AppResult.Error(CommonError.Unknown())
+    public var getFileDetailResult: AppResult<StorageFilePrivate> = AppResult.Error(CommonError.Unknown())
+    public var deleteFileResult: AppResult<Unit> = AppResult.Success(Unit)
+    public var deleteFilesBatchResult: AppResult<Unit> = AppResult.Success(Unit)
 
-    override suspend fun getFiles(params: ManagementStorageFileListParams?): AppResult<PagedResult<StorageFileSummary>> = getFilesResult
-    override suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate> = getFileDetailResult
-    override suspend fun deleteFile(fileId: String): AppResult<Unit> = deleteFileResult
-    override suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit> = deleteFilesBatchResult
+    public override suspend fun getFiles(
+        params: ManagementStorageFileListParams?
+    ): AppResult<PagedResult<StorageFileSummary>> = getFilesResult
+
+    public override suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate> = getFileDetailResult
+    public override suspend fun deleteFile(fileId: String): AppResult<Unit> = deleteFileResult
+    public override suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit> =
+        deleteFilesBatchResult
 }

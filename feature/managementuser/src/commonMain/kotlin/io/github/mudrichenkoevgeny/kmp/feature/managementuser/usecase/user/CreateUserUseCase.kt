@@ -10,14 +10,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
  *
  * @param managementUserRepository Administrative user management API.
  */
-class CreateUserUseCase(
+public class CreateUserUseCase(
     private val managementUserRepository: ManagementUserRepository
 ) {
     /**
      * @param request Payload details for creating an account via email.
      * @return Detailed information of the newly created user domain model, or a mapped failure.
      */
-    suspend operator fun invoke(request: CreateByEmailRequest): AppResult<UserPrivate> {
-        return managementUserRepository.createUser(request)
-    }
+    public suspend operator fun invoke(request: CreateByEmailRequest): AppResult<UserPrivate> =
+        managementUserRepository.createUser(
+            request
+        )
 }

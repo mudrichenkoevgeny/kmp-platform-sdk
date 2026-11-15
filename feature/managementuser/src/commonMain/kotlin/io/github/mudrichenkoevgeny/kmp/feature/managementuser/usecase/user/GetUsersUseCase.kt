@@ -11,16 +11,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  *
  * @param managementUserRepository Administrative user management API.
  */
-class GetUsersUseCase(
+public class GetUsersUseCase(
     private val managementUserRepository: ManagementUserRepository
 ) {
     /**
      * @param params Query and filter parameters DTO.
      * @return Paginated result containing user summary domain models, or a mapped failure.
      */
-    suspend operator fun invoke(
+    public suspend operator fun invoke(
         params: ManagementUserListParams? = null
-    ): AppResult<PagedResult<UserSummary>> {
-        return managementUserRepository.getUsers(params)
-    }
+    ): AppResult<PagedResult<UserSummary>> = managementUserRepository.getUsers(params)
 }

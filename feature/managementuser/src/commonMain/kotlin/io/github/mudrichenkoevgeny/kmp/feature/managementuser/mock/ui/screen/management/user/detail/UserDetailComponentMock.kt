@@ -7,122 +7,125 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.Sel
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailScreenState
 
+/**
+ * Mock implementation of [UserDetailComponent] for testing.
+ */
 @InternalApi
-class UserDetailComponentMock(
+public class UserDetailComponentMock(
     initialState: UserDetailScreenState = UserDetailScreenState.Loading
 ) : UserDetailComponent {
 
     private val _state = MutableValue(initialState)
-    override val state: Value<UserDetailScreenState> = _state
+    public override val state: Value<UserDetailScreenState> = _state
 
-    var updateCalls = 0
-    var deleteCalls = 0
-    var confirmDeleteCalls = 0
-    var dismissDeleteDialogCalls = 0
-    var disableTotpCalls = 0
-    var sessionsCalls = 0
-    var identifiersCalls = 0
-    var filesCalls = 0
-    var auditEventsCalls = 0
-    var retryCalls = 0
-    var backCalls = 0
-    var lastNicknameChanged: String? = null
-    var lastDisplayNameChanged: String? = null
-    var lastAvatarFileSelected: SelectedFilePayload? = null
-    var lastBirthdateChanged: String? = null
-    var lastAuthorityLevelChanged: String? = null
-    var lastAccountStatusChanged: String? = null
-    var lastLockoutTypeChanged: String? = null
-    var lastTemporaryLockoutUntilChanged: String? = null
-    var lastQuotaBytesChanged: String? = null
-    var lastMaxUploadSizeBytesChanged: String? = null
-    var lastMaxPendingUploadsChanged: String? = null
+    public var updateCalls: Int = 0
+    public var deleteCalls: Int = 0
+    public var confirmDeleteCalls: Int = 0
+    public var dismissDeleteDialogCalls: Int = 0
+    public var disableTotpCalls: Int = 0
+    public var sessionsCalls: Int = 0
+    public var identifiersCalls: Int = 0
+    public var filesCalls: Int = 0
+    public var auditEventsCalls: Int = 0
+    public var retryCalls: Int = 0
+    public var backCalls: Int = 0
+    public var lastNicknameChanged: String? = null
+    public var lastDisplayNameChanged: String? = null
+    public var lastAvatarFileSelected: SelectedFilePayload? = null
+    public var lastBirthdateChanged: String? = null
+    public var lastAuthorityLevelChanged: String? = null
+    public var lastAccountStatusChanged: String? = null
+    public var lastLockoutTypeChanged: String? = null
+    public var lastTemporaryLockoutUntilChanged: String? = null
+    public var lastQuotaBytesChanged: String? = null
+    public var lastMaxUploadSizeBytesChanged: String? = null
+    public var lastMaxPendingUploadsChanged: String? = null
 
-    override fun onNicknameChanged(value: String) {
+    public override fun onNicknameChanged(value: String) {
         lastNicknameChanged = value
     }
 
-    override fun onDisplayNameChanged(value: String) {
+    public override fun onDisplayNameChanged(value: String) {
         lastDisplayNameChanged = value
     }
 
-    override fun onAvatarFileSelected(payload: SelectedFilePayload) {
+    public override fun onAvatarFileSelected(payload: SelectedFilePayload) {
         lastAvatarFileSelected = payload
     }
 
-    override fun onBirthdateChanged(value: String) {
+    public override fun onBirthdateChanged(value: String) {
         lastBirthdateChanged = value
     }
 
-    override fun onAuthorityLevelChanged(value: String) {
+    public override fun onAuthorityLevelChanged(value: String) {
         lastAuthorityLevelChanged = value
     }
 
-    override fun onAccountStatusChanged(value: String) {
+    public override fun onAccountStatusChanged(value: String) {
         lastAccountStatusChanged = value
     }
 
-    override fun onLockoutTypeChanged(value: String) {
+    public override fun onLockoutTypeChanged(value: String) {
         lastLockoutTypeChanged = value
     }
 
-    override fun onTemporaryLockoutUntilChanged(value: String) {
+    public override fun onTemporaryLockoutUntilChanged(value: String) {
         lastTemporaryLockoutUntilChanged = value
     }
 
-    override fun onQuotaBytesChanged(value: String) {
+    public override fun onQuotaBytesChanged(value: String) {
         lastQuotaBytesChanged = value
     }
 
-    override fun onMaxUploadSizeBytesChanged(value: String) {
+    public override fun onMaxUploadSizeBytesChanged(value: String) {
         lastMaxUploadSizeBytesChanged = value
     }
 
-    override fun onMaxPendingUploadsChanged(value: String) {
+    public override fun onMaxPendingUploadsChanged(value: String) {
         lastMaxPendingUploadsChanged = value
     }
 
-    override fun onUpdateClick() {
+    public override fun onUpdateClick() {
         updateCalls++
     }
 
-    override fun onDeleteClick() {
+    public override fun onDeleteClick() {
         deleteCalls++
     }
 
-    override fun onConfirmDeleteClick() {
+    public override fun onConfirmDeleteClick() {
         confirmDeleteCalls++
     }
 
-    override fun onDismissDeleteDialog() {
+    public override fun onDismissDeleteDialog() {
         dismissDeleteDialogCalls++
     }
 
-    override fun onDisableTotpClick() {
+    public override fun onDisableTotpClick() {
         disableTotpCalls++
     }
 
-    override fun onSessionsClick() {
+    public override fun onSessionsClick() {
         sessionsCalls++
     }
 
-    override fun onIdentifiersClick() {
+    public override fun onIdentifiersClick() {
         identifiersCalls++
     }
 
-    override fun onFilesClick() {
+    public override fun onFilesClick() {
         filesCalls++
     }
 
-    override fun onAuditEventsClick() {
+    public override fun onAuditEventsClick() {
         auditEventsCalls++
     }
 
-    override fun onRetry() {
+    public override fun onRetry() {
         retryCalls++
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         backCalls++
     }
 }

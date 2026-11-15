@@ -12,9 +12,9 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.VisualTransformation
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
@@ -35,7 +35,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
  * @param shape Shape of the text field border container. Defaults to [CoreTheme.shapes].
  */
 @Composable
-fun CoreOutlinedTextField(
+public fun CoreOutlinedTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -70,7 +70,7 @@ fun CoreOutlinedTextField(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun CoreOutlinedTextFieldComponentSizePreview() {
     CoreTheme {
@@ -85,7 +85,7 @@ private fun CoreOutlinedTextFieldComponentSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun CoreOutlinedTextFieldThemePreview() {
     CoreTheme {
@@ -100,7 +100,7 @@ private fun CoreOutlinedTextFieldThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun CoreOutlinedTextFieldFontScalePreview() {
     CoreTheme {

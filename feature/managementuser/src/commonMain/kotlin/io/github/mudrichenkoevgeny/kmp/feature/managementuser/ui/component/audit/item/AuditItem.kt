@@ -18,9 +18,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list.AuditEventListTestTags
@@ -36,7 +36,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.m
  * @param modifier Optional [Modifier].
  */
 @Composable
-fun AuditItem(
+public fun AuditItem(
     event: AuditEventSummary,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -90,21 +90,21 @@ private fun AuditItemStatesPreview() {
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun AuditItemComponentSizePreview() {
     AuditItemPreviewContent(event = defaultAuditItemPreviewState)
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun AuditItemThemePreview() {
     AuditItemPreviewContent(event = defaultAuditItemPreviewState)
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun AuditItemFontScalePreview() {
     AuditItemPreviewContent(event = defaultAuditItemPreviewState)

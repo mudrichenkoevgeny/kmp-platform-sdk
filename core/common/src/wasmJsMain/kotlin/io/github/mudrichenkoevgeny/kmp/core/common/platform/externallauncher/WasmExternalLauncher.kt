@@ -20,7 +20,11 @@ class WasmExternalLauncher : ExternalLauncher {
         window.open(url, target = TARGET_BLANK)
     }
 
-    override fun openMail(email: String, subject: String?, body: String?) {
+    override fun openMail(
+        email: String,
+        subject: String?,
+        body: String?
+    ) {
         val mailto = StringBuilder("$MAIL_TO_DATA$email")
 
         val params = mutableListOf<String>()

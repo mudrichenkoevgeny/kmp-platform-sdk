@@ -13,11 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_warning
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import org.jetbrains.compose.resources.painterResource
+import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
 /**
  * Placeholder component when a paginated list returns no items.
@@ -26,7 +26,7 @@ import org.jetbrains.compose.resources.painterResource
  * @param text Message to display.
  */
 @Composable
-fun ListingEmptyState(
+public fun ListingEmptyState(
     modifier: Modifier = Modifier,
     text: String = LocalCommonStrings.current.ui.emptyList
 ) {

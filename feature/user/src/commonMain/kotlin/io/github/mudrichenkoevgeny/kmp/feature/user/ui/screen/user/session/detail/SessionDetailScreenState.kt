@@ -6,12 +6,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
 /**
  * Represents the UI state for the session detail screen.
  */
-sealed interface SessionDetailScreenState {
+public sealed interface SessionDetailScreenState {
     /** Fullscreen loading state while session details are being retrieved. */
-    object Loading : SessionDetailScreenState
+    public data object Loading : SessionDetailScreenState
 
     /** Fullscreen error state when fetching session details fails. */
-    data class Error(val error: AppError) : SessionDetailScreenState
+    public data class Error(val error: AppError) : SessionDetailScreenState
 
     /**
      * Content state displaying detailed session information.
@@ -21,7 +21,7 @@ sealed interface SessionDetailScreenState {
      * @property actionLoading Whether a revoke action is currently executing.
      * @property actionError Error from a failed revoke action.
      */
-    data class Content(
+    public data class Content(
         val session: UserSessionPrivate,
         val isCurrentSession: Boolean = false,
         val isSelfSession: Boolean = false,

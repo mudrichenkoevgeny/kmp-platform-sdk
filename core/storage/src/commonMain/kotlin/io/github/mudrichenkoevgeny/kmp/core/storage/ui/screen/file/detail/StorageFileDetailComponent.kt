@@ -9,35 +9,35 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail.dialog
 /**
  * Presentation logic controller (Decompose component) for the storage file detail screen.
  */
-interface StorageFileDetailComponent {
+public interface StorageFileDetailComponent {
 
     /** Observable screen state flow. */
-    val state: Value<StorageFileDetailScreenState>
+    public val state: Value<StorageFileDetailScreenState>
 
     /** Decompose child slot for confirmation dialogs. */
-    val dialogSlot: Value<ChildSlot<StorageFileDetailDialogConfig, StorageFileDetailDialogChild>>
+    public val dialogSlot: Value<ChildSlot<StorageFileDetailDialogConfig, StorageFileDetailDialogChild>>
 
     /** Slot navigator for dialogs. */
-    val dialogSlotNavigation: SlotNavigation<StorageFileDetailDialogConfig>
+    public val dialogSlotNavigation: SlotNavigation<StorageFileDetailDialogConfig>
 
     /** Whether the delete action is available for this contour. */
-    val isDeleteAvailable: Boolean
+    public val isDeleteAvailable: Boolean
 
     /** Retries loading file details after failure. */
-    fun onRetry()
+    public fun onRetry()
 
     /** Opens delete confirmation dialog. */
-    fun onDeleteClick()
+    public fun onDeleteClick()
 
     /** Dismisses delete confirmation dialog. */
-    fun onDismissDeleteDialog()
+    public fun onDismissDeleteDialog()
 
     /** Confirms and executes file deletion. */
-    fun onConfirmDelete()
+    public fun onConfirmDelete()
 
     /** Handles click on owner user ID. */
-    fun onUserClick()
+    public fun onUserClick()
 
     /** Triggers back navigation. */
-    fun onBackClick()
+    public fun onBackClick()
 }

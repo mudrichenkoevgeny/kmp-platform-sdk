@@ -23,11 +23,13 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
 /** [ManagementStorageApi] implementation backed by Ktor [HttpClient]. */
-class KtorManagementStorageApi(
+public class KtorManagementStorageApi(
     private val client: HttpClient
 ) : ManagementStorageApi {
 
-    override suspend fun getFiles(params: ManagementStorageFileListParams?): AppResult<PagedResult<StorageFileSummary>> =
+    public override suspend fun getFiles(
+        params: ManagementStorageFileListParams?
+    ): AppResult<PagedResult<StorageFileSummary>> =
         client.callResult<PagedResult<StorageFileSummaryPayload>> {
             get(ManagementStorageRoutes.GET_FILES) {
                 parameters(params)
@@ -36,21 +38,21 @@ class KtorManagementStorageApi(
             pagedResult.mapItems { it.toStorageFileSummary() }
         }
 
-    override suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate> {
+    public override suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate> {
         val path = ManagementStorageRoutes.GET_FILE.replace("{${StorageApiPaths.FILE_ID}}", fileId)
         return client.callResult<StorageFilePrivatePayload> {
             get(path)
         }.mapSuccess { it.toStorageFilePrivate() }
     }
 
-    override suspend fun deleteFile(fileId: String): AppResult<Unit> {
+    public override suspend fun deleteFile(fileId: String): AppResult<Unit> {
         val path = ManagementStorageRoutes.DELETE_FILE.replace("{${StorageApiPaths.FILE_ID}}", fileId)
         return client.callResult {
             delete(path)
         }
     }
 
-    override suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit> =
+    public override suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit> =
         client.callResult {
             post(ManagementStorageRoutes.DELETE_FILES_BATCH) {
                 setBody(request)

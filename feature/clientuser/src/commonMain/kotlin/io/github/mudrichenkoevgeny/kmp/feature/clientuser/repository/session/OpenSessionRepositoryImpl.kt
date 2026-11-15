@@ -32,37 +32,35 @@ class OpenSessionRepositoryImpl(
 
     override suspend fun getSessions(
         params: SelfSessionListParams?
-    ): AppResult<PagedResult<UserSessionSummary>> {
-        return sessionApi.getSessions(params).mapSuccess { pagedPayload ->
-            pagedPayload.mapItems { it.toUserSessionSummary() }
+    ): AppResult<PagedResult<UserSessionSummary>> = sessionApi.getSessions(params).mapSuccess { pagedPayload ->
+        pagedPayload.mapItems { it.toUserSessionSummary() }
+    }
+
+    override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivate> =
+        sessionApi.getSession(
+            userSessionId
+        ).mapSuccess {
+            it.toUserSessionPrivate()
         }
+
+    override suspend fun logout(): AppResult<Unit> = sessionApi.logout().onSuccess {
+        userStorage.clear()
+        authStorage.clearTokens()
     }
 
-    override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivate> {
-        return sessionApi.getSession(userSessionId).mapSuccess { it.toUserSessionPrivate() }
-    }
+    override suspend fun deleteSession(userSessionId: UserSessionId): AppResult<Unit> = sessionApi.deleteSession(
+        userSessionId
+    )
 
-    override suspend fun logout(): AppResult<Unit> {
-        return sessionApi.logout().onSuccess {
-            userStorage.clear()
-            authStorage.clearTokens()
-        }
-    }
+    override suspend fun deleteAllOtherSessions(): AppResult<Unit> = sessionApi.deleteAllOtherSessions().mapSuccess { }
 
-    override suspend fun deleteSession(userSessionId: UserSessionId): AppResult<Unit> {
-        return sessionApi.deleteSession(userSessionId)
-    }
-
-    override suspend fun deleteAllOtherSessions(): AppResult<Unit> {
-        return sessionApi.deleteAllOtherSessions().mapSuccess { }
-    }
-
-    override suspend fun reauthenticateSession(mfaToken: String, code: String): AppResult<Unit> {
-        return sessionApi.reauthenticateSession(
-            VerifyTotpPayload(
-                mfaToken = mfaToken,
-                code = code
-            )
+    override suspend fun reauthenticateSession(
+        mfaToken: String,
+        code: String
+    ): AppResult<Unit> = sessionApi.reauthenticateSession(
+        VerifyTotpPayload(
+            mfaToken = mfaToken,
+            code = code
         )
-    }
+    )
 }

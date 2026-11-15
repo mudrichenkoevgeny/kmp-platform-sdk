@@ -4,7 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.unlock.UnlockRepository
 
 /** Unlocks an account using an external authentication provider token. */
-open class UnlockByExternalAuthProviderUseCase(
+public open class UnlockByExternalAuthProviderUseCase(
     private val unlockRepository: UnlockRepository
 ) {
     /**
@@ -14,7 +14,8 @@ open class UnlockByExternalAuthProviderUseCase(
      * @param externalProviderToken OAuth token.
      * @return Unit result on success, or an error result.
      */
-    open suspend fun execute(authProvider: String, externalProviderToken: String): AppResult<Unit> {
-        return unlockRepository.unlockByExternalAuthProvider(authProvider, externalProviderToken)
-    }
+    public open suspend fun execute(
+        authProvider: String,
+        externalProviderToken: String
+    ): AppResult<Unit> = unlockRepository.unlockByExternalAuthProvider(authProvider, externalProviderToken)
 }

@@ -3,7 +3,6 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByExternalAuthProviderRequest
 
 /**
@@ -12,7 +11,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
  * Supports password-based authentication, multifactor verification (TOTP/Recovery codes),
  * and platform-specific identity providers.
  */
-interface LoginRepository {
+public interface LoginRepository {
     /**
      * Authenticates with [email] and [password].
      *
@@ -20,7 +19,10 @@ interface LoginRepository {
      * @param password Account password.
      * @return [AuthData] on success, or an error result.
      */
-    suspend fun loginByEmail(email: String, password: String): AppResult<AuthData>
+    public suspend fun loginByEmail(
+        email: String,
+        password: String
+    ): AppResult<AuthData>
 
     /**
      * Completes phone login using [phoneNumber] and [confirmationCode].
@@ -29,7 +31,10 @@ interface LoginRepository {
      * @param confirmationCode One-time code delivered to the phone.
      * @return [AuthData] on success, or an error result.
      */
-    suspend fun loginByPhone(phoneNumber: String, confirmationCode: String): AppResult<AuthData>
+    public suspend fun loginByPhone(
+        phoneNumber: String,
+        confirmationCode: String
+    ): AppResult<AuthData>
 
     /**
      * Signs in via an external authentication provider using the provided request payload.
@@ -37,7 +42,7 @@ interface LoginRepository {
      * @param loginByExternalAuthProviderRequest Payload containing the auth provider, external token, and optional display name.
      * @return [AuthData] on success, or an error result.
      */
-    suspend fun loginByExternalAuthProvider(
+    public suspend fun loginByExternalAuthProvider(
         loginByExternalAuthProviderRequest: LoginByExternalAuthProviderRequest
     ): AppResult<AuthData>
 
@@ -48,7 +53,10 @@ interface LoginRepository {
      * @param code Time-based verification code.
      * @return [AuthData] on success, or an error result.
      */
-    suspend fun loginByTotp(mfaToken: String, code: String): AppResult<AuthData>
+    public suspend fun loginByTotp(
+        mfaToken: String,
+        code: String
+    ): AppResult<AuthData>
 
     /**
      * Completes the MFA flow using a static backup recovery code.
@@ -57,7 +65,10 @@ interface LoginRepository {
      * @param code Single-use alphanumeric recovery code.
      * @return [AuthData] on success, or an error result.
      */
-    suspend fun loginByTotpRecoveryCode(mfaToken: String, code: String): AppResult<AuthData>
+    public suspend fun loginByTotpRecoveryCode(
+        mfaToken: String,
+        code: String
+    ): AppResult<AuthData>
 
     /**
      * Sends a login confirmation code to [phoneNumber].
@@ -65,7 +76,7 @@ interface LoginRepository {
      * @param phoneNumber Target phone for the code.
      * @return [OtpConfirmation] with retry metadata on success, or an error result.
      */
-    suspend fun sendLoginConfirmationToPhone(phoneNumber: String): AppResult<OtpConfirmation>
+    public suspend fun sendLoginConfirmationToPhone(phoneNumber: String): AppResult<OtpConfirmation>
 
     /**
      * Returns the remaining client-side cooldown in seconds for [phoneNumber].
@@ -73,5 +84,5 @@ interface LoginRepository {
      * @param phoneNumber Target phone key.
      * @return Remaining delay in seconds, or 0 if allowed immediately.
      */
-    fun getRemainingLoginConfirmationDelayInSeconds(phoneNumber: String): Int
+    public fun getRemainingLoginConfirmationDelayInSeconds(phoneNumber: String): Int
 }

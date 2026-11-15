@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.reques
  *
  * @param managementStorageRepository Management storage repository for administrative file operations.
  */
-class ManagementDeleteFilesBatchUseCase(
+public class ManagementDeleteFilesBatchUseCase(
     private val managementStorageRepository: ManagementStorageRepository
 ) {
     /**
@@ -18,7 +18,8 @@ class ManagementDeleteFilesBatchUseCase(
      * @param request Batch deletion request containing array of file identifiers.
      * @return [AppResult.Success] containing [Unit], or [AppResult.Error] on failure.
      */
-    suspend operator fun invoke(request: DeleteFilesBatchRequest): AppResult<Unit> {
-        return managementStorageRepository.deleteFilesBatch(request)
-    }
+    public suspend operator fun invoke(request: DeleteFilesBatchRequest): AppResult<Unit> =
+        managementStorageRepository.deleteFilesBatch(
+            request
+        )
 }

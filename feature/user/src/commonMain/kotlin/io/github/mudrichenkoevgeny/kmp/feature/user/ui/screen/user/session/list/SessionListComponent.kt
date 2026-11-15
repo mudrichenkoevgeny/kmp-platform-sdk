@@ -9,47 +9,50 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
 /**
  * Universal Decompose component contract for active sessions listing screens (client & management).
  */
-interface SessionListComponent : SessionListOwner {
+public interface SessionListComponent : SessionListOwner {
 
     /** Observable screen state flow. */
-    val state: Value<SessionListScreenState>
+    public val state: Value<SessionListScreenState>
 
     /** Whether revoking a single session is available for this contour. */
-    val isRevokeAvailable: Boolean
+    public val isRevokeAvailable: Boolean
 
     /** Whether revoking all other sessions / all user sessions is available for this contour. */
-    val isRevokeAllOthersAvailable: Boolean
+    public val isRevokeAllOthersAvailable: Boolean
 
     /** Whether filter panel features are included (administrative mode). */
-    val includeFilterPanel: Boolean
+    public val includeFilterPanel: Boolean
 
     /** Navigates back to previous screen. */
-    fun onBackClick()
+    public fun onBackClick()
 
     /** Refreshes current session list page. */
-    fun onRefresh()
+    public fun onRefresh()
 
     /** Triggers loading next page. */
-    fun onLoadNextPage()
+    public fun onLoadNextPage()
 
     /** Toggles expansion state of filter options panel. */
-    fun onToggleFilterPanel()
+    public fun onToggleFilterPanel()
 
     /** Called when active sort state changes. */
-    fun onSortChanged(sortState: ListingSortState)
+    public fun onSortChanged(sortState: ListingSortState)
 
     /** Called when an individual filter state changes. */
-    fun onFilterChanged(filterId: String, filterState: ListingFilterState?)
+    public fun onFilterChanged(
+        filterId: String,
+        filterState: ListingFilterState?
+    )
 
     /** Applies selected filters and re-fetches list. */
-    fun onApplyFilters()
+    public fun onApplyFilters()
 
     /** Navigates to detail view for the specified session. */
-    fun onSessionClick(session: UserSessionSummary)
+    public fun onSessionClick(session: UserSessionSummary)
 
     /** Revokes a specific session by ID. */
-    fun onRevokeSessionClick(sessionId: UserSessionId)
+    public fun onRevokeSessionClick(sessionId: UserSessionId)
 
     /** Revokes all other sessions (or all user sessions). */
-    fun onRevokeAllOtherSessionsClick()
+    public fun onRevokeAllOtherSessionsClick()
 }

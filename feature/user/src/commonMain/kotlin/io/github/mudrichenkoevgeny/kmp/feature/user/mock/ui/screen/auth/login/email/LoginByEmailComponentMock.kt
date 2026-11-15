@@ -6,51 +6,59 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.email.LoginByEmailScreenState
 
+/**
+ * Mock implementation of [LoginByEmailComponent] for Compose previews and testing.
+ */
 @InternalApi
-class LoginByEmailComponentMock(
+public class LoginByEmailComponentMock(
     initialState: LoginByEmailScreenState = LoginByEmailScreenState.Content()
 ) : LoginByEmailComponent {
 
     private val _state = MutableValue(initialState)
-    override val state: Value<LoginByEmailScreenState> = _state
+    public override val state: Value<LoginByEmailScreenState> = _state
 
-    var loginCalls = 0
-    var registrationCalls = 0
-    var forgotPasswordCalls = 0
-    var backCalls = 0
-    var togglePasswordVisibilityCalls = 0
-    var lastEmailChanged: String? = null
-    var lastPasswordChanged: String? = null
+    public var loginCalls: Int = 0
+    public var registrationCalls: Int = 0
+    public var forgotPasswordCalls: Int = 0
+    public var backCalls: Int = 0
+    public var togglePasswordVisibilityCalls: Int = 0
+    public var lastEmailChanged: String? = null
+    public var lastPasswordChanged: String? = null
 
-    fun updateState(state: LoginByEmailScreenState) {
+    /**
+     * Updates the component state value.
+     *
+     * @param state The new state value.
+     */
+    public fun updateState(state: LoginByEmailScreenState) {
         _state.value = state
     }
 
-    override fun onEmailChanged(email: String) {
+    public override fun onEmailChanged(email: String) {
         lastEmailChanged = email
     }
 
-    override fun onPasswordChanged(password: String) {
+    public override fun onPasswordChanged(password: String) {
         lastPasswordChanged = password
     }
 
-    override fun onTogglePasswordVisibility() {
+    public override fun onTogglePasswordVisibility() {
         togglePasswordVisibilityCalls++
     }
 
-    override fun onLoginClick() {
+    public override fun onLoginClick() {
         loginCalls++
     }
 
-    override fun onRegistrationClick() {
+    public override fun onRegistrationClick() {
         registrationCalls++
     }
 
-    override fun onForgotPasswordClick() {
+    public override fun onForgotPasswordClick() {
         forgotPasswordCalls++
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         backCalls++
     }
 }

@@ -1,17 +1,13 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword
 
 import android.app.Application
-import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
-import androidx.compose.ui.test.hasProgressBarRangeInfo
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import com.arkivanov.decompose.router.stack.bringToFront
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoadingConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.resetpassword.ResetEmailPasswordComponentMock
@@ -93,9 +89,11 @@ class ResetEmailPasswordScreenTest {
         }
         onNodeWithTag(ResetEmailPasswordTestTags.RESET_STEP_BACK_BUTTON).assertIsDisplayed()
         onNodeWithTag(ResetEmailPasswordTestTags.RESET_STEP_TITLE).assertIsDisplayed()
-        onNodeWithTag(ResetEmailPasswordTestTags.CODE_SENT_INFO_TEXT).assertIsDisplayed().assertTextContains(email, substring = true)
+        onNodeWithTag(ResetEmailPasswordTestTags.CODE_SENT_INFO_TEXT).assertIsDisplayed()
+            .assertTextContains(email, substring = true)
         onNodeWithTag(ResetEmailPasswordTestTags.CODE_INPUT).assertIsDisplayed().assertTextContains(CODE_THREE_DIGITS)
-        onNodeWithTag(ResetEmailPasswordTestTags.NEW_PASSWORD_INPUT).assertIsDisplayed().assertTextContains(NEW_PASSWORD_INVALID)
+        onNodeWithTag(ResetEmailPasswordTestTags.NEW_PASSWORD_INPUT).assertIsDisplayed()
+            .assertTextContains(NEW_PASSWORD_INVALID)
         onNodeWithTag(ResetEmailPasswordTestTags.CONFIRM_BUTTON).assertIsDisplayed()
         onNodeWithTag(ResetEmailPasswordTestTags.CHANGE_EMAIL_BUTTON).assertIsDisplayed()
     }

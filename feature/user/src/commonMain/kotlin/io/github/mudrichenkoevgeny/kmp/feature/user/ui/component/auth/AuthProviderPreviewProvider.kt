@@ -6,9 +6,9 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 /**
  * [PreviewParameterProvider] that yields a fixed sequence of [UserAuthProvider] values for Compose previews.
  */
-class AuthProviderPreviewProvider : PreviewParameterProvider<UserAuthProvider> {
+public class AuthProviderPreviewProvider : PreviewParameterProvider<UserAuthProvider> {
     /** Sample providers used in previews (email, phone, Google, Apple). */
-    override val values: Sequence<UserAuthProvider> = sequenceOf(
+    public override val values: Sequence<UserAuthProvider> = sequenceOf(
         UserAuthProvider.EMAIL,
         UserAuthProvider.PHONE,
         UserAuthProvider.GOOGLE,

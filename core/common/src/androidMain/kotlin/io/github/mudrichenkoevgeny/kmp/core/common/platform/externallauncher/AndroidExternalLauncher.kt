@@ -14,7 +14,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.platform.filesystem.AndroidFi
  * @param context Application or activity context; used with [Intent.FLAG_ACTIVITY_NEW_TASK] for cold starts.
  * @param fileOpener Opens non-http(s) paths via content URIs.
  */
-class AndroidExternalLauncher(
+public class AndroidExternalLauncher(
     private val context: Context,
     private val fileOpener: AndroidFileOpener
 ) : ExternalLauncher {
@@ -26,7 +26,11 @@ class AndroidExternalLauncher(
         context.startActivity(intent)
     }
 
-    override fun openMail(email: String, subject: String?, body: String?) {
+    override fun openMail(
+        email: String,
+        subject: String?,
+        body: String?
+    ) {
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = MAIL_TO_DATA.toUri()
             putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
@@ -39,7 +43,7 @@ class AndroidExternalLauncher(
 
     override fun openFile(url: String) {
         val isWebResource = url.startsWith(URL_HTTP, ignoreCase = true) ||
-                url.startsWith(URL_HTTPS, ignoreCase = true)
+            url.startsWith(URL_HTTPS, ignoreCase = true)
 
         if (isWebResource) {
             openUrl(url)
@@ -48,9 +52,9 @@ class AndroidExternalLauncher(
         }
     }
 
-    companion object {
-        const val MAIL_TO_DATA = "mailto:"
-        const val URL_HTTP = "http://"
-        const val URL_HTTPS = "https://"
+    public companion object {
+        public const val MAIL_TO_DATA: String = "mailto:"
+        public const val URL_HTTP: String = "http://"
+        public const val URL_HTTPS: String = "https://"
     }
 }

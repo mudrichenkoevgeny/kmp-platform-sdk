@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
  *
  * @param managementIdentifierRepository Administrative identifier management API.
  */
-class ManagementDeleteIdentifierUseCase(
+public class ManagementDeleteIdentifierUseCase(
     private val managementIdentifierRepository: ManagementIdentifierRepository
 ) {
     /**
@@ -17,7 +17,8 @@ class ManagementDeleteIdentifierUseCase(
      * @param identifierId Unique identifier record ID to delete.
      * @return Empty success indicator, or a mapped failure.
      */
-    suspend operator fun invoke(userId: UserId, identifierId: String): AppResult<Unit> {
-        return managementIdentifierRepository.deleteIdentifier(userId, identifierId)
-    }
+    public suspend operator fun invoke(
+        userId: UserId,
+        identifierId: String
+    ): AppResult<Unit> = managementIdentifierRepository.deleteIdentifier(userId, identifierId)
 }

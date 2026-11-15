@@ -6,14 +6,14 @@ import kotlinx.serialization.Serializable
  * Serializable configurations driving the Decompose navigation stack for the password reset wizard.
  */
 @Serializable
-sealed interface ResetPasswordStepConfig {
+public sealed interface ResetPasswordStepConfig {
     /**
      * Initial step: entering the email address.
      *
      * @param initialEmail Pre-filled email string if returning from a subsequent step.
      */
     @Serializable
-    data class EmailInput(
+    public data class EmailInput(
         val initialEmail: String = ""
     ) : ResetPasswordStepConfig
 
@@ -24,7 +24,7 @@ sealed interface ResetPasswordStepConfig {
      * @param resendTimerSeconds Cooldown timer for resending the verification code.
      */
     @Serializable
-    data class ConfirmInput(
+    public data class ConfirmInput(
         val email: String,
         val resendTimerSeconds: Int = 0
     ) : ResetPasswordStepConfig

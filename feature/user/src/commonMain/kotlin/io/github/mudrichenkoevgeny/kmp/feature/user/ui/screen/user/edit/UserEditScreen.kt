@@ -47,10 +47,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.Fullscre
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.preview.StorageFileImagePreview
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.rememberFilePickerLauncher
@@ -61,18 +61,6 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.c
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
-object UserEditTestTags {
-    const val BACK_BUTTON = "UserEdit_BackButton"
-    const val TITLE = "UserEdit_Title"
-    const val NICKNAME_INPUT = "UserEdit_NicknameInput"
-    const val DISPLAY_NAME_INPUT = "UserEdit_DisplayNameInput"
-    const val AVATAR_CHANGE_BUTTON = "UserEdit_AvatarChangeButton"
-    const val BIRTHDATE_INPUT = "UserEdit_BirthdateInput"
-    const val SAVE_BUTTON = "UserEdit_SaveButton"
-    const val RETRY_BUTTON = "UserEdit_RetryButton"
-    const val GLOBAL_ERROR_TEXT = "UserEdit_GlobalErrorText"
-}
-
 /**
  * Screen composable for editing the authenticated user's profile details (nickname, display name, avatar, birthdate).
  *
@@ -81,7 +69,7 @@ object UserEditTestTags {
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserEditScreen(
+public fun UserEditScreen(
     component: UserEditComponent,
     modifier: Modifier = Modifier
 ) {
@@ -129,6 +117,7 @@ fun UserEditScreen(
                 is UserEditScreenState.Loading -> {
                     FullscreenLoading()
                 }
+
                 is UserEditScreenState.Content -> {
                     Box(modifier = Modifier.fillMaxSize()) {
                         UserEditContent(
@@ -145,6 +134,7 @@ fun UserEditScreen(
                         }
                     }
                 }
+
                 is UserEditScreenState.Error -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
@@ -159,6 +149,18 @@ fun UserEditScreen(
             }
         }
     }
+}
+
+public object UserEditTestTags {
+    public const val BACK_BUTTON: String = "UserEdit_BackButton"
+    public const val TITLE: String = "UserEdit_Title"
+    public const val NICKNAME_INPUT: String = "UserEdit_NicknameInput"
+    public const val DISPLAY_NAME_INPUT: String = "UserEdit_DisplayNameInput"
+    public const val AVATAR_CHANGE_BUTTON: String = "UserEdit_AvatarChangeButton"
+    public const val BIRTHDATE_INPUT: String = "UserEdit_BirthdateInput"
+    public const val SAVE_BUTTON: String = "UserEdit_SaveButton"
+    public const val RETRY_BUTTON: String = "UserEdit_RetryButton"
+    public const val GLOBAL_ERROR_TEXT: String = "UserEdit_GlobalErrorText"
 }
 
 @Composable
@@ -207,7 +209,6 @@ private fun UserEditContent(
 
                 Spacer(modifier = Modifier.height(CoreTheme.dimens.paddingLarge))
 
-                // Circular Avatar Container
                 val avatarSourceUrl = state.selectedAvatarPayload?.localUri ?: state.avatarUrl
                 Surface(
                     modifier = Modifier
@@ -331,7 +332,7 @@ private fun UserEditScreenPreviewContent(state: UserEditScreenState) {
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview(
     @PreviewParameter(UserEditPreviewProvider::class) state: UserEditScreenState
@@ -342,7 +343,7 @@ private fun ScreenSizePreview(
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview(
     @PreviewParameter(UserEditPreviewProvider::class) state: UserEditScreenState
@@ -353,7 +354,7 @@ private fun ThemePreview(
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview(
     @PreviewParameter(UserEditPreviewProvider::class) state: UserEditScreenState

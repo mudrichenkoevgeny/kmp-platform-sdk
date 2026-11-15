@@ -12,10 +12,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.Co
  * @property args Dynamic metadata providing additional context for the failure (e.g. [CommonErrorArgs]).
  * @property isRetryable Indicates whether the failure is transient and the operation can be safely retried.
  */
-data class ServerError(
+public data class ServerError(
     override val id: ErrorId,
     override val code: String,
-    val message: String,
+    public val message: String,
     override val args: Map<String, String> = emptyMap(),
     override val isRetryable: Boolean
 ) : AppError

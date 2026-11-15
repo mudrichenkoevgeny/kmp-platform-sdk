@@ -3,12 +3,10 @@ package io.github.mudrichenkoevgeny.kmp.feature.clientuser.di
 import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySettingsRepository
 import io.github.mudrichenkoevgeny.kmp.core.settings.repository.OpenGlobalSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.core.storage.repository.open.OpenStorageSettingsRepository
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.RefreshOpenAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.usecase.configuration.RefreshClientUserConfigurationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.UserAuthServices
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth.google.DisabledGoogleAuthService
 import io.github.mudrichenkoevgeny.kmp.feature.user.di.UserStorageModule
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.configuration.OpenUserConfigurationApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
@@ -26,6 +24,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.S
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.ObserveAuthSettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.RefreshOpenAuthSettingsUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.SendUnlockEmailConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.SendUnlockPhoneConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockByEmailUseCase
@@ -50,15 +49,16 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.Reauthentica
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.RestoreUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.SelfUpdateUserUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.ValidateDisplayNameUseCase
-import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.ValidateNicknameUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.displayname.DisplayNameValidatorImpl
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.nickname.NicknameValidatorImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.DisableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.EnableTotpUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.GetRecoveryCodesUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.RegenerateRecoveryCodesUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.SetupTotpUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.ValidateDisplayNameUseCase
+import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.ValidateNicknameUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.apptype.AppType
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.displayname.DisplayNameValidatorImpl
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.nickname.NicknameValidatorImpl
 
 /**
  * Wires user-facing use cases from repositories, [AuthStorage], [UserAuthServices], and cross-cutting settings APIs.
@@ -82,7 +82,6 @@ internal class ClientUserUseCaseModule(
     private val openStorageSettingsRepository: OpenStorageSettingsRepository
 ) {
 
-    // Auth
     /** Refreshes current session tokens. */
     val refreshTokenUseCase by lazy {
         RefreshTokenUseCase(
@@ -271,7 +270,6 @@ internal class ClientUserUseCaseModule(
         )
     }
 
-    // Security
     /** Initiates TOTP setup. */
     val setupTotpUseCase by lazy {
         SetupTotpUseCase(
@@ -307,7 +305,6 @@ internal class ClientUserUseCaseModule(
         )
     }
 
-    // Sessions
     /** Returns active sessions. */
     val getSessionsUseCase by lazy {
         GetSessionsUseCase(
@@ -351,7 +348,6 @@ internal class ClientUserUseCaseModule(
         )
     }
 
-    // Identifiers
     /** Returns specific identifier. */
     val getUserIdentifierUseCase by lazy {
         GetUserIdentifierUseCase(

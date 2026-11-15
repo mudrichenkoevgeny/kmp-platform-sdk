@@ -3,19 +3,19 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.recover
 import com.arkivanov.decompose.value.Value
 
 /** Component for viewing and regenerating TOTP recovery codes. */
-interface TotpRecoveryCodesComponent {
+public interface TotpRecoveryCodesComponent {
     /** Reactive UI state. */
-    val state: Value<TotpRecoveryCodesScreenState>
+    public val state: Value<TotpRecoveryCodesScreenState>
 
     /** Shows regeneration confirmation dialog. */
-    fun onRegenerateClick()
+    public fun onRegenerateClick()
 
     /** Executes regeneration after confirmation. */
-    fun onConfirmRegenerate()
+    public fun onConfirmRegenerate()
 
     /** Hides confirmation dialogs. */
-    fun onDismissDialogs()
+    public fun onDismissDialogs()
 
     /** Navigates back. */
-    fun onBackClick()
+    public fun onBackClick()
 }

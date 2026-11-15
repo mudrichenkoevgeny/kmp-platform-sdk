@@ -7,36 +7,44 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome.LoginWelcomeScreenState
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 
+/**
+ * Mock implementation of [LoginWelcomeComponent] for Compose previews and testing.
+ */
 @InternalApi
-class LoginWelcomeComponentMock(
+public class LoginWelcomeComponentMock(
     initialState: LoginWelcomeScreenState = LoginWelcomeScreenState.Loading
 ) : LoginWelcomeComponent {
 
     private val _state = MutableValue(initialState)
-    override val state: Value<LoginWelcomeScreenState> = _state
+    public override val state: Value<LoginWelcomeScreenState> = _state
 
-    var retryInitCalls = 0
-    var privacyPolicyCalls = 0
-    var termsOfServiceCalls = 0
-    val loginClicks = mutableListOf<UserAuthProvider>()
+    public var retryInitCalls: Int = 0
+    public var privacyPolicyCalls: Int = 0
+    public var termsOfServiceCalls: Int = 0
+    public val loginClicks: MutableList<UserAuthProvider> = mutableListOf()
 
-    fun updateState(state: LoginWelcomeScreenState) {
+    /**
+     * Updates the component state value.
+     *
+     * @param state The new state value.
+     */
+    public fun updateState(state: LoginWelcomeScreenState) {
         _state.value = state
     }
 
-    override fun onRetryInitClick() {
+    public override fun onRetryInitClick() {
         retryInitCalls++
     }
 
-    override fun onLoginClick(authProvider: UserAuthProvider) {
+    public override fun onLoginClick(authProvider: UserAuthProvider) {
         loginClicks.add(authProvider)
     }
 
-    override fun onPrivacyPolicyClick() {
+    public override fun onPrivacyPolicyClick() {
         privacyPolicyCalls++
     }
 
-    override fun onTermsOfServiceClick() {
+    public override fun onTermsOfServiceClick() {
         termsOfServiceCalls++
     }
 }

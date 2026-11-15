@@ -13,32 +13,28 @@ import kotlin.uuid.Uuid
  * Handlers can be replaced/extended by app/feature-level [WebSocketMessageHandler] implementations
  * registered in `WebSocketService.updateWebSocketMessageHandlers`.
  */
-class CommonWebSocketMessageHandler() : WebSocketMessageHandler {
+public class CommonWebSocketMessageHandler : WebSocketMessageHandler {
     /**
      * Handles a received websocket [SocketFrame] and returns the decision/result.
      *
      * For unknown frames it returns [WebSocketMessageHandlerResult.NotHandled]
      * so that the service can route it as an unhandled event.
      */
-    override suspend fun handle(frame: SocketFrame): WebSocketMessageHandlerResult {
-        return when (frame.type) {
-            CommonWebSocketEventTypes.PING -> handlePing()
-            CommonWebSocketEventTypes.PONG -> WebSocketMessageHandlerResult.Handled
-            CommonWebSocketEventTypes.INITIALIZE -> WebSocketMessageHandlerResult.Handled
-            CommonWebSocketEventTypes.INITIALIZED_SUCCESS -> WebSocketMessageHandlerResult.Handled
-            else -> WebSocketMessageHandlerResult.NotHandled
-        }
+    public override suspend fun handle(frame: SocketFrame): WebSocketMessageHandlerResult = when (frame.type) {
+        CommonWebSocketEventTypes.PING -> handlePing()
+        CommonWebSocketEventTypes.PONG -> WebSocketMessageHandlerResult.Handled
+        CommonWebSocketEventTypes.INITIALIZE -> WebSocketMessageHandlerResult.Handled
+        CommonWebSocketEventTypes.INITIALIZED_SUCCESS -> WebSocketMessageHandlerResult.Handled
+        else -> WebSocketMessageHandlerResult.NotHandled
     }
 
-    private fun handlePing(): WebSocketMessageHandlerResult {
-        return WebSocketMessageHandlerResult.SendSocketFrame(
-            SocketFrame(
-                id = Uuid.random().toHexDashString(),
-                type = CommonWebSocketEventTypes.PONG,
-                payload = null,
-                metadata = emptyMap(),
-                timestamp = Clock.System.now().toEpochMilliseconds()
-            )
+    private fun handlePing(): WebSocketMessageHandlerResult = WebSocketMessageHandlerResult.SendSocketFrame(
+        SocketFrame(
+            id = Uuid.random().toHexDashString(),
+            type = CommonWebSocketEventTypes.PONG,
+            payload = null,
+            metadata = emptyMap(),
+            timestamp = Clock.System.now().toEpochMilliseconds()
         )
-    }
+    )
 }

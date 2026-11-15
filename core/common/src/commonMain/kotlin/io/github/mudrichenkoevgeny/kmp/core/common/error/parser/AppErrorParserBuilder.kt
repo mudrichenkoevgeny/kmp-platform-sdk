@@ -5,7 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 /**
  * Builder for creating the root [AppErrorParser] that coordinates error parsing across multiple modules.
  */
-object AppErrorParserBuilder {
+public object AppErrorParserBuilder {
 
     /**
      * Creates an [AppErrorParser] that implements a prioritized Chain of Responsibility pattern
@@ -23,13 +23,11 @@ object AppErrorParserBuilder {
      * Parsers at the beginning of the list have higher priority.
      * @return ready-to-use [AppErrorParser].
      */
-    fun build(
+    public fun build(
         commonParser: AppErrorParser,
         specificParsers: List<AppErrorParser> = emptyList()
-    ): AppErrorParser {
-        return AppErrorParserResolver(
-            commonParser = commonParser,
-            specificParsers = specificParsers
-        )
-    }
+    ): AppErrorParser = AppErrorParserResolver(
+        commonParser = commonParser,
+        specificParsers = specificParsers
+    )
 }

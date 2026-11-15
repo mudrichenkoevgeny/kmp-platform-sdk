@@ -10,8 +10,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierPrivate
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.identifier.detail.IdentifierDetailComponentMock
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierPrivate
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -44,7 +44,8 @@ class IdentifierDetailScreenTest {
         onNodeWithTag(IdentifierDetailTestTags.TITLE).assertIsDisplayed()
         onNodeWithTag(IdentifierDetailTestTags.BACK_BUTTON).assertIsDisplayed()
         onNodeWithTag(IdentifierDetailTestTags.CARD).assertIsDisplayed()
-        onNodeWithTag(IdentifierDetailTestTags.CHANGE_PASSWORD_BUTTON).performScrollTo().assertIsDisplayed().performClick()
+        onNodeWithTag(IdentifierDetailTestTags.CHANGE_PASSWORD_BUTTON).performScrollTo().assertIsDisplayed()
+            .performClick()
         assertEquals(1, component.changePasswordCalls)
 
         onNodeWithTag(IdentifierDetailTestTags.DELETE_BUTTON).performScrollTo().assertIsDisplayed().performClick()

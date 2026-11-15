@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
  * @param onNavigateToRecoveryCodes Opens the recovery codes screen.
  * @param onBack Pops this screen from the navigation stack.
  */
-class TotpMainComponentImpl(
+public class TotpMainComponentImpl(
     componentContext: ComponentContext,
     params: TotpMainParams = TotpMainParams(),
     private val userRepository: UserRepository,
@@ -48,7 +48,7 @@ class TotpMainComponentImpl(
     private val enableTotpUseCase: EnableTotpUseCase,
     private val disableTotpUseCase: DisableTotpUseCase,
     private val onNavigateToRecoveryCodes: () -> Unit,
-    val onBack: () -> Unit
+    private val onBack: () -> Unit
 ) : TotpMainComponent, ComponentContext by componentContext {
 
     private val scope = componentCoroutineScope()
@@ -59,35 +59,35 @@ class TotpMainComponentImpl(
         TotpStepConfig.Status
     }
 
-    override val stackNavigation = StackNavigation<TotpStepConfig>()
-    override val dialogSlotNavigation = SlotNavigation<TotpDialogConfig>()
+    public override val stackNavigation: StackNavigation<TotpStepConfig> = StackNavigation()
+    public override val dialogSlotNavigation: SlotNavigation<TotpDialogConfig> = SlotNavigation()
 
-    override val stack: Value<ChildStack<TotpStepConfig, TotpMainComponent.Child>> =
+    public override val stack: Value<ChildStack<TotpStepConfig, TotpMainComponent.Child>> =
         childStack(
             source = stackNavigation,
             serializer = TotpStepConfig.serializer(),
             initialConfiguration = startStepConfig,
             handleBackButton = true,
-            childFactory = ::createChild
+            childFactory = { config, _ -> createChild(config) }
         )
 
-    override val dialogSlot: Value<ChildSlot<TotpDialogConfig, TotpMainComponent.DialogChild>> =
+    public override val dialogSlot: Value<ChildSlot<TotpDialogConfig, TotpMainComponent.DialogChild>> =
         childSlot(
             source = dialogSlotNavigation,
             serializer = TotpDialogConfig.serializer(),
             handleBackButton = true,
-            childFactory = ::createDialogChild
+            childFactory = { config, _ -> createDialogChild(config) }
         )
 
     private val _state = MutableValue(TotpMainScreenState())
-    override val state: Value<TotpMainScreenState> = _state
+    public override val state: Value<TotpMainScreenState> = _state
 
     init {
         loadUserStatus()
     }
 
     @OptIn(DelicateDecomposeApi::class)
-    override fun onSetupClick() {
+    public override fun onSetupClick() {
         _state.value = _state.value.copy(actionLoading = true, actionError = null)
         scope.launch {
             setupTotpUseCase()
@@ -106,13 +106,13 @@ class TotpMainComponentImpl(
         }
     }
 
-    override fun onCodeChanged(code: String) {
+    public override fun onCodeChanged(code: String) {
         if (code.length <= FieldValidator.TOTP_CODE_LENGTH) {
             _state.value = _state.value.copy(code = code, actionError = null)
         }
     }
 
-    override fun onConfirmSetupClick() {
+    public override fun onConfirmSetupClick() {
         val currentCode = _state.value.code
         if (currentCode.length != FieldValidator.TOTP_CODE_LENGTH) {
             return
@@ -137,15 +137,15 @@ class TotpMainComponentImpl(
         }
     }
 
-    override fun onRecoveryCodesClick() {
+    public override fun onRecoveryCodesClick() {
         onNavigateToRecoveryCodes()
     }
 
-    override fun onDisableClick() {
+    public override fun onDisableClick() {
         dialogSlotNavigation.activate(TotpDialogConfig.ConfirmDisable)
     }
 
-    override fun onConfirmDisable() {
+    public override fun onConfirmDisable() {
         _state.value = _state.value.copy(actionLoading = true, actionError = null)
         scope.launch {
             disableTotpUseCase()
@@ -164,11 +164,11 @@ class TotpMainComponentImpl(
         }
     }
 
-    override fun onDismissDialogs() {
+    public override fun onDismissDialogs() {
         dialogSlotNavigation.dismiss()
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         if ((backHandler as? BackDispatcher)?.back() != true) {
             onBack()
         }
@@ -195,8 +195,7 @@ class TotpMainComponentImpl(
     }
 
     private fun createChild(
-        config: TotpStepConfig,
-        context: ComponentContext
+        config: TotpStepConfig
     ): TotpMainComponent.Child = when (config) {
         is TotpStepConfig.Status -> TotpMainComponent.Child.Status
         is TotpStepConfig.Setup -> TotpMainComponent.Child.Setup(
@@ -207,8 +206,7 @@ class TotpMainComponentImpl(
     }
 
     private fun createDialogChild(
-        config: TotpDialogConfig,
-        context: ComponentContext
+        config: TotpDialogConfig
     ): TotpMainComponent.DialogChild = when (config) {
         is TotpDialogConfig.ConfirmDisable -> TotpMainComponent.DialogChild.ConfirmDisable
     }

@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
  * @param onSuccess Callback invoked when user creation succeeds to dismiss/pop creation screen.
  * @param onBack Pops this screen from the navigation stack.
  */
-class CreateUserComponentImpl(
+public class CreateUserComponentImpl public constructor(
     componentContext: ComponentContext,
     private val createUserUseCase: CreateUserUseCase,
     private val uploadFileUseCase: UploadFileUseCase? = null,
@@ -117,6 +117,7 @@ class CreateUserComponentImpl(
                     is AppResult.Success -> {
                         uploadedAvatarFileId = uploadResult.data.id.asHexDashString()
                     }
+
                     is AppResult.Error -> {
                         _state.value = current.copy(
                             isLoading = false,
@@ -131,15 +132,16 @@ class CreateUserComponentImpl(
             val quotaBytes = current.quotaBytes.toLongOrNull()
             val maxUploadSizeBytes = current.maxUploadSizeBytes.toLongOrNull()
             val maxPendingUploads = current.maxPendingUploads.toIntOrNull()
-            val storageConfiguration = if (quotaBytes != null || maxUploadSizeBytes != null || maxPendingUploads != null) {
-                UserStorageConfigurationPayload(
-                    quotaBytes = quotaBytes,
-                    maxUploadSizeBytes = maxUploadSizeBytes,
-                    maxPendingUploads = maxPendingUploads
-                )
-            } else {
-                null
-            }
+            val storageConfiguration =
+                if (quotaBytes != null || maxUploadSizeBytes != null || maxPendingUploads != null) {
+                    UserStorageConfigurationPayload(
+                        quotaBytes = quotaBytes,
+                        maxUploadSizeBytes = maxUploadSizeBytes,
+                        maxPendingUploads = maxPendingUploads
+                    )
+                } else {
+                    null
+                }
 
             val birthdateMillis = current.birthdate.takeIf { it.isNotBlank() }?.toLongOrNull()
 

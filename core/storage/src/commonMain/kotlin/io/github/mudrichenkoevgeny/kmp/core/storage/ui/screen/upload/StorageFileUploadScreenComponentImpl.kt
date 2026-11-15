@@ -17,7 +17,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.ui.component.f
  * @param onSelectFiles Optional callback for system file picker trigger.
  * @param onNavigateBack Callback for back navigation.
  */
-class StorageFileUploadScreenComponentImpl(
+public class StorageFileUploadScreenComponentImpl(
     componentContext: ComponentContext,
     config: StorageFileUploadUiConfig = StorageFileUploadUiConfig(),
     uploadFileUseCase: UploadFileUseCase,
@@ -26,7 +26,7 @@ class StorageFileUploadScreenComponentImpl(
     private val onNavigateBack: () -> Unit
 ) : StorageFileUploadScreenComponent, ComponentContext by componentContext {
 
-    override val uploadComponent: StorageFileUploadComponent = StorageFileUploadComponentImpl(
+    public override val uploadComponent: StorageFileUploadComponent = StorageFileUploadComponentImpl(
         componentContext = this,
         config = config,
         uploadFileUseCase = uploadFileUseCase,
@@ -36,11 +36,11 @@ class StorageFileUploadScreenComponentImpl(
         }
     )
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         onNavigateBack()
     }
 
-    override fun onSelectFilesClick() {
+    public override fun onSelectFilesClick() {
         onSelectFiles?.invoke()
     }
 }

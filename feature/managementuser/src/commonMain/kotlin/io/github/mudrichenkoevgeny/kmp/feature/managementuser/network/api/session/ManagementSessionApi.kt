@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
 
 /** Administrative user sessions management. */
-interface ManagementSessionApi {
+public interface ManagementSessionApi {
 
     /**
      * Returns a paginated and filtered list of active sessions based on search criteria.
@@ -17,7 +17,7 @@ interface ManagementSessionApi {
      * @param params Administrative session list query and filter parameters DTO.
      * @return Paginated result containing matching session payloads, or a mapped failure.
      */
-    suspend fun getSessions(
+    public suspend fun getSessions(
         params: ManagementGlobalSessionListParams? = null
     ): AppResult<PagedResult<UserSessionSummaryPayload>>
 
@@ -27,7 +27,7 @@ interface ManagementSessionApi {
      * @param params Per-user session list query and filter parameters DTO.
      * @return Paginated result containing matching session payloads, or a mapped failure.
      */
-    suspend fun getUserSessions(
+    public suspend fun getUserSessions(
         params: ManagementUserSessionListParams
     ): AppResult<PagedResult<UserSessionSummaryPayload>>
 
@@ -37,7 +37,7 @@ interface ManagementSessionApi {
      * @param sessionId Unique session identifier.
      * @return Detailed information of the target session, or a mapped failure.
      */
-    suspend fun getSession(sessionId: String): AppResult<UserSessionPrivatePayload>
+    public suspend fun getSession(sessionId: String): AppResult<UserSessionPrivatePayload>
 
     /**
      * Deletes a specific session for the given user.
@@ -46,7 +46,10 @@ interface ManagementSessionApi {
      * @param sessionId Unique session identifier to revoke.
      * @return Empty success indicator, or a mapped failure.
      */
-    suspend fun deleteSession(userId: UserId, sessionId: String): AppResult<Unit>
+    public suspend fun deleteSession(
+        userId: UserId,
+        sessionId: String
+    ): AppResult<Unit>
 
     /**
      * Deletes all active sessions for the specified user.
@@ -54,5 +57,5 @@ interface ManagementSessionApi {
      * @param userId Unique identifier of the target account.
      * @return Empty success indicator, or a mapped failure.
      */
-    suspend fun deleteAllUserSessions(userId: UserId): AppResult<Unit>
+    public suspend fun deleteAllUserSessions(userId: UserId): AppResult<Unit>
 }

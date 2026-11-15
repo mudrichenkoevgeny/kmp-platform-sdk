@@ -4,7 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.UnlockMethod
 
 /** UI state for entering an OTP code to unlock an account. */
-data class UnlockOtpScreenState(
+public data class UnlockOtpScreenState(
     val method: UnlockMethod = UnlockMethod.EMAIL,
     val target: String = "",
     val codeInput: String = "",

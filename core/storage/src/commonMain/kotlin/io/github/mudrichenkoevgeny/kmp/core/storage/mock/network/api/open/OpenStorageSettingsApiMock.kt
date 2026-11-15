@@ -6,13 +6,16 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.network.api.open.OpenStorage
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.model.storagesettings.OpenStorageSettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.storage.network.model.storagesettings.createTestOpenStorageSettingsPayload
 
+/**
+ * Mock implementation of [OpenStorageSettingsApi] for testing.
+ */
 @InternalApi
-class OpenStorageSettingsApiMock(
-    var result: AppResult<OpenStorageSettingsPayload> = AppResult.Success(createTestOpenStorageSettingsPayload())
+public class OpenStorageSettingsApiMock(
+    public var result: AppResult<OpenStorageSettingsPayload> = AppResult.Success(createTestOpenStorageSettingsPayload())
 ) : OpenStorageSettingsApi {
-    var getStorageSettingsCallCount = 0
+    public var getStorageSettingsCallCount: Int = 0
 
-    override suspend fun getStorageSettings(): AppResult<OpenStorageSettingsPayload> {
+    public override suspend fun getStorageSettings(): AppResult<OpenStorageSettingsPayload> {
         getStorageSettingsCallCount++
         return result
     }

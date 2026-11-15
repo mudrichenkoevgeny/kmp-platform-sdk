@@ -87,7 +87,9 @@ class GlobalSessionListComponentImplTest {
         val context = createTestContext(repository = repository, sessions = listOf(createTestUserSessionSummary()))
         advanceUntilIdle()
 
-        context.component.onSortChanged(ListingSortState(optionId = UserSessionSortBy.CREATED_AT.value, isAscending = false))
+        context.component.onSortChanged(
+            ListingSortState(optionId = UserSessionSortBy.CREATED_AT.value, isAscending = false)
+        )
         advanceUntilIdle()
 
         assertEquals(UserSessionSortBy.CREATED_AT, repository.lastSortBy)

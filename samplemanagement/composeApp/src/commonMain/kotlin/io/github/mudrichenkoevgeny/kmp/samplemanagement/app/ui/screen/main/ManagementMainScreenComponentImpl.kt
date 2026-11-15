@@ -57,12 +57,13 @@ class ManagementMainScreenComponentImpl(
         )
 
     /** Child slot managing overlay modal login dialog instance. */
-    override val loginDialogSlot: Value<ChildSlot<MainScreenComponent.DialogConfig, ManagementLoginRootComponent>> = childSlot(
-        source = dialogSlotNavigation,
-        serializer = MainScreenComponent.DialogConfig.serializer(),
-        handleBackButton = true,
-        childFactory = ::createDialogChild
-    )
+    override val loginDialogSlot: Value<ChildSlot<MainScreenComponent.DialogConfig, ManagementLoginRootComponent>> =
+        childSlot(
+            source = dialogSlotNavigation,
+            serializer = MainScreenComponent.DialogConfig.serializer(),
+            handleBackButton = true,
+            childFactory = ::createDialogChild
+        )
 
     private var pendingRoute: ManagementAppDeepLinkRoute? = null
 
@@ -93,6 +94,7 @@ class ManagementMainScreenComponentImpl(
                     )
                 )
             }
+
             is MainScreenComponent.Config.Management -> {
                 MainScreenComponent.Child.ManagementChild(
                     managementAppComponent.managementUserComponent.createManagementComponent(
@@ -151,6 +153,7 @@ class ManagementMainScreenComponentImpl(
                     targetChild.component.navigateTo(route.destination)
                 }
             }
+
             is ManagementAppDeepLinkRoute.User -> {
                 if (targetChild is MainScreenComponent.Child.UserChild) {
                     targetChild.component.navigateTo(route.destination)

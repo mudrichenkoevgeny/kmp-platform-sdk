@@ -25,16 +25,14 @@ import kotlinx.coroutines.SupervisorJob
  * @return A fully wired [SecurityComponent] suitable for non-production hosts.
  */
 @InternalApi
-fun securityComponentMock(
+public fun securityComponentMock(
     httpClient: HttpClient = HttpClient(),
     webSocketService: WebSocketService = WebSocketServiceMock(),
     parentScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-): SecurityComponent {
-    return SecurityComponent(
-        webSocketService = webSocketService,
-        httpClient = httpClient,
-        openSecuritySettingsApi = OpenSecuritySettingsApiMock(),
-        encryptedSettings = EncryptedSettingsMock(),
-        parentScope = parentScope
-    )
-}
+): SecurityComponent = SecurityComponent(
+    webSocketService = webSocketService,
+    httpClient = httpClient,
+    openSecuritySettingsApi = OpenSecuritySettingsApiMock(),
+    encryptedSettings = EncryptedSettingsMock(),
+    parentScope = parentScope
+)

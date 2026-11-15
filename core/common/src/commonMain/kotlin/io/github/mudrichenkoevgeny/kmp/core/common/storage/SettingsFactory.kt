@@ -7,14 +7,17 @@ import kotlinx.coroutines.flow.Flow
  *
  * Implementations are platform-specific (Android DataStore, Wasm local storage, etc.).
  */
-interface EncryptedSettings {
+public interface EncryptedSettings {
     /**
      * Stores a string value for the provided key.
      *
      * @param key Storage key.
      * @param value Value to store.
      */
-    suspend fun put(key: String, value: String)
+    public suspend fun put(
+        key: String,
+        value: String
+    )
 
     /**
      * Reads a value for the provided key.
@@ -22,14 +25,14 @@ interface EncryptedSettings {
      * @param key Storage key.
      * @return Stored value, or `null` if missing.
      */
-    suspend fun get(key: String): String?
+    public suspend fun get(key: String): String?
 
     /**
      * Removes a value for the provided key (effectively setting it to `null`).
      *
      * @param key Storage key.
      */
-    suspend fun remove(key: String)
+    public suspend fun remove(key: String)
 
     /**
      * Observes value changes for a given key.
@@ -37,17 +40,17 @@ interface EncryptedSettings {
      * @param key Storage key.
      * @return Cold or hot flow of values; emits `null` when the key is absent.
      */
-    fun observe(key: String): Flow<String?>
+    public fun observe(key: String): Flow<String?>
 }
 
 /**
  * Factory for creating an [EncryptedSettings] instance for a platform.
  */
-interface SettingsFactory {
+public interface SettingsFactory {
     /**
      * Creates a new [EncryptedSettings] instance.
      */
-    fun create(): EncryptedSettings
+    public fun create(): EncryptedSettings
 }
 
 /**
@@ -55,4 +58,4 @@ interface SettingsFactory {
  *
  * The actual factory implementation is provided by platform source sets.
  */
-expect fun getSettingsFactory(platformContext: Any? = null): SettingsFactory
+public expect fun getSettingsFactory(platformContext: Any? = null): SettingsFactory

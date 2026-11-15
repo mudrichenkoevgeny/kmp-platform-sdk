@@ -49,7 +49,7 @@ import kotlin.time.Instant
  * @param onUserDeleted Callback invoked when the user account is deleted.
  * @param onBack Pops this screen from the navigation stack.
  */
-class UserDetailComponentImpl(
+public class UserDetailComponentImpl public constructor(
     componentContext: ComponentContext,
     private val params: UserDetailParams,
     private val getUserUseCase: GetUserUseCase,
@@ -142,92 +142,19 @@ class UserDetailComponentImpl(
         _state.value = currentContent.copy(isSaving = true, saveError = null)
 
         scope.launch {
-            var avatarUpdateField: UpdateField<FileId> = UpdateField.Ignore
-
-            val avatarPayload = currentContent.selectedAvatarPayload
-            if (avatarPayload != null) {
-                if (uploadFileUseCase != null) {
-                    val presignedRequest = PresignedUrlRequest(
-                        fileName = avatarPayload.fileName,
-                        fileSizeBytes = avatarPayload.fileSizeBytes,
-                        mimeType = avatarPayload.mimeType,
-                        category = StorageCategory.IMAGE.value,
-                        visibility = StorageFileVisibility.PUBLIC.value,
-                        targetScope = UserStorageTargetScopes.AVATAR
-                    )
-
-                    val uploadResult = uploadFileUseCase(
-                        request = presignedRequest,
-                        openReadChannel = avatarPayload.openReadChannel
-                    )
-
-                    when (uploadResult) {
-                        is AppResult.Success -> {
-                            avatarUpdateField = UpdateField.Set(uploadResult.data.id)
-                        }
-                        is AppResult.Error -> {
-                            _state.value = currentContent.copy(
-                                isSaving = false,
-                                saveError = uploadResult.error
-                            )
-                            return@launch
-                        }
+            val avatarResult = uploadAvatarIfNeeded(currentContent)
+            val avatarUpdateField = when (avatarResult) {
+                is AppResult.Success -> avatarResult.data
+                is AppResult.Error -> {
+                    val content = _state.value as? UserDetailScreenState.Content
+                    if (content != null) {
+                        _state.value = content.copy(isSaving = false, saveError = avatarResult.error)
                     }
+                    return@launch
                 }
-            } else if (currentContent.avatarFileIdInput != (currentContent.user.avatarFileId?.value?.toHexDashString() ?: "")) {
-                avatarUpdateField = UpdateField.Set(currentContent.avatarFileIdInput.takeIf { it.isNotBlank() }?.toFileIdOrNull())
             }
 
-            val authorityLevel = currentContent.authorityLevelInput.toIntOrNull()
-            val accountStatusEnum = currentContent.accountStatusInput.takeIf { it.isNotBlank() }
-                ?.let { UserAccountStatus.fromValueOrNull(it) }
-            val lockoutTypeEnum = currentContent.lockoutTypeInput.takeIf { it.isNotBlank() }
-                ?.let { AccountLockoutType.fromValueOrNull(it) }
-            val lockoutUntil = currentContent.temporaryLockoutUntilInput.toLongOrNull()
-
-            val quotaBytes = currentContent.quotaBytesInput.toLongOrNull()
-            val maxUploadSizeBytes = currentContent.maxUploadSizeBytesInput.toLongOrNull()
-            val maxPendingUploads = currentContent.maxPendingUploadsInput.toIntOrNull()
-
-            val storageConfiguration = UserStorageConfigurationPayload(
-                quotaBytes = quotaBytes,
-                maxUploadSizeBytes = maxUploadSizeBytes,
-                maxPendingUploads = maxPendingUploads
-            )
-
-            val nicknameUpdateField = if (currentContent.nicknameInput != (currentContent.user.nickname ?: "")) {
-                UpdateField.Set(currentContent.nicknameInput.takeIf { it.isNotBlank() })
-            } else {
-                UpdateField.Ignore
-            }
-
-            val displayNameUpdateField = if (currentContent.displayNameInput != (currentContent.user.displayName ?: "")) {
-                UpdateField.Set(currentContent.displayNameInput.takeIf { it.isNotBlank() })
-            } else {
-                UpdateField.Ignore
-            }
-
-            val initialBirthdateString = currentContent.user.birthdate?.toEpochMilliseconds()?.toString() ?: ""
-            val birthdateUpdateField = if (currentContent.birthdateInput != initialBirthdateString) {
-                val birthdateInstant = currentContent.birthdateInput.takeIf { it.isNotBlank() }
-                    ?.toLongOrNull()
-                    ?.let { Instant.fromEpochMilliseconds(it) }
-                UpdateField.Set(birthdateInstant)
-            } else {
-                UpdateField.Ignore
-            }
-
-            val updateParams = UpdateUserParams(
-                accountStatus = if (accountStatusEnum != null && currentContent.accountStatusInput != currentContent.user.accountStatus.name) UpdateField.Set(accountStatusEnum) else UpdateField.Ignore,
-                authorityLevel = if (authorityLevel != null && authorityLevel != currentContent.user.authorityLevel) UpdateField.Set(authorityLevel) else UpdateField.Ignore,
-                lockoutType = if (lockoutTypeEnum != null && currentContent.lockoutTypeInput != currentContent.user.lockoutType.name) UpdateField.Set(lockoutTypeEnum) else UpdateField.Ignore,
-                temporaryLockoutUntil = if (currentContent.temporaryLockoutUntilInput != (currentContent.user.temporaryLockoutUntil?.toEpochMilliseconds()?.toString() ?: "")) UpdateField.Set(lockoutUntil?.let { Instant.fromEpochMilliseconds(it) }) else UpdateField.Ignore,
-                storageConfiguration = if (quotaBytes != null || maxUploadSizeBytes != null || maxPendingUploads != null) UpdateField.Set(storageConfiguration) else UpdateField.Ignore,
-                nickname = nicknameUpdateField,
-                displayName = displayNameUpdateField,
-                avatarFileId = avatarUpdateField,
-                birthdate = birthdateUpdateField
-            )
+            val updateParams = buildUpdateUserParams(currentContent, avatarUpdateField)
 
             updateUserUseCase(targetId, updateParams)
                 .onSuccess {
@@ -347,9 +274,10 @@ class UserDetailComponentImpl(
                         avatarUrl = avatarUrl,
                         birthdateInput = user.birthdate?.toEpochMilliseconds()?.toString() ?: "",
                         authorityLevelInput = user.authorityLevel.toString(),
-                        accountStatusInput = user.accountStatus.name,
-                        lockoutTypeInput = user.lockoutType.name,
-                        temporaryLockoutUntilInput = user.temporaryLockoutUntil?.toEpochMilliseconds()?.toString() ?: "",
+                        accountStatusInput = user.accountStatus.value,
+                        lockoutTypeInput = user.lockoutType.value,
+                        temporaryLockoutUntilInput = user.temporaryLockoutUntil?.toEpochMilliseconds()?.toString()
+                            ?: "",
                         quotaBytesInput = user.storageConfiguration?.quotaBytes?.toString() ?: "",
                         maxUploadSizeBytesInput = user.storageConfiguration?.maxUploadSizeBytes?.toString() ?: "",
                         maxPendingUploadsInput = user.storageConfiguration?.maxPendingUploads?.toString() ?: "",
@@ -359,6 +287,161 @@ class UserDetailComponentImpl(
                 .onError { error ->
                     _state.value = UserDetailScreenState.Error(error)
                 }
+        }
+    }
+
+    private suspend fun uploadAvatarIfNeeded(
+        currentContent: UserDetailScreenState.Content
+    ): AppResult<UpdateField<FileId>> {
+        val avatarPayload = currentContent.selectedAvatarPayload
+        if (avatarPayload != null) {
+            if (uploadFileUseCase != null) {
+                val presignedRequest = PresignedUrlRequest(
+                    fileName = avatarPayload.fileName,
+                    fileSizeBytes = avatarPayload.fileSizeBytes,
+                    mimeType = avatarPayload.mimeType,
+                    category = StorageCategory.IMAGE.value,
+                    visibility = StorageFileVisibility.PUBLIC.value,
+                    targetScope = UserStorageTargetScopes.AVATAR
+                )
+
+                val uploadResult = uploadFileUseCase(
+                    request = presignedRequest,
+                    openReadChannel = avatarPayload.openReadChannel
+                )
+
+                return when (uploadResult) {
+                    is AppResult.Success -> AppResult.Success(UpdateField.Set(uploadResult.data.id))
+                    is AppResult.Error -> AppResult.Error(uploadResult.error)
+                }
+            }
+        } else if (currentContent.avatarFileIdInput !=
+            (currentContent.user.avatarFileId?.value?.toHexDashString() ?: "")
+        ) {
+            val fileId = currentContent.avatarFileIdInput.takeIf { it.isNotBlank() }?.toFileIdOrNull()
+            return AppResult.Success(UpdateField.Set(fileId))
+        }
+        return AppResult.Success(UpdateField.Ignore)
+    }
+
+    private fun buildUpdateUserParams(
+        currentContent: UserDetailScreenState.Content,
+        avatarUpdateField: UpdateField<FileId>
+    ): UpdateUserParams = UpdateUserParams(
+        accountStatus = buildAccountStatusUpdateField(currentContent),
+        authorityLevel = buildAuthorityLevelUpdateField(currentContent),
+        lockoutType = buildLockoutTypeUpdateField(currentContent),
+        temporaryLockoutUntil = buildTemporaryLockoutUpdateField(currentContent),
+        storageConfiguration = buildStorageConfigurationUpdateField(currentContent),
+        nickname = buildNicknameUpdateField(currentContent),
+        displayName = buildDisplayNameUpdateField(currentContent),
+        avatarFileId = avatarUpdateField,
+        birthdate = buildBirthdateUpdateField(currentContent)
+    )
+
+    private fun buildNicknameUpdateField(
+        currentContent: UserDetailScreenState.Content
+    ): UpdateField<String> = if (currentContent.nicknameInput != (currentContent.user.nickname ?: "")) {
+        UpdateField.Set(currentContent.nicknameInput.takeIf { it.isNotBlank() })
+    } else {
+        UpdateField.Ignore
+    }
+
+    private fun buildDisplayNameUpdateField(
+        currentContent: UserDetailScreenState.Content
+    ): UpdateField<String> = if (currentContent.displayNameInput != (currentContent.user.displayName ?: "")) {
+        UpdateField.Set(currentContent.displayNameInput.takeIf { it.isNotBlank() })
+    } else {
+        UpdateField.Ignore
+    }
+
+    private fun buildBirthdateUpdateField(
+        currentContent: UserDetailScreenState.Content
+    ): UpdateField<Instant> {
+        val initialBirthdateString = currentContent.user.birthdate?.toEpochMilliseconds()?.toString() ?: ""
+        return if (currentContent.birthdateInput != initialBirthdateString) {
+            val birthdateInstant = currentContent.birthdateInput.takeIf { it.isNotBlank() }
+                ?.toLongOrNull()
+                ?.let { Instant.fromEpochMilliseconds(it) }
+            UpdateField.Set(birthdateInstant)
+        } else {
+            UpdateField.Ignore
+        }
+    }
+
+    private fun buildAccountStatusUpdateField(
+        currentContent: UserDetailScreenState.Content
+    ): UpdateField<UserAccountStatus> {
+        val accountStatusEnum = currentContent.accountStatusInput.takeIf { it.isNotBlank() }
+            ?.let { UserAccountStatus.fromValueOrNull(it) }
+        return if (accountStatusEnum != null &&
+            currentContent.accountStatusInput != currentContent.user.accountStatus.value
+        ) {
+            UpdateField.Set(accountStatusEnum)
+        } else {
+            UpdateField.Ignore
+        }
+    }
+
+    private fun buildAuthorityLevelUpdateField(
+        currentContent: UserDetailScreenState.Content
+    ): UpdateField<Int> {
+        val authorityLevel = currentContent.authorityLevelInput.toIntOrNull()
+        return if (authorityLevel != null &&
+            authorityLevel != currentContent.user.authorityLevel
+        ) {
+            UpdateField.Set(authorityLevel)
+        } else {
+            UpdateField.Ignore
+        }
+    }
+
+    private fun buildLockoutTypeUpdateField(
+        currentContent: UserDetailScreenState.Content
+    ): UpdateField<AccountLockoutType> {
+        val lockoutTypeEnum = currentContent.lockoutTypeInput.takeIf { it.isNotBlank() }
+            ?.let { AccountLockoutType.fromValueOrNull(it) }
+        return if (lockoutTypeEnum != null &&
+            currentContent.lockoutTypeInput != currentContent.user.lockoutType.value
+        ) {
+            UpdateField.Set(lockoutTypeEnum)
+        } else {
+            UpdateField.Ignore
+        }
+    }
+
+    private fun buildTemporaryLockoutUpdateField(
+        currentContent: UserDetailScreenState.Content
+    ): UpdateField<Instant> {
+        val lockoutUntil = currentContent.temporaryLockoutUntilInput.toLongOrNull()
+        val initialLockoutUntilString =
+            currentContent.user.temporaryLockoutUntil?.toEpochMilliseconds()?.toString() ?: ""
+        return if (currentContent.temporaryLockoutUntilInput != initialLockoutUntilString) {
+            UpdateField.Set(lockoutUntil?.let { Instant.fromEpochMilliseconds(it) })
+        } else {
+            UpdateField.Ignore
+        }
+    }
+
+    private fun buildStorageConfigurationUpdateField(
+        currentContent: UserDetailScreenState.Content
+    ): UpdateField<UserStorageConfigurationPayload> {
+        val quotaBytes = currentContent.quotaBytesInput.toLongOrNull()
+        val maxUploadSizeBytes = currentContent.maxUploadSizeBytesInput.toLongOrNull()
+        val maxPendingUploads = currentContent.maxPendingUploadsInput.toIntOrNull()
+
+        return if (quotaBytes != null ||
+            maxUploadSizeBytes != null ||
+            maxPendingUploads != null
+        ) {
+            val storageConfiguration = UserStorageConfigurationPayload(
+                quotaBytes = quotaBytes,
+                maxUploadSizeBytes = maxUploadSizeBytes,
+                maxPendingUploads = maxPendingUploads
+            )
+            UpdateField.Set(storageConfiguration)
+        } else {
+            UpdateField.Ignore
         }
     }
 }

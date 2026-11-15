@@ -39,7 +39,9 @@ class LoginWelcomeScreenScreenshotTest(
             }
         }
 
-        if ((state is LoginWelcomeScreenState.Loading) || (state is LoginWelcomeScreenState.Content && state.actionLoading)) {
+        if ((state is LoginWelcomeScreenState.Loading) ||
+            (state is LoginWelcomeScreenState.Content && state.actionLoading)
+        ) {
             mainClock.autoAdvance = false
             mainClock.advanceTimeBy(FullscreenLoadingConfig.DELAY_MILLIS + 50L)
         }

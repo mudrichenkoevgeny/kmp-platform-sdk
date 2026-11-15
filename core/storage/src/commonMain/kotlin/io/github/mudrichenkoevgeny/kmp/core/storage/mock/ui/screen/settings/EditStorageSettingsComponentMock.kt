@@ -15,7 +15,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.core.storage.domain
  * Mock implementation of [EditStorageSettingsComponent] for testing and Compose previews.
  */
 @InternalApi
-class EditStorageSettingsComponentMock(
+public class EditStorageSettingsComponentMock(
     initialState: EditStorageSettingsScreenState = EditStorageSettingsScreenState.Content(
         initialSettings = createTestManagementStorageSettings(),
         minUploadSizeBytes = "1024",
@@ -32,84 +32,90 @@ class EditStorageSettingsComponentMock(
 ) : EditStorageSettingsComponent {
 
     private val _state = MutableValue(initialState)
-    override val state: Value<EditStorageSettingsScreenState> = _state
+    public override val state: Value<EditStorageSettingsScreenState> = _state
 
-    override val dialogSlotNavigation = SlotNavigation<StorageSettingsDialogConfig>()
-    override val dialogSlot: Value<ChildSlot<StorageSettingsDialogConfig, StorageSettingsDialogChild>> =
+    public override val dialogSlotNavigation: SlotNavigation<StorageSettingsDialogConfig> =
+        SlotNavigation<StorageSettingsDialogConfig>()
+    public override val dialogSlot: Value<ChildSlot<StorageSettingsDialogConfig, StorageSettingsDialogChild>> =
         MutableValue(initialDialogSlot ?: ChildSlot())
 
-    var retryCalls = 0
-    var saveCalls = 0
-    var resetCalls = 0
-    var confirmResetCalls = 0
-    var dismissDialogCalls = 0
-    var backCalls = 0
+    public var retryCalls: Int = 0
+    public var saveCalls: Int = 0
+    public var resetCalls: Int = 0
+    public var confirmResetCalls: Int = 0
+    public var dismissDialogCalls: Int = 0
+    public var backCalls: Int = 0
 
-    override fun onRetry() {
+    public override fun onRetry() {
         retryCalls++
     }
 
-    override fun onMinUploadSizeBytesChanged(value: String) {
+    public override fun onMinUploadSizeBytesChanged(value: String) {
         updateContent { copy(minUploadSizeBytes = value) }
     }
 
-    override fun onMaxUploadSizeBytesChanged(value: String) {
+    public override fun onMaxUploadSizeBytesChanged(value: String) {
         updateContent { copy(maxUploadSizeBytes = value) }
     }
 
-    override fun onTotalStorageQuotaForOpenUserBytesChanged(value: String) {
+    public override fun onTotalStorageQuotaForOpenUserBytesChanged(value: String) {
         updateContent { copy(totalStorageQuotaForOpenUserBytes = value) }
     }
 
-    override fun onTotalStorageQuotaForManagementUserBytesChanged(value: String) {
+    public override fun onTotalStorageQuotaForManagementUserBytesChanged(value: String) {
         updateContent { copy(totalStorageQuotaForManagementUserBytes = value) }
     }
 
-    override fun onPresignedUrlExpirationSecondsChanged(value: String) {
+    public override fun onPresignedUrlExpirationSecondsChanged(value: String) {
         updateContent { copy(presignedUrlExpirationSeconds = value) }
     }
 
-    override fun onMaxPendingUploadsForOpenUserChanged(value: String) {
+    public override fun onMaxPendingUploadsForOpenUserChanged(value: String) {
         updateContent { copy(maxPendingUploadsForOpenUser = value) }
     }
 
-    override fun onMaxPendingUploadsForManagementUserChanged(value: String) {
+    public override fun onMaxPendingUploadsForManagementUserChanged(value: String) {
         updateContent { copy(maxPendingUploadsForManagementUser = value) }
     }
 
-    override fun onIsDeduplicationEnabledToggled(value: Boolean) {
+    public override fun onIsDeduplicationEnabledToggled(value: Boolean) {
         updateContent { copy(isDeduplicationEnabled = value) }
     }
 
-    override fun onDeletedFilesCleanupIntervalSecondsChanged(value: String) {
+    public override fun onDeletedFilesCleanupIntervalSecondsChanged(value: String) {
         updateContent { copy(deletedFilesCleanupIntervalSeconds = value) }
     }
 
-    override fun onSaveClick() {
+    public override fun onSaveClick() {
         saveCalls++
     }
 
-    override fun onResetClick() {
+    public override fun onResetClick() {
         resetCalls++
     }
 
-    override fun onConfirmReset() {
+    public override fun onConfirmReset() {
         confirmResetCalls++
     }
 
-    override fun onDismissDialog() {
+    public override fun onDismissDialog() {
         dismissDialogCalls++
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         backCalls++
     }
 
-    fun emitState(newState: EditStorageSettingsScreenState) {
+    /**
+     * Emits a new [newState] to [state] for testing purposes.
+     */
+    public fun emitState(newState: EditStorageSettingsScreenState) {
         _state.value = newState
     }
 
-    private inline fun updateContent(transform: EditStorageSettingsScreenState.Content.() -> EditStorageSettingsScreenState.Content) {
+    private inline fun updateContent(
+        transform: EditStorageSettingsScreenState.Content.() -> EditStorageSettingsScreenState.Content
+    ) {
         val current = _state.value as? EditStorageSettingsScreenState.Content ?: return
         _state.value = current.transform()
     }

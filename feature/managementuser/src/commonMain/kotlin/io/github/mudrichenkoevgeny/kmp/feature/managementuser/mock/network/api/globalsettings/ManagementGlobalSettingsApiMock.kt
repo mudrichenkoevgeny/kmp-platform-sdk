@@ -8,19 +8,33 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.model
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.settings.network.model.globalsettings.createTestManagementGlobalSettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.settings.network.model.globalsettings.createTestOpenGlobalSettingsPayload
 
+/**
+ * Mock implementation of [ManagementGlobalSettingsApi] for testing.
+ */
 @InternalApi
-class ManagementGlobalSettingsApiMock(
-    var getResult: AppResult<ManagementGlobalSettingsPayload> = AppResult.Success(createTestManagementGlobalSettingsPayload()),
-    var getOpenResult: AppResult<OpenGlobalSettingsPayload> = AppResult.Success(createTestOpenGlobalSettingsPayload()),
-    var updateResult: AppResult<ManagementGlobalSettingsPayload> = AppResult.Success(createTestManagementGlobalSettingsPayload()),
-    var resetResult: AppResult<ManagementGlobalSettingsPayload> = AppResult.Success(createTestManagementGlobalSettingsPayload())
+public class ManagementGlobalSettingsApiMock(
+    public var getResult: AppResult<ManagementGlobalSettingsPayload> = AppResult.Success(
+        createTestManagementGlobalSettingsPayload()
+    ),
+    public var getOpenResult: AppResult<OpenGlobalSettingsPayload> = AppResult.Success(
+        createTestOpenGlobalSettingsPayload()
+    ),
+    public var updateResult: AppResult<ManagementGlobalSettingsPayload> = AppResult.Success(
+        createTestManagementGlobalSettingsPayload()
+    ),
+    public var resetResult: AppResult<ManagementGlobalSettingsPayload> = AppResult.Success(
+        createTestManagementGlobalSettingsPayload()
+    )
 ) : ManagementGlobalSettingsApi {
 
-    override suspend fun getManagementGlobalSettings(): AppResult<ManagementGlobalSettingsPayload> = getResult
+    public override suspend fun getManagementGlobalSettings(): AppResult<ManagementGlobalSettingsPayload> = getResult
 
-    override suspend fun getOpenGlobalSettings(): AppResult<OpenGlobalSettingsPayload> = getOpenResult
+    public override suspend fun getOpenGlobalSettings(): AppResult<OpenGlobalSettingsPayload> = getOpenResult
 
-    override suspend fun updateManagementGlobalSettings(request: ManagementGlobalSettingsPayload): AppResult<ManagementGlobalSettingsPayload> = updateResult
+    public override suspend fun updateManagementGlobalSettings(
+        request: ManagementGlobalSettingsPayload
+    ): AppResult<ManagementGlobalSettingsPayload> = updateResult
 
-    override suspend fun resetManagementGlobalSettings(): AppResult<ManagementGlobalSettingsPayload> = resetResult
+    public override suspend fun resetManagementGlobalSettings(): AppResult<ManagementGlobalSettingsPayload> =
+        resetResult
 }

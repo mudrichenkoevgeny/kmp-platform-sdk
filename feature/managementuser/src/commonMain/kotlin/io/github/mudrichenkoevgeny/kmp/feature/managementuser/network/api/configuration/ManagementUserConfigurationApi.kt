@@ -5,18 +5,18 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.configuration.OpenUserConfigurationPayload
 
 /** Server-driven user configuration for the signed-in user. */
-interface ManagementUserConfigurationApi {
+public interface ManagementUserConfigurationApi {
     /**
      * Loads the combined user configuration for management tasks.
      *
      * @return Configuration DTO from the shared contract, or a mapped failure.
      */
-    suspend fun getManagementUserConfiguration(): AppResult<ManagementUserConfigurationPayload>
+    public suspend fun getManagementUserConfiguration(): AppResult<ManagementUserConfigurationPayload>
 
     /**
      * Loads the open user configuration for unauthenticated management users.
      *
      * @return Open configuration DTO from the shared contract, or a mapped failure.
      */
-    suspend fun getOpenUserConfiguration(): AppResult<OpenUserConfigurationPayload>
+    public suspend fun getOpenUserConfiguration(): AppResult<OpenUserConfigurationPayload>
 }

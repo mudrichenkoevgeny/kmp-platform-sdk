@@ -65,7 +65,7 @@ import kotlinx.coroutines.launch
  * @param onIdentifierSelect Callback invoked when an identifier is tapped.
  * @param onBack Pops this screen from navigation stack.
  */
-class IdentifierListComponentImpl(
+public class IdentifierListComponentImpl(
     componentContext: ComponentContext,
     private val dataSource: IdentifierListDataSource,
     override val includeFilterPanel: Boolean = false,
@@ -84,35 +84,25 @@ class IdentifierListComponentImpl(
     private val onBack: () -> Unit
 ) : IdentifierListComponent, ComponentContext by componentContext {
 
-    override val isAddIdentifierSupported: Boolean
+    public override val isAddIdentifierSupported: Boolean
         get() = dataSource.isAddIdentifierSupported
 
     private val scope = componentCoroutineScope()
     private var timerJob: Job? = null
 
-    override val addIdentifierDialogSlotNavigation = SlotNavigation<AddIdentifierDialogConfig>()
+    public override val addIdentifierDialogSlotNavigation: SlotNavigation<AddIdentifierDialogConfig> = SlotNavigation()
 
-    override val addIdentifierDialogSlot: Value<ChildSlot<AddIdentifierDialogConfig, IdentifierListComponent.AddIdentifierDialogChild>> =
+    public override val addIdentifierDialogSlot:
+        Value<ChildSlot<AddIdentifierDialogConfig, IdentifierListComponent.AddIdentifierDialogChild>> =
         childSlot(
             source = addIdentifierDialogSlotNavigation,
             serializer = AddIdentifierDialogConfig.serializer(),
             handleBackButton = true,
-            childFactory = ::createAddIdentifierDialogChild
+            childFactory = { config, _ -> createAddIdentifierDialogChild(config) }
         )
 
-    private fun createAddIdentifierDialogChild(
-        config: AddIdentifierDialogConfig,
-        context: ComponentContext
-    ): IdentifierListComponent.AddIdentifierDialogChild = when (config) {
-        is AddIdentifierDialogConfig.ProviderSelection -> IdentifierListComponent.AddIdentifierDialogChild.ProviderSelection
-        is AddIdentifierDialogConfig.EmailInput -> IdentifierListComponent.AddIdentifierDialogChild.EmailInput(config.initialEmail)
-        is AddIdentifierDialogConfig.EmailConfirm -> IdentifierListComponent.AddIdentifierDialogChild.EmailConfirm(config.email)
-        is AddIdentifierDialogConfig.PhoneInput -> IdentifierListComponent.AddIdentifierDialogChild.PhoneInput(config.initialPhone)
-        is AddIdentifierDialogConfig.PhoneConfirm -> IdentifierListComponent.AddIdentifierDialogChild.PhoneConfirm(config.phone)
-    }
-
     private val _state = MutableValue<IdentifierListScreenState>(IdentifierListScreenState.Loading)
-    override val state: Value<IdentifierListScreenState> = _state
+    public override val state: Value<IdentifierListScreenState> = _state
 
     private var activeSortState: ListingSortState? = null
     private var activeFilterStates: Map<String, ListingFilterState> = emptyMap()
@@ -127,6 +117,29 @@ class IdentifierListComponentImpl(
         }
     }
 
+    private fun createAddIdentifierDialogChild(
+        config: AddIdentifierDialogConfig
+    ): IdentifierListComponent.AddIdentifierDialogChild = when (config) {
+        is AddIdentifierDialogConfig.ProviderSelection ->
+            IdentifierListComponent.AddIdentifierDialogChild.ProviderSelection
+
+        is AddIdentifierDialogConfig.EmailInput -> IdentifierListComponent.AddIdentifierDialogChild.EmailInput(
+            config.initialEmail
+        )
+
+        is AddIdentifierDialogConfig.EmailConfirm -> IdentifierListComponent.AddIdentifierDialogChild.EmailConfirm(
+            config.email
+        )
+
+        is AddIdentifierDialogConfig.PhoneInput -> IdentifierListComponent.AddIdentifierDialogChild.PhoneInput(
+            config.initialPhone
+        )
+
+        is AddIdentifierDialogConfig.PhoneConfirm -> IdentifierListComponent.AddIdentifierDialogChild.PhoneConfirm(
+            config.phone
+        )
+    }
+
     private fun initScreen() {
         if (_state.value is IdentifierListScreenState.Content) {
             return
@@ -135,18 +148,18 @@ class IdentifierListComponentImpl(
         fetchPage(pageNumber = ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER)
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         if ((backHandler as? BackDispatcher)?.back() != true) {
             onBack()
         }
     }
 
-    override fun onRefresh() {
+    public override fun onRefresh() {
         _state.value = IdentifierListScreenState.Loading
         fetchPage(pageNumber = ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER)
     }
 
-    override fun onLoadNextPage() {
+    public override fun onLoadNextPage() {
         val currentContent = _state.value as? IdentifierListScreenState.Content ?: return
         val paging = currentContent.paging
         if (!paging.canLoadMore) {
@@ -157,20 +170,23 @@ class IdentifierListComponentImpl(
         fetchPage(pageNumber = paging.nextPageNumber)
     }
 
-    override fun onToggleFilterPanel() {
+    public override fun onToggleFilterPanel() {
         val currentContent = _state.value as? IdentifierListScreenState.Content ?: return
         isFilterPanelExpanded = !isFilterPanelExpanded
         _state.value = currentContent.copy(isFilterPanelExpanded = isFilterPanelExpanded)
     }
 
-    override fun onSortChanged(sortState: ListingSortState) {
+    public override fun onSortChanged(sortState: ListingSortState) {
         activeSortState = sortState
         val currentContent = _state.value as? IdentifierListScreenState.Content ?: return
         _state.value = currentContent.copy(sortState = sortState)
         onRefresh()
     }
 
-    override fun onFilterChanged(filterId: String, filterState: ListingFilterState?) {
+    public override fun onFilterChanged(
+        filterId: String,
+        filterState: ListingFilterState?
+    ) {
         val newFilters = activeFilterStates.toMutableMap()
         if (filterState == null) {
             newFilters.remove(filterId)
@@ -183,7 +199,7 @@ class IdentifierListComponentImpl(
         _state.value = currentContent.copy(filterStates = newFilters)
     }
 
-    override fun onApplyFilters() {
+    public override fun onApplyFilters() {
         isFilterPanelExpanded = false
         val currentContent = _state.value as? IdentifierListScreenState.Content
         if (currentContent != null) {
@@ -192,11 +208,11 @@ class IdentifierListComponentImpl(
         onRefresh()
     }
 
-    override fun onIdentifierClick(identifierId: UserIdentifierId) {
+    public override fun onIdentifierClick(identifierId: UserIdentifierId) {
         onIdentifierSelect?.invoke(identifierId)
     }
 
-    override fun onIdentifierDeleted(identifierId: UserIdentifierId) {
+    public override fun onIdentifierDeleted(identifierId: UserIdentifierId) {
         val currentContent = _state.value as? IdentifierListScreenState.Content ?: return
         val updatedItems = currentContent.paging.items.filterNot { it.id == identifierId }
         _state.value = currentContent.copy(
@@ -204,7 +220,7 @@ class IdentifierListComponentImpl(
         )
     }
 
-    override fun onAddIdentifierClick() {
+    public override fun onAddIdentifierClick() {
         if (!isAddIdentifierSupported) {
             return
         }
@@ -248,17 +264,20 @@ class IdentifierListComponentImpl(
         }
     }
 
-    override fun onAddIdentifierSelectProvider(authProvider: UserAuthProvider) {
+    public override fun onAddIdentifierSelectProvider(authProvider: UserAuthProvider) {
         when (authProvider) {
             UserAuthProvider.EMAIL -> {
                 addIdentifierDialogSlotNavigation.activate(AddIdentifierDialogConfig.EmailInput())
             }
+
             UserAuthProvider.PHONE -> {
                 addIdentifierDialogSlotNavigation.activate(AddIdentifierDialogConfig.PhoneInput())
             }
+
             UserAuthProvider.GOOGLE -> {
                 addGoogleIdentifier()
             }
+
             UserAuthProvider.APPLE -> {
                 updateDialogError(
                     UserError.ExternalAuthFailed(
@@ -269,7 +288,7 @@ class IdentifierListComponentImpl(
         }
     }
 
-    override fun onAddIdentifierEmailChanged(email: String) {
+    public override fun onAddIdentifierEmailChanged(email: String) {
         val currentContent = _state.value as? IdentifierListScreenState.Content ?: return
         val isValid = FieldValidator.isEmailValid(email)
         _state.value = currentContent.copy(addEmail = email, isAddEmailValid = isValid, actionError = null)
@@ -282,17 +301,18 @@ class IdentifierListComponentImpl(
         }
     }
 
-    override fun onAddIdentifierPasswordChanged(password: String) {
+    public override fun onAddIdentifierPasswordChanged(password: String) {
         val currentContent = _state.value as? IdentifierListScreenState.Content ?: return
-        _state.value = currentContent.copy(addPassword = password, isAddPasswordValid = password.isNotBlank(), actionError = null)
+        _state.value =
+            currentContent.copy(addPassword = password, isAddPasswordValid = password.isNotBlank(), actionError = null)
     }
 
-    override fun onAddIdentifierTogglePasswordVisibility() {
+    public override fun onAddIdentifierTogglePasswordVisibility() {
         val currentContent = _state.value as? IdentifierListScreenState.Content ?: return
         _state.value = currentContent.copy(isAddPasswordVisible = !currentContent.isAddPasswordVisible)
     }
 
-    override fun onAddIdentifierPhoneChanged(phone: String) {
+    public override fun onAddIdentifierPhoneChanged(phone: String) {
         val currentContent = _state.value as? IdentifierListScreenState.Content ?: return
         val isValid = FieldValidator.isPhoneNumberValid(phone)
         _state.value = currentContent.copy(addPhone = phone, isAddPhoneValid = isValid, actionError = null)
@@ -305,17 +325,19 @@ class IdentifierListComponentImpl(
         }
     }
 
-    override fun onAddIdentifierCodeChanged(code: String) {
+    public override fun onAddIdentifierCodeChanged(code: String) {
         val currentContent = _state.value as? IdentifierListScreenState.Content ?: return
         if (code.length <= FieldValidator.DEFAULT_OTP_LENGTH) {
             _state.value = currentContent.copy(addCode = code, actionError = null)
-            if (currentContent.canSubmitAddPhone && addIdentifierDialogSlot.value.child?.configuration is AddIdentifierDialogConfig.PhoneConfirm) {
+            if (currentContent.canSubmitAddPhone &&
+                addIdentifierDialogSlot.value.child?.configuration is AddIdentifierDialogConfig.PhoneConfirm
+            ) {
                 onAddIdentifierSubmit()
             }
         }
     }
 
-    override fun onAddIdentifierSendCode() {
+    public override fun onAddIdentifierSendCode() {
         val currentContent = _state.value as? IdentifierListScreenState.Content ?: return
 
         when (addIdentifierDialogSlot.value.child?.configuration) {
@@ -338,6 +360,7 @@ class IdentifierListComponentImpl(
                         }
                 }
             }
+
             is AddIdentifierDialogConfig.PhoneInput, is AddIdentifierDialogConfig.PhoneConfirm -> {
                 val useCase = sendAddPhoneIdentifierConfirmationUseCase ?: return
                 updateDialogLoading(true)
@@ -357,11 +380,12 @@ class IdentifierListComponentImpl(
                         }
                 }
             }
+
             else -> {}
         }
     }
 
-    override fun onAddIdentifierSubmit() {
+    public override fun onAddIdentifierSubmit() {
         val currentContent = _state.value as? IdentifierListScreenState.Content ?: return
 
         when (addIdentifierDialogSlot.value.child?.configuration) {
@@ -383,6 +407,7 @@ class IdentifierListComponentImpl(
                         }
                 }
             }
+
             is AddIdentifierDialogConfig.PhoneConfirm -> {
                 val useCase = addUserIdentifierPhoneUseCase ?: return
                 if (!currentContent.canSubmitAddPhone) {
@@ -401,31 +426,45 @@ class IdentifierListComponentImpl(
                         }
                 }
             }
+
             else -> {}
         }
     }
 
-    override fun onAddIdentifierDialogBack() {
+    public override fun onAddIdentifierDialogBack() {
         when (addIdentifierDialogSlot.value.child?.configuration) {
             is AddIdentifierDialogConfig.EmailConfirm -> {
                 timerJob?.cancel()
-                val email = (addIdentifierDialogSlot.value.child?.configuration as? AddIdentifierDialogConfig.EmailConfirm)?.email ?: ""
+                val email =
+                    (
+                        addIdentifierDialogSlot.value.child?.configuration
+                            as? AddIdentifierDialogConfig.EmailConfirm
+                        )?.email
+                        ?: ""
                 addIdentifierDialogSlotNavigation.activate(AddIdentifierDialogConfig.EmailInput(email))
             }
+
             is AddIdentifierDialogConfig.PhoneConfirm -> {
                 timerJob?.cancel()
-                val phone = (addIdentifierDialogSlot.value.child?.configuration as? AddIdentifierDialogConfig.PhoneConfirm)?.phone ?: ""
+                val phone =
+                    (
+                        addIdentifierDialogSlot.value.child?.configuration
+                            as? AddIdentifierDialogConfig.PhoneConfirm
+                        )?.phone
+                        ?: ""
                 addIdentifierDialogSlotNavigation.activate(AddIdentifierDialogConfig.PhoneInput(phone))
             }
+
             is AddIdentifierDialogConfig.EmailInput, is AddIdentifierDialogConfig.PhoneInput -> {
                 timerJob?.cancel()
                 addIdentifierDialogSlotNavigation.activate(AddIdentifierDialogConfig.ProviderSelection)
             }
+
             else -> onAddIdentifierDialogDismiss()
         }
     }
 
-    override fun onAddIdentifierDialogDismiss() {
+    public override fun onAddIdentifierDialogDismiss() {
         timerJob?.cancel()
         addIdentifierDialogSlotNavigation.dismiss()
         val currentContent = _state.value as? IdentifierListScreenState.Content ?: return
@@ -459,12 +498,18 @@ class IdentifierListComponentImpl(
         }
     }
 
-    private fun moveToEmailConfirmation(email: String, seconds: Int) {
+    private fun moveToEmailConfirmation(
+        email: String,
+        seconds: Int
+    ) {
         addIdentifierDialogSlotNavigation.activate(AddIdentifierDialogConfig.EmailConfirm(email, seconds))
         startTimer(seconds)
     }
 
-    private fun moveToPhoneConfirmation(phone: String, seconds: Int) {
+    private fun moveToPhoneConfirmation(
+        phone: String,
+        seconds: Int
+    ) {
         addIdentifierDialogSlotNavigation.activate(AddIdentifierDialogConfig.PhoneConfirm(phone, seconds))
         startTimer(seconds)
     }
@@ -520,7 +565,8 @@ class IdentifierListComponentImpl(
             dataSource.getIdentifiers(query)
                 .onSuccess { pagedResult ->
                     val latestContent = _state.value as? IdentifierListScreenState.Content
-                    val newPaging = (latestContent?.paging ?: PaginationState<UserIdentifierSummary>()).appendResult(pagedResult)
+                    val newPaging =
+                        (latestContent?.paging ?: PaginationState<UserIdentifierSummary>()).appendResult(pagedResult)
                     val activeIdentifierId = authStorage?.getIdentifierId()?.toUserIdentifierIdOrNull()
                     val currentUserId = userRepository?.currentUser?.firstOrNull()?.id
                     _state.value = latestContent?.copy(

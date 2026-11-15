@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.decodeFromJsonElement
 
@@ -55,6 +56,7 @@ class OpenUserRepositoryImpl(
                         UserWebSocketEventTypes.USER_UPDATED -> {
                             handleUserUpdated(webSocketFrame.payload)
                         }
+
                         UserWebSocketEventTypes.SESSION_DELETED -> {
                             handleSessionDeleted()
                         }
@@ -63,45 +65,37 @@ class OpenUserRepositoryImpl(
         }
     }
 
-    override suspend fun refreshCurrentUser(): AppResult<UserPrivate> {
-        return mutex.withLock {
-            openUserApi.getUser().mapSuccess { userPrivatePayload: UserPrivatePayload ->
-                val userPrivate = userPrivatePayload.toUserPrivate()
-                userStorage.updateCurrentUser(userPrivate)
-                userPrivate
-            }
+    override suspend fun refreshCurrentUser(): AppResult<UserPrivate> = mutex.withLock {
+        openUserApi.getUser().mapSuccess { userPrivatePayload: UserPrivatePayload ->
+            val userPrivate = userPrivatePayload.toUserPrivate()
+            userStorage.updateCurrentUser(userPrivate)
+            userPrivate
         }
     }
 
-    override suspend fun scheduleUserDeletion(): AppResult<UserPrivate> {
-        return mutex.withLock {
-            openUserApi.scheduleUserDeletion().mapSuccess { userPrivatePayload: UserPrivatePayload ->
-                val userPrivate = userPrivatePayload.toUserPrivate()
-                userStorage.updateCurrentUser(userPrivate)
-                userPrivate
-            }
+    override suspend fun scheduleUserDeletion(): AppResult<UserPrivate> = mutex.withLock {
+        openUserApi.scheduleUserDeletion().mapSuccess { userPrivatePayload: UserPrivatePayload ->
+            val userPrivate = userPrivatePayload.toUserPrivate()
+            userStorage.updateCurrentUser(userPrivate)
+            userPrivate
         }
     }
 
-    override suspend fun restoreUser(): AppResult<UserPrivate> {
-        return mutex.withLock {
-            openUserApi.restoreUser().mapSuccess { userPrivatePayload: UserPrivatePayload ->
-                val userPrivate = userPrivatePayload.toUserPrivate()
-                userStorage.updateCurrentUser(userPrivate)
-                userPrivate
-            }
+    override suspend fun restoreUser(): AppResult<UserPrivate> = mutex.withLock {
+        openUserApi.restoreUser().mapSuccess { userPrivatePayload: UserPrivatePayload ->
+            val userPrivate = userPrivatePayload.toUserPrivate()
+            userStorage.updateCurrentUser(userPrivate)
+            userPrivate
         }
     }
 
     override suspend fun selfUpdateUser(
         params: UpdateUserParams
-    ): AppResult<UserPrivate> {
-        return mutex.withLock {
-            openUserApi.selfUpdateUser(params.toSelfUpdateUserRequest()).mapSuccess { userPrivatePayload ->
-                val userPrivate = userPrivatePayload.toUserPrivate()
-                userStorage.updateCurrentUser(userPrivate)
-                userPrivate
-            }
+    ): AppResult<UserPrivate> = mutex.withLock {
+        openUserApi.selfUpdateUser(params.toSelfUpdateUserRequest()).mapSuccess { userPrivatePayload ->
+            val userPrivate = userPrivatePayload.toUserPrivate()
+            userStorage.updateCurrentUser(userPrivate)
+            userPrivate
         }
     }
 
@@ -117,7 +111,9 @@ class OpenUserRepositoryImpl(
 
         val userPrivatePayload = try {
             FoundationJson.decodeFromJsonElement<UserPrivatePayload>(payload)
-        } catch (e: Exception) {
+        } catch (e: SerializationException) {
+            return WebSocketMessageHandlerResult.Error(CommonError.ContractViolation(e))
+        } catch (e: IllegalArgumentException) {
             return WebSocketMessageHandlerResult.Error(CommonError.ContractViolation(e))
         }
 

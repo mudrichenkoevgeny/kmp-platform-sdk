@@ -8,28 +8,31 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.data.AuthDataPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByEmailRequest
 
+/**
+ * Mock implementation of [SelfManagementLoginApi] for testing.
+ */
 @InternalApi
-class SelfManagementLoginApiMock : SelfManagementLoginApi {
+public class SelfManagementLoginApiMock : SelfManagementLoginApi {
 
-    var loginByEmailResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
-    var loginByTotpResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
-    var loginByTotpRecoveryCodeResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
+    public var loginByEmailResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
+    public var loginByTotpResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
+    public var loginByTotpRecoveryCodeResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
 
-    var lastLoginByEmailRequest: LoginByEmailRequest? = null
-    var lastLoginByTotpRequest: VerifyTotpPayload? = null
-    var lastLoginByTotpRecoveryCodeRequest: VerifyTotpPayload? = null
+    public var lastLoginByEmailRequest: LoginByEmailRequest? = null
+    public var lastLoginByTotpRequest: VerifyTotpPayload? = null
+    public var lastLoginByTotpRecoveryCodeRequest: VerifyTotpPayload? = null
 
-    override suspend fun loginByEmail(request: LoginByEmailRequest): AppResult<AuthDataPayload> {
+    public override suspend fun loginByEmail(request: LoginByEmailRequest): AppResult<AuthDataPayload> {
         lastLoginByEmailRequest = request
         return loginByEmailResult
     }
 
-    override suspend fun loginByTotp(request: VerifyTotpPayload): AppResult<AuthDataPayload> {
+    public override suspend fun loginByTotp(request: VerifyTotpPayload): AppResult<AuthDataPayload> {
         lastLoginByTotpRequest = request
         return loginByTotpResult
     }
 
-    override suspend fun loginByTotpRecoveryCode(request: VerifyTotpPayload): AppResult<AuthDataPayload> {
+    public override suspend fun loginByTotpRecoveryCode(request: VerifyTotpPayload): AppResult<AuthDataPayload> {
         lastLoginByTotpRecoveryCodeRequest = request
         return loginByTotpRecoveryCodeResult
     }

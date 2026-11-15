@@ -11,9 +11,9 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.Co
  * @property args Dynamic metadata providing additional context for the failure (e.g. [CommonErrorArgs]).
  * @property isRetryable Indicates whether the operation can be retried (e.g. to show a "Try Again" action).
  */
-interface AppError {
-    val id: ErrorId
-    val code: String
-    val args: Map<String, String>?
-    val isRetryable: Boolean
+public interface AppError {
+    public val id: ErrorId
+    public val code: String
+    public val args: Map<String, String>?
+    public val isRetryable: Boolean
 }

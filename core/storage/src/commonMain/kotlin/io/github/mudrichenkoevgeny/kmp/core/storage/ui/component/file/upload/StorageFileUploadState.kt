@@ -11,16 +11,17 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.ui.component.f
  * @property queueItems Current list of items in the upload queue.
  * @property isUploading Whether an upload operation is actively running.
  */
-data class StorageFileUploadState(
-    val config: StorageFileUploadUiConfig,
-    val queueItems: List<UploadQueueItem> = emptyList(),
-    val isUploading: Boolean = false
+public data class StorageFileUploadState(
+    public val config: StorageFileUploadUiConfig,
+    public val queueItems: List<UploadQueueItem> = emptyList(),
+    public val isUploading: Boolean = false
 ) {
     /**
      * `true` if there are any idle or failed items ready for upload.
      */
-    val hasPending: Boolean
+    public val hasPending: Boolean
         get() = queueItems.any { uploadQueueItem ->
-            uploadQueueItem.status == UploadQueueItemStatus.IDLE || uploadQueueItem.status == UploadQueueItemStatus.FAILED
+            uploadQueueItem.status == UploadQueueItemStatus.IDLE ||
+                uploadQueueItem.status == UploadQueueItemStatus.FAILED
         }
 }

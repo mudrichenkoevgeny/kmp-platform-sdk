@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
  * @param onUploaded Callback invoked when all queued files are successfully uploaded.
  */
 @OptIn(InternalApi::class)
-class StorageFileUploadComponentImpl(
+public class StorageFileUploadComponentImpl(
     componentContext: ComponentContext,
     private val config: StorageFileUploadUiConfig,
     private val uploadFileUseCase: UploadFileUseCase,
@@ -87,7 +87,8 @@ class StorageFileUploadComponentImpl(
             } else if (!StorageUploadValidator.isFileSizeValid(
                     config.maxFileSizeBytes,
                     payload.fileSizeBytes
-                )) {
+                )
+            ) {
                 status = UploadQueueItemStatus.FAILED
                 appError = StorageError.FileSizeExceedsLimit(
                     maxFileSizeBytes = config.maxFileSizeBytes,
@@ -100,7 +101,8 @@ class StorageFileUploadComponentImpl(
                     config.acceptedFileTypes,
                     payload.fileName,
                     payload.mimeType
-                )) {
+                )
+            ) {
                 status = UploadQueueItemStatus.FAILED
                 appError = StorageError.UnsupportedMimeType(
                     mimeType = payload.mimeType,
@@ -144,7 +146,7 @@ class StorageFileUploadComponentImpl(
         }
     }
 
-    override fun onUploadClicked() {
+    public override fun onUploadClicked() {
         if (_state.value.isUploading) {
             return
         }
@@ -199,6 +201,7 @@ class StorageFileUploadComponentImpl(
                             )
                         }
                     }
+
                     is AppResult.Error -> {
                         val appError = result.error
                         val apiError = ApiErrorResponse(
@@ -226,9 +229,12 @@ class StorageFileUploadComponentImpl(
         }
     }
 
-    override fun getFilePayload(id: UploadQueueItemId): SelectedFilePayload? = filePayloads[id]
+    public override fun getFilePayload(id: UploadQueueItemId): SelectedFilePayload? = filePayloads[id]
 
-    override fun onItemCategoryChanged(id: UploadQueueItemId, category: StorageCategory) {
+    public override fun onItemCategoryChanged(
+        id: UploadQueueItemId,
+        category: StorageCategory
+    ) {
         if (_state.value.isUploading) return
         updateItemState(id) { item ->
             if (item.status != UploadQueueItemStatus.UPLOADING) {
@@ -239,7 +245,10 @@ class StorageFileUploadComponentImpl(
         }
     }
 
-    override fun onItemVisibilityChanged(id: UploadQueueItemId, visibility: StorageFileVisibility) {
+    public override fun onItemVisibilityChanged(
+        id: UploadQueueItemId,
+        visibility: StorageFileVisibility
+    ) {
         if (_state.value.isUploading) return
         updateItemState(id) { item ->
             if (item.status != UploadQueueItemStatus.UPLOADING) {
@@ -250,7 +259,7 @@ class StorageFileUploadComponentImpl(
         }
     }
 
-    override fun onRemoveItemClicked(id: UploadQueueItemId) {
+    public override fun onRemoveItemClicked(id: UploadQueueItemId) {
         if (!_state.value.isUploading) {
             val currentItems = _state.value.queueItems
             val item = currentItems.find { it.id == id }

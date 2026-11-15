@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
  * @param resetRemoteAuthSettingsUseCase Resets auth settings to defaults.
  * @param onBack Pops this screen from the navigation stack.
  */
-class EditAuthSettingsComponentImpl(
+public class EditAuthSettingsComponentImpl public constructor(
     componentContext: ComponentContext,
     initialDialogConfig: SettingsDialogConfig? = null,
     private val getManagementAuthSettingsUseCase: GetManagementAuthSettingsUseCase,
@@ -44,7 +44,7 @@ class EditAuthSettingsComponentImpl(
     private val _state = MutableValue<EditAuthSettingsScreenState>(EditAuthSettingsScreenState.Loading)
     override val state: Value<EditAuthSettingsScreenState> = _state
 
-    override val dialogSlotNavigation = SlotNavigation<SettingsDialogConfig>()
+    override val dialogSlotNavigation: SlotNavigation<SettingsDialogConfig> = SlotNavigation<SettingsDialogConfig>()
 
     override val dialogSlot: Value<ChildSlot<SettingsDialogConfig, SettingsDialogChild>> =
         childSlot(
@@ -76,7 +76,8 @@ class EditAuthSettingsComponentImpl(
             val nextState = when (settingsResult) {
                 is AppResult.Success -> {
                     val settings = settingsResult.data
-                    val enabled = (settings.availableAuthProviders.primary + settings.availableAuthProviders.secondary).toSet()
+                    val enabled =
+                        (settings.availableAuthProviders.primary + settings.availableAuthProviders.secondary).toSet()
                     EditAuthSettingsScreenState.Content(
                         enabledProviders = enabled,
                         maxTotalIdentifiers = settings.maxTotalIdentifiers.toString(),
@@ -100,18 +101,24 @@ class EditAuthSettingsComponentImpl(
                         openEmailWhitelistEnabled = settings.openEmailRestrictionPolicy.isWhitelistEnabled,
                         openEmailWhitelist = settings.openEmailRestrictionPolicy.whitelist.joinToString(","),
                         managementEmailBlacklistEnabled = settings.managementEmailRestrictionPolicy.isBlacklistEnabled,
-                        managementEmailBlacklist = settings.managementEmailRestrictionPolicy.blacklist.joinToString(","),
+                        managementEmailBlacklist = settings.managementEmailRestrictionPolicy.blacklist.joinToString(
+                            ","
+                        ),
                         managementEmailWhitelistEnabled = settings.managementEmailRestrictionPolicy.isWhitelistEnabled,
                         managementEmailWhitelist = settings.managementEmailRestrictionPolicy.whitelist.joinToString(",")
                     )
                 }
+
                 is AppResult.Error -> EditAuthSettingsScreenState.Error(settingsResult.error)
             }
             _state.value = nextState
         }
     }
 
-    override fun onProviderToggled(provider: UserAuthProvider, enabled: Boolean) {
+    override fun onProviderToggled(
+        provider: UserAuthProvider,
+        enabled: Boolean
+    ) {
         val current = _state.value as? EditAuthSettingsScreenState.Content ?: return
         val newProviders = if (enabled) {
             current.enabledProviders + provider
@@ -227,8 +234,10 @@ class EditAuthSettingsComponentImpl(
         scope.launch {
             _state.value = current.copy(isSaving = true, saveError = null)
 
-            val primaryProviders = listOf(UserAuthProvider.EMAIL, UserAuthProvider.PHONE).filter { it in current.enabledProviders }
-            val secondaryProviders = listOf(UserAuthProvider.GOOGLE, UserAuthProvider.APPLE).filter { it in current.enabledProviders }
+            val primaryProviders =
+                listOf(UserAuthProvider.EMAIL, UserAuthProvider.PHONE).filter { it in current.enabledProviders }
+            val secondaryProviders =
+                listOf(UserAuthProvider.GOOGLE, UserAuthProvider.APPLE).filter { it in current.enabledProviders }
 
             val settings = ManagementAuthSettings(
                 availableAuthProviders = AvailableAuthProviders(
@@ -249,7 +258,8 @@ class EditAuthSettingsComponentImpl(
                 accessTokenExpirationSeconds = current.accessTokenExpirationSeconds.toIntOrNull() ?: 3600,
                 refreshTokenExpirationSeconds = current.refreshTokenExpirationSeconds.toIntOrNull() ?: 86400,
                 accountDeletionGracePeriodSeconds = current.accountDeletionGracePeriodSeconds.toIntOrNull() ?: 604800,
-                accountDeletionCheckIntervalSeconds = current.accountDeletionCheckIntervalSeconds.toIntOrNull() ?: 86400,
+                accountDeletionCheckIntervalSeconds = current.accountDeletionCheckIntervalSeconds.toIntOrNull()
+                    ?: 86400,
                 isRegistrationEnabled = current.isRegistrationEnabled,
                 openEmailRestrictionPolicy = EmailRestrictionPolicy(
                     isBlacklistEnabled = current.openEmailBlacklistEnabled,
@@ -259,7 +269,8 @@ class EditAuthSettingsComponentImpl(
                 ),
                 managementEmailRestrictionPolicy = EmailRestrictionPolicy(
                     isBlacklistEnabled = current.managementEmailBlacklistEnabled,
-                    blacklist = current.managementEmailBlacklist.split(",").map { it.trim() }.filter { it.isNotBlank() },
+                    blacklist = current.managementEmailBlacklist.split(",").map { it.trim() }
+                        .filter { it.isNotBlank() },
                     isWhitelistEnabled = current.managementEmailWhitelistEnabled,
                     whitelist = current.managementEmailWhitelist.split(",").map { it.trim() }.filter { it.isNotBlank() }
                 )
@@ -271,6 +282,7 @@ class EditAuthSettingsComponentImpl(
                     onBack()
                     current.copy(isSaving = false)
                 }
+
                 is AppResult.Error -> current.copy(isSaving = false, saveError = saveResult.error)
             }
             _state.value = nextState
@@ -292,6 +304,7 @@ class EditAuthSettingsComponentImpl(
                     onBack()
                     current.copy(isSaving = false)
                 }
+
                 is AppResult.Error -> current.copy(isSaving = false, saveError = resetResult.error)
             }
             _state.value = nextState

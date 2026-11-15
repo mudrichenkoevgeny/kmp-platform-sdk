@@ -11,8 +11,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.security.EditSecuritySettingsComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.security.EditSecuritySettingsScreenState
 
+/**
+ * Mock implementation of [EditSecuritySettingsComponent] for testing.
+ */
 @InternalApi
-class EditSecuritySettingsComponentMock(
+public class EditSecuritySettingsComponentMock(
     initialState: EditSecuritySettingsScreenState = EditSecuritySettingsScreenState.Content(
         recentAuthenticationValiditySecondsForOpenUser = "300",
         recentAuthenticationValiditySecondsForManagementUser = "300",
@@ -48,58 +51,67 @@ class EditSecuritySettingsComponentMock(
         rateLimitPeriodSeconds = "60"
     )
 ) : EditSecuritySettingsComponent {
-    override val state: Value<EditSecuritySettingsScreenState> = MutableValue(initialState)
+    public override val state: Value<EditSecuritySettingsScreenState> = MutableValue(initialState)
 
-    override val dialogSlotNavigation = SlotNavigation<SettingsDialogConfig>()
+    public override val dialogSlotNavigation: SlotNavigation<SettingsDialogConfig> =
+        SlotNavigation<SettingsDialogConfig>()
     private val _dialogSlot = MutableValue<ChildSlot<SettingsDialogConfig, SettingsDialogChild>>(ChildSlot())
-    override val dialogSlot: Value<ChildSlot<SettingsDialogConfig, SettingsDialogChild>> = _dialogSlot
+    public override val dialogSlot: Value<ChildSlot<SettingsDialogConfig, SettingsDialogChild>> = _dialogSlot
 
-    fun setDialog(config: SettingsDialogConfig?) {
+    /** Sets the active dialog configuration. */
+    public fun setDialog(config: SettingsDialogConfig?) {
         val child = when (config) {
             is SettingsDialogConfig.ConfirmReset -> SettingsDialogChild.ConfirmReset
             null -> null
         }
         _dialogSlot.value = ChildSlot(
-            child = if (config != null && child != null) Child.Created(configuration = config, instance = child) else null
+            child = if (config != null && child != null) {
+                Child.Created(
+                    configuration = config,
+                    instance = child
+                )
+            } else {
+                null
+            }
         )
     }
 
-    override fun onRetry() {}
-    override fun onRecentAuthenticationValidityForOpenUserChanged(value: String) {}
-    override fun onRecentAuthenticationValidityForManagementUserChanged(value: String) {}
-    override fun onMfaTokenExpirationSecondsChanged(value: String) {}
-    override fun onPasswordMinLengthChanged(value: String) {}
-    override fun onPasswordRequireLetterToggled(enabled: Boolean) {}
-    override fun onPasswordRequireUpperCaseToggled(enabled: Boolean) {}
-    override fun onPasswordRequireLowerCaseToggled(enabled: Boolean) {}
-    override fun onPasswordRequireDigitToggled(enabled: Boolean) {}
-    override fun onPasswordRequireSpecialCharToggled(enabled: Boolean) {}
-    override fun onCommonPasswordsChanged(value: String) {}
-    override fun onAccountLockoutMaxFailedPasswordAttemptsChanged(value: String) {}
-    override fun onAccountLockoutMaxFailedOtpAttemptsChanged(value: String) {}
-    override fun onAccountLockoutMaxFailedTotpAttemptsChanged(value: String) {}
-    override fun onAccountLockoutFailedAttemptsWindowSecondsChanged(value: String) {}
-    override fun onAccountLockoutDurationSecondsChanged(value: String) {}
-    override fun onAccountLockoutIndefiniteLockoutThresholdChanged(value: String) {}
-    override fun onAccountLockoutIsSelfServiceUnlockEnabledToggled(enabled: Boolean) {}
-    override fun onAccountLockoutCheckIntervalSecondsChanged(value: String) {}
-    override fun onRefreshTokenRotationGracePeriodSecondsChanged(value: String) {}
-    override fun onOpenIpBlacklistEnabledToggled(enabled: Boolean) {}
-    override fun onOpenIpBlacklistChanged(value: String) {}
-    override fun onOpenIpWhitelistEnabledToggled(enabled: Boolean) {}
-    override fun onOpenIpWhitelistChanged(value: String) {}
-    override fun onManagementIpBlacklistEnabledToggled(enabled: Boolean) {}
-    override fun onManagementIpBlacklistChanged(value: String) {}
-    override fun onManagementIpWhitelistEnabledToggled(enabled: Boolean) {}
-    override fun onManagementIpWhitelistChanged(value: String) {}
-    override fun onOtpRetryAfterSecondsChanged(value: String) {}
-    override fun onOtpNumberOfSymbolsChanged(value: String) {}
-    override fun onOtpExpirationSecondsChanged(value: String) {}
-    override fun onMaxRequestsPerPeriodChanged(value: String) {}
-    override fun onRateLimitPeriodSecondsChanged(value: String) {}
-    override fun onSaveClick() {}
-    override fun onResetClick() {}
-    override fun onConfirmReset() {}
-    override fun onDismissDialog() {}
-    override fun onBackClick() {}
+    public override fun onRetry(): Unit = Unit
+    public override fun onRecentAuthenticationValidityForOpenUserChanged(value: String): Unit = Unit
+    public override fun onRecentAuthenticationValidityForManagementUserChanged(value: String): Unit = Unit
+    public override fun onMfaTokenExpirationSecondsChanged(value: String): Unit = Unit
+    public override fun onPasswordMinLengthChanged(value: String): Unit = Unit
+    public override fun onPasswordRequireLetterToggled(enabled: Boolean): Unit = Unit
+    public override fun onPasswordRequireUpperCaseToggled(enabled: Boolean): Unit = Unit
+    public override fun onPasswordRequireLowerCaseToggled(enabled: Boolean): Unit = Unit
+    public override fun onPasswordRequireDigitToggled(enabled: Boolean): Unit = Unit
+    public override fun onPasswordRequireSpecialCharToggled(enabled: Boolean): Unit = Unit
+    public override fun onCommonPasswordsChanged(value: String): Unit = Unit
+    public override fun onAccountLockoutMaxFailedPasswordAttemptsChanged(value: String): Unit = Unit
+    public override fun onAccountLockoutMaxFailedOtpAttemptsChanged(value: String): Unit = Unit
+    public override fun onAccountLockoutMaxFailedTotpAttemptsChanged(value: String): Unit = Unit
+    public override fun onAccountLockoutFailedAttemptsWindowSecondsChanged(value: String): Unit = Unit
+    public override fun onAccountLockoutDurationSecondsChanged(value: String): Unit = Unit
+    public override fun onAccountLockoutIndefiniteLockoutThresholdChanged(value: String): Unit = Unit
+    public override fun onAccountLockoutIsSelfServiceUnlockEnabledToggled(enabled: Boolean): Unit = Unit
+    public override fun onAccountLockoutCheckIntervalSecondsChanged(value: String): Unit = Unit
+    public override fun onRefreshTokenRotationGracePeriodSecondsChanged(value: String): Unit = Unit
+    public override fun onOpenIpBlacklistEnabledToggled(enabled: Boolean): Unit = Unit
+    public override fun onOpenIpBlacklistChanged(value: String): Unit = Unit
+    public override fun onOpenIpWhitelistEnabledToggled(enabled: Boolean): Unit = Unit
+    public override fun onOpenIpWhitelistChanged(value: String): Unit = Unit
+    public override fun onManagementIpBlacklistEnabledToggled(enabled: Boolean): Unit = Unit
+    public override fun onManagementIpBlacklistChanged(value: String): Unit = Unit
+    public override fun onManagementIpWhitelistEnabledToggled(enabled: Boolean): Unit = Unit
+    public override fun onManagementIpWhitelistChanged(value: String): Unit = Unit
+    public override fun onOtpRetryAfterSecondsChanged(value: String): Unit = Unit
+    public override fun onOtpNumberOfSymbolsChanged(value: String): Unit = Unit
+    public override fun onOtpExpirationSecondsChanged(value: String): Unit = Unit
+    public override fun onMaxRequestsPerPeriodChanged(value: String): Unit = Unit
+    public override fun onRateLimitPeriodSecondsChanged(value: String): Unit = Unit
+    public override fun onSaveClick(): Unit = Unit
+    public override fun onResetClick(): Unit = Unit
+    public override fun onConfirmReset(): Unit = Unit
+    public override fun onDismissDialog(): Unit = Unit
+    public override fun onBackClick(): Unit = Unit
 }

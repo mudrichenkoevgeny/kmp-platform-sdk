@@ -17,9 +17,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.Dp
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.utils.StorageIconsMapper
@@ -38,7 +38,7 @@ import org.jetbrains.compose.resources.painterResource
  * @param iconSize Size of the centered category icon.
  */
 @Composable
-fun StorageFilePreview(
+public fun StorageFilePreview(
     category: StorageCategory,
     modifier: Modifier = Modifier,
     containerSize: Dp = CoreTheme.dimens.previewThumbnailSize,
@@ -119,21 +119,21 @@ private fun StorageFilePreviewCategoriesPreview(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun StorageFilePreviewComponentSizePreview() {
     StorageFilePreviewPreviewContent(state = defaultStorageFilePreviewState)
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun StorageFilePreviewThemePreview() {
     StorageFilePreviewPreviewContent(state = defaultStorageFilePreviewState)
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun StorageFilePreviewFontScalePreview() {
     StorageFilePreviewPreviewContent(state = defaultStorageFilePreviewState)
@@ -142,7 +142,7 @@ private fun StorageFilePreviewFontScalePreview() {
 /**
  * Test tags dictionary for [StorageFilePreview].
  */
-object StorageFilePreviewTestTags {
+public object StorageFilePreviewTestTags {
     /** Test tag prefix for the preview container. */
-    const val CONTAINER_PREFIX = "StorageFilePreview_"
+    public const val CONTAINER_PREFIX: String = "StorageFilePreview_"
 }

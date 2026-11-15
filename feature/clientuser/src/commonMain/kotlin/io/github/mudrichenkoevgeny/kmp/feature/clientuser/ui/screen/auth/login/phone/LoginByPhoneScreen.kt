@@ -40,21 +40,30 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorTe
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreSmallText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.ui.screen.auth.login.phone.LoginByPhoneComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 
+/**
+ * Composable screen for user sign in via phone number and OTP confirmation code.
+ *
+ * @param component Component managing phone login UI state and navigation stack.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
+public fun LoginByPhoneScreen(
+    component: LoginByPhoneComponent,
+    modifier: Modifier = Modifier
+) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {
@@ -84,15 +93,16 @@ fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
                     is LoginByPhoneComponent.Child.PhoneInput -> {
                         PhoneInputContent(
                             state = state,
-                            onPhoneChanged = component::onPhoneChanged,
+                            onPhoneChange = component::onPhoneChanged,
                             onSendCodeClick = component::onSendCodeClick
                         )
                     }
+
                     is LoginByPhoneComponent.Child.CodeInput -> {
                         CodeInputContent(
                             state = state,
                             phone = activeChild.phone,
-                            onCodeChanged = component::onCodeChanged,
+                            onCodeChange = component::onCodeChanged,
                             onConfirmClick = component::onConfirmCodeClick,
                             onResendClick = component::onSendCodeClick,
                             onChangePhoneClick = component::onResetPhoneClick
@@ -113,12 +123,13 @@ fun LoginByPhoneScreen(component: LoginByPhoneComponent) {
 @Composable
 private fun PhoneInputContent(
     state: LoginByPhoneScreenState,
-    onPhoneChanged: (String) -> Unit,
-    onSendCodeClick: () -> Unit
+    onPhoneChange: (String) -> Unit,
+    onSendCodeClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val userUi = LocalUserStrings.current.ui
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(CoreTheme.dimens.paddingLarge)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -139,7 +150,7 @@ private fun PhoneInputContent(
 
             CoreOutlinedTextField(
                 value = state.phoneNumber,
-                onValueChange = onPhoneChanged,
+                onValueChange = onPhoneChange,
                 label = { CoreBodyText(userUi.phoneNumber) },
                 placeholder = { CoreBodyText(userUi.phoneNumber) },
                 modifier = Modifier.testTag(LoginByPhoneTestTags.PHONE_INPUT),
@@ -171,14 +182,15 @@ private fun PhoneInputContent(
 private fun CodeInputContent(
     state: LoginByPhoneScreenState,
     phone: String,
-    onCodeChanged: (String) -> Unit,
+    onCodeChange: (String) -> Unit,
     onConfirmClick: () -> Unit,
     onResendClick: () -> Unit,
-    onChangePhoneClick: () -> Unit
+    onChangePhoneClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val userUi = LocalUserStrings.current.ui
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(CoreTheme.dimens.paddingLarge)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -202,7 +214,7 @@ private fun CodeInputContent(
         ) {
             CoreCodeTextField(
                 value = state.code,
-                onValueChange = onCodeChanged,
+                onValueChange = onCodeChange,
                 label = { CoreBodyText(userUi.confirmationCode) },
                 placeholder = { CoreBodyText(userUi.enterConfirmationCode) },
                 modifier = Modifier.testTag(LoginByPhoneTestTags.CODE_INPUT),
@@ -300,7 +312,7 @@ private val defaultLoginByPhonePreviewState = LoginByPhoneScreenState(
 )
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun StatesPreview(
     @PreviewParameter(LoginByPhonePreviewProvider::class) state: LoginByPhoneScreenState
@@ -311,7 +323,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
@@ -320,7 +332,7 @@ private fun ScreenSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -329,7 +341,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {

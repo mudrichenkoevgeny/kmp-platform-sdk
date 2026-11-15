@@ -10,7 +10,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.ManagementUpdateUserRequest
 
 /** Administrative user account management. */
-interface ManagementUserApi {
+public interface ManagementUserApi {
 
     /**
      * Creates a new user account administratively.
@@ -18,7 +18,7 @@ interface ManagementUserApi {
      * @param request Account creation payload.
      * @return Detailed information of the created user, or a mapped failure.
      */
-    suspend fun createUser(request: CreateByEmailRequest): AppResult<UserPrivatePayload>
+    public suspend fun createUser(request: CreateByEmailRequest): AppResult<UserPrivatePayload>
 
     /**
      * Returns a paginated and filtered list of user summaries based on search criteria.
@@ -26,7 +26,7 @@ interface ManagementUserApi {
      * @param params Query and filter parameters DTO.
      * @return Paginated result containing user details payloads, or a mapped failure.
      */
-    suspend fun getUsers(
+    public suspend fun getUsers(
         params: ManagementUserListParams? = null
     ): AppResult<PagedResult<UserSummaryPayload>>
 
@@ -36,7 +36,7 @@ interface ManagementUserApi {
      * @param userId Unique account identifier.
      * @return Detailed information of the target user, or a mapped failure.
      */
-    suspend fun getUser(userId: UserId): AppResult<UserPrivatePayload>
+    public suspend fun getUser(userId: UserId): AppResult<UserPrivatePayload>
 
     /**
      * Updates user details, status, or permissions for a specific user administratively.
@@ -45,7 +45,10 @@ interface ManagementUserApi {
      * @param request Patch payload containing fields to change.
      * @return Empty success indicator, or a mapped failure.
      */
-    suspend fun updateUser(userId: UserId, request: ManagementUpdateUserRequest): AppResult<Unit>
+    public suspend fun updateUser(
+        userId: UserId,
+        request: ManagementUpdateUserRequest
+    ): AppResult<Unit>
 
     /**
      * Deletes a user account administratively.
@@ -53,5 +56,5 @@ interface ManagementUserApi {
      * @param userId Unique account identifier to delete.
      * @return Empty success indicator, or a mapped failure.
      */
-    suspend fun deleteUser(userId: UserId): AppResult<Unit>
+    public suspend fun deleteUser(userId: UserId): AppResult<Unit>
 }

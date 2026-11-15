@@ -38,31 +38,34 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorPar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingEmptyState
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingHeaderBar
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReach
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.scrollbar.CoreLazyColumnScrollbar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.audit.list.AuditEventListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.component.audit.item.AuditItem
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.event.AuditEventId
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventSummary
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventSummaryList
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
+/**
+ * Screen displaying a paginated list of audit log events with filtering and sorting options.
+ *
+ * @param component Decompose controller for managing audit event list state and navigation.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AuditEventListScreen(component: AuditEventListComponent) {
+public fun AuditEventListScreen(component: AuditEventListComponent) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
@@ -126,6 +129,7 @@ fun AuditEventListScreen(component: AuditEventListComponent) {
                         )
                     }
                 }
+
                 is AuditEventListScreenState.Error -> {
                     CoreErrorText(
                         text = currentState.error.toLocalizedMessage(),
@@ -146,7 +150,7 @@ private fun Content(
 ) {
     val listState = rememberLazyListState()
 
-    listState.OnBottomReached {
+    listState.OnBottomReach {
         onLoadNextPage()
     }
 
@@ -258,7 +262,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
@@ -267,7 +271,7 @@ private fun ScreenSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -276,7 +280,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {
@@ -284,12 +288,12 @@ private fun FontScalePreview() {
     }
 }
 
-object AuditEventListTestTags {
-    const val TITLE = "AuditEventList_Title"
-    const val BACK_BUTTON = "AuditEventList_BackButton"
-    const val FILTER_BUTTON = "AuditEventList_FilterButton"
-    const val REFRESH_BUTTON = "AuditEventList_RefreshButton"
-    const val GLOBAL_ERROR_TEXT = "AuditEventList_GlobalErrorText"
-    const val EVENT_LIST = "AuditEventList_List"
-    const val AUDIT_ITEM_PREFIX = "AuditEventList_Item_"
+public object AuditEventListTestTags {
+    public const val TITLE: String = "AuditEventList_Title"
+    public const val BACK_BUTTON: String = "AuditEventList_BackButton"
+    public const val FILTER_BUTTON: String = "AuditEventList_FilterButton"
+    public const val REFRESH_BUTTON: String = "AuditEventList_RefreshButton"
+    public const val GLOBAL_ERROR_TEXT: String = "AuditEventList_GlobalErrorText"
+    public const val EVENT_LIST: String = "AuditEventList_List"
+    public const val AUDIT_ITEM_PREFIX: String = "AuditEventList_Item_"
 }

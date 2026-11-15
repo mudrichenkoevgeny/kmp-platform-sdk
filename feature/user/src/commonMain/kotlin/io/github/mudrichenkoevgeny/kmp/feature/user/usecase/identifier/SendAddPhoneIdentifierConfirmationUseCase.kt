@@ -9,14 +9,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
  *
  * @param identifierRepository Remote identifier management API.
  */
-open class SendAddPhoneIdentifierConfirmationUseCase(
+public open class SendAddPhoneIdentifierConfirmationUseCase(
     private val identifierRepository: IdentifierRepository
 ) {
     /**
      * @param phoneNumber Target phone number.
      * @return [OtpConfirmation] details on success, or a mapped failure.
      */
-    open suspend operator fun invoke(phoneNumber: String): AppResult<OtpConfirmation> {
-        return identifierRepository.sendAddPhoneIdentifierConfirmation(phoneNumber)
-    }
+    public open suspend operator fun invoke(phoneNumber: String): AppResult<OtpConfirmation> =
+        identifierRepository.sendAddPhoneIdentifierConfirmation(
+            phoneNumber
+        )
 }

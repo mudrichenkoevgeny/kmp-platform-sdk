@@ -12,7 +12,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  * Manages user identity identifiers, facilitating retrieval, pagination,
  * identifier lifecycle management, and security operations.
  */
-interface IdentifierRepository {
+public interface IdentifierRepository {
 
     /**
      * Retrieves specific identifier details by its unique id.
@@ -20,7 +20,7 @@ interface IdentifierRepository {
      * @param userIdentifierId Unique identifier payload id.
      * @return Detailed identifier info or a mapped failure.
      */
-    suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate>
+    public suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate>
 
     /**
      * Returns a paginated and filtered list of identifiers.
@@ -28,7 +28,7 @@ interface IdentifierRepository {
      * @param params Query and filter parameters DTO.
      * @return Paginated result containing matching user identifier models, or a mapped failure.
      */
-    suspend fun getUserIdentifiers(
+    public suspend fun getUserIdentifiers(
         params: SelfIdentifierListParams? = null
     ): AppResult<PagedResult<UserIdentifierSummary>>
 
@@ -38,7 +38,7 @@ interface IdentifierRepository {
      * @param identifierId Server identifier of the user-identifier row to delete.
      * @return Success or a mapped failure.
      */
-    suspend fun deleteUserIdentifier(identifierId: UserIdentifierId): AppResult<Unit>
+    public suspend fun deleteUserIdentifier(identifierId: UserIdentifierId): AppResult<Unit>
 
     /**
      * Starts linking a new email identifier to the account.
@@ -48,7 +48,7 @@ interface IdentifierRepository {
      * @param confirmationCode Verification OTP code.
      * @return Created or pending identifier row, or a mapped failure.
      */
-    suspend fun addUserIdentifierEmail(
+    public suspend fun addUserIdentifierEmail(
         email: String,
         password: String,
         confirmationCode: String
@@ -61,7 +61,7 @@ interface IdentifierRepository {
      * @param confirmationCode Verification OTP code.
      * @return Created or pending identifier row, or a mapped failure.
      */
-    suspend fun addUserIdentifierPhone(
+    public suspend fun addUserIdentifierPhone(
         phoneNumber: String,
         confirmationCode: String
     ): AppResult<UserIdentifierPrivate>
@@ -73,7 +73,7 @@ interface IdentifierRepository {
      * @param externalProviderToken Access/ID token from the provider.
      * @return Created or pending identifier row, or a mapped failure.
      */
-    suspend fun addUserIdentifierExternalAuthProvider(
+    public suspend fun addUserIdentifierExternalAuthProvider(
         authProvider: String,
         externalProviderToken: String
     ): AppResult<UserIdentifierPrivate>
@@ -84,7 +84,7 @@ interface IdentifierRepository {
      * @param email Target email address to send OTP to.
      * @return Confirmation dispatch result, or a mapped failure.
      */
-    suspend fun sendAddEmailIdentifierConfirmation(email: String): AppResult<OtpConfirmation>
+    public suspend fun sendAddEmailIdentifierConfirmation(email: String): AppResult<OtpConfirmation>
 
     /**
      * Sends a confirmation message for adding a phone identifier.
@@ -92,7 +92,7 @@ interface IdentifierRepository {
      * @param phoneNumber Target phone number to send OTP to.
      * @return Confirmation dispatch result, or a mapped failure.
      */
-    suspend fun sendAddPhoneIdentifierConfirmation(phoneNumber: String): AppResult<OtpConfirmation>
+    public suspend fun sendAddPhoneIdentifierConfirmation(phoneNumber: String): AppResult<OtpConfirmation>
 
     /**
      * Changes the password for the signed-in user's email identifier.
@@ -102,7 +102,7 @@ interface IdentifierRepository {
      * @param newPassword New password to set.
      * @return Success indicator, or a mapped failure.
      */
-    suspend fun emailChangePassword(
+    public suspend fun emailChangePassword(
         userIdentifierId: UserIdentifierId,
         oldPassword: String,
         newPassword: String
@@ -111,10 +111,10 @@ interface IdentifierRepository {
     /**
      * Returns remaining delay in seconds before a new email confirmation OTP can be sent.
      */
-    fun getRemainingEmailConfirmationDelayInSeconds(email: String): Int
+    public fun getRemainingEmailConfirmationDelayInSeconds(email: String): Int
 
     /**
      * Returns remaining delay in seconds before a new phone confirmation OTP can be sent.
      */
-    fun getRemainingPhoneNumberConfirmationDelayInSeconds(phoneNumber: String): Int
+    public fun getRemainingPhoneNumberConfirmationDelayInSeconds(phoneNumber: String): Int
 }

@@ -32,7 +32,7 @@ private const val DATASTORE_FILE_NAME = "secure_settings"
  *
  * @param platformContext Must be [Context].
  */
-actual fun getSettingsFactory(platformContext: Any?): SettingsFactory = object : SettingsFactory {
+public actual fun getSettingsFactory(platformContext: Any?): SettingsFactory = object : SettingsFactory {
     override fun create(): EncryptedSettings {
         val context = platformContext as Context
 
@@ -62,7 +62,10 @@ actual fun getSettingsFactory(platformContext: Any?): SettingsFactory = object :
 private class DataStoreEncryptedSettings(
     private val dataStore: DataStore<Preferences>
 ) : EncryptedSettings {
-    override suspend fun put(key: String, value: String) {
+    override suspend fun put(
+        key: String,
+        value: String
+    ) {
         dataStore.edit { it[stringPreferencesKey(key)] = value }
     }
 

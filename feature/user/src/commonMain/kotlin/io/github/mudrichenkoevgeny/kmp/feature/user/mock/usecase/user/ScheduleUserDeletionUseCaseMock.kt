@@ -8,13 +8,16 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserReposito
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.ScheduleUserDeletionUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
 
+/**
+ * Mock implementation of [ScheduleUserDeletionUseCase] for testing.
+ */
 @InternalApi
-class ScheduleUserDeletionUseCaseMock(
+public class ScheduleUserDeletionUseCaseMock(
     userRepository: UserRepository = UserRepositoryMock()
 ) : ScheduleUserDeletionUseCase(userRepository) {
 
-    var executeCalls = 0
-    var resultProvider: () -> AppResult<UserPrivate> = {
+    public var executeCalls: Int = 0
+    public var resultProvider: () -> AppResult<UserPrivate> = {
         AppResult.Error(
             CommonError.ContractViolation(
                 throwable = IllegalStateException("No mock result provided for ScheduleUserDeletionUseCaseMock.")
@@ -22,7 +25,7 @@ class ScheduleUserDeletionUseCaseMock(
         )
     }
 
-    override suspend fun invoke(): AppResult<UserPrivate> {
+    public override suspend fun invoke(): AppResult<UserPrivate> {
         executeCalls++
         return resultProvider()
     }

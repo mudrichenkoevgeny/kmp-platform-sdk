@@ -6,36 +6,40 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.detail.AuditEventDetailComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.detail.AuditEventDetailScreenState
 
+/**
+ * Mock implementation of [AuditEventDetailComponent] for testing.
+ */
 @InternalApi
-class AuditEventDetailComponentMock(
+public class AuditEventDetailComponentMock(
     initialState: AuditEventDetailScreenState = AuditEventDetailScreenState.Loading
 ) : AuditEventDetailComponent {
 
     private val _state = MutableValue(initialState)
-    override val state: Value<AuditEventDetailScreenState> = _state
+    public override val state: Value<AuditEventDetailScreenState> = _state
 
-    var backCalls = 0
-    var retryCalls = 0
-    var resourceClickCalls = 0
-    var subjectClickCalls = 0
+    public var backCalls: Int = 0
+    public var retryCalls: Int = 0
+    public var resourceClickCalls: Int = 0
+    public var subjectClickCalls: Int = 0
 
-    fun updateState(state: AuditEventDetailScreenState) {
+    /** Updates the current screen state. */
+    public fun updateState(state: AuditEventDetailScreenState) {
         _state.value = state
     }
 
-    override fun onRetry() {
+    public override fun onRetry() {
         retryCalls++
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         backCalls++
     }
 
-    override fun onResourceClick() {
+    public override fun onResourceClick() {
         resourceClickCalls++
     }
 
-    override fun onSubjectClick() {
+    public override fun onSubjectClick() {
         subjectClickCalls++
     }
 }

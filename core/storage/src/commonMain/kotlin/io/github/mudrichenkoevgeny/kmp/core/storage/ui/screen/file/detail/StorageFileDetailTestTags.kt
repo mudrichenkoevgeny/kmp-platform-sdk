@@ -3,22 +3,22 @@ package io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail
 /**
  * Test tags dictionary for [StorageFileDetailScreen].
  */
-object StorageFileDetailTestTags {
+public object StorageFileDetailTestTags {
     /** Test tag for the screen back button. */
-    const val BACK_BUTTON = "StorageFileDetail_BackButton"
+    public const val BACK_BUTTON: String = "StorageFileDetail_BackButton"
 
     /** Test tag for the screen title element. */
-    const val TITLE = "StorageFileDetail_Title"
+    public const val TITLE: String = "StorageFileDetail_Title"
 
     /** Test tag for the owner user row element. */
-    const val USER_ROW = "StorageFileDetail_UserRow"
+    public const val USER_ROW: String = "StorageFileDetail_UserRow"
 
     /** Test tag for the copy file URL button element. */
-    const val COPY_URL_BUTTON = "StorageFileDetail_CopyUrlButton"
+    public const val COPY_URL_BUTTON: String = "StorageFileDetail_CopyUrlButton"
 
     /** Test tag for the delete file button element. */
-    const val DELETE_BUTTON = "StorageFileDetail_DeleteButton"
+    public const val DELETE_BUTTON: String = "StorageFileDetail_DeleteButton"
 
     /** Test tag for the delete error text container element. */
-    const val DELETE_ERROR_TEXT = "StorageFileDetail_DeleteErrorText"
+    public const val DELETE_ERROR_TEXT: String = "StorageFileDetail_DeleteErrorText"
 }

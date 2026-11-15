@@ -13,8 +13,8 @@ This document defines standards for UI components, screens, preview tooling, and
 - **Tests & Previews Exception:** Non-localized raw string literals and test tags are permitted **only** inside unit tests, screenshot tests, and Compose preview composables.
 
 ## 2. Mandatory Previews for Screens and Components
-- **UI Components:** Every reusable UI component (`Core*` or custom composable) must provide Compose previews annotated with `@ComponentSizePreviews`, `@ThemePreviews`, and `@FontScalePreviews`.
-- **UI Screens:** Every screen composable (`*Screen.kt`) must provide Compose previews annotated with `@ScreenSizePreviews`, `@ThemePreviews`, `@FontScalePreviews`, and state providers (`*PreviewParameterProvider`).
+- **UI Components:** Every reusable UI component (`Core*` or custom composable) must provide Compose previews annotated with `@PreviewComponentSizes`, `@PreviewThemes`, and `@PreviewFontScales`.
+- **UI Screens:** Every screen composable (`*Screen.kt`) must provide Compose previews annotated with `@PreviewScreenSizes`, `@PreviewThemes`, `@PreviewFontScales`, and state providers (`*PreviewParameterProvider`).
 - **Annotations & Visibility:** All preview composables must be marked `private` and annotated with `@InternalApi`.
 - **Theme & Composition Local Wrapper:** Previews must wrap content in the application's root theme container and supply required composition local mocks to prevent preview rendering crashes (e.g. `LocalErrorParser provides AppErrorParserMock`).
 

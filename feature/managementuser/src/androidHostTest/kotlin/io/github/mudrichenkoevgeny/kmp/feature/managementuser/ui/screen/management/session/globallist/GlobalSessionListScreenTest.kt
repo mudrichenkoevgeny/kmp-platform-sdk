@@ -31,7 +31,8 @@ class GlobalSessionListScreenTest {
 
     @Test
     fun loading_showsIndeterminateProgressAfterDefaultDelay() = runComposeUiTest {
-        val component = SessionListComponentMock(initialState = SessionListScreenState.Loading, includeFilterPanel = true)
+        val component =
+            SessionListComponentMock(initialState = SessionListScreenState.Loading, includeFilterPanel = true)
         setContent {
             ComponentTestHarness {
                 SessionListScreen(component)
@@ -69,7 +70,9 @@ class GlobalSessionListScreenTest {
     @Test
     fun content_clickBack_invokesCallback() = runComposeUiTest {
         val component = SessionListComponentMock(
-            initialState = SessionListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)),
+            initialState = SessionListScreenState.Content(
+                paging = PaginationState(emptyList(), isInitialLoading = false)
+            ),
             includeFilterPanel = true
         )
         setContent {
@@ -84,7 +87,9 @@ class GlobalSessionListScreenTest {
     @Test
     fun content_clickRefresh_invokesCallback() = runComposeUiTest {
         val component = SessionListComponentMock(
-            initialState = SessionListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)),
+            initialState = SessionListScreenState.Content(
+                paging = PaginationState(emptyList(), isInitialLoading = false)
+            ),
             includeFilterPanel = true
         )
         setContent {
@@ -99,7 +104,9 @@ class GlobalSessionListScreenTest {
     @Test
     fun content_clickFilter_invokesCallback() = runComposeUiTest {
         val component = SessionListComponentMock(
-            initialState = SessionListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)),
+            initialState = SessionListScreenState.Content(
+                paging = PaginationState(emptyList(), isInitialLoading = false)
+            ),
             includeFilterPanel = true
         )
         setContent {

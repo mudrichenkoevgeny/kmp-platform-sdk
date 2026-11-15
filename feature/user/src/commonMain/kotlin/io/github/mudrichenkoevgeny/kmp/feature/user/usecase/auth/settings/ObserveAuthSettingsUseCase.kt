@@ -9,13 +9,11 @@ import kotlinx.coroutines.flow.Flow
  *
  * @param openAuthSettingsRepository Remote auth settings API.
  */
-class ObserveAuthSettingsUseCase(
+public class ObserveAuthSettingsUseCase(
     private val openAuthSettingsRepository: OpenAuthSettingsRepository
 ) {
     /**
      * @return [Flow] of the current [OpenAuthSettings] or `null`.
      */
-    operator fun invoke(): Flow<OpenAuthSettings?> {
-        return openAuthSettingsRepository.observeOpenAuthSettings()
-    }
+    public operator fun invoke(): Flow<OpenAuthSettings?> = openAuthSettingsRepository.observeOpenAuthSettings()
 }

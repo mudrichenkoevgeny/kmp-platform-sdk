@@ -9,62 +9,66 @@ import com.arkivanov.decompose.value.Value
 /**
  * Manages the TOTP lifecycle: setup, enabling with code, viewing recovery codes, and disabling.
  */
-interface TotpMainComponent {
+public interface TotpMainComponent {
     /**
      * Decompose navigation stack driving the TOTP steps.
      */
-    val stack: Value<ChildStack<TotpStepConfig, Child>>
+    public val stack: Value<ChildStack<TotpStepConfig, Child>>
 
     /**
      * Stack navigator for TOTP steps.
      */
-    val stackNavigation: StackNavigation<TotpStepConfig>
+    public val stackNavigation: StackNavigation<TotpStepConfig>
 
     /**
      * Modal dialog slot (e.g., disable TOTP confirmation).
      */
-    val dialogSlot: Value<ChildSlot<TotpDialogConfig, DialogChild>>
+    public val dialogSlot: Value<ChildSlot<TotpDialogConfig, DialogChild>>
 
     /**
      * Dialog slot navigator.
      */
-    val dialogSlotNavigation: SlotNavigation<TotpDialogConfig>
+    public val dialogSlotNavigation: SlotNavigation<TotpDialogConfig>
 
     /** Reactive UI state. */
-    val state: Value<TotpMainScreenState>
+    public val state: Value<TotpMainScreenState>
 
     /** Child instances corresponding to each wizard step. */
-    sealed interface Child {
-        data object Status : Child
-        data class Setup(val mfaToken: String, val otpAuthUrl: String, val secretKey: String) : Child
+    public sealed interface Child {
+        public data object Status : Child
+        public data class Setup(
+            val mfaToken: String,
+            val otpAuthUrl: String,
+            val secretKey: String
+        ) : Child
     }
 
     /** Dialog child instances. */
-    sealed interface DialogChild {
-        data object ConfirmDisable : DialogChild
+    public sealed interface DialogChild {
+        public data object ConfirmDisable : DialogChild
     }
 
     /** Starts the TOTP setup flow. */
-    fun onSetupClick()
+    public fun onSetupClick()
 
     /** Updates the confirmation code during setup. */
-    fun onCodeChanged(code: String)
+    public fun onCodeChanged(code: String)
 
     /** Finalizes setup using the verification code. */
-    fun onConfirmSetupClick()
+    public fun onConfirmSetupClick()
 
     /** Opens recovery codes management screen. */
-    fun onRecoveryCodesClick()
+    public fun onRecoveryCodesClick()
 
     /** Shows disable TOTP confirmation. */
-    fun onDisableClick()
+    public fun onDisableClick()
 
     /** Executes TOTP disabling after confirmation. */
-    fun onConfirmDisable()
+    public fun onConfirmDisable()
 
     /** Hides any active confirmation dialogs. */
-    fun onDismissDialogs()
+    public fun onDismissDialogs()
 
     /** Navigates back. */
-    fun onBackClick()
+    public fun onBackClick()
 }

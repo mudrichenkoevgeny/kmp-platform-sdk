@@ -12,11 +12,11 @@ import io.ktor.client.request.get
  *
  * @param client Shared client (typically from `core/common`) with base URL and plugins already applied.
  */
-class KtorOpenStorageSettingsApi(
+public class KtorOpenStorageSettingsApi(
     private val client: HttpClient
 ) : OpenStorageSettingsApi {
 
-    override suspend fun getStorageSettings(): AppResult<OpenStorageSettingsPayload> = client.callResult {
+    public override suspend fun getStorageSettings(): AppResult<OpenStorageSettingsPayload> = client.callResult {
         get(OpenStorageSettingsRoutes.GET_OPEN_STORAGE_SETTINGS)
     }
 }

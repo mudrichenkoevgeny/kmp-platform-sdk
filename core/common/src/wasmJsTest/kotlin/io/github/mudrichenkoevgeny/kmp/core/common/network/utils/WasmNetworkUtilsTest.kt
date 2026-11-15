@@ -30,6 +30,6 @@ class WasmNetworkUtilsTest {
 
     @Test
     fun `null message is not no internet`() {
-        assertFalse(isNoInternetException(Throwable()))
+        assertFalse(isNoInternetException(Throwable("Network error")))
     }
 }

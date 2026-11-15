@@ -16,9 +16,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.Res
 import io.github.mudrichenkoevgeny.kmp.feature.user.auth_logo_apple
@@ -35,7 +35,7 @@ import org.jetbrains.compose.resources.painterResource
  * @param onClick invoked when the user taps the tile.
  */
 @Composable
-fun AuthProviderItem(
+public fun AuthProviderItem(
     authProvider: UserAuthProvider,
     onClick: () -> Unit
 ) {
@@ -109,21 +109,21 @@ private fun AuthProviderItemStatesPreview(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun AuthProviderItemComponentSizePreview() {
     AuthProviderItemPreviewContent(provider = defaultAuthProviderItemPreviewState)
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun AuthProviderItemThemePreview() {
     AuthProviderItemPreviewContent(provider = defaultAuthProviderItemPreviewState)
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun AuthProviderItemFontScalePreview() {
     AuthProviderItemPreviewContent(provider = defaultAuthProviderItemPreviewState)

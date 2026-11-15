@@ -11,26 +11,35 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
 
+/**
+ * Mock implementation of [ManagementSessionApi] for testing.
+ */
 @InternalApi
-class ManagementSessionApiMock : ManagementSessionApi {
+public class ManagementSessionApiMock : ManagementSessionApi {
 
-    var getSessionsResult: AppResult<PagedResult<UserSessionSummaryPayload>> = AppResult.Error(CommonError.Unknown())
-    var getUserSessionsResult: AppResult<PagedResult<UserSessionSummaryPayload>> = AppResult.Error(CommonError.Unknown())
-    var getSessionResult: AppResult<UserSessionPrivatePayload> = AppResult.Error(CommonError.Unknown())
-    var deleteSessionResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
-    var deleteAllUserSessionsResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
+    public var getSessionsResult: AppResult<PagedResult<UserSessionSummaryPayload>> = AppResult.Error(
+        CommonError.Unknown()
+    )
+    public var getUserSessionsResult: AppResult<PagedResult<UserSessionSummaryPayload>> =
+        AppResult.Error(CommonError.Unknown())
+    public var getSessionResult: AppResult<UserSessionPrivatePayload> = AppResult.Error(CommonError.Unknown())
+    public var deleteSessionResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
+    public var deleteAllUserSessionsResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
 
-    override suspend fun getSessions(
+    public override suspend fun getSessions(
         params: ManagementGlobalSessionListParams?
     ): AppResult<PagedResult<UserSessionSummaryPayload>> = getSessionsResult
 
-    override suspend fun getUserSessions(
+    public override suspend fun getUserSessions(
         params: ManagementUserSessionListParams
     ): AppResult<PagedResult<UserSessionSummaryPayload>> = getUserSessionsResult
 
-    override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivatePayload> = getSessionResult
+    public override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivatePayload> = getSessionResult
 
-    override suspend fun deleteSession(userId: UserId, sessionId: String): AppResult<Unit> = deleteSessionResult
+    public override suspend fun deleteSession(
+        userId: UserId,
+        sessionId: String
+    ): AppResult<Unit> = deleteSessionResult
 
-    override suspend fun deleteAllUserSessions(userId: UserId): AppResult<Unit> = deleteAllUserSessionsResult
+    public override suspend fun deleteAllUserSessions(userId: UserId): AppResult<Unit> = deleteAllUserSessionsResult
 }

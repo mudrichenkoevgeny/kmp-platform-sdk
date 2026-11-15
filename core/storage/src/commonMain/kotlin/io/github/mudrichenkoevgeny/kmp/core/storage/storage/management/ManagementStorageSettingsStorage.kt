@@ -5,8 +5,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.s
 /**
  * Storage interface for persisting management storage settings.
  */
-interface ManagementStorageSettingsStorage {
-    suspend fun getManagementStorageSettings(): ManagementStorageSettings?
-    suspend fun updateManagementStorageSettings(managementStorageSettings: ManagementStorageSettings)
-    suspend fun clearManagementStorageSettings()
+public interface ManagementStorageSettingsStorage {
+    /** Retrieves the persisted management storage settings, or null if none exist. */
+    public suspend fun getManagementStorageSettings(): ManagementStorageSettings?
+
+    /** Updates the persisted management storage settings with [managementStorageSettings]. */
+    public suspend fun updateManagementStorageSettings(managementStorageSettings: ManagementStorageSettings)
+
+    /** Clears any persisted management storage settings. */
+    public suspend fun clearManagementStorageSettings()
 }

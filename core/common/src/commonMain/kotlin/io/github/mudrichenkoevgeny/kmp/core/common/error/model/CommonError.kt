@@ -12,7 +12,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.error.naming.Co
  * @property args Dynamic metadata providing additional context for the failure (e.g. [CommonErrorArgs]).
  * @property isRetryable Indicates whether the failure is transient and the operation can be safely retried.
  */
-sealed class CommonError(
+public sealed class CommonError(
     override val id: ErrorId,
     override val code: String,
     override val args: Map<String, String>? = null,
@@ -26,7 +26,7 @@ sealed class CommonError(
      *
      * @param isRetryable Whether the failure is considered transient and can be retried.
      */
-    class Unknown(
+    public class Unknown(
         isRetryable: Boolean = false
     ) : CommonError(
         id = ErrorId.generate(),
@@ -42,8 +42,8 @@ sealed class CommonError(
      * @param throwable The underlying exception that caused the failure.
      * @param isRetryable Whether the failure is considered transient and can be retried.
      */
-    class Internal(
-        val throwable: Throwable,
+    public class Internal(
+        public val throwable: Throwable,
         isRetryable: Boolean = false
     ) : CommonError(
         id = ErrorId.generate(),
@@ -59,8 +59,8 @@ sealed class CommonError(
      * @param throwable Underlying exception/cause.
      * @param isRetryable Whether the failure is transient and can be retried.
      */
-    class NoInternetConnection(
-        val throwable: Throwable,
+    public class NoInternetConnection(
+        public val throwable: Throwable,
         isRetryable: Boolean = true
     ) : CommonError(
         id = ErrorId.generate(),
@@ -74,8 +74,8 @@ sealed class CommonError(
      * @param throwable Underlying exception/cause.
      * @param isRetryable Whether the failure is transient and can be retried.
      */
-    class Network(
-        val throwable: Throwable,
+    public class Network(
+        public val throwable: Throwable,
         isRetryable: Boolean = true
     ) : CommonError(
         id = ErrorId.generate(),
@@ -90,8 +90,8 @@ sealed class CommonError(
      * @param args Optional structured details.
      * @param isRetryable Contract violations are usually non-retryable.
      */
-    class ContractViolation(
-        val throwable: Throwable? = null,
+    public class ContractViolation(
+        public val throwable: Throwable? = null,
         args: Map<String, String>? = null,
         isRetryable: Boolean = false
     ) : CommonError(
@@ -110,7 +110,7 @@ sealed class CommonError(
      * @param message Lifecycle error message to include in [args].
      * @param isRetryable Whether the failure is transient and can be retried.
      */
-    class Lifecycle(
+    public class Lifecycle(
         message: String,
         isRetryable: Boolean = false
     ) : CommonError(

@@ -12,77 +12,80 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.f
 /**
  * Universal Decompose component contract for storage file listing screens (client & management).
  */
-interface StorageFileListComponent {
+public interface StorageFileListComponent {
 
     /** Observable screen state flow. */
-    val state: Value<StorageFileListScreenState>
+    public val state: Value<StorageFileListScreenState>
 
     /** Decompose child slot for file list confirmation dialogs. */
-    val dialogSlot: Value<ChildSlot<StorageFileListDialogConfig, StorageFileListDialogChild>>
+    public val dialogSlot: Value<ChildSlot<StorageFileListDialogConfig, StorageFileListDialogChild>>
 
     /** Slot navigator for file list confirmation dialogs. */
-    val dialogSlotNavigation: SlotNavigation<StorageFileListDialogConfig>
+    public val dialogSlotNavigation: SlotNavigation<StorageFileListDialogConfig>
 
     /** Whether single file delete action is enabled for this contour. */
-    val isSingleDeleteAvailable: Boolean
+    public val isSingleDeleteAvailable: Boolean
 
     /** Whether batch file delete action is enabled for this contour. */
-    val isBatchDeleteAvailable: Boolean
+    public val isBatchDeleteAvailable: Boolean
 
     /** Whether the upload action is available for this contour. */
-    val isUploadAvailable: Boolean
+    public val isUploadAvailable: Boolean
 
     /** Whether the ownerUserId filter is included (administrative mode). */
-    val includeOwnerFilter: Boolean
+    public val includeOwnerFilter: Boolean
 
     /** Triggers navigation back to previous screen. */
-    fun onBackClick()
+    public fun onBackClick()
 
     /** Toggles the expansion state of the filter options panel. */
-    fun onToggleFilterPanel()
+    public fun onToggleFilterPanel()
 
     /** Refreshes current file list page. */
-    fun onRefresh()
+    public fun onRefresh()
 
     /** Triggers loading the next page. */
-    fun onLoadNextPage()
+    public fun onLoadNextPage()
 
     /** Called when active sort state changes. */
-    fun onSortChanged(sortState: ListingSortState?)
+    public fun onSortChanged(sortState: ListingSortState?)
 
     /** Called when an individual filter state changes. */
-    fun onFilterChanged(filterId: String, filterState: ListingFilterState?)
+    public fun onFilterChanged(
+        filterId: String,
+        filterState: ListingFilterState?
+    )
 
     /** Applies selected filters and re-fetches list. */
-    fun onApplyFilters()
+    public fun onApplyFilters()
 
     /** Navigates to file upload screen. */
-    fun onUploadClick()
+    public fun onUploadClick()
 
     /** Navigates to detail view for the specified file. */
-    fun onFileClick(file: StorageFileSummary)
+    public fun onFileClick(file: StorageFileSummary)
 
     /** Toggles multi-selection state for a file ID. */
-    fun toggleSelectFile(fileId: String)
+    public fun toggleSelectFile(fileId: String)
 
     /** Selects all files in current page. */
-    fun selectAllFiles()
+    public fun selectAllFiles()
 
     /** Clears selection. */
-    fun clearFileSelection()
+    public fun clearFileSelection()
 
     /** Opens single file deletion confirmation dialog. */
-    fun onDeleteFileClick(fileId: String)
+    public fun onDeleteFileClick(fileId: String)
 
     /** Opens batch deletion confirmation dialog. */
-    fun onDeleteSelectedFilesClick()
+    public fun onDeleteSelectedFilesClick()
 
     /** Dismisses delete confirmation dialogs. */
-    fun onDismissDeleteDialog()
+    public fun onDismissDeleteDialog()
 
     /** Confirms single file deletion. */
-    fun onConfirmDeleteFile()
+    public fun onConfirmDeleteFile()
 
     /** Confirms batch file deletion. */
-    fun onConfirmBatchDeleteFiles()
+    public fun onConfirmBatchDeleteFiles()
 }

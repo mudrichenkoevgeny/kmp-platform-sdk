@@ -9,10 +9,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
  *
  * @param managementSecuritySettingsRepository Management security settings repository.
  */
-class SaveRemoteSecuritySettingsUseCase(
+public class SaveRemoteSecuritySettingsUseCase(
     private val managementSecuritySettingsRepository: ManagementSecuritySettingsRepository
 ) {
-    suspend operator fun invoke(securitySettings: ManagementSecuritySettings): AppResult<ManagementSecuritySettings> {
-        return managementSecuritySettingsRepository.saveRemoteManagementSecuritySettings(securitySettings)
-    }
+    /** Saves remote management security settings. */
+    public suspend operator fun invoke(securitySettings: ManagementSecuritySettings): AppResult<ManagementSecuritySettings> =
+        managementSecuritySettingsRepository.saveRemoteManagementSecuritySettings(
+            securitySettings
+        )
 }

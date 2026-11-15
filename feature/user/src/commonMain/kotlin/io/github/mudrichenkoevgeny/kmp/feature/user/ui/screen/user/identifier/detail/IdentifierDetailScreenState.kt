@@ -6,12 +6,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
 /**
  * Represents the UI state for the identifier detail screen.
  */
-sealed interface IdentifierDetailScreenState {
+public sealed interface IdentifierDetailScreenState {
     /** Fullscreen loading state while identifier details are being retrieved. */
-    data object Loading : IdentifierDetailScreenState
+    public data object Loading : IdentifierDetailScreenState
 
     /** Fullscreen error state when fetching identifier details fails. */
-    data class Error(val error: AppError) : IdentifierDetailScreenState
+    public data class Error(val error: AppError) : IdentifierDetailScreenState
 
     /**
      * Content state displaying detailed identifier information.
@@ -26,7 +26,7 @@ sealed interface IdentifierDetailScreenState {
      * @property isChangePasswordDialogVisible Whether the change password dialog is currently visible.
      * @property isDeleteConfirmationVisible Whether the delete confirmation dialog is currently visible.
      */
-    data class Content(
+    public data class Content(
         val identifier: UserIdentifierPrivate,
         val isCurrentIdentifier: Boolean = false,
         val isSelfIdentifier: Boolean = false,

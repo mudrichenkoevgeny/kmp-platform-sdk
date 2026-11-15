@@ -18,31 +18,33 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
 /**
  * Implements [ManagementUserRepository] delegating to [ManagementUserApi].
  */
-class ManagementUserRepositoryImpl(
+public class ManagementUserRepositoryImpl(
     private val managementUserApi: ManagementUserApi
 ) : ManagementUserRepository {
 
-    override suspend fun createUser(request: CreateByEmailRequest): AppResult<UserPrivate> {
-        return managementUserApi.createUser(request).mapSuccess { it.toUserPrivate() }
-    }
+    override suspend fun createUser(request: CreateByEmailRequest): AppResult<UserPrivate> =
+        managementUserApi.createUser(
+            request
+        ).mapSuccess {
+            it.toUserPrivate()
+        }
 
     override suspend fun getUsers(
         params: ManagementUserListParams?
-    ): AppResult<PagedResult<UserSummary>> {
-        return managementUserApi.getUsers(params).mapSuccess { pagedPayload ->
-            pagedPayload.mapItems { payload -> payload.toUserSummary() }
-        }
+    ): AppResult<PagedResult<UserSummary>> = managementUserApi.getUsers(params).mapSuccess { pagedPayload ->
+        pagedPayload.mapItems { payload -> payload.toUserSummary() }
     }
 
-    override suspend fun getUser(userId: UserId): AppResult<UserPrivate> {
-        return managementUserApi.getUser(userId).mapSuccess { it.toUserPrivate() }
+    override suspend fun getUser(userId: UserId): AppResult<UserPrivate> = managementUserApi.getUser(
+        userId
+    ).mapSuccess {
+        it.toUserPrivate()
     }
 
-    override suspend fun updateUser(userId: UserId, params: UpdateUserParams): AppResult<Unit> {
-        return managementUserApi.updateUser(userId, params.toManagementUpdateUserRequest())
-    }
+    override suspend fun updateUser(
+        userId: UserId,
+        params: UpdateUserParams
+    ): AppResult<Unit> = managementUserApi.updateUser(userId, params.toManagementUpdateUserRequest())
 
-    override suspend fun deleteUser(userId: UserId): AppResult<Unit> {
-        return managementUserApi.deleteUser(userId)
-    }
+    override suspend fun deleteUser(userId: UserId): AppResult<Unit> = managementUserApi.deleteUser(userId)
 }

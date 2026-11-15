@@ -6,27 +6,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.row.CoreDetailRow
-import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.preview.StorageFileImagePreview
-import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.FileUrlPresets
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -40,9 +37,6 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
-import kotlin.time.Duration.Companion.milliseconds
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
@@ -52,23 +46,29 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreTextB
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.container.CoreScrollableScreenContent
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.error.FullscreenError
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.row.CoreDetailRow
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
 import io.github.mudrichenkoevgeny.kmp.core.storage.mock.ui.screen.file.detail.StorageFileDetailComponentMock
+import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.preview.StorageFileImagePreview
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.preview.StorageFilePreview
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail.dialog.StorageFileDetailDialogChild
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.utils.StorageStringsMapper
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.FileUrlPresets
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.status.StorageFileStatus
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.storage.domain.model.file.createTestStorageFilePrivate
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Screen displaying detailed information about a single storage file.
@@ -78,13 +78,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.core.storage.domain
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StorageFileDetailScreen(
+public fun StorageFileDetailScreen(
     component: StorageFileDetailComponent,
     modifier: Modifier = Modifier
 ) {
     val state by component.state.subscribeAsState()
     val storageUi = LocalStorageStrings.current.ui
     val commonUi = LocalCommonStrings.current.ui
+
+    @Suppress("DEPRECATION")
     val clipboardManager = LocalClipboardManager.current
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
@@ -113,6 +115,7 @@ fun StorageFileDetailScreen(
             is StorageFileDetailScreenState.Loading -> {
                 FullscreenLoading(modifier = Modifier.padding(padding))
             }
+
             is StorageFileDetailScreenState.Error -> {
                 FullscreenError(
                     error = currentState.error,
@@ -120,6 +123,7 @@ fun StorageFileDetailScreen(
                     modifier = Modifier.padding(padding)
                 )
             }
+
             is StorageFileDetailScreenState.Content -> {
                 StorageFileDetailContent(
                     state = currentState,
@@ -181,7 +185,6 @@ private fun StorageFileDetailContent(
     var isImagePreviewVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        // Delayed reveal of heavy Coil component to prevent navigation transition jank
         delay(150.milliseconds)
         isImagePreviewVisible = true
     }
@@ -240,8 +243,8 @@ private fun StorageFileDetailContent(
                     label = storageUi.category,
                     value = StorageStringsMapper.getCategoryString(file.category, storageUi)
                 )
-                CoreDetailRow(label = storageUi.visibility, value = file.visibility.name)
-                CoreDetailRow(label = commonUi.status, value = file.status.name)
+                CoreDetailRow(label = storageUi.visibility, value = file.visibility.value)
+                CoreDetailRow(label = commonUi.status, value = file.status.value)
             }
         }
 
@@ -330,28 +333,28 @@ private fun StorageFileDetailStatesPreview(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun StorageFileDetailComponentSizePreview() {
     StorageFileDetailPreviewContent(state = defaultStorageFileDetailPreviewState)
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun StorageFileDetailScreenSizePreview() {
     StorageFileDetailPreviewContent(state = defaultStorageFileDetailPreviewState)
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun StorageFileDetailThemePreview() {
     StorageFileDetailPreviewContent(state = defaultStorageFileDetailPreviewState)
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun StorageFileDetailFontScalePreview() {
     StorageFileDetailPreviewContent(state = defaultStorageFileDetailPreviewState)

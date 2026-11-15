@@ -56,8 +56,8 @@ class ListingOptionsPanelScreenshotTest {
                             config = config,
                             sortState = ListingSortState(ListingOptionsPanelTestData.SORT_ID_CREATED_AT, false),
                             filterStates = emptyMap(),
-                            onSortChanged = {},
-                            onFilterChanged = { _, _ -> },
+                            onSortChange = {},
+                            onFilterChange = { _, _ -> },
                             onApplyClick = {}
                         )
                     }

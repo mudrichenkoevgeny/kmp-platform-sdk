@@ -17,14 +17,14 @@ import io.ktor.client.plugins.logging.Logger
  * @param authClientProvider Lazy provider for the [HttpClient] used to send re-authentication requests.
  * @param reauthenticateAction Domain action performing re-authentication via [ReauthenticateSessionUseCase].
  */
-class MfaStepUpHttpClientConfigPlugin(
+public class MfaStepUpHttpClientConfigPlugin(
     private val baseUrl: String,
     private val reauthenticateRoute: String,
     private val mfaChallengeHandler: MfaChallengeHandler? = null,
     private val authClientProvider: (() -> HttpClient)? = null,
     private val reauthenticateAction: (suspend (mfaToken: String, code: String) -> AppResult<Unit>)? = null
 ) : HttpClientConfigPlugin {
-    override fun install(
+    public override fun install(
         config: HttpClientConfig<out HttpClientEngineConfig>,
         networkLogger: Logger
     ) {

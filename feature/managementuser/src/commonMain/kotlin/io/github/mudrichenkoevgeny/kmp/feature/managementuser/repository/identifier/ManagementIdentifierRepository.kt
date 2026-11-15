@@ -11,7 +11,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
 /**
  * Administrative repository for managing user identity identifiers across all accounts.
  */
-interface ManagementIdentifierRepository {
+public interface ManagementIdentifierRepository {
 
     /**
      * Returns a paginated and filtered list of identifiers based on search criteria.
@@ -19,7 +19,7 @@ interface ManagementIdentifierRepository {
      * @param params Administrative identifier list query and filter parameters DTO.
      * @return Paginated result containing matching user identifier models, or a mapped failure.
      */
-    suspend fun getIdentifiers(
+    public suspend fun getIdentifiers(
         params: ManagementGlobalIdentifierListParams? = null
     ): AppResult<PagedResult<UserIdentifierSummary>>
 
@@ -29,22 +29,28 @@ interface ManagementIdentifierRepository {
      * @param params Per-user identifier list query and filter parameters DTO.
      * @return Paginated result containing matching user identifier models, or a mapped failure.
      */
-    suspend fun getUserIdentifiers(
+    public suspend fun getUserIdentifiers(
         params: ManagementUserIdentifierListParams
     ): AppResult<PagedResult<UserIdentifierSummary>>
 
     /**
      * Retrieves specific identifier details.
      */
-    suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivate>
+    public suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivate>
 
     /**
      * Removes the identifier record for the given user.
      */
-    suspend fun deleteIdentifier(userId: UserId, identifierId: String): AppResult<Unit>
+    public suspend fun deleteIdentifier(
+        userId: UserId,
+        identifierId: String
+    ): AppResult<Unit>
 
     /**
      * Removes the password credential for the given user's identifier record.
      */
-    suspend fun deleteIdentifierPassword(userId: UserId, identifierId: String): AppResult<Unit>
+    public suspend fun deleteIdentifierPassword(
+        userId: UserId,
+        identifierId: String
+    ): AppResult<Unit>
 }

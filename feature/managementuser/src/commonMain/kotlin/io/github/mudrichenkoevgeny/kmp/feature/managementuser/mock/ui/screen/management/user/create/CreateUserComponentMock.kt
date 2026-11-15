@@ -7,86 +7,90 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.Sel
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create.CreateUserComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create.CreateUserScreenState
 
+/**
+ * Mock implementation of [CreateUserComponent] for testing.
+ */
 @InternalApi
-class CreateUserComponentMock(
+public class CreateUserComponentMock(
     initialState: CreateUserScreenState = CreateUserScreenState()
 ) : CreateUserComponent {
 
     private val _state = MutableValue(initialState)
-    override val state: Value<CreateUserScreenState> = _state
+    public override val state: Value<CreateUserScreenState> = _state
 
-    var createCalls = 0
-    var backCalls = 0
-    var lastEmailChanged: String? = null
-    var lastPasswordChanged: String? = null
-    var lastNicknameChanged: String? = null
-    var lastDisplayNameChanged: String? = null
-    var lastAvatarFileSelected: SelectedFilePayload? = null
-    var lastBirthdateChanged: String? = null
-    var lastRoleChanged: String? = null
-    var lastStatusChanged: String? = null
-    var lastAuthorityLevelChanged: String? = null
-    var lastQuotaBytesChanged: String? = null
-    var lastMaxUploadSizeBytesChanged: String? = null
-    var lastMaxPendingUploadsChanged: String? = null
+    public var createCalls: Int = 0
+    public var backCalls: Int = 0
+    public var lastEmailChanged: String? = null
+    public var lastPasswordChanged: String? = null
+    public var lastNicknameChanged: String? = null
+    public var lastDisplayNameChanged: String? = null
+    public var lastAvatarFileSelected: SelectedFilePayload? = null
+    public var lastBirthdateChanged: String? = null
+    public var lastRoleChanged: String? = null
+    public var lastStatusChanged: String? = null
+    public var lastAuthorityLevelChanged: String? = null
+    public var lastQuotaBytesChanged: String? = null
+    public var lastMaxUploadSizeBytesChanged: String? = null
+    public var lastMaxPendingUploadsChanged: String? = null
 
-    fun updateState(state: CreateUserScreenState) {
+    /** Updates the current screen state. */
+    public fun updateState(state: CreateUserScreenState) {
         _state.value = state
     }
 
-    override fun onEmailChanged(value: String) {
+    public override fun onEmailChanged(value: String) {
         lastEmailChanged = value
     }
 
-    override fun onPasswordChanged(value: String) {
+    public override fun onPasswordChanged(value: String) {
         lastPasswordChanged = value
     }
 
-    override fun onNicknameChanged(value: String) {
+    public override fun onNicknameChanged(value: String) {
         lastNicknameChanged = value
     }
 
-    override fun onDisplayNameChanged(value: String) {
+    public override fun onDisplayNameChanged(value: String) {
         lastDisplayNameChanged = value
     }
 
-    override fun onAvatarFileSelected(payload: SelectedFilePayload) {
+    public override fun onAvatarFileSelected(payload: SelectedFilePayload) {
         lastAvatarFileSelected = payload
     }
 
-    override fun onBirthdateChanged(value: String) {
+    public override fun onBirthdateChanged(value: String) {
         lastBirthdateChanged = value
     }
 
-    override fun onRoleChanged(value: String) {
+    public override fun onRoleChanged(value: String) {
         lastRoleChanged = value
     }
 
-    override fun onStatusChanged(value: String) {
+    public override fun onStatusChanged(value: String) {
         lastStatusChanged = value
     }
 
-    override fun onAuthorityLevelChanged(value: String) {
+    public override fun onAuthorityLevelChanged(value: String) {
         lastAuthorityLevelChanged = value
     }
 
-    override fun onQuotaBytesChanged(value: String) {
+    public override fun onQuotaBytesChanged(value: String) {
         lastQuotaBytesChanged = value
     }
 
-    override fun onMaxUploadSizeBytesChanged(value: String) {
+    public override fun onMaxUploadSizeBytesChanged(value: String) {
         lastMaxUploadSizeBytesChanged = value
     }
 
-    override fun onMaxPendingUploadsChanged(value: String) {
+    public override fun onMaxPendingUploadsChanged(value: String) {
         lastMaxPendingUploadsChanged = value
     }
 
-    override fun onCreateClick() {
+    public override fun onCreateClick() {
         createCalls++
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         backCalls++
     }
 }

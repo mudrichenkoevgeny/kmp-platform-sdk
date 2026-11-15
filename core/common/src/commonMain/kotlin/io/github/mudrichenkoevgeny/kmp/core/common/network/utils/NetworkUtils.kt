@@ -23,12 +23,14 @@ import kotlin.coroutines.cancellation.CancellationException
  *
  * @param isRetryable Indicates whether the operation should be treated as retryable when an IO failure happens.
  */
-suspend inline fun <reified T> HttpClient.callResult(
+public suspend inline fun <reified T> HttpClient.callResult(
     isRetryable: Boolean = false,
     block: HttpClient.() -> HttpResponse
 ): AppResult<T> = try {
     val response = this.block()
     AppResult.Success(response.body())
+} catch (e: CancellationException) {
+    throw e
 } catch (e: ApiException) {
     AppResult.Error(e.apiErrorResponse.toServerError(isRetryable))
 } catch (e: ResponseException) {
@@ -42,10 +44,7 @@ suspend inline fun <reified T> HttpClient.callResult(
     AppResult.Error(error)
 } catch (e: SerializationException) {
     AppResult.Error(CommonError.ContractViolation(e))
-} catch (t: Throwable) {
-    if (t is CancellationException) {
-        throw t
-    }
+} catch (@Suppress("TooGenericExceptionCaught") t: Throwable) {
     AppResult.Error(CommonError.Internal(t, isRetryable))
 }
 
@@ -54,4 +53,4 @@ suspend inline fun <reified T> HttpClient.callResult(
  *
  * The networking layer should use this to decide between `CommonError.NoInternetConnection` and `CommonError.Network`.
  */
-expect fun isNoInternetException(e: Throwable): Boolean
+public expect fun isNoInternetException(e: Throwable): Boolean

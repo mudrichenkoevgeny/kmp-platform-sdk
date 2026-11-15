@@ -28,18 +28,18 @@ import kotlin.time.Instant
  * @property avatarFileId target profile avatar image file identifier update ([UpdateField])
  * @property birthdate target user birthdate timestamp update ([UpdateField])
  */
-data class UpdateUserParams(
-    val accountStatus: UpdateField<UserAccountStatus> = UpdateField.Ignore,
-    val accountStatusOnRestore: UpdateField<UserAccountStatus> = UpdateField.Ignore,
-    val authorityLevel: UpdateField<Int> = UpdateField.Ignore,
-    val permissions: UpdateField<Set<PermissionCode>> = UpdateField.Ignore,
-    val isTotpEnabled: UpdateField<Boolean> = UpdateField.Ignore,
-    val scheduledPermanentDeletionAt: UpdateField<Instant> = UpdateField.Ignore,
-    val lockoutType: UpdateField<AccountLockoutType> = UpdateField.Ignore,
-    val temporaryLockoutUntil: UpdateField<Instant> = UpdateField.Ignore,
-    val storageConfiguration: UpdateField<UserStorageConfigurationPayload> = UpdateField.Ignore,
-    val nickname: UpdateField<String> = UpdateField.Ignore,
-    val displayName: UpdateField<String> = UpdateField.Ignore,
-    val avatarFileId: UpdateField<FileId> = UpdateField.Ignore,
-    val birthdate: UpdateField<Instant> = UpdateField.Ignore
+public data class UpdateUserParams(
+    public val accountStatus: UpdateField<UserAccountStatus> = UpdateField.Ignore,
+    public val accountStatusOnRestore: UpdateField<UserAccountStatus> = UpdateField.Ignore,
+    public val authorityLevel: UpdateField<Int> = UpdateField.Ignore,
+    public val permissions: UpdateField<Set<PermissionCode>> = UpdateField.Ignore,
+    public val isTotpEnabled: UpdateField<Boolean> = UpdateField.Ignore,
+    public val scheduledPermanentDeletionAt: UpdateField<Instant> = UpdateField.Ignore,
+    public val lockoutType: UpdateField<AccountLockoutType> = UpdateField.Ignore,
+    public val temporaryLockoutUntil: UpdateField<Instant> = UpdateField.Ignore,
+    public val storageConfiguration: UpdateField<UserStorageConfigurationPayload> = UpdateField.Ignore,
+    public val nickname: UpdateField<String> = UpdateField.Ignore,
+    public val displayName: UpdateField<String> = UpdateField.Ignore,
+    public val avatarFileId: UpdateField<FileId> = UpdateField.Ignore,
+    public val birthdate: UpdateField<Instant> = UpdateField.Ignore
 )

@@ -59,11 +59,9 @@ class StorageFileImagePreviewScreenshotTest(
         @Suppress("Unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
-        fun data(): Collection<Array<Any?>> {
-            return listOf(
-                arrayOf("Image", "https://example.com/image.png", StorageCategory.IMAGE),
-                arrayOf("Video_Thumbnail", "https://example.com/video_thumb.png", StorageCategory.VIDEO)
-            )
-        }
+        fun data(): Collection<Array<Any?>> = listOf(
+            arrayOf("Image", "https://example.com/image.png", StorageCategory.IMAGE),
+            arrayOf("Video_Thumbnail", "https://example.com/video_thumb.png", StorageCategory.VIDEO)
+        )
     }
 }

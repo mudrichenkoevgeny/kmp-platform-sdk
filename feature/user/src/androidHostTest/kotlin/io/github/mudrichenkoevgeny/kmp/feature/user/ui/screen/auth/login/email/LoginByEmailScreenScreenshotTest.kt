@@ -39,7 +39,9 @@ class LoginByEmailScreenScreenshotTest(
             }
         }
 
-        if ((state is LoginByEmailScreenState.Loading) || (state is LoginByEmailScreenState.Content && state.actionLoading)) {
+        if ((state is LoginByEmailScreenState.Loading) ||
+            (state is LoginByEmailScreenState.Content && state.actionLoading)
+        ) {
             mainClock.autoAdvance = false
             mainClock.advanceTimeBy(FullscreenLoadingConfig.DELAY_MILLIS + 50L)
         }

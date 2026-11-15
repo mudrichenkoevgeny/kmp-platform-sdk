@@ -42,7 +42,6 @@ subprojects {
             optIn.addAll(
                 "kotlin.uuid.ExperimentalUuidApi",
                 "kotlinx.coroutines.ExperimentalCoroutinesApi",
-                "androidx.compose.ui.test.ExperimentalTestApi"
             )
         }
     }

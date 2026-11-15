@@ -4,41 +4,50 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.storage.repository.management.ManagementStorageSettingsRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.storagesettings.ManagementStorageSettings
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.storage.network.model.storagesettings.createTestManagementStorageSettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.mapper.storagesettings.toManagementStorageSettings
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.storage.network.model.storagesettings.createTestManagementStorageSettingsPayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+/**
+ * Mock implementation of [ManagementStorageSettingsRepository] for testing.
+ */
 @InternalApi
-class ManagementStorageSettingsRepositoryMock(
-    var initialSettings: ManagementStorageSettings = createTestManagementStorageSettingsPayload().toManagementStorageSettings()
+public class ManagementStorageSettingsRepositoryMock(
+    public var initialSettings: ManagementStorageSettings =
+        createTestManagementStorageSettingsPayload().toManagementStorageSettings()
 ) : ManagementStorageSettingsRepository {
 
-    private val _settings = MutableStateFlow<ManagementStorageSettings?>(initialSettings)
+    private val settingsStateFlow = MutableStateFlow<ManagementStorageSettings?>(initialSettings)
 
-    override suspend fun getManagementStorageSettings(): AppResult<ManagementStorageSettings> {
-        return AppResult.Success(_settings.value ?: initialSettings)
-    }
+    public override suspend fun getManagementStorageSettings(): AppResult<ManagementStorageSettings> =
+        AppResult.Success(
+            settingsStateFlow.value ?: initialSettings
+        )
 
-    override suspend fun saveRemoteManagementStorageSettings(storageSettings: ManagementStorageSettings): AppResult<ManagementStorageSettings> {
-        _settings.value = storageSettings
+    public override suspend fun saveRemoteManagementStorageSettings(
+        storageSettings: ManagementStorageSettings
+    ): AppResult<ManagementStorageSettings> {
+        settingsStateFlow.value = storageSettings
         return AppResult.Success(storageSettings)
     }
 
-    override suspend fun resetRemoteManagementStorageSettings(): AppResult<ManagementStorageSettings> {
+    public override suspend fun resetRemoteManagementStorageSettings(): AppResult<ManagementStorageSettings> {
         val defaultSettings = createTestManagementStorageSettingsPayload().toManagementStorageSettings()
-        _settings.value = defaultSettings
+        settingsStateFlow.value = defaultSettings
         return AppResult.Success(defaultSettings)
     }
 
-    override suspend fun refreshManagementStorageSettings(): AppResult<ManagementStorageSettings> {
-        return AppResult.Success(_settings.value ?: initialSettings)
+    public override suspend fun refreshManagementStorageSettings(): AppResult<ManagementStorageSettings> =
+        AppResult.Success(
+            settingsStateFlow.value ?: initialSettings
+        )
+
+    public override suspend fun updateManagementStorageSettings(storageSettings: ManagementStorageSettings) {
+        settingsStateFlow.value = storageSettings
     }
 
-    override suspend fun updateManagementStorageSettings(storageSettings: ManagementStorageSettings) {
-        _settings.value = storageSettings
-    }
-
-    override fun observeManagementStorageSettings(): Flow<ManagementStorageSettings?> = _settings.asStateFlow()
+    public override fun observeManagementStorageSettings(): Flow<ManagementStorageSettings?> =
+        settingsStateFlow.asStateFlow()
 }

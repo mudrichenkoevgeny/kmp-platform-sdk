@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
  * @param onNavigateToSessionDetail Optional callback to navigate to session detail.
  * @param onBack Pops this screen from the navigation stack.
  */
-class SessionListComponentImpl(
+public class SessionListComponentImpl(
     componentContext: ComponentContext,
     private val dataSource: SessionListDataSource,
     override val includeFilterPanel: Boolean = false,
@@ -49,15 +49,15 @@ class SessionListComponentImpl(
     private val onBack: () -> Unit
 ) : SessionListComponent, ComponentContext by componentContext {
 
-    override val isRevokeAvailable: Boolean
+    public override val isRevokeAvailable: Boolean
         get() = dataSource.isRevokeAvailable
 
-    override val isRevokeAllOthersAvailable: Boolean
+    public override val isRevokeAllOthersAvailable: Boolean
         get() = dataSource.isRevokeAllOthersAvailable
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue<SessionListScreenState>(SessionListScreenState.Loading)
-    override val state: Value<SessionListScreenState> = _state
+    public override val state: Value<SessionListScreenState> = _state
 
     private var activeSortState: ListingSortState? = null
     private var activeFilterStates: Map<String, ListingFilterState> = emptyMap()
@@ -77,18 +77,18 @@ class SessionListComponentImpl(
         fetchPage(pageNumber = ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER)
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         if ((backHandler as? BackDispatcher)?.back() != true) {
             onBack()
         }
     }
 
-    override fun onRefresh() {
+    public override fun onRefresh() {
         _state.value = SessionListScreenState.Loading
         fetchPage(pageNumber = ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER)
     }
 
-    override fun onLoadNextPage() {
+    public override fun onLoadNextPage() {
         val currentContent = _state.value as? SessionListScreenState.Content ?: return
         val paging = currentContent.paging
         if (!paging.canLoadMore) {
@@ -99,20 +99,23 @@ class SessionListComponentImpl(
         fetchPage(pageNumber = paging.nextPageNumber)
     }
 
-    override fun onToggleFilterPanel() {
+    public override fun onToggleFilterPanel() {
         val currentContent = _state.value as? SessionListScreenState.Content ?: return
         isFilterPanelExpanded = !isFilterPanelExpanded
         _state.value = currentContent.copy(isFilterPanelExpanded = isFilterPanelExpanded)
     }
 
-    override fun onSortChanged(sortState: ListingSortState) {
+    public override fun onSortChanged(sortState: ListingSortState) {
         activeSortState = sortState
         val currentContent = _state.value as? SessionListScreenState.Content ?: return
         _state.value = currentContent.copy(sortState = sortState)
         onRefresh()
     }
 
-    override fun onFilterChanged(filterId: String, filterState: ListingFilterState?) {
+    public override fun onFilterChanged(
+        filterId: String,
+        filterState: ListingFilterState?
+    ) {
         val newFilters = activeFilterStates.toMutableMap()
         if (filterState == null) {
             newFilters.remove(filterId)
@@ -125,7 +128,7 @@ class SessionListComponentImpl(
         _state.value = currentContent.copy(filterStates = newFilters)
     }
 
-    override fun onApplyFilters() {
+    public override fun onApplyFilters() {
         isFilterPanelExpanded = false
         val currentContent = _state.value as? SessionListScreenState.Content
         if (currentContent != null) {
@@ -134,11 +137,11 @@ class SessionListComponentImpl(
         onRefresh()
     }
 
-    override fun onSessionClick(session: UserSessionSummary) {
+    public override fun onSessionClick(session: UserSessionSummary) {
         onNavigateToSessionDetail?.invoke(session)
     }
 
-    override fun onSessionRevoked(sessionId: UserSessionId) {
+    public override fun onSessionRevoked(sessionId: UserSessionId) {
         val current = _state.value as? SessionListScreenState.Content ?: return
         val newItems = current.paging.items.filterNot { it.id == sessionId }
         _state.value = current.copy(
@@ -146,7 +149,7 @@ class SessionListComponentImpl(
         )
     }
 
-    override fun onRevokeSessionClick(sessionId: UserSessionId) {
+    public override fun onRevokeSessionClick(sessionId: UserSessionId) {
         val current = _state.value as? SessionListScreenState.Content ?: return
         if (!isRevokeAvailable || current.actionLoading) {
             return
@@ -173,7 +176,7 @@ class SessionListComponentImpl(
         }
     }
 
-    override fun onRevokeAllOtherSessionsClick() {
+    public override fun onRevokeAllOtherSessionsClick() {
         val current = _state.value as? SessionListScreenState.Content ?: return
         if (!isRevokeAllOthersAvailable || current.actionLoading) {
             return
@@ -214,7 +217,8 @@ class SessionListComponentImpl(
             dataSource.getSessions(query)
                 .onSuccess { pagedResult ->
                     val latestContent = _state.value as? SessionListScreenState.Content
-                    val newPaging = (latestContent?.paging ?: PaginationState<UserSessionSummary>()).appendResult(pagedResult)
+                    val newPaging =
+                        (latestContent?.paging ?: PaginationState<UserSessionSummary>()).appendResult(pagedResult)
                     val activeSessionId = authStorage?.getSessionId()?.toUserSessionIdOrNull()
                     val currentUserId = userRepository?.currentUser?.firstOrNull()?.id
                     _state.value = latestContent?.copy(

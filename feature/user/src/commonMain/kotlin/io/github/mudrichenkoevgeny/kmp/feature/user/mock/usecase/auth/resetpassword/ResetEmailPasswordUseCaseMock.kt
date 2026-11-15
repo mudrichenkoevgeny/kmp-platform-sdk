@@ -8,16 +8,21 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpasswor
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword.ResetEmailPasswordUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 
+/**
+ * Mock implementation of [ResetEmailPasswordUseCase] for testing.
+ */
 @InternalApi
-class ResetEmailPasswordUseCaseMock(
+public class ResetEmailPasswordUseCaseMock(
     resetPasswordRepository: ResetPasswordRepository = ResetPasswordRepositoryMock()
 ) : ResetEmailPasswordUseCase(resetPasswordRepository) {
 
-    var resultProvider: (String, String, String) -> AppResult<UserIdentifierPrivate> = { _, _, _ ->
+    public var resultProvider: (String, String, String) -> AppResult<UserIdentifierPrivate> = { _, _, _ ->
         AppResult.Error(CommonError.Unknown())
     }
 
-    override suspend fun execute(email: String, newPassword: String, confirmationCode: String): AppResult<UserIdentifierPrivate> {
-        return resultProvider(email, newPassword, confirmationCode)
-    }
+    public override suspend fun execute(
+        email: String,
+        newPassword: String,
+        confirmationCode: String
+    ): AppResult<UserIdentifierPrivate> = resultProvider(email, newPassword, confirmationCode)
 }

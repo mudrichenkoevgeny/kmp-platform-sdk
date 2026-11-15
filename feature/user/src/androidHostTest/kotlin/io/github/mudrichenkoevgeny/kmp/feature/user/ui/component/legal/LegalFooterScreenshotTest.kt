@@ -11,8 +11,8 @@ import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.core.testing.ui.test.captureAppScreen
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.kmp.core.testing.ui.test.captureAppScreen
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -60,12 +60,10 @@ class LegalFooterScreenshotTest(
         @Suppress("Unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
-        fun data(): Collection<Array<Any>> {
-            return listOf(
-                arrayOf("Privacy_Policy_Only", true, false),
-                arrayOf("Terms_Of_Service_Only", false, true),
-                arrayOf("Both_Visible", true, true)
-            )
-        }
+        fun data(): Collection<Array<Any>> = listOf(
+            arrayOf("Privacy_Policy_Only", true, false),
+            arrayOf("Terms_Of_Service_Only", false, true),
+            arrayOf("Both_Visible", true, true)
+        )
     }
 }

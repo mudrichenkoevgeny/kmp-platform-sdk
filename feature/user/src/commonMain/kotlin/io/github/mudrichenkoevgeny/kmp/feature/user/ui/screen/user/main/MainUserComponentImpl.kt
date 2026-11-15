@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 /**
  * Default implementation of [MainUserComponent].
  */
-class MainUserComponentImpl(
+public class MainUserComponentImpl(
     componentContext: ComponentContext,
     private val userRepository: UserRepository,
     private val logoutUseCase: LogoutUseCase,
@@ -29,43 +29,43 @@ class MainUserComponentImpl(
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue<MainUserScreenState>(MainUserScreenState.Loading)
-    override val state: Value<MainUserScreenState> = _state
+    public override val state: Value<MainUserScreenState> = _state
 
     init {
         observeUser()
         refreshUser()
     }
 
-    override fun onRetry() {
+    public override fun onRetry() {
         refreshUser()
     }
 
-    override fun onTotpMainClick() {
+    public override fun onTotpMainClick() {
         onNavigateToTotp()
     }
 
-    override fun onEditUserClick() {
+    public override fun onEditUserClick() {
         onNavigateToUserEdit()
     }
 
-    override fun onSessionsClick() {
+    public override fun onSessionsClick() {
         onNavigateToSessions()
     }
 
-    override fun onIdentifiersClick() {
+    public override fun onIdentifiersClick() {
         onNavigateToIdentifiers()
     }
 
-    override fun onFilesListClick() {
+    public override fun onFilesListClick() {
         onNavigateToFilesList()
     }
 
-    override fun onDeleteUserClick() {
+    public override fun onDeleteUserClick() {
         val current = _state.value as? MainUserScreenState.Content ?: return
         _state.value = current.copy(isDeleteConfirmationVisible = true, actionError = null)
     }
 
-    override fun onConfirmDeleteUserClick() {
+    public override fun onConfirmDeleteUserClick() {
         val current = _state.value as? MainUserScreenState.Content ?: return
         _state.value = current.copy(actionLoading = true, actionError = null)
 
@@ -86,17 +86,17 @@ class MainUserComponentImpl(
         }
     }
 
-    override fun onDismissDeleteUserDialog() {
+    public override fun onDismissDeleteUserDialog() {
         val current = _state.value as? MainUserScreenState.Content ?: return
         _state.value = current.copy(isDeleteConfirmationVisible = false)
     }
 
-    override fun onLogoutClick() {
+    public override fun onLogoutClick() {
         val current = _state.value as? MainUserScreenState.Content ?: return
         _state.value = current.copy(isLogoutConfirmationVisible = true, actionError = null)
     }
 
-    override fun onConfirmLogoutClick() {
+    public override fun onConfirmLogoutClick() {
         val current = _state.value as? MainUserScreenState.Content ?: return
         _state.value = current.copy(isLogoutConfirmationVisible = false)
         scope.launch {
@@ -104,12 +104,12 @@ class MainUserComponentImpl(
         }
     }
 
-    override fun onDismissLogoutDialog() {
+    public override fun onDismissLogoutDialog() {
         val current = _state.value as? MainUserScreenState.Content ?: return
         _state.value = current.copy(isLogoutConfirmationVisible = false)
     }
 
-    override fun onLoginClick() {
+    public override fun onLoginClick() {
         onNavigateToLogin()
     }
 

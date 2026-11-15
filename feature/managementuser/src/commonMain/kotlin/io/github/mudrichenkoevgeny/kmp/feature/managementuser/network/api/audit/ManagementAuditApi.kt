@@ -9,14 +9,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
 /**
  * Network API contract for administrative audit log operations.
  */
-interface ManagementAuditApi {
+public interface ManagementAuditApi {
     /**
      * Retrieves a paginated list of audit events.
      *
      * @param params Query and filter parameters DTO.
      * @return Paged result containing audit event summaries, or a failure.
      */
-    suspend fun getAuditEvents(
+    public suspend fun getAuditEvents(
         params: ManagementAuditEventListParams? = null
     ): AppResult<PagedResult<AuditEventSummaryPayload>>
 
@@ -26,5 +26,5 @@ interface ManagementAuditApi {
      * @param eventId Unique audit event identifier string.
      * @return Audit event payload, or a failure.
      */
-    suspend fun getAuditEvent(eventId: String): AppResult<AuditEventPrivatePayload>
+    public suspend fun getAuditEvent(eventId: String): AppResult<AuditEventPrivatePayload>
 }

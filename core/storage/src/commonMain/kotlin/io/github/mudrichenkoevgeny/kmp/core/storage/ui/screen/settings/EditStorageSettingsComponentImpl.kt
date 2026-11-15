@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
  * @param resetSettingsUseCase Use case to reset storage settings.
  * @param onBack Callback invoked on back navigation request.
  */
-class EditStorageSettingsComponentImpl(
+public class EditStorageSettingsComponentImpl(
     componentContext: ComponentContext,
     initialDialogConfig: StorageSettingsDialogConfig? = null,
     private val getSettingsUseCase: GetManagementStorageSettingsUseCase,
@@ -42,11 +42,12 @@ class EditStorageSettingsComponentImpl(
 ) : EditStorageSettingsComponent, ComponentContext by componentContext {
 
     private val _state = MutableValue<EditStorageSettingsScreenState>(EditStorageSettingsScreenState.Loading)
-    override val state: Value<EditStorageSettingsScreenState> = _state
+    public override val state: Value<EditStorageSettingsScreenState> = _state
 
-    override val dialogSlotNavigation = SlotNavigation<StorageSettingsDialogConfig>()
+    public override val dialogSlotNavigation: SlotNavigation<StorageSettingsDialogConfig> =
+        SlotNavigation<StorageSettingsDialogConfig>()
 
-    override val dialogSlot: Value<ChildSlot<StorageSettingsDialogConfig, StorageSettingsDialogChild>> =
+    public override val dialogSlot: Value<ChildSlot<StorageSettingsDialogConfig, StorageSettingsDialogChild>> =
         childSlot(
             source = dialogSlotNavigation,
             serializer = StorageSettingsDialogConfig.serializer(),
@@ -70,47 +71,47 @@ class EditStorageSettingsComponentImpl(
         }
     }
 
-    override fun onRetry() {
+    public override fun onRetry() {
         loadSettings()
     }
 
-    override fun onMinUploadSizeBytesChanged(value: String) {
+    public override fun onMinUploadSizeBytesChanged(value: String) {
         updateContent { copy(minUploadSizeBytes = value, saveError = null) }
     }
 
-    override fun onMaxUploadSizeBytesChanged(value: String) {
+    public override fun onMaxUploadSizeBytesChanged(value: String) {
         updateContent { copy(maxUploadSizeBytes = value, saveError = null) }
     }
 
-    override fun onTotalStorageQuotaForOpenUserBytesChanged(value: String) {
+    public override fun onTotalStorageQuotaForOpenUserBytesChanged(value: String) {
         updateContent { copy(totalStorageQuotaForOpenUserBytes = value, saveError = null) }
     }
 
-    override fun onTotalStorageQuotaForManagementUserBytesChanged(value: String) {
+    public override fun onTotalStorageQuotaForManagementUserBytesChanged(value: String) {
         updateContent { copy(totalStorageQuotaForManagementUserBytes = value, saveError = null) }
     }
 
-    override fun onPresignedUrlExpirationSecondsChanged(value: String) {
+    public override fun onPresignedUrlExpirationSecondsChanged(value: String) {
         updateContent { copy(presignedUrlExpirationSeconds = value, saveError = null) }
     }
 
-    override fun onMaxPendingUploadsForOpenUserChanged(value: String) {
+    public override fun onMaxPendingUploadsForOpenUserChanged(value: String) {
         updateContent { copy(maxPendingUploadsForOpenUser = value, saveError = null) }
     }
 
-    override fun onMaxPendingUploadsForManagementUserChanged(value: String) {
+    public override fun onMaxPendingUploadsForManagementUserChanged(value: String) {
         updateContent { copy(maxPendingUploadsForManagementUser = value, saveError = null) }
     }
 
-    override fun onIsDeduplicationEnabledToggled(value: Boolean) {
+    public override fun onIsDeduplicationEnabledToggled(value: Boolean) {
         updateContent { copy(isDeduplicationEnabled = value, saveError = null) }
     }
 
-    override fun onDeletedFilesCleanupIntervalSecondsChanged(value: String) {
+    public override fun onDeletedFilesCleanupIntervalSecondsChanged(value: String) {
         updateContent { copy(deletedFilesCleanupIntervalSeconds = value, saveError = null) }
     }
 
-    override fun onSaveClick() {
+    public override fun onSaveClick() {
         val current = _state.value as? EditStorageSettingsScreenState.Content ?: return
         if (!current.hasChanges || current.isSaving) {
             return
@@ -122,13 +123,19 @@ class EditStorageSettingsComponentImpl(
             val updatedSettings = ManagementStorageSettings(
                 minUploadSizeBytes = current.minUploadSizeBytes.toLongOrNull() ?: 0L,
                 maxUploadSizeBytes = current.maxUploadSizeBytes.toLongOrNull() ?: 0L,
-                totalStorageQuotaForOpenUserBytes = current.totalStorageQuotaForOpenUserBytes.toLongOrNull(),
-                totalStorageQuotaForManagementUserBytes = current.totalStorageQuotaForManagementUserBytes.toLongOrNull(),
-                presignedUrlExpirationSeconds = current.presignedUrlExpirationSeconds.toIntOrNull() ?: 0,
-                maxPendingUploadsForOpenUser = current.maxPendingUploadsForOpenUser.toIntOrNull() ?: 0,
-                maxPendingUploadsForManagementUser = current.maxPendingUploadsForManagementUser.toIntOrNull() ?: 0,
+                totalStorageQuotaForOpenUserBytes =
+                    current.totalStorageQuotaForOpenUserBytes.toLongOrNull(),
+                totalStorageQuotaForManagementUserBytes =
+                    current.totalStorageQuotaForManagementUserBytes.toLongOrNull(),
+                presignedUrlExpirationSeconds =
+                    current.presignedUrlExpirationSeconds.toIntOrNull() ?: 0,
+                maxPendingUploadsForOpenUser =
+                    current.maxPendingUploadsForOpenUser.toIntOrNull() ?: 0,
+                maxPendingUploadsForManagementUser =
+                    current.maxPendingUploadsForManagementUser.toIntOrNull() ?: 0,
                 isDeduplicationEnabled = current.isDeduplicationEnabled,
-                deletedFilesCleanupIntervalSeconds = current.deletedFilesCleanupIntervalSeconds.toIntOrNull() ?: 0
+                deletedFilesCleanupIntervalSeconds =
+                    current.deletedFilesCleanupIntervalSeconds.toIntOrNull() ?: 0
             )
 
             val saveResult = updateSettingsUseCase(updatedSettings)
@@ -137,17 +144,18 @@ class EditStorageSettingsComponentImpl(
                     onBack()
                     current.copy(isSaving = false)
                 }
+
                 is AppResult.Error -> current.copy(isSaving = false, saveError = saveResult.error)
             }
             _state.value = nextState
         }
     }
 
-    override fun onResetClick() {
+    public override fun onResetClick() {
         dialogSlotNavigation.activate(StorageSettingsDialogConfig.ConfirmReset)
     }
 
-    override fun onConfirmReset() {
+    public override fun onConfirmReset() {
         dialogSlotNavigation.dismiss()
         val current = _state.value as? EditStorageSettingsScreenState.Content ?: return
         if (current.isSaving) {
@@ -163,17 +171,18 @@ class EditStorageSettingsComponentImpl(
                     onBack()
                     current.copy(isSaving = false)
                 }
+
                 is AppResult.Error -> current.copy(isSaving = false, saveError = result.error)
             }
             _state.value = nextState
         }
     }
 
-    override fun onDismissDialog() {
+    public override fun onDismissDialog() {
         dialogSlotNavigation.dismiss()
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         onBack()
     }
 
@@ -188,25 +197,38 @@ class EditStorageSettingsComponentImpl(
                         initialSettings = settings,
                         minUploadSizeBytes = settings.minUploadSizeBytes.toString(),
                         maxUploadSizeBytes = settings.maxUploadSizeBytes.toString(),
-                        totalStorageQuotaForOpenUserBytes = settings.totalStorageQuotaForOpenUserBytes?.toString().orEmpty(),
-                        totalStorageQuotaForManagementUserBytes = settings.totalStorageQuotaForManagementUserBytes?.toString().orEmpty(),
-                        presignedUrlExpirationSeconds = settings.presignedUrlExpirationSeconds.toString(),
-                        maxPendingUploadsForOpenUser = settings.maxPendingUploadsForOpenUser.toString(),
-                        maxPendingUploadsForManagementUser = settings.maxPendingUploadsForManagementUser.toString(),
+                        totalStorageQuotaForOpenUserBytes =
+                            settings.totalStorageQuotaForOpenUserBytes?.toString()
+                                .orEmpty(),
+                        totalStorageQuotaForManagementUserBytes =
+                            settings.totalStorageQuotaForManagementUserBytes?.toString()
+                                .orEmpty(),
+                        presignedUrlExpirationSeconds =
+                            settings.presignedUrlExpirationSeconds.toString(),
+                        maxPendingUploadsForOpenUser =
+                            settings.maxPendingUploadsForOpenUser.toString(),
+                        maxPendingUploadsForManagementUser =
+                            settings.maxPendingUploadsForManagementUser.toString(),
                         isDeduplicationEnabled = settings.isDeduplicationEnabled,
-                        deletedFilesCleanupIntervalSeconds = settings.deletedFilesCleanupIntervalSeconds.toString(),
+                        deletedFilesCleanupIntervalSeconds =
+                            settings.deletedFilesCleanupIntervalSeconds.toString(),
                         isSaving = false,
                         saveError = null
                     )
                 }
+
                 is AppResult.Error -> {
-                    _state.value = EditStorageSettingsScreenState.Error(getSettingsResult.error)
+                    _state.value = EditStorageSettingsScreenState.Error(
+                        getSettingsResult.error
+                    )
                 }
             }
         }
     }
 
-    private inline fun updateContent(transform: EditStorageSettingsScreenState.Content.() -> EditStorageSettingsScreenState.Content) {
+    private inline fun updateContent(
+        transform: EditStorageSettingsScreenState.Content.() -> EditStorageSettingsScreenState.Content
+    ) {
         val current = _state.value as? EditStorageSettingsScreenState.Content ?: return
         _state.value = current.transform()
     }

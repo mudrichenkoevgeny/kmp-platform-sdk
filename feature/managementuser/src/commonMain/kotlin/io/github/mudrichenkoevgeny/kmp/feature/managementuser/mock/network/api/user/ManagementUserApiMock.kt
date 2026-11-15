@@ -12,24 +12,31 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.create.CreateByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user.ManagementUpdateUserRequest
 
+/**
+ * Mock implementation of [ManagementUserApi] for testing.
+ */
 @InternalApi
-class ManagementUserApiMock : ManagementUserApi {
+public class ManagementUserApiMock : ManagementUserApi {
 
-    var createUserResult: AppResult<UserPrivatePayload> = AppResult.Error(CommonError.Unknown())
-    var getUsersResult: AppResult<PagedResult<UserSummaryPayload>> = AppResult.Error(CommonError.Unknown())
-    var getUserResult: AppResult<UserPrivatePayload> = AppResult.Error(CommonError.Unknown())
-    var updateUserResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
-    var deleteUserResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
+    public var createUserResult: AppResult<UserPrivatePayload> = AppResult.Error(CommonError.Unknown())
+    public var getUsersResult: AppResult<PagedResult<UserSummaryPayload>> = AppResult.Error(CommonError.Unknown())
+    public var getUserResult: AppResult<UserPrivatePayload> = AppResult.Error(CommonError.Unknown())
+    public var updateUserResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
+    public var deleteUserResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
 
-    override suspend fun createUser(request: CreateByEmailRequest) = createUserResult
+    public override suspend fun createUser(request: CreateByEmailRequest): AppResult<UserPrivatePayload> =
+        createUserResult
 
-    override suspend fun getUsers(
+    public override suspend fun getUsers(
         params: ManagementUserListParams?
-    ) = getUsersResult
+    ): AppResult<PagedResult<UserSummaryPayload>> = getUsersResult
 
-    override suspend fun getUser(userId: UserId) = getUserResult
+    public override suspend fun getUser(userId: UserId): AppResult<UserPrivatePayload> = getUserResult
 
-    override suspend fun updateUser(userId: UserId, request: ManagementUpdateUserRequest) = updateUserResult
+    public override suspend fun updateUser(
+        userId: UserId,
+        request: ManagementUpdateUserRequest
+    ): AppResult<Unit> = updateUserResult
 
-    override suspend fun deleteUser(userId: UserId) = deleteUserResult
+    public override suspend fun deleteUser(userId: UserId): AppResult<Unit> = deleteUserResult
 }

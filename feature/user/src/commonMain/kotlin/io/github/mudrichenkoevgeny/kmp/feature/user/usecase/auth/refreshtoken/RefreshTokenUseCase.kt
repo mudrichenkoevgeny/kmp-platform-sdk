@@ -14,7 +14,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.t
  * @param refreshTokenRepository Remote token refresh API.
  * @param authStorage Source of the current refresh token and destination for updated credentials.
  */
-class RefreshTokenUseCase(
+public class RefreshTokenUseCase(
     private val refreshTokenRepository: RefreshTokenRepository,
     private val authStorage: AuthStorage
 ) {
@@ -23,7 +23,7 @@ class RefreshTokenUseCase(
      * [UserError.InvalidRefreshToken] when no refresh token is cached, or an error from refresh when
      * the backend rejects the token.
      */
-    suspend operator fun invoke(): AppResult<SessionToken> {
+    public suspend operator fun invoke(): AppResult<SessionToken> {
         val currentRefreshToken = authStorage.getRefreshToken()?.value
             ?: return AppResult.Error(UserError.InvalidRefreshToken())
 

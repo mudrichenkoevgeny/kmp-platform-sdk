@@ -10,7 +10,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.platform.filesystem.AndroidFi
  * `"{packageName}.fileprovider"`; the host app must declare a matching `FileProvider` in the manifest.
  * @return [AndroidExternalLauncher] wired for the given context.
  */
-actual fun getExternalLauncher(platformContext: Any?): ExternalLauncher {
+public actual fun getExternalLauncher(platformContext: Any?): ExternalLauncher {
     val context = platformContext as? Context
         ?: error("Android ExternalLauncher requires a valid Context")
 

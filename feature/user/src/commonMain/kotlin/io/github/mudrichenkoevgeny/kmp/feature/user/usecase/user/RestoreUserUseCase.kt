@@ -7,11 +7,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 /**
  * Restores a pending deletion account.
  */
-open class RestoreUserUseCase(
+public open class RestoreUserUseCase(
     private val userRepository: UserRepository
 ) {
 
-    open suspend operator fun invoke(): AppResult<UserPrivate> {
-        return userRepository.restoreUser()
-    }
+    /**
+     * Executes restoration of a pending deletion account.
+     *
+     * @return [AppResult] containing restored [UserPrivate] data on success.
+     */
+    public open suspend operator fun invoke(): AppResult<UserPrivate> = userRepository.restoreUser()
 }

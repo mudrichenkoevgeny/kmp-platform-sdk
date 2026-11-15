@@ -10,8 +10,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.storage.getSettingsFactory
  * implementations. The actual factory selection is delegated to [getSettingsFactory]
  * using the provided `platformContext`.
  */
-class EncryptedSettingsComponent(platformContext: Any?) {
-    val encryptedSettings: EncryptedSettings by lazy {
+public class EncryptedSettingsComponent(platformContext: Any?) {
+    public val encryptedSettings: EncryptedSettings by lazy {
         getSettingsFactory(platformContext).create()
     }
 }

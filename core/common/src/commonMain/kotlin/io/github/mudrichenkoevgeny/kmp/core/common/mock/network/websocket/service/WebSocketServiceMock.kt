@@ -16,30 +16,35 @@ import kotlinx.serialization.json.JsonElement
  * - sending methods are no-ops (events are not generated automatically)
  */
 @InternalApi
-class WebSocketServiceMock : WebSocketService {
-    private val _events = MutableSharedFlow<SocketFrame>(extraBufferCapacity = 64)
+public class WebSocketServiceMock : WebSocketService {
+    private val eventsFlow = MutableSharedFlow<SocketFrame>(extraBufferCapacity = 64)
 
-    suspend fun emit(frame: SocketFrame) {
-        _events.emit(frame)
+    /**
+     * Emits a [SocketFrame] to the events flow for testing.
+     *
+     * @param frame The socket frame to emit.
+     */
+    public suspend fun emit(frame: SocketFrame) {
+        eventsFlow.emit(frame)
     }
 
-    override fun connect() {}
+    override fun connect(): Unit = Unit
 
-    override fun disconnect() {}
+    override fun disconnect(): Unit = Unit
 
-    override fun restart() {}
+    override fun restart(): Unit = Unit
 
-    override fun observeEvents(): SharedFlow<SocketFrame> = _events
+    override fun observeEvents(): SharedFlow<SocketFrame> = eventsFlow
 
     override fun updateWebSocketMessageHandlers(
         webSocketMessageHandlers: List<WebSocketMessageHandler>
-    ) {}
+    ): Unit = Unit
 
     override suspend fun sendEvent(
         type: String,
         payload: JsonElement?,
         metadata: Map<String, String>
-    ) {}
+    ): Unit = Unit
 
-    override suspend fun sendPing(metadata: Map<String, String>) {}
+    override suspend fun sendPing(metadata: Map<String, String>): Unit = Unit
 }

@@ -20,13 +20,14 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.decodeFromJsonElement
 
 /**
  * Implementation of [ManagementGlobalSettingsRepository] backing in-memory flow, [ManagementGlobalSettingsStorage],
  * REST updates via [ManagementGlobalSettingsApi], and WebSocket events for live changes.
  */
-class ManagementGlobalSettingsRepositoryImpl(
+public class ManagementGlobalSettingsRepositoryImpl(
     private val managementGlobalSettingsApi: ManagementGlobalSettingsApi,
     private val managementGlobalSettingsStorage: ManagementGlobalSettingsStorage,
     private val webSocketService: WebSocketService,
@@ -53,7 +54,11 @@ class ManagementGlobalSettingsRepositoryImpl(
                         } else {
                             Logger.w { "Received MANAGEMENT_GLOBAL_SETTINGS_UPDATED with invalid payload" }
                         }
-                    } catch (e: Exception) {
+                    } catch (e: SerializationException) {
+                        Logger.e(e) { "Failed to process WebSocket event" }
+                    } catch (e: IllegalArgumentException) {
+                        Logger.e(e) { "Failed to process WebSocket event" }
+                    } catch (e: IllegalStateException) {
                         Logger.e(e) { "Failed to process WebSocket event" }
                     }
                 }
@@ -85,19 +90,16 @@ class ManagementGlobalSettingsRepositoryImpl(
             }
     }
 
-    override suspend fun resetRemoteManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
-        return managementGlobalSettingsApi.resetManagementGlobalSettings()
+    override suspend fun resetRemoteManagementGlobalSettings(): AppResult<ManagementGlobalSettings> =
+        managementGlobalSettingsApi.resetManagementGlobalSettings()
             .mapSuccess { response ->
                 val settings = response.toManagementGlobalSettings()
                 updateManagementGlobalSettings(settings)
                 settings
             }
-    }
 
-    override suspend fun refreshManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
-        return updateMutex.withLock {
-            refreshManagementGlobalSettingsInternal()
-        }
+    override suspend fun refreshManagementGlobalSettings(): AppResult<ManagementGlobalSettings> = updateMutex.withLock {
+        refreshManagementGlobalSettingsInternal()
     }
 
     override suspend fun updateManagementGlobalSettings(globalSettings: ManagementGlobalSettings) {
@@ -108,14 +110,13 @@ class ManagementGlobalSettingsRepositoryImpl(
 
     override fun observeManagementGlobalSettings(): Flow<ManagementGlobalSettings?> = _settings.asStateFlow()
 
-    private suspend fun refreshManagementGlobalSettingsInternal(): AppResult<ManagementGlobalSettings> {
-        return managementGlobalSettingsApi.getManagementGlobalSettings()
+    private suspend fun refreshManagementGlobalSettingsInternal(): AppResult<ManagementGlobalSettings> =
+        managementGlobalSettingsApi.getManagementGlobalSettings()
             .mapSuccess { response ->
                 val settings = response.toManagementGlobalSettings()
                 applySettingsUpdate(settings)
                 settings
             }
-    }
 
     private suspend fun applySettingsUpdate(globalSettings: ManagementGlobalSettings) {
         managementGlobalSettingsStorage.updateManagementGlobalSettings(globalSettings)

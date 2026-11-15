@@ -21,35 +21,47 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.rout
  * Root of the user management flow: manages navigation between main user screen
  * and detailed settings like sessions or security.
  */
-interface UserRootComponent {
+public interface UserRootComponent {
     /** Current navigation stack and active child. */
-    val stack: Value<ChildStack<NavigationRoute, Child>>
+    public val stack: Value<ChildStack<NavigationRoute, Child>>
 
-    fun navigateTo(destination: NavigationRoute)
+    public fun navigateTo(destination: NavigationRoute)
 
     /** Active child for a [NavigationRoute] configuration. */
-    sealed interface Child {
+    public sealed interface Child {
         /** Main user dashboard screen. */
-        class Main(val component: MainUserComponent) : Child
+        public class Main(public val component: MainUserComponent) : Child
+
         /** User edit screen. */
-        class UserEdit(val component: UserEditComponent) : Child
+        public class UserEdit(public val component: UserEditComponent) : Child
+
         /** TOTP main screen. */
-        class TotpMain(val component: TotpMainComponent) : Child
+        public class TotpMain(public val component: TotpMainComponent) : Child
+
         /** TOTP recovery codes management. */
-        class TotpRecoveryCodes(val component: TotpRecoveryCodesComponent) : Child
+        public class TotpRecoveryCodes(public val component: TotpRecoveryCodesComponent) : Child
+
         /** Active session management. */
-        class Sessions(val component: SessionListComponent) : Child, SessionListOwner by component
+        public class Sessions(public val component: SessionListComponent) : Child, SessionListOwner by component
+
         /** Active session detail screen. */
-        class SessionDetail(val component: SessionDetailComponent) : Child
+        public class SessionDetail(public val component: SessionDetailComponent) : Child
+
         /** Account identifiers management. */
-        class Identifiers(val component: IdentifierListComponent) : Child, IdentifierListOwner by component
+        public class Identifiers(
+            public val component: IdentifierListComponent
+        ) : Child, IdentifierListOwner by component
+
         /** Identifier detail screen. */
-        class IdentifierDetail(val component: IdentifierDetailComponent) : Child
+        public class IdentifierDetail(public val component: IdentifierDetailComponent) : Child
+
         /** User storage file list screen. */
-        class StorageFileList(val component: StorageFileListComponent) : Child
+        public class StorageFileList(public val component: StorageFileListComponent) : Child
+
         /** User storage file detail screen. */
-        class StorageFileDetail(val component: StorageFileDetailComponent) : Child
+        public class StorageFileDetail(public val component: StorageFileDetailComponent) : Child
+
         /** User storage file upload screen. */
-        class StorageFileUpload(val component: StorageFileUploadScreenComponent) : Child
+        public class StorageFileUpload(public val component: StorageFileUploadScreenComponent) : Child
     }
 }

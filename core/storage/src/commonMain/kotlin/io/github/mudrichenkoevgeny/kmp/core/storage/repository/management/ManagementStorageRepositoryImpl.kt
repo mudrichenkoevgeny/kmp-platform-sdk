@@ -13,23 +13,26 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.reques
  *
  * @param managementStorageApi Administrative HTTP endpoints for system-wide file storage management.
  */
-class ManagementStorageRepositoryImpl(
+public class ManagementStorageRepositoryImpl(
     private val managementStorageApi: ManagementStorageApi
 ) : ManagementStorageRepository {
 
-    override suspend fun getFiles(params: ManagementStorageFileListParams?): AppResult<PagedResult<StorageFileSummary>> {
-        return managementStorageApi.getFiles(params)
-    }
+    public override suspend fun getFiles(
+        params: ManagementStorageFileListParams?
+    ): AppResult<PagedResult<StorageFileSummary>> =
+        managementStorageApi.getFiles(
+            params
+        )
 
-    override suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate> {
-        return managementStorageApi.getFileDetail(fileId)
-    }
+    public override suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate> =
+        managementStorageApi.getFileDetail(
+            fileId
+        )
 
-    override suspend fun deleteFile(fileId: String): AppResult<Unit> {
-        return managementStorageApi.deleteFile(fileId)
-    }
+    public override suspend fun deleteFile(fileId: String): AppResult<Unit> = managementStorageApi.deleteFile(fileId)
 
-    override suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit> {
-        return managementStorageApi.deleteFilesBatch(request)
-    }
+    public override suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit> =
+        managementStorageApi.deleteFilesBatch(
+            request
+        )
 }

@@ -64,11 +64,9 @@ class StorageFileUploadScreenScreenshotTest(
         @Suppress("Unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
-        fun data(): Collection<Array<Any>> {
-            return listOf(
-                arrayOf("Default", true),
-                arrayOf("Disabled", false)
-            )
-        }
+        fun data(): Collection<Array<Any>> = listOf(
+            arrayOf("Default", true),
+            arrayOf("Disabled", false)
+        )
     }
 }

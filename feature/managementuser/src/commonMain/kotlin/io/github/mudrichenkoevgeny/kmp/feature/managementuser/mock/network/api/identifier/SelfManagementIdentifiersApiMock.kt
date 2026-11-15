@@ -11,20 +11,25 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierSummaryPayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.security.password.EmailPasswordChangeRequest
 
+/**
+ * Mock implementation of [SelfManagementIdentifiersApi] for testing.
+ */
 @InternalApi
-class SelfManagementIdentifiersApiMock : SelfManagementIdentifiersApi {
+public class SelfManagementIdentifiersApiMock : SelfManagementIdentifiersApi {
 
-    var getUserIdentifierResult: AppResult<UserIdentifierPrivatePayload> = AppResult.Error(CommonError.Unknown())
-    var getUserIdentifiersResult: AppResult<PagedResult<UserIdentifierSummaryPayload>> = AppResult.Error(CommonError.Unknown())
-    var emailChangePasswordResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
+    public var getUserIdentifierResult: AppResult<UserIdentifierPrivatePayload> = AppResult.Error(CommonError.Unknown())
+    public var getUserIdentifiersResult: AppResult<PagedResult<UserIdentifierSummaryPayload>> =
+        AppResult.Error(CommonError.Unknown())
+    public var emailChangePasswordResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
 
-    override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivatePayload> = getUserIdentifierResult
+    public override suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivatePayload> =
+        getUserIdentifierResult
 
-    override suspend fun getUserIdentifiers(
+    public override suspend fun getUserIdentifiers(
         params: SelfIdentifierListParams?
     ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = getUserIdentifiersResult
 
-    override suspend fun emailChangePassword(
+    public override suspend fun emailChangePassword(
         userIdentifierId: UserIdentifierId,
         request: EmailPasswordChangeRequest
     ): AppResult<Unit> = emailChangePasswordResult

@@ -14,60 +14,66 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserSummary
 
+/**
+ * Mock implementation of [ManagementUserRepository] for testing.
+ */
 @InternalApi
-class ManagementUserRepositoryMock : ManagementUserRepository {
+public class ManagementUserRepositoryMock : ManagementUserRepository {
 
-    var createUserResultProvider: (CreateByEmailRequest) -> AppResult<UserPrivate> = {
+    public var createUserResultProvider: (CreateByEmailRequest) -> AppResult<UserPrivate> = {
         AppResult.Success(createTestUserPrivate())
     }
 
-    var getUsersResultProvider: () -> AppResult<PagedResult<UserSummary>> = {
+    public var getUsersResultProvider: () -> AppResult<PagedResult<UserSummary>> = {
         AppResult.Success(createTestPagedResult(listOf(createTestUserSummary())))
     }
 
-    var getUserResultProvider: (UserId) -> AppResult<UserPrivate> = {
+    public var getUserResultProvider: (UserId) -> AppResult<UserPrivate> = {
         AppResult.Success(createTestUserPrivate())
     }
 
-    var updateUserResultProvider: (UserId, UpdateUserParams) -> AppResult<Unit> = { _, _ ->
+    public var updateUserResultProvider: (UserId, UpdateUserParams) -> AppResult<Unit> = { _, _ ->
         AppResult.Success(Unit)
     }
 
-    var deleteUserResultProvider: (UserId) -> AppResult<Unit> = { _ ->
+    public var deleteUserResultProvider: (UserId) -> AppResult<Unit> = { _ ->
         AppResult.Success(Unit)
     }
 
-    var lastCreateRequest: CreateByEmailRequest? = null
-    var lastUpdateUserId: UserId? = null
-    var lastUpdateParams: UpdateUserParams? = null
-    var lastDeleteUserId: UserId? = null
-    var lastGetUserId: UserId? = null
-    var lastUserListParams: ManagementUserListParams? = null
+    public var lastCreateRequest: CreateByEmailRequest? = null
+    public var lastUpdateUserId: UserId? = null
+    public var lastUpdateParams: UpdateUserParams? = null
+    public var lastDeleteUserId: UserId? = null
+    public var lastGetUserId: UserId? = null
+    public var lastUserListParams: ManagementUserListParams? = null
 
-    override suspend fun createUser(request: CreateByEmailRequest): AppResult<UserPrivate> {
+    public override suspend fun createUser(request: CreateByEmailRequest): AppResult<UserPrivate> {
         lastCreateRequest = request
         return createUserResultProvider(request)
     }
 
-    override suspend fun getUsers(
+    public override suspend fun getUsers(
         params: ManagementUserListParams?
     ): AppResult<PagedResult<UserSummary>> {
         lastUserListParams = params
         return getUsersResultProvider()
     }
 
-    override suspend fun getUser(userId: UserId): AppResult<UserPrivate> {
+    public override suspend fun getUser(userId: UserId): AppResult<UserPrivate> {
         lastGetUserId = userId
         return getUserResultProvider(userId)
     }
 
-    override suspend fun updateUser(userId: UserId, params: UpdateUserParams): AppResult<Unit> {
+    public override suspend fun updateUser(
+        userId: UserId,
+        params: UpdateUserParams
+    ): AppResult<Unit> {
         lastUpdateUserId = userId
         lastUpdateParams = params
         return updateUserResultProvider(userId, params)
     }
 
-    override suspend fun deleteUser(userId: UserId): AppResult<Unit> {
+    public override suspend fun deleteUser(userId: UserId): AppResult<Unit> {
         lastDeleteUserId = userId
         return deleteUserResultProvider(userId)
     }

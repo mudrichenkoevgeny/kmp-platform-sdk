@@ -6,18 +6,21 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.session.Sess
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.user.UserRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.LogoutUseCase
 
+/**
+ * Mock implementation of [LogoutUseCase] for testing.
+ */
 @InternalApi
-class LogoutUseCaseMock : LogoutUseCase(
+public class LogoutUseCaseMock : LogoutUseCase(
     sessionRepository = SessionRepositoryMock(),
     userRepository = UserRepositoryMock()
 ) {
-    var executeCalls: Int = 0
+    public var executeCalls: Int = 0
 
-    var resultProvider: () -> AppResult<Unit> = {
+    public var resultProvider: () -> AppResult<Unit> = {
         AppResult.Success(Unit)
     }
 
-    override suspend fun invoke(): AppResult<Unit> {
+    public override suspend fun invoke(): AppResult<Unit> {
         executeCalls++
         return resultProvider()
     }

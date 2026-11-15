@@ -9,14 +9,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
  *
  * @param managementSessionRepository Administrative session management API.
  */
-class ManagementDeleteAllUserSessionsUseCase(
+public class ManagementDeleteAllUserSessionsUseCase(
     private val managementSessionRepository: ManagementSessionRepository
 ) {
     /**
      * @param userId Unique identifier of the target account.
      * @return Empty success indicator, or a mapped failure.
      */
-    suspend operator fun invoke(userId: UserId): AppResult<Unit> {
-        return managementSessionRepository.deleteAllUserSessions(userId)
-    }
+    public suspend operator fun invoke(userId: UserId): AppResult<Unit> =
+        managementSessionRepository.deleteAllUserSessions(
+            userId
+        )
 }

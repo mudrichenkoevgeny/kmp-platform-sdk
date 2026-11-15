@@ -11,17 +11,20 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.m
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.audit.domain.model.event.createTestAuditEventSummary
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
 
+/**
+ * Mock implementation of [ManagementAuditRepository] for testing.
+ */
 @InternalApi
-open class ManagementAuditRepositoryMock(
-    var getAuditEventsResult: AppResult<PagedResult<AuditEventSummary>> = AppResult.Success(
+public open class ManagementAuditRepositoryMock(
+    public var getAuditEventsResult: AppResult<PagedResult<AuditEventSummary>> = AppResult.Success(
         createTestPagedResult(listOf(createTestAuditEventSummary()))
     ),
-    var getAuditEventResult: AppResult<AuditEventPrivate> = AppResult.Success(createTestAuditEventPrivate())
+    public var getAuditEventResult: AppResult<AuditEventPrivate> = AppResult.Success(createTestAuditEventPrivate())
 ) : ManagementAuditRepository {
 
-    override suspend fun getAuditEvents(
+    public override suspend fun getAuditEvents(
         params: ManagementAuditEventListParams?
     ): AppResult<PagedResult<AuditEventSummary>> = getAuditEventsResult
 
-    override suspend fun getAuditEvent(eventId: String): AppResult<AuditEventPrivate> = getAuditEventResult
+    public override suspend fun getAuditEvent(eventId: String): AppResult<AuditEventPrivate> = getAuditEventResult
 }

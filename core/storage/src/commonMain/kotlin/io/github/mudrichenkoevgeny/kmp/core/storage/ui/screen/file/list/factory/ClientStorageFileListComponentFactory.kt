@@ -22,7 +22,7 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.base.GetFilesUseCase
  * @param onNavigateBack Callback for back navigation.
  * @return Configured [StorageFileListComponent] instance.
  */
-fun createClientStorageFileListComponent(
+public fun createClientStorageFileListComponent(
     componentContext: ComponentContext,
     getFilesUseCase: GetFilesUseCase,
     deleteFileUseCase: DeleteFileUseCase,

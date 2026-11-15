@@ -7,20 +7,20 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.network.model
 /**
  * Fetch and update global application settings via the management API.
  */
-interface ManagementGlobalSettingsApi {
+public interface ManagementGlobalSettingsApi {
     /**
      * Fetches global settings for management.
      *
      * @return [AppResult.Success] containing [ManagementGlobalSettingsPayload] or [AppResult.Error].
      */
-    suspend fun getManagementGlobalSettings(): AppResult<ManagementGlobalSettingsPayload>
+    public suspend fun getManagementGlobalSettings(): AppResult<ManagementGlobalSettingsPayload>
 
     /**
      * Fetches open (public) global settings for unauthenticated management users.
      *
      * @return [AppResult.Success] containing [OpenGlobalSettingsPayload] or [AppResult.Error].
      */
-    suspend fun getOpenGlobalSettings(): AppResult<OpenGlobalSettingsPayload>
+    public suspend fun getOpenGlobalSettings(): AppResult<OpenGlobalSettingsPayload>
 
     /**
      * Updates platform-wide global settings.
@@ -28,12 +28,12 @@ interface ManagementGlobalSettingsApi {
      * @param request New global settings payload.
      * @return [AppResult.Success] containing updated [ManagementGlobalSettingsPayload], or a mapped failure.
      */
-    suspend fun updateManagementGlobalSettings(request: ManagementGlobalSettingsPayload): AppResult<ManagementGlobalSettingsPayload>
+    public suspend fun updateManagementGlobalSettings(request: ManagementGlobalSettingsPayload): AppResult<ManagementGlobalSettingsPayload>
 
     /**
      * Resets platform-wide global settings to default values.
      *
      * @return Fresh default [ManagementGlobalSettingsPayload], or a mapped failure.
      */
-    suspend fun resetManagementGlobalSettings(): AppResult<ManagementGlobalSettingsPayload>
+    public suspend fun resetManagementGlobalSettings(): AppResult<ManagementGlobalSettingsPayload>
 }

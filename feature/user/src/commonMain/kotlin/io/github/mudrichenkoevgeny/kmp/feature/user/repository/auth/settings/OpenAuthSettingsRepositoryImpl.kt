@@ -11,6 +11,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.settings.toOpenAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserWebSocketEventTypes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.settings.OpenAuthSettingsPayload
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +32,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
  * @param webSocketService Source of push updates for auth settings changes.
  * @param repositoryScope Long-lived scope used for the WebSocket collector started in `init`.
  */
-class OpenAuthSettingsRepositoryImpl(
+public class OpenAuthSettingsRepositoryImpl(
     private val openAuthSettingsApi: OpenAuthSettingsApi,
     private val openAuthSettingsStorage: OpenAuthSettingsStorage,
     private val webSocketService: WebSocketService,
@@ -58,14 +59,16 @@ class OpenAuthSettingsRepositoryImpl(
                         } else {
                             Logger.w { "Received OPEN_AUTH_SETTINGS_UPDATED with invalid payload" }
                         }
-                    } catch (e: Exception) {
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
                         Logger.e(e) { "Failed to process WebSocket event" }
                     }
                 }
         }
     }
 
-    override suspend fun getOpenAuthSettings(): AppResult<OpenAuthSettings> {
+    public override suspend fun getOpenAuthSettings(): AppResult<OpenAuthSettings> {
         _settings.value?.let { return AppResult.Success(it) }
 
         return updateMutex.withLock {
@@ -80,28 +83,25 @@ class OpenAuthSettingsRepositoryImpl(
         }
     }
 
-    override suspend fun refreshOpenAuthSettings(): AppResult<OpenAuthSettings> {
-        return updateMutex.withLock {
-            refreshOpenAuthSettingsInternal()
-        }
+    public override suspend fun refreshOpenAuthSettings(): AppResult<OpenAuthSettings> = updateMutex.withLock {
+        refreshOpenAuthSettingsInternal()
     }
 
-    override suspend fun updateOpenAuthSettings(authSettings: OpenAuthSettings) {
+    public override suspend fun updateOpenAuthSettings(authSettings: OpenAuthSettings) {
         updateMutex.withLock {
             applySettingsUpdate(authSettings)
         }
     }
 
-    override fun observeOpenAuthSettings(): Flow<OpenAuthSettings?> = _settings.asStateFlow()
+    public override fun observeOpenAuthSettings(): Flow<OpenAuthSettings?> = _settings.asStateFlow()
 
-    private suspend fun refreshOpenAuthSettingsInternal(): AppResult<OpenAuthSettings> {
-        return openAuthSettingsApi.getAuthSettings()
+    private suspend fun refreshOpenAuthSettingsInternal(): AppResult<OpenAuthSettings> =
+        openAuthSettingsApi.getAuthSettings()
             .mapSuccess { response ->
                 val settings = response.toOpenAuthSettings()
                 applySettingsUpdate(settings)
                 settings
             }
-    }
 
     private suspend fun applySettingsUpdate(authSettings: OpenAuthSettings) {
         openAuthSettingsStorage.updateOpenAuthSettings(authSettings)

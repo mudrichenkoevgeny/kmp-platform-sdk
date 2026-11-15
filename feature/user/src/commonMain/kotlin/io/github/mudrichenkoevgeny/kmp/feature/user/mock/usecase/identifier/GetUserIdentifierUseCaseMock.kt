@@ -9,15 +9,19 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierPrivate
 
+/**
+ * Mock implementation of [GetUserIdentifierUseCase] for testing.
+ */
 @InternalApi
-class GetUserIdentifierUseCaseMock(
+public class GetUserIdentifierUseCaseMock(
     identifierRepository: IdentifierRepository = IdentifierRepositoryMock()
 ) : GetUserIdentifierUseCase(identifierRepository) {
 
-    var executeCalls = 0
-    var resultProvider: (UserIdentifierId) -> AppResult<UserIdentifierPrivate> = { AppResult.Success(createTestUserIdentifierPrivate()) }
+    public var executeCalls: Int = 0
+    public var resultProvider: (UserIdentifierId) -> AppResult<UserIdentifierPrivate> =
+        { AppResult.Success(createTestUserIdentifierPrivate()) }
 
-    override suspend fun invoke(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> {
+    public override suspend fun invoke(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> {
         executeCalls++
         return resultProvider(userIdentifierId)
     }

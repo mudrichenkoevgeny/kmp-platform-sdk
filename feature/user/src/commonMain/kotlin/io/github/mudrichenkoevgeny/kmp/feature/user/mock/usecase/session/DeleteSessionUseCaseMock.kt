@@ -6,14 +6,17 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.session.Sess
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteSessionUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 
+/**
+ * Mock implementation of [DeleteSessionUseCase] for testing.
+ */
 @InternalApi
-class DeleteSessionUseCaseMock : DeleteSessionUseCase(
+public class DeleteSessionUseCaseMock : DeleteSessionUseCase(
     sessionRepository = SessionRepositoryMock()
 ) {
-    var resultProvider: (UserSessionId) -> AppResult<Unit> = { AppResult.Success(Unit) }
-    var executeCalls = 0
+    public var resultProvider: (UserSessionId) -> AppResult<Unit> = { AppResult.Success(Unit) }
+    public var executeCalls: Int = 0
 
-    override suspend fun invoke(userSessionId: UserSessionId): AppResult<Unit> {
+    public override suspend fun invoke(userSessionId: UserSessionId): AppResult<Unit> {
         executeCalls++
         return resultProvider(userSessionId)
     }

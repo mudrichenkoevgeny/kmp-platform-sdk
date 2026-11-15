@@ -7,6 +7,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.Web
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user.SelfManagementUserApi
+import io.github.mudrichenkoevgeny.kmp.feature.user.domain.model.user.UpdateUserParams
+import io.github.mudrichenkoevgeny.kmp.feature.user.mapper.user.toSelfUpdateUserRequest
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
@@ -15,13 +17,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.user.toUserPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserWebSocketEventTypes
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserPrivatePayload
-import io.github.mudrichenkoevgeny.kmp.feature.user.domain.model.user.UpdateUserParams
-import io.github.mudrichenkoevgeny.kmp.feature.user.mapper.user.toSelfUpdateUserRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.decodeFromJsonElement
 
@@ -31,7 +32,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
  *
  * Note: Account deletion and restoration are not supported in the management context.
  */
-class SelfManagementUserRepositoryImpl(
+public class SelfManagementUserRepositoryImpl(
     private val userStorage: UserStorage,
     private val authStorage: AuthStorage,
     private val selfManagementUserApi: SelfManagementUserApi,
@@ -51,6 +52,7 @@ class SelfManagementUserRepositoryImpl(
                         UserWebSocketEventTypes.USER_UPDATED -> {
                             handleUserUpdated(webSocketFrame.payload)
                         }
+
                         UserWebSocketEventTypes.SESSION_DELETED -> {
                             handleSessionDeleted()
                         }
@@ -59,33 +61,25 @@ class SelfManagementUserRepositoryImpl(
         }
     }
 
-    override suspend fun refreshCurrentUser(): AppResult<UserPrivate> {
-        return mutex.withLock {
-            selfManagementUserApi.getUser().mapSuccess { userPrivatePayload: UserPrivatePayload ->
-                val userPrivate = userPrivatePayload.toUserPrivate()
-                userStorage.updateCurrentUser(userPrivate)
-                userPrivate
-            }
+    override suspend fun refreshCurrentUser(): AppResult<UserPrivate> = mutex.withLock {
+        selfManagementUserApi.getUser().mapSuccess { userPrivatePayload: UserPrivatePayload ->
+            val userPrivate = userPrivatePayload.toUserPrivate()
+            userStorage.updateCurrentUser(userPrivate)
+            userPrivate
         }
     }
 
-    override suspend fun scheduleUserDeletion(): AppResult<UserPrivate> {
-        return methodNotSupported()
-    }
+    override suspend fun scheduleUserDeletion(): AppResult<UserPrivate> = methodNotSupported()
 
-    override suspend fun restoreUser(): AppResult<UserPrivate> {
-        return methodNotSupported()
-    }
+    override suspend fun restoreUser(): AppResult<UserPrivate> = methodNotSupported()
 
     override suspend fun selfUpdateUser(
         params: UpdateUserParams
-    ): AppResult<UserPrivate> {
-        return mutex.withLock {
-            selfManagementUserApi.selfUpdateUser(params.toSelfUpdateUserRequest()).mapSuccess { userPrivatePayload ->
-                val userPrivate = userPrivatePayload.toUserPrivate()
-                userStorage.updateCurrentUser(userPrivate)
-                userPrivate
-            }
+    ): AppResult<UserPrivate> = mutex.withLock {
+        selfManagementUserApi.selfUpdateUser(params.toSelfUpdateUserRequest()).mapSuccess { userPrivatePayload ->
+            val userPrivate = userPrivatePayload.toUserPrivate()
+            userStorage.updateCurrentUser(userPrivate)
+            userPrivate
         }
     }
 
@@ -96,7 +90,9 @@ class SelfManagementUserRepositoryImpl(
 
         val userPrivatePayload = try {
             FoundationJson.decodeFromJsonElement<UserPrivatePayload>(payload)
-        } catch (e: Exception) {
+        } catch (e: SerializationException) {
+            return WebSocketMessageHandlerResult.Error(CommonError.ContractViolation(e))
+        } catch (e: IllegalArgumentException) {
             return WebSocketMessageHandlerResult.Error(CommonError.ContractViolation(e))
         }
 

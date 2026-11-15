@@ -21,114 +21,154 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.r
 /**
  * [AppErrorParser] for user-related error codes using `shared-foundation` localization.
  */
-open class UserErrorParser(
+public open class UserErrorParser(
     private val localeProvider: () -> String = { KmpLocalization.currentLocale }
 ) : AppErrorParser {
 
-    companion object : UserErrorParser()
-
-    override fun parse(appError: AppError): String? {
+    public override fun parse(appError: AppError): String? {
         val args = appError.args ?: emptyMap()
         val strings = UserModuleStrings(KmpLocalization.resolver, localeProvider())
 
-        return when (appError.code) {
-            UserErrorCodes.INVALID_ACCESS_TOKEN,
-            UserErrorCodes.ACCESS_TOKEN_EXPIRED,
-            UserErrorCodes.INVALID_REFRESH_TOKEN,
-            UserErrorCodes.INVALID_SESSION -> strings.errors.invalidSession
-
-            UserErrorCodes.USER_BANNED -> strings.errors.banned
-
-            UserErrorCodes.USER_LOCKED -> {
-                val rawType = args[UserErrorArgs.ACCOUNT_LOCKOUT_TYPE]
-                val lockoutType = if (rawType != null) AccountLockoutType.fromValueOrNull(rawType) else null
-                val formattedUntil = formatEpochMillisToDateTime(args[UserErrorArgs.TEMPORARY_LOCKOUT_UNTIL])
-                strings.resolveUserLockedMessage(
-                    lockoutType = lockoutType,
-                    formattedUntil = formattedUntil
-                )
-            }
-
-            UserErrorCodes.SELF_SERVICE_UNLOCK_DISABLED -> strings.errors.selfServiceUnlockDisabled
-
-            UserErrorCodes.USER_READ_ONLY -> strings.errors.readOnly
-
-            UserErrorCodes.USER_SECURITY_HOLD -> strings.errors.securityHold
-
-            UserErrorCodes.USER_PENDING_DELETION -> strings.errors.pendingDeletion
-
-            UserErrorCodes.USER_FORBIDDEN,
-            UserErrorCodes.USER_ROLE_NOT_ALLOWED,
-            UserErrorCodes.USER_ILLEGAL_ACCOUNT_STATUS -> strings.errors.forbidden
-
-            UserErrorCodes.USER_MISSING_PERMISSIONS,
-            UserErrorCodes.USER_INSUFFICIENT_AUTHORITY_LEVEL -> strings.errors.missingPermissions
-
-            UserErrorCodes.USER_NOT_FOUND -> strings.errors.notFound
-
-            UserErrorCodes.INVALID_CREDENTIALS -> strings.errors.invalidCredentials
-
-            UserErrorCodes.WRONG_PASSWORD -> strings.errors.wrongPassword
-
-            UserErrorCodes.PASSWORD_SETUP_REQUIRED -> strings.errors.passwordSetupRequired
-
-            UserErrorCodes.USER_IDENTIFIER_PASSWORD_NOT_SUPPORTED -> strings.errors.identifierPasswordNotSupported
-
-            UserErrorCodes.USER_IDENTIFIER_PASSWORD_NOT_SET -> strings.errors.identifierPasswordNotSet
-
-            UserErrorCodes.WRONG_CONFIRMATION_CODE -> strings.errors.wrongConfirmationCode
-
-            UserErrorCodes.EXTERNAL_IDENTIFIER_LINKAGE_FAILED -> strings.errors.externalLinkageFailed
-
-            UserErrorCodes.CAN_NOT_DELETE_USER_IDENTIFIER -> strings.errors.canNotDeleteIdentifier
-
-            UserErrorCodes.CAN_NOT_CREATE_USER_IDENTIFIER -> strings.errors.canNotCreateIdentifier
-
-            UserErrorCodes.EMAIL_NOT_ALLOWED -> strings.errors.emailNotAllowed
-
-            UserErrorCodes.USER_IDENTIFIER_LIMIT_REACHED -> {
-                val commonStrings = CommonModuleStrings(KmpLocalization.resolver, localeProvider())
-                val limit = args[UserErrorArgs.MAX_NUMBER_OF_IDENTIFIERS]
-                val providerRaw = args[UserErrorArgs.USER_AUTH_PROVIDER]
-                strings.resolveUserIdentifierLimitReachedMessage(
-                    commonStrings = commonStrings,
-                    limit = limit,
-                    providerRaw = providerRaw
-                )
-            }
-
-            UserErrorCodes.TOTAL_USER_IDENTIFIERS_LIMIT_REACHED -> {
-                val limit = args[UserErrorArgs.MAX_NUMBER_OF_IDENTIFIERS]
-                strings.resolveTotalUserIdentifiersLimitReachedMessage(
-                    limit = limit
-                )
-            }
-
-            UserErrorCodes.REGISTRATION_DISABLED -> strings.errors.registrationDisabled
-
-            UserErrorCodes.NICKNAME_ALREADY_TAKEN -> strings.errors.nicknameAlreadyTaken
-
-            UserErrorCodes.NICKNAME_CHANGE_DISABLED -> strings.errors.nicknameChangeDisabled
-
-            UserErrorCodes.NICKNAME_TOO_SHORT -> strings.resolveNicknameTooShortMessage(args[UserErrorArgs.NICKNAME_MIN_LENGTH])
-
-            UserErrorCodes.NICKNAME_TOO_LONG -> strings.resolveNicknameTooLongMessage(args[UserErrorArgs.NICKNAME_MAX_LENGTH])
-
-            UserErrorCodes.INVALID_NICKNAME_CHARACTERS -> strings.errors.invalidNicknameCharacters
-
-            UserErrorCodes.DISPLAY_NAME_TOO_SHORT -> strings.resolveDisplayNameTooShortMessage(args[UserErrorArgs.DISPLAY_NAME_MIN_LENGTH])
-
-            UserErrorCodes.DISPLAY_NAME_TOO_LONG -> strings.resolveDisplayNameTooLongMessage(args[UserErrorArgs.DISPLAY_NAME_MAX_LENGTH])
-
-            UserErrorCodes.INVALID_DISPLAY_NAME_CHARACTERS -> strings.errors.invalidDisplayNameCharacters
-
-            ClientUserErrorCodes.EXTERNAL_AUTH_CANCELLED -> strings.errors.externalAuthCancelled
-
-            ClientUserErrorCodes.EXTERNAL_AUTH_FAILED -> strings.errors.externalAuthFailed
-
-            ClientUserErrorCodes.TOO_MANY_CONFIRMATION_REQUESTS -> strings.errors.tooManyConfirmationRequests
-
-            else -> null
-        }
+        return parseSessionAndAuthError(appError.code, args, strings)
+            ?: parseIdentifierError(appError.code, args, strings)
+            ?: parseProfileError(appError.code, args, strings)
+            ?: parseClientError(appError.code, strings)
     }
+
+    private fun parseSessionAndAuthError(
+        code: String,
+        args: Map<String, String>,
+        strings: UserModuleStrings
+    ): String? = when (code) {
+        UserErrorCodes.INVALID_ACCESS_TOKEN,
+        UserErrorCodes.ACCESS_TOKEN_EXPIRED,
+        UserErrorCodes.INVALID_REFRESH_TOKEN,
+        UserErrorCodes.INVALID_SESSION -> strings.errors.invalidSession
+
+        UserErrorCodes.USER_BANNED -> strings.errors.banned
+
+        UserErrorCodes.USER_LOCKED -> {
+            val rawType = args[UserErrorArgs.ACCOUNT_LOCKOUT_TYPE]
+            val lockoutType = if (rawType != null) AccountLockoutType.fromValueOrNull(rawType) else null
+            val formattedUntil = formatEpochMillisToDateTime(args[UserErrorArgs.TEMPORARY_LOCKOUT_UNTIL])
+            strings.resolveUserLockedMessage(
+                lockoutType = lockoutType,
+                formattedUntil = formattedUntil
+            )
+        }
+
+        UserErrorCodes.SELF_SERVICE_UNLOCK_DISABLED -> strings.errors.selfServiceUnlockDisabled
+
+        UserErrorCodes.USER_READ_ONLY -> strings.errors.readOnly
+
+        UserErrorCodes.USER_SECURITY_HOLD -> strings.errors.securityHold
+
+        UserErrorCodes.USER_PENDING_DELETION -> strings.errors.pendingDeletion
+
+        UserErrorCodes.USER_FORBIDDEN,
+        UserErrorCodes.USER_ROLE_NOT_ALLOWED,
+        UserErrorCodes.USER_ILLEGAL_ACCOUNT_STATUS -> strings.errors.forbidden
+
+        UserErrorCodes.USER_MISSING_PERMISSIONS,
+        UserErrorCodes.USER_INSUFFICIENT_AUTHORITY_LEVEL -> strings.errors.missingPermissions
+
+        UserErrorCodes.USER_NOT_FOUND -> strings.errors.notFound
+
+        UserErrorCodes.INVALID_CREDENTIALS -> strings.errors.invalidCredentials
+
+        UserErrorCodes.WRONG_PASSWORD -> strings.errors.wrongPassword
+
+        UserErrorCodes.PASSWORD_SETUP_REQUIRED -> strings.errors.passwordSetupRequired
+
+        UserErrorCodes.WRONG_CONFIRMATION_CODE -> strings.errors.wrongConfirmationCode
+
+        UserErrorCodes.REGISTRATION_DISABLED -> strings.errors.registrationDisabled
+
+        else -> null
+    }
+
+    private fun parseIdentifierError(
+        code: String,
+        args: Map<String, String>,
+        strings: UserModuleStrings
+    ): String? = when (code) {
+        UserErrorCodes.USER_IDENTIFIER_PASSWORD_NOT_SUPPORTED -> strings.errors.identifierPasswordNotSupported
+
+        UserErrorCodes.USER_IDENTIFIER_PASSWORD_NOT_SET -> strings.errors.identifierPasswordNotSet
+
+        UserErrorCodes.EXTERNAL_IDENTIFIER_LINKAGE_FAILED -> strings.errors.externalLinkageFailed
+
+        UserErrorCodes.CAN_NOT_DELETE_USER_IDENTIFIER -> strings.errors.canNotDeleteIdentifier
+
+        UserErrorCodes.CAN_NOT_CREATE_USER_IDENTIFIER -> strings.errors.canNotCreateIdentifier
+
+        UserErrorCodes.EMAIL_NOT_ALLOWED -> strings.errors.emailNotAllowed
+
+        UserErrorCodes.USER_IDENTIFIER_LIMIT_REACHED -> {
+            val commonStrings = CommonModuleStrings(KmpLocalization.resolver, localeProvider())
+            val limit = args[UserErrorArgs.MAX_NUMBER_OF_IDENTIFIERS]
+            val providerRaw = args[UserErrorArgs.USER_AUTH_PROVIDER]
+            strings.resolveUserIdentifierLimitReachedMessage(
+                commonStrings = commonStrings,
+                limit = limit,
+                providerRaw = providerRaw
+            )
+        }
+
+        UserErrorCodes.TOTAL_USER_IDENTIFIERS_LIMIT_REACHED -> {
+            val limit = args[UserErrorArgs.MAX_NUMBER_OF_IDENTIFIERS]
+            strings.resolveTotalUserIdentifiersLimitReachedMessage(
+                limit = limit
+            )
+        }
+
+        else -> null
+    }
+
+    private fun parseProfileError(
+        code: String,
+        args: Map<String, String>,
+        strings: UserModuleStrings
+    ): String? = when (code) {
+        UserErrorCodes.NICKNAME_ALREADY_TAKEN -> strings.errors.nicknameAlreadyTaken
+
+        UserErrorCodes.NICKNAME_CHANGE_DISABLED -> strings.errors.nicknameChangeDisabled
+
+        UserErrorCodes.NICKNAME_TOO_SHORT -> strings.resolveNicknameTooShortMessage(
+            args[UserErrorArgs.NICKNAME_MIN_LENGTH]
+        )
+
+        UserErrorCodes.NICKNAME_TOO_LONG -> strings.resolveNicknameTooLongMessage(
+            args[UserErrorArgs.NICKNAME_MAX_LENGTH]
+        )
+
+        UserErrorCodes.INVALID_NICKNAME_CHARACTERS -> strings.errors.invalidNicknameCharacters
+
+        UserErrorCodes.DISPLAY_NAME_TOO_SHORT -> strings.resolveDisplayNameTooShortMessage(
+            args[UserErrorArgs.DISPLAY_NAME_MIN_LENGTH]
+        )
+
+        UserErrorCodes.DISPLAY_NAME_TOO_LONG -> strings.resolveDisplayNameTooLongMessage(
+            args[UserErrorArgs.DISPLAY_NAME_MAX_LENGTH]
+        )
+
+        UserErrorCodes.INVALID_DISPLAY_NAME_CHARACTERS -> strings.errors.invalidDisplayNameCharacters
+
+        else -> null
+    }
+
+    private fun parseClientError(
+        code: String,
+        strings: UserModuleStrings
+    ): String? = when (code) {
+        ClientUserErrorCodes.EXTERNAL_AUTH_CANCELLED -> strings.errors.externalAuthCancelled
+
+        ClientUserErrorCodes.EXTERNAL_AUTH_FAILED -> strings.errors.externalAuthFailed
+
+        ClientUserErrorCodes.TOO_MANY_CONFIRMATION_REQUESTS -> strings.errors.tooManyConfirmationRequests
+
+        else -> null
+    }
+
+    public companion object : UserErrorParser()
 }

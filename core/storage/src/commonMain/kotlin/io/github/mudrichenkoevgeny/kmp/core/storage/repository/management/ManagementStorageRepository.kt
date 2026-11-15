@@ -10,7 +10,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.reques
 /**
  * Management Storage Repository contract for staff administrative file operations.
  */
-interface ManagementStorageRepository {
+public interface ManagementStorageRepository {
 
     /**
      * Fetches a paginated list of files uploaded across the platform.
@@ -18,7 +18,9 @@ interface ManagementStorageRepository {
      * @param params Optional query parameters DTO matching the administrative listing search schema.
      * @return [AppResult.Success] containing a [PagedResult] of [StorageFileSummary] or [AppResult.Error].
      */
-    suspend fun getFiles(params: ManagementStorageFileListParams? = null): AppResult<PagedResult<StorageFileSummary>>
+    public suspend fun getFiles(
+        params: ManagementStorageFileListParams? = null
+    ): AppResult<PagedResult<StorageFileSummary>>
 
     /**
      * Retrieves detailed private view of any specific file in the platform.
@@ -26,7 +28,7 @@ interface ManagementStorageRepository {
      * @param fileId Unique identifier of the target file.
      * @return [AppResult.Success] containing [StorageFilePrivate] or [AppResult.Error].
      */
-    suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate>
+    public suspend fun getFileDetail(fileId: String): AppResult<StorageFilePrivate>
 
     /**
      * Deletes any specific file from object storage across the platform.
@@ -34,7 +36,7 @@ interface ManagementStorageRepository {
      * @param fileId Unique identifier of the target file to delete.
      * @return [AppResult.Success] containing [Unit] or [AppResult.Error].
      */
-    suspend fun deleteFile(fileId: String): AppResult<Unit>
+    public suspend fun deleteFile(fileId: String): AppResult<Unit>
 
     /**
      * Deletes multiple files across the platform in a single batch operation using a request DTO.
@@ -42,5 +44,5 @@ interface ManagementStorageRepository {
      * @param request Batch deletion request parameters containing target file identifiers.
      * @return [AppResult.Success] containing [Unit] or [AppResult.Error].
      */
-    suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit>
+    public suspend fun deleteFilesBatch(request: DeleteFilesBatchRequest): AppResult<Unit>
 }

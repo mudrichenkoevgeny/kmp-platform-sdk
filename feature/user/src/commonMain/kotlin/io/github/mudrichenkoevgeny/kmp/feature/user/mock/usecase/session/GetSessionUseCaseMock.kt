@@ -9,15 +9,19 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionPrivate
 
+/**
+ * Mock implementation of [GetSessionUseCase] for testing.
+ */
 @InternalApi
-class GetSessionUseCaseMock(
+public class GetSessionUseCaseMock(
     sessionRepository: SessionRepository = SessionRepositoryMock()
 ) : GetSessionUseCase(sessionRepository) {
 
-    var executeCalls = 0
-    var resultProvider: (UserSessionId) -> AppResult<UserSessionPrivate> = { AppResult.Success(createTestUserSessionPrivate()) }
+    public var executeCalls: Int = 0
+    public var resultProvider: (UserSessionId) -> AppResult<UserSessionPrivate> =
+        { AppResult.Success(createTestUserSessionPrivate()) }
 
-    override suspend fun invoke(userSessionId: UserSessionId): AppResult<UserSessionPrivate> {
+    public override suspend fun invoke(userSessionId: UserSessionId): AppResult<UserSessionPrivate> {
         executeCalls++
         return resultProvider(userSessionId)
     }

@@ -14,6 +14,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contra
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user.UserPrivatePayload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.decodeFromJsonElement
 
@@ -29,20 +30,18 @@ import kotlinx.serialization.json.decodeFromJsonElement
  * @param refreshTokenUseCase Use case to trigger session refresh on unauthorized frames.
  * @param scope Coroutine scope for launching background update/clear tasks.
  */
-class UserWebSocketMessageHandler(
+public class UserWebSocketMessageHandler(
     private val userStorage: UserStorage,
     private val userRepository: UserRepository,
     private val authStorage: AuthStorage,
     private val refreshTokenUseCase: RefreshTokenUseCase,
     private val scope: CoroutineScope
 ) : WebSocketMessageHandler {
-    override suspend fun handle(frame: SocketFrame): WebSocketMessageHandlerResult {
-        return when (frame.type) {
-            UserWebSocketEventTypes.UNAUTHORIZED -> handleUnauthorized()
-            UserWebSocketEventTypes.USER_UPDATED -> handleUserUpdated(frame.payload)
-            UserWebSocketEventTypes.SESSION_DELETED -> handleSessionDeleted()
-            else -> WebSocketMessageHandlerResult.NotHandled
-        }
+    public override suspend fun handle(frame: SocketFrame): WebSocketMessageHandlerResult = when (frame.type) {
+        UserWebSocketEventTypes.UNAUTHORIZED -> handleUnauthorized()
+        UserWebSocketEventTypes.USER_UPDATED -> handleUserUpdated(frame.payload)
+        UserWebSocketEventTypes.SESSION_DELETED -> handleSessionDeleted()
+        else -> WebSocketMessageHandlerResult.NotHandled
     }
 
     private suspend fun handleUnauthorized(): WebSocketMessageHandlerResult {
@@ -59,7 +58,9 @@ class UserWebSocketMessageHandler(
 
         val userPrivatePayload = try {
             FoundationJson.decodeFromJsonElement<UserPrivatePayload>(payload)
-        } catch (e: Exception) {
+        } catch (e: SerializationException) {
+            return WebSocketMessageHandlerResult.Error(CommonError.ContractViolation(e))
+        } catch (e: IllegalArgumentException) {
             return WebSocketMessageHandlerResult.Error(CommonError.ContractViolation(e))
         }
 

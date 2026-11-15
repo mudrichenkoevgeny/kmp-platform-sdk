@@ -12,27 +12,36 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPrivatePayload
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
 
+/**
+ * Mock implementation of [SessionApi] for testing.
+ */
 @InternalApi
-class SelfManagementSessionApiMock : SessionApi {
+public class SelfManagementSessionApiMock : SessionApi {
 
-    var getSessionsResult: AppResult<PagedResult<UserSessionSummaryPayload>> = AppResult.Error(CommonError.Unknown())
-    var getSessionResult: AppResult<UserSessionPrivatePayload> = AppResult.Error(CommonError.Unknown())
-    var logoutResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
-    var deleteSessionResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
-    var deleteAllOtherSessionsResult: AppResult<DeletedSessionsPayload> = AppResult.Error(CommonError.Unknown())
-    var reauthenticateSessionResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
+    public var getSessionsResult: AppResult<PagedResult<UserSessionSummaryPayload>> = AppResult.Error(
+        CommonError.Unknown()
+    )
+    public var getSessionResult: AppResult<UserSessionPrivatePayload> = AppResult.Error(CommonError.Unknown())
+    public var logoutResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
+    public var deleteSessionResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
+    public var deleteAllOtherSessionsResult: AppResult<DeletedSessionsPayload> =
+        AppResult.Error(CommonError.Unknown())
+    public var reauthenticateSessionResult: AppResult<Unit> = AppResult.Error(CommonError.Unknown())
 
-    override suspend fun getSessions(
+    public override suspend fun getSessions(
         params: SelfSessionListParams?
     ): AppResult<PagedResult<UserSessionSummaryPayload>> = getSessionsResult
 
-    override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivatePayload> = getSessionResult
+    public override suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivatePayload> =
+        getSessionResult
 
-    override suspend fun logout(): AppResult<Unit> = logoutResult
+    public override suspend fun logout(): AppResult<Unit> = logoutResult
 
-    override suspend fun deleteSession(userSessionId: UserSessionId): AppResult<Unit> = deleteSessionResult
+    public override suspend fun deleteSession(userSessionId: UserSessionId): AppResult<Unit> = deleteSessionResult
 
-    override suspend fun deleteAllOtherSessions(): AppResult<DeletedSessionsPayload> = deleteAllOtherSessionsResult
+    public override suspend fun deleteAllOtherSessions(): AppResult<DeletedSessionsPayload> =
+        deleteAllOtherSessionsResult
 
-    override suspend fun reauthenticateSession(request: VerifyTotpPayload): AppResult<Unit> = reauthenticateSessionResult
+    public override suspend fun reauthenticateSession(request: VerifyTotpPayload): AppResult<Unit> =
+        reauthenticateSessionResult
 }

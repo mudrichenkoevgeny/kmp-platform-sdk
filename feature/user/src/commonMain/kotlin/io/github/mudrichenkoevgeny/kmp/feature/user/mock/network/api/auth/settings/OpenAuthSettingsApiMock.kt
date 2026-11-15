@@ -6,12 +6,15 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.api.auth.settings.OpenAuthSettingsApi
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.auth.settings.OpenAuthSettingsPayload
 
+/**
+ * Mock implementation of [OpenAuthSettingsApi] for testing.
+ */
 @InternalApi
-class OpenAuthSettingsApiMock : OpenAuthSettingsApi {
-    var result: AppResult<OpenAuthSettingsPayload> = AppResult.Error(CommonError.Unknown(isRetryable = false))
-    var callCount = 0
+public class OpenAuthSettingsApiMock : OpenAuthSettingsApi {
+    public var result: AppResult<OpenAuthSettingsPayload> = AppResult.Error(CommonError.Unknown(isRetryable = false))
+    public var callCount: Int = 0
 
-    override suspend fun getAuthSettings(): AppResult<OpenAuthSettingsPayload> {
+    public override suspend fun getAuthSettings(): AppResult<OpenAuthSettingsPayload> {
         callCount++
         return result
     }

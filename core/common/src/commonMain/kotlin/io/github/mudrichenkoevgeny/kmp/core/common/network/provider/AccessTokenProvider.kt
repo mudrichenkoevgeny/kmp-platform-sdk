@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.StateFlow
  *
  * The token value is observed by the WebSocket service to restart the connection when it changes.
  */
-interface AccessTokenProvider {
+public interface AccessTokenProvider {
     /**
      * Current access token stream.
      *
      * The value can be `null` when the user is not authenticated.
      */
-    val accessTokenFlow: StateFlow<String?>
+    public val accessTokenFlow: StateFlow<String?>
 }

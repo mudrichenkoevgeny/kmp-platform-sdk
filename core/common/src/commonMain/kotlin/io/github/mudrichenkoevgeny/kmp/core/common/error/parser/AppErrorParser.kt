@@ -9,11 +9,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
  * If the parser cannot handle the error, it should return `null` so that the
  * resolver can delegate to the fallback parser.
  */
-interface AppErrorParser {
+public interface AppErrorParser {
     /**
      * @param appError Error instance to localize.
      * @return Localized message for the provided [appError], or `null`
      * when this parser does not recognize the error code.
      */
-    fun parse(appError: AppError): String?
+    public fun parse(appError: AppError): String?
 }

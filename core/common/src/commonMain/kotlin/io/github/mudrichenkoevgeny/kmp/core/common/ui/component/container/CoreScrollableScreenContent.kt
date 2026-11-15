@@ -21,9 +21,9 @@ import androidx.compose.ui.Modifier
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.scrollbar.CoreVerticalScrollbar
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
@@ -37,7 +37,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
  * @param content Composable scope content rendered inside the scrollable column.
  */
 @Composable
-fun CoreScrollableScreenContent(
+public fun CoreScrollableScreenContent(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues = PaddingValues(CoreTheme.dimens.paddingLarge),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium),
@@ -70,7 +70,7 @@ fun CoreScrollableScreenContent(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun CoreScrollableScreenContentComponentSizePreview() {
     CoreTheme {
@@ -83,7 +83,7 @@ private fun CoreScrollableScreenContentComponentSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun CoreScrollableScreenContentThemePreview() {
     CoreTheme {
@@ -96,7 +96,7 @@ private fun CoreScrollableScreenContentThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun CoreScrollableScreenContentFontScalePreview() {
     CoreTheme {

@@ -44,16 +44,21 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorTe
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewDialogSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.pendingdeletion.PendingDeletionComponentMock
 
+/**
+ * Screen displaying account pending deletion status and restoration actions.
+ *
+ * @param component The Decompose component driving state and callbacks for pending deletion restoration.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PendingDeletionScreen(component: PendingDeletionComponent) {
+public fun PendingDeletionScreen(component: PendingDeletionComponent) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
@@ -147,7 +152,10 @@ fun PendingDeletionScreen(component: PendingDeletionComponent) {
 }
 
 @Composable
-private fun ErrorText(error: AppError?, testTag: String) {
+private fun ErrorText(
+    error: AppError?,
+    testTag: String
+) {
     AnimatedVisibility(
         visible = error != null,
         enter = fadeIn() + expandVertically(),
@@ -202,7 +210,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@DialogSizePreviews
+@PreviewDialogSizes
 @Composable
 private fun DialogSizePreview() {
     DialogPreviewContainer {
@@ -211,7 +219,7 @@ private fun DialogSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     DialogPreviewContainer {
@@ -220,7 +228,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     DialogPreviewContainer {
@@ -228,11 +236,11 @@ private fun FontScalePreview() {
     }
 }
 
-object PendingDeletionTestTags {
-    const val TITLE = "PendingDeletion_Title"
-    const val CARD_TITLE = "PendingDeletion_CardTitle"
-    const val CARD_DESC = "PendingDeletion_CardDesc"
-    const val RESTORE_BUTTON = "PendingDeletion_RestoreButton"
-    const val SIGN_OUT_BUTTON = "PendingDeletion_SignOutButton"
-    const val ACTION_ERROR_TEXT = "PendingDeletion_ActionErrorText"
+public object PendingDeletionTestTags {
+    public const val TITLE: String = "PendingDeletion_Title"
+    public const val CARD_TITLE: String = "PendingDeletion_CardTitle"
+    public const val CARD_DESC: String = "PendingDeletion_CardDesc"
+    public const val RESTORE_BUTTON: String = "PendingDeletion_RestoreButton"
+    public const val SIGN_OUT_BUTTON: String = "PendingDeletion_SignOutButton"
+    public const val ACTION_ERROR_TEXT: String = "PendingDeletion_ActionErrorText"
 }

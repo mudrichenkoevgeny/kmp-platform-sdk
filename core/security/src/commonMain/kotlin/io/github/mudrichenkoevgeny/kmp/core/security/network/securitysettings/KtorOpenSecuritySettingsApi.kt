@@ -12,11 +12,11 @@ import io.ktor.client.request.get
  *
  * @param client Shared client (typically from `core/common`) with base URL and plugins already applied.
  */
-class KtorOpenSecuritySettingsApi(
+public class KtorOpenSecuritySettingsApi(
     private val client: HttpClient
 ) : OpenSecuritySettingsApi {
 
-    override suspend fun getSecuritySettings(): AppResult<OpenSecuritySettingsPayload> = client.callResult {
+    public override suspend fun getSecuritySettings(): AppResult<OpenSecuritySettingsPayload> = client.callResult {
         get(OpenSecuritySettingsRoutes.GET_OPEN_SECURITY_SETTINGS)
     }
 }

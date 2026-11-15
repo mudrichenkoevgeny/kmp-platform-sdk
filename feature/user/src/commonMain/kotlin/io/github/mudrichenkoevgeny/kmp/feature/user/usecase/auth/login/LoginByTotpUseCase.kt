@@ -15,7 +15,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
  * @param authStorage Encrypted token storage updated after a successful login.
  * @param userStorage User snapshot storage updated after a successful login.
  */
-open class LoginByTotpUseCase(
+public open class LoginByTotpUseCase(
     private val loginRepository: LoginRepository,
     private val authStorage: AuthStorage,
     private val userStorage: UserStorage
@@ -26,11 +26,12 @@ open class LoginByTotpUseCase(
      * @return [AuthData] after a successful login and local persistence, or an error result without
      * touching storage when login fails.
      */
-    open suspend fun execute(mfaToken: String, code: String): AppResult<AuthData> {
-        return loginRepository.loginByTotp(mfaToken, code)
-            .onSuccess { authData ->
-                authStorage.updateTokens(authData.sessionToken)
-                userStorage.updateCurrentUser(authData.userPrivate)
-            }
-    }
+    public open suspend fun execute(
+        mfaToken: String,
+        code: String
+    ): AppResult<AuthData> = loginRepository.loginByTotp(mfaToken, code)
+        .onSuccess { authData ->
+            authStorage.updateTokens(authData.sessionToken)
+            userStorage.updateCurrentUser(authData.userPrivate)
+        }
 }

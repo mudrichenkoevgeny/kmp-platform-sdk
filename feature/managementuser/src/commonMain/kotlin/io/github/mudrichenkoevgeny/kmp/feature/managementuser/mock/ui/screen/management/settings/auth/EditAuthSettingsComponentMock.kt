@@ -12,8 +12,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.auth.EditAuthSettingsScreenState
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 
+/**
+ * Mock implementation of [EditAuthSettingsComponent] for testing.
+ */
 @InternalApi
-class EditAuthSettingsComponentMock(
+public class EditAuthSettingsComponentMock(
     initialState: EditAuthSettingsScreenState = EditAuthSettingsScreenState.Content(
         enabledProviders = setOf(UserAuthProvider.EMAIL, UserAuthProvider.GOOGLE),
         maxTotalIdentifiers = "10",
@@ -34,51 +37,64 @@ class EditAuthSettingsComponentMock(
         isRegistrationEnabled = true
     )
 ) : EditAuthSettingsComponent {
-    override val state: Value<EditAuthSettingsScreenState> = MutableValue(initialState)
+    public override val state: Value<EditAuthSettingsScreenState> = MutableValue(initialState)
 
-    override val dialogSlotNavigation = SlotNavigation<SettingsDialogConfig>()
+    public override val dialogSlotNavigation: SlotNavigation<SettingsDialogConfig> =
+        SlotNavigation<SettingsDialogConfig>()
     private val _dialogSlot = MutableValue<ChildSlot<SettingsDialogConfig, SettingsDialogChild>>(ChildSlot())
-    override val dialogSlot: Value<ChildSlot<SettingsDialogConfig, SettingsDialogChild>> = _dialogSlot
+    public override val dialogSlot: Value<ChildSlot<SettingsDialogConfig, SettingsDialogChild>> = _dialogSlot
 
-    fun setDialog(config: SettingsDialogConfig?) {
+    /** Sets the active dialog configuration. */
+    public fun setDialog(config: SettingsDialogConfig?) {
         val child = when (config) {
             is SettingsDialogConfig.ConfirmReset -> SettingsDialogChild.ConfirmReset
             null -> null
         }
         _dialogSlot.value = ChildSlot(
-            child = if (config != null && child != null) Child.Created(configuration = config, instance = child) else null
+            child = if (config != null && child != null) {
+                Child.Created(
+                    configuration = config,
+                    instance = child
+                )
+            } else {
+                null
+            }
         )
     }
 
-    override fun onRetry() {}
-    override fun onProviderToggled(provider: UserAuthProvider, enabled: Boolean) {}
-    override fun onMaxTotalIdentifiersChanged(value: String) {}
-    override fun onMaxEmailIdentifiersChanged(value: String) {}
-    override fun onMaxPhoneIdentifiersChanged(value: String) {}
-    override fun onMaxIdentifiersPerExternalProviderChanged(value: String) {}
-    override fun onUserNicknameMinLengthChanged(value: String) {}
-    override fun onUserNicknameMaxLengthChanged(value: String) {}
-    override fun onUserDisplayNameMinLengthChanged(value: String) {}
-    override fun onUserDisplayNameMaxLengthChanged(value: String) {}
-    override fun onIsUserNicknameChangeAllowedToggled(enabled: Boolean) {}
-    override fun onMaxActiveSessionsForOpenUserChanged(value: String) {}
-    override fun onMaxActiveSessionsForManagementUserChanged(value: String) {}
-    override fun onAccessTokenExpirationSecondsChanged(value: String) {}
-    override fun onRefreshTokenExpirationSecondsChanged(value: String) {}
-    override fun onAccountDeletionGracePeriodSecondsChanged(value: String) {}
-    override fun onAccountDeletionCheckIntervalSecondsChanged(value: String) {}
-    override fun onRegistrationEnabledToggled(enabled: Boolean) {}
-    override fun onOpenEmailBlacklistEnabledToggled(enabled: Boolean) {}
-    override fun onOpenEmailBlacklistChanged(value: String) {}
-    override fun onOpenEmailWhitelistEnabledToggled(enabled: Boolean) {}
-    override fun onOpenEmailWhitelistChanged(value: String) {}
-    override fun onManagementEmailBlacklistEnabledToggled(enabled: Boolean) {}
-    override fun onManagementEmailBlacklistChanged(value: String) {}
-    override fun onManagementEmailWhitelistEnabledToggled(enabled: Boolean) {}
-    override fun onManagementEmailWhitelistChanged(value: String) {}
-    override fun onSaveClick() {}
-    override fun onResetClick() {}
-    override fun onConfirmReset() {}
-    override fun onDismissDialog() {}
-    override fun onBackClick() {}
+    public override fun onRetry(): Unit = Unit
+    public override fun onProviderToggled(
+        provider: UserAuthProvider,
+        enabled: Boolean
+    ): Unit = Unit
+
+    public override fun onMaxTotalIdentifiersChanged(value: String): Unit = Unit
+    public override fun onMaxEmailIdentifiersChanged(value: String): Unit = Unit
+    public override fun onMaxPhoneIdentifiersChanged(value: String): Unit = Unit
+    public override fun onMaxIdentifiersPerExternalProviderChanged(value: String): Unit = Unit
+    public override fun onUserNicknameMinLengthChanged(value: String): Unit = Unit
+    public override fun onUserNicknameMaxLengthChanged(value: String): Unit = Unit
+    public override fun onUserDisplayNameMinLengthChanged(value: String): Unit = Unit
+    public override fun onUserDisplayNameMaxLengthChanged(value: String): Unit = Unit
+    public override fun onIsUserNicknameChangeAllowedToggled(enabled: Boolean): Unit = Unit
+    public override fun onMaxActiveSessionsForOpenUserChanged(value: String): Unit = Unit
+    public override fun onMaxActiveSessionsForManagementUserChanged(value: String): Unit = Unit
+    public override fun onAccessTokenExpirationSecondsChanged(value: String): Unit = Unit
+    public override fun onRefreshTokenExpirationSecondsChanged(value: String): Unit = Unit
+    public override fun onAccountDeletionGracePeriodSecondsChanged(value: String): Unit = Unit
+    public override fun onAccountDeletionCheckIntervalSecondsChanged(value: String): Unit = Unit
+    public override fun onRegistrationEnabledToggled(enabled: Boolean): Unit = Unit
+    public override fun onOpenEmailBlacklistEnabledToggled(enabled: Boolean): Unit = Unit
+    public override fun onOpenEmailBlacklistChanged(value: String): Unit = Unit
+    public override fun onOpenEmailWhitelistEnabledToggled(enabled: Boolean): Unit = Unit
+    public override fun onOpenEmailWhitelistChanged(value: String): Unit = Unit
+    public override fun onManagementEmailBlacklistEnabledToggled(enabled: Boolean): Unit = Unit
+    public override fun onManagementEmailBlacklistChanged(value: String): Unit = Unit
+    public override fun onManagementEmailWhitelistEnabledToggled(enabled: Boolean): Unit = Unit
+    public override fun onManagementEmailWhitelistChanged(value: String): Unit = Unit
+    public override fun onSaveClick(): Unit = Unit
+    public override fun onResetClick(): Unit = Unit
+    public override fun onConfirmReset(): Unit = Unit
+    public override fun onDismissDialog(): Unit = Unit
+    public override fun onBackClick(): Unit = Unit
 }

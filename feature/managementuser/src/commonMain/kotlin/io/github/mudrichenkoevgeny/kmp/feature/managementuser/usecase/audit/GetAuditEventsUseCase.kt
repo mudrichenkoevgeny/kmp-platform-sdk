@@ -11,16 +11,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
  *
  * @param managementAuditRepository Administrative audit repository.
  */
-class GetAuditEventsUseCase(
+public class GetAuditEventsUseCase(
     private val managementAuditRepository: ManagementAuditRepository
 ) {
     /**
      * @param params Query and filter parameters DTO.
      * @return Paginated result containing audit event summaries, or a failure.
      */
-    suspend operator fun invoke(
+    public suspend operator fun invoke(
         params: ManagementAuditEventListParams? = null
-    ): AppResult<PagedResult<AuditEventSummary>> {
-        return managementAuditRepository.getAuditEvents(params)
-    }
+    ): AppResult<PagedResult<AuditEventSummary>> = managementAuditRepository.getAuditEvents(params)
 }

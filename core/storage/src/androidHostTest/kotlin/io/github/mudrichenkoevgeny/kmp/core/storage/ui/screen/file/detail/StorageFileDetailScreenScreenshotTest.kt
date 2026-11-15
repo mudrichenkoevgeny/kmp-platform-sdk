@@ -52,12 +52,10 @@ class StorageFileDetailScreenScreenshotTest(
         @Suppress("Unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
-        fun data(): Collection<Array<Any>> {
-            return listOf(
-                arrayOf("Loading", StorageFileDetailScreenState.Loading),
-                arrayOf("Error", StorageFileDetailScreenState.Error(error = CommonError.Unknown())),
-                arrayOf("Content", StorageFileDetailComponentMock().state.value)
-            )
-        }
+        fun data(): Collection<Array<Any>> = listOf(
+            arrayOf("Loading", StorageFileDetailScreenState.Loading),
+            arrayOf("Error", StorageFileDetailScreenState.Error(error = CommonError.Unknown())),
+            arrayOf("Content", StorageFileDetailComponentMock().state.value)
+        )
     }
 }

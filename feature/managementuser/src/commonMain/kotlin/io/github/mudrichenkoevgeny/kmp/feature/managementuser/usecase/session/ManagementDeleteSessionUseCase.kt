@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
  *
  * @param managementSessionRepository Administrative session management API.
  */
-class ManagementDeleteSessionUseCase(
+public class ManagementDeleteSessionUseCase(
     private val managementSessionRepository: ManagementSessionRepository
 ) {
     /**
@@ -17,7 +17,8 @@ class ManagementDeleteSessionUseCase(
      * @param sessionId Unique session identifier to revoke.
      * @return Empty success indicator, or a mapped failure.
      */
-    suspend operator fun invoke(userId: UserId, sessionId: String): AppResult<Unit> {
-        return managementSessionRepository.deleteSession(userId, sessionId)
-    }
+    public suspend operator fun invoke(
+        userId: UserId,
+        sessionId: String
+    ): AppResult<Unit> = managementSessionRepository.deleteSession(userId, sessionId)
 }

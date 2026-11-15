@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
  * @param onBack Pops this screen on the parent stack.
  * @param onFinished Invoked when login succeeds so the host can close the flow.
  */
-class LoginByTotpComponentImpl(
+public class LoginByTotpComponentImpl(
     componentContext: ComponentContext,
     params: LoginByTotpParams = LoginByTotpParams(),
     private val loginByTotpUseCase: LoginByTotpUseCase,
@@ -34,7 +34,14 @@ class LoginByTotpComponentImpl(
     private val onFinished: () -> Unit
 ) : LoginByTotpComponent, ComponentContext by componentContext {
 
-    constructor(
+    private val scope = componentCoroutineScope()
+
+    private val _state = MutableValue<LoginByTotpScreenState>(
+        LoginByTotpScreenState.Content(mfaToken = params.mfaToken ?: "")
+    )
+    public override val state: Value<LoginByTotpScreenState> = _state
+
+    public constructor(
         componentContext: ComponentContext,
         mfaToken: String,
         loginByTotpUseCase: LoginByTotpUseCase,
@@ -52,14 +59,7 @@ class LoginByTotpComponentImpl(
         onFinished = onFinished
     )
 
-    private val scope = componentCoroutineScope()
-
-    private val _state = MutableValue<LoginByTotpScreenState>(
-        LoginByTotpScreenState.Content(mfaToken = params.mfaToken ?: "")
-    )
-    override val state: Value<LoginByTotpScreenState> = _state
-
-    override fun onCodeChanged(code: String) {
+    public override fun onCodeChanged(code: String) {
         val current = _state.value as? LoginByTotpScreenState.Content ?: return
         _state.value = current.copy(
             code = code,
@@ -67,7 +67,7 @@ class LoginByTotpComponentImpl(
         )
     }
 
-    override fun onToggleModeClick() {
+    public override fun onToggleModeClick() {
         val current = _state.value as? LoginByTotpScreenState.Content ?: return
         val newMode = if (current.mode == LoginByTotpMode.TOTP) LoginByTotpMode.RECOVERY_CODE else LoginByTotpMode.TOTP
         _state.value = current.copy(
@@ -77,7 +77,7 @@ class LoginByTotpComponentImpl(
         )
     }
 
-    override fun onSubmitClick() {
+    public override fun onSubmitClick() {
         val current = _state.value as? LoginByTotpScreenState.Content ?: return
         if (!current.canSubmit) {
             return
@@ -109,7 +109,7 @@ class LoginByTotpComponentImpl(
         }
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         onBack()
     }
 }

@@ -9,10 +9,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.settings.domain.model.
  *
  * @param managementGlobalSettingsRepository Management global settings repository.
  */
-class RefreshManagementGlobalSettingsUseCase(
+public class RefreshManagementGlobalSettingsUseCase(
     private val managementGlobalSettingsRepository: ManagementGlobalSettingsRepository
 ) {
-    suspend operator fun invoke(): AppResult<ManagementGlobalSettings> {
-        return managementGlobalSettingsRepository.refreshManagementGlobalSettings()
-    }
+    /** Forces a network refresh of management global settings. */
+    public suspend operator fun invoke(): AppResult<ManagementGlobalSettings> =
+        managementGlobalSettingsRepository.refreshManagementGlobalSettings()
 }

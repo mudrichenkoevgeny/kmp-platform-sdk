@@ -28,9 +28,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ic_warning
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import org.jetbrains.compose.resources.painterResource
 
@@ -44,7 +44,7 @@ import org.jetbrains.compose.resources.painterResource
  * @param modifier Layout modifier.
  */
 @Composable
-fun FullscreenError(
+public fun FullscreenError(
     error: AppError,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier
@@ -120,7 +120,7 @@ private fun FullscreenErrorRetryablePreview() {
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun FullscreenErrorComponentSizePreview() {
     CoreTheme {
@@ -136,7 +136,7 @@ private fun FullscreenErrorComponentSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun FullscreenErrorThemePreview() {
     CoreTheme {
@@ -152,7 +152,7 @@ private fun FullscreenErrorThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FullscreenErrorFontScalePreview() {
     CoreTheme {

@@ -45,10 +45,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.Fullscre
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
@@ -56,19 +56,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.main.Mai
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
-object MainUserTestTags {
-    const val REFRESH_BUTTON = "MainUser_RefreshButton"
-    const val USER_ID_TEXT = "MainUser_UserIdText"
-    const val EDIT_USER_BUTTON = "MainUser_EditUserButton"
-    const val FILES_BUTTON = "MainUser_FilesButton"
-    const val LOGOUT_BUTTON = "MainUser_LogoutButton"
-    const val LOGIN_BUTTON = "MainUser_LoginButton"
-    const val GLOBAL_ERROR_TEXT = "MainUser_GlobalErrorText"
-}
-
+/**
+ * Main screen component for authenticated user overview, navigation to user profile settings, TOTP, sessions, and files.
+ *
+ * @param component Component driving main user screen state and callbacks.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainUserScreen(component: MainUserComponent) {
+public fun MainUserScreen(component: MainUserComponent) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
     val commonUi = LocalCommonStrings.current.ui
@@ -109,6 +104,7 @@ fun MainUserScreen(component: MainUserComponent) {
                             onLoginClick = component::onLoginClick
                         )
                     }
+
                     is MainUserScreenState.Content -> {
                         MainUserContent(
                             state = current,
@@ -165,6 +161,7 @@ fun MainUserScreen(component: MainUserComponent) {
                             FullscreenOverlayLoading()
                         }
                     }
+
                     is MainUserScreenState.Error -> {
                         Box(
                             modifier = Modifier.fillMaxSize(),
@@ -180,6 +177,16 @@ fun MainUserScreen(component: MainUserComponent) {
             }
         }
     }
+}
+
+public object MainUserTestTags {
+    public const val REFRESH_BUTTON: String = "MainUser_RefreshButton"
+    public const val USER_ID_TEXT: String = "MainUser_UserIdText"
+    public const val EDIT_USER_BUTTON: String = "MainUser_EditUserButton"
+    public const val FILES_BUTTON: String = "MainUser_FilesButton"
+    public const val LOGOUT_BUTTON: String = "MainUser_LogoutButton"
+    public const val LOGIN_BUTTON: String = "MainUser_LoginButton"
+    public const val GLOBAL_ERROR_TEXT: String = "MainUser_GlobalErrorText"
 }
 
 @Composable
@@ -338,7 +345,7 @@ private fun MainUserScreenPreview() {
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
@@ -347,7 +354,7 @@ private fun ScreenSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -356,7 +363,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {

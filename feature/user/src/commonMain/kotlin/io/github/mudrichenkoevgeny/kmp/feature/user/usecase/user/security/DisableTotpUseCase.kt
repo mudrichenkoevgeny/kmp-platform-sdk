@@ -8,13 +8,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.security.Use
  *
  * @param userSecurityRepository Remote security management API.
  */
-open class DisableTotpUseCase(
+public open class DisableTotpUseCase(
     private val userSecurityRepository: UserSecurityRepository
 ) {
     /**
      * @return Empty success indicator, or a mapped failure.
      */
-    open suspend operator fun invoke(): AppResult<Unit> {
-        return userSecurityRepository.disableTotp()
-    }
+    public open suspend operator fun invoke(): AppResult<Unit> = userSecurityRepository.disableTotp()
 }

@@ -9,4 +9,4 @@ package io.github.mudrichenkoevgeny.kmp.core.common.infrastructure
     message = "Internal SDK API"
 )
 @Retention(AnnotationRetention.BINARY)
-annotation class InternalApi
+public annotation class InternalApi

@@ -66,13 +66,15 @@ class KtorWebSocketServiceTest {
         scope = scope
     )
 
-    private fun createMockHttpClient(): HttpClient = HttpClient(MockEngine {
-        respond(
-            content = "",
-            status = HttpStatusCode.OK,
-            headers = headersOf(HttpHeaders.ContentType, "application/json")
-        )
-    }) {
+    private fun createMockHttpClient(): HttpClient = HttpClient(
+        MockEngine {
+            respond(
+                content = "",
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, "application/json")
+            )
+        }
+    ) {
         install(WebSockets)
     }
 
@@ -111,13 +113,13 @@ class KtorWebSocketServiceTest {
 
         var handlerInvoked = false
         val customHandler = object : WebSocketMessageHandler {
-            override suspend fun handle(frame: SocketFrame): WebSocketMessageHandlerResult {
-                return if (frame.type == "CUSTOM_TEST_TYPE") {
-                    handlerInvoked = true
-                    WebSocketMessageHandlerResult.Handled
-                } else {
-                    WebSocketMessageHandlerResult.NotHandled
-                }
+            override suspend fun handle(frame: SocketFrame): WebSocketMessageHandlerResult = if (frame.type ==
+                "CUSTOM_TEST_TYPE"
+            ) {
+                handlerInvoked = true
+                WebSocketMessageHandlerResult.Handled
+            } else {
+                WebSocketMessageHandlerResult.NotHandled
             }
         }
 

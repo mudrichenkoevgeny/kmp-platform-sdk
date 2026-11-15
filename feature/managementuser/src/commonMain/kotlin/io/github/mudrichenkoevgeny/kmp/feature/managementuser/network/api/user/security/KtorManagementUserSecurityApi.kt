@@ -10,7 +10,7 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.parameter
 
 /** [ManagementUserSecurityApi] backed by [HttpClient]. */
-class KtorManagementUserSecurityApi(
+public class KtorManagementUserSecurityApi(
     private val client: HttpClient
 ) : ManagementUserSecurityApi {
 

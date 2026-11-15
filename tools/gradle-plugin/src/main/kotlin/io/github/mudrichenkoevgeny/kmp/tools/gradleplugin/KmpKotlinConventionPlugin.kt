@@ -1,4 +1,4 @@
-package io.github.mudrichenkoevgeny.kmp.plugin
+package io.github.mudrichenkoevgeny.kmp.tools.gradleplugin
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -13,6 +13,11 @@ public class KmpKotlinConventionPlugin : Plugin<Project> {
      * @param target The target Gradle project to configure.
      */
     override fun apply(target: Project) {
-        target.pluginManager.apply("io.github.mudrichenkoevgeny.shared-foundation-kotlin")
+        target.pluginManager.apply(SHARED_FOUNDATION_KOTLIN_PLUGIN_ID)
+    }
+
+    private companion object {
+        private const val SHARED_FOUNDATION_KOTLIN_PLUGIN_ID: String =
+            "io.github.mudrichenkoevgeny.shared-foundation-kotlin"
     }
 }

@@ -42,24 +42,22 @@ import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorPar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingEmptyState
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.ListingHeaderBar
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReached
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.OnBottomReach
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.PagingFooter
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.listing.option.ListingOptionsPanel
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.scrollbar.CoreLazyColumnScrollbar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.main.GlobalUserListComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.component.user.item.UserItem
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
-
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserSummary
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserSummaryList
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
@@ -71,7 +69,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GlobalUserListScreen(component: GlobalUserListComponent) {
+public fun GlobalUserListScreen(component: GlobalUserListComponent) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
@@ -146,6 +144,7 @@ fun GlobalUserListScreen(component: GlobalUserListComponent) {
                         )
                     }
                 }
+
                 is GlobalUserListScreenState.Error -> {
                     CoreErrorText(
                         text = currentState.error.toLocalizedMessage(),
@@ -166,7 +165,7 @@ private fun Content(
 ) {
     val listState = rememberLazyListState()
 
-    listState.OnBottomReached {
+    listState.OnBottomReach {
         onLoadNextPage()
     }
 
@@ -244,7 +243,10 @@ private fun Content(
 }
 
 @Composable
-private fun ErrorText(error: AppError?, testTag: String) {
+private fun ErrorText(
+    error: AppError?,
+    testTag: String
+) {
     if (error != null) {
         CoreErrorText(
             text = error.toLocalizedMessage(),
@@ -300,7 +302,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
@@ -309,7 +311,7 @@ private fun ScreenSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -318,7 +320,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {
@@ -329,14 +331,14 @@ private fun FontScalePreview() {
 /**
  * Test tags for UI nodes on [GlobalUserListScreen].
  */
-object GlobalUserListTestTags {
-    const val TITLE = "GlobalUserList_Title"
-    const val BACK_BUTTON = "GlobalUserList_BackButton"
-    const val FILTER_BUTTON = "GlobalUserList_FilterButton"
-    const val REFRESH_BUTTON = "GlobalUserList_RefreshButton"
-    const val CREATE_USER_FAB = "GlobalUserList_CreateUserFab"
-    const val GLOBAL_ERROR_TEXT = "GlobalUserList_GlobalErrorText"
-    const val USER_LIST = "GlobalUserList_List"
-    const val USER_ITEM_PREFIX = "GlobalUserList_Item_"
-    const val ACTION_ERROR_TEXT = "GlobalUserList_ACTION_ERROR_TEXT"
+public object GlobalUserListTestTags {
+    public const val TITLE: String = "GlobalUserList_Title"
+    public const val BACK_BUTTON: String = "GlobalUserList_BackButton"
+    public const val FILTER_BUTTON: String = "GlobalUserList_FilterButton"
+    public const val REFRESH_BUTTON: String = "GlobalUserList_RefreshButton"
+    public const val CREATE_USER_FAB: String = "GlobalUserList_CreateUserFab"
+    public const val GLOBAL_ERROR_TEXT: String = "GlobalUserList_GlobalErrorText"
+    public const val USER_LIST: String = "GlobalUserList_List"
+    public const val USER_ITEM_PREFIX: String = "GlobalUserList_Item_"
+    public const val ACTION_ERROR_TEXT: String = "GlobalUserList_ACTION_ERROR_TEXT"
 }

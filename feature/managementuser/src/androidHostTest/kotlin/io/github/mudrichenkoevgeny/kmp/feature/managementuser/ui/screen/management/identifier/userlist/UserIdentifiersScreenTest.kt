@@ -66,7 +66,9 @@ class UserIdentifiersScreenTest {
 
     @Test
     fun content_clickBack_invokesCallback() = runComposeUiTest {
-        val component = IdentifierListComponentMock(IdentifierListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
+        val component = IdentifierListComponentMock(
+            IdentifierListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false))
+        )
         setContent {
             ComponentTestHarness {
                 IdentifierListScreen(component)
@@ -78,7 +80,9 @@ class UserIdentifiersScreenTest {
 
     @Test
     fun content_clickRefresh_invokesCallback() = runComposeUiTest {
-        val component = IdentifierListComponentMock(IdentifierListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)))
+        val component = IdentifierListComponentMock(
+            IdentifierListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false))
+        )
         setContent {
             ComponentTestHarness {
                 IdentifierListScreen(component)

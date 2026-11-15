@@ -3,10 +3,6 @@ package io.github.mudrichenkoevgeny.kmp.core.security.repository.securitysetting
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.websocket.service.WebSocketServiceMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.network.model.websocket.createTestSocketFrame
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.securitysettings.createTestOpenSecuritySettings
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.network.model.passwordpolicy.createTestOpenPasswordPolicyPayload
-import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.network.model.securitysettings.createTestOpenSecuritySettingsPayload
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.network.securitysettings.OpenSecuritySettingsApiMock
 import io.github.mudrichenkoevgeny.kmp.core.security.mock.storage.securitysettings.OpenSecuritySettingsStorageMock
 import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySettingsRepositoryImpl
@@ -15,6 +11,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.mapper.securitysettings.toOpenSecuritySettings
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.contract.SecurityWebSocketEventTypes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.securitysettings.OpenSecuritySettingsPayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.network.model.websocket.createTestSocketFrame
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.securitysettings.createTestOpenSecuritySettings
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.network.model.passwordpolicy.createTestOpenPasswordPolicyPayload
+import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.network.model.securitysettings.createTestOpenSecuritySettingsPayload
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent

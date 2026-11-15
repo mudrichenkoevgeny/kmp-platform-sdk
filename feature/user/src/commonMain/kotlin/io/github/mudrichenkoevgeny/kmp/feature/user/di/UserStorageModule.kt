@@ -9,9 +9,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.storage.user.UserStorage
  *
  * @param encryptedSettings Platform encrypted settings used to build [UserStorage].
  */
-class UserStorageModule(encryptedSettings: EncryptedSettings) {
+public class UserStorageModule(encryptedSettings: EncryptedSettings) {
     /**
      * Encrypted implementation of [UserStorage].
      */
-    val userStorage: UserStorage by lazy { EncryptedUserStorage(encryptedSettings) }
+    public val userStorage: UserStorage by lazy { EncryptedUserStorage(encryptedSettings) }
 }

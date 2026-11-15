@@ -14,7 +14,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.disp
  * @param displayNameValidator Validator engine for display names.
  * @param getAuthSettingsUseCase Use case to retrieve current public auth settings.
  */
-open class ValidateDisplayNameUseCase(
+public open class ValidateDisplayNameUseCase(
     private val displayNameValidator: DisplayNameValidator,
     private val getAuthSettingsUseCase: GetAuthSettingsUseCase
 ) {
@@ -24,30 +24,31 @@ open class ValidateDisplayNameUseCase(
      * @param newDisplayName The target display name input.
      * @return [AppResult.Success] if valid, or [AppResult.Error] wrapping [UserError] on failure.
      */
-    open suspend operator fun invoke(newDisplayName: String): AppResult<Unit> {
-        return getAuthSettingsUseCase().flatMap { authSettings ->
-            val minLength = authSettings.userDisplayNameMinLength
-            val maxLength = authSettings.userDisplayNameMaxLength
+    public open suspend operator fun invoke(
+        newDisplayName: String
+    ): AppResult<Unit> = getAuthSettingsUseCase().flatMap { authSettings ->
+        val minLength = authSettings.userDisplayNameMinLength
+        val maxLength = authSettings.userDisplayNameMaxLength
 
-            val validationResult = displayNameValidator.validate(
-                displayName = newDisplayName,
-                minLength = minLength,
-                maxLength = maxLength
-            )
-            
-            when (validationResult) {
-                is DisplayNameValidatorResult.Fail -> {
-                    val error = when (validationResult.errorCode) {
-                        UserErrorCodes.DISPLAY_NAME_TOO_SHORT -> UserError.DisplayNameTooShort(minLength)
-                        UserErrorCodes.DISPLAY_NAME_TOO_LONG -> UserError.DisplayNameTooLong(maxLength)
-                        UserErrorCodes.INVALID_DISPLAY_NAME_CHARACTERS -> UserError.InvalidDisplayNameCharacters()
-                        else -> UserError.InvalidDisplayNameCharacters()
-                    }
-                    AppResult.Error(error)
+        val validationResult = displayNameValidator.validate(
+            displayName = newDisplayName,
+            minLength = minLength,
+            maxLength = maxLength
+        )
+
+        when (validationResult) {
+            is DisplayNameValidatorResult.Fail -> {
+                val error = when (validationResult.errorCode) {
+                    UserErrorCodes.DISPLAY_NAME_TOO_SHORT -> UserError.DisplayNameTooShort(minLength)
+                    UserErrorCodes.DISPLAY_NAME_TOO_LONG -> UserError.DisplayNameTooLong(maxLength)
+                    UserErrorCodes.INVALID_DISPLAY_NAME_CHARACTERS -> UserError.InvalidDisplayNameCharacters()
+                    else -> UserError.InvalidDisplayNameCharacters()
                 }
-                is DisplayNameValidatorResult.Success -> {
-                    AppResult.Success(Unit)
-                }
+                AppResult.Error(error)
+            }
+
+            is DisplayNameValidatorResult.Success -> {
+                AppResult.Success(Unit)
             }
         }
     }

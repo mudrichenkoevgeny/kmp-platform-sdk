@@ -9,24 +9,27 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+/**
+ * Mock implementation of [OpenStorageSettingsRepository] for testing.
+ */
 @InternalApi
-class OpenStorageSettingsRepositoryMock(
-    var initialSettings: OpenStorageSettings = createTestOpenStorageSettings()
+public class OpenStorageSettingsRepositoryMock(
+    public var initialSettings: OpenStorageSettings = createTestOpenStorageSettings()
 ) : OpenStorageSettingsRepository {
 
-    private val _settings = MutableStateFlow<OpenStorageSettings?>(initialSettings)
+    private val settingsStateFlow = MutableStateFlow<OpenStorageSettings?>(initialSettings)
 
-    override suspend fun getOpenStorageSettings(): AppResult<OpenStorageSettings> {
-        return AppResult.Success(_settings.value ?: initialSettings)
+    public override suspend fun getOpenStorageSettings(): AppResult<OpenStorageSettings> = AppResult.Success(
+        settingsStateFlow.value ?: initialSettings
+    )
+
+    public override suspend fun refreshOpenStorageSettings(): AppResult<OpenStorageSettings> = AppResult.Success(
+        settingsStateFlow.value ?: initialSettings
+    )
+
+    public override suspend fun updateOpenStorageSettings(openStorageSettings: OpenStorageSettings) {
+        settingsStateFlow.value = openStorageSettings
     }
 
-    override suspend fun refreshOpenStorageSettings(): AppResult<OpenStorageSettings> {
-        return AppResult.Success(_settings.value ?: initialSettings)
-    }
-
-    override suspend fun updateOpenStorageSettings(openStorageSettings: OpenStorageSettings) {
-        _settings.value = openStorageSettings
-    }
-
-    override fun observeOpenStorageSettings(): Flow<OpenStorageSettings?> = _settings.asStateFlow()
+    public override fun observeOpenStorageSettings(): Flow<OpenStorageSettings?> = settingsStateFlow.asStateFlow()
 }

@@ -7,29 +7,32 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpasswor
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 
+/**
+ * Mock implementation of [ResetPasswordRepository] for testing.
+ */
 @InternalApi
-class SelfManagementResetPasswordRepositoryMock : ResetPasswordRepository {
+public class SelfManagementResetPasswordRepositoryMock : ResetPasswordRepository {
 
-    var resetResult: AppResult<UserIdentifierPrivate> = AppResult.Error(
+    public var resetResult: AppResult<UserIdentifierPrivate> = AppResult.Error(
         CommonError.ContractViolation(
             throwable = IllegalStateException("No mock result provided for resetPassword.")
         )
     )
 
-    var sendConfirmationResult: AppResult<OtpConfirmation> = AppResult.Error(
+    public var sendConfirmationResult: AppResult<OtpConfirmation> = AppResult.Error(
         CommonError.ContractViolation(
             throwable = IllegalStateException("No mock result provided for sendResetPasswordConfirmationToEmail.")
         )
     )
 
-    var remainingDelaySeconds: Int = 0
+    public var remainingDelaySeconds: Int = 0
 
-    var lastResetEmail: String? = null
-    var lastResetPassword: String? = null
-    var lastResetConfirmationCode: String? = null
-    var lastSendConfirmationEmail: String? = null
+    public var lastResetEmail: String? = null
+    public var lastResetPassword: String? = null
+    public var lastResetConfirmationCode: String? = null
+    public var lastSendConfirmationEmail: String? = null
 
-    override suspend fun resetPassword(
+    public override suspend fun resetPassword(
         email: String,
         newPassword: String,
         confirmationCode: String
@@ -40,12 +43,10 @@ class SelfManagementResetPasswordRepositoryMock : ResetPasswordRepository {
         return resetResult
     }
 
-    override suspend fun sendResetPasswordConfirmationToEmail(email: String): AppResult<OtpConfirmation> {
+    public override suspend fun sendResetPasswordConfirmationToEmail(email: String): AppResult<OtpConfirmation> {
         lastSendConfirmationEmail = email
         return sendConfirmationResult
     }
 
-    override fun getRemainingResetPasswordConfirmationDelayInSeconds(email: String): Int {
-        return remainingDelaySeconds
-    }
+    public override fun getRemainingResetPasswordConfirmationDelayInSeconds(email: String): Int = remainingDelaySeconds
 }

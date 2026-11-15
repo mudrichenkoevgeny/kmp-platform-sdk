@@ -9,14 +9,21 @@ import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registr
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email.RegistrationByEmailScreenState
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email.RegistrationByEmailStepConfig
 
+/**
+ * Mock implementation of [RegistrationByEmailComponent] for testing and Compose previews.
+ *
+ * @param initialState Initial screen state to initialize the mock with.
+ */
 @InternalApi
-class RegistrationByEmailComponentMock(
+public class RegistrationByEmailComponentMock(
     initialState: RegistrationByEmailScreenState = RegistrationByEmailScreenState()
 ) : RegistrationByEmailComponent {
 
-    override val stackNavigation = StackNavigation<RegistrationByEmailStepConfig>()
+    override val stackNavigation: StackNavigation<RegistrationByEmailStepConfig> =
+        StackNavigation<RegistrationByEmailStepConfig>()
 
-    private val defaultStepConfig: RegistrationByEmailStepConfig = RegistrationByEmailStepConfig.EmailInput(initialEmail = initialState.email)
+    private val defaultStepConfig: RegistrationByEmailStepConfig =
+        RegistrationByEmailStepConfig.EmailInput(initialEmail = initialState.email)
 
     private val _stack = MutableValue(
         ChildStack(
@@ -29,15 +36,20 @@ class RegistrationByEmailComponentMock(
     private val _state = MutableValue(initialState)
     override val state: Value<RegistrationByEmailScreenState> = _state
 
-    var sendCodeCalls = 0
-    var registerCalls = 0
-    var backCalls = 0
-    var togglePasswordVisibilityCalls = 0
-    var lastEmailChanged: String? = null
-    var lastCodeChanged: String? = null
-    var lastPasswordChanged: String? = null
+    public var sendCodeCalls: Int = 0
+    public var registerCalls: Int = 0
+    public var backCalls: Int = 0
+    public var togglePasswordVisibilityCalls: Int = 0
+    public var lastEmailChanged: String? = null
+    public var lastCodeChanged: String? = null
+    public var lastPasswordChanged: String? = null
 
-    fun setStep(config: RegistrationByEmailStepConfig) {
+    /**
+     * Updates the current active step configuration in the Decompose child stack.
+     *
+     * @param config Target step configuration to push onto the stack.
+     */
+    public fun setStep(config: RegistrationByEmailStepConfig) {
         _stack.value = ChildStack(
             configuration = config,
             instance = createChild(config)
@@ -45,11 +57,19 @@ class RegistrationByEmailComponentMock(
     }
 
     private fun createChild(config: RegistrationByEmailStepConfig): RegistrationByEmailComponent.Child = when (config) {
-        is RegistrationByEmailStepConfig.EmailInput -> RegistrationByEmailComponent.Child.EmailInput(config.initialEmail)
+        is RegistrationByEmailStepConfig.EmailInput -> RegistrationByEmailComponent.Child.EmailInput(
+            config.initialEmail
+        )
+
         is RegistrationByEmailStepConfig.ConfirmInput -> RegistrationByEmailComponent.Child.ConfirmInput(config.email)
     }
 
-    fun updateState(state: RegistrationByEmailScreenState) {
+    /**
+     * Updates the current screen state emitted by [state].
+     *
+     * @param state New screen state to emit.
+     */
+    public fun updateState(state: RegistrationByEmailScreenState) {
         _state.value = state
     }
 

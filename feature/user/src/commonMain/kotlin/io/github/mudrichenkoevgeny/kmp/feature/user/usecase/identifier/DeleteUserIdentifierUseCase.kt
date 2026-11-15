@@ -9,14 +9,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
  *
  * @param identifierRepository Remote identifier management API.
  */
-open class DeleteUserIdentifierUseCase(
+public open class DeleteUserIdentifierUseCase(
     private val identifierRepository: IdentifierRepository
 ) {
     /**
      * @param identifierId Unique identifier id to delete.
      * @return Success unit, or a mapped failure.
      */
-    open suspend operator fun invoke(identifierId: UserIdentifierId): AppResult<Unit> {
-        return identifierRepository.deleteUserIdentifier(identifierId)
-    }
+    public open suspend operator fun invoke(identifierId: UserIdentifierId): AppResult<Unit> =
+        identifierRepository.deleteUserIdentifier(
+            identifierId
+        )
 }

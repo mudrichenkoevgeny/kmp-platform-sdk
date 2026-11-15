@@ -23,9 +23,15 @@ private class AndroidFilePickerLauncher(
     }
 }
 
+/**
+ * Remembers a [FilePickerLauncher] instance for selecting multiple files on Android.
+ *
+ * @param onFilesSelect Callback invoked when user selects one or more files.
+ * @return A remembered [FilePickerLauncher].
+ */
 @Composable
-actual fun rememberFilePickerLauncher(
-    onFilesSelected: (List<SelectedFilePayload>) -> Unit
+public actual fun rememberFilePickerLauncher(
+    onFilesSelect: (List<SelectedFilePayload>) -> Unit
 ): FilePickerLauncher {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -39,7 +45,7 @@ actual fun rememberFilePickerLauncher(
                     uris.mapNotNull { uri -> createPayloadFromUri(context, uri) }
                 }
                 if (payloads.isNotEmpty()) {
-                    onFilesSelected(payloads)
+                    onFilesSelect(payloads)
                 }
             }
         }
@@ -52,38 +58,39 @@ actual fun rememberFilePickerLauncher(
     }
 }
 
-private fun createPayloadFromUri(context: Context, uri: Uri): SelectedFilePayload? {
-    return try {
-        var fileName = "file"
-        var fileSize = 0L
-        val mimeType = context.contentResolver.getType(uri) ?: "application/octet-stream"
+private fun createPayloadFromUri(
+    context: Context,
+    uri: Uri
+): SelectedFilePayload? = try {
+    var fileName = "file"
+    var fileSize = 0L
+    val mimeType = context.contentResolver.getType(uri) ?: "application/octet-stream"
 
-        context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-            if (cursor.moveToFirst()) {
-                val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
-                if (nameIndex >= 0) {
-                    fileName = cursor.getString(nameIndex) ?: "file"
-                }
-                if (sizeIndex >= 0) {
-                    fileSize = cursor.getLong(sizeIndex)
-                }
+    context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+        if (cursor.moveToFirst()) {
+            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+            if (nameIndex >= 0) {
+                fileName = cursor.getString(nameIndex) ?: "file"
+            }
+            if (sizeIndex >= 0) {
+                fileSize = cursor.getLong(sizeIndex)
             }
         }
-
-        SelectedFilePayload(
-            fileName = fileName,
-            fileSizeBytes = fileSize,
-            mimeType = mimeType,
-            localUri = uri.toString(),
-            openReadChannel = {
-                val inputStream = context.contentResolver.openInputStream(uri)
-                    ?: throw IllegalStateException("Cannot open input stream for $uri")
-                inputStream.toByteReadChannel()
-            }
-        )
-    } catch (e: Exception) {
-        Logger.e(e) { "Failed to resolve file payload from URI: $uri" }
-        null
     }
+
+    SelectedFilePayload(
+        fileName = fileName,
+        fileSizeBytes = fileSize,
+        mimeType = mimeType,
+        localUri = uri.toString(),
+        openReadChannel = {
+            val inputStream = context.contentResolver.openInputStream(uri)
+                ?: throw IllegalStateException("Cannot open input stream for $uri")
+            inputStream.toByteReadChannel()
+        }
+    )
+} catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
+    Logger.e(e) { "Failed to resolve file payload from URI: $uri" }
+    null
 }

@@ -9,13 +9,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
  *
  * @param openSecuritySettingsRepository Source of truth for cached or network-backed settings.
  */
-class GetOpenSecuritySettingsUseCase(
+public class GetOpenSecuritySettingsUseCase(
     private val openSecuritySettingsRepository: OpenSecuritySettingsRepository
 ) {
     /**
      * @return [AppResult.Success] with [OpenSecuritySettings], or [AppResult.Error] when none can be loaded.
      */
-    suspend operator fun invoke(): AppResult<OpenSecuritySettings> {
-        return openSecuritySettingsRepository.getOpenSecuritySettings()
-    }
+    public suspend operator fun invoke(): AppResult<OpenSecuritySettings> =
+        openSecuritySettingsRepository.getOpenSecuritySettings()
 }

@@ -11,16 +11,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  *
  * @param managementIdentifierRepository Administrative identifier management API.
  */
-class ManagementGetIdentifiersUseCase(
+public class ManagementGetIdentifiersUseCase(
     private val managementIdentifierRepository: ManagementIdentifierRepository
 ) {
     /**
      * @param params Administrative identifier list query and filter parameters DTO.
      * @return Paginated result containing matching user identifier models, or a mapped failure.
      */
-    suspend operator fun invoke(
+    public suspend operator fun invoke(
         params: ManagementGlobalIdentifierListParams? = null
-    ): AppResult<PagedResult<UserIdentifierSummary>> {
-        return managementIdentifierRepository.getIdentifiers(params)
-    }
+    ): AppResult<PagedResult<UserIdentifierSummary>> = managementIdentifierRepository.getIdentifiers(params)
 }

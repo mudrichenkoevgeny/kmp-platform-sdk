@@ -5,15 +5,18 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.storage.uploader.DirectFileUploader
 import io.ktor.utils.io.ByteReadChannel
 
+/**
+ * Mock implementation of [DirectFileUploader] for testing.
+ */
 @InternalApi
-class DirectFileUploaderMock : DirectFileUploader {
-    var result: AppResult<Unit> = AppResult.Success(Unit)
-    var uploadCallCount = 0
-    var lastUploadUrl: String? = null
-    var lastContentLength: Long? = null
-    var lastOpenReadChannel: (suspend () -> ByteReadChannel)? = null
+public class DirectFileUploaderMock : DirectFileUploader {
+    public var result: AppResult<Unit> = AppResult.Success(Unit)
+    public var uploadCallCount: Int = 0
+    public var lastUploadUrl: String? = null
+    public var lastContentLength: Long? = null
+    public var lastOpenReadChannel: (suspend () -> ByteReadChannel)? = null
 
-    override suspend fun uploadFile(
+    public override suspend fun uploadFile(
         uploadUrl: String,
         contentLength: Long,
         openReadChannel: suspend () -> ByteReadChannel,

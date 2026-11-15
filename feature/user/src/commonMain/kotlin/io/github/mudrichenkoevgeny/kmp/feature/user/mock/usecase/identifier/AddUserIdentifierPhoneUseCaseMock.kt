@@ -8,12 +8,15 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.Identi
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.AddUserIdentifierPhoneUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 
+/**
+ * Mock implementation of [AddUserIdentifierPhoneUseCase] for testing.
+ */
 @InternalApi
-class AddUserIdentifierPhoneUseCaseMock(
+public class AddUserIdentifierPhoneUseCaseMock(
     identifierRepository: IdentifierRepository = IdentifierRepositoryMock()
 ) : AddUserIdentifierPhoneUseCase(identifierRepository) {
 
-    var resultProvider: (String, String) -> AppResult<UserIdentifierPrivate> = { _, _ ->
+    public var resultProvider: (String, String) -> AppResult<UserIdentifierPrivate> = { _, _ ->
         AppResult.Error(
             CommonError.ContractViolation(
                 throwable = IllegalStateException("No mock result provided for AddUserIdentifierPhoneUseCaseMock.")
@@ -21,10 +24,8 @@ class AddUserIdentifierPhoneUseCaseMock(
         )
     }
 
-    override suspend fun invoke(
+    public override suspend fun invoke(
         phoneNumber: String,
         confirmationCode: String
-    ): AppResult<UserIdentifierPrivate> {
-        return resultProvider(phoneNumber, confirmationCode)
-    }
+    ): AppResult<UserIdentifierPrivate> = resultProvider(phoneNumber, confirmationCode)
 }

@@ -43,9 +43,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyTex
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewDialogSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.totp.LoginByTotpComponentMock
@@ -58,7 +58,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.scr
  * @param component Decompose component providing state and callbacks.
  */
 @Composable
-fun LoginByTotpScreen(component: LoginByTotpComponent) {
+public fun LoginByTotpScreen(component: LoginByTotpComponent) {
     val state by component.state.subscribeAsState()
 
     Box(
@@ -69,6 +69,7 @@ fun LoginByTotpScreen(component: LoginByTotpComponent) {
             is LoginByTotpScreenState.Loading -> {
                 FullscreenLoading()
             }
+
             is LoginByTotpScreenState.Content -> {
                 LoginByTotpContent(
                     state = currentState,
@@ -275,7 +276,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@DialogSizePreviews
+@PreviewDialogSizes
 @Composable
 private fun DialogSizePreview() {
     DialogPreviewContainer {
@@ -284,7 +285,7 @@ private fun DialogSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     DialogPreviewContainer {
@@ -293,7 +294,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     DialogPreviewContainer {
@@ -301,12 +302,12 @@ private fun FontScalePreview() {
     }
 }
 
-internal object LoginByTotpTestTags {
-    const val BACK_BUTTON = "LoginByTotp_BackButton"
-    const val TITLE = "LoginByTotp_Title"
-    const val DESCRIPTION = "LoginByTotp_Description"
-    const val CODE_INPUT = "LoginByTotp_CodeInput"
-    const val SUBMIT_BUTTON = "LoginByTotp_SubmitButton"
-    const val TOGGLE_MODE_BUTTON = "LoginByTotp_ToggleModeButton"
-    const val ERROR_TEXT = "LoginByTotp_ErrorText"
+public object LoginByTotpTestTags {
+    public const val BACK_BUTTON: String = "LoginByTotp_BackButton"
+    public const val TITLE: String = "LoginByTotp_Title"
+    public const val DESCRIPTION: String = "LoginByTotp_Description"
+    public const val CODE_INPUT: String = "LoginByTotp_CodeInput"
+    public const val SUBMIT_BUTTON: String = "LoginByTotp_SubmitButton"
+    public const val TOGGLE_MODE_BUTTON: String = "LoginByTotp_ToggleModeButton"
+    public const val ERROR_TEXT: String = "LoginByTotp_ErrorText"
 }

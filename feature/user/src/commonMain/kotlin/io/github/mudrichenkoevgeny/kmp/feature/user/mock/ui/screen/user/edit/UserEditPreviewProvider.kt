@@ -7,11 +7,14 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.edit.UserEditScreenState
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 
+/**
+ * Preview parameter provider providing sample states for user edit screens.
+ */
 @InternalApi
-class UserEditPreviewProvider : PreviewParameterProvider<UserEditScreenState> {
+public class UserEditPreviewProvider : PreviewParameterProvider<UserEditScreenState> {
     private val testUser = createTestUserPrivate()
 
-    override val values: Sequence<UserEditScreenState> = sequenceOf(
+    public override val values: Sequence<UserEditScreenState> = sequenceOf(
         UserEditScreenState.Loading,
         UserEditScreenState.Content(
             user = testUser,

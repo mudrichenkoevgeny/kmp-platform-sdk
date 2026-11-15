@@ -9,13 +9,12 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.s
  *
  * @param openStorageSettingsRepository Repository performing the network refresh and persistence.
  */
-class RefreshOpenStorageSettingsUseCase(
+public class RefreshOpenStorageSettingsUseCase(
     private val openStorageSettingsRepository: OpenStorageSettingsRepository
 ) {
     /**
      * @return [AppResult.Success] with refreshed [OpenStorageSettings], or [AppResult.Error] on failure.
      */
-    suspend operator fun invoke(): AppResult<OpenStorageSettings> {
-        return openStorageSettingsRepository.refreshOpenStorageSettings()
-    }
+    public suspend operator fun invoke(): AppResult<OpenStorageSettings> =
+        openStorageSettingsRepository.refreshOpenStorageSettings()
 }

@@ -36,9 +36,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyTex
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewDialogSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.login.welcome.LoginWelcomeComponentMock
@@ -54,7 +54,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
  * @param component Decompose component driving state and callbacks.
  */
 @Composable
-fun LoginWelcomeScreen(component: LoginWelcomeComponent) {
+public fun LoginWelcomeScreen(component: LoginWelcomeComponent) {
     val state by component.state.subscribeAsState()
 
     Box(
@@ -65,12 +65,14 @@ fun LoginWelcomeScreen(component: LoginWelcomeComponent) {
             is LoginWelcomeScreenState.Loading -> {
                 FullscreenLoading()
             }
+
             is LoginWelcomeScreenState.InitializationError -> {
                 FullscreenError(
                     error = currentState.error,
                     onRetry = component::onRetryInitClick
                 )
             }
+
             is LoginWelcomeScreenState.Content -> {
                 LoginWelcomeContent(
                     state = currentState,
@@ -121,8 +123,8 @@ private fun LoginWelcomeContent(
                 }
 
                 if (state.availableAuthProviders.primary.isNotEmpty() &&
-                    state.availableAuthProviders.secondary.isNotEmpty()) {
-
+                    state.availableAuthProviders.secondary.isNotEmpty()
+                ) {
                     CoreBodyText(
                         text = userUi.orSignInWith,
                         style = MaterialTheme.typography.labelMedium,
@@ -227,7 +229,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@DialogSizePreviews
+@PreviewDialogSizes
 @Composable
 private fun DialogSizePreview() {
     DialogPreviewContainer {
@@ -236,7 +238,7 @@ private fun DialogSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     DialogPreviewContainer {
@@ -245,7 +247,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     DialogPreviewContainer {
@@ -253,11 +255,17 @@ private fun FontScalePreview() {
     }
 }
 
-internal object LoginWelcomeTestTags {
-    const val TITLE = "LoginWelcome_Title"
-    const val OR_DIVIDER = "LoginWelcome_OrDivider"
-    const val SECONDARY_PROVIDERS_GRID = "LoginWelcome_SecondaryProvidersGrid"
-    const val ACTION_ERROR_TEXT = "LoginWelcome_ActionErrorText"
+public object LoginWelcomeTestTags {
+    public const val TITLE: String = "LoginWelcome_Title"
+    public const val OR_DIVIDER: String = "LoginWelcome_OrDivider"
+    public const val SECONDARY_PROVIDERS_GRID: String = "LoginWelcome_SecondaryProvidersGrid"
+    public const val ACTION_ERROR_TEXT: String = "LoginWelcome_ActionErrorText"
 
-    fun getAuthProviderTag(provider: UserAuthProvider): String = "LoginWelcome_AuthProvider_${provider.name}"
+    /**
+     * Constructs a test tag string for a specific authentication provider button.
+     *
+     * @param provider The [UserAuthProvider] enum value.
+     * @return Formatted test tag string.
+     */
+    public fun getAuthProviderTag(provider: UserAuthProvider): String = "LoginWelcome_AuthProvider_${provider.value}"
 }

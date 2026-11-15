@@ -7,13 +7,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 /**
  * UI state for administrative single user account detail screen.
  */
-sealed interface UserDetailScreenState {
+public sealed interface UserDetailScreenState {
 
     /** Initial loading of user data. */
-    object Loading : UserDetailScreenState
+    public object Loading : UserDetailScreenState
 
     /** Critical error during state initialization. */
-    data class Error(val error: AppError) : UserDetailScreenState
+    public data class Error(public val error: AppError) : UserDetailScreenState
 
     /**
      * User details and account management input form state.
@@ -41,36 +41,36 @@ sealed interface UserDetailScreenState {
      * @param disableTotpError Server error from the last TOTP disable attempt.
      * @param isDeleteConfirmationVisible True when the deletion confirmation dialog is shown.
      */
-    data class Content(
-        val user: UserPrivate,
-        val nicknameInput: String = "",
-        val displayNameInput: String = "",
-        val avatarFileIdInput: String = "",
-        val avatarUrl: String? = null,
-        val selectedAvatarPayload: SelectedFilePayload? = null,
-        val birthdateInput: String = "",
-        val authorityLevelInput: String = "0",
-        val accountStatusInput: String = "ACTIVE",
-        val lockoutTypeInput: String = "NONE",
-        val temporaryLockoutUntilInput: String = "",
-        val quotaBytesInput: String = "",
-        val maxUploadSizeBytesInput: String = "",
-        val maxPendingUploadsInput: String = "",
-        val isSelf: Boolean = false,
-        val isSaving: Boolean = false,
-        val saveError: AppError? = null,
-        val isDeleting: Boolean = false,
-        val deleteError: AppError? = null,
-        val isDisablingTotp: Boolean = false,
-        val disableTotpError: AppError? = null,
-        val isDeleteConfirmationVisible: Boolean = false
+    public data class Content(
+        public val user: UserPrivate,
+        public val nicknameInput: String = "",
+        public val displayNameInput: String = "",
+        public val avatarFileIdInput: String = "",
+        public val avatarUrl: String? = null,
+        public val selectedAvatarPayload: SelectedFilePayload? = null,
+        public val birthdateInput: String = "",
+        public val authorityLevelInput: String = "0",
+        public val accountStatusInput: String = "ACTIVE",
+        public val lockoutTypeInput: String = "NONE",
+        public val temporaryLockoutUntilInput: String = "",
+        public val quotaBytesInput: String = "",
+        public val maxUploadSizeBytesInput: String = "",
+        public val maxPendingUploadsInput: String = "",
+        public val isSelf: Boolean = false,
+        public val isSaving: Boolean = false,
+        public val saveError: AppError? = null,
+        public val isDeleting: Boolean = false,
+        public val deleteError: AppError? = null,
+        public val isDisablingTotp: Boolean = false,
+        public val disableTotpError: AppError? = null,
+        public val isDeleteConfirmationVisible: Boolean = false
     ) : UserDetailScreenState {
-        val hasChanges: Boolean
+        public val hasChanges: Boolean
             get() {
                 val initialAuthLevel = user.authorityLevel.toString()
                 val currentAuthLevel = authorityLevelInput.ifBlank { "0" }
-                val initialAccountStatus = user.accountStatus.name
-                val initialLockoutType = user.lockoutType.name
+                val initialAccountStatus = user.accountStatus.value
+                val initialLockoutType = user.lockoutType.value
                 val initialTempLockout = user.temporaryLockoutUntil?.toEpochMilliseconds()?.toString() ?: ""
                 val initialQuotaBytes = user.storageConfiguration?.quotaBytes?.toString() ?: ""
                 val initialMaxUploadSizeBytes = user.storageConfiguration?.maxUploadSizeBytes?.toString() ?: ""
@@ -82,8 +82,10 @@ sealed interface UserDetailScreenState {
 
                 return currentAuthLevel != initialAuthLevel ||
                     !accountStatusInput.equals(initialAccountStatus, ignoreCase = true) ||
-                    (!lockoutTypeInput.equals(initialLockoutType, ignoreCase = true) &&
-                        !lockoutTypeInput.equals(user.lockoutType.value, ignoreCase = true)) ||
+                    (
+                        !lockoutTypeInput.equals(initialLockoutType, ignoreCase = true) &&
+                            !lockoutTypeInput.equals(user.lockoutType.value, ignoreCase = true)
+                        ) ||
                     temporaryLockoutUntilInput != initialTempLockout ||
                     quotaBytesInput != initialQuotaBytes ||
                     maxUploadSizeBytesInput != initialMaxUploadSizeBytes ||

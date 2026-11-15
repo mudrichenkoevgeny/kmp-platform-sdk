@@ -40,7 +40,7 @@ class ListingChoiceDropdownTest {
                 ListingChoiceDropdown(
                     filter = filter,
                     selectedIds = setOf(ListingChoiceDropdownTestData.OPTION_ACTIVE_ID),
-                    onSelectionChanged = {}
+                    onSelectionChange = {}
                 )
             }
         }
@@ -70,7 +70,7 @@ class ListingChoiceDropdownTest {
                 ListingChoiceDropdown(
                     filter = filter,
                     selectedIds = emptySet(),
-                    onSelectionChanged = {}
+                    onSelectionChange = {}
                 )
             }
         }

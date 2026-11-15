@@ -2,22 +2,28 @@ package io.github.mudrichenkoevgeny.kmp.core.common.ui.preview
 
 import androidx.compose.ui.tooling.preview.Preview
 
-object ComponentSizePreviewSpecs {
-    const val NAME_STANDARD = "1. Standard Component"
-    const val NAME_NARROW = "2. Narrow Component"
+/**
+ * Specifications for component size previews.
+ */
+public object PreviewComponentSizesSpecs {
+    public const val NAME_STANDARD: String = "1. Standard Component"
+    public const val NAME_NARROW: String = "2. Narrow Component"
 
-    const val WIDTH_STANDARD = 400
-    const val WIDTH_NARROW = 280
+    public const val WIDTH_STANDARD: Int = 400
+    public const val WIDTH_NARROW: Int = 280
 }
 
+/**
+ * Multi-preview annotation for component size previews across standard and narrow widths.
+ */
 @Preview(
-    name = ComponentSizePreviewSpecs.NAME_STANDARD,
-    widthDp = ComponentSizePreviewSpecs.WIDTH_STANDARD,
+    name = PreviewComponentSizesSpecs.NAME_STANDARD,
+    widthDp = PreviewComponentSizesSpecs.WIDTH_STANDARD,
     showBackground = true
 )
 @Preview(
-    name = ComponentSizePreviewSpecs.NAME_NARROW,
-    widthDp = ComponentSizePreviewSpecs.WIDTH_NARROW,
+    name = PreviewComponentSizesSpecs.NAME_NARROW,
+    widthDp = PreviewComponentSizesSpecs.WIDTH_NARROW,
     showBackground = true
 )
-annotation class ComponentSizePreviews
+public annotation class PreviewComponentSizes

@@ -10,7 +10,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionSummaryPayload
 
 /** Session listing, logout, and per-session revocation for the authenticated user. */
-interface SessionApi {
+public interface SessionApi {
 
     /**
      * Returns a paginated and filtered list of active sessions for the current authenticated account.
@@ -18,30 +18,30 @@ interface SessionApi {
      * @param params Query and filter parameters DTO.
      * @return [AppResult.Success] containing a [PagedResult] of [UserSessionSummaryPayload] or [AppResult.Error].
      */
-    suspend fun getSessions(params: SelfSessionListParams? = null): AppResult<PagedResult<UserSessionSummaryPayload>>
+    public suspend fun getSessions(params: SelfSessionListParams? = null): AppResult<PagedResult<UserSessionSummaryPayload>>
 
     /**
      * Returns details of a specific session owned by the current management account.
      */
-    suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivatePayload>
+    public suspend fun getSession(userSessionId: UserSessionId): AppResult<UserSessionPrivatePayload>
 
     /**
      * Ends the current active management session on the server (sign-out for this client).
      */
-    suspend fun logout(): AppResult<Unit>
+    public suspend fun logout(): AppResult<Unit>
 
     /**
      * Deletes a specific active session for the current management account.
      */
-    suspend fun deleteSession(userSessionId: UserSessionId): AppResult<Unit>
+    public suspend fun deleteSession(userSessionId: UserSessionId): AppResult<Unit>
 
     /**
      * Deletes all sessions for the current management account except the one used for this request.
      */
-    suspend fun deleteAllOtherSessions(): AppResult<DeletedSessionsPayload>
+    public suspend fun deleteAllOtherSessions(): AppResult<DeletedSessionsPayload>
 
     /**
      * Performs re-authentication via TOTP for the current management session to update its trust level.
      */
-    suspend fun reauthenticateSession(request: VerifyTotpPayload): AppResult<Unit>
+    public suspend fun reauthenticateSession(request: VerifyTotpPayload): AppResult<Unit>
 }

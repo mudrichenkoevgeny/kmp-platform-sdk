@@ -2,8 +2,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.storage.user
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.storage.EncryptedSettingsMock
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test

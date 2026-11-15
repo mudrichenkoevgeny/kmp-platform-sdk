@@ -13,8 +13,8 @@ import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.core.testing.ui.test.captureAppScreen
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.kmp.core.testing.ui.test.captureAppScreen
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
@@ -65,19 +65,17 @@ class AuthProviderGridScreenshotTest(
         @Suppress("Unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
-        fun data(): Collection<Array<Any>> {
-            return listOf(
-                arrayOf("TwoProviders", listOf(UserAuthProvider.GOOGLE, UserAuthProvider.APPLE)),
-                arrayOf(
-                    "AllProviders",
-                    listOf(
-                        UserAuthProvider.EMAIL,
-                        UserAuthProvider.PHONE,
-                        UserAuthProvider.GOOGLE,
-                        UserAuthProvider.APPLE
-                    )
+        fun data(): Collection<Array<Any>> = listOf(
+            arrayOf("TwoProviders", listOf(UserAuthProvider.GOOGLE, UserAuthProvider.APPLE)),
+            arrayOf(
+                "AllProviders",
+                listOf(
+                    UserAuthProvider.EMAIL,
+                    UserAuthProvider.PHONE,
+                    UserAuthProvider.GOOGLE,
+                    UserAuthProvider.APPLE
                 )
             )
-        }
+        )
     }
 }

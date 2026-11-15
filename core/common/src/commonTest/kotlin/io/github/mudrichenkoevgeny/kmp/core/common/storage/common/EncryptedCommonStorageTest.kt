@@ -39,4 +39,3 @@ class EncryptedCommonStorageTest {
         assertNull(storage.getDeviceId())
     }
 }
-

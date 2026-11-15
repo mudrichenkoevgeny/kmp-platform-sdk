@@ -3,12 +3,12 @@ package io.github.mudrichenkoevgeny.kmp.feature.clientuser.repository.auth.regis
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.network.api.auth.registration.RegistrationApi
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.confirmation.ConfirmationType
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.registration.RegistrationRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.confirmation.ConfirmationRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation.OtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.mapper.otpconfirmation.toOtpConfirmation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.confirmation.ConfirmationType
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.data.toAuthData
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.registration.RegistrationByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
@@ -29,33 +29,28 @@ class OpenRegistrationRepositoryImpl(
         email: String,
         password: String,
         confirmationCode: String
-    ): AppResult<AuthData> {
-        return registrationApi.registerByEmail(
-            RegistrationByEmailRequest(email, password, confirmationCode)
-        ).mapSuccess { authDataPayload ->
-            authDataPayload.toAuthData()
-        }
+    ): AppResult<AuthData> = registrationApi.registerByEmail(
+        RegistrationByEmailRequest(email, password, confirmationCode)
+    ).mapSuccess { authDataPayload ->
+        authDataPayload.toAuthData()
     }
 
     override suspend fun sendRegistrationConfirmationToEmail(
         email: String
-    ): AppResult<OtpConfirmation> {
-        return confirmationRepository.executeWithTimer(
-            type = ConfirmationType.REGISTRATION_EMAIL,
-            identifier = email
-        ) {
-            registrationApi.sendRegistrationConfirmationToEmail(
-                SendConfirmationToEmailRequest(email)
-            ).mapSuccess { response ->
-                response.toOtpConfirmation()
-            }
+    ): AppResult<OtpConfirmation> = confirmationRepository.executeWithTimer(
+        type = ConfirmationType.REGISTRATION_EMAIL,
+        identifier = email
+    ) {
+        registrationApi.sendRegistrationConfirmationToEmail(
+            SendConfirmationToEmailRequest(email)
+        ).mapSuccess { response ->
+            response.toOtpConfirmation()
         }
     }
 
-    override fun getRemainingRegistrationConfirmationDelayInSeconds(email: String): Int {
-        return confirmationRepository.getRemainingDelay(
+    override fun getRemainingRegistrationConfirmationDelayInSeconds(email: String): Int =
+        confirmationRepository.getRemainingDelay(
             type = ConfirmationType.REGISTRATION_EMAIL,
             identifier = email
         )
-    }
 }

@@ -4,17 +4,20 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.storage.auth.settings.ManagementAuthSettingsStorage
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.ManagementAuthSettings
 
+/**
+ * Mock implementation of [ManagementAuthSettingsStorage] for testing.
+ */
 @InternalApi
-class ManagementAuthSettingsStorageMock : ManagementAuthSettingsStorage {
-    var stored: ManagementAuthSettings? = null
+public class ManagementAuthSettingsStorageMock : ManagementAuthSettingsStorage {
+    public var stored: ManagementAuthSettings? = null
 
-    override suspend fun getManagementAuthSettings(): ManagementAuthSettings? = stored
+    public override suspend fun getManagementAuthSettings(): ManagementAuthSettings? = stored
 
-    override suspend fun updateManagementAuthSettings(managementAuthSettings: ManagementAuthSettings) {
+    public override suspend fun updateManagementAuthSettings(managementAuthSettings: ManagementAuthSettings) {
         stored = managementAuthSettings
     }
 
-    override suspend fun clearManagementAuthSettings() {
+    public override suspend fun clearManagementAuthSettings() {
         stored = null
     }
 }

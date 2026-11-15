@@ -8,8 +8,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.edit.UserEdit
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.edit.UserEditScreenState
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 
+/**
+ * Mock implementation of [UserEditComponent] for Compose previews and testing.
+ */
 @InternalApi
-class UserEditComponentMock(
+public class UserEditComponentMock(
     initialState: UserEditScreenState = UserEditScreenState.Content(
         user = createTestUserPrivate(),
         nicknameInput = "johndoe",
@@ -17,50 +20,50 @@ class UserEditComponentMock(
     )
 ) : UserEditComponent {
 
-    private val _state = MutableValue(initialState)
-    override val state: Value<UserEditScreenState> = _state
+    private val _state: MutableValue<UserEditScreenState> = MutableValue(initialState)
+    public override val state: Value<UserEditScreenState> = _state
 
-    var lastNicknameInput: String? = null
-    var lastDisplayNameInput: String? = null
-    var lastAvatarPayload: SelectedFilePayload? = null
-    var lastBirthdateInput: String? = null
-    var saveCalls = 0
-    var backCalls = 0
-    var retryCalls = 0
+    public var lastNicknameInput: String? = null
+    public var lastDisplayNameInput: String? = null
+    public var lastAvatarPayload: SelectedFilePayload? = null
+    public var lastBirthdateInput: String? = null
+    public var saveCalls: Int = 0
+    public var backCalls: Int = 0
+    public var retryCalls: Int = 0
 
-    override fun onNicknameChanged(value: String) {
+    public override fun onNicknameChanged(value: String) {
         lastNicknameInput = value
         val current = _state.value as? UserEditScreenState.Content ?: return
         _state.value = current.copy(nicknameInput = value, nicknameError = null)
     }
 
-    override fun onDisplayNameChanged(value: String) {
+    public override fun onDisplayNameChanged(value: String) {
         lastDisplayNameInput = value
         val current = _state.value as? UserEditScreenState.Content ?: return
         _state.value = current.copy(displayNameInput = value, displayNameError = null)
     }
 
-    override fun onAvatarFileSelected(payload: SelectedFilePayload) {
+    public override fun onAvatarFileSelected(payload: SelectedFilePayload) {
         lastAvatarPayload = payload
         val current = _state.value as? UserEditScreenState.Content ?: return
         _state.value = current.copy(selectedAvatarPayload = payload)
     }
 
-    override fun onBirthdateChanged(value: String) {
+    public override fun onBirthdateChanged(value: String) {
         lastBirthdateInput = value
         val current = _state.value as? UserEditScreenState.Content ?: return
         _state.value = current.copy(birthdateInput = value)
     }
 
-    override fun onSaveClick() {
+    public override fun onSaveClick() {
         saveCalls++
     }
 
-    override fun onRetry() {
+    public override fun onRetry() {
         retryCalls++
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         backCalls++
     }
 }

@@ -10,10 +10,10 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail.StorageFileDetailScreen
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.StorageFileListScreen
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.upload.StorageFileUploadScreen
@@ -21,11 +21,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.UserRoot
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.edit.UserEditScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.detail.IdentifierDetailScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListScreen
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.main.MainUserScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.detail.SessionDetailScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.SessionListScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpMainScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.recovery.TotpRecoveryCodesScreen
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.main.MainUserScreen
 
 /**
  * Root Composable for user main and settings stack.
@@ -34,7 +34,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.main.MainUser
  * @param modifier Optional layout modifier.
  */
 @Composable
-fun UserRootScreen(
+public fun UserRootScreen(
     component: UserRootComponent,
     modifier: Modifier = Modifier
 ) {
@@ -79,7 +79,7 @@ private fun UserRootScreenPreview() {
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview() {
     ScreenPreviewContainer {
@@ -88,7 +88,7 @@ private fun ScreenSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     ScreenPreviewContainer {
@@ -97,7 +97,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     ScreenPreviewContainer {

@@ -9,21 +9,26 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.password.ResetPasswordRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.password.SendResetPasswordConfirmationRequest
 
+/**
+ * Mock implementation of [ResetPasswordApi] for testing.
+ */
 @InternalApi
-class SelfManagementResetPasswordApiMock : ResetPasswordApi {
+public class SelfManagementResetPasswordApiMock : ResetPasswordApi {
 
-    var resetPasswordResult: AppResult<UserIdentifierPrivatePayload> = AppResult.Error(CommonError.Unknown())
-    var sendResetPasswordConfirmationResult: AppResult<OtpConfirmationPayload> = AppResult.Error(CommonError.Unknown())
+    public var resetPasswordResult: AppResult<UserIdentifierPrivatePayload> = AppResult.Error(CommonError.Unknown())
+    public var sendResetPasswordConfirmationResult: AppResult<OtpConfirmationPayload> = AppResult.Error(
+        CommonError.Unknown()
+    )
 
-    var lastResetPasswordRequest: ResetPasswordRequest? = null
-    var lastSendResetPasswordConfirmationRequest: SendResetPasswordConfirmationRequest? = null
+    public var lastResetPasswordRequest: ResetPasswordRequest? = null
+    public var lastSendResetPasswordConfirmationRequest: SendResetPasswordConfirmationRequest? = null
 
-    override suspend fun resetPassword(request: ResetPasswordRequest): AppResult<UserIdentifierPrivatePayload> {
+    public override suspend fun resetPassword(request: ResetPasswordRequest): AppResult<UserIdentifierPrivatePayload> {
         lastResetPasswordRequest = request
         return resetPasswordResult
     }
 
-    override suspend fun sendResetPasswordConfirmationToEmail(
+    public override suspend fun sendResetPasswordConfirmationToEmail(
         request: SendResetPasswordConfirmationRequest
     ): AppResult<OtpConfirmationPayload> {
         lastSendResetPasswordConfirmationRequest = request

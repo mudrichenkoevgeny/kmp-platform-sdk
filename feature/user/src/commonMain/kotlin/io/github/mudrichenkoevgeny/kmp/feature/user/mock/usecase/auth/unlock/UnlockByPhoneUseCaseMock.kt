@@ -4,7 +4,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.unlock.UnlockRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockByPhoneUseCase
 
+/**
+ * Mock implementation of [UnlockByPhoneUseCase] for testing.
+ */
 @InternalApi
-class UnlockByPhoneUseCaseMock : UnlockByPhoneUseCase(
+public class UnlockByPhoneUseCaseMock : UnlockByPhoneUseCase(
     unlockRepository = UnlockRepositoryMock()
 )

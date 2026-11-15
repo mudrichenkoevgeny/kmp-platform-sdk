@@ -17,10 +17,10 @@ class OpenRefreshTokenRepositoryImpl(
     private val refreshTokenApi: RefreshTokenApi
 ) : RefreshTokenRepository {
 
-    override suspend fun refreshToken(refreshToken: String): AppResult<SessionToken> {
-        return refreshTokenApi.refreshToken(RefreshTokenPayload(refreshToken))
-            .mapSuccess { sessionTokenResponse ->
-                sessionTokenResponse.toSessionToken()
-            }
-    }
+    override suspend fun refreshToken(refreshToken: String): AppResult<SessionToken> = refreshTokenApi.refreshToken(
+        RefreshTokenPayload(refreshToken)
+    )
+        .mapSuccess { sessionTokenResponse ->
+            sessionTokenResponse.toSessionToken()
+        }
 }

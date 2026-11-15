@@ -9,14 +9,19 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetEmailPasswordScreenState
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.resetpassword.ResetPasswordStepConfig
 
+/**
+ * Mock implementation of [ResetEmailPasswordComponent] for Compose previews and testing.
+ */
 @InternalApi
-class ResetEmailPasswordComponentMock(
+public class ResetEmailPasswordComponentMock(
     initialState: ResetEmailPasswordScreenState = ResetEmailPasswordScreenState()
 ) : ResetEmailPasswordComponent {
 
-    override val stackNavigation = StackNavigation<ResetPasswordStepConfig>()
+    public override val stackNavigation: StackNavigation<ResetPasswordStepConfig> =
+        StackNavigation<ResetPasswordStepConfig>()
 
-    private val defaultStepConfig: ResetPasswordStepConfig = ResetPasswordStepConfig.EmailInput(initialEmail = initialState.email)
+    private val defaultStepConfig: ResetPasswordStepConfig =
+        ResetPasswordStepConfig.EmailInput(initialEmail = initialState.email)
 
     private val _stack = MutableValue(
         ChildStack(
@@ -24,20 +29,25 @@ class ResetEmailPasswordComponentMock(
             instance = createChild(defaultStepConfig)
         )
     )
-    override val stack: Value<ChildStack<ResetPasswordStepConfig, ResetEmailPasswordComponent.Child>> = _stack
+    public override val stack: Value<ChildStack<ResetPasswordStepConfig, ResetEmailPasswordComponent.Child>> = _stack
 
     private val _state = MutableValue(initialState)
-    override val state: Value<ResetEmailPasswordScreenState> = _state
+    public override val state: Value<ResetEmailPasswordScreenState> = _state
 
-    var sendCodeCalls = 0
-    var resetEmailCalls = 0
-    var confirmResetCalls = 0
-    var backCalls = 0
-    var lastEmailChanged: String? = null
-    var lastCodeChanged: String? = null
-    var lastPasswordChanged: String? = null
+    public var sendCodeCalls: Int = 0
+    public var resetEmailCalls: Int = 0
+    public var confirmResetCalls: Int = 0
+    public var backCalls: Int = 0
+    public var lastEmailChanged: String? = null
+    public var lastCodeChanged: String? = null
+    public var lastPasswordChanged: String? = null
 
-    fun setStep(config: ResetPasswordStepConfig) {
+    /**
+     * Updates the current active step configuration in the child stack.
+     *
+     * @param config The step configuration.
+     */
+    public fun setStep(config: ResetPasswordStepConfig) {
         _stack.value = ChildStack(
             configuration = config,
             instance = createChild(config)
@@ -49,35 +59,40 @@ class ResetEmailPasswordComponentMock(
         is ResetPasswordStepConfig.ConfirmInput -> ResetEmailPasswordComponent.Child.ConfirmInput(config.email)
     }
 
-    fun updateState(state: ResetEmailPasswordScreenState) {
+    /**
+     * Updates the component state value.
+     *
+     * @param state The new state value.
+     */
+    public fun updateState(state: ResetEmailPasswordScreenState) {
         _state.value = state
     }
 
-    override fun onEmailChanged(email: String) {
+    public override fun onEmailChanged(email: String) {
         lastEmailChanged = email
     }
 
-    override fun onCodeChanged(code: String) {
+    public override fun onCodeChanged(code: String) {
         lastCodeChanged = code
     }
 
-    override fun onPasswordChanged(password: String) {
+    public override fun onPasswordChanged(password: String) {
         lastPasswordChanged = password
     }
 
-    override fun onSendCodeClick() {
+    public override fun onSendCodeClick() {
         sendCodeCalls++
     }
 
-    override fun onResetEmailClick() {
+    public override fun onResetEmailClick() {
         resetEmailCalls++
     }
 
-    override fun onConfirmResetClick() {
+    public override fun onConfirmResetClick() {
         confirmResetCalls++
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         backCalls++
     }
 }

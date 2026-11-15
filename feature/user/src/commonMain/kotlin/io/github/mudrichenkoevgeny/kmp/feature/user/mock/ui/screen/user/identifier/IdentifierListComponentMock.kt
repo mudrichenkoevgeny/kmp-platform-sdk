@@ -13,100 +13,104 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.li
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 
+/**
+ * Mock implementation of [IdentifierListComponent] for Compose previews and testing.
+ */
 @InternalApi
-class IdentifierListComponentMock(
+public class IdentifierListComponentMock(
     initialState: IdentifierListScreenState = IdentifierListScreenState.Loading,
-    override val isAddIdentifierSupported: Boolean = true,
-    override val includeFilterPanel: Boolean = false,
-    initialDialogSlot: ChildSlot<AddIdentifierDialogConfig, IdentifierListComponent.AddIdentifierDialogChild> = ChildSlot()
+    public override val isAddIdentifierSupported: Boolean = true,
+    public override val includeFilterPanel: Boolean = false,
+    initialDialogSlot: ChildSlot<AddIdentifierDialogConfig, IdentifierListComponent.AddIdentifierDialogChild> =
+        ChildSlot()
 ) : IdentifierListComponent {
 
-    private val _state = MutableValue(initialState)
-    override val state: Value<IdentifierListScreenState> = _state
+    private val _state: MutableValue<IdentifierListScreenState> = MutableValue(initialState)
+    public override val state: Value<IdentifierListScreenState> = _state
 
-    override val addIdentifierDialogSlotNavigation = SlotNavigation<AddIdentifierDialogConfig>()
-    override val addIdentifierDialogSlot = MutableValue(initialDialogSlot)
+    public override val addIdentifierDialogSlotNavigation: SlotNavigation<AddIdentifierDialogConfig> =
+        SlotNavigation<AddIdentifierDialogConfig>()
+    public override val addIdentifierDialogSlot:
+        Value<ChildSlot<AddIdentifierDialogConfig, IdentifierListComponent.AddIdentifierDialogChild>> =
+        MutableValue(initialDialogSlot)
 
-    var refreshCalls: Int = 0
-    var identifierClickCalls: MutableList<UserIdentifierId> = mutableListOf()
-    var identifierDeletedCalls: MutableList<UserIdentifierId> = mutableListOf()
-    var loadNextPageCalls: Int = 0
-    var backCalls: Int = 0
-    var addIdentifierClickCalls: Int = 0
-    var addIdentifierSelectProviderCalls: MutableList<UserAuthProvider> = mutableListOf()
-    var addIdentifierSubmitCalls: Int = 0
-    var addIdentifierDismissCalls: Int = 0
+    public var refreshCalls: Int = 0
+    public var identifierClickCalls: MutableList<UserIdentifierId> = mutableListOf()
+    public var identifierDeletedCalls: MutableList<UserIdentifierId> = mutableListOf()
+    public var loadNextPageCalls: Int = 0
+    public var backCalls: Int = 0
+    public var addIdentifierClickCalls: Int = 0
+    public var addIdentifierSelectProviderCalls: MutableList<UserAuthProvider> = mutableListOf()
+    public var addIdentifierSubmitCalls: Int = 0
+    public var addIdentifierDismissCalls: Int = 0
 
-    fun updateState(state: IdentifierListScreenState) {
+    /**
+     * Updates the component state value.
+     *
+     * @param state The new state value.
+     */
+    public fun updateState(state: IdentifierListScreenState) {
         _state.value = state
     }
 
-    override fun onRefresh() {
+    public override fun onRefresh() {
         refreshCalls++
     }
 
-    override fun onLoadNextPage() {
+    public override fun onLoadNextPage() {
         loadNextPageCalls++
     }
 
-    override fun onToggleFilterPanel() {
-    }
+    public override fun onToggleFilterPanel(): Unit = Unit
 
-    override fun onSortChanged(sortState: ListingSortState) {
-    }
+    public override fun onSortChanged(sortState: ListingSortState): Unit = Unit
 
-    override fun onFilterChanged(filterId: String, filterState: ListingFilterState?) {
-    }
+    public override fun onFilterChanged(
+        filterId: String,
+        filterState: ListingFilterState?
+    ): Unit = Unit
 
-    override fun onApplyFilters() {
-    }
+    public override fun onApplyFilters(): Unit = Unit
 
-    override fun onIdentifierClick(identifierId: UserIdentifierId) {
+    public override fun onIdentifierClick(identifierId: UserIdentifierId) {
         identifierClickCalls.add(identifierId)
     }
 
-    override fun onIdentifierDeleted(identifierId: UserIdentifierId) {
+    public override fun onIdentifierDeleted(identifierId: UserIdentifierId) {
         identifierDeletedCalls.add(identifierId)
     }
 
-    override fun onAddIdentifierClick() {
+    public override fun onAddIdentifierClick() {
         addIdentifierClickCalls++
     }
 
-    override fun onAddIdentifierSelectProvider(authProvider: UserAuthProvider) {
+    public override fun onAddIdentifierSelectProvider(authProvider: UserAuthProvider) {
         addIdentifierSelectProviderCalls.add(authProvider)
     }
 
-    override fun onAddIdentifierEmailChanged(email: String) {
-    }
+    public override fun onAddIdentifierEmailChanged(email: String): Unit = Unit
 
-    override fun onAddIdentifierPasswordChanged(password: String) {
-    }
+    public override fun onAddIdentifierPasswordChanged(password: String): Unit = Unit
 
-    override fun onAddIdentifierTogglePasswordVisibility() {
-    }
+    public override fun onAddIdentifierTogglePasswordVisibility(): Unit = Unit
 
-    override fun onAddIdentifierPhoneChanged(phone: String) {
-    }
+    public override fun onAddIdentifierPhoneChanged(phone: String): Unit = Unit
 
-    override fun onAddIdentifierCodeChanged(code: String) {
-    }
+    public override fun onAddIdentifierCodeChanged(code: String): Unit = Unit
 
-    override fun onAddIdentifierSendCode() {
-    }
+    public override fun onAddIdentifierSendCode(): Unit = Unit
 
-    override fun onAddIdentifierSubmit() {
+    public override fun onAddIdentifierSubmit() {
         addIdentifierSubmitCalls++
     }
 
-    override fun onAddIdentifierDialogBack() {
-    }
+    public override fun onAddIdentifierDialogBack(): Unit = Unit
 
-    override fun onAddIdentifierDialogDismiss() {
+    public override fun onAddIdentifierDialogDismiss() {
         addIdentifierDismissCalls++
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         backCalls++
     }
 }

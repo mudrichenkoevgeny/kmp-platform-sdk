@@ -9,44 +9,47 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+/**
+ * Mock implementation of [OpenSecuritySettingsRepository] for testing purposes.
+ */
 @InternalApi
-class OpenSecuritySettingsRepositoryMock(
+public class OpenSecuritySettingsRepositoryMock(
     initialSettings: OpenSecuritySettings? = createTestOpenSecuritySettings()
 ) : OpenSecuritySettingsRepository {
 
-    private val _settings = MutableStateFlow(initialSettings)
+    private val settingsStateFlow = MutableStateFlow(initialSettings)
 
-    var getSecuritySettingsResult: AppResult<OpenSecuritySettings>? = null
-    var refreshSecuritySettingsResult: AppResult<OpenSecuritySettings>? = null
+    public var getSecuritySettingsResult: AppResult<OpenSecuritySettings>? = null
+    public var refreshSecuritySettingsResult: AppResult<OpenSecuritySettings>? = null
 
-    override suspend fun getOpenSecuritySettings(): AppResult<OpenSecuritySettings> {
+    public override suspend fun getOpenSecuritySettings(): AppResult<OpenSecuritySettings> {
         val customResult = getSecuritySettingsResult
         if (customResult != null) {
             return customResult
         }
-        val current = _settings.value
+        val current = settingsStateFlow.value
         return if (current != null) {
             AppResult.Success(current)
         } else {
             val fresh = createTestOpenSecuritySettings()
-            _settings.value = fresh
+            settingsStateFlow.value = fresh
             AppResult.Success(fresh)
         }
     }
 
-    override suspend fun refreshOpenSecuritySettings(): AppResult<OpenSecuritySettings> {
+    public override suspend fun refreshOpenSecuritySettings(): AppResult<OpenSecuritySettings> {
         val customResult = refreshSecuritySettingsResult
         if (customResult != null) {
             return customResult
         }
         val fresh = createTestOpenSecuritySettings()
-        _settings.value = fresh
+        settingsStateFlow.value = fresh
         return AppResult.Success(fresh)
     }
 
-    override suspend fun updateOpenSecuritySettings(securitySettings: OpenSecuritySettings) {
-        _settings.value = securitySettings
+    public override suspend fun updateOpenSecuritySettings(securitySettings: OpenSecuritySettings) {
+        settingsStateFlow.value = securitySettings
     }
 
-    override fun observeOpenSecuritySettings(): Flow<OpenSecuritySettings?> = _settings.asStateFlow()
+    public override fun observeOpenSecuritySettings(): Flow<OpenSecuritySettings?> = settingsStateFlow.asStateFlow()
 }

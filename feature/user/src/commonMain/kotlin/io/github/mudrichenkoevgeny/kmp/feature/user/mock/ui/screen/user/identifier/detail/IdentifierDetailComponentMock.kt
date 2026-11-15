@@ -7,8 +7,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.de
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.detail.IdentifierDetailScreenState
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierPrivate
 
+/**
+ * Mock implementation of [IdentifierDetailComponent] for Compose previews and testing.
+ */
 @InternalApi
-class IdentifierDetailComponentMock(
+public class IdentifierDetailComponentMock(
     initialState: IdentifierDetailScreenState = IdentifierDetailScreenState.Content(
         identifier = createTestUserIdentifierPrivate(),
         isCurrentIdentifier = false,
@@ -16,27 +19,57 @@ class IdentifierDetailComponentMock(
         canDeletePassword = false
     )
 ) : IdentifierDetailComponent {
-    override val state: Value<IdentifierDetailScreenState> = MutableValue(initialState)
+    public override val state: Value<IdentifierDetailScreenState> = MutableValue(initialState)
 
-    var deleteIdentifierCalls = 0
-    var changePasswordCalls = 0
-    var confirmChangePasswordCalls = 0
-    var dismissChangePasswordCalls = 0
-    var deletePasswordCalls = 0
-    var retryCalls = 0
-    var backCalls = 0
+    public var deleteIdentifierCalls: Int = 0
+    public var changePasswordCalls: Int = 0
+    public var confirmChangePasswordCalls: Int = 0
+    public var dismissChangePasswordCalls: Int = 0
+    public var deletePasswordCalls: Int = 0
+    public var retryCalls: Int = 0
+    public var backCalls: Int = 0
 
-    var deleteIdentifierRequestedCalls = 0
-    var dismissDeleteIdentifierDialogCalls = 0
+    public var deleteIdentifierRequestedCalls: Int = 0
+    public var dismissDeleteIdentifierDialogCalls: Int = 0
 
-    override fun onDeleteIdentifierRequested() { deleteIdentifierRequestedCalls++ }
-    override fun onDismissDeleteIdentifierDialog() { dismissDeleteIdentifierDialogCalls++ }
-    override fun onDeleteIdentifierClick() { deleteIdentifierCalls++ }
-    override fun onChangePasswordClick() { changePasswordCalls++ }
-    override fun onConfirmChangePasswordClick(oldPassword: String, newPassword: String) { confirmChangePasswordCalls++ }
-    override fun onDismissChangePasswordDialog() { dismissChangePasswordCalls++ }
-    override fun onDeletePasswordClick() { deletePasswordCalls++ }
-    override fun onRetry() { retryCalls++ }
-    override fun onBackClick() { backCalls++ }
-    override fun onUserClick() {}
+    public override fun onDeleteIdentifierRequested() {
+        deleteIdentifierRequestedCalls++
+    }
+
+    public override fun onDismissDeleteIdentifierDialog() {
+        dismissDeleteIdentifierDialogCalls++
+    }
+
+    public override fun onDeleteIdentifierClick() {
+        deleteIdentifierCalls++
+    }
+
+    public override fun onChangePasswordClick() {
+        changePasswordCalls++
+    }
+
+    public override fun onConfirmChangePasswordClick(
+        oldPassword: String,
+        newPassword: String
+    ) {
+        confirmChangePasswordCalls++
+    }
+
+    public override fun onDismissChangePasswordDialog() {
+        dismissChangePasswordCalls++
+    }
+
+    public override fun onDeletePasswordClick() {
+        deletePasswordCalls++
+    }
+
+    public override fun onRetry() {
+        retryCalls++
+    }
+
+    public override fun onBackClick() {
+        backCalls++
+    }
+
+    public override fun onUserClick(): Unit = Unit
 }

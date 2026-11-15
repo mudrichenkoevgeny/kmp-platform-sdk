@@ -12,9 +12,9 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.Delet
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.GetUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.UpdateUserUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security.ManagementDisableTotpUseCase
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.user.detail.UserDetailParams
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlin.test.Test
 import kotlin.test.assertEquals

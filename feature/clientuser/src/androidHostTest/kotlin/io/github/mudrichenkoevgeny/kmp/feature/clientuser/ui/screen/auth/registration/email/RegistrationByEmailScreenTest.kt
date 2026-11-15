@@ -123,7 +123,9 @@ class RegistrationByEmailScreenTest {
                 resendTimerSeconds = RESEND_TIMER_COUNTDOWN_SECONDS
             )
         )
-        component.setStep(RegistrationByEmailStepConfig.ConfirmInput(EMAIL_REGISTRATION_FLOW, RESEND_TIMER_COUNTDOWN_SECONDS))
+        component.setStep(
+            RegistrationByEmailStepConfig.ConfirmInput(EMAIL_REGISTRATION_FLOW, RESEND_TIMER_COUNTDOWN_SECONDS)
+        )
         setContent {
             ComponentTestHarness {
                 RegistrationByEmailScreen(component)
@@ -140,7 +142,9 @@ class RegistrationByEmailScreenTest {
                 resendTimerSeconds = RESEND_TIMER_EXPIRED_SECONDS
             )
         )
-        component.setStep(RegistrationByEmailStepConfig.ConfirmInput(EMAIL_REGISTRATION_FLOW, RESEND_TIMER_EXPIRED_SECONDS))
+        component.setStep(
+            RegistrationByEmailStepConfig.ConfirmInput(EMAIL_REGISTRATION_FLOW, RESEND_TIMER_EXPIRED_SECONDS)
+        )
         setContent {
             ComponentTestHarness {
                 RegistrationByEmailScreen(component)

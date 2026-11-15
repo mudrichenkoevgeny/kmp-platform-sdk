@@ -22,20 +22,20 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.Sel
  * @param isLoading True while create user request is in progress.
  * @param error Error from the last create attempt, or `null`.
  */
-data class CreateUserScreenState(
-    val email: String = "",
-    val password: String = "",
-    val nickname: String = "",
-    val displayName: String = "",
-    val avatarFileId: String = "",
-    val selectedAvatarPayload: SelectedFilePayload? = null,
-    val birthdate: String = "",
-    val role: String = "USER",
-    val status: String = "ACTIVE",
-    val authorityLevel: String = "0",
-    val quotaBytes: String = "",
-    val maxUploadSizeBytes: String = "",
-    val maxPendingUploads: String = "",
-    val isLoading: Boolean = false,
-    val error: AppError? = null
+public data class CreateUserScreenState(
+    public val email: String = "",
+    public val password: String = "",
+    public val nickname: String = "",
+    public val displayName: String = "",
+    public val avatarFileId: String = "",
+    public val selectedAvatarPayload: SelectedFilePayload? = null,
+    public val birthdate: String = "",
+    public val role: String = "USER",
+    public val status: String = "ACTIVE",
+    public val authorityLevel: String = "0",
+    public val quotaBytes: String = "",
+    public val maxUploadSizeBytes: String = "",
+    public val maxPendingUploads: String = "",
+    public val isLoading: Boolean = false,
+    public val error: AppError? = null
 )

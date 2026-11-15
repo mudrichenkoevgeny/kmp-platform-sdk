@@ -22,9 +22,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input.CoreOutlin
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewDialogSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.mfa.MfaChallengeRequest
@@ -39,7 +39,7 @@ import kotlinx.coroutines.CompletableDeferred
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MfaChallengeDialog(
+public fun MfaChallengeDialog(
     request: MfaChallengeRequest,
     onConfirm: (String) -> Unit,
     onCancel: () -> Unit
@@ -112,30 +112,30 @@ private fun MfaChallengeDialogPreviewContent() {
 }
 
 @InternalApi
-@DialogSizePreviews
+@PreviewDialogSizes
 @Composable
 private fun DialogSizePreview() {
     MfaChallengeDialogPreviewContent()
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     MfaChallengeDialogPreviewContent()
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     MfaChallengeDialogPreviewContent()
 }
 
-object MfaChallengeDialogTestTags {
-    const val TITLE = "MfaChallengeDialog_Title"
-    const val DESC = "MfaChallengeDialog_Desc"
-    const val CODE_INPUT = "MfaChallengeDialog_CodeInput"
-    const val CONFIRM_BUTTON = "MfaChallengeDialog_ConfirmButton"
-    const val CANCEL_BUTTON = "MfaChallengeDialog_CancelButton"
+public object MfaChallengeDialogTestTags {
+    public const val TITLE: String = "MfaChallengeDialog_Title"
+    public const val DESC: String = "MfaChallengeDialog_Desc"
+    public const val CODE_INPUT: String = "MfaChallengeDialog_CodeInput"
+    public const val CONFIRM_BUTTON: String = "MfaChallengeDialog_ConfirmButton"
+    public const val CANCEL_BUTTON: String = "MfaChallengeDialog_CancelButton"
 }

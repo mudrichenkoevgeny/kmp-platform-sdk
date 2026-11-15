@@ -8,11 +8,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCorou
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.time.resendCountdown
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.UnlockMethod
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.SendUnlockEmailConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.SendUnlockPhoneConfirmationUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockByEmailUseCase
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockByPhoneUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.UnlockMethod
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.auth.unlock.otpinput.UnlockOtpInputParams
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
  * @param onUnlockSuccess Navigates to unlock success screen.
  * @param onBack Pops this screen from the navigation stack.
  */
-class UnlockOtpComponentImpl(
+public class UnlockOtpComponentImpl(
     componentContext: ComponentContext,
     params: UnlockOtpInputParams = UnlockOtpInputParams(),
     private val unlockByEmailUseCase: UnlockByEmailUseCase,
@@ -40,7 +40,26 @@ class UnlockOtpComponentImpl(
     private val onBack: () -> Unit
 ) : UnlockOtpComponent, ComponentContext by componentContext {
 
-    constructor(
+    private val scope = componentCoroutineScope()
+    private var timerJob: Job? = null
+
+    private val _state = MutableValue(
+        UnlockOtpScreenState(
+            method = params.unlockMethod ?: UnlockMethod.EMAIL,
+            target = params.identifier ?: "",
+            remainingDelaySeconds = params.retryAfterSeconds ?: 0
+        )
+    )
+    public override val state: Value<UnlockOtpScreenState> = _state
+
+    init {
+        val delay = params.retryAfterSeconds ?: 0
+        if (delay > 0) {
+            startTimer(delay)
+        }
+    }
+
+    public constructor(
         componentContext: ComponentContext,
         method: UnlockMethod,
         target: String,
@@ -66,30 +85,11 @@ class UnlockOtpComponentImpl(
         onBack = onBack
     )
 
-    private val scope = componentCoroutineScope()
-    private var timerJob: Job? = null
-
-    private val _state = MutableValue(
-        UnlockOtpScreenState(
-            method = params.unlockMethod ?: UnlockMethod.EMAIL,
-            target = params.identifier ?: "",
-            remainingDelaySeconds = params.retryAfterSeconds ?: 0
-        )
-    )
-    override val state: Value<UnlockOtpScreenState> = _state
-
-    init {
-        val delay = params.retryAfterSeconds ?: 0
-        if (delay > 0) {
-            startTimer(delay)
-        }
-    }
-
-    override fun onCodeChanged(code: String) {
+    public override fun onCodeChanged(code: String) {
         _state.update { it.copy(codeInput = code, actionError = null) }
     }
 
-    override fun onUnlockClick() {
+    public override fun onUnlockClick() {
         val currentState = _state.value
         val code = currentState.codeInput.trim()
         if (code.isBlank()) {
@@ -107,14 +107,17 @@ class UnlockOtpComponentImpl(
                     _state.update { currentStateCopy -> currentStateCopy.copy(actionLoading = false) }
                     onUnlockSuccess()
                 }
+
                 is AppResult.Error -> {
-                    _state.update { currentStateCopy -> currentStateCopy.copy(actionLoading = false, actionError = result.error) }
+                    _state.update { currentStateCopy ->
+                        currentStateCopy.copy(actionLoading = false, actionError = result.error)
+                    }
                 }
             }
         }
     }
 
-    override fun onResendCodeClick() {
+    public override fun onResendCodeClick() {
         val currentState = _state.value
         if (currentState.remainingDelaySeconds > 0) {
             return
@@ -131,9 +134,12 @@ class UnlockOtpComponentImpl(
                     _state.update { currentStateCopy -> currentStateCopy.copy(actionLoading = false) }
                     startTimer(result.data.retryAfterSeconds)
                 }
+
                 is AppResult.Error -> {
                     val error = result.error
-                    _state.update { currentStateCopy -> currentStateCopy.copy(actionLoading = false, actionError = error) }
+                    _state.update { currentStateCopy ->
+                        currentStateCopy.copy(actionLoading = false, actionError = error)
+                    }
                     if (error is UserError.TooManyConfirmationRequests) {
                         startTimer(error.retryAfterSeconds)
                     }
@@ -142,7 +148,7 @@ class UnlockOtpComponentImpl(
         }
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         timerJob?.cancel()
         onBack()
     }

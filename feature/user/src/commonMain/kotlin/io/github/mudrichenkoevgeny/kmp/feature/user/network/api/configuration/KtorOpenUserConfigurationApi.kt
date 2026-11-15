@@ -8,11 +8,12 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 
 /** [OpenUserConfigurationApi] implementation backed by Ktor [HttpClient]. */
-class KtorOpenUserConfigurationApi(
+public class KtorOpenUserConfigurationApi(
     private val client: HttpClient
 ) : OpenUserConfigurationApi {
 
-    override suspend fun getOpenUserConfiguration(): AppResult<OpenUserConfigurationPayload> = client.callResult {
-        get(OpenUserConfigurationRoutes.GET_OPEN_USER_CONFIGURATION)
-    }
+    public override suspend fun getOpenUserConfiguration(): AppResult<OpenUserConfigurationPayload> =
+        client.callResult {
+            get(OpenUserConfigurationRoutes.GET_OPEN_USER_CONFIGURATION)
+        }
 }

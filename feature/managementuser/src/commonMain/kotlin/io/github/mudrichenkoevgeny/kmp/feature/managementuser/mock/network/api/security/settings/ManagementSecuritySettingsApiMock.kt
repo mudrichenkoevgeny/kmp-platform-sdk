@@ -8,19 +8,33 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.network.model.securitysettings.createTestManagementSecuritySettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.network.model.securitysettings.createTestOpenSecuritySettingsPayload
 
+/**
+ * Mock implementation of [ManagementSecuritySettingsApi] for testing.
+ */
 @InternalApi
-class ManagementSecuritySettingsApiMock(
-    var getResult: AppResult<ManagementSecuritySettingsPayload> = AppResult.Success(createTestManagementSecuritySettingsPayload()),
-    var getOpenResult: AppResult<OpenSecuritySettingsPayload> = AppResult.Success(createTestOpenSecuritySettingsPayload()),
-    var updateResult: AppResult<ManagementSecuritySettingsPayload> = AppResult.Success(createTestManagementSecuritySettingsPayload()),
-    var resetResult: AppResult<ManagementSecuritySettingsPayload> = AppResult.Success(createTestManagementSecuritySettingsPayload())
+public class ManagementSecuritySettingsApiMock(
+    public var getResult: AppResult<ManagementSecuritySettingsPayload> = AppResult.Success(
+        createTestManagementSecuritySettingsPayload()
+    ),
+    public var getOpenResult: AppResult<OpenSecuritySettingsPayload> = AppResult.Success(
+        createTestOpenSecuritySettingsPayload()
+    ),
+    public var updateResult: AppResult<ManagementSecuritySettingsPayload> = AppResult.Success(
+        createTestManagementSecuritySettingsPayload()
+    ),
+    public var resetResult: AppResult<ManagementSecuritySettingsPayload> = AppResult.Success(
+        createTestManagementSecuritySettingsPayload()
+    )
 ) : ManagementSecuritySettingsApi {
 
-    override suspend fun getManagementSecuritySettings(): AppResult<ManagementSecuritySettingsPayload> = getResult
+    public override suspend fun getManagementSecuritySettings(): AppResult<ManagementSecuritySettingsPayload> =
+        getResult
 
-    override suspend fun getOpenSecuritySettings(): AppResult<OpenSecuritySettingsPayload> = getOpenResult
+    public override suspend fun getOpenSecuritySettings(): AppResult<OpenSecuritySettingsPayload> = getOpenResult
 
-    override suspend fun updateManagementSecuritySettings(request: ManagementSecuritySettingsPayload): AppResult<ManagementSecuritySettingsPayload> = updateResult
+    public override suspend fun updateManagementSecuritySettings(request: ManagementSecuritySettingsPayload): AppResult<ManagementSecuritySettingsPayload> =
+        updateResult
 
-    override suspend fun resetManagementSecuritySettings(): AppResult<ManagementSecuritySettingsPayload> = resetResult
+    public override suspend fun resetManagementSecuritySettings(): AppResult<ManagementSecuritySettingsPayload> =
+        resetResult
 }

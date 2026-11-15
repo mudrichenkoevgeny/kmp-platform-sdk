@@ -47,10 +47,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyTex
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.settings.auth.EditAuthSettingsComponentMock
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.SettingsDialogChild
@@ -64,7 +64,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditAuthSettingsScreen(component: EditAuthSettingsComponent) {
+public fun EditAuthSettingsScreen(component: EditAuthSettingsComponent) {
     val state by component.state.subscribeAsState()
     val userUi = LocalUserStrings.current.ui
 
@@ -91,6 +91,7 @@ fun EditAuthSettingsScreen(component: EditAuthSettingsComponent) {
             is EditAuthSettingsScreenState.Loading -> {
                 FullscreenLoading(modifier = Modifier.padding(padding))
             }
+
             is EditAuthSettingsScreenState.Error -> {
                 FullscreenError(
                     error = currentState.error,
@@ -100,6 +101,7 @@ fun EditAuthSettingsScreen(component: EditAuthSettingsComponent) {
                         .testTag(EditAuthSettingsTestTags.GLOBAL_ERROR)
                 )
             }
+
             is EditAuthSettingsScreenState.Content -> {
                 EditAuthSettingsForm(
                     state = currentState,
@@ -205,273 +207,41 @@ private fun EditAuthSettingsForm(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingMedium)
     ) {
-        CoreTitleText(
-            text = userUi.enabledAuthProviders,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.testTag(EditAuthSettingsTestTags.SECTION_PROVIDERS_TITLE)
+        EnabledProvidersSection(
+            state = state,
+            onProviderToggled = onProviderToggled,
+            onRegistrationEnabledToggled = onRegistrationEnabledToggled
         )
 
-        UserAuthProvider.entries.forEach { provider ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Checkbox(
-                    checked = provider in state.enabledProviders,
-                    onCheckedChange = { enabled ->
-                        onProviderToggled(provider, enabled)
-                    },
-                    modifier = Modifier.testTag(EditAuthSettingsTestTags.getProviderCheckboxTag(provider))
-                )
-                CoreBodyText(
-                    text = provider.name,
-                    modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
-                )
-            }
-        }
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Checkbox(
-                checked = state.isRegistrationEnabled,
-                onCheckedChange = onRegistrationEnabledToggled,
-                modifier = Modifier.testTag(EditAuthSettingsTestTags.IS_REGISTRATION_ENABLED_CHECKBOX)
-            )
-            CoreBodyText(
-                text = userUi.isRegistrationEnabled,
-                modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
-            )
-        }
-
-        CoreTitleText(
-            text = userUi.limitsAndExpirations,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.testTag(EditAuthSettingsTestTags.SECTION_LIMITS_TITLE)
+        LimitsAndExpirationsSection(
+            state = state,
+            onMaxTotalIdentifiersChanged = onMaxTotalIdentifiersChanged,
+            onMaxEmailIdentifiersChanged = onMaxEmailIdentifiersChanged,
+            onMaxPhoneIdentifiersChanged = onMaxPhoneIdentifiersChanged,
+            onMaxIdentifiersPerExternalProviderChanged = onMaxIdentifiersPerExternalProviderChanged,
+            onUserNicknameMinLengthChanged = onUserNicknameMinLengthChanged,
+            onUserNicknameMaxLengthChanged = onUserNicknameMaxLengthChanged,
+            onUserDisplayNameMinLengthChanged = onUserDisplayNameMinLengthChanged,
+            onUserDisplayNameMaxLengthChanged = onUserDisplayNameMaxLengthChanged,
+            onIsUserNicknameChangeAllowedToggled = onIsUserNicknameChangeAllowedToggled,
+            onMaxActiveSessionsForOpenUserChanged = onMaxActiveSessionsForOpenUserChanged,
+            onMaxActiveSessionsForManagementUserChanged = onMaxActiveSessionsForManagementUserChanged,
+            onAccessTokenExpirationSecondsChanged = onAccessTokenExpirationSecondsChanged,
+            onRefreshTokenExpirationSecondsChanged = onRefreshTokenExpirationSecondsChanged,
+            onAccountDeletionGracePeriodSecondsChanged = onAccountDeletionGracePeriodSecondsChanged,
+            onAccountDeletionCheckIntervalSecondsChanged = onAccountDeletionCheckIntervalSecondsChanged
         )
 
-        CoreOutlinedTextField(
-            value = state.maxTotalIdentifiers,
-            onValueChange = onMaxTotalIdentifiersChanged,
-            label = { CoreBodyText(userUi.maxTotalIdentifiers) },
-            placeholder = { CoreBodyText(userUi.maxTotalIdentifiers) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_TOTAL_IDENTIFIERS_INPUT)
-        )
-
-        CoreOutlinedTextField(
-            value = state.maxEmailIdentifiers,
-            onValueChange = onMaxEmailIdentifiersChanged,
-            label = { CoreBodyText(userUi.maxEmailIdentifiers) },
-            placeholder = { CoreBodyText(userUi.maxEmailIdentifiers) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_EMAIL_IDENTIFIERS_INPUT)
-        )
-
-        CoreOutlinedTextField(
-            value = state.maxPhoneIdentifiers,
-            onValueChange = onMaxPhoneIdentifiersChanged,
-            label = { CoreBodyText(userUi.maxPhoneIdentifiers) },
-            placeholder = { CoreBodyText(userUi.maxPhoneIdentifiers) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_PHONE_IDENTIFIERS_INPUT)
-        )
-
-        CoreOutlinedTextField(
-            value = state.maxIdentifiersPerExternalProvider,
-            onValueChange = onMaxIdentifiersPerExternalProviderChanged,
-            label = { CoreBodyText(userUi.maxIdentifiersPerExternalProvider) },
-            placeholder = { CoreBodyText(userUi.maxIdentifiersPerExternalProvider) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_IDENTIFIERS_PER_EXTERNAL_PROVIDER_INPUT)
-        )
-
-        CoreOutlinedTextField(
-            value = state.userNicknameMinLength,
-            onValueChange = onUserNicknameMinLengthChanged,
-            label = { CoreBodyText(userUi.userNicknameMinLength) },
-            placeholder = { CoreBodyText(userUi.userNicknameMinLength) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.testTag(EditAuthSettingsTestTags.USER_NICKNAME_MIN_LENGTH_INPUT)
-        )
-
-        CoreOutlinedTextField(
-            value = state.userNicknameMaxLength,
-            onValueChange = onUserNicknameMaxLengthChanged,
-            label = { CoreBodyText(userUi.userNicknameMaxLength) },
-            placeholder = { CoreBodyText(userUi.userNicknameMaxLength) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.testTag(EditAuthSettingsTestTags.USER_NICKNAME_MAX_LENGTH_INPUT)
-        )
-
-        CoreOutlinedTextField(
-            value = state.userDisplayNameMinLength,
-            onValueChange = onUserDisplayNameMinLengthChanged,
-            label = { CoreBodyText(userUi.userDisplayNameMinLength) },
-            placeholder = { CoreBodyText(userUi.userDisplayNameMinLength) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.testTag(EditAuthSettingsTestTags.USER_DISPLAY_NAME_MIN_LENGTH_INPUT)
-        )
-
-        CoreOutlinedTextField(
-            value = state.userDisplayNameMaxLength,
-            onValueChange = onUserDisplayNameMaxLengthChanged,
-            label = { CoreBodyText(userUi.userDisplayNameMaxLength) },
-            placeholder = { CoreBodyText(userUi.userDisplayNameMaxLength) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.testTag(EditAuthSettingsTestTags.USER_DISPLAY_NAME_MAX_LENGTH_INPUT)
-        )
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Checkbox(
-                checked = state.isUserNicknameChangeAllowed,
-                onCheckedChange = onIsUserNicknameChangeAllowedToggled,
-                modifier = Modifier.testTag(EditAuthSettingsTestTags.IS_USER_NICKNAME_CHANGE_ALLOWED_CHECKBOX)
-            )
-            CoreBodyText(
-                text = userUi.isUserNicknameChangeAllowed,
-                modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
-            )
-        }
-
-        CoreOutlinedTextField(
-            value = state.maxActiveSessionsForOpenUser,
-            onValueChange = onMaxActiveSessionsForOpenUserChanged,
-            label = { CoreBodyText(userUi.maxActiveSessionsOpen) },
-            placeholder = { CoreBodyText(userUi.maxActiveSessionsOpen) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_ACTIVE_SESSIONS_OPEN_INPUT)
-        )
-
-        CoreOutlinedTextField(
-            value = state.maxActiveSessionsForManagementUser,
-            onValueChange = onMaxActiveSessionsForManagementUserChanged,
-            label = { CoreBodyText(userUi.maxActiveSessionsManagement) },
-            placeholder = { CoreBodyText(userUi.maxActiveSessionsManagement) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_ACTIVE_SESSIONS_MANAGEMENT_INPUT)
-        )
-
-        CoreOutlinedTextField(
-            value = state.accessTokenExpirationSeconds,
-            onValueChange = onAccessTokenExpirationSecondsChanged,
-            label = { CoreBodyText(userUi.accessTokenExpirationSeconds) },
-            placeholder = { CoreBodyText(userUi.accessTokenExpirationSeconds) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.testTag(EditAuthSettingsTestTags.ACCESS_TOKEN_EXPIRATION_INPUT)
-        )
-
-        CoreOutlinedTextField(
-            value = state.refreshTokenExpirationSeconds,
-            onValueChange = onRefreshTokenExpirationSecondsChanged,
-            label = { CoreBodyText(userUi.refreshTokenExpirationSeconds) },
-            placeholder = { CoreBodyText(userUi.refreshTokenExpirationSeconds) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.testTag(EditAuthSettingsTestTags.REFRESH_TOKEN_EXPIRATION_INPUT)
-        )
-
-        CoreOutlinedTextField(
-            value = state.accountDeletionGracePeriodSeconds,
-            onValueChange = onAccountDeletionGracePeriodSecondsChanged,
-            label = { CoreBodyText(userUi.accountDeletionDelaySeconds) },
-            placeholder = { CoreBodyText(userUi.accountDeletionDelaySeconds) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.testTag(EditAuthSettingsTestTags.ACCOUNT_DELETION_DELAY_INPUT)
-        )
-
-        CoreOutlinedTextField(
-            value = state.accountDeletionCheckIntervalSeconds,
-            onValueChange = onAccountDeletionCheckIntervalSecondsChanged,
-            label = { CoreBodyText(userUi.accountDeletionCheckIntervalSeconds) },
-            placeholder = { CoreBodyText(userUi.accountDeletionCheckIntervalSeconds) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.testTag(EditAuthSettingsTestTags.ACCOUNT_DELETION_CHECK_INTERVAL_INPUT)
-        )
-
-        CoreTitleText(
-            text = userUi.openEmailRestrictionPolicy,
-            style = MaterialTheme.typography.titleMedium
-        )
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Checkbox(
-                checked = state.openEmailBlacklistEnabled,
-                onCheckedChange = onOpenEmailBlacklistEnabledToggled
-            )
-            CoreBodyText(text = userUi.blacklistEnabled, modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
-        }
-
-        CoreOutlinedTextField(
-            value = state.openEmailBlacklist,
-            onValueChange = onOpenEmailBlacklistChanged,
-            label = { CoreBodyText(userUi.emailBlacklistPlaceholder) },
-            placeholder = { CoreBodyText(userUi.emailBlacklistPlaceholder) }
-        )
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Checkbox(
-                checked = state.openEmailWhitelistEnabled,
-                onCheckedChange = onOpenEmailWhitelistEnabledToggled
-            )
-            CoreBodyText(text = userUi.whitelistEnabled, modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
-        }
-
-        CoreOutlinedTextField(
-            value = state.openEmailWhitelist,
-            onValueChange = onOpenEmailWhitelistChanged,
-            label = { CoreBodyText(userUi.emailWhitelistPlaceholder) },
-            placeholder = { CoreBodyText(userUi.emailWhitelistPlaceholder) }
-        )
-
-        CoreTitleText(
-            text = userUi.managementEmailRestrictionPolicy,
-            style = MaterialTheme.typography.titleMedium
-        )
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Checkbox(
-                checked = state.managementEmailBlacklistEnabled,
-                onCheckedChange = onManagementEmailBlacklistEnabledToggled
-            )
-            CoreBodyText(text = userUi.blacklistEnabled, modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
-        }
-
-        CoreOutlinedTextField(
-            value = state.managementEmailBlacklist,
-            onValueChange = onManagementEmailBlacklistChanged,
-            label = { CoreBodyText(userUi.emailBlacklistPlaceholder) },
-            placeholder = { CoreBodyText(userUi.emailBlacklistPlaceholder) }
-        )
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Checkbox(
-                checked = state.managementEmailWhitelistEnabled,
-                onCheckedChange = onManagementEmailWhitelistEnabledToggled
-            )
-            CoreBodyText(text = userUi.blacklistEnabled, modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall))
-        }
-
-        CoreOutlinedTextField(
-            value = state.managementEmailWhitelist,
-            onValueChange = onManagementEmailWhitelistChanged,
-            label = { CoreBodyText(userUi.emailWhitelistPlaceholder) },
-            placeholder = { CoreBodyText(userUi.emailWhitelistPlaceholder) }
+        EmailRestrictionSettingsSection(
+            state = state,
+            onOpenEmailBlacklistEnabledToggled = onOpenEmailBlacklistEnabledToggled,
+            onOpenEmailBlacklistChanged = onOpenEmailBlacklistChanged,
+            onOpenEmailWhitelistEnabledToggled = onOpenEmailWhitelistEnabledToggled,
+            onOpenEmailWhitelistChanged = onOpenEmailWhitelistChanged,
+            onManagementEmailBlacklistEnabledToggled = onManagementEmailBlacklistEnabledToggled,
+            onManagementEmailBlacklistChanged = onManagementEmailBlacklistChanged,
+            onManagementEmailWhitelistEnabledToggled = onManagementEmailWhitelistEnabledToggled,
+            onManagementEmailWhitelistChanged = onManagementEmailWhitelistChanged
         )
 
         ErrorText(
@@ -496,7 +266,337 @@ private fun EditAuthSettingsForm(
 }
 
 @Composable
-private fun ErrorText(error: AppError?, testTag: String) {
+private fun EnabledProvidersSection(
+    state: EditAuthSettingsScreenState.Content,
+    onProviderToggled: (UserAuthProvider, Boolean) -> Unit,
+    onRegistrationEnabledToggled: (Boolean) -> Unit
+) {
+    val userUi = LocalUserStrings.current.ui
+
+    CoreTitleText(
+        text = userUi.enabledAuthProviders,
+        style = MaterialTheme.typography.titleMedium,
+        modifier = Modifier.testTag(EditAuthSettingsTestTags.SECTION_PROVIDERS_TITLE)
+    )
+
+    UserAuthProvider.entries.forEach { provider ->
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Checkbox(
+                checked = provider in state.enabledProviders,
+                onCheckedChange = { enabled ->
+                    onProviderToggled(provider, enabled)
+                },
+                modifier = Modifier.testTag(EditAuthSettingsTestTags.getProviderCheckboxTag(provider))
+            )
+            CoreBodyText(
+                text = provider.name,
+                modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
+            )
+        }
+    }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Checkbox(
+            checked = state.isRegistrationEnabled,
+            onCheckedChange = onRegistrationEnabledToggled,
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.IS_REGISTRATION_ENABLED_CHECKBOX)
+        )
+        CoreBodyText(
+            text = userUi.isRegistrationEnabled,
+            modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
+        )
+    }
+}
+
+@Composable
+private fun LimitsAndExpirationsSection(
+    state: EditAuthSettingsScreenState.Content,
+    onMaxTotalIdentifiersChanged: (String) -> Unit,
+    onMaxEmailIdentifiersChanged: (String) -> Unit,
+    onMaxPhoneIdentifiersChanged: (String) -> Unit,
+    onMaxIdentifiersPerExternalProviderChanged: (String) -> Unit,
+    onUserNicknameMinLengthChanged: (String) -> Unit,
+    onUserNicknameMaxLengthChanged: (String) -> Unit,
+    onUserDisplayNameMinLengthChanged: (String) -> Unit,
+    onUserDisplayNameMaxLengthChanged: (String) -> Unit,
+    onIsUserNicknameChangeAllowedToggled: (Boolean) -> Unit,
+    onMaxActiveSessionsForOpenUserChanged: (String) -> Unit,
+    onMaxActiveSessionsForManagementUserChanged: (String) -> Unit,
+    onAccessTokenExpirationSecondsChanged: (String) -> Unit,
+    onRefreshTokenExpirationSecondsChanged: (String) -> Unit,
+    onAccountDeletionGracePeriodSecondsChanged: (String) -> Unit,
+    onAccountDeletionCheckIntervalSecondsChanged: (String) -> Unit
+) {
+    val userUi = LocalUserStrings.current.ui
+
+    CoreTitleText(
+        text = userUi.limitsAndExpirations,
+        style = MaterialTheme.typography.titleMedium,
+        modifier = Modifier.testTag(EditAuthSettingsTestTags.SECTION_LIMITS_TITLE)
+    )
+
+    CoreOutlinedTextField(
+        value = state.maxTotalIdentifiers,
+        onValueChange = onMaxTotalIdentifiersChanged,
+        label = { CoreBodyText(userUi.maxTotalIdentifiers) },
+        placeholder = { CoreBodyText(userUi.maxTotalIdentifiers) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_TOTAL_IDENTIFIERS_INPUT)
+    )
+
+    CoreOutlinedTextField(
+        value = state.maxEmailIdentifiers,
+        onValueChange = onMaxEmailIdentifiersChanged,
+        label = { CoreBodyText(userUi.maxEmailIdentifiers) },
+        placeholder = { CoreBodyText(userUi.maxEmailIdentifiers) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_EMAIL_IDENTIFIERS_INPUT)
+    )
+
+    CoreOutlinedTextField(
+        value = state.maxPhoneIdentifiers,
+        onValueChange = onMaxPhoneIdentifiersChanged,
+        label = { CoreBodyText(userUi.maxPhoneIdentifiers) },
+        placeholder = { CoreBodyText(userUi.maxPhoneIdentifiers) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_PHONE_IDENTIFIERS_INPUT)
+    )
+
+    CoreOutlinedTextField(
+        value = state.maxIdentifiersPerExternalProvider,
+        onValueChange = onMaxIdentifiersPerExternalProviderChanged,
+        label = { CoreBodyText(userUi.maxIdentifiersPerExternalProvider) },
+        placeholder = { CoreBodyText(userUi.maxIdentifiersPerExternalProvider) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_IDENTIFIERS_PER_EXTERNAL_PROVIDER_INPUT)
+    )
+
+    CoreOutlinedTextField(
+        value = state.userNicknameMinLength,
+        onValueChange = onUserNicknameMinLengthChanged,
+        label = { CoreBodyText(userUi.userNicknameMinLength) },
+        placeholder = { CoreBodyText(userUi.userNicknameMinLength) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.testTag(EditAuthSettingsTestTags.USER_NICKNAME_MIN_LENGTH_INPUT)
+    )
+
+    CoreOutlinedTextField(
+        value = state.userNicknameMaxLength,
+        onValueChange = onUserNicknameMaxLengthChanged,
+        label = { CoreBodyText(userUi.userNicknameMaxLength) },
+        placeholder = { CoreBodyText(userUi.userNicknameMaxLength) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.testTag(EditAuthSettingsTestTags.USER_NICKNAME_MAX_LENGTH_INPUT)
+    )
+
+    CoreOutlinedTextField(
+        value = state.userDisplayNameMinLength,
+        onValueChange = onUserDisplayNameMinLengthChanged,
+        label = { CoreBodyText(userUi.userDisplayNameMinLength) },
+        placeholder = { CoreBodyText(userUi.userDisplayNameMinLength) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.testTag(EditAuthSettingsTestTags.USER_DISPLAY_NAME_MIN_LENGTH_INPUT)
+    )
+
+    CoreOutlinedTextField(
+        value = state.userDisplayNameMaxLength,
+        onValueChange = onUserDisplayNameMaxLengthChanged,
+        label = { CoreBodyText(userUi.userDisplayNameMaxLength) },
+        placeholder = { CoreBodyText(userUi.userDisplayNameMaxLength) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.testTag(EditAuthSettingsTestTags.USER_DISPLAY_NAME_MAX_LENGTH_INPUT)
+    )
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Checkbox(
+            checked = state.isUserNicknameChangeAllowed,
+            onCheckedChange = onIsUserNicknameChangeAllowedToggled,
+            modifier = Modifier.testTag(EditAuthSettingsTestTags.IS_USER_NICKNAME_CHANGE_ALLOWED_CHECKBOX)
+        )
+        CoreBodyText(
+            text = userUi.isUserNicknameChangeAllowed,
+            modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
+        )
+    }
+
+    CoreOutlinedTextField(
+        value = state.maxActiveSessionsForOpenUser,
+        onValueChange = onMaxActiveSessionsForOpenUserChanged,
+        label = { CoreBodyText(userUi.maxActiveSessionsOpen) },
+        placeholder = { CoreBodyText(userUi.maxActiveSessionsOpen) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_ACTIVE_SESSIONS_OPEN_INPUT)
+    )
+
+    CoreOutlinedTextField(
+        value = state.maxActiveSessionsForManagementUser,
+        onValueChange = onMaxActiveSessionsForManagementUserChanged,
+        label = { CoreBodyText(userUi.maxActiveSessionsManagement) },
+        placeholder = { CoreBodyText(userUi.maxActiveSessionsManagement) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.testTag(EditAuthSettingsTestTags.MAX_ACTIVE_SESSIONS_MANAGEMENT_INPUT)
+    )
+
+    CoreOutlinedTextField(
+        value = state.accessTokenExpirationSeconds,
+        onValueChange = onAccessTokenExpirationSecondsChanged,
+        label = { CoreBodyText(userUi.accessTokenExpirationSeconds) },
+        placeholder = { CoreBodyText(userUi.accessTokenExpirationSeconds) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.testTag(EditAuthSettingsTestTags.ACCESS_TOKEN_EXPIRATION_INPUT)
+    )
+
+    CoreOutlinedTextField(
+        value = state.refreshTokenExpirationSeconds,
+        onValueChange = onRefreshTokenExpirationSecondsChanged,
+        label = { CoreBodyText(userUi.refreshTokenExpirationSeconds) },
+        placeholder = { CoreBodyText(userUi.refreshTokenExpirationSeconds) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.testTag(EditAuthSettingsTestTags.REFRESH_TOKEN_EXPIRATION_INPUT)
+    )
+
+    CoreOutlinedTextField(
+        value = state.accountDeletionGracePeriodSeconds,
+        onValueChange = onAccountDeletionGracePeriodSecondsChanged,
+        label = { CoreBodyText(userUi.accountDeletionDelaySeconds) },
+        placeholder = { CoreBodyText(userUi.accountDeletionDelaySeconds) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.testTag(EditAuthSettingsTestTags.ACCOUNT_DELETION_DELAY_INPUT)
+    )
+
+    CoreOutlinedTextField(
+        value = state.accountDeletionCheckIntervalSeconds,
+        onValueChange = onAccountDeletionCheckIntervalSecondsChanged,
+        label = { CoreBodyText(userUi.accountDeletionCheckIntervalSeconds) },
+        placeholder = { CoreBodyText(userUi.accountDeletionCheckIntervalSeconds) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.testTag(EditAuthSettingsTestTags.ACCOUNT_DELETION_CHECK_INTERVAL_INPUT)
+    )
+}
+
+@Composable
+private fun EmailRestrictionSettingsSection(
+    state: EditAuthSettingsScreenState.Content,
+    onOpenEmailBlacklistEnabledToggled: (Boolean) -> Unit,
+    onOpenEmailBlacklistChanged: (String) -> Unit,
+    onOpenEmailWhitelistEnabledToggled: (Boolean) -> Unit,
+    onOpenEmailWhitelistChanged: (String) -> Unit,
+    onManagementEmailBlacklistEnabledToggled: (Boolean) -> Unit,
+    onManagementEmailBlacklistChanged: (String) -> Unit,
+    onManagementEmailWhitelistEnabledToggled: (Boolean) -> Unit,
+    onManagementEmailWhitelistChanged: (String) -> Unit
+) {
+    val userUi = LocalUserStrings.current.ui
+
+    CoreTitleText(
+        text = userUi.openEmailRestrictionPolicy,
+        style = MaterialTheme.typography.titleMedium
+    )
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Checkbox(
+            checked = state.openEmailBlacklistEnabled,
+            onCheckedChange = onOpenEmailBlacklistEnabledToggled
+        )
+        CoreBodyText(
+            text = userUi.blacklistEnabled,
+            modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
+        )
+    }
+
+    CoreOutlinedTextField(
+        value = state.openEmailBlacklist,
+        onValueChange = onOpenEmailBlacklistChanged,
+        label = { CoreBodyText(userUi.emailBlacklistPlaceholder) },
+        placeholder = { CoreBodyText(userUi.emailBlacklistPlaceholder) }
+    )
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Checkbox(
+            checked = state.openEmailWhitelistEnabled,
+            onCheckedChange = onOpenEmailWhitelistEnabledToggled
+        )
+        CoreBodyText(
+            text = userUi.whitelistEnabled,
+            modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
+        )
+    }
+
+    CoreOutlinedTextField(
+        value = state.openEmailWhitelist,
+        onValueChange = onOpenEmailWhitelistChanged,
+        label = { CoreBodyText(userUi.emailWhitelistPlaceholder) },
+        placeholder = { CoreBodyText(userUi.emailWhitelistPlaceholder) }
+    )
+
+    CoreTitleText(
+        text = userUi.managementEmailRestrictionPolicy,
+        style = MaterialTheme.typography.titleMedium
+    )
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Checkbox(
+            checked = state.managementEmailBlacklistEnabled,
+            onCheckedChange = onManagementEmailBlacklistEnabledToggled
+        )
+        CoreBodyText(
+            text = userUi.blacklistEnabled,
+            modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
+        )
+    }
+
+    CoreOutlinedTextField(
+        value = state.managementEmailBlacklist,
+        onValueChange = onManagementEmailBlacklistChanged,
+        label = { CoreBodyText(userUi.emailBlacklistPlaceholder) },
+        placeholder = { CoreBodyText(userUi.emailBlacklistPlaceholder) }
+    )
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Checkbox(
+            checked = state.managementEmailWhitelistEnabled,
+            onCheckedChange = onManagementEmailWhitelistEnabledToggled
+        )
+        CoreBodyText(
+            text = userUi.blacklistEnabled,
+            modifier = Modifier.padding(start = CoreTheme.dimens.paddingSmall)
+        )
+    }
+
+    CoreOutlinedTextField(
+        value = state.managementEmailWhitelist,
+        onValueChange = onManagementEmailWhitelistChanged,
+        label = { CoreBodyText(userUi.emailWhitelistPlaceholder) },
+        placeholder = { CoreBodyText(userUi.emailWhitelistPlaceholder) }
+    )
+}
+
+@Composable
+private fun ErrorText(
+    error: AppError?,
+    testTag: String
+) {
     AnimatedVisibility(
         visible = error != null,
         enter = fadeIn() + expandVertically(),
@@ -560,7 +660,7 @@ private fun EditAuthSettingsScreenPreviewContent(state: EditAuthSettingsScreenSt
 }
 
 @InternalApi
-@ScreenSizePreviews
+@PreviewScreenSizes
 @Composable
 private fun ScreenSizePreview(
     @PreviewParameter(EditAuthSettingsPreviewProvider::class) state: EditAuthSettingsScreenState
@@ -571,7 +671,7 @@ private fun ScreenSizePreview(
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview(
     @PreviewParameter(EditAuthSettingsPreviewProvider::class) state: EditAuthSettingsScreenState
@@ -582,7 +682,7 @@ private fun ThemePreview(
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview(
     @PreviewParameter(EditAuthSettingsPreviewProvider::class) state: EditAuthSettingsScreenState
@@ -592,33 +692,44 @@ private fun FontScalePreview(
     }
 }
 
-object EditAuthSettingsTestTags {
-    const val TITLE = "EditAuthSettings_Title"
-    const val BACK_BUTTON = "EditAuthSettings_BackButton"
-    const val GLOBAL_ERROR = "EditAuthSettings_GlobalError"
+public object EditAuthSettingsTestTags {
+    public const val TITLE: String = "EditAuthSettings_Title"
+    public const val BACK_BUTTON: String = "EditAuthSettings_BackButton"
+    public const val GLOBAL_ERROR: String = "EditAuthSettings_GlobalError"
 
-    const val SECTION_PROVIDERS_TITLE = "EditAuthSettings_SectionProvidersTitle"
-    fun getProviderCheckboxTag(provider: UserAuthProvider) = "EditAuthSettings_ProviderCheckbox_${provider.name}"
-    const val IS_REGISTRATION_ENABLED_CHECKBOX = "EditAuthSettings_IsRegistrationEnabledCheckbox"
+    public const val SECTION_PROVIDERS_TITLE: String = "EditAuthSettings_SectionProvidersTitle"
+    public const val IS_REGISTRATION_ENABLED_CHECKBOX: String = "EditAuthSettings_IsRegistrationEnabledCheckbox"
 
-    const val SECTION_LIMITS_TITLE = "EditAuthSettings_SectionLimitsTitle"
-    const val MAX_TOTAL_IDENTIFIERS_INPUT = "EditAuthSettings_MaxTotalIdentifiersInput"
-    const val MAX_EMAIL_IDENTIFIERS_INPUT = "EditAuthSettings_MaxEmailIdentifiersInput"
-    const val MAX_PHONE_IDENTIFIERS_INPUT = "EditAuthSettings_MaxPhoneIdentifiersInput"
-    const val MAX_IDENTIFIERS_PER_EXTERNAL_PROVIDER_INPUT = "EditAuthSettings_MaxIdentifiersPerExternalProviderInput"
-    const val USER_NICKNAME_MIN_LENGTH_INPUT = "EditAuthSettings_UserNicknameMinLengthInput"
-    const val USER_NICKNAME_MAX_LENGTH_INPUT = "EditAuthSettings_UserNicknameMaxLengthInput"
-    const val USER_DISPLAY_NAME_MIN_LENGTH_INPUT = "EditAuthSettings_UserDisplayNameMinLengthInput"
-    const val USER_DISPLAY_NAME_MAX_LENGTH_INPUT = "EditAuthSettings_UserDisplayNameMaxLengthInput"
-    const val IS_USER_NICKNAME_CHANGE_ALLOWED_CHECKBOX = "EditAuthSettings_IsUserNicknameChangeAllowedCheckbox"
-    const val MAX_ACTIVE_SESSIONS_OPEN_INPUT = "EditAuthSettings_MaxActiveSessionsOpenInput"
-    const val MAX_ACTIVE_SESSIONS_MANAGEMENT_INPUT = "EditAuthSettings_MaxActiveSessionsManagementInput"
-    const val ACCESS_TOKEN_EXPIRATION_INPUT = "EditAuthSettings_AccessTokenExpirationInput"
-    const val REFRESH_TOKEN_EXPIRATION_INPUT = "EditAuthSettings_RefreshTokenExpirationInput"
-    const val ACCOUNT_DELETION_DELAY_INPUT = "EditAuthSettings_AccountDeletionDelayInput"
-    const val ACCOUNT_DELETION_CHECK_INTERVAL_INPUT = "EditAuthSettings_AccountDeletionCheckIntervalInput"
+    public const val SECTION_LIMITS_TITLE: String = "EditAuthSettings_SectionLimitsTitle"
+    public const val MAX_TOTAL_IDENTIFIERS_INPUT: String = "EditAuthSettings_MaxTotalIdentifiersInput"
+    public const val MAX_EMAIL_IDENTIFIERS_INPUT: String = "EditAuthSettings_MaxEmailIdentifiersInput"
+    public const val MAX_PHONE_IDENTIFIERS_INPUT: String = "EditAuthSettings_MaxPhoneIdentifiersInput"
+    public const val MAX_IDENTIFIERS_PER_EXTERNAL_PROVIDER_INPUT: String =
+        "EditAuthSettings_MaxIdentifiersPerExternalProviderInput"
+    public const val USER_NICKNAME_MIN_LENGTH_INPUT: String = "EditAuthSettings_UserNicknameMinLengthInput"
+    public const val USER_NICKNAME_MAX_LENGTH_INPUT: String = "EditAuthSettings_UserNicknameMaxLengthInput"
+    public const val USER_DISPLAY_NAME_MIN_LENGTH_INPUT: String = "EditAuthSettings_UserDisplayNameMinLengthInput"
+    public const val USER_DISPLAY_NAME_MAX_LENGTH_INPUT: String = "EditAuthSettings_UserDisplayNameMaxLengthInput"
+    public const val IS_USER_NICKNAME_CHANGE_ALLOWED_CHECKBOX: String =
+        "EditAuthSettings_IsUserNicknameChangeAllowedCheckbox"
+    public const val MAX_ACTIVE_SESSIONS_OPEN_INPUT: String = "EditAuthSettings_MaxActiveSessionsOpenInput"
+    public const val MAX_ACTIVE_SESSIONS_MANAGEMENT_INPUT: String = "EditAuthSettings_MaxActiveSessionsManagementInput"
+    public const val ACCESS_TOKEN_EXPIRATION_INPUT: String = "EditAuthSettings_AccessTokenExpirationInput"
+    public const val REFRESH_TOKEN_EXPIRATION_INPUT: String = "EditAuthSettings_RefreshTokenExpirationInput"
+    public const val ACCOUNT_DELETION_DELAY_INPUT: String = "EditAuthSettings_AccountDeletionDelayInput"
+    public const val ACCOUNT_DELETION_CHECK_INTERVAL_INPUT: String =
+        "EditAuthSettings_AccountDeletionCheckIntervalInput"
 
-    const val SAVE_ERROR_TEXT = "EditAuthSettings_SaveErrorText"
-    const val SAVE_BUTTON = "EditAuthSettings_SaveButton"
-    const val RESET_BUTTON = "EditAuthSettings_ResetButton"
+    public const val SAVE_ERROR_TEXT: String = "EditAuthSettings_SaveErrorText"
+    public const val SAVE_BUTTON: String = "EditAuthSettings_SaveButton"
+    public const val RESET_BUTTON: String = "EditAuthSettings_ResetButton"
+
+    /**
+     * Generates a test tag for an authentication provider checkbox.
+     *
+     * @param provider The target authentication provider.
+     * @return Test tag string for the provider checkbox.
+     */
+    public fun getProviderCheckboxTag(provider: UserAuthProvider): String =
+        "EditAuthSettings_ProviderCheckbox_${provider.name}"
 }

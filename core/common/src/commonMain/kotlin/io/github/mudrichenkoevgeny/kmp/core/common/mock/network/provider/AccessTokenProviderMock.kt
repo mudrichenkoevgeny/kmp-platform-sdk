@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * @param token Initial access token value exposed via [accessTokenFlow].
  */
 @InternalApi
-class AccessTokenProviderMock(
+public class AccessTokenProviderMock(
     token: String? = "mock_access_token"
 ) : AccessTokenProvider {
     override val accessTokenFlow: StateFlow<String?> = MutableStateFlow(token).asStateFlow()

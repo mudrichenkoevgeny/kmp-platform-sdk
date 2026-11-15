@@ -23,7 +23,9 @@ sealed interface ManagementAppDeepLinkRoute {
      */
     data class Management(
         val destination: NavigationRoute,
-        override val tab: MainScreenComponent.Config = if (destination.route.contains("/self") || destination.route.contains("/user")) { // todo refactor
+        override val tab: MainScreenComponent.Config = if (destination.route.contains(
+                "/self") || destination.route.contains("/user")
+        ) { // todo refactor
             MainScreenComponent.Config.User
         } else {
             MainScreenComponent.Config.Management

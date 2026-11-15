@@ -9,19 +9,22 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+/**
+ * Mock implementation of [ManagementSecuritySettingsRepository] for testing.
+ */
 @InternalApi
-class ManagementSecuritySettingsRepositoryMock(
+public class ManagementSecuritySettingsRepositoryMock(
     initialSettings: ManagementSecuritySettings? = createTestManagementSecuritySettings()
 ) : ManagementSecuritySettingsRepository {
 
     private val _settings = MutableStateFlow(initialSettings)
 
-    var getManagementSecuritySettingsResult: AppResult<ManagementSecuritySettings>? = null
-    var refreshManagementSecuritySettingsResult: AppResult<ManagementSecuritySettings>? = null
-    var saveRemoteSecuritySettingsResult: AppResult<ManagementSecuritySettings>? = null
-    var resetRemoteSecuritySettingsResult: AppResult<ManagementSecuritySettings>? = null
+    public var getManagementSecuritySettingsResult: AppResult<ManagementSecuritySettings>? = null
+    public var refreshManagementSecuritySettingsResult: AppResult<ManagementSecuritySettings>? = null
+    public var saveRemoteSecuritySettingsResult: AppResult<ManagementSecuritySettings>? = null
+    public var resetRemoteSecuritySettingsResult: AppResult<ManagementSecuritySettings>? = null
 
-    override suspend fun getManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
+    public override suspend fun getManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
         val customResult = getManagementSecuritySettingsResult
         if (customResult != null) {
             return customResult
@@ -36,7 +39,7 @@ class ManagementSecuritySettingsRepositoryMock(
         }
     }
 
-    override suspend fun saveRemoteManagementSecuritySettings(securitySettings: ManagementSecuritySettings): AppResult<ManagementSecuritySettings> {
+    public override suspend fun saveRemoteManagementSecuritySettings(securitySettings: ManagementSecuritySettings): AppResult<ManagementSecuritySettings> {
         val customResult = saveRemoteSecuritySettingsResult
         if (customResult != null) {
             return customResult
@@ -45,7 +48,7 @@ class ManagementSecuritySettingsRepositoryMock(
         return AppResult.Success(securitySettings)
     }
 
-    override suspend fun refreshManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
+    public override suspend fun refreshManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
         val customResult = refreshManagementSecuritySettingsResult
         if (customResult != null) {
             return customResult
@@ -53,11 +56,11 @@ class ManagementSecuritySettingsRepositoryMock(
         return getManagementSecuritySettings()
     }
 
-    override suspend fun updateManagementSecuritySettings(securitySettings: ManagementSecuritySettings) {
+    public override suspend fun updateManagementSecuritySettings(securitySettings: ManagementSecuritySettings) {
         _settings.value = securitySettings
     }
 
-    override suspend fun resetRemoteManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
+    public override suspend fun resetRemoteManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
         val customResult = resetRemoteSecuritySettingsResult
         if (customResult != null) {
             return customResult
@@ -65,5 +68,5 @@ class ManagementSecuritySettingsRepositoryMock(
         return getManagementSecuritySettings()
     }
 
-    override fun observeManagementSecuritySettings(): Flow<ManagementSecuritySettings?> = _settings.asStateFlow()
+    public override fun observeManagementSecuritySettings(): Flow<ManagementSecuritySettings?> = _settings.asStateFlow()
 }

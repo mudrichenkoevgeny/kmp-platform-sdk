@@ -18,14 +18,14 @@ import kotlinx.coroutines.CoroutineScope
  * @param refreshTokenUseCase Use case for auto-reauth.
  * @param scope Coroutine scope for push updates.
  */
-class ManagementUserWebSocketModule(
+public class ManagementUserWebSocketModule(
     private val userStorage: UserStorage,
     private val userRepository: UserRepository,
     private val authStorage: AuthStorage,
     private val refreshTokenUseCase: RefreshTokenUseCase,
     private val scope: CoroutineScope
 ) {
-    val userWebSocketMessageHandler: WebSocketMessageHandler by lazy {
+    public val userWebSocketMessageHandler: WebSocketMessageHandler by lazy {
         UserWebSocketMessageHandler(
             userStorage = userStorage,
             userRepository = userRepository,

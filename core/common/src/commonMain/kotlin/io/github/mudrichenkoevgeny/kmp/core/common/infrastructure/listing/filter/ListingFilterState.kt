@@ -3,15 +3,15 @@ package io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filte
 /**
  * Represents the active state of a specific filter applied to a listing screen.
  */
-sealed interface ListingFilterState
+public sealed interface ListingFilterState
 
 /**
  * Represents the state of a text-based filter (e.g., search input).
  *
  * @property value The current text query entered by the user.
  */
-data class TextListingFilterState(
-    val value: String
+public data class TextListingFilterState(
+    public val value: String
 ) : ListingFilterState
 
 /**
@@ -19,8 +19,8 @@ data class TextListingFilterState(
  *
  * @property selectedIds The set of unique identifiers of the currently selected options.
  */
-data class ChoiceListingFilterState(
-    val selectedIds: Set<String>
+public data class ChoiceListingFilterState(
+    public val selectedIds: Set<String>
 ) : ListingFilterState
 
 /**
@@ -28,8 +28,8 @@ data class ChoiceListingFilterState(
  *
  * @property value The current boolean state of the filter.
  */
-data class BooleanListingFilterState(
-    val value: Boolean
+public data class BooleanListingFilterState(
+    public val value: Boolean
 ) : ListingFilterState
 
 /**
@@ -37,6 +37,6 @@ data class BooleanListingFilterState(
  *
  * @property value The current numeric value entered by the user.
  */
-data class NumberListingFilterState(
-    val value: Long
+public data class NumberListingFilterState(
+    public val value: Long
 ) : ListingFilterState

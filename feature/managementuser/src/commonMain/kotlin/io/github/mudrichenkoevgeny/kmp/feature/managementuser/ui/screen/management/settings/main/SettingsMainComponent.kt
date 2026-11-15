@@ -3,19 +3,19 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 /**
  * Component driving the main settings screen in management portal.
  */
-interface SettingsMainComponent {
+public interface SettingsMainComponent {
     /** Navigates to edit auth settings. */
-    fun onEditAuthSettingsClick()
+    public fun onEditAuthSettingsClick()
 
     /** Navigates to edit global settings. */
-    fun onEditGlobalSettingsClick()
+    public fun onEditGlobalSettingsClick()
 
     /** Navigates to edit security settings. */
-    fun onEditSecuritySettingsClick()
+    public fun onEditSecuritySettingsClick()
 
     /** Navigates to edit storage settings. */
-    fun onEditStorageSettingsClick()
+    public fun onEditStorageSettingsClick()
 
     /** Navigates back. */
-    fun onBackClick()
+    public fun onBackClick()
 }

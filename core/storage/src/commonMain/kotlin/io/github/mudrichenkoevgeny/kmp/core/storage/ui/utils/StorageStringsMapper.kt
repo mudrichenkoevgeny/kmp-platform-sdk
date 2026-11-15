@@ -6,7 +6,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.localization.U
 /**
  * Utility for resolving localized strings related to storage categories.
  */
-object StorageStringsMapper {
+public object StorageStringsMapper {
 
     /**
      * Returns the localized string for a given [StorageCategory].
@@ -15,13 +15,14 @@ object StorageStringsMapper {
      * @param strings Localized UI strings bundle.
      * @return Localized category label string.
      */
-    fun getCategoryString(category: StorageCategory, strings: UiStrings): String {
-        return when (category) {
-            StorageCategory.IMAGE -> strings.categoryImage
-            StorageCategory.VIDEO -> strings.categoryVideo
-            StorageCategory.AUDIO -> strings.categoryAudio
-            StorageCategory.DOCUMENT -> strings.categoryDocument
-            StorageCategory.OTHER -> strings.categoryOther
-        }
+    public fun getCategoryString(
+        category: StorageCategory,
+        strings: UiStrings
+    ): String = when (category) {
+        StorageCategory.IMAGE -> strings.categoryImage
+        StorageCategory.VIDEO -> strings.categoryVideo
+        StorageCategory.AUDIO -> strings.categoryAudio
+        StorageCategory.DOCUMENT -> strings.categoryDocument
+        StorageCategory.OTHER -> strings.categoryOther
     }
 }

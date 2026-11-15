@@ -15,9 +15,9 @@ import io.ktor.http.Url
 /**
  * Deep link URL parser for client user profile, sessions, identifiers, and TOTP settings routes.
  */
-class UserDeepLinkParser : DeepLinkParser<ClientUserNavigation> {
+public class UserDeepLinkParser : DeepLinkParser<ClientUserNavigation> {
 
-    override fun parse(url: Url): ClientUserNavigation? {
+    public override fun parse(url: Url): ClientUserNavigation? {
         val path = url.encodedPath.trimEnd('/').ifEmpty { "/" }
         val segments = path.split('/').filter { it.isNotEmpty() }
 
@@ -35,18 +35,23 @@ class UserDeepLinkParser : DeepLinkParser<ClientUserNavigation> {
             ?: ClientUserNavigation.Main
     }
 
-    private fun parseTotpRoute(path: String, queryMap: Map<String, Any?>): ClientUserNavigation? {
-        return when {
-            path == ClientUserNavigation.BASE_USER_ROUTE || path == ClientUserNavigation.Main.route ->
-                ClientUserNavigation.Main
-            path == ClientUserNavigation.UserEdit.route ->
-                ClientUserNavigation.UserEdit
-            path == ClientUserNavigation.BASE_TOTP_ROUTE || path == ClientUserNavigation.TotpMain.ROUTE ->
-                ClientUserNavigation.TotpMain(TotpMainParams.parse(queryMap))
-            path == ClientUserNavigation.TotpRecoveryCodes.route ->
-                ClientUserNavigation.TotpRecoveryCodes
-            else -> null
-        }
+    private fun parseTotpRoute(
+        path: String,
+        queryMap: Map<String, Any?>
+    ): ClientUserNavigation? = when {
+        path == ClientUserNavigation.BASE_USER_ROUTE || path == ClientUserNavigation.Main.route ->
+            ClientUserNavigation.Main
+
+        path == ClientUserNavigation.UserEdit.route ->
+            ClientUserNavigation.UserEdit
+
+        path == ClientUserNavigation.BASE_TOTP_ROUTE || path == ClientUserNavigation.TotpMain.ROUTE ->
+            ClientUserNavigation.TotpMain(TotpMainParams.parse(queryMap))
+
+        path == ClientUserNavigation.TotpRecoveryCodes.route ->
+            ClientUserNavigation.TotpRecoveryCodes
+
+        else -> null
     }
 
     private fun parseSessionsRoute(
@@ -94,7 +99,9 @@ class UserDeepLinkParser : DeepLinkParser<ClientUserNavigation> {
         if (segments.size >= 3 && "/${segments[0]}/${segments[1]}" == ClientUserNavigation.IdentifierList.ROUTE) {
             val identifierId = segments[2].toUserIdentifierIdOrNull()
             return if (identifierId != null) {
-                ClientUserNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId.asHexDashString()))
+                ClientUserNavigation.IdentifierDetail(
+                    IdentifierDetailParams(identifierId = identifierId.asHexDashString())
+                )
             } else {
                 ClientUserNavigation.IdentifierList(SelfIdentifierListParams.parse(queryMap))
             }

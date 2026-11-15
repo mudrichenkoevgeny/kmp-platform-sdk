@@ -10,9 +10,12 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.manageme
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.NavigationRoute
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.management.ManagementMainNavigation
 
+/**
+ * Mock implementation of [ManagementRootComponent] for testing.
+ */
 @InternalApi
-class ManagementRootComponentMock : ManagementRootComponent {
-    override val stack: Value<ChildStack<NavigationRoute, ManagementRootComponent.Child>> = MutableValue(
+public class ManagementRootComponentMock : ManagementRootComponent {
+    public override val stack: Value<ChildStack<NavigationRoute, ManagementRootComponent.Child>> = MutableValue(
         ChildStack(
             active = Child.Created(
                 configuration = ManagementMainNavigation.Main,
@@ -22,5 +25,5 @@ class ManagementRootComponentMock : ManagementRootComponent {
         )
     )
 
-    override fun navigateTo(destination: NavigationRoute) { }
+    public override fun navigateTo(destination: NavigationRoute): Unit = Unit
 }

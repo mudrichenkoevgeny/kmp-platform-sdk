@@ -9,14 +9,14 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.security.password.EmailPasswordChangeRequest
 
 /** Manage user identifiers (email, phone, external providers) and related confirmations. */
-interface SelfManagementIdentifiersApi {
+public interface SelfManagementIdentifiersApi {
     /**
      * Retrieves specific identifier details by its unique id.
      *
      * @param userIdentifierId Unique identifier payload id.
      * @return Detailed identifier info or a mapped failure.
      */
-    suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivatePayload>
+    public suspend fun getUserIdentifier(userIdentifierId: UserIdentifierId): AppResult<UserIdentifierPrivatePayload>
 
     /**
      * Returns a paginated and filtered list of identifiers linked to the current authenticated management account.
@@ -24,7 +24,7 @@ interface SelfManagementIdentifiersApi {
      * @param params Query and filter parameters DTO.
      * @return Paginated result containing matching user identifier payloads, or a mapped failure.
      */
-    suspend fun getUserIdentifiers(
+    public suspend fun getUserIdentifiers(
         params: SelfIdentifierListParams? = null
     ): AppResult<PagedResult<UserIdentifierSummaryPayload>>
 
@@ -35,7 +35,7 @@ interface SelfManagementIdentifiersApi {
      * @param request Current and new password payload from the shared contract.
      * @return Empty success indicator, or a mapped failure.
      */
-    suspend fun emailChangePassword(
+    public suspend fun emailChangePassword(
         userIdentifierId: UserIdentifierId,
         request: EmailPasswordChangeRequest
     ): AppResult<Unit>

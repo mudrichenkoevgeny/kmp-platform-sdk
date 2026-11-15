@@ -20,7 +20,6 @@ kotlin {
         }
     }
 
-    // TODO: [IOS] Uncomment when starting iOS development
 //    listOf(
 //        iosArm64(),
 //        iosSimulatorArm64()
@@ -31,10 +30,10 @@ kotlin {
 //        }
 //    }
 
-    wasmJs {
-        browser()
-        binaries.executable()
-    }
+//    wasmJs {
+//        browser()
+//        binaries.executable()
+//    }
 
     sourceSets {
         commonMain.dependencies {
@@ -85,10 +84,10 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
         }
 
-        wasmJsTest.dependencies {
-            implementation(kotlin("test"))
-            implementation(libs.kotlinx.coroutines.test)
-        }
+//        wasmJsTest.dependencies {
+//            implementation(kotlin("test"))
+//            implementation(libs.kotlinx.coroutines.test)
+//        }
 
         androidMain.dependencies {
             // Storage
@@ -100,7 +99,6 @@ kotlin {
             api(libs.crypto.tink.android)
         }
 
-        // TODO: [IOS] Uncomment when starting iOS development
 //        iosMain.dependencies {
 //            // Ktor
 //            implementation(libs.ktor.client.darwin)

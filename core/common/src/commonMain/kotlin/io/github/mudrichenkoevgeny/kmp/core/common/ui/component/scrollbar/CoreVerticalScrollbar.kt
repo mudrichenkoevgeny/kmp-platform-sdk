@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
  * Vertical scrollbar for scrollable columns.
  */
 @Composable
-expect fun CoreVerticalScrollbar(
+public expect fun CoreVerticalScrollbar(
     scrollState: ScrollState,
     modifier: Modifier = Modifier
 )

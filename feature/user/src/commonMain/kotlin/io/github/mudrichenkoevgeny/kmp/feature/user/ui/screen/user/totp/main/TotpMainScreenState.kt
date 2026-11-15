@@ -13,7 +13,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
  * @param actionError error from the last API action.
  * @param initError critical error during state initialization.
  */
-data class TotpMainScreenState(
+public data class TotpMainScreenState(
     val isInitialized: Boolean = false,
     val isEnabled: Boolean = false,
     val code: String = "",
@@ -21,5 +21,6 @@ data class TotpMainScreenState(
     val actionError: AppError? = null,
     val initError: AppError? = null
 ) {
-    val canConfirm: Boolean = code.length == FieldValidator.TOTP_CODE_LENGTH && code.all { it.isDigit() } && !actionLoading
+    public val canConfirm: Boolean =
+        code.length == FieldValidator.TOTP_CODE_LENGTH && code.all { it.isDigit() } && !actionLoading
 }

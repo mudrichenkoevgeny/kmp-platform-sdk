@@ -9,8 +9,11 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.root.UserRoot
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.NavigationRoute
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.client.ClientUserNavigation
 
+/**
+ * Mock implementation of [UserRootComponent] for Compose previews and testing.
+ */
 @InternalApi
-class UserRootComponentMock(
+public class UserRootComponentMock(
     child: UserRootComponent.Child = UserRootComponent.Child.Main(MainUserComponentMock())
 ) : UserRootComponent {
 
@@ -21,14 +24,23 @@ class UserRootComponentMock(
         )
     )
 
-    override val stack: Value<ChildStack<NavigationRoute, UserRootComponent.Child>> = _stack
+    public override val stack: Value<ChildStack<NavigationRoute, UserRootComponent.Child>> = _stack
 
-    fun setChild(configuration: NavigationRoute, child: UserRootComponent.Child) {
+    /**
+     * Updates the current active child step configuration in the root stack.
+     *
+     * @param configuration The route configuration.
+     * @param child The child instance.
+     */
+    public fun setChild(
+        configuration: NavigationRoute,
+        child: UserRootComponent.Child
+    ) {
         _stack.value = ChildStack(
             configuration = configuration,
             instance = child
         )
     }
 
-    override fun navigateTo(destination: NavigationRoute) { }
+    public override fun navigateTo(destination: NavigationRoute): Unit = Unit
 }

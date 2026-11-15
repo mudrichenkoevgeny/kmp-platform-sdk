@@ -19,15 +19,13 @@ import kotlinx.coroutines.SupervisorJob
  * @return A fully wired [StorageComponent] suitable for non-production hosts.
  */
 @InternalApi
-fun storageComponentMock(
+public fun storageComponentMock(
     httpClient: HttpClient = HttpClient(),
     webSocketService: WebSocketService = WebSocketServiceMock(),
     parentScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-): StorageComponent {
-    return StorageComponent(
-        httpClient = httpClient,
-        encryptedSettings = EncryptedSettingsMock(),
-        webSocketService = webSocketService,
-        parentScope = parentScope
-    )
-}
+): StorageComponent = StorageComponent(
+    httpClient = httpClient,
+    encryptedSettings = EncryptedSettingsMock(),
+    webSocketService = webSocketService,
+    parentScope = parentScope
+)

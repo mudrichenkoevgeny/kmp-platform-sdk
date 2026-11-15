@@ -10,8 +10,8 @@ import androidx.compose.runtime.setValue
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.totp.LoginByTotpScreenState
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpStepConfig
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.root.UserRootComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpStepConfig
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.navigation.deeplink.ManagementAppDeepLinkParser
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main.MainScreenComponent
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.toFullUrl
@@ -33,9 +33,9 @@ private const val EVENT_POPSTATE = "popstate"
 private fun isTopLevelRootPath(path: String): Boolean {
     val cleanPath = path.substringBefore('?').substringBefore('#')
     return cleanPath == "/" ||
-            cleanPath == PATH_USER_ROOT ||
-            cleanPath == PATH_SELF_USER_ROOT ||
-            cleanPath == PATH_MANAGEMENT_ROOT
+        cleanPath == PATH_USER_ROOT ||
+        cleanPath == PATH_SELF_USER_ROOT ||
+        cleanPath == PATH_MANAGEMENT_ROOT
 }
 
 private fun getAncestorPaths(fullPath: String): List<String> {
@@ -146,7 +146,9 @@ actual fun SetupBrowserHistory(
             window.history.back()
         } else if (historyStack.size == 1 && historyStack[0] == activePath) {
             window.history.replaceState(null, "", activePath)
-        } else if (historyStack.size == 1 && historyStack[0].startsWith(activePath.substringBefore('?')) && activePath != "/") {
+        } else if (historyStack.size == 1 && historyStack[0].startsWith(
+                activePath.substringBefore('?')) && activePath != "/"
+        ) {
             historyStack[0] = activePath
             window.history.replaceState(null, "", activePath)
         } else if (isTopLevelRootPath(activePath)) {
@@ -212,7 +214,8 @@ private fun calculateActivePath(
                 val totpChild = userStackState.active.instance
                 if (totpChild is UserRootComponent.Child.TotpMain) {
                     val totpStackState by totpChild.component.stack.subscribeAsState()
-                    val step = if (totpStackState.active.configuration is TotpStepConfig.Setup) TotpStep.SETUP else TotpStep.OVERVIEW
+                    val step =
+                        if (totpStackState.active.configuration is TotpStepConfig.Setup) TotpStep.SETUP else TotpStep.OVERVIEW
                     ClientUserNavigation.TotpMain(TotpMainParams(totpStep = step))
                 } else {
                     currentRoute
@@ -226,6 +229,7 @@ private fun calculateActivePath(
             val query = if (absoluteUrl.encodedQuery.isEmpty()) "" else "?${absoluteUrl.encodedQuery}"
             path + query
         }
+
         is MainScreenComponent.Child.ManagementChild -> {
             val managementStackState by activeChild.component.stack.subscribeAsState()
             val currentRoute = managementStackState.active.configuration

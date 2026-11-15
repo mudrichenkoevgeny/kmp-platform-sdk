@@ -12,22 +12,27 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.reques
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.login.LoginByPhoneRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToPhoneRequest
 
+/**
+ * Mock implementation of [OpenLoginApi] for unit and UI testing.
+ */
 @InternalApi
-open class OpenLoginApiMock : OpenLoginApi {
+public open class OpenLoginApiMock : OpenLoginApi {
 
-    var loginByEmailResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
-    var loginByPhoneResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
-    var loginByExternalAuthProviderResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
-    var loginByTotpResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
-    var loginByTotpRecoveryCodeResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
-    var sendLoginConfirmationToPhoneResult: AppResult<OtpConfirmationPayload> = AppResult.Error(CommonError.Unknown())
+    public var loginByEmailResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
+    public var loginByPhoneResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
+    public var loginByExternalAuthProviderResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
+    public var loginByTotpResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
+    public var loginByTotpRecoveryCodeResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
+    public var sendLoginConfirmationToPhoneResult: AppResult<OtpConfirmationPayload> = AppResult.Error(
+        CommonError.Unknown()
+    )
 
-    var lastLoginByEmailRequest: LoginByEmailRequest? = null
-    var lastLoginByPhoneRequest: LoginByPhoneRequest? = null
-    var lastLoginByExternalAuthProviderRequest: LoginByExternalAuthProviderRequest? = null
-    var lastLoginByTotpRequest: VerifyTotpPayload? = null
-    var lastLoginByTotpRecoveryCodeRequest: VerifyTotpPayload? = null
-    var lastSendLoginConfirmationToPhoneRequest: SendConfirmationToPhoneRequest? = null
+    public var lastLoginByEmailRequest: LoginByEmailRequest? = null
+    public var lastLoginByPhoneRequest: LoginByPhoneRequest? = null
+    public var lastLoginByExternalAuthProviderRequest: LoginByExternalAuthProviderRequest? = null
+    public var lastLoginByTotpRequest: VerifyTotpPayload? = null
+    public var lastLoginByTotpRecoveryCodeRequest: VerifyTotpPayload? = null
+    public var lastSendLoginConfirmationToPhoneRequest: SendConfirmationToPhoneRequest? = null
 
     override suspend fun loginByEmail(request: LoginByEmailRequest): AppResult<AuthDataPayload> {
         lastLoginByEmailRequest = request
@@ -39,7 +44,9 @@ open class OpenLoginApiMock : OpenLoginApi {
         return loginByPhoneResult
     }
 
-    override suspend fun loginByExternalAuthProvider(request: LoginByExternalAuthProviderRequest): AppResult<AuthDataPayload> {
+    override suspend fun loginByExternalAuthProvider(
+        request: LoginByExternalAuthProviderRequest
+    ): AppResult<AuthDataPayload> {
         lastLoginByExternalAuthProviderRequest = request
         return loginByExternalAuthProviderResult
     }
@@ -54,7 +61,9 @@ open class OpenLoginApiMock : OpenLoginApi {
         return loginByTotpRecoveryCodeResult
     }
 
-    override suspend fun sendLoginConfirmationToPhone(request: SendConfirmationToPhoneRequest): AppResult<OtpConfirmationPayload> {
+    override suspend fun sendLoginConfirmationToPhone(
+        request: SendConfirmationToPhoneRequest
+    ): AppResult<OtpConfirmationPayload> {
         lastSendLoginConfirmationToPhoneRequest = request
         return sendLoginConfirmationToPhoneResult
     }

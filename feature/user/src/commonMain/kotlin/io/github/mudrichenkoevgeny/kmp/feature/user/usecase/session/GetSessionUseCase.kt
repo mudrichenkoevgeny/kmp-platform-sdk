@@ -10,14 +10,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.s
  *
  * @param sessionRepository Session management repository.
  */
-open class GetSessionUseCase(
+public open class GetSessionUseCase(
     private val sessionRepository: SessionRepository
 ) {
     /**
      * @param userSessionId Session ID.
      * @return [UserSessionPrivate] on success, or a mapped failure.
      */
-    open suspend operator fun invoke(userSessionId: UserSessionId): AppResult<UserSessionPrivate> {
-        return sessionRepository.getSession(userSessionId)
-    }
+    public open suspend operator fun invoke(userSessionId: UserSessionId): AppResult<UserSessionPrivate> =
+        sessionRepository.getSession(
+            userSessionId
+        )
 }

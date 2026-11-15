@@ -12,11 +12,11 @@ import io.ktor.client.request.get
  *
  * @param client Shared client (typically from `core/common`) with base URL and plugins already applied.
  */
-class KtorOpenGlobalSettingsApi(
+public class KtorOpenGlobalSettingsApi(
     private val client: HttpClient
 ) : OpenGlobalSettingsApi {
 
-    override suspend fun getOpenGlobalSettings(): AppResult<OpenGlobalSettingsPayload> = client.callResult {
+    public override suspend fun getOpenGlobalSettings(): AppResult<OpenGlobalSettingsPayload> = client.callResult {
         get(OpenGlobalSettingsRoutes.GET_OPEN_GLOBAL_SETTINGS)
     }
 }

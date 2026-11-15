@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
  *
  * @param managementSecuritySettingsRepository Remote management security settings API.
  */
-class ResetRemoteSecuritySettingsUseCase(
+public class ResetRemoteSecuritySettingsUseCase(
     private val managementSecuritySettingsRepository: ManagementSecuritySettingsRepository
 ) {
     /**
@@ -17,7 +17,6 @@ class ResetRemoteSecuritySettingsUseCase(
      *
      * @return Updated default [ManagementSecuritySettings] on success, or an error result when the remote reset fails.
      */
-    suspend operator fun invoke(): AppResult<ManagementSecuritySettings> {
-        return managementSecuritySettingsRepository.resetRemoteManagementSecuritySettings()
-    }
+    public suspend operator fun invoke(): AppResult<ManagementSecuritySettings> =
+        managementSecuritySettingsRepository.resetRemoteManagementSecuritySettings()
 }

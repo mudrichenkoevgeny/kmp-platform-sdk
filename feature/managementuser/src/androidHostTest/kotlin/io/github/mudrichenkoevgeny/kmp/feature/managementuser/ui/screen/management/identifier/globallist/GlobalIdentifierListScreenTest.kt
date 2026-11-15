@@ -31,7 +31,8 @@ class GlobalIdentifierListScreenTest {
 
     @Test
     fun loading_showsIndeterminateProgressAfterDefaultDelay() = runComposeUiTest {
-        val component = IdentifierListComponentMock(initialState = IdentifierListScreenState.Loading, includeFilterPanel = true)
+        val component =
+            IdentifierListComponentMock(initialState = IdentifierListScreenState.Loading, includeFilterPanel = true)
         setContent {
             ComponentTestHarness {
                 IdentifierListScreen(component)
@@ -69,7 +70,9 @@ class GlobalIdentifierListScreenTest {
     @Test
     fun content_clickBack_invokesCallback() = runComposeUiTest {
         val component = IdentifierListComponentMock(
-            initialState = IdentifierListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)),
+            initialState = IdentifierListScreenState.Content(
+                paging = PaginationState(emptyList(), isInitialLoading = false)
+            ),
             includeFilterPanel = true
         )
         setContent {
@@ -84,7 +87,9 @@ class GlobalIdentifierListScreenTest {
     @Test
     fun content_clickRefresh_invokesCallback() = runComposeUiTest {
         val component = IdentifierListComponentMock(
-            initialState = IdentifierListScreenState.Content(paging = PaginationState(emptyList(), isInitialLoading = false)),
+            initialState = IdentifierListScreenState.Content(
+                paging = PaginationState(emptyList(), isInitialLoading = false)
+            ),
             includeFilterPanel = true
         )
         setContent {

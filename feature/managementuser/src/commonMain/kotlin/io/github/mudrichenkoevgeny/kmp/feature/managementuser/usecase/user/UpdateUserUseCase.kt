@@ -10,7 +10,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
  *
  * @param managementUserRepository Administrative user management API.
  */
-class UpdateUserUseCase(
+public class UpdateUserUseCase(
     private val managementUserRepository: ManagementUserRepository
 ) {
     /**
@@ -18,7 +18,8 @@ class UpdateUserUseCase(
      * @param params Domain parameters containing fields to change.
      * @return Empty success indicator, or a mapped failure.
      */
-    suspend operator fun invoke(userId: UserId, params: UpdateUserParams): AppResult<Unit> {
-        return managementUserRepository.updateUser(userId, params)
-    }
+    public suspend operator fun invoke(
+        userId: UserId,
+        params: UpdateUserParams
+    ): AppResult<Unit> = managementUserRepository.updateUser(userId, params)
 }

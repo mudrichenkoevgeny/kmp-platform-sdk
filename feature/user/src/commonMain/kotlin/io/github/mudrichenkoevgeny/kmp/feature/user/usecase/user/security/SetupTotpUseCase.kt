@@ -9,13 +9,11 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
  *
  * @param userSecurityRepository Remote security management API.
  */
-open class SetupTotpUseCase(
+public open class SetupTotpUseCase(
     private val userSecurityRepository: UserSecurityRepository
 ) {
     /**
      * @return [TotpSetup] details on success, or a mapped failure.
      */
-    open suspend operator fun invoke(): AppResult<TotpSetup> {
-        return userSecurityRepository.setupTotp()
-    }
+    public open suspend operator fun invoke(): AppResult<TotpSetup> = userSecurityRepository.setupTotp()
 }

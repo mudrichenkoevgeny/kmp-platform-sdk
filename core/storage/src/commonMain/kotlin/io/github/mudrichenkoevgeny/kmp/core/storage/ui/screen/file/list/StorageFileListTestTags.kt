@@ -3,40 +3,40 @@ package io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list
 /**
  * Test tags dictionary for [StorageFileListScreen].
  */
-object StorageFileListTestTags {
+public object StorageFileListTestTags {
     /** Screen header title text tag. */
-    const val TITLE = "StorageFileList_Title"
+    public const val TITLE: String = "StorageFileList_Title"
 
     /** Top bar back button tag. */
-    const val BACK_BUTTON = "StorageFileList_BackButton"
+    public const val BACK_BUTTON: String = "StorageFileList_BackButton"
 
     /** Filter panel toggle button tag. */
-    const val FILTER_BUTTON = "StorageFileList_FilterButton"
+    public const val FILTER_BUTTON: String = "StorageFileList_FilterButton"
 
     /** Page refresh button tag. */
-    const val REFRESH_BUTTON = "StorageFileList_RefreshButton"
+    public const val REFRESH_BUTTON: String = "StorageFileList_RefreshButton"
 
     /** File upload navigation action button tag. */
-    const val UPLOAD_BUTTON = "StorageFileList_UploadButton"
+    public const val UPLOAD_BUTTON: String = "StorageFileList_UploadButton"
 
     /** Fullscreen global error text tag. */
-    const val GLOBAL_ERROR_TEXT = "StorageFileList_GlobalErrorText"
+    public const val GLOBAL_ERROR_TEXT: String = "StorageFileList_GlobalErrorText"
 
     /** LazyColumn file list container tag. */
-    const val FILE_LIST = "StorageFileList_List"
+    public const val FILE_LIST: String = "StorageFileList_List"
 
     /** Inline action error text tag. */
-    const val ACTION_ERROR_TEXT = "StorageFileList_ActionErrorText"
+    public const val ACTION_ERROR_TEXT: String = "StorageFileList_ActionErrorText"
 
     /** Multi-selection batch action bar container tag. */
-    const val BATCH_ACTION_BAR = "StorageFileList_BatchActionBar"
+    public const val BATCH_ACTION_BAR: String = "StorageFileList_BatchActionBar"
 
     /** Batch delete selected files action button tag. */
-    const val BATCH_DELETE_BUTTON = "StorageFileList_BatchDeleteButton"
+    public const val BATCH_DELETE_BUTTON: String = "StorageFileList_BatchDeleteButton"
 
     /** Select all page files button tag. */
-    const val SELECT_ALL_BUTTON = "StorageFileList_SelectAllButton"
+    public const val SELECT_ALL_BUTTON: String = "StorageFileList_SelectAllButton"
 
     /** Clear file selection button tag. */
-    const val CLEAR_SELECTION_BUTTON = "StorageFileList_ClearSelectionButton"
+    public const val CLEAR_SELECTION_BUTTON: String = "StorageFileList_ClearSelectionButton"
 }

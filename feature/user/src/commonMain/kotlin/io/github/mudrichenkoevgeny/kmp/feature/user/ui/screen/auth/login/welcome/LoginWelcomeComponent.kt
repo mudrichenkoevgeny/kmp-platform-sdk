@@ -6,33 +6,33 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.a
 /**
  * Presentation logic for the welcome step: loads providers and legal URLs, handles provider selection and OAuth.
  */
-interface LoginWelcomeComponent {
+public interface LoginWelcomeComponent {
     /**
      * Current screen state for [LoginWelcomeScreen].
      *
      * @return reactive [LoginWelcomeScreenState].
      */
-    val state: Value<LoginWelcomeScreenState>
+    public val state: Value<LoginWelcomeScreenState>
 
     /**
      * Retries loading available providers and global settings after [LoginWelcomeScreenState.InitializationError].
      */
-    fun onRetryInitClick()
+    public fun onRetryInitClick()
 
     /**
      * Handles the user’s choice of sign-in method: navigates to email/phone flows or starts OAuth where supported.
      *
      * @param authProvider selected provider.
      */
-    fun onLoginClick(authProvider: UserAuthProvider)
+    public fun onLoginClick(authProvider: UserAuthProvider)
 
     /**
      * Opens the privacy policy URL from the loaded global settings when available.
      */
-    fun onPrivacyPolicyClick()
+    public fun onPrivacyPolicyClick()
 
     /**
      * Opens the terms of service URL from the loaded global settings when available.
      */
-    fun onTermsOfServiceClick()
+    public fun onTermsOfServiceClick()
 }

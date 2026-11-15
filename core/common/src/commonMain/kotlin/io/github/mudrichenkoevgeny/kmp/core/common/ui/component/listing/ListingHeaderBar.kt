@@ -20,9 +20,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.ListingDefaultValues
 
@@ -34,7 +34,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.li
  * @param modifier Optional [Modifier].
  */
 @Composable
-fun ListingHeaderBar(
+public fun ListingHeaderBar(
     state: PaginationState<*>,
     lazyListState: LazyListState,
     modifier: Modifier = Modifier
@@ -124,7 +124,7 @@ private fun ListingHeaderBarStatesPreview(
 }
 
 @InternalApi
-@ComponentSizePreviews
+@PreviewComponentSizes
 @Composable
 private fun ListingHeaderBarComponentSizePreview() {
     CoreTheme {
@@ -138,7 +138,7 @@ private fun ListingHeaderBarComponentSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ListingHeaderBarThemePreview() {
     CoreTheme {
@@ -152,7 +152,7 @@ private fun ListingHeaderBarThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun ListingHeaderBarFontScalePreview() {
     CoreTheme {

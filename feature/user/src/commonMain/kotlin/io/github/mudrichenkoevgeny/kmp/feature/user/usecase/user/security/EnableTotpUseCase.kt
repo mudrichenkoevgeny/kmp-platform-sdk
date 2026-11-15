@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
  *
  * @param userSecurityRepository Remote security management API.
  */
-open class EnableTotpUseCase(
+public open class EnableTotpUseCase(
     private val userSecurityRepository: UserSecurityRepository
 ) {
     /**
@@ -17,7 +17,8 @@ open class EnableTotpUseCase(
      * @param code Time-based verification code.
      * @return Freshly generated static [TotpRecoveryCodes] on success, or a mapped failure.
      */
-    open suspend operator fun invoke(mfaToken: String, code: String): AppResult<TotpRecoveryCodes> {
-        return userSecurityRepository.enableTotp(mfaToken, code)
-    }
+    public open suspend operator fun invoke(
+        mfaToken: String,
+        code: String
+    ): AppResult<TotpRecoveryCodes> = userSecurityRepository.enableTotp(mfaToken, code)
 }

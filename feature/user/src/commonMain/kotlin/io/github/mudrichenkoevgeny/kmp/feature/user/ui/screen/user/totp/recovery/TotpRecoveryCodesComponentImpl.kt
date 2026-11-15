@@ -12,7 +12,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.Regene
 import kotlinx.coroutines.launch
 
 /** Default implementation of [TotpRecoveryCodesComponent]. */
-class TotpRecoveryCodesComponentImpl(
+public class TotpRecoveryCodesComponentImpl(
     componentContext: ComponentContext,
     private val getRecoveryCodesUseCase: GetRecoveryCodesUseCase,
     private val regenerateRecoveryCodesUseCase: RegenerateRecoveryCodesUseCase,
@@ -21,18 +21,18 @@ class TotpRecoveryCodesComponentImpl(
 
     private val scope = componentCoroutineScope()
     private val _state = MutableValue<TotpRecoveryCodesScreenState>(TotpRecoveryCodesScreenState.Loading)
-    override val state: Value<TotpRecoveryCodesScreenState> = _state
+    public override val state: Value<TotpRecoveryCodesScreenState> = _state
 
     init {
         loadRecoveryCodes()
     }
 
-    override fun onRegenerateClick() {
+    public override fun onRegenerateClick() {
         val current = _state.value as? TotpRecoveryCodesScreenState.Content ?: return
         _state.value = current.copy(showRegenerateConfirmation = true)
     }
 
-    override fun onConfirmRegenerate() {
+    public override fun onConfirmRegenerate() {
         val current = _state.value as? TotpRecoveryCodesScreenState.Content ?: return
         _state.value = current.copy(showRegenerateConfirmation = false, actionLoading = true, actionError = null)
 
@@ -57,12 +57,12 @@ class TotpRecoveryCodesComponentImpl(
         }
     }
 
-    override fun onDismissDialogs() {
+    public override fun onDismissDialogs() {
         val current = _state.value as? TotpRecoveryCodesScreenState.Content ?: return
         _state.value = current.copy(showRegenerateConfirmation = false)
     }
 
-    override fun onBackClick() {
+    public override fun onBackClick() {
         if ((backHandler as? BackDispatcher)?.back() != true) {
             onBack()
         }

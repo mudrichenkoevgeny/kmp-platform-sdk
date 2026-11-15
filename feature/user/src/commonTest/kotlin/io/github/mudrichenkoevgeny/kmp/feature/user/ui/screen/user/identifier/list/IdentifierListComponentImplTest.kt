@@ -7,17 +7,17 @@ import com.arkivanov.essenty.lifecycle.resume
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.auth.settings.createTestOpenAuthSettings
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.settings.OpenAuthSettingsRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.GetUserIdentifiersUseCaseMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.model.apptype.AppType
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.datasource.SelfIdentifierListDataSource
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.apptype.AppType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.ListingDefaultValues
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.common.domain.model.listing.createTestPagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.auth.settings.createTestOpenAuthSettings
+import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummaryList
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
@@ -75,7 +75,9 @@ class IdentifierListComponentImplTest {
             context.component.onAddIdentifierClick()
             advanceUntilIdle()
 
-            assertIs<IdentifierListComponent.AddIdentifierDialogChild.ProviderSelection>(context.component.addIdentifierDialogSlot.value.child?.instance)
+            assertIs<IdentifierListComponent.AddIdentifierDialogChild.ProviderSelection>(
+                context.component.addIdentifierDialogSlot.value.child?.instance
+            )
         } finally {
             context.destroy()
         }
@@ -90,7 +92,9 @@ class IdentifierListComponentImplTest {
             advanceUntilIdle()
 
             context.component.onAddIdentifierSelectProvider(UserAuthProvider.EMAIL)
-            assertIs<IdentifierListComponent.AddIdentifierDialogChild.EmailInput>(context.component.addIdentifierDialogSlot.value.child?.instance)
+            assertIs<IdentifierListComponent.AddIdentifierDialogChild.EmailInput>(
+                context.component.addIdentifierDialogSlot.value.child?.instance
+            )
         } finally {
             context.destroy()
         }
@@ -124,7 +128,14 @@ class IdentifierListComponentImplTest {
         val getUserIdentifiersUseCase = GetUserIdentifiersUseCaseMock().apply {
             resultProvider = { params ->
                 val page = params?.pageNumber ?: 1
-                val items = if (page == ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER) initialIdentifiers else nextIdentifiers
+                val items =
+                    if (page ==
+                        ListingDefaultValues.Pagination.INITIAL_PAGE_NUMBER
+                    ) {
+                        initialIdentifiers
+                    } else {
+                        nextIdentifiers
+                    }
                 AppResult.Success(createTestPagedResult(items = items, totalCount = 2, totalPages = 2))
             }
         }

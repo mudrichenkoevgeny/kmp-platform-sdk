@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.decodeFromJsonElement
 
 /**
@@ -32,7 +33,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
  * @param webSocketService Source of push updates for auth settings changes.
  * @param repositoryScope Long-lived scope used for the WebSocket collector started in `init`.
  */
-class ManagementAuthSettingsRepositoryImpl(
+public class ManagementAuthSettingsRepositoryImpl(
     private val managementAuthSettingsApi: ManagementAuthSettingsApi,
     private val managementAuthSettingsStorage: ManagementAuthSettingsStorage,
     private val webSocketService: WebSocketService,
@@ -59,7 +60,11 @@ class ManagementAuthSettingsRepositoryImpl(
                         } else {
                             Logger.w { "Received MANAGEMENT_AUTH_SETTINGS_UPDATED with invalid payload" }
                         }
-                    } catch (e: Exception) {
+                    } catch (e: SerializationException) {
+                        Logger.e(e) { "Failed to process WebSocket event" }
+                    } catch (e: IllegalArgumentException) {
+                        Logger.e(e) { "Failed to process WebSocket event" }
+                    } catch (e: IllegalStateException) {
                         Logger.e(e) { "Failed to process WebSocket event" }
                     }
                 }
@@ -91,19 +96,16 @@ class ManagementAuthSettingsRepositoryImpl(
             }
     }
 
-    override suspend fun resetRemoteManagementAuthSettings(): AppResult<ManagementAuthSettings> {
-        return managementAuthSettingsApi.resetManagementAuthSettings()
+    override suspend fun resetRemoteManagementAuthSettings(): AppResult<ManagementAuthSettings> =
+        managementAuthSettingsApi.resetManagementAuthSettings()
             .mapSuccess { response ->
                 val settings = response.toManagementAuthSettings()
                 updateManagementAuthSettings(settings)
                 settings
             }
-    }
 
-    override suspend fun refreshManagementAuthSettings(): AppResult<ManagementAuthSettings> {
-        return updateMutex.withLock {
-            refreshManagementAuthSettingsInternal()
-        }
+    override suspend fun refreshManagementAuthSettings(): AppResult<ManagementAuthSettings> = updateMutex.withLock {
+        refreshManagementAuthSettingsInternal()
     }
 
     override suspend fun updateManagementAuthSettings(authSettings: ManagementAuthSettings) {
@@ -114,14 +116,13 @@ class ManagementAuthSettingsRepositoryImpl(
 
     override fun observeManagementAuthSettings(): Flow<ManagementAuthSettings?> = _settings.asStateFlow()
 
-    private suspend fun refreshManagementAuthSettingsInternal(): AppResult<ManagementAuthSettings> {
-        return managementAuthSettingsApi.getManagementAuthSettings()
+    private suspend fun refreshManagementAuthSettingsInternal(): AppResult<ManagementAuthSettings> =
+        managementAuthSettingsApi.getManagementAuthSettings()
             .mapSuccess { response ->
                 val settings = response.toManagementAuthSettings()
                 applySettingsUpdate(settings)
                 settings
             }
-    }
 
     private suspend fun applySettingsUpdate(managementAuthSettings: ManagementAuthSettings) {
         managementAuthSettingsStorage.updateManagementAuthSettings(managementAuthSettings)

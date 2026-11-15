@@ -9,21 +9,27 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.registration.RegistrationByEmailRequest
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.confirmation.SendConfirmationToEmailRequest
 
+/**
+ * Mock implementation of [RegistrationApi] for unit and UI testing.
+ */
 @InternalApi
-open class OpenRegistrationApiMock : RegistrationApi {
+public open class OpenRegistrationApiMock : RegistrationApi {
 
-    var registerByEmailResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
-    var sendRegistrationConfirmationToEmailResult: AppResult<OtpConfirmationPayload> = AppResult.Error(CommonError.Unknown())
+    public var registerByEmailResult: AppResult<AuthDataPayload> = AppResult.Error(CommonError.Unknown())
+    public var sendRegistrationConfirmationToEmailResult: AppResult<OtpConfirmationPayload> =
+        AppResult.Error(CommonError.Unknown())
 
-    var lastRegisterByEmailRequest: RegistrationByEmailRequest? = null
-    var lastSendRegistrationConfirmationToEmailRequest: SendConfirmationToEmailRequest? = null
+    public var lastRegisterByEmailRequest: RegistrationByEmailRequest? = null
+    public var lastSendRegistrationConfirmationToEmailRequest: SendConfirmationToEmailRequest? = null
 
     override suspend fun registerByEmail(request: RegistrationByEmailRequest): AppResult<AuthDataPayload> {
         lastRegisterByEmailRequest = request
         return registerByEmailResult
     }
 
-    override suspend fun sendRegistrationConfirmationToEmail(request: SendConfirmationToEmailRequest): AppResult<OtpConfirmationPayload> {
+    override suspend fun sendRegistrationConfirmationToEmail(
+        request: SendConfirmationToEmailRequest
+    ): AppResult<OtpConfirmationPayload> {
         lastSendRegistrationConfirmationToEmailRequest = request
         return sendRegistrationConfirmationToEmailResult
     }

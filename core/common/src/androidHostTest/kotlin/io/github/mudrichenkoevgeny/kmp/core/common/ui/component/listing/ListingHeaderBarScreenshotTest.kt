@@ -56,27 +56,25 @@ class ListingHeaderBarScreenshotTest(
         @Suppress("Unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
-        fun data(): Collection<Array<Any>> {
-            return listOf(
-                arrayOf(
-                    "MultiPage",
-                    PaginationState(
-                        items = listOf("item1", "item2"),
-                        pageNumber = 1,
-                        totalPages = 5,
-                        totalCount = 100
-                    )
-                ),
-                arrayOf(
-                    "SinglePage",
-                    PaginationState(
-                        items = listOf("item1"),
-                        pageNumber = 1,
-                        totalPages = 1,
-                        totalCount = 1
-                    )
+        fun data(): Collection<Array<Any>> = listOf(
+            arrayOf(
+                "MultiPage",
+                PaginationState(
+                    items = listOf("item1", "item2"),
+                    pageNumber = 1,
+                    totalPages = 5,
+                    totalCount = 100
+                )
+            ),
+            arrayOf(
+                "SinglePage",
+                PaginationState(
+                    items = listOf("item1"),
+                    pageNumber = 1,
+                    totalPages = 1,
+                    totalCount = 1
                 )
             )
-        }
+        )
     }
 }

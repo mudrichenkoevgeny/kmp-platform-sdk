@@ -4,7 +4,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.unlock.UnlockRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock.UnlockByEmailUseCase
 
+/**
+ * Mock implementation of [UnlockByEmailUseCase] for testing.
+ */
 @InternalApi
-class UnlockByEmailUseCaseMock : UnlockByEmailUseCase(
+public class UnlockByEmailUseCaseMock : UnlockByEmailUseCase(
     unlockRepository = UnlockRepositoryMock()
 )

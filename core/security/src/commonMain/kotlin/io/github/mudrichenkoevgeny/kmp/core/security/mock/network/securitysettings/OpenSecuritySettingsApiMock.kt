@@ -6,13 +6,18 @@ import io.github.mudrichenkoevgeny.kmp.core.security.network.securitysettings.Op
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.network.model.securitysettings.OpenSecuritySettingsPayload
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.network.model.securitysettings.createTestOpenSecuritySettingsPayload
 
+/**
+ * Mock implementation of [OpenSecuritySettingsApi] for testing purposes.
+ */
 @InternalApi
-class OpenSecuritySettingsApiMock(
-    var result: AppResult<OpenSecuritySettingsPayload> = AppResult.Success(createTestOpenSecuritySettingsPayload())
+public class OpenSecuritySettingsApiMock(
+    public var result: AppResult<OpenSecuritySettingsPayload> = AppResult.Success(
+        createTestOpenSecuritySettingsPayload()
+    )
 ) : OpenSecuritySettingsApi {
-    var getSecuritySettingsCallCount = 0
+    public var getSecuritySettingsCallCount: Int = 0
 
-    override suspend fun getSecuritySettings(): AppResult<OpenSecuritySettingsPayload> {
+    public override suspend fun getSecuritySettings(): AppResult<OpenSecuritySettingsPayload> {
         getSecuritySettingsCallCount++
         return result
     }

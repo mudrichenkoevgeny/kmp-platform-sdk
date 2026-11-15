@@ -14,14 +14,14 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
  * indicating whether the canvas represents a mobile viewport.
  */
 @Composable
-fun ScreenPreviewContainer(
+public fun ScreenPreviewContainer(
     modifier: Modifier = Modifier,
     content: @Composable (isMobile: Boolean) -> Unit
 ) {
     CoreTheme {
         BoxWithConstraints(modifier = modifier) {
             val isDesktopPreview = maxWidth == ScreenSizePreviewSpecs.WIDTH_DESKTOP.dp &&
-                    maxHeight == ScreenSizePreviewSpecs.HEIGHT_DESKTOP.dp
+                maxHeight == ScreenSizePreviewSpecs.HEIGHT_DESKTOP.dp
             val isMobile = !isDesktopPreview
 
             content(isMobile)

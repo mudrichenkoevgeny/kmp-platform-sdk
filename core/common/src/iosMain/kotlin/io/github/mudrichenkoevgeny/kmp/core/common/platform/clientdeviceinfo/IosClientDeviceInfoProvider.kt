@@ -9,6 +9,9 @@ import platform.Foundation.NSLocale
 import platform.Foundation.currentLocale
 import platform.Foundation.languageCode
 
+/**
+ * iOS implementation of [ClientDeviceInfoProvider] retrieving device details and system parameters.
+ */
 class IosClientDeviceInfoProvider : ClientDeviceInfoProvider {
     override fun getCLientDeviceInfo(): ClientDeviceInfo {
         val device = UIDevice.currentDevice

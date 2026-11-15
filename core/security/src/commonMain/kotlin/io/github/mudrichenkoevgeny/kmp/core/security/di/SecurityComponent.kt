@@ -1,9 +1,15 @@
 package io.github.mudrichenkoevgeny.kmp.core.security.di
 
+import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler.WebSocketMessageHandler
 import io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service.WebSocketService
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
 import io.github.mudrichenkoevgeny.kmp.core.security.network.securitysettings.OpenSecuritySettingsApi
+import io.github.mudrichenkoevgeny.kmp.core.security.repository.OpenSecuritySettingsRepository
 import io.github.mudrichenkoevgeny.kmp.core.security.storage.securitysettings.OpenSecuritySettingsStorage
+import io.github.mudrichenkoevgeny.kmp.core.security.usecase.GetOpenSecuritySettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ObserveOpenSecuritySettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.core.security.usecase.RefreshOpenSecuritySettingsUseCase
+import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ValidatePasswordUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator.PasswordPolicyValidator
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator.PasswordPolicyValidatorImpl
 import io.ktor.client.HttpClient
@@ -22,7 +28,7 @@ import kotlinx.coroutines.SupervisorJob
  * - [EncryptedSettings]: backing store for encrypted security settings persistence.
  * - `parentScope`: optional scope for repository coroutines; if null, a supervisor scope on the default dispatcher is created.
  */
-class SecurityComponent(
+public class SecurityComponent(
     webSocketService: WebSocketService,
     httpClient: HttpClient,
     encryptedSettings: EncryptedSettings,
@@ -37,9 +43,9 @@ class SecurityComponent(
             encryptedSettings
         )
     }
-    val securitySettingsStorage get() = storageModule.openSecuritySettingsStorage
+    public val securitySettingsStorage: OpenSecuritySettingsStorage get() = storageModule.openSecuritySettingsStorage
 
-    val passwordPolicyValidator: PasswordPolicyValidator by lazy {
+    public val passwordPolicyValidator: PasswordPolicyValidator by lazy {
         PasswordPolicyValidatorImpl()
     }
 
@@ -55,7 +61,9 @@ class SecurityComponent(
             repositoryScope = componentScope
         )
     }
-    val securitySettingsRepository get() = repositoryModule.openSecuritySettingsRepository
+    public val securitySettingsRepository: OpenSecuritySettingsRepository
+        get() =
+            repositoryModule.openSecuritySettingsRepository
 
     private val useCaseModule by lazy {
         SecurityUseCaseModule(
@@ -63,14 +71,19 @@ class SecurityComponent(
             passwordPolicyValidator = passwordPolicyValidator
         )
     }
-    val refreshSecuritySettingsUseCase get() = useCaseModule.refreshOpenSecuritySettingsUseCase
-    val getOpenSecuritySettingsUseCase get() = useCaseModule.getOpenSecuritySettingsUseCase
-    val observeSecuritySettingsUseCase get() = useCaseModule.observeOpenSecuritySettingsUseCase
-    val validatePasswordUseCase get() = useCaseModule.validatePasswordUseCase
+    public val refreshSecuritySettingsUseCase: RefreshOpenSecuritySettingsUseCase
+        get() = useCaseModule.refreshOpenSecuritySettingsUseCase
+    public val getOpenSecuritySettingsUseCase: GetOpenSecuritySettingsUseCase
+        get() = useCaseModule.getOpenSecuritySettingsUseCase
+    public val observeSecuritySettingsUseCase: ObserveOpenSecuritySettingsUseCase
+        get() = useCaseModule.observeOpenSecuritySettingsUseCase
+    public val validatePasswordUseCase: ValidatePasswordUseCase
+        get() = useCaseModule.validatePasswordUseCase
 
     private val webSocketsModule by lazy {
         SecurityWebSocketModule()
     }
 
-    val securityWebSocketMessageHandler get() = webSocketsModule.securityWebSocketMessageHandler
+    public val securityWebSocketMessageHandler: WebSocketMessageHandler
+        get() = webSocketsModule.securityWebSocketMessageHandler
 }

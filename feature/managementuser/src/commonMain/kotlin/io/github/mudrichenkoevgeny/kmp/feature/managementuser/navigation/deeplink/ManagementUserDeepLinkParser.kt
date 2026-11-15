@@ -37,7 +37,7 @@ import io.ktor.http.Url
 /**
  * Deep link URL parser for the management portal, handling settings, users, audit, storage, and self-service routes.
  */
-class ManagementUserDeepLinkParser : DeepLinkParser<NavigationRoute> {
+public class ManagementUserDeepLinkParser : DeepLinkParser<NavigationRoute> {
 
     override fun parse(url: Url): NavigationRoute? {
         val queryMap: Map<String, Any?> = url.parameters.entries().associate { (key, values) ->
@@ -61,7 +61,10 @@ class ManagementUserDeepLinkParser : DeepLinkParser<NavigationRoute> {
         }
     }
 
-    private fun parseSelfUserRoute(path: String, queryMap: Map<String, Any?>): NavigationRoute? {
+    private fun parseSelfUserRoute(
+        path: String,
+        queryMap: Map<String, Any?>
+    ): NavigationRoute? {
         val segments = path.split('/').filter { it.isNotEmpty() }
         return when {
             path == ManagementSelfUserNavigation.BASE_USER_ROUTE || path == ManagementSelfUserNavigation.Main.route ->
@@ -91,30 +94,39 @@ class ManagementUserDeepLinkParser : DeepLinkParser<NavigationRoute> {
             segments.size >= 3 && "/${segments[0]}/${segments[1]}" == ManagementSelfUserNavigation.IdentifierList.ROUTE -> {
                 val identifierId = segments[2].toUserIdentifierIdOrNull()
                     ?: return ManagementSelfUserNavigation.IdentifierList(SelfIdentifierListParams.parse(queryMap))
-                ManagementSelfUserNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId.asHexDashString()))
+                ManagementSelfUserNavigation.IdentifierDetail(
+                    IdentifierDetailParams(identifierId = identifierId.asHexDashString())
+                )
             }
 
             else -> null
         }
     }
 
-    private fun parseSettingsRoute(path: String): NavigationRoute? {
-        return when (path) {
-            CommonNavigationRoutes.BASE_SETTINGS_NAVIGATION_ROUTE, ManagementSettingsNavigation.Main.route ->
-                ManagementSettingsNavigation.Main
-            ManagementSettingsNavigation.GlobalSettings.route ->
-                ManagementSettingsNavigation.GlobalSettings
-            ManagementAuthSettingsNavigation.AuthSettings.route ->
-                ManagementAuthSettingsNavigation.AuthSettings
-            ManagementSecurityNavigation.SecuritySettings.route ->
-                ManagementSecurityNavigation.SecuritySettings
-            ManagementStorageSettingsNavigation.StorageSettings.route ->
-                ManagementStorageSettingsNavigation.StorageSettings
-            else -> null
-        }
+    private fun parseSettingsRoute(path: String): NavigationRoute? = when (path) {
+        CommonNavigationRoutes.BASE_SETTINGS_NAVIGATION_ROUTE, ManagementSettingsNavigation.Main.route ->
+            ManagementSettingsNavigation.Main
+
+        ManagementSettingsNavigation.GlobalSettings.route ->
+            ManagementSettingsNavigation.GlobalSettings
+
+        ManagementAuthSettingsNavigation.AuthSettings.route ->
+            ManagementAuthSettingsNavigation.AuthSettings
+
+        ManagementSecurityNavigation.SecuritySettings.route ->
+            ManagementSecurityNavigation.SecuritySettings
+
+        ManagementStorageSettingsNavigation.StorageSettings.route ->
+            ManagementStorageSettingsNavigation.StorageSettings
+
+        else -> null
     }
 
-    private fun parseUsersRoute(path: String, segments: List<String>, queryMap: Map<String, Any?>): NavigationRoute? {
+    private fun parseUsersRoute(
+        path: String,
+        segments: List<String>,
+        queryMap: Map<String, Any?>
+    ): NavigationRoute? {
         return when {
             path == ManagementUsersNavigation.BASE_USERS_ROUTE || path == ManagementUsersNavigation.UserList.ROUTE ->
                 ManagementUsersNavigation.UserList(ManagementUserListParams.parse(queryMap))
@@ -127,35 +139,53 @@ class ManagementUserDeepLinkParser : DeepLinkParser<NavigationRoute> {
                     ?: return ManagementUsersNavigation.UserList(ManagementUserListParams.parse(queryMap))
                 val subPath = segments.getOrNull(2)
                 when (subPath) {
-                    SESSIONS_SEGMENT -> ManagementUsersNavigation.UserSessionList(ManagementUserSessionListParams(userId = userId.asHexDashString()))
-                    IDENTIFIERS_SEGMENT -> ManagementUsersNavigation.UserIdentifierList(ManagementUserIdentifierListParams(userId = userId.asHexDashString()))
+                    SESSIONS_SEGMENT -> ManagementUsersNavigation.UserSessionList(
+                        ManagementUserSessionListParams(userId = userId.asHexDashString())
+                    )
+
+                    IDENTIFIERS_SEGMENT -> ManagementUsersNavigation.UserIdentifierList(
+                        ManagementUserIdentifierListParams(userId = userId.asHexDashString())
+                    )
+
                     else -> ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString()))
                 }
             }
 
-            path == ManagementUsersNavigation.BASE_SESSIONS_ROUTE || path == ManagementUsersNavigation.GlobalSessionList.ROUTE ->
+            path == ManagementUsersNavigation.BASE_SESSIONS_ROUTE ||
+                path == ManagementUsersNavigation.GlobalSessionList.ROUTE ->
                 ManagementUsersNavigation.GlobalSessionList(ManagementGlobalSessionListParams.parse(queryMap))
 
             segments.size >= 2 && "/${segments[0]}" == ManagementUsersNavigation.BASE_SESSIONS_ROUTE -> {
                 val sessionId = segments[1].toUserSessionIdOrNull()
-                    ?: return ManagementUsersNavigation.GlobalSessionList(ManagementGlobalSessionListParams.parse(queryMap))
+                    ?: return ManagementUsersNavigation.GlobalSessionList(
+                        ManagementGlobalSessionListParams.parse(queryMap)
+                    )
                 ManagementUsersNavigation.SessionDetail(SessionDetailParams(sessionId = sessionId.asHexDashString()))
             }
 
-            path == ManagementUsersNavigation.BASE_IDENTIFIERS_ROUTE || path == ManagementUsersNavigation.GlobalIdentifierList.ROUTE ->
+            path == ManagementUsersNavigation.BASE_IDENTIFIERS_ROUTE ||
+                path == ManagementUsersNavigation.GlobalIdentifierList.ROUTE ->
                 ManagementUsersNavigation.GlobalIdentifierList(ManagementGlobalIdentifierListParams.parse(queryMap))
 
             segments.size >= 2 && "/${segments[0]}" == ManagementUsersNavigation.BASE_IDENTIFIERS_ROUTE -> {
                 val identifierId = segments[1].toUserIdentifierIdOrNull()
-                    ?: return ManagementUsersNavigation.GlobalIdentifierList(ManagementGlobalIdentifierListParams.parse(queryMap))
-                ManagementUsersNavigation.IdentifierDetail(IdentifierDetailParams(identifierId = identifierId.asHexDashString()))
+                    ?: return ManagementUsersNavigation.GlobalIdentifierList(
+                        ManagementGlobalIdentifierListParams.parse(queryMap)
+                    )
+                ManagementUsersNavigation.IdentifierDetail(
+                    IdentifierDetailParams(identifierId = identifierId.asHexDashString())
+                )
             }
 
             else -> null
         }
     }
 
-    private fun parseAuditRoute(path: String, segments: List<String>, queryMap: Map<String, Any?>): NavigationRoute? {
+    private fun parseAuditRoute(
+        path: String,
+        segments: List<String>,
+        queryMap: Map<String, Any?>
+    ): NavigationRoute? {
         return when {
             path == ManagementAuditNavigation.Main.route || path == ManagementAuditNavigation.AuditEventList.ROUTE ->
                 ManagementAuditNavigation.AuditEventList(ManagementAuditEventListParams.parse(queryMap))
@@ -163,14 +193,20 @@ class ManagementUserDeepLinkParser : DeepLinkParser<NavigationRoute> {
             segments.size >= 2 && "/${segments[0]}" == ManagementAuditNavigation.AuditEventList.ROUTE -> {
                 val eventId = segments[1].toAuditEventIdOrNull()
                     ?: return ManagementAuditNavigation.AuditEventList(ManagementAuditEventListParams.parse(queryMap))
-                ManagementAuditNavigation.AuditEventDetail(ManagementAuditEventDetailParams(eventId = eventId.asHexDashString()))
+                ManagementAuditNavigation.AuditEventDetail(
+                    ManagementAuditEventDetailParams(eventId = eventId.asHexDashString())
+                )
             }
 
             else -> null
         }
     }
 
-    private fun parseStorageRoute(path: String, segments: List<String>, queryMap: Map<String, Any?>): NavigationRoute? {
+    private fun parseStorageRoute(
+        path: String,
+        segments: List<String>,
+        queryMap: Map<String, Any?>
+    ): NavigationRoute? {
         return when {
             path == ManagementStorageNavigation.FileList.ROUTE ->
                 ManagementStorageNavigation.FileList(ManagementStorageFileListParams.parse(queryMap))

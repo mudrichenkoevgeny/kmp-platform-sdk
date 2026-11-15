@@ -4,8 +4,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.network.websocket.service.WebSocketServiceMock
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.network.api.auth.settings.OpenAuthSettingsApiMock
-import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepositoryImpl
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth.settings.OpenAuthSettingsStorageMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.settings.OpenAuthSettingsRepositoryImpl
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.serialization.FoundationJson
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.OpenAuthSettings
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.auth.settings.toOpenAuthSettings
@@ -98,7 +98,8 @@ class OpenAuthSettingsRepositoryImplTest {
         val frame = createTestSocketFrame(
             type = UserWebSocketEventTypes.OPEN_AUTH_SETTINGS_UPDATED,
             payload = FoundationJson.encodeToJsonElement(
-                OpenAuthSettingsPayload.serializer(), pushed
+                OpenAuthSettingsPayload.serializer(),
+                pushed
             )
         )
         sockets.emit(frame)

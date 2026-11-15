@@ -9,21 +9,27 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.user.UserStorag
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login.LoginByTotpUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.data.AuthData
 
+/**
+ * Mock implementation of [LoginByTotpUseCase] for testing.
+ */
 @InternalApi
-class LoginByTotpUseCaseMock : LoginByTotpUseCase(
+public class LoginByTotpUseCaseMock : LoginByTotpUseCase(
     loginRepository = LoginRepositoryMock(),
     authStorage = AuthStorageMock(),
     userStorage = UserStorageMock()
 ) {
-    var executeCalls: Int = 0
-    var lastMfaToken: String? = null
-    var lastCode: String? = null
+    public var executeCalls: Int = 0
+    public var lastMfaToken: String? = null
+    public var lastCode: String? = null
 
-    var resultProvider: (String, String) -> AppResult<AuthData> = { _, _ ->
+    public var resultProvider: (String, String) -> AppResult<AuthData> = { _, _ ->
         AppResult.Error(CommonError.Unknown())
     }
 
-    override suspend fun execute(mfaToken: String, code: String): AppResult<AuthData> {
+    public override suspend fun execute(
+        mfaToken: String,
+        code: String
+    ): AppResult<AuthData> {
         executeCalls++
         lastMfaToken = mfaToken
         lastCode = code

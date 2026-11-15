@@ -9,12 +9,12 @@ import kotlinx.coroutines.flow.asStateFlow
  * Default implementation of [MfaChallengeHandler].
  * Exposes active [MfaChallengeRequest] as a [StateFlow] for UI dialog rendering.
  */
-class DefaultMfaChallengeHandler : MfaChallengeHandler {
+public class DefaultMfaChallengeHandler : MfaChallengeHandler {
 
-    private val _challengeRequest = MutableStateFlow<MfaChallengeRequest?>(null)
-    val challengeRequest: StateFlow<MfaChallengeRequest?> = _challengeRequest.asStateFlow()
+    private val _challengeRequest: MutableStateFlow<MfaChallengeRequest?> = MutableStateFlow<MfaChallengeRequest?>(null)
+    public val challengeRequest: StateFlow<MfaChallengeRequest?> = _challengeRequest.asStateFlow()
 
-    override suspend fun onRequestMfaCode(mfaToken: String): String? {
+    public override suspend fun onRequestMfaCode(mfaToken: String): String? {
         val deferred = CompletableDeferred<String?>()
         val request = MfaChallengeRequest(
             mfaToken = mfaToken,
@@ -32,7 +32,7 @@ class DefaultMfaChallengeHandler : MfaChallengeHandler {
      *
      * @param code Verification secret supplied by the user.
      */
-    fun onConfirm(code: String) {
+    public fun onConfirm(code: String) {
         val current = _challengeRequest.value ?: return
         current.deferred.complete(code)
     }
@@ -40,7 +40,7 @@ class DefaultMfaChallengeHandler : MfaChallengeHandler {
     /**
      * Cancels the current challenge.
      */
-    fun onCancel() {
+    public fun onCancel() {
         val current = _challengeRequest.value ?: return
         current.deferred.complete(null)
     }

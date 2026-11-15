@@ -9,7 +9,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.i
  *
  * @param identifierRepository Remote identifier management API.
  */
-open class EmailChangePasswordUseCase(
+public open class EmailChangePasswordUseCase(
     private val identifierRepository: IdentifierRepository
 ) {
     /**
@@ -18,11 +18,9 @@ open class EmailChangePasswordUseCase(
      * @param newPassword Target password to be applied.
      * @return Success indicator, or a mapped failure.
      */
-    open suspend operator fun invoke(
+    public open suspend operator fun invoke(
         userIdentifierId: UserIdentifierId,
         oldPassword: String,
         newPassword: String
-    ): AppResult<Unit> {
-        return identifierRepository.emailChangePassword(userIdentifierId, oldPassword, newPassword)
-    }
+    ): AppResult<Unit> = identifierRepository.emailChangePassword(userIdentifierId, oldPassword, newPassword)
 }

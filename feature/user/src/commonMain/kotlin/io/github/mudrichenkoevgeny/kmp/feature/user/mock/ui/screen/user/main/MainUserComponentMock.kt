@@ -6,81 +6,89 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.main.MainUserComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.main.MainUserScreenState
 
+/**
+ * Mock implementation of [MainUserComponent] for Compose previews and testing.
+ */
 @InternalApi
-open class MainUserComponentMock(
+public open class MainUserComponentMock(
     initialState: MainUserScreenState = MainUserScreenState.Loading
 ) : MainUserComponent {
 
-    private val _state = MutableValue(initialState)
-    override val state: Value<MainUserScreenState> = _state
+    private val _state: MutableValue<MainUserScreenState> = MutableValue(initialState)
+    public override val state: Value<MainUserScreenState> = _state
 
-    var retryCalls = 0
-    var totpMainCalls = 0
-    var editUserCalls = 0
-    var sessionsCalls = 0
-    var identifiersCalls = 0
-    var filesCalls = 0
-    var deleteUserCalls = 0
-    var confirmDeleteUserCalls = 0
-    var dismissDeleteUserDialogCalls = 0
-    var logoutCalls = 0
-    var confirmLogoutCalls = 0
-    var dismissLogoutDialogCalls = 0
-    var loginCalls = 0
+    public var retryCalls: Int = 0
+    public var totpMainCalls: Int = 0
+    public var editUserCalls: Int = 0
+    public var sessionsCalls: Int = 0
+    public var identifiersCalls: Int = 0
+    public var filesCalls: Int = 0
+    public var deleteUserCalls: Int = 0
+    public var confirmDeleteUserCalls: Int = 0
+    public var dismissDeleteUserDialogCalls: Int = 0
+    public var logoutCalls: Int = 0
+    public var confirmLogoutCalls: Int = 0
+    public var dismissLogoutDialogCalls: Int = 0
+    public var loginCalls: Int = 0
 
-    fun setState(newState: MainUserScreenState) {
+    /**
+     * Updates the component state value.
+     *
+     * @param newState The new state value.
+     */
+    public fun setState(newState: MainUserScreenState) {
         _state.value = newState
     }
 
-    override fun onRetry() {
+    public override fun onRetry() {
         retryCalls++
     }
 
-    override fun onTotpMainClick() {
+    public override fun onTotpMainClick() {
         totpMainCalls++
     }
 
-    override fun onEditUserClick() {
+    public override fun onEditUserClick() {
         editUserCalls++
     }
 
-    override fun onSessionsClick() {
+    public override fun onSessionsClick() {
         sessionsCalls++
     }
 
-    override fun onIdentifiersClick() {
+    public override fun onIdentifiersClick() {
         identifiersCalls++
     }
 
-    override fun onFilesListClick() {
+    public override fun onFilesListClick() {
         filesCalls++
     }
 
-    override fun onDeleteUserClick() {
+    public override fun onDeleteUserClick() {
         deleteUserCalls++
     }
 
-    override fun onConfirmDeleteUserClick() {
+    public override fun onConfirmDeleteUserClick() {
         confirmDeleteUserCalls++
     }
 
-    override fun onDismissDeleteUserDialog() {
+    public override fun onDismissDeleteUserDialog() {
         dismissDeleteUserDialogCalls++
     }
 
-    override fun onLogoutClick() {
+    public override fun onLogoutClick() {
         logoutCalls++
     }
 
-    override fun onConfirmLogoutClick() {
+    public override fun onConfirmLogoutClick() {
         confirmLogoutCalls++
     }
 
-    override fun onDismissLogoutDialog() {
+    public override fun onDismissLogoutDialog() {
         dismissLogoutDialogCalls++
     }
 
-    override fun onLoginClick() {
+    public override fun onLoginClick() {
         loginCalls++
     }
 }

@@ -8,49 +8,56 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.totprecoverycodes.createTestTotpRecoveryCodes
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.domain.model.totpsetup.createTestTotpSetup
 
+/**
+ * Mock implementation of [UserSecurityRepository] for testing.
+ */
 @InternalApi
-open class UserSecurityRepositoryMock : UserSecurityRepository {
+public open class UserSecurityRepositoryMock : UserSecurityRepository {
 
-    var totpSetupResultProvider: () -> AppResult<TotpSetup> = {
+    public var totpSetupResultProvider: () -> AppResult<TotpSetup> = {
         AppResult.Success(
             createTestTotpSetup()
         )
     }
 
-    var enableTotpResultProvider: (mfaToken: String, code: String) -> AppResult<TotpRecoveryCodes> = { _, _ ->
+    public var enableTotpResultProvider: (mfaToken: String, code: String) -> AppResult<TotpRecoveryCodes> = { _, _ ->
         AppResult.Success(
             createTestTotpRecoveryCodes()
         )
     }
 
-    var disableTotpResultProvider: () -> AppResult<Unit> = { AppResult.Success(Unit) }
+    public var disableTotpResultProvider: () -> AppResult<Unit> = { AppResult.Success(Unit) }
 
-    var recoveryCodesResultProvider: () -> AppResult<TotpRecoveryCodes> = {
+    public var recoveryCodesResultProvider: () -> AppResult<TotpRecoveryCodes> = {
         AppResult.Success(
             createTestTotpRecoveryCodes()
         )
     }
 
-    var regenerateRecoveryCodesResultProvider: () -> AppResult<TotpRecoveryCodes> = {
+    public var regenerateRecoveryCodesResultProvider: () -> AppResult<TotpRecoveryCodes> = {
         AppResult.Success(
             createTestTotpRecoveryCodes()
         )
     }
 
-    var lastMfaToken: String? = null
-    var lastCode: String? = null
+    public var lastMfaToken: String? = null
+    public var lastCode: String? = null
 
-    override suspend fun setupTotp(): AppResult<TotpSetup> = totpSetupResultProvider()
+    public override suspend fun setupTotp(): AppResult<TotpSetup> = totpSetupResultProvider()
 
-    override suspend fun enableTotp(mfaToken: String, code: String): AppResult<TotpRecoveryCodes> {
+    public override suspend fun enableTotp(
+        mfaToken: String,
+        code: String
+    ): AppResult<TotpRecoveryCodes> {
         lastMfaToken = mfaToken
         lastCode = code
         return enableTotpResultProvider(mfaToken, code)
     }
 
-    override suspend fun disableTotp(): AppResult<Unit> = disableTotpResultProvider()
+    public override suspend fun disableTotp(): AppResult<Unit> = disableTotpResultProvider()
 
-    override suspend fun getRecoveryCodes(): AppResult<TotpRecoveryCodes> = recoveryCodesResultProvider()
+    public override suspend fun getRecoveryCodes(): AppResult<TotpRecoveryCodes> = recoveryCodesResultProvider()
 
-    override suspend fun regenerateRecoveryCodes(): AppResult<TotpRecoveryCodes> = regenerateRecoveryCodesResultProvider()
+    public override suspend fun regenerateRecoveryCodes(): AppResult<TotpRecoveryCodes> =
+        regenerateRecoveryCodesResultProvider()
 }

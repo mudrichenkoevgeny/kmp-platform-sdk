@@ -6,12 +6,12 @@ import kotlin.time.Instant
 /**
  * [Clock] with a mutable epoch for deterministic tests and previews (not wired into production components).
  */
-class MutableEpochTestClock(
+public class MutableEpochTestClock(
     private var epochMilliseconds: Long
 ) : Clock {
-    override fun now(): Instant = Instant.fromEpochMilliseconds(epochMilliseconds)
+    public override fun now(): Instant = Instant.fromEpochMilliseconds(epochMilliseconds)
 
-    fun advanceMilliseconds(delta: Long) {
+    public fun advanceMilliseconds(delta: Long) {
         epochMilliseconds += delta
     }
 }

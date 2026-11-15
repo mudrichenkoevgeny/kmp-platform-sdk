@@ -10,13 +10,13 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.u
 /**
  * UI state for global platform users list management screen.
  */
-sealed interface GlobalUserListScreenState {
+public sealed interface GlobalUserListScreenState {
 
     /** Initial loading of users list. */
-    object Loading : GlobalUserListScreenState
+    public object Loading : GlobalUserListScreenState
 
     /** Critical error during state initialization. */
-    data class Error(val error: AppError) : GlobalUserListScreenState
+    public data class Error(public val error: AppError) : GlobalUserListScreenState
 
     /**
      * Users list with pagination, sorting, and filtering.
@@ -29,13 +29,13 @@ sealed interface GlobalUserListScreenState {
      * @param actionLoading True when an action is in progress.
      * @param actionError Error from the last action attempt.
      */
-    data class Content(
-        val paging: PaginationState<UserSummary>,
-        val currentUserId: UserId? = null,
-        val sortState: ListingSortState? = null,
-        val filterStates: Map<String, ListingFilterState> = emptyMap(),
-        val isFilterPanelExpanded: Boolean = false,
-        val actionLoading: Boolean = false,
-        val actionError: AppError? = null
+    public data class Content(
+        public val paging: PaginationState<UserSummary>,
+        public val currentUserId: UserId? = null,
+        public val sortState: ListingSortState? = null,
+        public val filterStates: Map<String, ListingFilterState> = emptyMap(),
+        public val isFilterPanelExpanded: Boolean = false,
+        public val actionLoading: Boolean = false,
+        public val actionError: AppError? = null
     ) : GlobalUserListScreenState
 }

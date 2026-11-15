@@ -24,7 +24,7 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.Managemen
  * @param onNavigateBack Callback for back navigation.
  * @return Configured [StorageFileListComponent] instance.
  */
-fun createStaffSelfStorageFileListComponent(
+public fun createStaffSelfStorageFileListComponent(
     componentContext: ComponentContext,
     getFilesUseCase: ManagementGetFilesUseCase,
     deleteFileUseCase: ManagementDeleteFileUseCase,

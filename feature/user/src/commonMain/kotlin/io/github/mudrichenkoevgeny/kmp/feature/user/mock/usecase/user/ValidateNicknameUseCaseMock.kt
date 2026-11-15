@@ -8,15 +8,19 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.validation.Vali
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.nickname.NicknameValidator
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.validator.nickname.NicknameValidatorImpl
 
+/**
+ * Mock implementation of [ValidateNicknameUseCase] for testing.
+ */
 @InternalApi
-class ValidateNicknameUseCaseMock(
+public class ValidateNicknameUseCaseMock(
     nicknameValidator: NicknameValidator = NicknameValidatorImpl(),
     getAuthSettingsUseCase: GetAuthSettingsUseCase = GetAuthSettingsUseCase(OpenAuthSettingsRepositoryMock())
 ) : ValidateNicknameUseCase(nicknameValidator, getAuthSettingsUseCase) {
 
-    var resultProvider: (String, String?) -> AppResult<Unit> = { _, _ -> AppResult.Success(Unit) }
+    public var resultProvider: (String, String?) -> AppResult<Unit> = { _, _ -> AppResult.Success(Unit) }
 
-    override suspend fun invoke(newNickname: String, currentNickname: String?): AppResult<Unit> {
-        return resultProvider(newNickname, currentNickname)
-    }
+    public override suspend fun invoke(
+        newNickname: String,
+        currentNickname: String?
+    ): AppResult<Unit> = resultProvider(newNickname, currentNickname)
 }

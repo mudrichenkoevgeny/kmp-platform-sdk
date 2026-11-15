@@ -6,12 +6,15 @@ import io.github.mudrichenkoevgeny.kmp.core.security.mock.repository.OpenSecurit
 import io.github.mudrichenkoevgeny.kmp.core.security.usecase.ValidatePasswordUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.testing.core.security.passwordpolicy.validator.PasswordPolicyValidatorMock
 
+/**
+ * Mock implementation of [ValidatePasswordUseCase] for testing purposes.
+ */
 @InternalApi
-class ValidatePasswordUseCaseMock : ValidatePasswordUseCase(
+public class ValidatePasswordUseCaseMock : ValidatePasswordUseCase(
     openSecuritySettingsRepository = OpenSecuritySettingsRepositoryMock(),
     passwordPolicyValidator = PasswordPolicyValidatorMock()
 ) {
-    var resultProvider: (String) -> AppResult<Unit> = { AppResult.Success(Unit) }
+    public var resultProvider: (String) -> AppResult<Unit> = { AppResult.Success(Unit) }
 
-    override suspend fun invoke(password: String): AppResult<Unit> = resultProvider(password)
+    public override suspend fun invoke(password: String): AppResult<Unit> = resultProvider(password)
 }

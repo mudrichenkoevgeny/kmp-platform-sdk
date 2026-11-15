@@ -53,17 +53,15 @@ class PagingFooterScreenshotTest(
         @Suppress("Unused")
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
-        fun data(): Collection<Array<Any>> {
-            return listOf(
-                arrayOf(
-                    "Loading",
-                    PaginationState<Any>(items = listOf(object {}), isNextPageLoading = true)
-                ),
-                arrayOf(
-                    "Error",
-                    PaginationState<Any>(items = listOf(object {}), error = CommonError.Unknown(isRetryable = true))
-                )
+        fun data(): Collection<Array<Any>> = listOf(
+            arrayOf(
+                "Loading",
+                PaginationState<Any>(items = listOf(object {}), isNextPageLoading = true)
+            ),
+            arrayOf(
+                "Error",
+                PaginationState<Any>(items = listOf(object {}), error = CommonError.Unknown(isRetryable = true))
             )
-        }
+        )
     }
 }

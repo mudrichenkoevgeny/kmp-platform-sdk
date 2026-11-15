@@ -11,15 +11,15 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.error.naming.U
  *
  * [code] values follow shared [UserErrorCodes] or [ClientUserErrorCodes].
  */
-sealed class UserError(
-    override val id: ErrorId,
-    override val code: String,
-    override val args: Map<String, String>? = null,
-    override val isRetryable: Boolean
+public sealed class UserError(
+    public override val id: ErrorId,
+    public override val code: String,
+    public override val args: Map<String, String>? = null,
+    public override val isRetryable: Boolean
 ) : AppError {
 
     /** Emitted when the stored refresh token is rejected or missing while refreshing a session. */
-    class InvalidRefreshToken : UserError(
+    public class InvalidRefreshToken : UserError(
         id = ErrorId.generate(),
         code = UserErrorCodes.INVALID_REFRESH_TOKEN,
         isRetryable = false
@@ -30,8 +30,8 @@ sealed class UserError(
      *
      * @param throwable Optional underlying cancellation cause for logging; not shown directly to users.
      */
-    class ExternalAuthCancelled(
-        val throwable: Throwable?
+    public class ExternalAuthCancelled(
+        public val throwable: Throwable?
     ) : UserError(
         id = ErrorId.generate(),
         code = ClientUserErrorCodes.EXTERNAL_AUTH_CANCELLED,
@@ -43,8 +43,8 @@ sealed class UserError(
      *
      * @param throwable Optional failure cause for logging; not shown directly to users.
      */
-    class ExternalAuthFailed(
-        val throwable: Throwable?
+    public class ExternalAuthFailed(
+        public val throwable: Throwable?
     ) : UserError(
         id = ErrorId.generate(),
         code = ClientUserErrorCodes.EXTERNAL_AUTH_FAILED,
@@ -56,8 +56,8 @@ sealed class UserError(
      *
      * @param retryAfterSeconds Suggested wait time before retrying a send; safe to display to users.
      */
-    class TooManyConfirmationRequests(
-        val retryAfterSeconds: Int
+    public class TooManyConfirmationRequests(
+        public val retryAfterSeconds: Int
     ) : UserError(
         id = ErrorId.generate(),
         code = ClientUserErrorCodes.TOO_MANY_CONFIRMATION_REQUESTS,
@@ -65,22 +65,22 @@ sealed class UserError(
     )
 
     /** Registration is disabled by administrator in auth settings. */
-    class RegistrationDisabled : UserError(
+    public class RegistrationDisabled : UserError(
         id = ErrorId.generate(),
         code = UserErrorCodes.REGISTRATION_DISABLED,
         isRetryable = false
     )
 
     /** Emitted when attempting to change a nickname when changes are disabled by policy. */
-    class NicknameChangeDisabled : UserError(
+    public class NicknameChangeDisabled : UserError(
         id = ErrorId.generate(),
         code = UserErrorCodes.NICKNAME_CHANGE_DISABLED,
         isRetryable = false
     )
 
     /** Emitted when nickname length is below the configured minimum. */
-    class NicknameTooShort(
-        val minLength: Int
+    public class NicknameTooShort(
+        public val minLength: Int
     ) : UserError(
         id = ErrorId.generate(),
         code = UserErrorCodes.NICKNAME_TOO_SHORT,
@@ -89,8 +89,8 @@ sealed class UserError(
     )
 
     /** Emitted when nickname length is above the configured maximum. */
-    class NicknameTooLong(
-        val maxLength: Int
+    public class NicknameTooLong(
+        public val maxLength: Int
     ) : UserError(
         id = ErrorId.generate(),
         code = UserErrorCodes.NICKNAME_TOO_LONG,
@@ -99,15 +99,15 @@ sealed class UserError(
     )
 
     /** Emitted when nickname contains forbidden characters. */
-    class InvalidNicknameCharacters : UserError(
+    public class InvalidNicknameCharacters : UserError(
         id = ErrorId.generate(),
         code = UserErrorCodes.INVALID_NICKNAME_CHARACTERS,
         isRetryable = false
     )
 
     /** Emitted when display name length is below the configured minimum. */
-    class DisplayNameTooShort(
-        val minLength: Int
+    public class DisplayNameTooShort(
+        public val minLength: Int
     ) : UserError(
         id = ErrorId.generate(),
         code = UserErrorCodes.DISPLAY_NAME_TOO_SHORT,
@@ -116,8 +116,8 @@ sealed class UserError(
     )
 
     /** Emitted when display name length is above the configured maximum. */
-    class DisplayNameTooLong(
-        val maxLength: Int
+    public class DisplayNameTooLong(
+        public val maxLength: Int
     ) : UserError(
         id = ErrorId.generate(),
         code = UserErrorCodes.DISPLAY_NAME_TOO_LONG,
@@ -126,7 +126,7 @@ sealed class UserError(
     )
 
     /** Emitted when display name contains forbidden characters. */
-    class InvalidDisplayNameCharacters : UserError(
+    public class InvalidDisplayNameCharacters : UserError(
         id = ErrorId.generate(),
         code = UserErrorCodes.INVALID_DISPLAY_NAME_CHARACTERS,
         isRetryable = false

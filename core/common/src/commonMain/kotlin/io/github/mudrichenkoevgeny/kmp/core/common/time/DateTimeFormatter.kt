@@ -12,7 +12,7 @@ import kotlin.time.Instant
  * @param instant Instant timestamp.
  * @return Formatted date-time string, or `null` if [instant] is null.
  */
-fun formatInstantToDateTime(instant: Instant?): String? {
+public fun formatInstantToDateTime(instant: Instant?): String? {
     if (instant == null) {
         return null
     }
@@ -44,7 +44,7 @@ fun formatInstantToDateTime(instant: Instant?): String? {
  * @param epochMillis Epoch milliseconds timestamp.
  * @return Formatted date-time string, or `null` if [epochMillis] is null.
  */
-fun formatEpochMillisToDateTime(epochMillis: Long?): String? {
+public fun formatEpochMillisToDateTime(epochMillis: Long?): String? {
     if (epochMillis == null) {
         return null
     }
@@ -57,6 +57,6 @@ fun formatEpochMillisToDateTime(epochMillis: Long?): String? {
  * @param epochMillisString String representation of epoch milliseconds.
  * @return Formatted date-time string, or `null` if [epochMillisString] is null, blank, or invalid.
  */
-fun formatEpochMillisToDateTime(epochMillisString: String?): String? {
-    return formatEpochMillisToDateTime(epochMillisString?.toLongOrNull())
-}
+public fun formatEpochMillisToDateTime(epochMillisString: String?): String? = formatEpochMillisToDateTime(
+    epochMillisString?.toLongOrNull()
+)

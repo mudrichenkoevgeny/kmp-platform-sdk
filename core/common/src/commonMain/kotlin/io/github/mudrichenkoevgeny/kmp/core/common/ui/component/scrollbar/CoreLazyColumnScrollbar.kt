@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
  * Vertical scrollbar for lazy lists.
  */
 @Composable
-expect fun CoreLazyColumnScrollbar(
+public expect fun CoreLazyColumnScrollbar(
     lazyListState: LazyListState,
     modifier: Modifier = Modifier
 )

@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.stack.Children
@@ -46,9 +45,9 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyTex
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogSizePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.FontScalePreviews
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ThemePreviews
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewDialogSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.resetpassword.ResetEmailPasswordComponentMock
@@ -59,7 +58,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.auth.resetpas
  * @param component Decompose component providing state and callbacks.
  */
 @Composable
-fun ResetEmailPasswordScreen(component: ResetEmailPasswordComponent) {
+public fun ResetEmailPasswordScreen(component: ResetEmailPasswordComponent) {
     val state by component.state.subscribeAsState()
 
     Box(
@@ -79,6 +78,7 @@ fun ResetEmailPasswordScreen(component: ResetEmailPasswordComponent) {
                         onBackClick = component::onBackClick
                     )
                 }
+
                 is ResetEmailPasswordComponent.Child.ConfirmInput -> {
                     ResetInputContent(
                         state = state,
@@ -273,7 +273,10 @@ private fun ResetInputContent(
 }
 
 @Composable
-private fun ErrorText(error: AppError?, tag: String) {
+private fun ErrorText(
+    error: AppError?,
+    tag: String
+) {
     AnimatedVisibility(
         visible = error != null,
         enter = fadeIn() + expandVertically(),
@@ -348,7 +351,7 @@ private val defaultResetEmailPasswordPreviewState = ResetEmailPasswordScreenStat
 )
 
 @InternalApi
-@DialogSizePreviews
+@PreviewDialogSizes
 @Composable
 private fun StatesPreview(
     @PreviewParameter(ResetEmailPasswordPreviewProvider::class) state: ResetEmailPasswordScreenState
@@ -359,7 +362,7 @@ private fun StatesPreview(
 }
 
 @InternalApi
-@DialogSizePreviews
+@PreviewDialogSizes
 @Composable
 private fun DialogSizePreview() {
     DialogPreviewContainer {
@@ -368,7 +371,7 @@ private fun DialogSizePreview() {
 }
 
 @InternalApi
-@ThemePreviews
+@PreviewThemes
 @Composable
 private fun ThemePreview() {
     DialogPreviewContainer {
@@ -377,7 +380,7 @@ private fun ThemePreview() {
 }
 
 @InternalApi
-@FontScalePreviews
+@PreviewFontScales
 @Composable
 private fun FontScalePreview() {
     DialogPreviewContainer {
@@ -385,21 +388,21 @@ private fun FontScalePreview() {
     }
 }
 
-internal object ResetEmailPasswordTestTags {
-    const val EMAIL_STEP_BACK_BUTTON = "ResetEmailPassword_EmailStepBackButton"
-    const val EMAIL_STEP_TITLE = "ResetEmailPassword_EmailStepTitle"
-    const val EMAIL_INPUT = "ResetEmailPassword_EmailInput"
-    const val SEND_CODE_BUTTON = "ResetEmailPassword_SendCodeButton"
-    const val EMAIL_STEP_ERROR_TEXT = "ResetEmailPassword_EmailStepErrorText"
+public object ResetEmailPasswordTestTags {
+    public const val EMAIL_STEP_BACK_BUTTON: String = "ResetEmailPassword_EmailStepBackButton"
+    public const val EMAIL_STEP_TITLE: String = "ResetEmailPassword_EmailStepTitle"
+    public const val EMAIL_INPUT: String = "ResetEmailPassword_EmailInput"
+    public const val SEND_CODE_BUTTON: String = "ResetEmailPassword_SendCodeButton"
+    public const val EMAIL_STEP_ERROR_TEXT: String = "ResetEmailPassword_EmailStepErrorText"
 
-    const val RESET_STEP_BACK_BUTTON = "ResetEmailPassword_ResetStepBackButton"
-    const val RESET_STEP_TITLE = "ResetEmailPassword_ResetStepTitle"
-    const val CODE_SENT_INFO_TEXT = "ResetEmailPassword_CodeSentInfoText"
-    const val CODE_INPUT = "ResetEmailPassword_CodeInput"
-    const val NEW_PASSWORD_INPUT = "ResetEmailPassword_NewPasswordInput"
-    const val RESEND_TIMER_TEXT = "ResetEmailPassword_ResendTimerText"
-    const val RESEND_CODE_BUTTON = "ResetEmailPassword_ResendCodeButton"
-    const val CONFIRM_BUTTON = "ResetEmailPassword_ConfirmButton"
-    const val CHANGE_EMAIL_BUTTON = "ResetEmailPassword_ChangeEmailButton"
-    const val RESET_STEP_ERROR_TEXT = "ResetEmailPassword_ResetStepErrorText"
+    public const val RESET_STEP_BACK_BUTTON: String = "ResetEmailPassword_ResetStepBackButton"
+    public const val RESET_STEP_TITLE: String = "ResetEmailPassword_ResetStepTitle"
+    public const val CODE_SENT_INFO_TEXT: String = "ResetEmailPassword_CodeSentInfoText"
+    public const val CODE_INPUT: String = "ResetEmailPassword_CodeInput"
+    public const val NEW_PASSWORD_INPUT: String = "ResetEmailPassword_NewPasswordInput"
+    public const val RESEND_TIMER_TEXT: String = "ResetEmailPassword_ResendTimerText"
+    public const val RESEND_CODE_BUTTON: String = "ResetEmailPassword_ResendCodeButton"
+    public const val CONFIRM_BUTTON: String = "ResetEmailPassword_ConfirmButton"
+    public const val CHANGE_EMAIL_BUTTON: String = "ResetEmailPassword_ChangeEmailButton"
+    public const val RESET_STEP_ERROR_TEXT: String = "ResetEmailPassword_ResetStepErrorText"
 }

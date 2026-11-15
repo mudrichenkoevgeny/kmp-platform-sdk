@@ -18,7 +18,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.l
  * @property filterStates Map of filter ID to active [ListingFilterState].
  * @property targetUserId Optional target user ID for scope-constrained queries.
  */
-data class IdentifierListQuery(
+public data class IdentifierListQuery(
     val pageNumber: Int,
     val sortState: ListingSortState? = null,
     val filterStates: Map<String, ListingFilterState> = emptyMap(),
@@ -26,78 +26,82 @@ data class IdentifierListQuery(
 ) {
 
     /** Parsed identifier ID text or null if blank. */
-    val identifierIdText: String?
+    public val identifierIdText: String?
         get() = (filterStates[UserIdentifierFilterValues.IDENTIFIER_ID] as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }
 
     /** Parsed user ID text or null if blank. */
-    val userIdText: String?
+    public val userIdText: String?
         get() = (filterStates[UserIdentifierFilterValues.USER_ID] as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }
 
     /** Parsed identifier text or null if blank. */
-    val identifierText: String?
+    public val identifierText: String?
         get() = (filterStates[UserIdentifierFilterValues.IDENTIFIER] as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }
 
     /** Parsed auth provider choices. */
-    val authProvidersChoices: List<UserAuthProvider>
+    public val authProvidersChoices: List<UserAuthProvider>
         get() = (filterStates[UserIdentifierFilterValues.USER_AUTH_PROVIDER] as? ChoiceListingFilterState)
             ?.selectedIds?.mapNotNull { UserAuthProvider.fromValueOrNull(it) }.orEmpty()
 
     /** Parsed excluded auth provider choices. */
-    val excludeAuthProvidersChoices: List<UserAuthProvider>
+    public val excludeAuthProvidersChoices: List<UserAuthProvider>
         get() = (filterStates[UserIdentifierFilterValues.EXCLUDE_USER_AUTH_PROVIDER] as? ChoiceListingFilterState)
             ?.selectedIds?.mapNotNull { UserAuthProvider.fromValueOrNull(it) }.orEmpty()
 
     /** Parsed display name text or null if blank. */
-    val displayNameText: String?
+    public val displayNameText: String?
         get() = (filterStates[UserIdentifierFilterValues.DISPLAY_NAME] as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }
 
     /** Parsed external provider email text or null if blank. */
-    val externalProviderEmailText: String?
+    public val externalProviderEmailText: String?
         get() = (filterStates[UserIdentifierFilterValues.EXTERNAL_PROVIDER_EMAIL] as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }
 
     /** Parsed boolean flag indicating whether external provider email is set. */
-    val isExternalProviderEmailSetChoice: Boolean?
-        get() = (filterStates[UserIdentifierFilterValues.IS_EXTERNAL_PROVIDER_EMAIL_SET] as? BooleanListingFilterState)?.value
+    public val isExternalProviderEmailSetChoice: Boolean?
+        get() = (
+            filterStates[UserIdentifierFilterValues.IS_EXTERNAL_PROVIDER_EMAIL_SET]
+                as? BooleanListingFilterState
+            )?.value
 
     /** Parsed creation lower bound timestamp text. */
-    val createdAtFromText: String?
+    public val createdAtFromText: String?
         get() = (filterStates[UserIdentifierFilterValues.CREATED_AT_FROM] as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }
 
     /** Parsed creation upper bound timestamp text. */
-    val createdAtToText: String?
+    public val createdAtToText: String?
         get() = (filterStates[UserIdentifierFilterValues.CREATED_AT_TO] as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }
 
     /** Parsed update lower bound timestamp text. */
-    val updatedAtFromText: String?
+    public val updatedAtFromText: String?
         get() = (filterStates[UserIdentifierFilterValues.UPDATED_AT_FROM] as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }
 
     /** Parsed update upper bound timestamp text. */
-    val updatedAtToText: String?
+    public val updatedAtToText: String?
         get() = (filterStates[UserIdentifierFilterValues.UPDATED_AT_TO] as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }
 
     /** Parsed boolean flag indicating whether record has been updated. */
-    val isUpdatedAtSetChoice: Boolean?
+    public val isUpdatedAtSetChoice: Boolean?
         get() = (filterStates[UserIdentifierFilterValues.IS_UPDATED_AT_SET] as? BooleanListingFilterState)?.value
 
     /** Parsed search query filter text or null if blank. */
-    val searchQueryText: String?
+    public val searchQueryText: String?
         get() = (filterStates[UserIdentifierFilterValues.SEARCH_QUERY] as? TextListingFilterState)
             ?.value?.takeIf { it.isNotBlank() }
 
     /** Parsed sort field option or default. */
-    val sortBy: UserIdentifierSortBy
-        get() = sortState?.optionId?.let { id -> UserIdentifierSortBy.fromValueOrNull(id) } ?: UserIdentifierSortBy.DEFAULT
+    public val sortBy: UserIdentifierSortBy
+        get() = sortState?.optionId?.let { id -> UserIdentifierSortBy.fromValueOrNull(id) }
+            ?: UserIdentifierSortBy.DEFAULT
 
     /** Parsed sort order or default. */
-    val sortOrder: SortOrder
+    public val sortOrder: SortOrder
         get() = sortState?.let { if (it.isAscending) SortOrder.ASC else SortOrder.DESC } ?: SortOrder.DEFAULT
 }
