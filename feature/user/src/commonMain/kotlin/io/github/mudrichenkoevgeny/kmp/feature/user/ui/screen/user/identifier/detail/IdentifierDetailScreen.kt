@@ -400,10 +400,8 @@ private class IdentifierDetailPreviewProvider : PreviewParameterProvider<Identif
 @Composable
 private fun IdentifierDetailPreviewContent(state: IdentifierDetailScreenState) {
     CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-        CoreTheme {
-            ScreenPreviewContainer {
-                IdentifierDetailScreen(component = IdentifierDetailComponentMock(initialState = state))
-            }
+        ScreenPreviewContainer {
+            IdentifierDetailScreen(component = IdentifierDetailComponentMock(initialState = state))
         }
     }
 }
@@ -422,28 +420,36 @@ private val defaultIdentifierDetailPreviewState = IdentifierDetailScreenState.Co
 private fun IdentifierDetailStatesPreview(
     @PreviewParameter(IdentifierDetailPreviewProvider::class) state: IdentifierDetailScreenState
 ) {
-    IdentifierDetailPreviewContent(state = state)
+    ScreenPreviewContainer {
+        IdentifierDetailPreviewContent(state = state)
+    }
 }
 
 @InternalApi
 @PreviewScreenSizes
 @Composable
 private fun IdentifierDetailScreenSizePreview() {
-    IdentifierDetailPreviewContent(state = defaultIdentifierDetailPreviewState)
+    ScreenPreviewContainer {
+        IdentifierDetailPreviewContent(state = defaultIdentifierDetailPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewThemes
 @Composable
 private fun IdentifierDetailThemePreview() {
-    IdentifierDetailPreviewContent(state = defaultIdentifierDetailPreviewState)
+    ScreenPreviewContainer {
+        IdentifierDetailPreviewContent(state = defaultIdentifierDetailPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewFontScales
 @Composable
 private fun IdentifierDetailFontScalePreview() {
-    IdentifierDetailPreviewContent(state = defaultIdentifierDetailPreviewState)
+    ScreenPreviewContainer {
+        IdentifierDetailPreviewContent(state = defaultIdentifierDetailPreviewState)
+    }
 }
 
 /**

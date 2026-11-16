@@ -28,9 +28,15 @@ public class OpenAuthSettingsRepositoryMock : OpenAuthSettingsRepository {
             )
     }
 
+    public var refreshCallCount: Int = 0
+        private set
+
     public override suspend fun getOpenAuthSettings(): AppResult<OpenAuthSettings> = resultProvider()
 
-    public override suspend fun refreshOpenAuthSettings(): AppResult<OpenAuthSettings> = resultProvider()
+    public override suspend fun refreshOpenAuthSettings(): AppResult<OpenAuthSettings> {
+        refreshCallCount++
+        return resultProvider()
+    }
 
     public override suspend fun updateOpenAuthSettings(authSettings: OpenAuthSettings) {
         authSettingsFlow.value = authSettings

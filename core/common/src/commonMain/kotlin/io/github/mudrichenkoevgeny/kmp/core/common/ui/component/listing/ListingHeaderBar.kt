@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -20,6 +19,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -113,13 +113,11 @@ private val defaultListingHeaderBarPreviewState = PaginationState(
 private fun ListingHeaderBarStatesPreview(
     @PreviewParameter(ListingHeaderBarPreviewProvider::class) state: PaginationState<String>
 ) {
-    CoreTheme {
-        Surface {
-            ListingHeaderBar(
-                state = state,
-                lazyListState = rememberLazyListState()
-            )
-        }
+    ComponentPreviewContainer {
+        ListingHeaderBar(
+            state = state,
+            lazyListState = rememberLazyListState()
+        )
     }
 }
 
@@ -127,13 +125,11 @@ private fun ListingHeaderBarStatesPreview(
 @PreviewComponentSizes
 @Composable
 private fun ListingHeaderBarComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            ListingHeaderBar(
-                state = defaultListingHeaderBarPreviewState,
-                lazyListState = rememberLazyListState()
-            )
-        }
+    ComponentPreviewContainer {
+        ListingHeaderBar(
+            state = defaultListingHeaderBarPreviewState,
+            lazyListState = rememberLazyListState()
+        )
     }
 }
 
@@ -141,13 +137,11 @@ private fun ListingHeaderBarComponentSizePreview() {
 @PreviewThemes
 @Composable
 private fun ListingHeaderBarThemePreview() {
-    CoreTheme {
-        Surface {
-            ListingHeaderBar(
-                state = defaultListingHeaderBarPreviewState,
-                lazyListState = rememberLazyListState()
-            )
-        }
+    ComponentPreviewContainer {
+        ListingHeaderBar(
+            state = defaultListingHeaderBarPreviewState,
+            lazyListState = rememberLazyListState()
+        )
     }
 }
 
@@ -155,12 +149,10 @@ private fun ListingHeaderBarThemePreview() {
 @PreviewFontScales
 @Composable
 private fun ListingHeaderBarFontScalePreview() {
-    CoreTheme {
-        Surface {
-            ListingHeaderBar(
-                state = defaultListingHeaderBarPreviewState,
-                lazyListState = rememberLazyListState()
-            )
-        }
+    ComponentPreviewContainer {
+        ListingHeaderBar(
+            state = defaultListingHeaderBarPreviewState,
+            lazyListState = rememberLazyListState()
+        )
     }
 }

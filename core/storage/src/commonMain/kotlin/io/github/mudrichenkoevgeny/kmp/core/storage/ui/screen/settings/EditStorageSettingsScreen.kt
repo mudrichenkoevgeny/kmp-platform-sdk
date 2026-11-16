@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,7 +13,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -45,7 +43,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyTex
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -324,22 +321,6 @@ private fun ErrorText(
     }
 }
 
-@InternalApi
-@Preview(showBackground = true)
-@Composable
-private fun ErrorTextPreview() {
-    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-        CoreTheme {
-            Surface {
-                ErrorText(
-                    error = CommonError.Unknown(),
-                    testTag = EditStorageSettingsTestTags.ERROR_TEXT
-                )
-            }
-        }
-    }
-}
-
 private data class EditStorageSettingsPreviewState(
     val state: EditStorageSettingsScreenState = EditStorageSettingsScreenState.Content(
         initialSettings = createTestManagementStorageSettings(),
@@ -373,18 +354,12 @@ private class EditStorageSettingsPreviewProvider : PreviewParameterProvider<Edit
 @InternalApi
 @Composable
 private fun EditStorageSettingsPreviewContent(state: EditStorageSettingsPreviewState) {
-    ScreenPreviewContainer {
-        CoreTheme {
-            Surface {
-                Box {
-                    EditStorageSettingsScreen(
-                        component = EditStorageSettingsComponentMock(
-                            initialState = state.state
-                        )
-                    )
-                }
-            }
-        }
+    CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+        EditStorageSettingsScreen(
+            component = EditStorageSettingsComponentMock(
+                initialState = state.state
+            )
+        )
     }
 }
 
@@ -397,33 +372,34 @@ private val defaultEditStorageSettingsPreviewState = EditStorageSettingsPreviewS
 private fun EditStorageSettingsStatesPreview(
     @PreviewParameter(EditStorageSettingsPreviewProvider::class) state: EditStorageSettingsPreviewState
 ) {
-    EditStorageSettingsPreviewContent(state = state)
-}
-
-@InternalApi
-@PreviewComponentSizes
-@Composable
-private fun EditStorageSettingsComponentSizePreview() {
-    EditStorageSettingsPreviewContent(state = defaultEditStorageSettingsPreviewState)
+    ScreenPreviewContainer {
+        EditStorageSettingsPreviewContent(state = state)
+    }
 }
 
 @InternalApi
 @PreviewScreenSizes
 @Composable
 private fun EditStorageSettingsScreenSizePreview() {
-    EditStorageSettingsPreviewContent(state = defaultEditStorageSettingsPreviewState)
+    ScreenPreviewContainer {
+        EditStorageSettingsPreviewContent(state = defaultEditStorageSettingsPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewThemes
 @Composable
 private fun EditStorageSettingsThemePreview() {
-    EditStorageSettingsPreviewContent(state = defaultEditStorageSettingsPreviewState)
+    ScreenPreviewContainer {
+        EditStorageSettingsPreviewContent(state = defaultEditStorageSettingsPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewFontScales
 @Composable
 private fun EditStorageSettingsFontScalePreview() {
-    EditStorageSettingsPreviewContent(state = defaultEditStorageSettingsPreviewState)
+    ScreenPreviewContainer {
+        EditStorageSettingsPreviewContent(state = defaultEditStorageSettingsPreviewState)
+    }
 }

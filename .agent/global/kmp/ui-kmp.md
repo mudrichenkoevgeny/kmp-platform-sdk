@@ -9,14 +9,15 @@ alwaysApply: true
 This document defines standards for UI components, screens, preview tooling, and testing boundaries for KMP applications.
 
 ## 1. UI Localization Enforcement
-- **Production UI:** All user-facing text in production `@Composable` functions must strictly use Compose Multiplatform localized resources (`Res.string.*` via `stringResource(...)`). Hardcoded string literals in production UI code are strictly forbidden.
+- **Production UI:** All user-facing text in production `@Composable` functions must strictly use the custom `shared-foundation` localization system (e.g., `CommonModuleStrings` via `LocalCommonStrings.current`). Direct usage of `Res.string.*` via `stringResource(...)` is prohibited. Hardcoded string literals in production UI code are strictly forbidden.
 - **Tests & Previews Exception:** Non-localized raw string literals and test tags are permitted **only** inside unit tests, screenshot tests, and Compose preview composables.
 
-## 2. Mandatory Previews for Screens and Components
-- **UI Components:** Every reusable UI component (`Core*` or custom composable) must provide Compose previews annotated with `@PreviewComponentSizes`, `@PreviewThemes`, and `@PreviewFontScales`.
-- **UI Screens:** Every screen composable (`*Screen.kt`) must provide Compose previews annotated with `@PreviewScreenSizes`, `@PreviewThemes`, `@PreviewFontScales`, and state providers (`*PreviewParameterProvider`).
+## 2. Mandatory Previews for Screens, Dialogs, and Components
+- **UI Components:** Every reusable UI component (`Core*` or custom composable) must provide Compose previews annotated with `@PreviewComponentSizes`, `@PreviewThemes`, and `@PreviewFontScales`, wrapping content in `ComponentPreviewContainer`.
+- **UI Screens:** Every screen composable (`*Screen.kt`) must provide Compose previews annotated with `@PreviewScreenSizes`, `@PreviewThemes`, and `@PreviewFontScales`, wrapping content in `ScreenPreviewContainer`.
+- **UI Dialogs:** Every dialog composable must provide Compose previews annotated with `@PreviewDialogSizes`, `@PreviewThemes`, and `@PreviewFontScales`, wrapping content in `DialogPreviewContainer`.
 - **Annotations & Visibility:** All preview composables must be marked `private` and annotated with `@InternalApi`.
-- **Theme & Composition Local Wrapper:** Previews must wrap content in the application's root theme container and supply required composition local mocks to prevent preview rendering crashes (e.g. `LocalErrorParser provides AppErrorParserMock`).
+- **Theme & Composition Local Wrapper:** Previews must wrap content in standard preview containers (`ComponentPreviewContainer`, `ScreenPreviewContainer`, `DialogPreviewContainer`) to apply `CoreTheme` and supply required composition local mocks to prevent preview rendering crashes.
 
 ## 3. Mandatory Companion Tests
 - **Screen & Component Coverage:** Every created UI screen (`*Screen.kt`) or UI component must be accompanied by both:

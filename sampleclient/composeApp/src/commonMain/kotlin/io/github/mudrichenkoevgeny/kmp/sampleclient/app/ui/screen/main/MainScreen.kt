@@ -28,7 +28,6 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.dialog.MainScreenDialogConfig
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalCommonComponent
@@ -46,6 +45,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.mfa.MfaChalleng
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.root.UserRootScreen
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.LocalClientAppComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.mock.di.clientAppComponentMock
+import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.dialog.MainScreenDialogConfig
 import org.jetbrains.compose.resources.painterResource
 
 /**

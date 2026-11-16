@@ -19,6 +19,9 @@ public class OpenSecuritySettingsRepositoryMock(
 
     private val settingsStateFlow = MutableStateFlow(initialSettings)
 
+    public var refreshCallCount: Int = 0
+        private set
+
     public var getSecuritySettingsResult: AppResult<OpenSecuritySettings>? = null
     public var refreshSecuritySettingsResult: AppResult<OpenSecuritySettings>? = null
 
@@ -38,6 +41,7 @@ public class OpenSecuritySettingsRepositoryMock(
     }
 
     public override suspend fun refreshOpenSecuritySettings(): AppResult<OpenSecuritySettings> {
+        refreshCallCount++
         val customResult = refreshSecuritySettingsResult
         if (customResult != null) {
             return customResult

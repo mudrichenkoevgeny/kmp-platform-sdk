@@ -1,7 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,10 +10,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
  * Standard body text component styled with [MaterialTheme.typography].
@@ -116,10 +115,8 @@ public fun CoreTitleText(
 @PreviewComponentSizes
 @Composable
 private fun CoreBodyTextComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            CoreBodyText(text = LocalCommonStrings.current.ui.message)
-        }
+    ComponentPreviewContainer {
+        CoreBodyText(text = LocalCommonStrings.current.ui.message)
     }
 }
 
@@ -127,10 +124,8 @@ private fun CoreBodyTextComponentSizePreview() {
 @PreviewThemes
 @Composable
 private fun CoreBodyTextThemePreview() {
-    CoreTheme {
-        Surface {
-            CoreBodyText(text = LocalCommonStrings.current.ui.message)
-        }
+    ComponentPreviewContainer {
+        CoreBodyText(text = LocalCommonStrings.current.ui.message)
     }
 }
 
@@ -138,9 +133,7 @@ private fun CoreBodyTextThemePreview() {
 @PreviewFontScales
 @Composable
 private fun CoreBodyTextFontScalePreview() {
-    CoreTheme {
-        Surface {
-            CoreBodyText(text = LocalCommonStrings.current.ui.message)
-        }
+    ComponentPreviewContainer {
+        CoreBodyText(text = LocalCommonStrings.current.ui.message)
     }
 }

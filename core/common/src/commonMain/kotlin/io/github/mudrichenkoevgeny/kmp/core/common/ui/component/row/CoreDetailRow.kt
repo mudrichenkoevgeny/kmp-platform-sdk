@@ -5,17 +5,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
  * Standardized key-value detail row component displaying a descriptor label and value in a row layout.
@@ -54,13 +53,11 @@ public fun CoreDetailRow(
 @PreviewComponentSizes
 @Composable
 private fun CoreDetailRowComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            CoreDetailRow(
-                label = "Status",
-                value = "Active"
-            )
-        }
+    ComponentPreviewContainer {
+        CoreDetailRow(
+            label = "Status",
+            value = "Active"
+        )
     }
 }
 
@@ -68,13 +65,11 @@ private fun CoreDetailRowComponentSizePreview() {
 @PreviewThemes
 @Composable
 private fun CoreDetailRowThemePreview() {
-    CoreTheme {
-        Surface {
-            CoreDetailRow(
-                label = "Status",
-                value = "Active"
-            )
-        }
+    ComponentPreviewContainer {
+        CoreDetailRow(
+            label = "Status",
+            value = "Active"
+        )
     }
 }
 
@@ -82,12 +77,10 @@ private fun CoreDetailRowThemePreview() {
 @PreviewFontScales
 @Composable
 private fun CoreDetailRowFontScalePreview() {
-    CoreTheme {
-        Surface {
-            CoreDetailRow(
-                label = "Status",
-                value = "Active"
-            )
-        }
+    ComponentPreviewContainer {
+        CoreDetailRow(
+            label = "Status",
+            value = "Active"
+        )
     }
 }

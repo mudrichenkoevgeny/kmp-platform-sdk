@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,10 +14,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
  * Standardized error message text component styled with error color palette and optional animated visibility.
@@ -74,12 +73,10 @@ public fun CoreErrorText(
 @PreviewComponentSizes
 @Composable
 private fun CoreErrorTextComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            CoreErrorText(
-                text = LocalCommonStrings.current.errors.unknown
-            )
-        }
+    ComponentPreviewContainer {
+        CoreErrorText(
+            text = LocalCommonStrings.current.errors.unknown
+        )
     }
 }
 
@@ -87,12 +84,10 @@ private fun CoreErrorTextComponentSizePreview() {
 @PreviewThemes
 @Composable
 private fun CoreErrorTextThemePreview() {
-    CoreTheme {
-        Surface {
-            CoreErrorText(
-                text = LocalCommonStrings.current.errors.unknown
-            )
-        }
+    ComponentPreviewContainer {
+        CoreErrorText(
+            text = LocalCommonStrings.current.errors.unknown
+        )
     }
 }
 
@@ -100,11 +95,9 @@ private fun CoreErrorTextThemePreview() {
 @PreviewFontScales
 @Composable
 private fun CoreErrorTextFontScalePreview() {
-    CoreTheme {
-        Surface {
-            CoreErrorText(
-                text = LocalCommonStrings.current.errors.unknown
-            )
-        }
+    ComponentPreviewContainer {
+        CoreErrorText(
+            text = LocalCommonStrings.current.errors.unknown
+        )
     }
 }

@@ -15,6 +15,10 @@ kotlin {
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
+        optimization {
+            consumerKeepRules.file("consumer-rules.pro")
+        }
+
         androidResources {
             enable = true
         }

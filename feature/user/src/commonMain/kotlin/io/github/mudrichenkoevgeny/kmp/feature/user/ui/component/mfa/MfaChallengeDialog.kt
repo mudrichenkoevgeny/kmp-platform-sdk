@@ -102,34 +102,38 @@ private fun MfaChallengeDialogPreviewContent() {
         mfaToken = "mock_mfa_token",
         deferred = CompletableDeferred()
     )
-    DialogPreviewContainer {
-        MfaChallengeDialog(
-            request = request,
-            onConfirm = {},
-            onCancel = {}
-        )
-    }
+    MfaChallengeDialog(
+        request = request,
+        onConfirm = {},
+        onCancel = {}
+    )
 }
 
 @InternalApi
 @PreviewDialogSizes
 @Composable
 private fun DialogSizePreview() {
-    MfaChallengeDialogPreviewContent()
+    DialogPreviewContainer {
+        MfaChallengeDialogPreviewContent()
+    }
 }
 
 @InternalApi
 @PreviewThemes
 @Composable
 private fun ThemePreview() {
-    MfaChallengeDialogPreviewContent()
+    DialogPreviewContainer {
+        MfaChallengeDialogPreviewContent()
+    }
 }
 
 @InternalApi
 @PreviewFontScales
 @Composable
 private fun FontScalePreview() {
-    MfaChallengeDialogPreviewContent()
+    DialogPreviewContainer {
+        MfaChallengeDialogPreviewContent()
+    }
 }
 
 public object MfaChallengeDialogTestTags {

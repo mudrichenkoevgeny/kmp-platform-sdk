@@ -69,4 +69,7 @@ include(":samplemanagement:androidApp")
 include(":tools:detekt-rules")
 project(":tools:detekt-rules").projectDir = file("tools/detekt-rules")
 
+include(":tools:project-generator")
+project(":tools:project-generator").projectDir = file("tools/project-generator")
+
 includeBuild("tools/gradle-plugin")

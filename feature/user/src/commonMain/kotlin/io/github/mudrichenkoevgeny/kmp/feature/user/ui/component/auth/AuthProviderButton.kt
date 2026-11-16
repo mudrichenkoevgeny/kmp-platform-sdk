@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -102,20 +102,16 @@ public fun AuthProviderButton(
 @InternalApi
 @Composable
 private fun AuthProviderButtonPreviewContent(provider: UserAuthProvider) {
-    CoreTheme {
-        Surface {
-            Box(
-                modifier = Modifier
-                    .padding(CoreTheme.dimens.paddingLarge)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                AuthProviderButton(
-                    authProvider = provider,
-                    onClick = {}
-                )
-            }
-        }
+    Box(
+        modifier = Modifier
+            .padding(CoreTheme.dimens.paddingLarge)
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        AuthProviderButton(
+            authProvider = provider,
+            onClick = {}
+        )
     }
 }
 
@@ -127,26 +123,34 @@ private val defaultAuthProviderButtonPreviewState = UserAuthProvider.EMAIL
 private fun AuthProviderButtonStatesPreview(
     @PreviewParameter(AuthProviderPreviewProvider::class) provider: UserAuthProvider
 ) {
-    AuthProviderButtonPreviewContent(provider = provider)
+    ComponentPreviewContainer {
+        AuthProviderButtonPreviewContent(provider = provider)
+    }
 }
 
 @InternalApi
 @PreviewComponentSizes
 @Composable
 private fun AuthProviderButtonComponentSizePreview() {
-    AuthProviderButtonPreviewContent(provider = defaultAuthProviderButtonPreviewState)
+    ComponentPreviewContainer {
+        AuthProviderButtonPreviewContent(provider = defaultAuthProviderButtonPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewThemes
 @Composable
 private fun ThemePreview() {
-    AuthProviderButtonPreviewContent(provider = defaultAuthProviderButtonPreviewState)
+    ComponentPreviewContainer {
+        AuthProviderButtonPreviewContent(provider = defaultAuthProviderButtonPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewFontScales
 @Composable
 private fun FontScalePreview() {
-    AuthProviderButtonPreviewContent(provider = defaultAuthProviderButtonPreviewState)
+    ComponentPreviewContainer {
+        AuthProviderButtonPreviewContent(provider = defaultAuthProviderButtonPreviewState)
+    }
 }

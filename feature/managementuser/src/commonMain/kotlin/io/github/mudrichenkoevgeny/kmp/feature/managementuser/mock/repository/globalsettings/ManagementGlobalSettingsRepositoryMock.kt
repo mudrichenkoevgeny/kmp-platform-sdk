@@ -19,6 +19,9 @@ public class ManagementGlobalSettingsRepositoryMock(
 
     private val settingsStateFlow = MutableStateFlow(initialSettings)
 
+    public var refreshCallCount: Int = 0
+        private set
+
     public var getManagementGlobalSettingsResult: AppResult<ManagementGlobalSettings>? = null
     public var refreshManagementGlobalSettingsResult: AppResult<ManagementGlobalSettings>? = null
     public var saveRemoteGlobalSettingsResult: AppResult<ManagementGlobalSettings>? = null
@@ -51,6 +54,7 @@ public class ManagementGlobalSettingsRepositoryMock(
     }
 
     public override suspend fun refreshManagementGlobalSettings(): AppResult<ManagementGlobalSettings> {
+        refreshCallCount++
         val customResult = refreshManagementGlobalSettingsResult
         if (customResult != null) {
             return customResult

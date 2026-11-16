@@ -215,7 +215,7 @@ class ClientAppComponent(
     }
 
     /** Concurrent sync operation for all settings modules. */
-    val syncDataUseCase get() = clientAppUseCaseModule.syncDataUseCase
+    val syncDataRunner get() = clientAppUseCaseModule.syncClientDataRunner
 
     /**
      * Registers feature error parsers and the combined WebSocket handler list on the shared socket service,

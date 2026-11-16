@@ -17,7 +17,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,6 +29,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.time.formatInstantToDateTime
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -174,16 +174,14 @@ private class SessionItemPreviewProvider : PreviewParameterProvider<SessionItemP
 @InternalApi
 @Composable
 private fun SessionItemPreviewContent(state: SessionItemPreviewState) {
-    CoreTheme {
-        Surface {
-            Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
-                SessionItem(
-                    session = state.session,
-                    onRevokeClick = {},
-                    enabled = state.enabled,
-                    isCurrentSession = state.isCurrentSession
-                )
-            }
+    ComponentPreviewContainer {
+        Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
+            SessionItem(
+                session = state.session,
+                onRevokeClick = {},
+                enabled = state.enabled,
+                isCurrentSession = state.isCurrentSession
+            )
         }
     }
 }
@@ -200,30 +198,42 @@ private val defaultSessionItemPreviewState = SessionItemPreviewState(
 private fun SessionItemStatesPreview(
     @PreviewParameter(SessionItemPreviewProvider::class) state: SessionItemPreviewState
 ) {
-    SessionItemPreviewContent(state = state)
+    ComponentPreviewContainer {
+        SessionItemPreviewContent(state = state)
+    }
 }
 
 @InternalApi
 @PreviewComponentSizes
 @Composable
 private fun SessionItemComponentSizePreview() {
-    SessionItemPreviewContent(state = defaultSessionItemPreviewState)
+    ComponentPreviewContainer {
+        SessionItemPreviewContent(state = defaultSessionItemPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewThemes
 @Composable
 private fun SessionItemThemePreview() {
-    SessionItemPreviewContent(state = defaultSessionItemPreviewState)
+    ComponentPreviewContainer {
+        SessionItemPreviewContent(state = defaultSessionItemPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewFontScales
 @Composable
 private fun SessionItemFontScalePreview() {
-    SessionItemPreviewContent(state = defaultSessionItemPreviewState)
+    ComponentPreviewContainer {
+        SessionItemPreviewContent(state = defaultSessionItemPreviewState)
+    }
 }
 
+/**
+ * Test tags dictionary for [SessionItem].
+ */
 public object SessionItemTestTags {
+    /** Test tag prefix for session items. */
     public const val ITEM_PREFIX: String = "SessionItem_"
 }

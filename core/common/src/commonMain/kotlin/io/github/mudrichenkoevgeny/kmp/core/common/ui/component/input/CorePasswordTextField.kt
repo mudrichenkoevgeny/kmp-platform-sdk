@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -14,6 +13,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.Res
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_hide
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_show
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -88,15 +88,13 @@ public fun CorePasswordTextField(
 @PreviewComponentSizes
 @Composable
 private fun CorePasswordTextFieldComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            CorePasswordTextField(
-                value = "secret123",
-                onValueChange = {},
-                isPasswordVisible = false,
-                onTogglePasswordVisibility = {}
-            )
-        }
+    ComponentPreviewContainer {
+        CorePasswordTextField(
+            value = "secret123",
+            onValueChange = {},
+            isPasswordVisible = false,
+            onTogglePasswordVisibility = {}
+        )
     }
 }
 
@@ -104,15 +102,13 @@ private fun CorePasswordTextFieldComponentSizePreview() {
 @PreviewThemes
 @Composable
 private fun CorePasswordTextFieldThemePreview() {
-    CoreTheme {
-        Surface {
-            CorePasswordTextField(
-                value = "secret123",
-                onValueChange = {},
-                isPasswordVisible = false,
-                onTogglePasswordVisibility = {}
-            )
-        }
+    ComponentPreviewContainer {
+        CorePasswordTextField(
+            value = "secret123",
+            onValueChange = {},
+            isPasswordVisible = false,
+            onTogglePasswordVisibility = {}
+        )
     }
 }
 
@@ -120,14 +116,12 @@ private fun CorePasswordTextFieldThemePreview() {
 @PreviewFontScales
 @Composable
 private fun CorePasswordTextFieldFontScalePreview() {
-    CoreTheme {
-        Surface {
-            CorePasswordTextField(
-                value = "secret123",
-                onValueChange = {},
-                isPasswordVisible = false,
-                onTogglePasswordVisibility = {}
-            )
-        }
+    ComponentPreviewContainer {
+        CorePasswordTextField(
+            value = "secret123",
+            onValueChange = {},
+            isPasswordVisible = false,
+            onTogglePasswordVisibility = {}
+        )
     }
 }

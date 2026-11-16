@@ -10,7 +10,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonElevation
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -18,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -110,13 +110,11 @@ public fun CoreButton(
 @PreviewComponentSizes
 @Composable
 private fun CoreButtonComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            CoreButton(
-                text = LocalCommonStrings.current.ui.apply,
-                onClick = {}
-            )
-        }
+    ComponentPreviewContainer {
+        CoreButton(
+            text = LocalCommonStrings.current.ui.apply,
+            onClick = {}
+        )
     }
 }
 
@@ -124,13 +122,11 @@ private fun CoreButtonComponentSizePreview() {
 @PreviewThemes
 @Composable
 private fun CoreButtonThemePreview() {
-    CoreTheme {
-        Surface {
-            CoreButton(
-                text = LocalCommonStrings.current.ui.apply,
-                onClick = {}
-            )
-        }
+    ComponentPreviewContainer {
+        CoreButton(
+            text = LocalCommonStrings.current.ui.apply,
+            onClick = {}
+        )
     }
 }
 
@@ -138,12 +134,10 @@ private fun CoreButtonThemePreview() {
 @PreviewFontScales
 @Composable
 private fun CoreButtonFontScalePreview() {
-    CoreTheme {
-        Surface {
-            CoreButton(
-                text = LocalCommonStrings.current.ui.apply,
-                onClick = {}
-            )
-        }
+    ComponentPreviewContainer {
+        CoreButton(
+            text = LocalCommonStrings.current.ui.apply,
+            onClick = {}
+        )
     }
 }

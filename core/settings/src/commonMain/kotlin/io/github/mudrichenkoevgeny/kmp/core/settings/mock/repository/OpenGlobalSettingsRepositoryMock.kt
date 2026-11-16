@@ -19,6 +19,9 @@ public class OpenGlobalSettingsRepositoryMock(
 
     private val settingsStateFlow = MutableStateFlow(initialSettings)
 
+    public var refreshCallCount: Int = 0
+        private set
+
     public var getGlobalSettingsResult: AppResult<OpenGlobalSettings>? = null
     public var refreshGlobalSettingsResult: AppResult<OpenGlobalSettings>? = null
 
@@ -38,6 +41,7 @@ public class OpenGlobalSettingsRepositoryMock(
     }
 
     override suspend fun refreshOpenGlobalSettings(): AppResult<OpenGlobalSettings> {
+        refreshCallCount++
         val customResult = refreshGlobalSettingsResult
         if (customResult != null) {
             return customResult

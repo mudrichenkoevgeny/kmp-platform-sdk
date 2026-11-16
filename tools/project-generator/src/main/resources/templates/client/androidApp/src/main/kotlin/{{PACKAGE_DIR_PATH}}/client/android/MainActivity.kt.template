@@ -1,0 +1,26 @@
+package {{PACKAGE_NAME}}.client.android
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import com.arkivanov.decompose.defaultComponentContext
+import {{PACKAGE_NAME}}.client.app.di.ClientAppComponent
+import {{PACKAGE_NAME}}.client.app.ui.root.RootContent
+
+/**
+ * Main Android activity entry point for {{PROJECT_TITLE}} Client.
+ */
+class MainActivity : ComponentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val componentContext = defaultComponentContext()
+        val appComponent = ClientAppComponent(componentContext, platformContext = applicationContext)
+        appComponent.init()
+
+        setContent {
+            RootContent(appComponent)
+        }
+    }
+}

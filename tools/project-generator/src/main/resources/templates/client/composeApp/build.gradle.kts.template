@@ -1,0 +1,103 @@
+plugins {
+    alias(libs.plugins.multiplatform)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.kmp.platform.quality)
+    alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose)
+    alias(libs.plugins.roborazzi)
+}
+
+kotlin {
+    android {
+        namespace = "{{PACKAGE_NAME}}.client.app"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
+        withHostTestBuilder {}.configure {
+            isIncludeAndroidResources = true
+        }
+    }
+
+//    wasmJs {
+//        browser {
+//            commonWebpackConfig {
+//                outputFileName = "composeApp.js"
+//            }
+//        }
+//        binaries.executable()
+//    }
+
+    sourceSets {
+        commonMain.dependencies {
+            // SDK Modules (BOM Managed)
+            api(project.dependencies.platform(libs.kmp.platform.sdk.bom))
+            api(project.dependencies.platform(libs.shared.foundation.bom))
+            // Optional downstream contracts BOM:
+            // api(project.dependencies.platform(libs.{{PROJECT_NAME}}.shared.bom))
+
+            implementation(libs.kmp.platform.sdk.core.common)
+            implementation(libs.kmp.platform.sdk.core.security)
+            implementation(libs.kmp.platform.sdk.core.settings)
+            implementation(libs.kmp.platform.sdk.core.storage)
+            implementation(libs.kmp.platform.sdk.feature.user)
+            implementation(libs.kmp.platform.sdk.feature.clientuser)
+
+            implementation(libs.shared.foundation.core.common)
+            implementation(libs.shared.foundation.core.security)
+            implementation(libs.shared.foundation.core.settings)
+            implementation(libs.shared.foundation.core.storage)
+            implementation(libs.shared.foundation.feature.user)
+
+            // Kotlin & Ktor
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.ktor.client.core)
+
+            // Compose
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.resources)
+            implementation(libs.compose.ui.tooling.preview)
+            implementation(libs.compose.material3)
+
+            // Infrastructure
+            implementation(libs.decompose)
+            implementation(libs.decompose.compose)
+            implementation(libs.kermit)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.compose.ui)
+            implementation(libs.compose.runtime)
+        }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.kotlinx.coroutines.test)
+        }
+
+        getByName("androidHostTest") {
+            compilerOptions {
+                optIn.add("androidx.compose.ui.test.ExperimentalTestApi")
+            }
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
+                implementation(libs.kmp.platform.sdk.testing)
+                implementation(libs.compose.ui.test)
+                implementation(libs.androidx.compose.ui.test.manifest)
+                implementation(libs.androidx.test.core)
+                implementation(libs.robolectric)
+                implementation(libs.roborazzi)
+                implementation(libs.roborazzi.compose)
+                implementation(libs.roborazzi.junit.rule)
+            }
+        }
+    }
+}
+
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "{{PACKAGE_NAME}}.client.app"
+}

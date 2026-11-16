@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,6 +17,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -50,12 +50,14 @@ public fun AuditItem(
         elevation = CardDefaults.cardElevation(defaultElevation = CoreTheme.dimens.elevationHeader)
     ) {
         Column(modifier = Modifier.padding(CoreTheme.dimens.paddingMedium)) {
+            @Suppress("NoRawStringInComposeUiRule")
             Text(
                 text = "${userUi.auditEventId}: ${event.id.value}",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.height(CoreTheme.dimens.paddingSmall))
+            @Suppress("NoRawStringInComposeUiRule")
             Text(
                 text = "${userUi.auditEventStatus}: ${event.status}",
                 style = MaterialTheme.typography.bodySmall
@@ -67,15 +69,11 @@ public fun AuditItem(
 @InternalApi
 @Composable
 private fun AuditItemPreviewContent(event: AuditEventSummary) {
-    CoreTheme {
-        Surface {
-            Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
-                AuditItem(
-                    event = event,
-                    onClick = {}
-                )
-            }
-        }
+    Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
+        AuditItem(
+            event = event,
+            onClick = {}
+        )
     }
 }
 
@@ -86,26 +84,34 @@ private val defaultAuditItemPreviewState = createTestAuditEventSummary()
 @Preview(showBackground = true, group = "States")
 @Composable
 private fun AuditItemStatesPreview() {
-    AuditItemPreviewContent(event = defaultAuditItemPreviewState)
+    ComponentPreviewContainer {
+        AuditItemPreviewContent(event = defaultAuditItemPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewComponentSizes
 @Composable
 private fun AuditItemComponentSizePreview() {
-    AuditItemPreviewContent(event = defaultAuditItemPreviewState)
+    ComponentPreviewContainer {
+        AuditItemPreviewContent(event = defaultAuditItemPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewThemes
 @Composable
 private fun AuditItemThemePreview() {
-    AuditItemPreviewContent(event = defaultAuditItemPreviewState)
+    ComponentPreviewContainer {
+        AuditItemPreviewContent(event = defaultAuditItemPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewFontScales
 @Composable
 private fun AuditItemFontScalePreview() {
-    AuditItemPreviewContent(event = defaultAuditItemPreviewState)
+    ComponentPreviewContainer {
+        AuditItemPreviewContent(event = defaultAuditItemPreviewState)
+    }
 }

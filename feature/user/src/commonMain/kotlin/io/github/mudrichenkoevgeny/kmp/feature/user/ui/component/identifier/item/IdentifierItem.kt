@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -107,16 +107,12 @@ private class IdentifierItemPreviewProvider : PreviewParameterProvider<Identifie
 @InternalApi
 @Composable
 private fun IdentifierItemPreviewContent(state: IdentifierItemPreviewState) {
-    CoreTheme {
-        Surface {
-            Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
-                IdentifierItem(
-                    identifier = state.identifier,
-                    onClick = {},
-                    isCurrentIdentifier = state.isCurrentIdentifier
-                )
-            }
-        }
+    Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
+        IdentifierItem(
+            identifier = state.identifier,
+            onClick = {},
+            isCurrentIdentifier = state.isCurrentIdentifier
+        )
     }
 }
 
@@ -132,26 +128,34 @@ private val defaultIdentifierItemPreviewState = IdentifierItemPreviewState(
 private fun IdentifierItemStatesPreview(
     @PreviewParameter(IdentifierItemPreviewProvider::class) state: IdentifierItemPreviewState
 ) {
-    IdentifierItemPreviewContent(state = state)
+    ComponentPreviewContainer {
+        IdentifierItemPreviewContent(state = state)
+    }
 }
 
 @InternalApi
 @PreviewComponentSizes
 @Composable
 private fun IdentifierItemComponentSizePreview() {
-    IdentifierItemPreviewContent(state = defaultIdentifierItemPreviewState)
+    ComponentPreviewContainer {
+        IdentifierItemPreviewContent(state = defaultIdentifierItemPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewThemes
 @Composable
 private fun IdentifierItemThemePreview() {
-    IdentifierItemPreviewContent(state = defaultIdentifierItemPreviewState)
+    ComponentPreviewContainer {
+        IdentifierItemPreviewContent(state = defaultIdentifierItemPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewFontScales
 @Composable
 private fun IdentifierItemFontScalePreview() {
-    IdentifierItemPreviewContent(state = defaultIdentifierItemPreviewState)
+    ComponentPreviewContainer {
+        IdentifierItemPreviewContent(state = defaultIdentifierItemPreviewState)
+    }
 }

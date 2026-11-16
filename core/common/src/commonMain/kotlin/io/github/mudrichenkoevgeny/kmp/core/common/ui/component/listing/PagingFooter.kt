@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -21,6 +20,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessa
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.PaginationState
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -111,10 +111,8 @@ public fun PagingErrorFooter(
 @PreviewComponentSizes
 @Composable
 private fun PagingLoadingFooterComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            PagingLoadingFooter()
-        }
+    ComponentPreviewContainer {
+        PagingLoadingFooter()
     }
 }
 
@@ -122,10 +120,8 @@ private fun PagingLoadingFooterComponentSizePreview() {
 @PreviewThemes
 @Composable
 private fun PagingLoadingFooterThemePreview() {
-    CoreTheme {
-        Surface {
-            PagingLoadingFooter()
-        }
+    ComponentPreviewContainer {
+        PagingLoadingFooter()
     }
 }
 
@@ -133,9 +129,7 @@ private fun PagingLoadingFooterThemePreview() {
 @PreviewFontScales
 @Composable
 private fun PagingLoadingFooterFontScalePreview() {
-    CoreTheme {
-        Surface {
-            PagingLoadingFooter()
-        }
+    ComponentPreviewContainer {
+        PagingLoadingFooter()
     }
 }

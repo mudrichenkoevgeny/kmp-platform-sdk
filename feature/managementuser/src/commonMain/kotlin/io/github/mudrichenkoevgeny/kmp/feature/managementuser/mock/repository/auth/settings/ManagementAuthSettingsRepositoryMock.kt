@@ -17,6 +17,9 @@ public class ManagementAuthSettingsRepositoryMock : ManagementAuthSettingsReposi
 
     private val authSettingsFlow = MutableStateFlow<ManagementAuthSettings?>(null)
 
+    public var refreshCallCount: Int = 0
+        private set
+
     public var resultProvider: () -> AppResult<ManagementAuthSettings> = {
         authSettingsFlow.value?.let { AppResult.Success(it) }
             ?: AppResult.Error(
@@ -36,7 +39,10 @@ public class ManagementAuthSettingsRepositoryMock : ManagementAuthSettingsReposi
 
     public override suspend fun getManagementAuthSettings(): AppResult<ManagementAuthSettings> = resultProvider()
 
-    public override suspend fun refreshManagementAuthSettings(): AppResult<ManagementAuthSettings> = resultProvider()
+    public override suspend fun refreshManagementAuthSettings(): AppResult<ManagementAuthSettings> {
+        refreshCallCount++
+        return resultProvider()
+    }
 
     public override suspend fun resetRemoteManagementAuthSettings(): AppResult<ManagementAuthSettings> {
         val result = resetResultProvider()

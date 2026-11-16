@@ -1,7 +1,6 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,10 +8,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
  * Standardized screen title text component for top app bars and header layouts.
@@ -44,12 +43,10 @@ public fun CoreScreenTitleText(
 @PreviewComponentSizes
 @Composable
 private fun CoreScreenTitleTextComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            CoreScreenTitleText(
-                text = LocalCommonStrings.current.ui.status
-            )
-        }
+    ComponentPreviewContainer {
+        CoreScreenTitleText(
+            text = LocalCommonStrings.current.ui.status
+        )
     }
 }
 
@@ -57,12 +54,10 @@ private fun CoreScreenTitleTextComponentSizePreview() {
 @PreviewThemes
 @Composable
 private fun CoreScreenTitleTextThemePreview() {
-    CoreTheme {
-        Surface {
-            CoreScreenTitleText(
-                text = LocalCommonStrings.current.ui.status
-            )
-        }
+    ComponentPreviewContainer {
+        CoreScreenTitleText(
+            text = LocalCommonStrings.current.ui.status
+        )
     }
 }
 
@@ -70,11 +65,9 @@ private fun CoreScreenTitleTextThemePreview() {
 @PreviewFontScales
 @Composable
 private fun CoreScreenTitleTextFontScalePreview() {
-    CoreTheme {
-        Surface {
-            CoreScreenTitleText(
-                text = LocalCommonStrings.current.ui.status
-            )
-        }
+    ComponentPreviewContainer {
+        CoreScreenTitleText(
+            text = LocalCommonStrings.current.ui.status
+        )
     }
 }

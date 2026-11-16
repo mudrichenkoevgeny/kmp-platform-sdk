@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,6 +20,7 @@ import androidx.compose.ui.Modifier
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.scrollbar.CoreVerticalScrollbar
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -73,11 +73,9 @@ public fun CoreScrollableScreenContent(
 @PreviewComponentSizes
 @Composable
 private fun CoreScrollableScreenContentComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            CoreScrollableScreenContent {
-                Text(LocalCommonStrings.current.ui.action)
-            }
+    ComponentPreviewContainer {
+        CoreScrollableScreenContent {
+            Text(LocalCommonStrings.current.ui.action)
         }
     }
 }
@@ -86,11 +84,9 @@ private fun CoreScrollableScreenContentComponentSizePreview() {
 @PreviewThemes
 @Composable
 private fun CoreScrollableScreenContentThemePreview() {
-    CoreTheme {
-        Surface {
-            CoreScrollableScreenContent {
-                Text(LocalCommonStrings.current.ui.action)
-            }
+    ComponentPreviewContainer {
+        CoreScrollableScreenContent {
+            Text(LocalCommonStrings.current.ui.action)
         }
     }
 }
@@ -99,11 +95,9 @@ private fun CoreScrollableScreenContentThemePreview() {
 @PreviewFontScales
 @Composable
 private fun CoreScrollableScreenContentFontScalePreview() {
-    CoreTheme {
-        Surface {
-            CoreScrollableScreenContent {
-                Text(LocalCommonStrings.current.ui.action)
-            }
+    ComponentPreviewContainer {
+        CoreScrollableScreenContent {
+            Text(LocalCommonStrings.current.ui.action)
         }
     }
 }

@@ -12,7 +12,7 @@ Add the BOM and the required modules to your `commonMain` dependencies:
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(platform("io.github.mudrichenkoevgeny:kmp-platform-sdk-bom:0.0.3"))
+            implementation(platform("io.github.mudrichenkoevgeny:kmp-platform-sdk-bom:0.0.4"))
             implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-core-common")
             implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-core-settings")
             implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-core-security")
@@ -32,6 +32,7 @@ Published artifacts (versions aligned via the BOM):
 - **core-common** — Foundation for all modules: Ktor HTTP client bootstrap, WebSocket lifecycle management, `EncryptedSettings` abstraction, platform metadata, error modeling, Chain of Responsibility error parser, listing/pagination infrastructure, and deep link navigation contracts (`DeepLinkParser` / `UrlFormatter`) ([module README](core/common/README.md)).
 - **core-settings** — Global application settings management, REST API client, encrypted caching, and reactive WebSocket updates ([module README](core/settings/README.md)).
 - **core-security** — Password policy validation, MFA state management, Ktor API client, encrypted storage, and localized security error parsing ([module README](core/security/README.md)).
+- **core-storage** — File storage infrastructure, upload/download REST clients, storage settings, and reactive WebSocket updates ([module README](core/storage/README.md)).
 - **feature-user** — Foundational identity & auth domain logic: core models, use cases, token storage (`AuthStorage`), session auto-refresh, TOTP 2FA, session management, identifier linking, and account deletion ([module README](feature/user/README.md)).
 - **feature-clientuser** — Identity solution for consumer applications: multi-method auth (Email, Phone OTP, Google Sign-In), Compose Multiplatform UI, social login buttons, and Decompose navigation flows ([module README](feature/clientuser/README.md)).
 - **feature-managementuser** — Administrative identity solution for internal staff, resource oversight, administrative user management, and audit inspection ([module README](feature/managementuser/README.md)).

@@ -14,7 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_warning
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
@@ -53,5 +58,32 @@ public fun ListingEmptyState(
                 textAlign = TextAlign.Center
             )
         }
+    }
+}
+
+@InternalApi
+@PreviewComponentSizes
+@Composable
+private fun ListingEmptyStateComponentSizePreview() {
+    ComponentPreviewContainer {
+        ListingEmptyState()
+    }
+}
+
+@InternalApi
+@PreviewThemes
+@Composable
+private fun ListingEmptyStateThemePreview() {
+    ComponentPreviewContainer {
+        ListingEmptyState()
+    }
+}
+
+@InternalApi
+@PreviewFontScales
+@Composable
+private fun ListingEmptyStateFontScalePreview() {
+    ComponentPreviewContainer {
+        ListingEmptyState()
     }
 }

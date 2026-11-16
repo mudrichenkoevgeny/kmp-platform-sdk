@@ -19,6 +19,9 @@ public class ManagementSecuritySettingsRepositoryMock(
 
     private val settingsStateFlow = MutableStateFlow(initialSettings)
 
+    public var refreshCallCount: Int = 0
+        private set
+
     public var getManagementSecuritySettingsResult: AppResult<ManagementSecuritySettings>? = null
     public var refreshManagementSecuritySettingsResult: AppResult<ManagementSecuritySettings>? = null
     public var saveRemoteSecuritySettingsResult: AppResult<ManagementSecuritySettings>? = null
@@ -51,6 +54,7 @@ public class ManagementSecuritySettingsRepositoryMock(
     }
 
     public override suspend fun refreshManagementSecuritySettings(): AppResult<ManagementSecuritySettings> {
+        refreshCallCount++
         val customResult = refreshManagementSecuritySettingsResult
         if (customResult != null) {
             return customResult

@@ -1,0 +1,9 @@
+# Agent Instructions — {{PROJECT_TITLE}}
+
+This repository is built using `kmp-platform-sdk` and `shared-foundation`.
+
+All AI collaborators working on this repository must strictly follow:
+1. Universal KMP architecture standards in `.agent/global/kmp/architecture-patterns-kmp.md`.
+2. UI Compose and preview container standards in `.agent/global/kmp/ui-kmp.md`.
+3. Custom localization rules in `.agent/global/kmp/localization-kmp.md`.
+4. Testing and Roborazzi rules in `.agent/global/kmp/testing-kmp.md`.

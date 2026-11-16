@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -19,6 +18,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -81,15 +81,11 @@ public fun UserItem(
 @InternalApi
 @Composable
 private fun UserItemPreviewContent(user: UserSummary) {
-    CoreTheme {
-        Surface {
-            Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
-                UserItem(
-                    user = user,
-                    onClick = {}
-                )
-            }
-        }
+    Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
+        UserItem(
+            user = user,
+            onClick = {}
+        )
     }
 }
 
@@ -100,26 +96,34 @@ private val defaultUserItemPreviewState = createTestUserSummary()
 @Preview(showBackground = true, group = "States")
 @Composable
 private fun UserItemStatesPreview() {
-    UserItemPreviewContent(user = defaultUserItemPreviewState)
+    ComponentPreviewContainer {
+        UserItemPreviewContent(user = defaultUserItemPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewComponentSizes
 @Composable
 private fun UserItemComponentSizePreview() {
-    UserItemPreviewContent(user = defaultUserItemPreviewState)
+    ComponentPreviewContainer {
+        UserItemPreviewContent(user = defaultUserItemPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewThemes
 @Composable
 private fun UserItemThemePreview() {
-    UserItemPreviewContent(user = defaultUserItemPreviewState)
+    ComponentPreviewContainer {
+        UserItemPreviewContent(user = defaultUserItemPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewFontScales
 @Composable
 private fun UserItemFontScalePreview() {
-    UserItemPreviewContent(user = defaultUserItemPreviewState)
+    ComponentPreviewContainer {
+        UserItemPreviewContent(user = defaultUserItemPreviewState)
+    }
 }

@@ -46,6 +46,10 @@ Thumbs.db
 *.hprof
 *.log
 
+# Testing & Roborazzi
+*_actual.png
+*_compare.png
+
 # Editors & Tooling
 .vscode/
 .history/

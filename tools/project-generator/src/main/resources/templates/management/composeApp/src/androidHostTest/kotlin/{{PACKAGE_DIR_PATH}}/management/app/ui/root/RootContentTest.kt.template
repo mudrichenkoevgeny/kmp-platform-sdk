@@ -1,0 +1,38 @@
+package {{PACKAGE_NAME}}.management.app.ui.root
+
+import android.app.Application
+import android.content.Context
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.v2.runComposeUiTest
+import androidx.test.core.app.ApplicationProvider
+import com.arkivanov.decompose.DefaultComponentContext
+import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
+import {{PACKAGE_NAME}}.management.app.di.ManagementAppComponent
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [ROBOLECTRIC_SDK], application = Application::class)
+class RootContentTest {
+
+    @Test
+    fun rootContent_rendersDefaultWelcomeText() = runComposeUiTest {
+        val lifecycle = LifecycleRegistry()
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val appComponent = ManagementAppComponent(
+            componentContext = DefaultComponentContext(lifecycle),
+            platformContext = context
+        )
+        appComponent.init()
+
+        setContent {
+            RootContent(appComponent)
+        }
+
+        onNodeWithText("Welcome to {{PROJECT_TITLE}} Management").assertIsDisplayed()
+    }
+}

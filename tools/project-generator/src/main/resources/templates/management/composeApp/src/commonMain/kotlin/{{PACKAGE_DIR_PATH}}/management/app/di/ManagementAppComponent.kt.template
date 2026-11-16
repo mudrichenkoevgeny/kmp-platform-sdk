@@ -1,0 +1,165 @@
+package {{PACKAGE_NAME}}.management.app.di
+
+import com.arkivanov.decompose.ComponentContext
+import io.github.mudrichenkoevgeny.kmp.core.common.di.CommonComponent
+import io.github.mudrichenkoevgeny.kmp.core.common.di.EncryptedSettingsComponent
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.mock.platform.model.clientDeviceInfoMock
+import io.github.mudrichenkoevgeny.kmp.core.security.di.SecurityComponent
+import io.github.mudrichenkoevgeny.kmp.core.security.error.parser.SecurityErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.settings.di.SettingsComponent
+import io.github.mudrichenkoevgeny.kmp.core.storage.di.StorageComponent
+import io.github.mudrichenkoevgeny.kmp.feature.managementuser.di.ManagementUserComponent
+import io.github.mudrichenkoevgeny.kmp.feature.user.error.parser.UserErrorParser
+import io.github.mudrichenkoevgeny.kmp.feature.user.mock.auth.UserAuthServicesMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.AuthHttpClientConfigPlugin
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.mfa.DefaultMfaChallengeHandler
+import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.mfa.MfaStepUpHttpClientConfigPlugin
+import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
+import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.EncryptedAuthStorage
+import {{PACKAGE_NAME}}.management.app.usecase.SyncManagementDataRunner
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientDeviceInfo
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.network.contract.WebSocketContract
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.auth.refreshtoken.SelfManagementRefreshTokenRoutes
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.route.management.self.user.session.SelfManagementSessionRoutes
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
+/**
+ * Root application dependency injection component graph for {{PROJECT_TITLE}} Management.
+ *
+ * @param componentContext Decompose component context.
+ * @param platformContext Optional platform context handle (e.g. Android Application).
+ * @param clientDeviceInfo Client device information.
+ * @param baseUrl Base HTTP and WebSocket URL.
+ */
+@OptIn(InternalApi::class)
+class ManagementAppComponent(
+    componentContext: ComponentContext,
+    platformContext: Any? = null,
+    clientDeviceInfo: ClientDeviceInfo = clientDeviceInfoMock(),
+    baseUrl: String = "https://kmp-platform.internal"
+) : ComponentContext by componentContext {
+
+    private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+    private val encryptedSettingsComponent by lazy {
+        EncryptedSettingsComponent(platformContext)
+    }
+    val encryptedSettings get() = encryptedSettingsComponent.encryptedSettings
+
+    val authStorage: AuthStorage by lazy {
+        EncryptedAuthStorage(
+            encryptedSettings = encryptedSettings,
+            scope = appScope
+        )
+    }
+
+    private val authHttpClientConfigPlugin by lazy {
+        AuthHttpClientConfigPlugin(
+            baseUrl = baseUrl,
+            authStorage = authStorage,
+            refreshTokenRoute = SelfManagementRefreshTokenRoutes.REFRESH_TOKEN,
+            onSessionCleared = { managementUserComponent.userRepository.clearSession() }
+        )
+    }
+
+    val mfaChallengeHandler by lazy {
+        DefaultMfaChallengeHandler()
+    }
+
+    private val mfaStepUpHttpClientConfigPlugin by lazy {
+        MfaStepUpHttpClientConfigPlugin(
+            baseUrl = baseUrl,
+            reauthenticateRoute = SelfManagementSessionRoutes.REAUTHENTICATE_SESSION,
+            mfaChallengeHandler = mfaChallengeHandler,
+            authClientProvider = { commonComponent.httpClient },
+            reauthenticateAction = { mfaToken, code ->
+                managementUserComponent.reauthenticateSessionUseCase(mfaToken, code)
+            }
+        )
+    }
+
+    val commonComponent: CommonComponent by lazy {
+        CommonComponent(
+            encryptedSettings = encryptedSettings,
+            clientDeviceInfo = clientDeviceInfo,
+            baseUrl = baseUrl,
+            webSocketPath = WebSocketContract.WS_MANAGEMENT_REALTIME_PATH,
+            httpClientConfigPlugins = listOf(authHttpClientConfigPlugin, mfaStepUpHttpClientConfigPlugin),
+            accessTokenProvider = authStorage,
+            appScope = appScope,
+            platformContext = platformContext
+        )
+    }
+
+    val settingsComponent: SettingsComponent by lazy {
+        SettingsComponent(
+            webSocketService = commonComponent.webSocketService,
+            httpClient = commonComponent.httpClient,
+            encryptedSettings = encryptedSettings,
+            parentScope = appScope
+        )
+    }
+
+    val securityComponent: SecurityComponent by lazy {
+        SecurityComponent(
+            webSocketService = commonComponent.webSocketService,
+            httpClient = commonComponent.httpClient,
+            encryptedSettings = encryptedSettings,
+            parentScope = appScope
+        )
+    }
+
+    val storageComponent: StorageComponent by lazy {
+        StorageComponent(
+            httpClient = commonComponent.httpClient,
+            webSocketService = commonComponent.webSocketService,
+            encryptedSettings = encryptedSettings,
+            parentScope = appScope
+        )
+    }
+
+    val managementUserComponent: ManagementUserComponent by lazy {
+        ManagementUserComponent(
+            commonComponent = commonComponent,
+            settingsComponent = settingsComponent,
+            securityComponent = securityComponent,
+            storageComponent = storageComponent,
+            authStorage = authStorage,
+            authServices = UserAuthServicesMock(),
+            parentScope = appScope
+        )
+    }
+
+    val syncManagementDataRunner by lazy {
+        SyncManagementDataRunner(
+            refreshManagementGlobalSettingsUseCase = managementUserComponent.refreshManagementGlobalSettingsUseCase,
+            refreshManagementSecuritySettingsUseCase = managementUserComponent.refreshManagementSecuritySettingsUseCase,
+            refreshManagementAuthSettingsUseCase = managementUserComponent.refreshManagementAuthSettingsUseCase
+        )
+    }
+
+    private val _isInitialized = MutableStateFlow(false)
+    val isInitialized: StateFlow<Boolean> = _isInitialized.asStateFlow()
+
+    fun init() {
+        if (_isInitialized.value) return
+        _isInitialized.value = true
+
+        commonComponent.init(
+            appErrorParserSpecificParsers = listOf(SecurityErrorParser, UserErrorParser)
+        )
+        val handlers = listOf(
+            commonComponent.commonWebSocketMessageHandler,
+            settingsComponent.settingsWebSocketMessageHandler,
+            securityComponent.securityWebSocketMessageHandler,
+            managementUserComponent.userWebSocketMessageHandler
+        )
+        commonComponent.webSocketService.updateWebSocketMessageHandlers(handlers)
+    }
+}

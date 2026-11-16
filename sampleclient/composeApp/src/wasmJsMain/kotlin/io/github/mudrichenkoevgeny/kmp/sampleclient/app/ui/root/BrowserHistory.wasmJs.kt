@@ -28,12 +28,12 @@ import org.w3c.dom.events.Event
 private const val PATH_USER_ROOT = "/user"
 private const val EVENT_POPSTATE = "popstate"
 
-private fun isTopLevelRootPath(path: String): Boolean {
+internal fun isTopLevelRootPath(path: String): Boolean {
     val cleanPath = path.substringBefore('?').substringBefore('#')
     return cleanPath == "/" || cleanPath == PATH_USER_ROOT
 }
 
-private fun getAncestorPaths(fullPath: String): List<String> {
+internal fun getAncestorPaths(fullPath: String): List<String> {
     val cleanPath = fullPath.substringBefore('?').substringBefore('#')
     val segments = cleanPath.split('/').filter { it.isNotEmpty() }
     if (segments.isEmpty()) {
@@ -193,10 +193,7 @@ private fun calculateActivePath(
         }
 
         val rawUrl = effectiveRoute.toFullUrl(baseUrl)
-        val absoluteUrl = Url(rawUrl)
-        val path = absoluteUrl.encodedPath.ifEmpty { "/" }
-        val query = if (absoluteUrl.encodedQuery.isEmpty()) "" else "?${absoluteUrl.encodedQuery}"
-        return path + query
+        return formatCanonicalPath(rawUrl)
     }
 
     val stackState by mainComponent.stack.subscribeAsState()
@@ -208,8 +205,11 @@ private fun calculateActivePath(
                 val totpChild = userStackState.active.instance
                 if (totpChild is UserRootComponent.Child.TotpMain) {
                     val totpStackState by totpChild.component.stack.subscribeAsState()
-                    val step =
-                        if (totpStackState.active.configuration is TotpStepConfig.Setup) TotpStep.SETUP else TotpStep.OVERVIEW
+                    val step = if (totpStackState.active.configuration is TotpStepConfig.Setup) {
+                        TotpStep.SETUP
+                    } else {
+                        TotpStep.OVERVIEW
+                    }
                     ClientUserNavigation.TotpMain(TotpMainParams(totpStep = step))
                 } else {
                     currentRoute
@@ -218,10 +218,14 @@ private fun calculateActivePath(
                 currentRoute
             }
             val rawUrl = effectiveRoute.toFullUrl(baseUrl)
-            val absoluteUrl = Url(rawUrl)
-            val path = absoluteUrl.encodedPath.ifEmpty { "/" }
-            val query = if (absoluteUrl.encodedQuery.isEmpty()) "" else "?${absoluteUrl.encodedQuery}"
-            path + query
+            return formatCanonicalPath(rawUrl)
         }
     }
+}
+
+internal fun formatCanonicalPath(rawUrl: String): String {
+    val absoluteUrl = Url(rawUrl)
+    val path = absoluteUrl.encodedPath.ifEmpty { "/" }
+    val query = if (absoluteUrl.encodedQuery.isEmpty()) "" else "?${absoluteUrl.encodedQuery}"
+    return path + query
 }

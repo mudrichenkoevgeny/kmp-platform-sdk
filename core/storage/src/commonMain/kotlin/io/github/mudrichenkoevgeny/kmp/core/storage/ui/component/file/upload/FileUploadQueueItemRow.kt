@@ -36,6 +36,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ic_delete
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -381,16 +382,12 @@ private class FileUploadQueueItemRowPreviewProvider : PreviewParameterProvider<F
 @InternalApi
 @Composable
 private fun FileUploadQueueItemRowPreviewContent(state: FileUploadQueueItemRowPreviewState) {
-    CoreTheme {
-        Surface {
-            Box(modifier = Modifier.padding(CoreTheme.dimens.paddingMedium)) {
-                FileUploadQueueItemRow(
-                    item = state.item,
-                    isUploading = state.isUploading,
-                    onRemove = {}
-                )
-            }
-        }
+    Box(modifier = Modifier.padding(CoreTheme.dimens.paddingMedium)) {
+        FileUploadQueueItemRow(
+            item = state.item,
+            isUploading = state.isUploading,
+            onRemove = {}
+        )
     }
 }
 
@@ -412,26 +409,34 @@ private val defaultFileUploadQueueItemRowPreviewState = FileUploadQueueItemRowPr
 private fun FileUploadQueueItemRowStatesPreview(
     @PreviewParameter(FileUploadQueueItemRowPreviewProvider::class) state: FileUploadQueueItemRowPreviewState
 ) {
-    FileUploadQueueItemRowPreviewContent(state = state)
+    ComponentPreviewContainer {
+        FileUploadQueueItemRowPreviewContent(state = state)
+    }
 }
 
 @InternalApi
 @PreviewComponentSizes
 @Composable
 private fun FileUploadQueueItemRowComponentSizePreview() {
-    FileUploadQueueItemRowPreviewContent(state = defaultFileUploadQueueItemRowPreviewState)
+    ComponentPreviewContainer {
+        FileUploadQueueItemRowPreviewContent(state = defaultFileUploadQueueItemRowPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewThemes
 @Composable
 private fun FileUploadQueueItemRowThemePreview() {
-    FileUploadQueueItemRowPreviewContent(state = defaultFileUploadQueueItemRowPreviewState)
+    ComponentPreviewContainer {
+        FileUploadQueueItemRowPreviewContent(state = defaultFileUploadQueueItemRowPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewFontScales
 @Composable
 private fun FileUploadQueueItemRowFontScalePreview() {
-    FileUploadQueueItemRowPreviewContent(state = defaultFileUploadQueueItemRowPreviewState)
+    ComponentPreviewContainer {
+        FileUploadQueueItemRowPreviewContent(state = defaultFileUploadQueueItemRowPreviewState)
+    }
 }

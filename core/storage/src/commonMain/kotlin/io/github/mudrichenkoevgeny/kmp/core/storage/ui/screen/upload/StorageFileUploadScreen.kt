@@ -1,10 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.upload
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,12 +14,10 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreBackButton
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.container.CoreScrollableScreenContent
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
 import io.github.mudrichenkoevgeny.kmp.core.storage.mock.ui.component.file.upload.StorageFileUploadComponentMock
 import io.github.mudrichenkoevgeny.kmp.core.storage.mock.ui.screen.upload.StorageFileUploadScreenComponentMock
@@ -97,20 +93,14 @@ private class StorageFileUploadScreenPreviewProvider : PreviewParameterProvider<
 @Composable
 private fun StorageFileUploadScreenPreviewContent(state: StorageFileUploadScreenPreviewState) {
     ScreenPreviewContainer {
-        CoreTheme {
-            Surface {
-                Box {
-                    StorageFileUploadScreen(
-                        component = StorageFileUploadScreenComponentMock(
-                            uploadComponent = StorageFileUploadComponentMock(
-                                initialState = StorageFileUploadState(config = state.config)
-                            )
-                        ),
-                        enabled = state.enabled
-                    )
-                }
-            }
-        }
+        StorageFileUploadScreen(
+            component = StorageFileUploadScreenComponentMock(
+                uploadComponent = StorageFileUploadComponentMock(
+                    initialState = StorageFileUploadState(config = state.config)
+                )
+            ),
+            enabled = state.enabled
+        )
     }
 }
 
@@ -123,33 +113,34 @@ private val defaultStorageFileUploadScreenPreviewState = StorageFileUploadScreen
 private fun StorageFileUploadScreenStatesPreview(
     @PreviewParameter(StorageFileUploadScreenPreviewProvider::class) state: StorageFileUploadScreenPreviewState
 ) {
-    StorageFileUploadScreenPreviewContent(state = state)
-}
-
-@InternalApi
-@PreviewComponentSizes
-@Composable
-private fun StorageFileUploadScreenComponentSizePreview() {
-    StorageFileUploadScreenPreviewContent(state = defaultStorageFileUploadScreenPreviewState)
+    ScreenPreviewContainer {
+        StorageFileUploadScreenPreviewContent(state = state)
+    }
 }
 
 @InternalApi
 @PreviewScreenSizes
 @Composable
 private fun StorageFileUploadScreenSizePreview() {
-    StorageFileUploadScreenPreviewContent(state = defaultStorageFileUploadScreenPreviewState)
+    ScreenPreviewContainer {
+        StorageFileUploadScreenPreviewContent(state = defaultStorageFileUploadScreenPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewThemes
 @Composable
 private fun StorageFileUploadScreenThemePreview() {
-    StorageFileUploadScreenPreviewContent(state = defaultStorageFileUploadScreenPreviewState)
+    ScreenPreviewContainer {
+        StorageFileUploadScreenPreviewContent(state = defaultStorageFileUploadScreenPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewFontScales
 @Composable
 private fun StorageFileUploadScreenFontScalePreview() {
-    StorageFileUploadScreenPreviewContent(state = defaultStorageFileUploadScreenPreviewState)
+    ScreenPreviewContainer {
+        StorageFileUploadScreenPreviewContent(state = defaultStorageFileUploadScreenPreviewState)
+    }
 }

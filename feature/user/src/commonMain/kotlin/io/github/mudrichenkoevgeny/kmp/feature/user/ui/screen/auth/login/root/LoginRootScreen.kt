@@ -18,8 +18,14 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalCommonComponent
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
@@ -109,6 +115,63 @@ private fun <C : Any, T : Any> LoginDialogSurface(
             animation = stackAnimation(fade())
         ) { child ->
             content(child.instance)
+        }
+    }
+}
+
+@InternalApi
+@PreviewScreenSizes
+@Composable
+private fun LoginRootContainerScreenSizePreview() {
+    ScreenPreviewContainer {
+        LoginRootContainer(
+            stack = MutableValue(
+                ChildStack(
+                    configuration = "test",
+                    instance = "Test"
+                )
+            ),
+            onDismiss = {}
+        ) {
+            Surface(modifier = Modifier.fillMaxSize()) {}
+        }
+    }
+}
+
+@InternalApi
+@PreviewThemes
+@Composable
+private fun LoginRootContainerThemePreview() {
+    ScreenPreviewContainer {
+        LoginRootContainer(
+            stack = MutableValue(
+                ChildStack(
+                    configuration = "test",
+                    instance = "Test"
+                )
+            ),
+            onDismiss = {}
+        ) {
+            Surface(modifier = Modifier.fillMaxSize()) {}
+        }
+    }
+}
+
+@InternalApi
+@PreviewFontScales
+@Composable
+private fun LoginRootContainerFontScalePreview() {
+    ScreenPreviewContainer {
+        LoginRootContainer(
+            stack = MutableValue(
+                ChildStack(
+                    configuration = "test",
+                    instance = "Test"
+                )
+            ),
+            onDismiss = {}
+        ) {
+            Surface(modifier = Modifier.fillMaxSize()) {}
         }
     }
 }

@@ -11,11 +11,20 @@ kotlin {
         namespace = "io.github.mudrichenkoevgeny.kmp.testing"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
+
+        optimization {
+            consumerKeepRules.file("consumer-rules.pro")
+        }
     }
 
     jvm()
 
     sourceSets {
+        commonMain.dependencies {
+            api(libs.konsist)
+            api(libs.kotlinx.coroutines.core)
+        }
+
         androidMain.dependencies {
             api(libs.compose.ui.test)
             api(libs.roborazzi)
@@ -23,10 +32,12 @@ kotlin {
             api(libs.roborazzi.junit.rule)
         }
 
+        jvmMain.dependencies {
+            api(libs.kotlinx.coroutines.test)
+        }
+
         jvmTest.dependencies {
-            implementation(libs.konsist)
             implementation(kotlin("test"))
-            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }

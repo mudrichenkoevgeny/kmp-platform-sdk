@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,6 +11,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.VisualTransformation
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -73,14 +73,12 @@ public fun CoreOutlinedTextField(
 @PreviewComponentSizes
 @Composable
 private fun CoreOutlinedTextFieldComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            CoreOutlinedTextField(
-                value = "",
-                onValueChange = {},
-                placeholder = { Text(LocalCommonStrings.current.ui.message) }
-            )
-        }
+    ComponentPreviewContainer {
+        CoreOutlinedTextField(
+            value = "",
+            onValueChange = {},
+            placeholder = { Text(LocalCommonStrings.current.ui.message) }
+        )
     }
 }
 
@@ -88,14 +86,12 @@ private fun CoreOutlinedTextFieldComponentSizePreview() {
 @PreviewThemes
 @Composable
 private fun CoreOutlinedTextFieldThemePreview() {
-    CoreTheme {
-        Surface {
-            CoreOutlinedTextField(
-                value = "",
-                onValueChange = {},
-                placeholder = { Text(LocalCommonStrings.current.ui.message) }
-            )
-        }
+    ComponentPreviewContainer {
+        CoreOutlinedTextField(
+            value = "",
+            onValueChange = {},
+            placeholder = { Text(LocalCommonStrings.current.ui.message) }
+        )
     }
 }
 
@@ -103,13 +99,11 @@ private fun CoreOutlinedTextFieldThemePreview() {
 @PreviewFontScales
 @Composable
 private fun CoreOutlinedTextFieldFontScalePreview() {
-    CoreTheme {
-        Surface {
-            CoreOutlinedTextField(
-                value = "",
-                onValueChange = {},
-                placeholder = { Text(LocalCommonStrings.current.ui.message) }
-            )
-        }
+    ComponentPreviewContainer {
+        CoreOutlinedTextField(
+            value = "",
+            onValueChange = {},
+            placeholder = { Text(LocalCommonStrings.current.ui.message) }
+        )
     }
 }

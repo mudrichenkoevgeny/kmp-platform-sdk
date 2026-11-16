@@ -1,0 +1,15 @@
+# Project Identity
+group={{GROUP_ID}}
+version=0.1.0
+
+# JVM & Gradle Performance
+org.gradle.jvmargs=-Xmx4g -Dfile.encoding=UTF-8
+org.gradle.caching=true
+org.gradle.configuration-cache=true
+org.gradle.daemon=true
+org.gradle.parallel=true
+
+# Kotlin & Android Configuration
+kotlin.code.style=official
+android.useAndroidX=true
+android.nonTransitiveRClass=true

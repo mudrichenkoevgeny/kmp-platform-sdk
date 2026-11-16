@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -14,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
@@ -70,10 +70,8 @@ public object FullscreenLoadingConfig {
 @PreviewComponentSizes
 @Composable
 private fun FullscreenLoadingComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            FullscreenLoading(delayMillis = 0L)
-        }
+    ComponentPreviewContainer {
+        FullscreenLoading(delayMillis = 0L)
     }
 }
 
@@ -81,9 +79,7 @@ private fun FullscreenLoadingComponentSizePreview() {
 @PreviewThemes
 @Composable
 private fun FullscreenLoadingThemePreview() {
-    CoreTheme {
-        Surface {
-            FullscreenLoading(delayMillis = 0L)
-        }
+    ComponentPreviewContainer {
+        FullscreenLoading(delayMillis = 0L)
     }
 }

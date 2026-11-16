@@ -1,0 +1,9 @@
+# {{PROJECT_TITLE}} (`{{PROJECT_REPO_NAME}}`)
+
+Kotlin Multiplatform application built on top of `kmp-platform-sdk` and `shared-foundation`.
+
+## Build & Test Commands
+
+- **Build all artifacts:** `./gradlew assemble`
+- **Run static analysis & unit tests:** `./gradlew check`
+- **Verify Roborazzi screenshots:** `./gradlew verifyRoborazzi`

@@ -148,6 +148,7 @@ konsist = { module = "com.lemonappdev:konsist", version.ref = "konsist" }
 ktlint-compose-rules = { module = "io.nlopez.compose.rules:ktlint", version.ref = "ktlint-compose-rules" }
 
 # Gradle Plugins
+agp-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 detekt-gradle-plugin = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 ktlint-gradle-plugin = { group = "org.jlleitschuh.gradle", name = "ktlint-gradle", version.ref = "ktlint" }
 maven-publish-gradle-plugin = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version.ref = "maven-publish" }

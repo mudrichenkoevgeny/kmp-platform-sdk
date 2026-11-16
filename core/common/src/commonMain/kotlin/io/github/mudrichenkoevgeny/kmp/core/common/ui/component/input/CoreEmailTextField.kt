@@ -1,17 +1,16 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input
 
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
  * Specialized email input text field configured with email keyboard options.
@@ -50,13 +49,11 @@ public fun CoreEmailTextField(
 @PreviewComponentSizes
 @Composable
 private fun CoreEmailTextFieldComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            CoreEmailTextField(
-                value = "user@example.com",
-                onValueChange = {}
-            )
-        }
+    ComponentPreviewContainer {
+        CoreEmailTextField(
+            value = "user@example.com",
+            onValueChange = {}
+        )
     }
 }
 
@@ -64,13 +61,11 @@ private fun CoreEmailTextFieldComponentSizePreview() {
 @PreviewThemes
 @Composable
 private fun CoreEmailTextFieldThemePreview() {
-    CoreTheme {
-        Surface {
-            CoreEmailTextField(
-                value = "user@example.com",
-                onValueChange = {}
-            )
-        }
+    ComponentPreviewContainer {
+        CoreEmailTextField(
+            value = "user@example.com",
+            onValueChange = {}
+        )
     }
 }
 
@@ -78,12 +73,10 @@ private fun CoreEmailTextFieldThemePreview() {
 @PreviewFontScales
 @Composable
 private fun CoreEmailTextFieldFontScalePreview() {
-    CoreTheme {
-        Surface {
-            CoreEmailTextField(
-                value = "user@example.com",
-                onValueChange = {}
-            )
-        }
+    ComponentPreviewContainer {
+        CoreEmailTextField(
+            value = "user@example.com",
+            onValueChange = {}
+        )
     }
 }

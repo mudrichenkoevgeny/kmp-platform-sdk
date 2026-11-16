@@ -20,6 +20,8 @@ public class CustomRuleSetProvider : RuleSetProvider {
      */
     public override fun instance(): RuleSet = RuleSet(
         ruleSetId,
-        emptyList()
+        listOf(
+            ::NoRawStringInComposeUiRule
+        )
     )
 }

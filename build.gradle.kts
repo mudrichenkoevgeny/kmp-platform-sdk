@@ -22,12 +22,19 @@ plugins {
 
 apiValidation {
     validationDisabled = true
+    nonPublicMarkers += "io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi"
     ignoredProjects += listOf(
         "bom",
-        "composeApp",
+        "sampleclient",
+        "samplemanagement",
         "androidApp",
+        "composeApp",
         "detekt-rules",
-        "testing"
+        "project-generator",
+        "testing",
+        "tools",
+        "core",
+        "feature"
     )
 }
 
@@ -54,4 +61,22 @@ subprojects {
             }
         }
     }
+}
+
+tasks.register("initProject") {
+    group = "scaffolding"
+    description = "Scaffolds a new KMP application project"
+    dependsOn(":tools:project-generator:initProject")
+}
+
+tasks.register("scaffoldProject") {
+    group = "scaffolding"
+    description = "Alias for initProject"
+    dependsOn(":tools:project-generator:scaffoldProject")
+}
+
+tasks.register("verifyProjectGenerator") {
+    group = "verification"
+    description = "Scaffolds a test project and runs ./gradlew check assemble E2E"
+    dependsOn(":tools:project-generator:verifyProjectGenerator")
 }

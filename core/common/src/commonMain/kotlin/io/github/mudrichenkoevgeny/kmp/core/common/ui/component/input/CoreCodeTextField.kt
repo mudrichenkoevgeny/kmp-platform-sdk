@@ -1,15 +1,14 @@
 package io.github.mudrichenkoevgeny.kmp.core.common.ui.component.input
 
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 
 /**
  * Specialized numeric confirmation code text field configured with number keyboard options.
@@ -48,13 +47,11 @@ public fun CoreCodeTextField(
 @PreviewComponentSizes
 @Composable
 private fun CoreCodeTextFieldComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            CoreCodeTextField(
-                value = "123456",
-                onValueChange = {}
-            )
-        }
+    ComponentPreviewContainer {
+        CoreCodeTextField(
+            value = "123456",
+            onValueChange = {}
+        )
     }
 }
 
@@ -62,13 +59,11 @@ private fun CoreCodeTextFieldComponentSizePreview() {
 @PreviewThemes
 @Composable
 private fun CoreCodeTextFieldThemePreview() {
-    CoreTheme {
-        Surface {
-            CoreCodeTextField(
-                value = "123456",
-                onValueChange = {}
-            )
-        }
+    ComponentPreviewContainer {
+        CoreCodeTextField(
+            value = "123456",
+            onValueChange = {}
+        )
     }
 }
 
@@ -76,12 +71,10 @@ private fun CoreCodeTextFieldThemePreview() {
 @PreviewFontScales
 @Composable
 private fun CoreCodeTextFieldFontScalePreview() {
-    CoreTheme {
-        Surface {
-            CoreCodeTextField(
-                value = "123456",
-                onValueChange = {}
-            )
-        }
+    ComponentPreviewContainer {
+        CoreCodeTextField(
+            value = "123456",
+            onValueChange = {}
+        )
     }
 }

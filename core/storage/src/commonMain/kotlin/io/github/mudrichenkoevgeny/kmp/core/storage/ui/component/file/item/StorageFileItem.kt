@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -237,17 +238,13 @@ private class StorageFileItemPreviewProvider : PreviewParameterProvider<StorageF
 @InternalApi
 @Composable
 private fun StorageFileItemPreviewContent(state: StorageFileItemPreviewState) {
-    CoreTheme {
-        Surface {
-            Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
-                StorageFileItem(
-                    file = state.file,
-                    status = state.status,
-                    enabled = state.enabled,
-                    onDeleteClick = {}
-                )
-            }
-        }
+    Box(modifier = Modifier.padding(CoreTheme.dimens.paddingLarge)) {
+        StorageFileItem(
+            file = state.file,
+            status = state.status,
+            enabled = state.enabled,
+            onDeleteClick = {}
+        )
     }
 }
 
@@ -262,28 +259,36 @@ private val defaultStorageFileItemPreviewState = StorageFileItemPreviewState(
 private fun StorageFileItemStatesPreview(
     @PreviewParameter(StorageFileItemPreviewProvider::class) state: StorageFileItemPreviewState
 ) {
-    StorageFileItemPreviewContent(state = state)
+    ComponentPreviewContainer {
+        StorageFileItemPreviewContent(state = state)
+    }
 }
 
 @InternalApi
 @PreviewComponentSizes
 @Composable
 private fun StorageFileItemComponentSizePreview() {
-    StorageFileItemPreviewContent(state = defaultStorageFileItemPreviewState)
+    ComponentPreviewContainer {
+        StorageFileItemPreviewContent(state = defaultStorageFileItemPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewThemes
 @Composable
 private fun StorageFileItemThemePreview() {
-    StorageFileItemPreviewContent(state = defaultStorageFileItemPreviewState)
+    ComponentPreviewContainer {
+        StorageFileItemPreviewContent(state = defaultStorageFileItemPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewFontScales
 @Composable
 private fun StorageFileItemFontScalePreview() {
-    StorageFileItemPreviewContent(state = defaultStorageFileItemPreviewState)
+    ComponentPreviewContainer {
+        StorageFileItemPreviewContent(state = defaultStorageFileItemPreviewState)
+    }
 }
 
 public object StorageFileItemTestTags {

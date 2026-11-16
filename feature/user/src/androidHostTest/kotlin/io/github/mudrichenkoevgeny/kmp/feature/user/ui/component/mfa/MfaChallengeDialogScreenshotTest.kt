@@ -8,8 +8,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.DialogPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
-import io.github.mudrichenkoevgeny.kmp.testing.ui.test.captureAppScreen
 import io.github.mudrichenkoevgeny.kmp.feature.user.network.httpclient.mfa.MfaChallengeRequest
+import io.github.mudrichenkoevgeny.kmp.testing.ui.test.captureAppScreen
 import kotlinx.coroutines.CompletableDeferred
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner

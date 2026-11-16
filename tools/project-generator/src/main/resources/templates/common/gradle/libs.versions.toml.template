@@ -1,0 +1,98 @@
+[versions]
+jvmToolchain = "{{TOOLCHAIN_JVM}}"
+android-compileSdk = "{{ANDROID_COMPILE_SDK}}"
+android-minSdk = "{{ANDROID_MIN_SDK}}"
+android-targetSdk = "{{ANDROID_TARGET_SDK}}"
+
+kotlin = "{{KOTLIN_VERSION}}"
+agp = "{{AGP_VERSION}}"
+compose = "{{COMPOSE_VERSION}}"
+compose-material3 = "{{COMPOSE_MATERIAL3_VERSION}}"
+kmpSdkVersion = "{{KMP_SDK_VERSION}}"
+sharedFoundationVersion = "{{SF_VERSION}}"
+
+kotlinx-coroutines = "{{COROUTINES_VERSION}}"
+kotlinx-serialization = "{{SERIALIZATION_VERSION}}"
+ktor = "{{KTOR_VERSION}}"
+decompose = "{{DECOMPOSE_VERSION}}"
+kermit = "{{KERMIT_VERSION}}"
+buildConfig = "{{BUILD_CONFIG_VERSION}}"
+androidx-activityCompose = "{{ACTIVITY_COMPOSE_VERSION}}"
+androidx-test-core = "{{ANDROIDX_TEST_CORE_VERSION}}"
+androidx-compose-ui = "{{ANDROIDX_COMPOSE_UI_VERSION}}"
+
+# Code Analysis
+detekt = "{{DETEKT_VERSION}}"
+ktlint = "{{KTLINT_VERSION}}"
+
+# Testing
+robolectric = "{{ROBOLECTRIC_VERSION}}"
+roborazzi = "{{ROBORAZZI_VERSION}}"
+
+[libraries]
+# KMP SDK Modules
+kmp-platform-sdk-bom = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-bom", version.ref = "kmpSdkVersion" }
+kmp-platform-sdk-core-common = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-core-common" }
+kmp-platform-sdk-core-security = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-core-security" }
+kmp-platform-sdk-core-settings = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-core-settings" }
+kmp-platform-sdk-core-storage = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-core-storage" }
+kmp-platform-sdk-feature-user = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-feature-user" }
+kmp-platform-sdk-feature-clientuser = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-feature-clientuser" }
+kmp-platform-sdk-feature-managementuser = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-feature-managementuser" }
+kmp-platform-sdk-testing = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-testing", version.ref = "kmpSdkVersion" }
+
+# Shared Foundation
+shared-foundation-bom = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-bom", version.ref = "sharedFoundationVersion" }
+shared-foundation-core-common = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-common" }
+shared-foundation-core-security = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-security" }
+shared-foundation-core-settings = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-settings" }
+shared-foundation-core-storage = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-storage" }
+shared-foundation-feature-user = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-feature-user" }
+
+# Optional downstream contracts BOM:
+# {{PROJECT_NAME}}-shared-bom = { group = "{{GROUP_ID}}", name = "{{PROJECT_NAME}}-shared-bom", version = "0.1.0" }
+
+# Kotlin & Infrastructure
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
+decompose-compose = { module = "com.arkivanov.decompose:extensions-compose", version.ref = "decompose" }
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+
+# Android & Compose
+androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
+compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose" }
+compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose" }
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose" }
+compose-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose" }
+compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose" }
+compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose" }
+compose-ui-test = { module = "org.jetbrains.compose.ui:ui-test", version.ref = "compose" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-material3" }
+
+# Testing
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "androidx-compose-ui" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+roborazzi = { module = "io.github.takahirom.roborazzi:roborazzi", version.ref = "roborazzi" }
+roborazzi-compose = { module = "io.github.takahirom.roborazzi:roborazzi-compose", version.ref = "roborazzi" }
+roborazzi-junit-rule = { module = "io.github.takahirom.roborazzi:roborazzi-junit-rule", version.ref = "roborazzi" }
+
+[plugins]
+kmp-platform-quality = { id = "io.github.mudrichenkoevgeny.kmp-platform-quality", version.ref = "kmpSdkVersion" }
+kmp-platform-kotlin = { id = "io.github.mudrichenkoevgeny.kmp-platform-kotlin", version.ref = "kmpSdkVersion" }
+kmp-platform-publish = { id = "io.github.mudrichenkoevgeny.kmp-platform-publish", version.ref = "kmpSdkVersion" }
+kmp-platform-agent-sync = { id = "io.github.mudrichenkoevgeny.kmp-platform-agent-sync", version.ref = "kmpSdkVersion" }
+multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose = { id = "org.jetbrains.compose", version.ref = "compose" }
+buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }
+roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }

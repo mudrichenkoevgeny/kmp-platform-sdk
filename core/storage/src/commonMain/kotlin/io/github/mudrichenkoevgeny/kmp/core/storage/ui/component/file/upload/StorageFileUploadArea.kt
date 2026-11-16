@@ -14,7 +14,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,6 +28,7 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_add
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.button.CoreButton
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -158,18 +158,14 @@ private class StorageFileUploadAreaPreviewProvider : PreviewParameterProvider<St
 @InternalApi
 @Composable
 private fun StorageFileUploadAreaPreviewContent(state: StorageFileUploadAreaPreviewState) {
-    CoreTheme {
-        Surface {
-            Box(modifier = Modifier.padding(CoreTheme.dimens.paddingMedium)) {
-                StorageFileUploadArea(
-                    component = StorageFileUploadComponentMock(
-                        initialState = StorageFileUploadState(config = state.config)
-                    ),
-                    onSelectFilesClick = {},
-                    enabled = state.enabled
-                )
-            }
-        }
+    Box(modifier = Modifier.padding(CoreTheme.dimens.paddingMedium)) {
+        StorageFileUploadArea(
+            component = StorageFileUploadComponentMock(
+                initialState = StorageFileUploadState(config = state.config)
+            ),
+            onSelectFilesClick = {},
+            enabled = state.enabled
+        )
     }
 }
 
@@ -182,26 +178,34 @@ private val defaultStorageFileUploadAreaPreviewState = StorageFileUploadAreaPrev
 private fun StorageFileUploadAreaStatesPreview(
     @PreviewParameter(StorageFileUploadAreaPreviewProvider::class) state: StorageFileUploadAreaPreviewState
 ) {
-    StorageFileUploadAreaPreviewContent(state = state)
+    ComponentPreviewContainer {
+        StorageFileUploadAreaPreviewContent(state = state)
+    }
 }
 
 @InternalApi
 @PreviewComponentSizes
 @Composable
 private fun StorageFileUploadAreaComponentSizePreview() {
-    StorageFileUploadAreaPreviewContent(state = defaultStorageFileUploadAreaPreviewState)
+    ComponentPreviewContainer {
+        StorageFileUploadAreaPreviewContent(state = defaultStorageFileUploadAreaPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewThemes
 @Composable
 private fun StorageFileUploadAreaThemePreview() {
-    StorageFileUploadAreaPreviewContent(state = defaultStorageFileUploadAreaPreviewState)
+    ComponentPreviewContainer {
+        StorageFileUploadAreaPreviewContent(state = defaultStorageFileUploadAreaPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewFontScales
 @Composable
 private fun StorageFileUploadAreaFontScalePreview() {
-    StorageFileUploadAreaPreviewContent(state = defaultStorageFileUploadAreaPreviewState)
+    ComponentPreviewContainer {
+        StorageFileUploadAreaPreviewContent(state = defaultStorageFileUploadAreaPreviewState)
+    }
 }

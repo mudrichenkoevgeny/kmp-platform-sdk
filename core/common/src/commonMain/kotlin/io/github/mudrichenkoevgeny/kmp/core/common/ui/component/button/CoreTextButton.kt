@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonElevation
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -18,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -110,13 +110,11 @@ public fun CoreTextButton(
 @PreviewComponentSizes
 @Composable
 private fun CoreTextButtonComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            CoreTextButton(
-                text = LocalCommonStrings.current.ui.action,
-                onClick = {}
-            )
-        }
+    ComponentPreviewContainer {
+        CoreTextButton(
+            text = LocalCommonStrings.current.ui.action,
+            onClick = {}
+        )
     }
 }
 
@@ -124,13 +122,11 @@ private fun CoreTextButtonComponentSizePreview() {
 @PreviewThemes
 @Composable
 private fun CoreTextButtonThemePreview() {
-    CoreTheme {
-        Surface {
-            CoreTextButton(
-                text = LocalCommonStrings.current.ui.action,
-                onClick = {}
-            )
-        }
+    ComponentPreviewContainer {
+        CoreTextButton(
+            text = LocalCommonStrings.current.ui.action,
+            onClick = {}
+        )
     }
 }
 
@@ -138,12 +134,10 @@ private fun CoreTextButtonThemePreview() {
 @PreviewFontScales
 @Composable
 private fun CoreTextButtonFontScalePreview() {
-    CoreTheme {
-        Surface {
-            CoreTextButton(
-                text = LocalCommonStrings.current.ui.action,
-                onClick = {}
-            )
-        }
+    ComponentPreviewContainer {
+        CoreTextButton(
+            text = LocalCommonStrings.current.ui.action,
+            onClick = {}
+        )
     }
 }

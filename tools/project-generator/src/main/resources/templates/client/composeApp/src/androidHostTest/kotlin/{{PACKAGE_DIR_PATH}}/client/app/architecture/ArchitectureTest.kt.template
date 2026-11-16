@@ -1,0 +1,14 @@
+package {{PACKAGE_NAME}}.client.app.architecture
+
+import io.github.mudrichenkoevgeny.kmp.testing.architecture.SdkArchitectureAssertions
+import kotlin.test.Test
+
+class ArchitectureTest {
+
+    @Test
+    fun `assert all consumer architecture rules`() {
+        SdkArchitectureAssertions.assertAllConsumerRules(
+            previewExcludedFunctionNames = setOf("OnBottomReach", "CoreTheme", "RootContent")
+        )
+    }
+}

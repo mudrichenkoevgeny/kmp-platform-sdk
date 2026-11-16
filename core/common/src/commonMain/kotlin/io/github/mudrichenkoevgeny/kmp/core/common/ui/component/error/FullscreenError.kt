@@ -11,7 +11,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -28,6 +27,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ic_warning
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -91,14 +91,12 @@ private val defaultFullscreenErrorPreviewState = CommonError.Unknown(isRetryable
 @Preview(showBackground = true, group = "States")
 @Composable
 private fun FullscreenErrorNonRetryablePreview() {
-    CoreTheme {
-        Surface {
-            CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-                FullscreenError(
-                    error = CommonError.Unknown(isRetryable = false),
-                    onRetry = {}
-                )
-            }
+    ComponentPreviewContainer {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+            FullscreenError(
+                error = CommonError.Unknown(isRetryable = false),
+                onRetry = {}
+            )
         }
     }
 }
@@ -107,14 +105,12 @@ private fun FullscreenErrorNonRetryablePreview() {
 @Preview(showBackground = true, group = "States")
 @Composable
 private fun FullscreenErrorRetryablePreview() {
-    CoreTheme {
-        Surface {
-            CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-                FullscreenError(
-                    error = defaultFullscreenErrorPreviewState,
-                    onRetry = {}
-                )
-            }
+    ComponentPreviewContainer {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+            FullscreenError(
+                error = defaultFullscreenErrorPreviewState,
+                onRetry = {}
+            )
         }
     }
 }
@@ -123,14 +119,12 @@ private fun FullscreenErrorRetryablePreview() {
 @PreviewComponentSizes
 @Composable
 private fun FullscreenErrorComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-                FullscreenError(
-                    error = defaultFullscreenErrorPreviewState,
-                    onRetry = {}
-                )
-            }
+    ComponentPreviewContainer {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+            FullscreenError(
+                error = defaultFullscreenErrorPreviewState,
+                onRetry = {}
+            )
         }
     }
 }
@@ -139,14 +133,12 @@ private fun FullscreenErrorComponentSizePreview() {
 @PreviewThemes
 @Composable
 private fun FullscreenErrorThemePreview() {
-    CoreTheme {
-        Surface {
-            CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-                FullscreenError(
-                    error = defaultFullscreenErrorPreviewState,
-                    onRetry = {}
-                )
-            }
+    ComponentPreviewContainer {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+            FullscreenError(
+                error = defaultFullscreenErrorPreviewState,
+                onRetry = {}
+            )
         }
     }
 }
@@ -155,14 +147,12 @@ private fun FullscreenErrorThemePreview() {
 @PreviewFontScales
 @Composable
 private fun FullscreenErrorFontScalePreview() {
-    CoreTheme {
-        Surface {
-            CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-                FullscreenError(
-                    error = defaultFullscreenErrorPreviewState,
-                    onRetry = {}
-                )
-            }
+    ComponentPreviewContainer {
+        CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
+            FullscreenError(
+                error = defaultFullscreenErrorPreviewState,
+                onRetry = {}
+            )
         }
     }
 }

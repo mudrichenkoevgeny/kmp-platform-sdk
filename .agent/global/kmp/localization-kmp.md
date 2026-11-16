@@ -20,7 +20,7 @@ This document defines universal structure, formatting, and naming standards for 
   - Common Controls: `ui_common_[control]` (e.g., `ui_common_action_retry`, `ui_common_action_cancel`)
 
 ## 3. UI Usage Enforcement
-- **Production UI:** All user-facing text strings in production `@Composable` functions must be retrieved via `stringResource(Res.string.*)`. Hardcoded string literals in production UI code are strictly forbidden.
+- **Production UI:** All user-facing text strings in production `@Composable` functions must be retrieved via the custom `shared-foundation` localization system (e.g., `CommonModuleStrings` via `LocalCommonStrings.current`). Direct usage of `stringResource(Res.string.*)` is prohibited to ensure consistency with the `shared-foundation` approach. Hardcoded string literals in production UI code are strictly forbidden.
 - **Tests & Previews Exception:** Raw string literals are permitted only inside unit tests, screenshot tests, and Compose preview composables.
 
 ## 4. Message Formatting

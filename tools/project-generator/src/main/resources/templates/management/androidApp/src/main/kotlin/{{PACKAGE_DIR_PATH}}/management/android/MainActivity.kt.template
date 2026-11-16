@@ -1,0 +1,26 @@
+package {{PACKAGE_NAME}}.management.android
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import com.arkivanov.decompose.defaultComponentContext
+import {{PACKAGE_NAME}}.management.app.di.ManagementAppComponent
+import {{PACKAGE_NAME}}.management.app.ui.root.RootContent
+
+/**
+ * Main Android activity entry point for {{PROJECT_TITLE}} Management.
+ */
+class MainActivity : ComponentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val componentContext = defaultComponentContext()
+        val appComponent = ManagementAppComponent(componentContext, platformContext = applicationContext)
+        appComponent.init()
+
+        setContent {
+            RootContent(appComponent)
+        }
+    }
+}

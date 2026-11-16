@@ -22,7 +22,6 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -36,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.BooleanListingFilterDefinition
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.BooleanListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ChoiceFilterPresentationStyle
@@ -51,11 +51,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.option
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortDefinition
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Panel component presenting sorting and filtering options for listings.
@@ -63,8 +63,8 @@ import org.jetbrains.compose.resources.stringResource
  * @param config Configuration specifying available sort definitions and filter definitions.
  * @param sortState Current sorting state, or null if unsorted.
  * @param filterStates Map of filter identifiers to their current states.
- * @param onSortChanged Callback invoked when the sort selection changes.
- * @param onFilterChanged Callback invoked when a filter state changes.
+ * @param onSortChange Callback invoked when the sort selection changes.
+ * @param onFilterChange Callback invoked when a filter state changes.
  * @param onApplyClick Callback invoked when the apply button is pressed.
  * @param modifier Modifier to be applied to the panel layout.
  */
@@ -375,16 +375,8 @@ private fun BooleanFilterItem(
     state: BooleanListingFilterState?,
     onFilterChange: (ListingFilterState?) -> Unit
 ) {
-    val trueLabel = if (filter.trueLabelRes != null) {
-        stringResource(filter.trueLabelRes)
-    } else {
-        LocalCommonStrings.current.ui.yes
-    }
-    val falseLabel = if (filter.falseLabelRes != null) {
-        stringResource(filter.falseLabelRes)
-    } else {
-        LocalCommonStrings.current.ui.no
-    }
+    val trueLabel = filter.trueLabel ?: LocalCommonStrings.current.ui.yes
+    val falseLabel = filter.falseLabel ?: LocalCommonStrings.current.ui.no
     Row(
         horizontalArrangement = Arrangement.spacedBy(CoreTheme.dimens.paddingSmall)
     ) {
@@ -495,96 +487,57 @@ private fun ListingChoiceChips(
     }
 }
 
+@InternalApi
+@Composable
+private fun ListingOptionsPanelPreviewContent() {
+    ListingOptionsPanel(
+        config = ListingOptionsConfig(
+            sortOptions = listOf(
+                ListingSortDefinition(
+                    ListingOptionsPanelTestData.SORT_ID_CREATED_AT,
+                    ListingOptionsPanelTestData.SORT_TITLE_CREATED_AT
+                )
+            ),
+            filters = listOf(
+                TextListingFilterDefinition(
+                    ListingOptionsPanelTestData.FILTER_ID_ACTION,
+                    ListingOptionsPanelTestData.FILTER_TITLE_ACTION,
+                    ListingOptionsPanelTestData.FILTER_PLACEHOLDER_SEARCH
+                )
+            )
+        ),
+        sortState = ListingSortState(ListingOptionsPanelTestData.SORT_ID_CREATED_AT, false),
+        filterStates = emptyMap(),
+        onSortChange = {},
+        onFilterChange = { _, _ -> },
+        onApplyClick = {}
+    )
+}
+
+@InternalApi
 @PreviewComponentSizes
 @Composable
 private fun ListingOptionsPanelComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            ListingOptionsPanel(
-                config = ListingOptionsConfig(
-                    sortOptions = listOf(
-                        ListingSortDefinition(
-                            ListingOptionsPanelTestData.SORT_ID_CREATED_AT,
-                            ListingOptionsPanelTestData.SORT_TITLE_CREATED_AT
-                        )
-                    ),
-                    filters = listOf(
-                        TextListingFilterDefinition(
-                            ListingOptionsPanelTestData.FILTER_ID_ACTION,
-                            ListingOptionsPanelTestData.FILTER_TITLE_ACTION,
-                            ListingOptionsPanelTestData.FILTER_PLACEHOLDER_SEARCH
-                        )
-                    )
-                ),
-                sortState = ListingSortState(ListingOptionsPanelTestData.SORT_ID_CREATED_AT, false),
-                filterStates = emptyMap(),
-                onSortChange = {},
-                onFilterChange = { _, _ -> },
-                onApplyClick = {}
-            )
-        }
+    ComponentPreviewContainer {
+        ListingOptionsPanelPreviewContent()
     }
 }
 
+@InternalApi
 @PreviewThemes
 @Composable
 private fun ListingOptionsPanelThemePreview() {
-    CoreTheme {
-        Surface {
-            ListingOptionsPanel(
-                config = ListingOptionsConfig(
-                    sortOptions = listOf(
-                        ListingSortDefinition(
-                            ListingOptionsPanelTestData.SORT_ID_CREATED_AT,
-                            ListingOptionsPanelTestData.SORT_TITLE_CREATED_AT
-                        )
-                    ),
-                    filters = listOf(
-                        TextListingFilterDefinition(
-                            ListingOptionsPanelTestData.FILTER_ID_ACTION,
-                            ListingOptionsPanelTestData.FILTER_TITLE_ACTION,
-                            ListingOptionsPanelTestData.FILTER_PLACEHOLDER_SEARCH
-                        )
-                    )
-                ),
-                sortState = ListingSortState(ListingOptionsPanelTestData.SORT_ID_CREATED_AT, false),
-                filterStates = emptyMap(),
-                onSortChange = {},
-                onFilterChange = { _, _ -> },
-                onApplyClick = {}
-            )
-        }
+    ComponentPreviewContainer {
+        ListingOptionsPanelPreviewContent()
     }
 }
 
+@InternalApi
 @PreviewFontScales
 @Composable
 private fun ListingOptionsPanelFontScalePreview() {
-    CoreTheme {
-        Surface {
-            ListingOptionsPanel(
-                config = ListingOptionsConfig(
-                    sortOptions = listOf(
-                        ListingSortDefinition(
-                            ListingOptionsPanelTestData.SORT_ID_CREATED_AT,
-                            ListingOptionsPanelTestData.SORT_TITLE_CREATED_AT
-                        )
-                    ),
-                    filters = listOf(
-                        TextListingFilterDefinition(
-                            ListingOptionsPanelTestData.FILTER_ID_ACTION,
-                            ListingOptionsPanelTestData.FILTER_TITLE_ACTION,
-                            ListingOptionsPanelTestData.FILTER_PLACEHOLDER_SEARCH
-                        )
-                    )
-                ),
-                sortState = ListingSortState(ListingOptionsPanelTestData.SORT_ID_CREATED_AT, false),
-                filterStates = emptyMap(),
-                onSortChange = {},
-                onFilterChange = { _, _ -> },
-                onApplyClick = {}
-            )
-        }
+    ComponentPreviewContainer {
+        ListingOptionsPanelPreviewContent()
     }
 }
 

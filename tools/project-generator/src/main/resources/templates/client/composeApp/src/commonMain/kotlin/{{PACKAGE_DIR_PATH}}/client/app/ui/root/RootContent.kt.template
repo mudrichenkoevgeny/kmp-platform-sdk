@@ -1,0 +1,59 @@
+package {{PACKAGE_NAME}}.client.app.ui.root
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalCommonComponent
+import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
+import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.kmp.core.security.localization.LocalSecurityStrings
+import io.github.mudrichenkoevgeny.kmp.core.storage.localization.LocalStorageStrings
+import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
+import {{PACKAGE_NAME}}.client.app.di.ClientAppComponent
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.localization.CommonModuleStrings
+import io.github.mudrichenkoevgeny.shared.foundation.core.security.localization.SecurityModuleStrings
+import io.github.mudrichenkoevgeny.shared.foundation.core.storage.localization.StorageModuleStrings
+import io.github.mudrichenkoevgeny.shared.foundation.feature.user.localization.UserModuleStrings
+
+/**
+ * Root Composable UI container for {{PROJECT_TITLE}} Client.
+ *
+ * @param appComponent Root application component graph.
+ * @param modifier Composable modifier.
+ */
+@Composable
+fun RootContent(
+    appComponent: ClientAppComponent,
+    modifier: Modifier = Modifier
+) {
+    val activeLocale = remember { KmpLocalization.currentLocale }
+    val commonStrings = remember(activeLocale) { CommonModuleStrings(KmpLocalization.resolver, activeLocale) }
+    val securityStrings = remember(activeLocale) { SecurityModuleStrings(KmpLocalization.resolver, activeLocale) }
+    val storageStrings = remember(activeLocale) { StorageModuleStrings(KmpLocalization.resolver, activeLocale) }
+    val userStrings = remember(activeLocale) { UserModuleStrings(KmpLocalization.resolver, activeLocale) }
+
+    CompositionLocalProvider(
+        LocalCommonStrings provides commonStrings,
+        LocalSecurityStrings provides securityStrings,
+        LocalStorageStrings provides storageStrings,
+        LocalUserStrings provides userStrings,
+        LocalCommonComponent provides appComponent.commonComponent,
+        LocalErrorParser provides appComponent.commonComponent.appErrorParser
+    ) {
+        CoreTheme {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CoreTitleText(text = "Welcome to {{PROJECT_TITLE}} Client")
+            }
+        }
+    }
+}

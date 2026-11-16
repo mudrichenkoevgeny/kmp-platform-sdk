@@ -23,7 +23,7 @@ This document defines testing constraints, test fixture standards, and screensho
 ## 3. Screenshot Testing (Roborazzi & `captureAppScreen`)
 
 - **Execution Target:** UI screenshot regression tests must reside in `src/androidHostTest` utilizing Robolectric and Roborazzi.
-- **Screen Capture Utility:** Use the `captureAppScreen` helper provided by `:core:testing` (`androidMain`) for consistent screen rendering and baseline capture.
+- **Screen Capture Utility:** Use the `captureAppScreen` helper provided by `:testing` (`androidMain`) for consistent screen rendering and baseline capture.
 - **Naming Standard:** Use the `[Subject]ScreenshotTest.kt` naming convention.
 - **Baseline Directory:** Golden baseline images must be stored under `src/androidHostTest/snapshots/images/` and tracked in version control.
 - **Gradle Tasks:**
@@ -38,3 +38,22 @@ This document defines testing constraints, test fixture standards, and screensho
 ## 5. Targeted Test Execution
 
 - **Scoped Verification:** Never run full-repository test suites (`./gradlew test`, `./gradlew check`) automatically unless explicitly requested. Whenever writing new tests, fixing a bug, or modifying production/UI logic, compile and run the specific affected test class or method (e.g., `./gradlew :module:testDebugUnitTest --tests "com.example.SubjectTest"` and `./gradlew :module:verifyRoborazziDebug --tests "com.example.SubjectScreenshotTest"` for UI changes).
+
+## 6. Konsist Architecture Testing & Reuse
+
+- **`SdkArchitectureAssertions`:** Consumer applications and SDK modules can reuse predefined Konsist architecture rules exported by the `:testing` module (`jvmMain`).
+- **Universal Rule Suite:** Executing `SdkArchitectureAssertions.assertAllConsumerRules()` automatically validates:
+  - Single public declaration per file matching the declaration name.
+  - Decompose component contracts (state exposed via `Value<T>`, no mutable `var` properties).
+  - Decompose dialog sealed class hierarchy and `@Serializable` configs.
+  - Domain ID value class extension functions (`asHexDashString`, `toXxxIdOrNull`, `toXxxIdOrThrow`).
+  - Prohibition of raw storage imports (`SharedPreferences`, `DataStore`, `IndexedDB`, `localStorage`) in feature packages.
+  - Prohibition of raw `stringResource`, `getString`, or `Res.string` in UI packages.
+  - Compose preview completeness (mandatory `Sizes`, `Themes`, and conditional `FontScales` previews wrapped in standard preview containers).
+- **Usage in `jvmTest`:**
+  ```kotlin
+  @Test
+  fun `verify architecture standards`() {
+      SdkArchitectureAssertions.assertAllConsumerRules()
+  }
+  ```

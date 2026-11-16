@@ -1,0 +1,6 @@
+# Local Architecture Overview — {{PROJECT_TITLE}}
+
+This repository contains the {{PROJECT_TITLE}} Kotlin Multiplatform application.
+
+## Modules Structure
+{{PROJECT_OVERVIEW_MODULES}}

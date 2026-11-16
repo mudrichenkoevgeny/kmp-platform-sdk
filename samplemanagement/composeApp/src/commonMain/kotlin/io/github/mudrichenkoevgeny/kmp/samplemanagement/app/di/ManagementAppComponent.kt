@@ -215,7 +215,7 @@ class ManagementAppComponent(
     }
 
     /** Concurrent sync operation for all settings modules. */
-    val syncDataUseCase get() = managementAppUseCaseModule.syncManagementDataUseCase
+    val syncDataRunner get() = managementAppUseCaseModule.syncManagementDataRunner
 
     /**
      * Registers feature error parsers and the combined WebSocket handler list on the shared socket service,

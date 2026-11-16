@@ -30,7 +30,7 @@ private const val PATH_SELF_USER_ROOT = "/self/user"
 private const val PATH_MANAGEMENT_ROOT = "/management"
 private const val EVENT_POPSTATE = "popstate"
 
-private fun isTopLevelRootPath(path: String): Boolean {
+internal fun isTopLevelRootPath(path: String): Boolean {
     val cleanPath = path.substringBefore('?').substringBefore('#')
     return cleanPath == "/" ||
         cleanPath == PATH_USER_ROOT ||
@@ -38,7 +38,7 @@ private fun isTopLevelRootPath(path: String): Boolean {
         cleanPath == PATH_MANAGEMENT_ROOT
 }
 
-private fun getAncestorPaths(fullPath: String): List<String> {
+internal fun getAncestorPaths(fullPath: String): List<String> {
     val cleanPath = fullPath.substringBefore('?').substringBefore('#')
     val segments = cleanPath.split('/').filter { it.isNotEmpty() }
     if (segments.isEmpty()) {
@@ -199,10 +199,7 @@ private fun calculateActivePath(
         }
 
         val rawUrl = effectiveRoute.toFullUrl(baseUrl)
-        val absoluteUrl = Url(rawUrl)
-        val path = absoluteUrl.encodedPath.ifEmpty { "/" }
-        val query = if (absoluteUrl.encodedQuery.isEmpty()) "" else "?${absoluteUrl.encodedQuery}"
-        return path + query
+        return formatCanonicalPath(rawUrl)
     }
 
     val stackState by mainComponent.stack.subscribeAsState()
@@ -224,20 +221,21 @@ private fun calculateActivePath(
                 currentRoute
             }
             val rawUrl = effectiveRoute.toFullUrl(baseUrl)
-            val absoluteUrl = Url(rawUrl)
-            val path = absoluteUrl.encodedPath.ifEmpty { "/" }
-            val query = if (absoluteUrl.encodedQuery.isEmpty()) "" else "?${absoluteUrl.encodedQuery}"
-            path + query
+            return formatCanonicalPath(rawUrl)
         }
 
         is MainScreenComponent.Child.ManagementChild -> {
             val managementStackState by activeChild.component.stack.subscribeAsState()
             val currentRoute = managementStackState.active.configuration
             val rawUrl = currentRoute.toFullUrl(baseUrl)
-            val absoluteUrl = Url(rawUrl)
-            val path = absoluteUrl.encodedPath.ifEmpty { "/" }
-            val query = if (absoluteUrl.encodedQuery.isEmpty()) "" else "?${absoluteUrl.encodedQuery}"
-            path + query
+            return formatCanonicalPath(rawUrl)
         }
     }
+}
+
+internal fun formatCanonicalPath(rawUrl: String): String {
+    val absoluteUrl = Url(rawUrl)
+    val path = absoluteUrl.encodedPath.ifEmpty { "/" }
+    val query = if (absoluteUrl.encodedQuery.isEmpty()) "" else "?${absoluteUrl.encodedQuery}"
+    return path + query
 }

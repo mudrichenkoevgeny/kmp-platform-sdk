@@ -1,0 +1,47 @@
+name: CI / Build & Validate
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  gitleaks:
+    name: Security / Gitleaks Secret Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  validate-and-test:
+    name: Build, Lint & Multi-Target Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Environment & Toolchains
+        uses: ./.github/actions/setup-env
+
+      - name: Run Build, Detekt, Ktlint & Unit Tests
+        run: ./gradlew check
+
+      - name: Verify Binary Compatibility API Dumps
+        run: ./gradlew apiCheck
+
+      - name: Verify Roborazzi Screenshot Regression
+        run: ./gradlew verifyRoborazzi
+
+      - name: Assemble Sample Host Applications
+        run: |
+          ./gradlew :sampleclient:androidApp:assembleDebug :samplemanagement:androidApp:assembleDebug
+          # Uncomment once wasmJs targets are re-enabled:
+          # ./gradlew :sampleclient:composeApp:wasmJsBrowserDistribution :samplemanagement:composeApp:wasmJsBrowserDistribution

@@ -24,8 +24,8 @@ import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.FullscreenLoading
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.category.StorageCategory
@@ -126,15 +126,11 @@ private class StorageFileImagePreviewPreviewProvider : PreviewParameterProvider<
 @InternalApi
 @Composable
 private fun StorageFileImagePreviewPreviewContent(state: StorageFileImagePreviewPreviewState) {
-    CoreTheme {
-        Surface {
-            Box(modifier = Modifier.padding(CoreTheme.dimens.paddingMedium)) {
-                StorageFileImagePreview(
-                    imageUrl = state.imageUrl,
-                    category = state.category
-                )
-            }
-        }
+    Box(modifier = Modifier.padding(CoreTheme.dimens.paddingMedium)) {
+        StorageFileImagePreview(
+            imageUrl = state.imageUrl,
+            category = state.category
+        )
     }
 }
 
@@ -150,28 +146,27 @@ private val defaultStorageFileImagePreviewPreviewState = StorageFileImagePreview
 private fun StorageFileImagePreviewStatesPreview(
     @PreviewParameter(StorageFileImagePreviewPreviewProvider::class) state: StorageFileImagePreviewPreviewState
 ) {
-    StorageFileImagePreviewPreviewContent(state = state)
+    ComponentPreviewContainer {
+        StorageFileImagePreviewPreviewContent(state = state)
+    }
 }
 
 @InternalApi
 @PreviewComponentSizes
 @Composable
 private fun StorageFileImagePreviewComponentSizePreview() {
-    StorageFileImagePreviewPreviewContent(state = defaultStorageFileImagePreviewPreviewState)
+    ComponentPreviewContainer {
+        StorageFileImagePreviewPreviewContent(state = defaultStorageFileImagePreviewPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewThemes
 @Composable
 private fun StorageFileImagePreviewThemePreview() {
-    StorageFileImagePreviewPreviewContent(state = defaultStorageFileImagePreviewPreviewState)
-}
-
-@InternalApi
-@PreviewFontScales
-@Composable
-private fun StorageFileImagePreviewFontScalePreview() {
-    StorageFileImagePreviewPreviewContent(state = defaultStorageFileImagePreviewPreviewState)
+    ComponentPreviewContainer {
+        StorageFileImagePreviewPreviewContent(state = defaultStorageFileImagePreviewPreviewState)
+    }
 }
 
 /**

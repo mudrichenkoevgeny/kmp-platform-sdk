@@ -161,6 +161,7 @@ private fun Content(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
+                        @Suppress("NoRawStringInComposeUiRule")
                         Text(
                             text = "${commonUi.userId}: ${session.userId.asHexDashString()}",
                             style = MaterialTheme.typography.titleMedium,

@@ -5,14 +5,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
@@ -48,20 +49,16 @@ public fun AuthProviderGrid(
 @InternalApi
 @Composable
 private fun AuthProviderGridPreviewContent(providers: List<UserAuthProvider>) {
-    CoreTheme {
-        Surface {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(CoreTheme.dimens.paddingLarge),
-                contentAlignment = Alignment.Center
-            ) {
-                AuthProviderGrid(
-                    authProviders = providers,
-                    onProviderClick = {}
-                )
-            }
-        }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(CoreTheme.dimens.paddingLarge),
+        contentAlignment = Alignment.Center
+    ) {
+        AuthProviderGrid(
+            authProviders = providers,
+            onProviderClick = {}
+        )
     }
 }
 
@@ -78,19 +75,34 @@ private val defaultAuthProviderGridPreviewState = listOf(
 private fun AuthProviderGridStatesPreview(
     @PreviewParameter(AuthGridPreviewProvider::class) providers: List<UserAuthProvider>
 ) {
-    AuthProviderGridPreviewContent(providers = providers)
+    ComponentPreviewContainer {
+        AuthProviderGridPreviewContent(providers = providers)
+    }
 }
 
 @InternalApi
 @PreviewComponentSizes
 @Composable
 private fun AuthProviderGridComponentSizePreview() {
-    AuthProviderGridPreviewContent(providers = defaultAuthProviderGridPreviewState)
+    ComponentPreviewContainer {
+        AuthProviderGridPreviewContent(providers = defaultAuthProviderGridPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewThemes
 @Composable
 private fun AuthProviderGridThemePreview() {
-    AuthProviderGridPreviewContent(providers = defaultAuthProviderGridPreviewState)
+    ComponentPreviewContainer {
+        AuthProviderGridPreviewContent(providers = defaultAuthProviderGridPreviewState)
+    }
+}
+
+@InternalApi
+@PreviewFontScales
+@Composable
+private fun AuthProviderGridFontScalePreview() {
+    ComponentPreviewContainer {
+        AuthProviderGridPreviewContent(providers = defaultAuthProviderGridPreviewState)
+    }
 }

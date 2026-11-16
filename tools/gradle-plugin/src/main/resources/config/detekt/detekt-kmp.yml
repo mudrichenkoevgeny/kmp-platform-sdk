@@ -22,3 +22,5 @@ comments:
 
 kmp-rules:
   active: true
+  NoRawStringInComposeUiRule:
+    active: true

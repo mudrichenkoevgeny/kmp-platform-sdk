@@ -14,7 +14,6 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -24,9 +23,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ChoiceListingFilterDefinition
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterChoiceOption
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ComponentPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -172,84 +173,53 @@ public fun ListingChoiceDropdown(
     }
 }
 
+@InternalApi
+@Composable
+private fun ListingChoiceDropdownPreviewContent() {
+    ListingChoiceDropdown(
+        filter = ChoiceListingFilterDefinition(
+            id = ListingChoiceDropdownTestData.FILTER_ID_STATUS,
+            title = ListingChoiceDropdownTestData.FILTER_TITLE_STATUS,
+            options = listOf(
+                ListingFilterChoiceOption(
+                    ListingChoiceDropdownTestData.OPTION_ACTIVE_ID,
+                    ListingChoiceDropdownTestData.OPTION_ACTIVE_TITLE
+                ),
+                ListingFilterChoiceOption(
+                    ListingChoiceDropdownTestData.OPTION_INACTIVE_ID,
+                    ListingChoiceDropdownTestData.OPTION_INACTIVE_TITLE
+                )
+            )
+        ),
+        selectedIds = setOf(ListingChoiceDropdownTestData.OPTION_ACTIVE_ID),
+        onSelectionChange = {}
+    )
+}
+
+@InternalApi
 @PreviewComponentSizes
 @Composable
 private fun ListingChoiceDropdownComponentSizePreview() {
-    CoreTheme {
-        Surface {
-            ListingChoiceDropdown(
-                filter = ChoiceListingFilterDefinition(
-                    id = ListingChoiceDropdownTestData.FILTER_ID_STATUS,
-                    title = ListingChoiceDropdownTestData.FILTER_TITLE_STATUS,
-                    options = listOf(
-                        ListingFilterChoiceOption(
-                            ListingChoiceDropdownTestData.OPTION_ACTIVE_ID,
-                            ListingChoiceDropdownTestData.OPTION_ACTIVE_TITLE
-                        ),
-                        ListingFilterChoiceOption(
-                            ListingChoiceDropdownTestData.OPTION_INACTIVE_ID,
-                            ListingChoiceDropdownTestData.OPTION_INACTIVE_TITLE
-                        )
-                    )
-                ),
-                selectedIds = setOf(ListingChoiceDropdownTestData.OPTION_ACTIVE_ID),
-                onSelectionChange = {}
-            )
-        }
+    ComponentPreviewContainer {
+        ListingChoiceDropdownPreviewContent()
     }
 }
 
+@InternalApi
 @PreviewThemes
 @Composable
 private fun ListingChoiceDropdownThemePreview() {
-    CoreTheme {
-        Surface {
-            ListingChoiceDropdown(
-                filter = ChoiceListingFilterDefinition(
-                    id = ListingChoiceDropdownTestData.FILTER_ID_STATUS,
-                    title = ListingChoiceDropdownTestData.FILTER_TITLE_STATUS,
-                    options = listOf(
-                        ListingFilterChoiceOption(
-                            ListingChoiceDropdownTestData.OPTION_ACTIVE_ID,
-                            ListingChoiceDropdownTestData.OPTION_ACTIVE_TITLE
-                        ),
-                        ListingFilterChoiceOption(
-                            ListingChoiceDropdownTestData.OPTION_INACTIVE_ID,
-                            ListingChoiceDropdownTestData.OPTION_INACTIVE_TITLE
-                        )
-                    )
-                ),
-                selectedIds = setOf(ListingChoiceDropdownTestData.OPTION_ACTIVE_ID),
-                onSelectionChange = {}
-            )
-        }
+    ComponentPreviewContainer {
+        ListingChoiceDropdownPreviewContent()
     }
 }
 
+@InternalApi
 @PreviewFontScales
 @Composable
 private fun ListingChoiceDropdownFontScalePreview() {
-    CoreTheme {
-        Surface {
-            ListingChoiceDropdown(
-                filter = ChoiceListingFilterDefinition(
-                    id = ListingChoiceDropdownTestData.FILTER_ID_STATUS,
-                    title = ListingChoiceDropdownTestData.FILTER_TITLE_STATUS,
-                    options = listOf(
-                        ListingFilterChoiceOption(
-                            ListingChoiceDropdownTestData.OPTION_ACTIVE_ID,
-                            ListingChoiceDropdownTestData.OPTION_ACTIVE_TITLE
-                        ),
-                        ListingFilterChoiceOption(
-                            ListingChoiceDropdownTestData.OPTION_INACTIVE_ID,
-                            ListingChoiceDropdownTestData.OPTION_INACTIVE_TITLE
-                        )
-                    )
-                ),
-                selectedIds = setOf(ListingChoiceDropdownTestData.OPTION_ACTIVE_ID),
-                onSelectionChange = {}
-            )
-        }
+    ComponentPreviewContainer {
+        ListingChoiceDropdownPreviewContent()
     }
 }
 

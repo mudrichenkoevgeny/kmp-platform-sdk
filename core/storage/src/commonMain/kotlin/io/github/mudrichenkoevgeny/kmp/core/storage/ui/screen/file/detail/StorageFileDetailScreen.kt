@@ -14,7 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -51,7 +50,6 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyTex
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewFontScales
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -304,19 +302,11 @@ private class StorageFileDetailPreviewProvider : PreviewParameterProvider<Storag
 @Composable
 private fun StorageFileDetailPreviewContent(state: StorageFileDetailPreviewState) {
     CompositionLocalProvider(LocalErrorParser provides AppErrorParserMock) {
-        ScreenPreviewContainer {
-            CoreTheme {
-                Surface {
-                    Box {
-                        StorageFileDetailScreen(
-                            component = StorageFileDetailComponentMock(
-                                initialState = state.state
-                            )
-                        )
-                    }
-                }
-            }
-        }
+        StorageFileDetailScreen(
+            component = StorageFileDetailComponentMock(
+                initialState = state.state
+            )
+        )
     }
 }
 
@@ -329,33 +319,34 @@ private val defaultStorageFileDetailPreviewState = StorageFileDetailPreviewState
 private fun StorageFileDetailStatesPreview(
     @PreviewParameter(StorageFileDetailPreviewProvider::class) state: StorageFileDetailPreviewState
 ) {
-    StorageFileDetailPreviewContent(state = state)
-}
-
-@InternalApi
-@PreviewComponentSizes
-@Composable
-private fun StorageFileDetailComponentSizePreview() {
-    StorageFileDetailPreviewContent(state = defaultStorageFileDetailPreviewState)
+    ScreenPreviewContainer {
+        StorageFileDetailPreviewContent(state = state)
+    }
 }
 
 @InternalApi
 @PreviewScreenSizes
 @Composable
 private fun StorageFileDetailScreenSizePreview() {
-    StorageFileDetailPreviewContent(state = defaultStorageFileDetailPreviewState)
+    ScreenPreviewContainer {
+        StorageFileDetailPreviewContent(state = defaultStorageFileDetailPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewThemes
 @Composable
 private fun StorageFileDetailThemePreview() {
-    StorageFileDetailPreviewContent(state = defaultStorageFileDetailPreviewState)
+    ScreenPreviewContainer {
+        StorageFileDetailPreviewContent(state = defaultStorageFileDetailPreviewState)
+    }
 }
 
 @InternalApi
 @PreviewFontScales
 @Composable
 private fun StorageFileDetailFontScalePreview() {
-    StorageFileDetailPreviewContent(state = defaultStorageFileDetailPreviewState)
+    ScreenPreviewContainer {
+        StorageFileDetailPreviewContent(state = defaultStorageFileDetailPreviewState)
+    }
 }
