@@ -29,7 +29,10 @@ public interface LoginByPhoneComponent {
      * Child instances corresponding to each wizard step.
      */
     public sealed interface Child {
+        /** Phone input wizard step. */
         public data class PhoneInput(public val initialPhone: String) : Child
+
+        /** SMS code confirmation step. */
         public data class CodeInput(public val phone: String) : Child
     }
 

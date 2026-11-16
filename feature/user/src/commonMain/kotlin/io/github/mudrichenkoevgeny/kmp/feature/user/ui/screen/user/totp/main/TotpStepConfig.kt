@@ -22,18 +22,8 @@ public sealed interface TotpStepConfig {
      */
     @Serializable
     public data class Setup(
-        val mfaToken: String,
-        val otpAuthUrl: String,
-        val secretKey: String
+        public val mfaToken: String,
+        public val otpAuthUrl: String,
+        public val secretKey: String
     ) : TotpStepConfig
-}
-
-/**
- * Serializable configurations driving the Decompose child slot for TOTP modal dialogs.
- */
-@Serializable
-public sealed interface TotpDialogConfig {
-    /** Modal dialog confirming TOTP disabling for the account. */
-    @Serializable
-    public data object ConfirmDisable : TotpDialogConfig
 }

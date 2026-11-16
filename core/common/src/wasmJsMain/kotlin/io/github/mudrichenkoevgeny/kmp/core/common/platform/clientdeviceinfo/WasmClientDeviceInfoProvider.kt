@@ -9,23 +9,23 @@ import kotlinx.browser.window
 
 /**
  * Wasm/browser [ClientDeviceInfoProvider]: builds [ClientDeviceInfo] from [window] `navigator` (user agent and language),
- * a host-supplied app version string, a fixed OS label from [WasmDeviceInfo], and a persistent [ClientDeviceId]
+ * a host-supplied app version string, a fixed OS label from [OS_VERSION], and a persistent [ClientDeviceId]
  * stored in `window.localStorage`.
  *
  * @param appVersion Version string from the embedding app or build (there is no package manager on web).
- * @param deviceIdStorageKey Key for storing the device ID in `localStorage`. Defaults to [WasmDeviceInfo.DEFAULT_DEVICE_ID_STORAGE_KEY].
+ * @param deviceIdStorageKey Key for storing the device ID in `localStorage`. Defaults to [DEFAULT_DEVICE_ID_STORAGE_KEY].
  */
-class WasmClientDeviceInfoProvider(
+public class WasmClientDeviceInfoProvider(
     private val appVersion: String,
-    private val deviceIdStorageKey: String = WasmDeviceInfo.DEFAULT_DEVICE_ID_STORAGE_KEY
+    private val deviceIdStorageKey: String = DEFAULT_DEVICE_ID_STORAGE_KEY
 ) : ClientDeviceInfoProvider {
 
     /**
      * @return [ClientDeviceInfo] with [ClientType.WEB], a persistent [ClientDeviceId] loaded or generated from `window.localStorage`,
      * a human-readable device name parsed from `navigator.userAgent` via [UserAgentParser.getDeviceName], `navigator.language`,
-     * the provided [appVersion], and [WasmDeviceInfo.OS_VERSION].
+     * the provided [appVersion], and [OS_VERSION].
      */
-    override fun getClientDeviceInfo(): ClientDeviceInfo {
+    public override fun getClientDeviceInfo(): ClientDeviceInfo {
         val navigator = window.navigator
         val deviceId = getOrCreateDeviceId()
 
@@ -35,7 +35,7 @@ class WasmClientDeviceInfoProvider(
             clientType = ClientType.WEB,
             language = ClientDeviceInfo.parsePrimaryLanguage(navigator.language),
             appVersion = appVersion,
-            operationSystemVersion = WasmDeviceInfo.OS_VERSION
+            operationSystemVersion = OS_VERSION
         )
     }
 
@@ -50,12 +50,16 @@ class WasmClientDeviceInfoProvider(
         window.localStorage.setItem(deviceIdStorageKey, newDeviceId.asHexDashString())
         return newDeviceId
     }
-}
 
-/**
- * Shared Wasm constants for [ClientDeviceInfo] fields and storage keys.
- */
-object WasmDeviceInfo {
-    const val OS_VERSION = "web"
-    const val DEFAULT_DEVICE_ID_STORAGE_KEY = "app_device_id"
+    public companion object {
+        /**
+         * Operating system version for Web target.
+         */
+        public const val OS_VERSION: String = "web"
+
+        /**
+         * Default key used for storing device ID in browser's local storage.
+         */
+        public const val DEFAULT_DEVICE_ID_STORAGE_KEY: String = "app_device_id"
+    }
 }

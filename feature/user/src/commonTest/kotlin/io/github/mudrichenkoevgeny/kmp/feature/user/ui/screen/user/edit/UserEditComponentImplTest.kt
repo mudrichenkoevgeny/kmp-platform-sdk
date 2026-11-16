@@ -22,7 +22,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
-@OptIn(InternalApi::class)
+@InternalApi
 class UserEditComponentImplTest {
 
     private val testDispatcher = StandardTestDispatcher()

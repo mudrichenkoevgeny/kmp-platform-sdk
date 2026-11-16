@@ -26,6 +26,8 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security.SetupT
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.totp.TotpStep
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.totp.main.TotpMainParams
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.dialog.TotpDialogChild
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.dialog.TotpDialogConfig
 import kotlinx.coroutines.launch
 
 /**
@@ -71,7 +73,7 @@ public class TotpMainComponentImpl(
             childFactory = { config, _ -> createChild(config) }
         )
 
-    public override val dialogSlot: Value<ChildSlot<TotpDialogConfig, TotpMainComponent.DialogChild>> =
+    public override val dialogSlot: Value<ChildSlot<TotpDialogConfig, TotpDialogChild>> =
         childSlot(
             source = dialogSlotNavigation,
             serializer = TotpDialogConfig.serializer(),
@@ -207,7 +209,7 @@ public class TotpMainComponentImpl(
 
     private fun createDialogChild(
         config: TotpDialogConfig
-    ): TotpMainComponent.DialogChild = when (config) {
-        is TotpDialogConfig.ConfirmDisable -> TotpMainComponent.DialogChild.ConfirmDisable
+    ): TotpDialogChild = when (config) {
+        is TotpDialogConfig.ConfirmDisable -> TotpDialogChild.ConfirmDisable
     }
 }

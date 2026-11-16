@@ -103,7 +103,7 @@ kotlin {
         }
 
         getByName("androidHostTest").dependencies {
-            implementation(project(":core:testing"))
+            implementation(project(":testing"))
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.androidx.compose.ui.test.junit4)

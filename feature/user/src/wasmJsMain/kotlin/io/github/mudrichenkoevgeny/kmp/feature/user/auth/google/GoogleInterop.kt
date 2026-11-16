@@ -1,5 +1,5 @@
 @file:OptIn(ExperimentalWasmJsInterop::class)
-@file:Suppress("ClassNaming", "UnusedParameter")
+@file:Suppress("ClassNaming", "UnusedParameter", "MatchingDeclarationName")
 
 package io.github.mudrichenkoevgeny.kmp.feature.user.auth.google
 
@@ -13,7 +13,7 @@ import kotlin.js.ExperimentalWasmJsInterop
  *
  * @see <a href="https://developers.google.com/identity/gsi/web/reference/js-reference">Google Identity Services Reference</a>
  */
-external object google {
+internal external object google {
     object accounts {
         object id {
             /**
@@ -44,7 +44,7 @@ external object google {
 /**
  * JavaScript interface representing the status of the Google Sign-In prompt.
  */
-external interface PromptMomentNotification : JsAny {
+internal external interface PromptMomentNotification : JsAny {
     /** @return true if the prompt was not displayed to the user. */
     fun isNotDisplayed(): Boolean
 
@@ -62,7 +62,7 @@ external interface PromptMomentNotification : JsAny {
  * @param callback The function to be executed when a credential (ID Token) is returned.
  * @return A [JsAny] object formatted as `{ client_id, callback }`.
  */
-fun createGoogleConfig(
+internal fun createGoogleConfig(
     clientId: String,
     callback: (JsAny) -> Unit
 ): JsAny =
@@ -74,7 +74,7 @@ fun createGoogleConfig(
  * @param response The raw [JsAny] response received from the Google callback.
  * @return The ID Token as a [String].
  */
-fun getCredentialFromJsResponse(response: JsAny): String =
+internal fun getCredentialFromJsResponse(response: JsAny): String =
     js("response.credential")
 
 /**
@@ -83,7 +83,7 @@ fun getCredentialFromJsResponse(response: JsAny): String =
  * @param response The raw [JsAny] response received from the Google callback.
  * @return The user's display name, or null if parsing fails or name is not present.
  */
-fun getDisplayNameFromJsResponse(response: JsAny): String? = js(
+internal fun getDisplayNameFromJsResponse(response: JsAny): String? = js(
     """
     (() => {
         try {

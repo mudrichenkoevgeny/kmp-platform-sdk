@@ -1,12 +1,10 @@
 package io.github.mudrichenkoevgeny.kmp.core.storage.mapper
 
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.category.StorageCategory
 
 /**
  * Utility for inferring storage categories from MIME types.
  */
-@InternalApi
 public object StorageCategoryMapper {
 
     /**

@@ -14,6 +14,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.security.E
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.user.security.SetupTotpUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpMainComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.TotpMainComponentImpl
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.dialog.TotpDialogChild
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totprecoverycodes.TotpRecoveryCodes
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.totpsetup.TotpSetup
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
@@ -213,7 +214,7 @@ class TotpMainComponentImplTest {
             context.component.onDisableClick()
             runCurrent()
 
-            assertIs<TotpMainComponent.DialogChild.ConfirmDisable>(context.component.dialogSlot.value.child?.instance)
+            assertIs<TotpDialogChild.ConfirmDisable>(context.component.dialogSlot.value.child?.instance)
         } finally {
             context.destroy()
         }

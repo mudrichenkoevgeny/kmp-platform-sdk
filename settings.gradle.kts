@@ -38,13 +38,15 @@ val coreModules = listOf(
     "common",
     "security",
     "settings",
-    "storage",
-    "testing"
+    "storage"
 )
 registerModules(
     "core",
     coreModules
 )
+
+include(":testing")
+project(":testing").projectDir = file("testing")
 
 val featureModules = listOf(
     "user",

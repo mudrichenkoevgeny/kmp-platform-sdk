@@ -32,10 +32,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
-import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_filter
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_refresh
@@ -58,6 +56,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.Fullscre
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.scrollbar.CoreLazyColumnScrollbar
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreBodyText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreErrorText
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.dialog.AddIdentifierDialogChild
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreScreenTitleText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreSmallText
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.text.CoreTitleText
@@ -201,7 +200,7 @@ public fun IdentifierListScreen(
 @Composable
 private fun AddIdentifierDialog(
     contentState: IdentifierListScreenState.Content,
-    dialogChild: IdentifierListComponent.AddIdentifierDialogChild,
+    dialogChild: AddIdentifierDialogChild,
     component: IdentifierListComponent
 ) {
     val userUi = LocalUserStrings.current.ui
@@ -221,23 +220,23 @@ private fun AddIdentifierDialog(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     when (dialogChild) {
-                        is IdentifierListComponent.AddIdentifierDialogChild.ProviderSelection -> {
+                        is AddIdentifierDialogChild.ProviderSelection -> {
                             AddIdentifierProviderSelectionContent(contentState, component)
                         }
 
-                        is IdentifierListComponent.AddIdentifierDialogChild.EmailInput -> {
+                        is AddIdentifierDialogChild.EmailInput -> {
                             AddIdentifierEmailInputContent(contentState, component)
                         }
 
-                        is IdentifierListComponent.AddIdentifierDialogChild.EmailConfirm -> {
+                        is AddIdentifierDialogChild.EmailConfirm -> {
                             AddIdentifierEmailConfirmContent(dialogChild.email, contentState, component)
                         }
 
-                        is IdentifierListComponent.AddIdentifierDialogChild.PhoneInput -> {
+                        is AddIdentifierDialogChild.PhoneInput -> {
                             AddIdentifierPhoneInputContent(contentState, component)
                         }
 
-                        is IdentifierListComponent.AddIdentifierDialogChild.PhoneConfirm -> {
+                        is AddIdentifierDialogChild.PhoneConfirm -> {
                             AddIdentifierPhoneConfirmContent(dialogChild.phone, contentState, component)
                         }
                     }
@@ -530,32 +529,6 @@ private fun Content(
                 .fillMaxHeight()
         )
     }
-}
-
-/**
- * Preview parameter provider delivering various [IdentifierListScreenState] configurations for Compose previews.
- */
-@InternalApi
-public class IdentifierListPreviewProvider : PreviewParameterProvider<IdentifierListScreenState> {
-    private val items: List<Pair<String, IdentifierListScreenState>> = listOf(
-        "Content List" to IdentifierListScreenState.Content(
-            paging = PaginationState(
-                items = listOf(createTestUserIdentifierSummary())
-            ),
-            isAddIdentifierSupported = true
-        ),
-        "Action Loading" to IdentifierListScreenState.Content(
-            paging = PaginationState(items = listOf(createTestUserIdentifierSummary())),
-            isAddIdentifierSupported = true,
-            actionLoading = true
-        ),
-        "Global Error" to IdentifierListScreenState.Error(error = CommonError.Unknown()),
-        "Fullscreen Loading" to IdentifierListScreenState.Loading
-    )
-
-    public override val values: Sequence<IdentifierListScreenState> = items.asSequence().map { it.second }
-
-    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
 }
 
 @InternalApi

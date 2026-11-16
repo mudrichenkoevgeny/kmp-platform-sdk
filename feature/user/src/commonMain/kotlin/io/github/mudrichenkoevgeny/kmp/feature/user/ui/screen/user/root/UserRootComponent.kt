@@ -25,6 +25,11 @@ public interface UserRootComponent {
     /** Current navigation stack and active child. */
     public val stack: Value<ChildStack<NavigationRoute, Child>>
 
+    /**
+     * Navigates to the specified route destination.
+     *
+     * @param destination Target navigation route.
+     */
     public fun navigateTo(destination: NavigationRoute)
 
     /** Active child for a [NavigationRoute] configuration. */

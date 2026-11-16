@@ -30,6 +30,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main.dialog.MainScreenDialogConfig
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalCommonComponent
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
@@ -88,7 +89,7 @@ fun MainScreen(screenComponent: MainScreenComponent) {
 
             loginChild?.let { child ->
                 val isDismissible =
-                    (child.configuration as? MainScreenComponent.DialogConfig.Login)?.isDismissible ?: true
+                    (child.configuration as? MainScreenDialogConfig.Login)?.isDismissible ?: true
                 ManagementLoginRootScreen(
                     component = child.instance,
                     isDismissible = isDismissible,

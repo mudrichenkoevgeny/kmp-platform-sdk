@@ -23,6 +23,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.toNext
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onError
 import io.github.mudrichenkoevgeny.kmp.core.common.result.onSuccess
 import io.github.mudrichenkoevgeny.kmp.core.common.time.resendCountdown
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.dialog.AddIdentifierDialogChild
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.dialog.AddIdentifierDialogConfig
 import io.github.mudrichenkoevgeny.kmp.feature.user.error.model.UserError
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.identifier.IdentifierRepository
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.user.UserRepository
@@ -93,7 +95,7 @@ public class IdentifierListComponentImpl(
     public override val addIdentifierDialogSlotNavigation: SlotNavigation<AddIdentifierDialogConfig> = SlotNavigation()
 
     public override val addIdentifierDialogSlot:
-        Value<ChildSlot<AddIdentifierDialogConfig, IdentifierListComponent.AddIdentifierDialogChild>> =
+        Value<ChildSlot<AddIdentifierDialogConfig, AddIdentifierDialogChild>> =
         childSlot(
             source = addIdentifierDialogSlotNavigation,
             serializer = AddIdentifierDialogConfig.serializer(),
@@ -119,23 +121,23 @@ public class IdentifierListComponentImpl(
 
     private fun createAddIdentifierDialogChild(
         config: AddIdentifierDialogConfig
-    ): IdentifierListComponent.AddIdentifierDialogChild = when (config) {
+    ): AddIdentifierDialogChild = when (config) {
         is AddIdentifierDialogConfig.ProviderSelection ->
-            IdentifierListComponent.AddIdentifierDialogChild.ProviderSelection
+            AddIdentifierDialogChild.ProviderSelection
 
-        is AddIdentifierDialogConfig.EmailInput -> IdentifierListComponent.AddIdentifierDialogChild.EmailInput(
+        is AddIdentifierDialogConfig.EmailInput -> AddIdentifierDialogChild.EmailInput(
             config.initialEmail
         )
 
-        is AddIdentifierDialogConfig.EmailConfirm -> IdentifierListComponent.AddIdentifierDialogChild.EmailConfirm(
+        is AddIdentifierDialogConfig.EmailConfirm -> AddIdentifierDialogChild.EmailConfirm(
             config.email
         )
 
-        is AddIdentifierDialogConfig.PhoneInput -> IdentifierListComponent.AddIdentifierDialogChild.PhoneInput(
+        is AddIdentifierDialogConfig.PhoneInput -> AddIdentifierDialogChild.PhoneInput(
             config.initialPhone
         )
 
-        is AddIdentifierDialogConfig.PhoneConfirm -> IdentifierListComponent.AddIdentifierDialogChild.PhoneConfirm(
+        is AddIdentifierDialogConfig.PhoneConfirm -> AddIdentifierDialogChild.PhoneConfirm(
             config.phone
         )
     }

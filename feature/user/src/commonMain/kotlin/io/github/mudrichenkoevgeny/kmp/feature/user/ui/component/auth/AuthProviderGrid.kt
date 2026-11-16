@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewComponentSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
@@ -44,23 +43,6 @@ public fun AuthProviderGrid(
             )
         }
     }
-}
-
-/**
- * [PreviewParameterProvider] supplying sample lists of [UserAuthProvider] for [AuthProviderGrid] previews.
- */
-public class AuthGridPreviewProvider : PreviewParameterProvider<List<UserAuthProvider>> {
-    /** Varying list sizes and provider mixes for layout previews. */
-    public override val values: Sequence<List<UserAuthProvider>> = sequenceOf(
-        listOf(UserAuthProvider.GOOGLE, UserAuthProvider.APPLE),
-        listOf(
-            UserAuthProvider.EMAIL,
-            UserAuthProvider.PHONE,
-            UserAuthProvider.GOOGLE,
-            UserAuthProvider.APPLE
-        ),
-        List(6) { if (it % 2 == 0) UserAuthProvider.GOOGLE else UserAuthProvider.APPLE }
-    )
 }
 
 @InternalApi

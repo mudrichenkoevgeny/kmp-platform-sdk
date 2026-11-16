@@ -13,6 +13,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.Pagina
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.identifier.IdentifierListComponentMock
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.dialog.AddIdentifierDialogChild
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.dialog.AddIdentifierDialogConfig
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.auth.settings.AvailableAuthProviders
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierSummary
@@ -94,10 +96,10 @@ class IdentifierListScreenTest {
     @Test
     fun addIdentifierDialog_isDisplayedWhenStateIsOpen() = runComposeUiTest {
         val config = AddIdentifierDialogConfig.ProviderSelection
-        val slot = ChildSlot<AddIdentifierDialogConfig, IdentifierListComponent.AddIdentifierDialogChild>(
+        val slot = ChildSlot<AddIdentifierDialogConfig, AddIdentifierDialogChild>(
             child = Child.Created(
                 configuration = config,
-                instance = IdentifierListComponent.AddIdentifierDialogChild.ProviderSelection
+                instance = AddIdentifierDialogChild.ProviderSelection
             )
         )
         val component = IdentifierListComponentMock(

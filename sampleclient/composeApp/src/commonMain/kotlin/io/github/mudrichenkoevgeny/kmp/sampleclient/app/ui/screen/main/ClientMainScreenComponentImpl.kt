@@ -16,6 +16,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCorou
 import io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.login.root.ClientLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.di.ClientAppComponent
 import io.github.mudrichenkoevgeny.kmp.sampleclient.app.navigation.deeplink.ClientAppDeepLinkRoute
+import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.dialog.MainScreenDialogConfig
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -93,7 +94,7 @@ class ClientMainScreenComponentImpl(
         context: ComponentContext
     ): ClientLoginRootComponent =
         when (config) {
-            is MainScreenComponent.DialogConfig.Login -> {
+            is MainScreenDialogConfig.Login -> {
                 clientAppComponent.clientUserComponent.createLoginRootDialogComponent(
                     componentContext = context,
                     onFinished = {
@@ -121,7 +122,7 @@ class ClientMainScreenComponentImpl(
         val targetChild = stack.value.items.find { it.configuration == route.tab }?.instance
         when (route) {
             is ClientAppDeepLinkRoute.Login -> {
-                dialogSlotNavigation.activate(MainScreenComponent.DialogConfig.Login())
+                dialogSlotNavigation.activate(MainScreenDialogConfig.Login())
                 loginDialogSlot.value.child?.instance?.navigateTo(route.destination)
             }
 
@@ -138,7 +139,7 @@ class ClientMainScreenComponentImpl(
     }
 
     override fun onShowLogin() {
-        dialogSlotNavigation.activate(MainScreenComponent.DialogConfig.Login())
+        dialogSlotNavigation.activate(MainScreenDialogConfig.Login())
     }
 
     override fun onDismissLogin() {

@@ -27,7 +27,10 @@ public interface RegistrationByEmailComponent {
      * Child instances corresponding to each wizard step.
      */
     public sealed interface Child {
+        /** Email input wizard step. */
         public data class EmailInput(public val initialEmail: String) : Child
+
+        /** Email confirmation and password setup step. */
         public data class ConfirmInput(public val email: String) : Child
     }
 

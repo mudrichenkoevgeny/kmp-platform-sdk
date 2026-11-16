@@ -40,8 +40,7 @@ subprojects {
     tasks.withType<KotlinCompilationTask<*>>().configureEach {
         compilerOptions {
             optIn.addAll(
-                "kotlin.uuid.ExperimentalUuidApi",
-                "kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "kotlinx.coroutines.ExperimentalCoroutinesApi"
             )
         }
     }

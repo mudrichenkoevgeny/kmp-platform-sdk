@@ -11,10 +11,10 @@ import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain
  * Preview parameter provider providing sample states for user edit screens.
  */
 @InternalApi
-public class UserEditPreviewProvider : PreviewParameterProvider<UserEditScreenState> {
+internal class UserEditPreviewProvider : PreviewParameterProvider<UserEditScreenState> {
     private val testUser = createTestUserPrivate()
 
-    public override val values: Sequence<UserEditScreenState> = sequenceOf(
+    override val values: Sequence<UserEditScreenState> = sequenceOf(
         UserEditScreenState.Loading,
         UserEditScreenState.Content(
             user = testUser,

@@ -28,6 +28,7 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import io.github.mudrichenkoevgeny.kmp.sampleclient.app.ui.screen.main.dialog.MainScreenDialogConfig
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalCommonComponent
@@ -76,7 +77,7 @@ fun MainScreen(screenComponent: MainScreenComponent) {
         )
 
         loginDialogSlot.child?.let { child ->
-            val isDismissible = (child.configuration as? MainScreenComponent.DialogConfig.Login)?.isDismissible ?: true
+            val isDismissible = (child.configuration as? MainScreenDialogConfig.Login)?.isDismissible ?: true
             ClientLoginRootScreen(component = child.instance, isDismissible = isDismissible)
         }
 

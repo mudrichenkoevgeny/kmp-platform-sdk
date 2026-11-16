@@ -10,6 +10,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.runComponentTest
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.settings.OpenAuthSettingsRepositoryMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.mock.usecase.identifier.GetUserIdentifiersUseCaseMock
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.datasource.SelfIdentifierListDataSource
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.dialog.AddIdentifierDialogChild
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings.GetAvailableUserAuthProvidersUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.apptype.AppType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.ListingDefaultValues
@@ -75,7 +76,7 @@ class IdentifierListComponentImplTest {
             context.component.onAddIdentifierClick()
             advanceUntilIdle()
 
-            assertIs<IdentifierListComponent.AddIdentifierDialogChild.ProviderSelection>(
+            assertIs<AddIdentifierDialogChild.ProviderSelection>(
                 context.component.addIdentifierDialogSlot.value.child?.instance
             )
         } finally {
@@ -92,7 +93,7 @@ class IdentifierListComponentImplTest {
             advanceUntilIdle()
 
             context.component.onAddIdentifierSelectProvider(UserAuthProvider.EMAIL)
-            assertIs<IdentifierListComponent.AddIdentifierDialogChild.EmailInput>(
+            assertIs<AddIdentifierDialogChild.EmailInput>(
                 context.component.addIdentifierDialogSlot.value.child?.instance
             )
         } finally {

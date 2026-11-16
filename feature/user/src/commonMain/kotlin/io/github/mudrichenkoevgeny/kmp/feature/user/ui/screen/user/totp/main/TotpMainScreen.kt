@@ -41,6 +41,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.main.dialog.TotpDialogChild
 import io.github.alexzhirkevich.qrose.rememberQrCodePainter
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
@@ -156,7 +157,7 @@ public fun TotpMainScreen(
                 val dialogSlot by component.dialogSlot.subscribeAsState()
                 dialogSlot.child?.instance?.let { dialogChild ->
                     when (dialogChild) {
-                        is TotpMainComponent.DialogChild.ConfirmDisable -> {
+                        is TotpDialogChild.ConfirmDisable -> {
                             AlertDialog(
                                 onDismissRequest = component::onDismissDialogs,
                                 title = { CoreTitleText(text = userUi.dialogConfirmTitle) },

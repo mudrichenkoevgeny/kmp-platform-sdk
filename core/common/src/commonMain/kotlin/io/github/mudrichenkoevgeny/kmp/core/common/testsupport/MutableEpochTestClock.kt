@@ -11,6 +11,11 @@ public class MutableEpochTestClock(
 ) : Clock {
     public override fun now(): Instant = Instant.fromEpochMilliseconds(epochMilliseconds)
 
+    /**
+     * Advances the mock epoch time by the specified delta in milliseconds.
+     *
+     * @param delta Milliseconds to advance.
+     */
     public fun advanceMilliseconds(delta: Long) {
         epochMilliseconds += delta
     }

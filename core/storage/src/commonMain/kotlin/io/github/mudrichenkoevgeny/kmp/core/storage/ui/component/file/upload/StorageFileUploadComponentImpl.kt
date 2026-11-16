@@ -5,7 +5,6 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.doOnDestroy
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.ErrorId
-import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.storage.error.model.StorageError
 import io.github.mudrichenkoevgeny.kmp.core.storage.error.parser.StorageErrorParser
@@ -36,7 +35,6 @@ import kotlinx.coroutines.launch
  * @param uploadFileUseCase Use case for executing direct file uploads.
  * @param onUploaded Callback invoked when all queued files are successfully uploaded.
  */
-@OptIn(InternalApi::class)
 public class StorageFileUploadComponentImpl(
     componentContext: ComponentContext,
     private val config: StorageFileUploadUiConfig,

@@ -7,9 +7,10 @@ import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
-import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.AddIdentifierDialogConfig
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.dialog.AddIdentifierDialogConfig
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.IdentifierListScreenState
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.dialog.AddIdentifierDialogChild
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 
@@ -21,7 +22,7 @@ public class IdentifierListComponentMock(
     initialState: IdentifierListScreenState = IdentifierListScreenState.Loading,
     public override val isAddIdentifierSupported: Boolean = true,
     public override val includeFilterPanel: Boolean = false,
-    initialDialogSlot: ChildSlot<AddIdentifierDialogConfig, IdentifierListComponent.AddIdentifierDialogChild> =
+    initialDialogSlot: ChildSlot<AddIdentifierDialogConfig, AddIdentifierDialogChild> =
         ChildSlot()
 ) : IdentifierListComponent {
 
@@ -31,7 +32,7 @@ public class IdentifierListComponentMock(
     public override val addIdentifierDialogSlotNavigation: SlotNavigation<AddIdentifierDialogConfig> =
         SlotNavigation<AddIdentifierDialogConfig>()
     public override val addIdentifierDialogSlot:
-        Value<ChildSlot<AddIdentifierDialogConfig, IdentifierListComponent.AddIdentifierDialogChild>> =
+        Value<ChildSlot<AddIdentifierDialogConfig, AddIdentifierDialogChild>> =
         MutableValue(initialDialogSlot)
 
     public var refreshCalls: Int = 0

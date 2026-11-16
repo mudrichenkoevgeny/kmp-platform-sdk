@@ -8,6 +8,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.log
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.root.ManagementRootComponent
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.root.UserRootComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.navigation.deeplink.ManagementAppDeepLinkRoute
+import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main.dialog.MainScreenDialogConfig
 import kotlinx.serialization.Serializable
 
 /**
@@ -60,11 +61,5 @@ interface MainScreenComponent {
     }
 
     /** Serializable keys for dialog-slot children. */
-    @Serializable
-    sealed class DialogConfig {
-        @Serializable
-        data class Login(
-            val isDismissible: Boolean = true
-        ) : DialogConfig()
-    }
+    typealias DialogConfig = MainScreenDialogConfig
 }

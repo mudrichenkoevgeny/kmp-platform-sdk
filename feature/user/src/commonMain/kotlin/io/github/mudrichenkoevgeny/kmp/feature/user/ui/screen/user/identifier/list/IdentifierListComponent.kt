@@ -6,6 +6,8 @@ import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.ListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.dialog.AddIdentifierDialogChild
+import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.dialog.AddIdentifierDialogConfig
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
 
 /**
@@ -21,15 +23,6 @@ public interface IdentifierListComponent : IdentifierListOwner {
 
     /** Slot navigator for the add identifier dialog. */
     public val addIdentifierDialogSlotNavigation: SlotNavigation<AddIdentifierDialogConfig>
-
-    /** Dialog child instances corresponding to each configuration step. */
-    public sealed interface AddIdentifierDialogChild {
-        public data object ProviderSelection : AddIdentifierDialogChild
-        public data class EmailInput(val initialEmail: String) : AddIdentifierDialogChild
-        public data class EmailConfirm(val email: String) : AddIdentifierDialogChild
-        public data class PhoneInput(val initialPhone: String) : AddIdentifierDialogChild
-        public data class PhoneConfirm(val phone: String) : AddIdentifierDialogChild
-    }
 
     /** Whether adding a new identifier is available for this contour. */
     public val isAddIdentifierSupported: Boolean

@@ -9,7 +9,7 @@ dependencies {
         api(project(":core:settings"))
         api(project(":core:security"))
         api(project(":core:storage"))
-        api(project(":core:testing"))
+        api(project(":testing"))
         api(project(":feature:user"))
         api(project(":feature:clientuser"))
         api(project(":feature:managementuser"))

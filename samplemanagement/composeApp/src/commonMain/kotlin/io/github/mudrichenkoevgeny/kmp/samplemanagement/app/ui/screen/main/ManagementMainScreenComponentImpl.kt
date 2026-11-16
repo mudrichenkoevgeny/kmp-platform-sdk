@@ -16,6 +16,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.componentCorou
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root.ManagementLoginRootComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.di.ManagementAppComponent
 import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.navigation.deeplink.ManagementAppDeepLinkRoute
+import io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main.dialog.MainScreenDialogConfig
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -74,7 +75,7 @@ class ManagementMainScreenComponentImpl(
                     dialogSlotNavigation.dismiss()
                 } else {
                     if (loginDialogSlot.value.child?.instance == null) {
-                        dialogSlotNavigation.activate(MainScreenComponent.DialogConfig.Login(isDismissible = false))
+                        dialogSlotNavigation.activate(MainScreenDialogConfig.Login(isDismissible = false))
                     }
                 }
             }
@@ -112,7 +113,7 @@ class ManagementMainScreenComponentImpl(
         context: ComponentContext
     ): ManagementLoginRootComponent =
         when (config) {
-            is MainScreenComponent.DialogConfig.Login -> {
+            is MainScreenDialogConfig.Login -> {
                 managementAppComponent.managementUserComponent.createLoginRootDialogComponent(
                     componentContext = context,
                     onFinished = {
@@ -135,7 +136,7 @@ class ManagementMainScreenComponentImpl(
         if (route.requiresAuth && !isAuthorized.value) {
             pendingRoute = route
             dialogSlotNavigation.activate(
-                MainScreenComponent.DialogConfig.Login(
+                MainScreenDialogConfig.Login(
                     isDismissible = false
                 )
             )
@@ -169,7 +170,7 @@ class ManagementMainScreenComponentImpl(
      */
     override fun onTabClick(config: MainScreenComponent.Config) {
         if ((config is MainScreenComponent.Config.Management) && (!isAuthorized.value)) {
-            dialogSlotNavigation.activate(MainScreenComponent.DialogConfig.Login(isDismissible = false))
+            dialogSlotNavigation.activate(MainScreenDialogConfig.Login(isDismissible = false))
             return
         }
         navigation.bringToFront(config)
@@ -177,12 +178,12 @@ class ManagementMainScreenComponentImpl(
 
     /** Opens the authentication modal dialog slot in dismissible mode. */
     override fun onShowLogin() {
-        dialogSlotNavigation.activate(MainScreenComponent.DialogConfig.Login(isDismissible = true))
+        dialogSlotNavigation.activate(MainScreenDialogConfig.Login(isDismissible = true))
     }
 
     /** Dismisses the active authentication modal dialog slot if permitted by state. */
     override fun onDismissLogin() {
-        val currentDialog = loginDialogSlot.value.child?.configuration as? MainScreenComponent.DialogConfig.Login
+        val currentDialog = loginDialogSlot.value.child?.configuration as? MainScreenDialogConfig.Login
         if (currentDialog?.isDismissible == false && !isAuthorized.value) {
             return
         }

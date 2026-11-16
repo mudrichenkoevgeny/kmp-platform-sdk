@@ -16,7 +16,7 @@ class WasmDeviceInfoProviderTest {
 
         assertEquals(ClientType.WEB, info.clientType)
         assertEquals("9.8.7", info.appVersion)
-        assertEquals(WasmDeviceInfo.OS_VERSION, info.operationSystemVersion)
+        assertEquals(WasmClientDeviceInfoProvider.OS_VERSION, info.operationSystemVersion)
     }
 
     @Test

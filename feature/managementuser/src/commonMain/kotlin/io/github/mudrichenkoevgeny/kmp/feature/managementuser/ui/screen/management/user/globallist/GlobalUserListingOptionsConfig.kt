@@ -449,7 +449,10 @@ private fun createPersonalFilterDefinitions(): List<ListingFilterDefinition> {
     )
 }
 
-public object AuthorityLevel {
-    public const val MIN_AUTHORITY_LEVEL: Long = 0L
-    public const val MAX_AUTHORITY_LEVEL: Long = 100L
+/**
+ * Constants for user authority level bounds.
+ */
+internal object AuthorityLevel {
+    const val MIN_AUTHORITY_LEVEL: Long = 0L
+    const val MAX_AUTHORITY_LEVEL: Long = 100L
 }

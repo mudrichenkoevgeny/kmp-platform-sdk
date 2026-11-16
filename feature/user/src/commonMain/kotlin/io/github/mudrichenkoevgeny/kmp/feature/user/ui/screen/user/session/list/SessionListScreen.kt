@@ -33,11 +33,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
-import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_filter
 import io.github.mudrichenkoevgeny.kmp.core.common.ic_refresh
@@ -65,7 +63,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.session.
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.component.session.item.SessionItem
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummary
-import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.session.createTestUserSessionSummaryList
 import org.jetbrains.compose.resources.painterResource
 import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
 
@@ -299,46 +296,6 @@ private fun ErrorText(
             )
         }
     }
-}
-
-/**
- * Preview parameter provider delivering various [SessionListScreenState] configurations for Compose previews.
- */
-@InternalApi
-public class SessionListPreviewProvider : PreviewParameterProvider<SessionListScreenState> {
-    private val defaultSessions = createTestUserSessionSummaryList(count = 2)
-    private val currentSession = defaultSessions.first()
-
-    private val items: List<Pair<String, SessionListScreenState>> = listOf(
-        "Current and Other Sessions" to SessionListScreenState.Content(
-            paging = PaginationState(
-                items = defaultSessions
-            ),
-            currentSessionId = currentSession.id
-        ),
-        "Multiple Sessions" to SessionListScreenState.Content(
-            paging = PaginationState(
-                items = createTestUserSessionSummaryList(count = 2)
-            )
-        ),
-        "Single Session" to SessionListScreenState.Content(
-            paging = PaginationState(
-                items = listOf(currentSession)
-            )
-        ),
-        "Action Loading" to SessionListScreenState.Content(
-            paging = PaginationState(
-                items = listOf(currentSession)
-            ),
-            actionLoading = true
-        ),
-        "Global Error" to SessionListScreenState.Error(error = CommonError.Unknown()),
-        "Fullscreen Loading" to SessionListScreenState.Loading
-    )
-
-    public override val values: Sequence<SessionListScreenState> = items.asSequence().map { it.second }
-
-    override fun getDisplayName(index: Int): String? = items.getOrNull(index)?.first
 }
 
 @InternalApi

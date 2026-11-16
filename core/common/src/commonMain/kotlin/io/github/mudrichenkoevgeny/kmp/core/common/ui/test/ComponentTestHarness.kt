@@ -8,6 +8,11 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.mock.error.parser.AppErrorParserMock
 import org.jetbrains.compose.resources.PreviewContextConfigurationEffect
 
+/**
+ * Shared test and preview harness providing theme and error parser context.
+ *
+ * @param content Composable content to wrap.
+ */
 @InternalApi
 @Composable
 public fun ComponentTestHarness(content: @Composable () -> Unit) {
