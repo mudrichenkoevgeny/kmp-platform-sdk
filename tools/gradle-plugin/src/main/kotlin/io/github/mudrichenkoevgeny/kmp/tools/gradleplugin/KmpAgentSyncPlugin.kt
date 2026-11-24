@@ -5,7 +5,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 /**
- * Gradle plugin for synchronizing shared and KMP AI agent rules into consumer projects.
+ * Gradle plugin for synchronizing shared and KMP agent rules into consumer projects.
  */
 public class KmpAgentSyncPlugin : Plugin<Project> {
     /**

@@ -50,6 +50,16 @@ Thumbs.db
 *_actual.png
 *_compare.png
 
+# Generated Design System Assets
+core/common/src/commonMain/composeResources/font/
+core/common/src/commonMain/composeResources/drawable/
+core/storage/src/commonMain/composeResources/drawable/
+feature/user/src/commonMain/composeResources/drawable/
+
+# Code review artifacts
+.code-review/state.json
+.code-review/payload.md
+
 # Editors & Tooling
 .vscode/
 .history/

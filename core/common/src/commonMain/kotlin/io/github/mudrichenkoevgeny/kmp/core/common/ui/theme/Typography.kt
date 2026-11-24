@@ -10,7 +10,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.pt_sans_bold
 import io.github.mudrichenkoevgeny.kmp.core.common.pt_sans_bold_italic
 import io.github.mudrichenkoevgeny.kmp.core.common.pt_sans_italic
 import io.github.mudrichenkoevgeny.kmp.core.common.pt_sans_regular
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.tokens.GeneratedDesignTokens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.tokens.PlatformDesignTokens
 import org.jetbrains.compose.resources.Font
 
 /**
@@ -20,14 +20,14 @@ import org.jetbrains.compose.resources.Font
  */
 @Composable
 public fun ptSansFontFamily(): FontFamily {
-    val regularWeight = FontWeight(GeneratedDesignTokens.Typography.FONT_WEIGHT_REGULAR)
-    val boldWeight = FontWeight(GeneratedDesignTokens.Typography.FONT_WEIGHT_BOLD)
-    val normalStyle = if (GeneratedDesignTokens.Typography.FONT_STYLE_NORMAL == "italic") {
+    val regularWeight = FontWeight(PlatformDesignTokens.Typography.fontWeightRegular)
+    val boldWeight = FontWeight(PlatformDesignTokens.Typography.fontWeightBold)
+    val normalStyle = if (PlatformDesignTokens.Typography.fontStyleNormal == "italic") {
         FontStyle.Italic
     } else {
         FontStyle.Normal
     }
-    val italicStyle = if (GeneratedDesignTokens.Typography.FONT_STYLE_ITALIC == "italic") {
+    val italicStyle = if (PlatformDesignTokens.Typography.fontStyleItalic == "italic") {
         FontStyle.Italic
     } else {
         FontStyle.Normal

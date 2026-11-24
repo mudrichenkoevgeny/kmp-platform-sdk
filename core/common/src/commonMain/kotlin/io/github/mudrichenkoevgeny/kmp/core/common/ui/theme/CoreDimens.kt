@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.tokens.GeneratedDesignTokens
+import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.tokens.PlatformDesignTokens
 
 internal val LocalCoreDimens = staticCompositionLocalOf { CoreDimens() }
 
@@ -13,36 +13,36 @@ internal val LocalCoreDimens = staticCompositionLocalOf { CoreDimens() }
  */
 @Immutable
 public data class CoreDimens(
-    public val paddingExtraSmall: Dp = GeneratedDesignTokens.Spacing.extraSmall,
-    public val paddingSmall: Dp = GeneratedDesignTokens.Spacing.small,
-    public val paddingMedium: Dp = GeneratedDesignTokens.Spacing.medium,
-    public val paddingLarge: Dp = GeneratedDesignTokens.Spacing.large,
-    public val headerHeight: Dp = GeneratedDesignTokens.Sizing.headerHeight,
+    public val paddingExtraSmall: Dp = PlatformDesignTokens.Spacing.extraSmall,
+    public val paddingSmall: Dp = PlatformDesignTokens.Spacing.small,
+    public val paddingMedium: Dp = PlatformDesignTokens.Spacing.medium,
+    public val paddingLarge: Dp = PlatformDesignTokens.Spacing.large,
+    public val headerHeight: Dp = PlatformDesignTokens.Sizing.headerHeight,
     public val iconSizeSmall: Dp = 14.dp,
     public val iconSizeMedium: Dp = 20.dp,
     public val iconSizeLarge: Dp = 24.dp,
     public val iconSizeXLarge: Dp = 36.dp,
-    public val iconSizeHeader: Dp = GeneratedDesignTokens.Sizing.iconSizeHeader,
-    public val iconButtonSize: Dp = GeneratedDesignTokens.Sizing.iconButtonSize,
-    public val actionButtonHeight: Dp = GeneratedDesignTokens.Sizing.actionButtonHeight,
-    public val actionButtonIconSize: Dp = GeneratedDesignTokens.Sizing.actionButtonIconSize,
-    public val elevationHeader: Dp = GeneratedDesignTokens.Elevation.header,
-    public val roundedCornerShape: Dp = GeneratedDesignTokens.Radius.small,
-    public val shadowElevation: Dp = GeneratedDesignTokens.Elevation.shadow,
-    public val rowHeight: Dp = GeneratedDesignTokens.Sizing.rowHeight,
+    public val iconSizeHeader: Dp = PlatformDesignTokens.Sizing.iconSizeHeader,
+    public val iconButtonSize: Dp = PlatformDesignTokens.Sizing.iconButtonSize,
+    public val actionButtonHeight: Dp = PlatformDesignTokens.Sizing.actionButtonHeight,
+    public val actionButtonIconSize: Dp = PlatformDesignTokens.Sizing.actionButtonIconSize,
+    public val elevationHeader: Dp = PlatformDesignTokens.Elevation.header,
+    public val roundedCornerShape: Dp = PlatformDesignTokens.Radius.small,
+    public val shadowElevation: Dp = PlatformDesignTokens.Elevation.shadow,
+    public val rowHeight: Dp = PlatformDesignTokens.Sizing.rowHeight,
     public val borderWidthThin: Dp = 1.dp,
     public val borderWidthThick: Dp = 2.dp,
     public val previewThumbnailSize: Dp = 48.dp,
-    public val progressIndicatorStrokeWidth: Dp = GeneratedDesignTokens.Sizing.progressIndicatorStrokeWidth,
-    public val progressIndicatorStrokeWidthSmall: Dp = GeneratedDesignTokens.Sizing.progressIndicatorStrokeWidthSmall,
-    public val progressIndicatorSizeSmall: Dp = GeneratedDesignTokens.Sizing.progressIndicatorSizeSmall,
-    public val progressIndicatorSizeLarge: Dp = GeneratedDesignTokens.Sizing.progressIndicatorSizeLarge,
-    public val qrCodeSize: Dp = GeneratedDesignTokens.Sizing.qrCodeSize,
-    public val previewContainerHeight: Dp = GeneratedDesignTokens.Sizing.previewContainerHeight,
-    public val dialogWidth: Dp = GeneratedDesignTokens.Sizing.dialogWidth,
-    public val dialogHeight: Dp = GeneratedDesignTokens.Sizing.dialogHeight,
-    public val maxFormWidth: Dp = GeneratedDesignTokens.Sizing.maxFormWidth,
-    public val maxContentWidth: Dp = GeneratedDesignTokens.Sizing.maxContentWidth,
-    public val maxButtonWidth: Dp = GeneratedDesignTokens.Sizing.maxButtonWidth,
-    public val navigationRailWidth: Dp = GeneratedDesignTokens.Sizing.navigationRailWidth
+    public val progressIndicatorStrokeWidth: Dp = PlatformDesignTokens.Sizing.progressIndicatorStrokeWidth,
+    public val progressIndicatorStrokeWidthSmall: Dp = PlatformDesignTokens.Sizing.progressIndicatorStrokeWidthSmall,
+    public val progressIndicatorSizeSmall: Dp = PlatformDesignTokens.Sizing.progressIndicatorSizeSmall,
+    public val progressIndicatorSizeLarge: Dp = PlatformDesignTokens.Sizing.progressIndicatorSizeLarge,
+    public val qrCodeSize: Dp = PlatformDesignTokens.Sizing.qrCodeSize,
+    public val previewContainerHeight: Dp = PlatformDesignTokens.Sizing.previewContainerHeight,
+    public val dialogWidth: Dp = PlatformDesignTokens.Sizing.dialogWidth,
+    public val dialogHeight: Dp = PlatformDesignTokens.Sizing.dialogHeight,
+    public val maxFormWidth: Dp = PlatformDesignTokens.Sizing.maxFormWidth,
+    public val maxContentWidth: Dp = PlatformDesignTokens.Sizing.maxContentWidth,
+    public val maxButtonWidth: Dp = PlatformDesignTokens.Sizing.maxButtonWidth,
+    public val navigationRailWidth: Dp = PlatformDesignTokens.Sizing.navigationRailWidth
 )

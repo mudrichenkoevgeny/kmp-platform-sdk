@@ -27,8 +27,8 @@ This document defines testing constraints, test fixture standards, and screensho
 - **Naming Standard:** Use the `[Subject]ScreenshotTest.kt` naming convention.
 - **Baseline Directory:** Golden baseline images must be stored under `src/androidHostTest/snapshots/images/` and tracked in version control.
 - **Gradle Tasks:**
-  - Verify baselines: `./gradlew :module:verifyRoborazziDebug --tests "com.example.SubjectScreenshotTest"` (or `./gradlew verifyRoborazzi` when explicitly requested)
-  - Record/update baselines: `./gradlew :module:recordRoborazziDebug --tests "com.example.SubjectScreenshotTest"`
+  - Verify baselines: `:module:verifyRoborazziDebug --tests "com.example.SubjectScreenshotTest"` (or `verifyRoborazzi` when explicitly requested)
+  - Record/update baselines: `:module:recordRoborazziDebug --tests "com.example.SubjectScreenshotTest"`
 
 ## 4. Infrastructure & Serialization Verification Boundaries
 
@@ -37,7 +37,7 @@ This document defines testing constraints, test fixture standards, and screensho
 
 ## 5. Targeted Test Execution
 
-- **Scoped Verification:** Never run full-repository test suites (`./gradlew test`, `./gradlew check`) automatically unless explicitly requested. Whenever writing new tests, fixing a bug, or modifying production/UI logic, compile and run the specific affected test class or method (e.g., `./gradlew :module:testDebugUnitTest --tests "com.example.SubjectTest"` and `./gradlew :module:verifyRoborazziDebug --tests "com.example.SubjectScreenshotTest"` for UI changes).
+- **Scoped Verification:** Never run full-repository test suites (`test`, `check` tasks) automatically unless explicitly requested. Whenever writing new tests, fixing a bug, or modifying production/UI logic, compile and run the specific affected test class or method (e.g., `:module:testDebugUnitTest --tests "com.example.SubjectTest"` and `:module:verifyRoborazziDebug --tests "com.example.SubjectScreenshotTest"` for UI changes).
 
 ## 6. Konsist Architecture Testing & Reuse
 

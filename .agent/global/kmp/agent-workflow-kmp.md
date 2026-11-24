@@ -3,9 +3,9 @@ description: KMP architecture standards, Decompose components, Compose UI, and s
 alwaysApply: true
 ---
 
-# AI Collaboration & Workflow Standards — KMP Platform Additions
+# Agent Workflow Standards — KMP Platform Additions
 
-This document defines the KMP-specific extensions and architectural workflow requirements for KMP projects. It builds upon `ai-collaboration-basics.md`.
+This document defines the KMP-specific extensions and architectural workflow requirements for KMP projects. It builds upon `agent-workflow-basics.md`.
 
 ## 1. KMP Layering & Module Boundaries
 

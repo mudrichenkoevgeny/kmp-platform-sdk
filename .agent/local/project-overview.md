@@ -13,7 +13,7 @@ alwaysApply: true
 
 ## Tech Stack & Infrastructure
 - **Kotlin Multiplatform:** Kotlin, Coroutines, Kotlinx Serialization, Kotlinx DateTime.
-- **UI & Design Tokens:** Compose Multiplatform (`composeResources` + generated `Res`). Design tokens synchronized from `platform-design-system` into `GeneratedDesignTokens.kt`.
+- **UI & Design Tokens:** Compose Multiplatform (`composeResources` + generated `Res`). Design tokens, fonts, and vector icons generated/extracted at build time via `shared-foundation-design-system` Gradle plugin into `PlatformDesignTokens.kt`.
 - **Navigation:** Decompose (Component-based architecture) + Universal Deep Link routing (`shared-foundation`).
 - **Networking:** Ktor Client (HTTP + WebSockets).
 - **Security & Storage:** Android DataStore, Google Tink, platform `EncryptedSettings`.
@@ -41,9 +41,9 @@ alwaysApply: true
 ### Tools Modules (`tools/*`)
 *Build-time plugins, generators, and static analysis extensions.*
 
-- **`tools/gradle-plugin`:** Included build (`kmp-platform-sdk-gradle-plugin`) defining SDK convention plugins (`kmp-platform-quality`, `kmp-platform-kotlin`, `kmp-platform-publish`, `kmp-platform-agent-sync`) and packaging AI agent rules from `.agent/global/kmp`.
+- **`tools/gradle-plugin`:** Included build (`kmp-platform-sdk-gradle-plugin`) defining SDK convention plugins (`kmp-platform-quality`, `kmp-platform-kotlin`, `kmp-platform-publish`, `kmp-platform-agent-sync`) and packaging agent rules from `.agent/global/kmp`.
 - **`tools/detekt-rules`:** Custom Detekt rules module (`kmp-platform-sdk-detekt-rules`) enforcing KMP platform code standards ([module README](../../tools/detekt-rules/README.md)).
-- **`tools/project-generator`:** Internal JVM generator triggered via `./gradlew initProject` / `./gradlew scaffoldProject` for scaffolding clean, minimal, production-ready downstream KMP application repositories (`<name>-kmp`) on disk ([module README](../../tools/project-generator/README.md)).
+- **`tools/project-generator`:** Internal JVM generator triggered via `initProject` / `scaffoldProject` tasks for scaffolding clean, minimal, production-ready downstream KMP application repositories (`<name>-kmp`) on disk ([module README](../../tools/project-generator/README.md)).
 
 ### Infrastructure & Reference
 - **`testing`:** Shared testing infrastructure, Robolectric setup, `AppErrorParserMock`, screenshot capture utilities (`captureAppScreen`), and repository-wide Konsist architecture suite ([module README](../../testing/README.md)).

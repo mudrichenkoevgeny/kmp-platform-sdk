@@ -19,7 +19,7 @@ This module provides the following Gradle convention plugins:
    - Configures Maven Central publishing via Vanniktech Maven Publish plugin.
    - Handles POM configuration and GPG signing.
 4. **`kmp-platform-agent-sync`**
-   - Syncs AI agent rules and standards (`AGENTS.MD` and `.agent/`) to consumer projects to enforce consistency.
+   - Syncs agent rules and standards (`AGENTS.MD` and `.agent/`) to consumer projects to enforce consistency.
 
 ---
 

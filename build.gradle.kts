@@ -17,6 +17,7 @@ plugins {
     alias(libs.plugins.gradle.versions.plugin)
     alias(libs.plugins.binary.compatibility.validator)
     alias(libs.plugins.dokka)
+    alias(libs.plugins.shared.foundation.design.system) apply false
     alias(libs.plugins.kmp.platform.agent.sync)
 }
 

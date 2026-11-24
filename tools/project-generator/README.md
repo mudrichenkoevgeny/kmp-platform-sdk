@@ -2,7 +2,7 @@
 
 Internal Kotlin JVM module and CLI engine for scaffolding clean, minimal, production-ready downstream KMP application repositories (`<name>-kmp`) on disk in a single command.
 
-Triggered via the root Gradle tasks: **`./gradlew initProject`** or **`./gradlew scaffoldProject`**.
+Triggered via the root Gradle tasks: **`initProject`** or **`scaffoldProject`**.
 
 ---
 
@@ -13,7 +13,7 @@ The project skeleton generator is implemented as an internal (non-published) JVM
 - **[ProjectGenerator]**: Main generator engine. Copies binary infrastructure files (`gradlew`, `gradlew.bat`, `gradle/wrapper/*`, `gradle-daemon-jvm.properties`, `.editorconfig`, `.gitignore`, `local.properties`, `.agent/global/`), walks physical resource templates from `src/main/resources/templates/` (`common/`, `client/`, `management/`), sets executable permissions (`chmod +x gradlew`), enforces overwrite protection (`checkTargetDirectory`), and initializes a Git repository.
 - **[ProjectGeneratorConfig]**: Parameter resolution data class. Reads system properties passed by Gradle, validates required version inputs (`KNOWN_VERSION_KEYS`), and computes `groupId`, `packageName`, `packageDirPath`, `projectType`, and `targetDir` with safe defaults and package sanitization (`com.<name>.kmp`).
 - **[TemplateReplacer]**: String substitution engine. Replaces generic placeholder tokens (`{{PROJECT_NAME}}`, `{{PROJECT_TITLE}}`, `{{PROJECT_REPO_NAME}}`, `{{GROUP_ID}}`, `{{PACKAGE_NAME}}`, `{{PACKAGE_DIR_PATH}}`, `{{KMP_SDK_VERSION}}`, `{{SF_VERSION}}`, `{{TOOLCHAIN_JVM}}`, `{{ANDROID_COMPILE_SDK}}`, `{{ANDROID_MIN_SDK}}`, `{{ANDROID_TARGET_SDK}}`, `{{KOTLIN_VERSION}}`, `{{AGP_VERSION}}`, `{{COMPOSE_VERSION}}`, `{{COMPOSE_MATERIAL3_VERSION}}`, `{{DETEKT_VERSION}}`, `{{KTLINT_VERSION}}`, `{{COROUTINES_VERSION}}`, `{{SERIALIZATION_VERSION}}`, `{{KTOR_VERSION}}`, `{{DECOMPOSE_VERSION}}`, `{{ROBOLECTRIC_VERSION}}`, `{{ROBORAZZI_VERSION}}`, `{{KERMIT_VERSION}}`, `{{BUILD_CONFIG_VERSION}}`, `{{ACTIVITY_COMPOSE_VERSION}}`, `{{ANDROIDX_TEST_CORE_VERSION}}`, `{{ANDROIDX_COMPOSE_UI_VERSION}}`, `{{MAVEN_LOCAL_REPOS}}`, `{{SETTINGS_INCLUDES}}`, `{{PROJECT_OVERVIEW_MODULES}}`) with dynamic values injected directly from `kmp-platform-sdk`'s catalog (`libs.versions.toml`).
-- **[ProjectGeneratorVerifier]**: In-process E2E verification engine. Scaffolds a test project in `build/tmp/scaffold-test/scaffold-test-kmp` and executes `./gradlew check assemble` inside it to ensure zero template rot.
+- **[ProjectGeneratorVerifier]**: In-process E2E verification engine. Scaffolds a test project in `build/tmp/scaffold-test/scaffold-test-kmp` and executes `check assemble` tasks inside it to ensure zero template rot.
 
 ---
 
@@ -70,7 +70,7 @@ The generator is continuously verified against template rot and version drift:
 ./gradlew verifyProjectGenerator
 ```
 
-This task compiles `kmp-platform-sdk`, publishes artifacts to `mavenLocal()`, scaffolds a test project in `build/tmp/scaffold-test/scaffold-test-kmp`, and verifies that `./gradlew check assemble` passes cleanly out of the box inside the scaffolded project.
+This task compiles `kmp-platform-sdk`, publishes artifacts to `mavenLocal()`, scaffolds a test project in `build/tmp/scaffold-test/scaffold-test-kmp`, and verifies that `check assemble` tasks pass cleanly out of the box inside the scaffolded project.
 
 [ProjectGenerator]: src/main/kotlin/io/github/mudrichenkoevgeny/kmp/tools/projectgenerator/ProjectGenerator.kt
 [ProjectGeneratorConfig]: src/main/kotlin/io/github/mudrichenkoevgeny/kmp/tools/projectgenerator/ProjectGeneratorConfig.kt

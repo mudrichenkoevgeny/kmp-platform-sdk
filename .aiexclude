@@ -1,0 +1,29 @@
+# Build outputs & caches
+**/build/
+**/.gradle/
+**/.kotlin/
+**/.konan/
+**/kotlin-js-store/
+**/node_modules/
+**/Pods/
+**/.cxx/
+**/.externalNativeBuild/
+.artifacts/
+
+# Local configuration & secrets
+local.properties
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+*.gpg
+
+# Binary, font & visual snapshot assets
+gradle/wrapper/gradle-wrapper.jar
+**/*.woff2
+**/*.png
+
+# Code review artifacts
+.code-review/payload.md
+.code-review/state.json

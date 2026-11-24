@@ -95,7 +95,7 @@ class ArchitectureTest {
         }
 
         val isExcludedFile: (KoFileDeclaration) -> Boolean = { file ->
-            file.name.contains(FILE_GENERATED_DESIGN_TOKENS)
+            file.name.contains(FILE_PLATFORM_DESIGN_TOKENS)
         }
 
         scope.classes(includeNested = true).assertTrue {
@@ -147,7 +147,7 @@ class ArchitectureTest {
     }
 
     @Test
-    fun `CoreTheme colors typography dimensions and shapes map to GeneratedDesignTokens`() {
+    fun `CoreTheme colors typography dimensions and shapes map to PlatformDesignTokens`() {
         val themeFiles = Konsist
             .scopeFromProduction()
             .files
@@ -160,11 +160,11 @@ class ArchitectureTest {
         assertTestTrue(themeFiles.isNotEmpty(), "Theme token mapping files set must not be empty")
 
         themeFiles.forEach { file ->
-            val mapsToTokens = file.text.contains(FILE_GENERATED_DESIGN_TOKENS) ||
-                file.imports.any { import -> import.name.endsWith(FILE_GENERATED_DESIGN_TOKENS) }
+            val mapsToTokens = file.text.contains(FILE_PLATFORM_DESIGN_TOKENS) ||
+                file.imports.any { import -> import.name.endsWith(FILE_PLATFORM_DESIGN_TOKENS) }
             assertTestTrue(
                 mapsToTokens,
-                "Theme file ${file.name} must reference $FILE_GENERATED_DESIGN_TOKENS"
+                "Theme file ${file.name} must reference $FILE_PLATFORM_DESIGN_TOKENS"
             )
         }
     }
@@ -207,7 +207,7 @@ class ArchitectureTest {
         private const val PKG_MOCK = "mock"
         private const val NAME_COMPANION = "Companion"
         private const val SUFFIX_TEST_TAGS = "TestTags"
-        private const val FILE_GENERATED_DESIGN_TOKENS = "GeneratedDesignTokens"
+        private const val FILE_PLATFORM_DESIGN_TOKENS = "PlatformDesignTokens"
     }
 }
 

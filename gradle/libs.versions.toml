@@ -7,7 +7,7 @@ android-targetSdk = "37"
 
 # Plugins & Core
 kotlin = "2.4.21"
-agp = "9.5.1"
+agp = "9.4.0"
 compose = "1.12.2"
 sqlDelight = "2.4.1"
 buildConfig = "6.1.2"
@@ -18,7 +18,7 @@ bcv = "0.18.2"
 dokka = "2.3.0"
 
 # Shared Foundation
-shared-foundation = "0.1.18"
+shared-foundation = "0.1.24"
 
 # Kotlin
 kotlinx-serialization = "1.13.0"
@@ -170,6 +170,7 @@ roborazzi-junit-rule = { module = "io.github.takahirom.roborazzi:roborazzi-junit
 shared-foundation-kotlin = { id = "io.github.mudrichenkoevgeny.shared-foundation-kotlin", version.ref = "shared-foundation" }
 shared-foundation-quality = { id = "io.github.mudrichenkoevgeny.shared-foundation-quality", version.ref = "shared-foundation" }
 shared-foundation-publish = { id = "io.github.mudrichenkoevgeny.shared-foundation-publish", version.ref = "shared-foundation" }
+shared-foundation-design-system = { id = "io.github.mudrichenkoevgeny.shared-foundation-design-system", version.ref = "shared-foundation" }
 kmp-platform-agent-sync = { id = "io.github.mudrichenkoevgeny.kmp-platform-agent-sync" }
 kmp-platform-quality = { id = "io.github.mudrichenkoevgeny.kmp-platform-quality" }
 kmp-platform-kotlin = { id = "io.github.mudrichenkoevgeny.kmp-platform-kotlin" }

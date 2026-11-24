@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kmp.platform.quality)
     alias(libs.plugins.kmp.platform.kotlin)
     alias(libs.plugins.kmp.platform.publish)
+    alias(libs.plugins.shared.foundation.design.system)
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.kotlinx.serialization)
@@ -138,4 +139,10 @@ kotlin {
 compose.resources {
     publicResClass = true
     packageOfResClass = "io.github.mudrichenkoevgeny.kmp.core.storage"
+}
+
+sharedDesignSystem {
+    generateTokens.set(false)
+    extractFonts.set(false)
+    iconModules.set(listOf("core-storage"))
 }

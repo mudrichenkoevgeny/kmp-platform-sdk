@@ -14,7 +14,7 @@ gradlePlugin {
             id = "io.github.mudrichenkoevgeny.kmp-platform-agent-sync"
             implementationClass = "io.github.mudrichenkoevgeny.kmp.tools.gradleplugin.KmpAgentSyncPlugin"
             displayName = "KMP Platform Agent Sync Gradle Plugin"
-            description = "Gradle plugin synchronizing KMP platform AI agent rules into consumer projects"
+            description = "Gradle plugin synchronizing KMP platform agent rules into consumer projects"
         }
         create("kmpQuality") {
             id = "io.github.mudrichenkoevgeny.kmp-platform-quality"
