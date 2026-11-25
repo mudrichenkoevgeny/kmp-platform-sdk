@@ -2,6 +2,10 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenProvider
 import io.github.mudrichenkoevgeny.kmp.core.common.storage.EncryptedSettings
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.toUserIdentifierIdOrNull
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.toUserSessionIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
@@ -56,9 +60,11 @@ public class EncryptedAuthStorage(
     public override suspend fun getExpiresAt(): Long =
         encryptedSettings.get(KEY_EXPIRES_AT)?.toLongOrNull() ?: 0L
 
-    public override suspend fun getSessionId(): String? = encryptedSettings.get(KEY_SESSION_ID)
+    public override suspend fun getSessionId(): UserSessionId? =
+        encryptedSettings.get(KEY_SESSION_ID)?.let { it.toUserSessionIdOrNull() }
 
-    public override suspend fun getIdentifierId(): String? = encryptedSettings.get(KEY_IDENTIFIER_ID)
+    public override suspend fun getIdentifierId(): UserIdentifierId? =
+        encryptedSettings.get(KEY_IDENTIFIER_ID)?.let { it.toUserIdentifierIdOrNull() }
 
     public override suspend fun updateTokens(sessionToken: SessionToken) {
         encryptedSettings.put(KEY_ACCESS_TOKEN, sessionToken.accessToken.value)

@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.session.ManagementSessionApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.globallist.ManagementGlobalSessionListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.userlist.ManagementUserSessionListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPrivatePayload
@@ -34,11 +35,13 @@ public class ManagementSessionApiMock : ManagementSessionApi {
         params: ManagementUserSessionListParams
     ): AppResult<PagedResult<UserSessionSummaryPayload>> = getUserSessionsResult
 
-    public override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivatePayload> = getSessionResult
+    public override suspend fun getSession(
+        sessionId: UserSessionId
+    ): AppResult<UserSessionPrivatePayload> = getSessionResult
 
     public override suspend fun deleteSession(
         userId: UserId,
-        sessionId: String
+        sessionId: UserSessionId
     ): AppResult<Unit> = deleteSessionResult
 
     public override suspend fun deleteAllUserSessions(userId: UserId): AppResult<Unit> = deleteAllUserSessionsResult

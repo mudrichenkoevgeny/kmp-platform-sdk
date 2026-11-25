@@ -54,10 +54,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // Project Modules
-            implementation(project(":core:common"))
-            implementation(project(":core:settings"))
-            implementation(project(":core:security"))
-            implementation(project(":core:storage"))
+            implementation(project(":core"))
 
             // Shared Foundation
             implementation(libs.shared.foundation.core)

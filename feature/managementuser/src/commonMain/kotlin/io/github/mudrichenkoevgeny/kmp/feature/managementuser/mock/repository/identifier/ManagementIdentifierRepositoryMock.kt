@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.identifier.ManagementIdentifierRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.globallist.ManagementGlobalIdentifierListParams
@@ -36,18 +37,18 @@ public open class ManagementIdentifierRepositoryMock : ManagementIdentifierRepos
         )
     }
 
-    public var getIdentifierResultProvider: (String) -> AppResult<UserIdentifierPrivate> = {
+    public var getIdentifierResultProvider: (UserIdentifierId) -> AppResult<UserIdentifierPrivate> = {
         AppResult.Success(createTestUserIdentifierPrivate())
     }
 
-    public var deleteIdentifierResultProvider: (UserId, String) -> AppResult<Unit> = { _, _ ->
+    public var deleteIdentifierResultProvider: (UserId, UserIdentifierId) -> AppResult<Unit> = { _, _ ->
         AppResult.Success(Unit)
     }
-    public var deleteIdentifierPasswordResultProvider: (UserId, String) -> AppResult<Unit> =
+    public var deleteIdentifierPasswordResultProvider: (UserId, UserIdentifierId) -> AppResult<Unit> =
         { _, _ -> AppResult.Success(Unit) }
 
     public var lastUserId: UserId? = null
-    public var lastIdentifierId: String? = null
+    public var lastIdentifierId: UserIdentifierId? = null
     public var lastGlobalParams: ManagementGlobalIdentifierListParams? = null
     public var lastUserParams: ManagementUserIdentifierListParams? = null
 
@@ -65,14 +66,14 @@ public open class ManagementIdentifierRepositoryMock : ManagementIdentifierRepos
         return getUserIdentifiersResultProvider(params)
     }
 
-    public override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivate> {
+    public override suspend fun getIdentifier(identifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> {
         lastIdentifierId = identifierId
         return getIdentifierResultProvider(identifierId)
     }
 
     public override suspend fun deleteIdentifier(
         userId: UserId,
-        identifierId: String
+        identifierId: UserIdentifierId
     ): AppResult<Unit> {
         lastUserId = userId
         lastIdentifierId = identifierId
@@ -81,7 +82,7 @@ public open class ManagementIdentifierRepositoryMock : ManagementIdentifierRepos
 
     public override suspend fun deleteIdentifierPassword(
         userId: UserId,
-        identifierId: String
+        identifierId: UserIdentifierId
     ): AppResult<Unit> {
         lastUserId = userId
         lastIdentifierId = identifierId

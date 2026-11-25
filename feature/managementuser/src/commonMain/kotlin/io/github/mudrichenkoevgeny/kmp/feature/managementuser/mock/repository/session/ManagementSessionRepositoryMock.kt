@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.session.ManagementSessionRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.globallist.ManagementGlobalSessionListParams
@@ -28,16 +29,18 @@ public open class ManagementSessionRepositoryMock : ManagementSessionRepository 
         AppResult.Success(createTestPagedResult(listOf(createTestUserSessionSummary())))
     }
 
-    public var getSessionResultProvider: (String) -> AppResult<UserSessionPrivate> = {
+    public var getSessionResultProvider: (UserSessionId) -> AppResult<UserSessionPrivate> = {
         AppResult.Success(createTestUserSessionPrivate())
     }
 
-    public var deleteSessionResultProvider: (UserId, String) -> AppResult<Unit> = { _, _ -> AppResult.Success(Unit) }
+    public var deleteSessionResultProvider: (UserId, UserSessionId) -> AppResult<Unit> = { _, _ ->
+        AppResult.Success(Unit)
+    }
 
     public var deleteAllUserSessionsResultProvider: (UserId) -> AppResult<Unit> = { _ -> AppResult.Success(Unit) }
 
     public var lastUserId: UserId? = null
-    public var lastSessionId: String? = null
+    public var lastSessionId: UserSessionId? = null
     public var lastGlobalParams: ManagementGlobalSessionListParams? = null
     public var lastUserParams: ManagementUserSessionListParams? = null
 
@@ -55,14 +58,14 @@ public open class ManagementSessionRepositoryMock : ManagementSessionRepository 
         return getUserSessionsResultProvider(params)
     }
 
-    public override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivate> {
+    public override suspend fun getSession(sessionId: UserSessionId): AppResult<UserSessionPrivate> {
         lastSessionId = sessionId
         return getSessionResultProvider(sessionId)
     }
 
     public override suspend fun deleteSession(
         userId: UserId,
-        sessionId: String
+        sessionId: UserSessionId
     ): AppResult<Unit> {
         lastUserId = userId
         lastSessionId = sessionId

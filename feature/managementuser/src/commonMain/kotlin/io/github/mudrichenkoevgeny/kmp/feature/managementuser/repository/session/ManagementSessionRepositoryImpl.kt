@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.session.ManagementSessionApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedresult.mapItems
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
@@ -42,7 +43,9 @@ public class ManagementSessionRepositoryImpl(
         }
     }
 
-    override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivate> = managementSessionApi.getSession(
+    override suspend fun getSession(
+        sessionId: UserSessionId
+    ): AppResult<UserSessionPrivate> = managementSessionApi.getSession(
         sessionId
     ).mapSuccess { payload ->
         payload.toUserSessionPrivate()
@@ -50,7 +53,7 @@ public class ManagementSessionRepositoryImpl(
 
     override suspend fun deleteSession(
         userId: UserId,
-        sessionId: String
+        sessionId: UserSessionId
     ): AppResult<Unit> = managementSessionApi.deleteSession(
         userId = userId,
         sessionId = sessionId

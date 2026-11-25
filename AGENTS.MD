@@ -27,14 +27,11 @@ This document is the entry point for architectural and coding standards. These r
 
 ## Module Map
 
-### Core Modules (`core/*`)
+### Core Module (`core`)
 
 *Shared infrastructure for Android and Wasm targets.*
 
-- **`core/common`:** Ktor bootstrap, WebSocket lifecycle management, `EncryptedSettings` abstraction, platform metadata, `CoreTheme`, and Chain of Responsibility error parsing.
-- **`core/security`:** Password policy validation, MFA state primitives, Ktor network client for security settings, and localized security error domains.
-- **`core/settings`:** Global application configuration logic, Ktor network client for global settings, encrypted caching, and reactive state management.
-- **`core/storage`:** File storage infrastructure, upload/download REST clients, storage settings, and reactive WebSocket updates.
+- **`core`:** Unified foundation for Ktor bootstrap, WebSocket lifecycle management, `EncryptedSettings` abstraction, platform metadata, `CoreTheme`, password policy, MFA state primitives, global settings, and file storage infrastructure.
 
 ### Feature Modules (`feature/*`)
 

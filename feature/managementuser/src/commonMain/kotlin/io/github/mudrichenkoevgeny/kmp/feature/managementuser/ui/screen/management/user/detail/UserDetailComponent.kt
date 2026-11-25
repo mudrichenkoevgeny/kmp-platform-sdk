@@ -2,6 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 
 import com.arkivanov.decompose.value.Value
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.SelectedFilePayload
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserAccountStatus
 
 /**
  * Component contract for inspecting and managing detailed user profile and administrative actions.
@@ -26,7 +27,7 @@ public interface UserDetailComponent {
     public fun onAuthorityLevelChanged(value: String)
 
     /** Updates account status. */
-    public fun onAccountStatusChanged(value: String)
+    public fun onAccountStatusChanged(value: UserAccountStatus)
 
     /** Updates lockout type. */
     public fun onLockoutTypeChanged(value: String)

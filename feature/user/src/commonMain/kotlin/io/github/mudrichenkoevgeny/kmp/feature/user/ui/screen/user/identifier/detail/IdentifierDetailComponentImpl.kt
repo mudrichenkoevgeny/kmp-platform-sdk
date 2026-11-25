@@ -16,7 +16,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.EmailChan
 import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.GetUserIdentifierUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserIdentifierId
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.toUserIdentifierIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.detail.IdentifierDetailParams
@@ -209,7 +208,7 @@ public class IdentifierDetailComponentImpl(
     private fun initializeIdentifier() {
         scope.launch {
             val targetId = identifierId
-            val activeIdentifierId = authStorage?.getIdentifierId()?.toUserIdentifierIdOrNull()
+            val activeIdentifierId = authStorage?.getIdentifierId()
             val resolvedIsCurrent = isCurrentIdentifier ?: (targetId != null && targetId == activeIdentifierId)
 
             if (targetId != null && fetchIdentifier != null) {

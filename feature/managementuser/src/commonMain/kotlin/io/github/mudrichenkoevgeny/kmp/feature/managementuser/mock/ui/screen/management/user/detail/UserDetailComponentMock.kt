@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.SelectedFilePayload
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailComponent
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail.UserDetailScreenState
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserAccountStatus
 
 /**
  * Mock implementation of [UserDetailComponent] for testing.
@@ -34,7 +35,7 @@ public class UserDetailComponentMock(
     public var lastAvatarFileSelected: SelectedFilePayload? = null
     public var lastBirthdateChanged: String? = null
     public var lastAuthorityLevelChanged: String? = null
-    public var lastAccountStatusChanged: String? = null
+    public var lastAccountStatusChanged: UserAccountStatus? = null
     public var lastLockoutTypeChanged: String? = null
     public var lastTemporaryLockoutUntilChanged: String? = null
     public var lastQuotaBytesChanged: String? = null
@@ -61,7 +62,7 @@ public class UserDetailComponentMock(
         lastAuthorityLevelChanged = value
     }
 
-    public override fun onAccountStatusChanged(value: String) {
+    public override fun onAccountStatusChanged(value: UserAccountStatus) {
         lastAccountStatusChanged = value
     }
 

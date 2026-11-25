@@ -40,7 +40,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier.SendAddPh
 import io.github.mudrichenkoevgeny.kmp.feature.user.utils.FieldValidator
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.ListingDefaultValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserIdentifierId
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.toUserIdentifierIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import kotlinx.coroutines.Job
@@ -569,7 +568,7 @@ public class IdentifierListComponentImpl(
                     val latestContent = _state.value as? IdentifierListScreenState.Content
                     val newPaging =
                         (latestContent?.paging ?: PaginationState<UserIdentifierSummary>()).appendResult(pagedResult)
-                    val activeIdentifierId = authStorage?.getIdentifierId()?.toUserIdentifierIdOrNull()
+                    val activeIdentifierId = authStorage?.getIdentifierId()
                     val currentUserId = userRepository?.currentUser?.firstOrNull()?.id
                     _state.value = latestContent?.copy(
                         paging = newPaging,

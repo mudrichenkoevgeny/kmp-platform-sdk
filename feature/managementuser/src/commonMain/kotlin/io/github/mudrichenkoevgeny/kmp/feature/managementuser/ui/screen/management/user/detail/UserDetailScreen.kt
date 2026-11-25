@@ -40,7 +40,6 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.github.mudrichenkoevgeny.kmp.core.common.di.LocalErrorParser
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.error.parser.toLocalizedMessage
-import io.github.mudrichenkoevgeny.kmp.core.common.ic_back
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.KmpLocalization
 import io.github.mudrichenkoevgeny.kmp.core.common.localization.LocalCommonStrings
@@ -61,6 +60,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewScreenSizes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.PreviewThemes
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.preview.ScreenPreviewContainer
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.theme.CoreTheme
+import io.github.mudrichenkoevgeny.kmp.core.generated.resources.ic_back
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.preview.StorageFileImagePreview
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.rememberFilePickerLauncher
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.detail.UserDetailComponentMock
@@ -71,7 +71,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.c
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.localization.StorageModuleStrings
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 import org.jetbrains.compose.resources.painterResource
-import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
+import io.github.mudrichenkoevgeny.kmp.core.generated.resources.Res as CommonRes
 
 /**
  * Administrative user detail screen: displays user details and management action controls.
@@ -181,7 +181,7 @@ private fun Content(
     onBirthdateChange: (String) -> Unit,
     onChangeAvatarClick: () -> Unit,
     onAuthorityLevelChange: (String) -> Unit,
-    onAccountStatusChange: (String) -> Unit,
+    onAccountStatusChange: (UserAccountStatus) -> Unit,
     onLockoutTypeChange: (String) -> Unit,
     onTemporaryLockoutUntilChange: (String) -> Unit,
     onQuotaBytesChange: (String) -> Unit,
@@ -410,7 +410,7 @@ private fun UserDetailEditableFieldsSection(
     onDisplayNameChange: (String) -> Unit,
     onBirthdateChange: (String) -> Unit,
     onAuthorityLevelChange: (String) -> Unit,
-    onAccountStatusChange: (String) -> Unit,
+    onAccountStatusChange: (UserAccountStatus) -> Unit,
     onLockoutTypeChange: (String) -> Unit,
     onTemporaryLockoutUntilChange: (String) -> Unit,
     onQuotaBytesChange: (String) -> Unit,
@@ -590,8 +590,8 @@ private fun UserDetailActionsSection(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AccountStatusDropdown(
-    selectedAccountStatus: String,
-    onAccountStatusSelect: (String) -> Unit,
+    selectedAccountStatus: UserAccountStatus,
+    onAccountStatusSelect: (UserAccountStatus) -> Unit,
     enabled: Boolean
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -601,7 +601,7 @@ private fun AccountStatusDropdown(
         onExpandedChange = { if (enabled) expanded = !expanded }
     ) {
         CoreOutlinedTextField(
-            value = selectedAccountStatus,
+            value = selectedAccountStatus.value,
             onValueChange = {},
             label = { CoreBodyText(LocalUserStrings.current.ui.userAccountStatus) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -619,7 +619,7 @@ private fun AccountStatusDropdown(
                 DropdownMenuItem(
                     text = { CoreBodyText(status.name) },
                     onClick = {
-                        onAccountStatusSelect(status.name)
+                        onAccountStatusSelect(status)
                         expanded = false
                     }
                 )
@@ -675,7 +675,7 @@ internal class UserDetailPreviewProvider : PreviewParameterProvider<UserDetailSc
     private val sampleContent = UserDetailScreenState.Content(
         user = sampleUser,
         authorityLevelInput = "10",
-        accountStatusInput = "ACTIVE"
+        accountStatusInput = UserAccountStatus.ACTIVE
     )
 
     private val items: List<Pair<String, UserDetailScreenState>> = listOf(

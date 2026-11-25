@@ -43,10 +43,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // Project Modules
-            implementation(project(":core:common"))
-            implementation(project(":core:settings"))
-            implementation(project(":core:security"))
-            implementation(project(":core:storage"))
+            implementation(project(":core"))
             implementation(project(":feature:user"))
             implementation(project(":feature:clientuser"))
 
@@ -78,7 +75,7 @@ kotlin {
 
 //        wasmJsMain.dependencies {
 //            // Project Modules
-//            implementation(project(":core:common"))
+//            implementation(project(":core"))
 //        }
 
         androidMain.dependencies {

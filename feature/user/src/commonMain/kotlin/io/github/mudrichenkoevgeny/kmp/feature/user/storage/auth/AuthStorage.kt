@@ -1,6 +1,8 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth
 
 import io.github.mudrichenkoevgeny.kmp.core.common.network.provider.AccessTokenProvider
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
@@ -24,10 +26,10 @@ public interface AuthStorage : AccessTokenProvider {
     public suspend fun getExpiresAt(): Long
 
     /** @return The current active session ID, or null if absent. */
-    public suspend fun getSessionId(): String?
+    public suspend fun getSessionId(): UserSessionId?
 
     /** @return The identifier ID used to authorize this session, or null if absent. */
-    public suspend fun getIdentifierId(): String?
+    public suspend fun getIdentifierId(): UserIdentifierId?
 
     /**
      * Persists a new session after login or refresh.

@@ -36,12 +36,10 @@ flowchart TD
         BaseUser["feature:user\nBase Identity, Use Cases, Repositories, AuthStorage"]
     end
 
-    %% SDK Core Modules
-    subgraph CoreLayer [Core Infrastructure Modules]
+    %% SDK Core Module
+    subgraph CoreLayer [Core Infrastructure Module]
         direction TB
-        CoreSecurity["core:security\nPassword Policies, Validator, Security Storage"]
-        CoreSettings["core:settings\nGlobal App Settings, Settings Repository"]
-        CoreCommon["core:common\nKtor Client, WebSocketService, EncryptedSettings,\nAppErrorParser, Pagination, Platform metadata"]
+        Core[":core\nKtor Client, WebSocketService, EncryptedSettings,\nSettings, Security/MFA, Storage, Pagination, Deep Links"]
     end
 
     %% Platform Native Infrastructure
@@ -56,43 +54,30 @@ flowchart TD
 
     %% Wiring Relationships
     ClientApp --> ClientUser
-    ClientApp --> CoreSettings
-    ClientApp --> CoreSecurity
-    ClientApp --> CoreCommon
+    ClientApp --> Core
 
     MgmtApp --> MgmtUser
-    MgmtApp --> CoreSettings
-    MgmtApp --> CoreSecurity
-    MgmtApp --> CoreCommon
+    MgmtApp --> Core
 
     ClientUser --> BaseUser
-    ClientUser --> CoreSecurity
-    ClientUser --> CoreSettings
-    ClientUser --> CoreCommon
+    ClientUser --> Core
 
     MgmtUser --> BaseUser
-    MgmtUser --> CoreSecurity
-    MgmtUser --> CoreSettings
-    MgmtUser --> CoreCommon
+    MgmtUser --> Core
 
-    BaseUser --> CoreSecurity
-    BaseUser --> CoreSettings
-    BaseUser --> CoreCommon
+    BaseUser --> Core
 
-    CoreSecurity --> CoreCommon
-    CoreSettings --> CoreCommon
+    Core -.-> AndroidDriver
+    Core -.-> WasmDriver
 
-    CoreCommon -.-> AndroidDriver
-    CoreCommon -.-> WasmDriver
-
-    CoreCommon -->|HTTP / WebSockets| Backend
+    Core -->|HTTP / WebSockets| Backend
 ```
 
 ---
 
 ## 2. Module Dependency Graph
 
-The project enforces strict layer boundaries. `core:common` is the foundational leaf module that must never depend on any `feature/*` modules. Feature modules depend on core primitives and `core:common`. Host applications aggregate the entire graph at the composition root. All module version alignments are maintained via the `:bom` Bill of Materials.
+The project enforces strict layer boundaries. `:core` is the unified foundational core module with internal package-level isolation (e.g. `core.common`). Feature modules depend on core primitives and `:core`. Host applications aggregate the entire graph at the composition root. All module version alignments are maintained via the `:bom` Bill of Materials.
 
 ```mermaid
 graph TD
@@ -108,38 +93,23 @@ graph TD
     FeatureMgmtUser[":feature:managementuser"]
     FeatureUser[":feature:user"]
 
-    %% Core Modules
-    CoreSecurity[":core:security"]
-    CoreSettings[":core:settings"]
-    CoreCommon[":core:common"]
+    %% Core Module
+    Core[":core"]
 
     %% Dependencies
     SampleClient --> FeatureClientUser
-    SampleClient --> CoreSettings
-    SampleClient --> CoreSecurity
-    SampleClient --> CoreCommon
+    SampleClient --> Core
 
     SampleMgmt --> FeatureMgmtUser
-    SampleMgmt --> CoreSettings
-    SampleMgmt --> CoreSecurity
-    SampleMgmt --> CoreCommon
+    SampleMgmt --> Core
 
     FeatureClientUser --> FeatureUser
-    FeatureClientUser --> CoreSecurity
-    FeatureClientUser --> CoreSettings
-    FeatureClientUser --> CoreCommon
+    FeatureClientUser --> Core
 
     FeatureMgmtUser --> FeatureUser
-    FeatureMgmtUser --> CoreSecurity
-    FeatureMgmtUser --> CoreSettings
-    FeatureMgmtUser --> CoreCommon
+    FeatureMgmtUser --> Core
 
-    FeatureUser --> CoreSecurity
-    FeatureUser --> CoreSettings
-    FeatureUser --> CoreCommon
-
-    CoreSecurity --> CoreCommon
-    CoreSettings --> CoreCommon
+    FeatureUser --> Core
 ```
 
 ---
@@ -155,7 +125,7 @@ All 11 navigation objects across the ecosystem implement sealed interfaces (`@Se
 - Extension function `NavigationRoute.toFullUrl(baseUrl: String)` serializes route paths and query parameters into canonical URLs.
 
 ### Deep Link Architecture
-1. **Contracts (`core:common`):** Generic interfaces `DeepLinkParser<out Route : Any>` and `UrlFormatter<in T : Any>`.
+1. **Contracts (`core.common`):** Generic interfaces `DeepLinkParser<out Route : Any>` and `UrlFormatter<in T : Any>`.
 2. **Feature Parsers & Formatters (`feature/*`):** Feature-specific parsers (`ManagementUserDeepLinkParser`, `UserDeepLinkParser`, `ClientUserDeepLinkParser`) and formatters (`ManagementUrlFormatter`, `UserUrlFormatter`, `ClientUrlFormatter`) parse raw URLs directly into typed `shared-foundation` `NavigationRoute` objects and format destinations via `destination.toFullUrl(baseUrl)`.
 3. **App-Specific Aggregators (`samplemanagement` / `sampleclient`):** Application-level route models (`ManagementAppDeepLinkRoute`, `ClientAppDeepLinkRoute`) and aggregators (`ManagementAppDeepLinkParser`, `ClientAppDeepLinkParser`) maintain strict dependency graph isolation.
 4. **Wasm Browser History Integration (`SetupBrowserHistory`):**

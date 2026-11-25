@@ -15,6 +15,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.ui.component.loading.Fullscre
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ComponentTestHarness
 import io.github.mudrichenkoevgeny.kmp.core.common.ui.test.ROBOLECTRIC_SDK
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.ui.screen.management.user.detail.UserDetailComponentMock
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.user.createTestUserPrivate
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -47,7 +48,7 @@ class UserDetailScreenTest {
             UserDetailScreenState.Content(
                 user = user,
                 authorityLevelInput = "0",
-                accountStatusInput = "ACTIVE"
+                accountStatusInput = UserAccountStatus.ACTIVE
             )
         )
         setContent {
@@ -75,7 +76,7 @@ class UserDetailScreenTest {
             UserDetailScreenState.Content(
                 user = user,
                 authorityLevelInput = "0",
-                accountStatusInput = "ACTIVE"
+                accountStatusInput = UserAccountStatus.ACTIVE
             )
         )
         setContent {
@@ -100,7 +101,7 @@ class UserDetailScreenTest {
             UserDetailScreenState.Content(
                 user = user,
                 authorityLevelInput = "1",
-                accountStatusInput = "ACTIVE"
+                accountStatusInput = UserAccountStatus.ACTIVE
             )
         )
         setContent {
@@ -119,7 +120,7 @@ class UserDetailScreenTest {
             UserDetailScreenState.Content(
                 user = user,
                 authorityLevelInput = "0",
-                accountStatusInput = "ACTIVE"
+                accountStatusInput = UserAccountStatus.ACTIVE
             )
         )
         setContent {
@@ -138,7 +139,7 @@ class UserDetailScreenTest {
             UserDetailScreenState.Content(
                 user = user,
                 authorityLevelInput = "0",
-                accountStatusInput = "ACTIVE"
+                accountStatusInput = UserAccountStatus.ACTIVE
             )
         )
         setContent {
@@ -157,7 +158,7 @@ class UserDetailScreenTest {
             UserDetailScreenState.Content(
                 user = user,
                 authorityLevelInput = "0",
-                accountStatusInput = "ACTIVE"
+                accountStatusInput = UserAccountStatus.ACTIVE
             )
         )
         setContent {
@@ -176,7 +177,7 @@ class UserDetailScreenTest {
             UserDetailScreenState.Content(
                 user = user,
                 authorityLevelInput = "0",
-                accountStatusInput = "ACTIVE"
+                accountStatusInput = UserAccountStatus.ACTIVE
             )
         )
         setContent {

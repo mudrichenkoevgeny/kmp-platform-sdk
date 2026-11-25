@@ -13,9 +13,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(platform("io.github.mudrichenkoevgeny:kmp-platform-sdk-bom:<version>"))
-            implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-core-common")
-            implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-core-settings")
-            implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-core-security")
+            implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-core")
             implementation("io.github.mudrichenkoevgeny:kmp-platform-sdk-feature-clientuser")
             // Add other kmp-platform-sdk modules as required
         }
@@ -23,16 +21,13 @@ kotlin {
 }
 ```
 
-With a Version Catalog (`gradle/libs.versions.toml`), declare the BOM and module aliases, then use `implementation(platform(libs.kmp.platform.sdk.bom))` and `implementation(libs.kmp.platform.sdk.core.common)`.
+With a Version Catalog (`gradle/libs.versions.toml`), declare the BOM and module aliases, then use `implementation(platform(libs.kmp.platform.sdk.bom))` and `implementation(libs.kmp.platform.sdk.core)`.
 
 ## Modules
 
 Published artifacts (versions aligned via the BOM):
 
-- **core-common** — Foundation for all modules: Ktor HTTP client bootstrap, WebSocket lifecycle management, `EncryptedSettings` abstraction, platform metadata, error modeling, Chain of Responsibility error parser, listing/pagination infrastructure, and deep link navigation contracts (`DeepLinkParser` / `UrlFormatter`) ([module README](core/common/README.md)).
-- **core-settings** — Global application settings management, REST API client, encrypted caching, and reactive WebSocket updates ([module README](core/settings/README.md)).
-- **core-security** — Password policy validation, MFA state management, Ktor API client, encrypted storage, and localized security error parsing ([module README](core/security/README.md)).
-- **core-storage** — File storage infrastructure, upload/download REST clients, storage settings, and reactive WebSocket updates ([module README](core/storage/README.md)).
+- **core** — Consolidated foundation for all SDK modules: Ktor HTTP client bootstrap, WebSocket lifecycle management, `EncryptedSettings` abstraction, global settings, password policy & MFA, file storage infrastructure, error modeling, listing/pagination, and deep link navigation contracts ([module README](core/README.md)).
 - **feature-user** — Foundational identity & auth domain logic: core models, use cases, token storage (`AuthStorage`), session auto-refresh, TOTP 2FA, session management, identifier linking, and account deletion ([module README](feature/user/README.md)).
 - **feature-clientuser** — Identity solution for consumer applications: multi-method auth (Email, Phone OTP, Google Sign-In), Compose Multiplatform UI, social login buttons, and Decompose navigation flows ([module README](feature/clientuser/README.md)).
 - **feature-managementuser** — Administrative identity solution for internal staff, resource oversight, administrative user management, and audit inspection ([module README](feature/managementuser/README.md)).

@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.network.api.session.ManagementSessionApiMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.mapper.session.toUserSessionPrivate
@@ -56,7 +57,7 @@ class ManagementSessionRepositoryImplTest {
         val payload = createTestUserSessionPrivatePayload()
         api.getSessionResult = AppResult.Success(payload)
 
-        val result = repo.getSession("session-1")
+        val result = repo.getSession(UserSessionId.generate())
 
         val success = assertIs<AppResult.Success<UserSessionPrivate>>(result)
         assertEquals(payload.toUserSessionPrivate(), success.data)
@@ -67,7 +68,7 @@ class ManagementSessionRepositoryImplTest {
         api.deleteSessionResult = AppResult.Success(Unit)
         val userId = UserId(Uuid.random())
 
-        val result = repo.deleteSession(userId, "session-1")
+        val result = repo.deleteSession(userId, UserSessionId.generate())
 
         assertIs<AppResult.Success<Unit>>(result)
     }
@@ -86,7 +87,7 @@ class ManagementSessionRepositoryImplTest {
     fun `repository propagates api errors`() = runTest {
         api.getSessionResult = AppResult.Error(CommonError.Unknown())
 
-        val result = repo.getSession("session-1")
+        val result = repo.getSession(UserSessionId.generate())
 
         assertIs<AppResult.Error>(result)
     }

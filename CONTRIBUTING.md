@@ -98,6 +98,6 @@ Add `mavenLocal()` at the top of `pluginManagement` and `dependencyResolutionMan
 
 Releases are automated via `.github/workflows/release.yml` on pushing a `v*` tag. The workflow publishes:
 
-- **Maven Central (GPG-signed):** `kmp-platform-sdk-gradle-plugin`, `kmp-platform-sdk-bom`, `kmp-platform-sdk-core-common`, `kmp-platform-sdk-core-security`, `kmp-platform-sdk-core-settings`, `kmp-platform-sdk-core-storage`, `kmp-platform-sdk-feature-user`, `kmp-platform-sdk-feature-clientuser`, `kmp-platform-sdk-feature-managementuser`, `kmp-platform-sdk-testing`, `kmp-platform-sdk-detekt-rules`.
+- **Maven Central (GPG-signed):** `kmp-platform-sdk-gradle-plugin`, `kmp-platform-sdk-bom`, `kmp-platform-sdk-core`, `kmp-platform-sdk-feature-user`, `kmp-platform-sdk-feature-clientuser`, `kmp-platform-sdk-feature-managementuser`, `kmp-platform-sdk-testing`, `kmp-platform-sdk-detekt-rules`.
 - **GitHub Pages:** Dokka HTML API documentation (`./build/dokka/html`).
 - **GitHub Release:** Release entry with generated release notes.

@@ -34,16 +34,8 @@ fun registerModules(
     }
 }
 
-val coreModules = listOf(
-    "common",
-    "security",
-    "settings",
-    "storage"
-)
-registerModules(
-    "core",
-    coreModules
-)
+include(":core")
+project(":core").projectDir = file("core")
 
 include(":testing")
 project(":testing").projectDir = file("testing")

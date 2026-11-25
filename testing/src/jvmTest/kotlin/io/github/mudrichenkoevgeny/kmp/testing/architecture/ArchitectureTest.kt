@@ -22,8 +22,51 @@ class ArchitectureTest {
                     name.startsWith(PREFIX_FEATURE) ||
                         (
                             name.startsWith(PREFIX_CORE) &&
-                                !name.startsWith(PREFIX_CORE_COMMON)
+                                !name.startsWith(PREFIX_CORE_COMMON) &&
+                                !name.startsWith(PREFIX_CORE_GENERATED_RESOURCES)
                             )
+                }
+            }
+    }
+
+    @Test
+    fun `core-security package should not depend on settings or storage packages`() {
+        Konsist
+            .scopeFromProduction()
+            .files
+            .withPackage(PACKAGE_CORE_SECURITY)
+            .assertFalse { file ->
+                file.imports.any { import ->
+                    val name = import.name
+                    name.startsWith(PREFIX_CORE_SETTINGS) || name.startsWith(PREFIX_CORE_STORAGE)
+                }
+            }
+    }
+
+    @Test
+    fun `core-settings package should not depend on security or storage packages`() {
+        Konsist
+            .scopeFromProduction()
+            .files
+            .withPackage(PACKAGE_CORE_SETTINGS)
+            .assertFalse { file ->
+                file.imports.any { import ->
+                    val name = import.name
+                    name.startsWith(PREFIX_CORE_SECURITY) || name.startsWith(PREFIX_CORE_STORAGE)
+                }
+            }
+    }
+
+    @Test
+    fun `core-storage package should not depend on security or settings packages`() {
+        Konsist
+            .scopeFromProduction()
+            .files
+            .withPackage(PACKAGE_CORE_STORAGE)
+            .assertFalse { file ->
+                file.imports.any { import ->
+                    val name = import.name
+                    name.startsWith(PREFIX_CORE_SECURITY) || name.startsWith(PREFIX_CORE_SETTINGS)
                 }
             }
     }
@@ -196,10 +239,17 @@ class ArchitectureTest {
 
     private companion object {
         private const val PACKAGE_CORE_COMMON = "io.github.mudrichenkoevgeny.kmp.core.common.."
+        private const val PACKAGE_CORE_SECURITY = "io.github.mudrichenkoevgeny.kmp.core.security.."
+        private const val PACKAGE_CORE_SETTINGS = "io.github.mudrichenkoevgeny.kmp.core.settings.."
+        private const val PACKAGE_CORE_STORAGE = "io.github.mudrichenkoevgeny.kmp.core.storage.."
         private const val PACKAGE_FEATURE = "io.github.mudrichenkoevgeny.kmp.feature.."
         private const val PREFIX_FEATURE = "io.github.mudrichenkoevgeny.kmp.feature."
         private const val PREFIX_CORE = "io.github.mudrichenkoevgeny.kmp.core."
         private const val PREFIX_CORE_COMMON = "io.github.mudrichenkoevgeny.kmp.core.common."
+        private const val PREFIX_CORE_GENERATED_RESOURCES = "io.github.mudrichenkoevgeny.kmp.core.generated.resources."
+        private const val PREFIX_CORE_SECURITY = "io.github.mudrichenkoevgeny.kmp.core.security."
+        private const val PREFIX_CORE_SETTINGS = "io.github.mudrichenkoevgeny.kmp.core.settings."
+        private const val PREFIX_CORE_STORAGE = "io.github.mudrichenkoevgeny.kmp.core.storage."
         private const val FEATURE_USER = "user"
         private const val PKG_SAMPLE_CLIENT = "sampleclient"
         private const val PKG_SAMPLE_MANAGEMENT = "samplemanagement"

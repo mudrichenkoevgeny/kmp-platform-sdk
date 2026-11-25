@@ -76,7 +76,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteSessio
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.route.management.ManagementAuditNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.screen.management.audit.detail.ManagementAuditEventDetailParams
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.screen.management.audit.list.ManagementAuditEventListParams
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.toUserSessionIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.NavigationRoute
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.management.ManagementMainNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.navigation.route.management.ManagementSecurityNavigation
@@ -469,10 +468,10 @@ public class ManagementRootComponentImpl(
             params = config.params,
             userRepository = userRepository,
             fetchSession = managementGetSessionUseCase?.let { useCase ->
-                { targetId -> useCase(targetId.asHexDashString()) }
+                { targetId -> useCase(targetId) }
             },
             revokeSession = { targetId ->
-                val activeSessionId = authStorage?.getSessionId()?.toUserSessionIdOrNull()
+                val activeSessionId = authStorage?.getSessionId()
                 if (targetId == activeSessionId) {
                     AppResult.Error(
                         CommonError.ContractViolation(
@@ -480,9 +479,9 @@ public class ManagementRootComponentImpl(
                         )
                     )
                 } else {
-                    val sessionResult = managementGetSessionUseCase?.invoke(targetId.asHexDashString())
+                    val sessionResult = managementGetSessionUseCase?.invoke(targetId)
                     if (sessionResult is AppResult.Success) {
-                        managementDeleteSessionUseCase.invoke(sessionResult.data.userId, targetId.asHexDashString())
+                        managementDeleteSessionUseCase.invoke(sessionResult.data.userId, targetId)
                     } else if (deleteSessionUseCase != null) {
                         deleteSessionUseCase.invoke(targetId)
                     } else {
@@ -550,14 +549,14 @@ public class ManagementRootComponentImpl(
             params = config.params,
             userRepository = userRepository,
             fetchIdentifier = managementGetIdentifierUseCase?.let { useCase ->
-                { targetId -> useCase(targetId.asHexDashString()) }
+                { targetId -> useCase(targetId) }
             },
             deleteIdentifier = { targetId ->
-                val identifierResult = managementGetIdentifierUseCase?.invoke(targetId.asHexDashString())
+                val identifierResult = managementGetIdentifierUseCase?.invoke(targetId)
                 if (identifierResult is AppResult.Success) {
                     managementDeleteIdentifierUseCase?.invoke(
                         identifierResult.data.userId,
-                        targetId.asHexDashString()
+                        targetId
                     )
                         ?: AppResult.Error(CommonError.ContractViolation())
                 } else if (deleteUserIdentifierUseCase != null) {
@@ -567,11 +566,11 @@ public class ManagementRootComponentImpl(
                 }
             },
             deletePassword = { targetId ->
-                val identifierResult = managementGetIdentifierUseCase?.invoke(targetId.asHexDashString())
+                val identifierResult = managementGetIdentifierUseCase?.invoke(targetId)
                 if (identifierResult is AppResult.Success) {
                     deleteIdentifierPasswordUseCase?.invoke(
                         identifierResult.data.userId,
-                        targetId.asHexDashString()
+                        targetId
                     )
                         ?: AppResult.Error(CommonError.ContractViolation())
                 } else {

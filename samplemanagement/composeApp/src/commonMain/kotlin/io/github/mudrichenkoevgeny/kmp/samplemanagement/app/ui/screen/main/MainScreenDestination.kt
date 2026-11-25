@@ -1,11 +1,11 @@
 package io.github.mudrichenkoevgeny.kmp.samplemanagement.app.ui.screen.main
 
 import androidx.compose.runtime.Composable
-import io.github.mudrichenkoevgeny.kmp.core.common.ic_settings
-import io.github.mudrichenkoevgeny.kmp.core.common.ic_user
+import io.github.mudrichenkoevgeny.kmp.core.generated.resources.ic_settings
+import io.github.mudrichenkoevgeny.kmp.core.generated.resources.ic_user
 import io.github.mudrichenkoevgeny.kmp.feature.user.localization.LocalUserStrings
 import org.jetbrains.compose.resources.DrawableResource
-import io.github.mudrichenkoevgeny.kmp.core.common.Res as CommonRes
+import io.github.mudrichenkoevgeny.kmp.core.generated.resources.Res as CommonRes
 
 /**
  * UI-facing tab model: ties [MainScreenComponent.Config] to localized titles and toolbar icons.

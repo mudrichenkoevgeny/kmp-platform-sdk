@@ -4,6 +4,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.error.model.CommonError
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.repository.identifier.ManagementIdentifierRepositoryMock
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.testing.feature.user.domain.model.identifier.createTestUserIdentifierPrivate
 import kotlinx.coroutines.test.runTest
@@ -21,7 +22,7 @@ class ManagementGetIdentifierUseCaseTest {
             getIdentifierResultProvider = { AppResult.Success(expectedIdentifier) }
         }
         val useCase = ManagementGetIdentifierUseCase(repository)
-        val identifierId = "identifier_id"
+        val identifierId = UserIdentifierId.generate()
 
         val result = useCase(identifierId)
 
@@ -37,7 +38,7 @@ class ManagementGetIdentifierUseCaseTest {
             getIdentifierResultProvider = { AppResult.Error(expectedError) }
         }
         val useCase = ManagementGetIdentifierUseCase(repository)
-        val identifierId = "identifier_id"
+        val identifierId = UserIdentifierId.generate()
 
         val result = useCase(identifierId)
 

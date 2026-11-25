@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.network.api.identifier.ManagementIdentifierApiMock
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.toUserIdOrThrow
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
@@ -49,7 +50,7 @@ class ManagementIdentifierRepositoryImplTest {
         val payload = createTestUserIdentifierPrivatePayload()
         api.getIdentifierResult = AppResult.Success(payload)
 
-        val result = repo.getIdentifier("id-1")
+        val result = repo.getIdentifier(UserIdentifierId.generate())
 
         val success = assertIs<AppResult.Success<UserIdentifierPrivate>>(result)
         assertEquals(payload.toUserIdentifierPrivate(), success.data)
@@ -60,7 +61,7 @@ class ManagementIdentifierRepositoryImplTest {
         api.deleteIdentifierResult = AppResult.Success(Unit)
         val userId = "550e8400-e29b-41d4-a716-446655440000".toUserIdOrThrow()
 
-        val result = repo.deleteIdentifier(userId, "id-1")
+        val result = repo.deleteIdentifier(userId, UserIdentifierId.generate())
 
         assertIs<AppResult.Success<Unit>>(result)
     }
@@ -70,7 +71,7 @@ class ManagementIdentifierRepositoryImplTest {
         api.deleteIdentifierPasswordResult = AppResult.Success(Unit)
         val userId = "550e8400-e29b-41d4-a716-446655440000".toUserIdOrThrow()
 
-        val result = repo.deleteIdentifierPassword(userId, "id-1")
+        val result = repo.deleteIdentifierPassword(userId, UserIdentifierId.generate())
 
         assertIs<AppResult.Success<Unit>>(result)
     }
@@ -79,7 +80,7 @@ class ManagementIdentifierRepositoryImplTest {
     fun `repository propagates api errors`() = runTest {
         api.getIdentifierResult = AppResult.Error(CommonError.Unknown())
 
-        val result = repo.getIdentifier("id-1")
+        val result = repo.getIdentifier(UserIdentifierId.generate())
 
         assertIs<AppResult.Error>(result)
     }

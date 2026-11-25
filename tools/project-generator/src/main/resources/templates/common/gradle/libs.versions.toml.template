@@ -32,10 +32,7 @@ roborazzi = "{{ROBORAZZI_VERSION}}"
 [libraries]
 # KMP SDK Modules
 kmp-platform-sdk-bom = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-bom", version.ref = "kmpSdkVersion" }
-kmp-platform-sdk-core-common = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-core-common" }
-kmp-platform-sdk-core-security = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-core-security" }
-kmp-platform-sdk-core-settings = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-core-settings" }
-kmp-platform-sdk-core-storage = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-core-storage" }
+kmp-platform-sdk-core = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-core" }
 kmp-platform-sdk-feature-user = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-feature-user" }
 kmp-platform-sdk-feature-clientuser = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-feature-clientuser" }
 kmp-platform-sdk-feature-managementuser = { group = "io.github.mudrichenkoevgeny", name = "kmp-platform-sdk-feature-managementuser" }

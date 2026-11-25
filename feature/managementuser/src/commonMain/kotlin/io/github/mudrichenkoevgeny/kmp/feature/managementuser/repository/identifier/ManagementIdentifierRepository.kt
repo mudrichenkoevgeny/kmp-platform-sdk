@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.identi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.globallist.ManagementGlobalIdentifierListParams
@@ -36,14 +37,14 @@ public interface ManagementIdentifierRepository {
     /**
      * Retrieves specific identifier details.
      */
-    public suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivate>
+    public suspend fun getIdentifier(identifierId: UserIdentifierId): AppResult<UserIdentifierPrivate>
 
     /**
      * Removes the identifier record for the given user.
      */
     public suspend fun deleteIdentifier(
         userId: UserId,
-        identifierId: String
+        identifierId: UserIdentifierId
     ): AppResult<Unit>
 
     /**
@@ -51,6 +52,6 @@ public interface ManagementIdentifierRepository {
      */
     public suspend fun deleteIdentifierPassword(
         userId: UserId,
-        identifierId: String
+        identifierId: UserIdentifierId
     ): AppResult<Unit>
 }

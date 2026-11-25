@@ -21,7 +21,6 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.
 import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.datasource.SessionListQuery
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.ListingDefaultValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserSessionId
-import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.toUserSessionIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -219,7 +218,7 @@ public class SessionListComponentImpl(
                     val latestContent = _state.value as? SessionListScreenState.Content
                     val newPaging =
                         (latestContent?.paging ?: PaginationState<UserSessionSummary>()).appendResult(pagedResult)
-                    val activeSessionId = authStorage?.getSessionId()?.toUserSessionIdOrNull()
+                    val activeSessionId = authStorage?.getSessionId()
                     val currentUserId = userRepository?.currentUser?.firstOrNull()?.id
                     _state.value = latestContent?.copy(
                         paging = newPaging,

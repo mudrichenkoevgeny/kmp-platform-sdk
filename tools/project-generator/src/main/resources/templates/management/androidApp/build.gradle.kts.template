@@ -29,7 +29,7 @@ dependencies {
 
     // SDK Modules
     implementation(platform(libs.kmp.platform.sdk.bom))
-    implementation(libs.kmp.platform.sdk.core.common)
+    implementation(libs.kmp.platform.sdk.core)
     implementation(libs.kmp.platform.sdk.feature.user)
     implementation(libs.kmp.platform.sdk.feature.managementuser)
 

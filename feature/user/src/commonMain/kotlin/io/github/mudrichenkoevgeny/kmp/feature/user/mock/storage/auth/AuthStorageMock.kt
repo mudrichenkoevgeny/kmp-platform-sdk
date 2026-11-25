@@ -2,6 +2,8 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.mock.storage.auth
 
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.InternalApi
 import io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth.AuthStorage
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.AccessToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.RefreshToken
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.token.SessionToken
@@ -19,8 +21,8 @@ public class AuthStorageMock : AuthStorage {
     private var accessToken: AccessToken? = null
     private var refreshToken: RefreshToken? = null
     private var expiresAt: Long = 0L
-    private var sessionId: String? = null
-    private var identifierId: String? = null
+    private var sessionId: UserSessionId? = null
+    private var identifierId: UserIdentifierId? = null
 
     public var isTokensCleared: Boolean = false
         private set
@@ -34,16 +36,16 @@ public class AuthStorageMock : AuthStorage {
 
     public override suspend fun getExpiresAt(): Long = expiresAt
 
-    public override suspend fun getSessionId(): String? = sessionId
+    public override suspend fun getSessionId(): UserSessionId? = sessionId
 
-    public override suspend fun getIdentifierId(): String? = identifierId
+    public override suspend fun getIdentifierId(): UserIdentifierId? = identifierId
 
     public override suspend fun updateTokens(sessionToken: SessionToken) {
         this.accessToken = sessionToken.accessToken
         this.refreshToken = sessionToken.refreshToken
         this.expiresAt = sessionToken.expiresAt.toEpochMilliseconds()
-        this.sessionId = sessionToken.sessionId.asHexDashString()
-        this.identifierId = sessionToken.identifierId.asHexDashString()
+        this.sessionId = sessionToken.sessionId
+        this.identifierId = sessionToken.identifierId
         _accessTokenFlow.value = sessionToken.accessToken.value
     }
 

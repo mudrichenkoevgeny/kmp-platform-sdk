@@ -2,6 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.managem
 
 import io.github.mudrichenkoevgeny.kmp.core.common.error.model.AppError
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.component.file.upload.SelectedFilePayload
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserAccountStatus
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserPrivate
 
 /**
@@ -50,7 +51,7 @@ public sealed interface UserDetailScreenState {
         public val selectedAvatarPayload: SelectedFilePayload? = null,
         public val birthdateInput: String = "",
         public val authorityLevelInput: String = "0",
-        public val accountStatusInput: String = "ACTIVE",
+        public val accountStatusInput: UserAccountStatus = UserAccountStatus.ACTIVE,
         public val lockoutTypeInput: String = "NONE",
         public val temporaryLockoutUntilInput: String = "",
         public val quotaBytesInput: String = "",
@@ -69,7 +70,6 @@ public sealed interface UserDetailScreenState {
             get() {
                 val initialAuthLevel = user.authorityLevel.toString()
                 val currentAuthLevel = authorityLevelInput.ifBlank { "0" }
-                val initialAccountStatus = user.accountStatus.value
                 val initialLockoutType = user.lockoutType.value
                 val initialTempLockout = user.temporaryLockoutUntil?.toEpochMilliseconds()?.toString() ?: ""
                 val initialQuotaBytes = user.storageConfiguration?.quotaBytes?.toString() ?: ""
@@ -81,7 +81,7 @@ public sealed interface UserDetailScreenState {
                 val initialBirthdate = user.birthdate?.toEpochMilliseconds()?.toString() ?: ""
 
                 return currentAuthLevel != initialAuthLevel ||
-                    !accountStatusInput.equals(initialAccountStatus, ignoreCase = true) ||
+                    accountStatusInput != user.accountStatus ||
                     (
                         !lockoutTypeInput.equals(initialLockoutType, ignoreCase = true) &&
                             !lockoutTypeInput.equals(user.lockoutType.value, ignoreCase = true)

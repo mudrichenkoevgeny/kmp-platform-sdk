@@ -102,7 +102,7 @@ public class UserDetailComponentImpl(
         _state.value = currentContent.copy(authorityLevelInput = value, saveError = null)
     }
 
-    override fun onAccountStatusChanged(value: String) {
+    override fun onAccountStatusChanged(value: UserAccountStatus) {
         val currentContent = _state.value as? UserDetailScreenState.Content ?: return
         _state.value = currentContent.copy(accountStatusInput = value, saveError = null)
     }
@@ -274,7 +274,7 @@ public class UserDetailComponentImpl(
                         avatarUrl = avatarUrl,
                         birthdateInput = user.birthdate?.toEpochMilliseconds()?.toString() ?: "",
                         authorityLevelInput = user.authorityLevel.toString(),
-                        accountStatusInput = user.accountStatus.value,
+                        accountStatusInput = user.accountStatus,
                         lockoutTypeInput = user.lockoutType.value,
                         temporaryLockoutUntilInput = user.temporaryLockoutUntil?.toEpochMilliseconds()?.toString()
                             ?: "",
@@ -372,11 +372,8 @@ public class UserDetailComponentImpl(
     private fun buildAccountStatusUpdateField(
         currentContent: UserDetailScreenState.Content
     ): UpdateField<UserAccountStatus> {
-        val accountStatusEnum = currentContent.accountStatusInput.takeIf { it.isNotBlank() }
-            ?.let { UserAccountStatus.fromValueOrNull(it) }
-        return if (accountStatusEnum != null &&
-            currentContent.accountStatusInput != currentContent.user.accountStatus.value
-        ) {
+        val accountStatusEnum = currentContent.accountStatusInput
+        return if (currentContent.accountStatusInput != currentContent.user.accountStatus) {
             UpdateField.Set(accountStatusEnum)
         } else {
             UpdateField.Ignore

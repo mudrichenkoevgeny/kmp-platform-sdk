@@ -11,6 +11,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list.
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.client.ClientType
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.toUserIdOrThrow
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.toUserSessionIdOrThrow
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider.UserAuthProvider
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionSummary
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.globallist.ManagementGlobalSessionListParams
@@ -61,7 +62,8 @@ public class ManagementSessionListDataSource(
             )
         }
         val typedUserId = userId.toUserIdOrThrow()
-        return managementDeleteSessionUseCase(typedUserId, sessionId)
+        val typedSessionId = sessionId.toUserSessionIdOrThrow()
+        return managementDeleteSessionUseCase(typedUserId, typedSessionId)
     }
 
     override suspend fun revokeAllOtherSessions(userId: String?): AppResult<Unit> {

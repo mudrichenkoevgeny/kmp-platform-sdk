@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.sessi
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.globallist.ManagementGlobalSessionListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.userlist.ManagementUserSessionListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.session.UserSessionPrivatePayload
@@ -37,7 +38,7 @@ public interface ManagementSessionApi {
      * @param sessionId Unique session identifier.
      * @return Detailed information of the target session, or a mapped failure.
      */
-    public suspend fun getSession(sessionId: String): AppResult<UserSessionPrivatePayload>
+    public suspend fun getSession(sessionId: UserSessionId): AppResult<UserSessionPrivatePayload>
 
     /**
      * Deletes a specific session for the given user.
@@ -48,7 +49,7 @@ public interface ManagementSessionApi {
      */
     public suspend fun deleteSession(
         userId: UserId,
-        sessionId: String
+        sessionId: UserSessionId
     ): AppResult<Unit>
 
     /**

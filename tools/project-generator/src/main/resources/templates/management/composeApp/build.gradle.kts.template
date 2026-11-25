@@ -36,17 +36,11 @@ kotlin {
             // Optional downstream contracts BOM:
             // api(project.dependencies.platform(libs.{{PROJECT_NAME}}.shared.bom))
 
-            implementation(libs.kmp.platform.sdk.core.common)
-            implementation(libs.kmp.platform.sdk.core.security)
-            implementation(libs.kmp.platform.sdk.core.settings)
-            implementation(libs.kmp.platform.sdk.core.storage)
+            implementation(libs.kmp.platform.sdk.core)
             implementation(libs.kmp.platform.sdk.feature.user)
             implementation(libs.kmp.platform.sdk.feature.managementuser)
 
-            implementation(libs.shared.foundation.core.common)
-            implementation(libs.shared.foundation.core.security)
-            implementation(libs.shared.foundation.core.settings)
-            implementation(libs.shared.foundation.core.storage)
+            implementation(libs.shared.foundation.core)
             implementation(libs.shared.foundation.feature.user)
 
             // Kotlin & Ktor

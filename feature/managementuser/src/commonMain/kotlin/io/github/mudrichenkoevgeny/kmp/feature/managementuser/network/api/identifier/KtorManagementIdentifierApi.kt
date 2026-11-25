@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.network.utils.callResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.globallist.ManagementGlobalIdentifierListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.userlist.ManagementUserIdentifierListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserApiPaths
@@ -44,30 +45,30 @@ public class KtorManagementIdentifierApi(
     }
 
     override suspend fun getIdentifier(
-        identifierId: String
+        identifierId: UserIdentifierId
     ): AppResult<UserIdentifierPrivatePayload> = client.callResult {
         get(ManagementIdentifiersRoutes.GET_IDENTIFIER) {
-            parameter(UserApiPaths.USER_IDENTIFIER_ID, identifierId)
+            parameter(UserApiPaths.USER_IDENTIFIER_ID, identifierId.asHexDashString())
         }
     }
 
     override suspend fun deleteIdentifier(
         userId: UserId,
-        identifierId: String
+        identifierId: UserIdentifierId
     ): AppResult<Unit> = client.callResult {
         delete(ManagementIdentifiersRoutes.DELETE_IDENTIFIER) {
-            parameter(UserApiPaths.USER_ID, userId.value)
-            parameter(UserApiPaths.USER_IDENTIFIER_ID, identifierId)
+            parameter(UserApiPaths.USER_ID, userId.asHexDashString())
+            parameter(UserApiPaths.USER_IDENTIFIER_ID, identifierId.asHexDashString())
         }
     }
 
     override suspend fun deleteIdentifierPassword(
         userId: UserId,
-        identifierId: String
+        identifierId: UserIdentifierId
     ): AppResult<Unit> = client.callResult {
         delete(ManagementIdentifiersRoutes.DELETE_IDENTIFIER_PASSWORD) {
-            parameter(UserApiPaths.USER_ID, userId.value)
-            parameter(UserApiPaths.USER_IDENTIFIER_ID, identifierId)
+            parameter(UserApiPaths.USER_ID, userId.asHexDashString())
+            parameter(UserApiPaths.USER_IDENTIFIER_ID, identifierId.asHexDashString())
         }
     }
 }

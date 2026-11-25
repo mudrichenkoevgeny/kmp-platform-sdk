@@ -6,6 +6,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.identifier.ManagementIdentifierApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.globallist.ManagementGlobalIdentifierListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.identifier.userlist.ManagementUserIdentifierListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.identifier.UserIdentifierPrivatePayload
@@ -33,16 +34,16 @@ public class ManagementIdentifierApiMock : ManagementIdentifierApi {
         params: ManagementUserIdentifierListParams
     ): AppResult<PagedResult<UserIdentifierSummaryPayload>> = getUserIdentifiersResult
 
-    public override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivatePayload> =
+    public override suspend fun getIdentifier(identifierId: UserIdentifierId): AppResult<UserIdentifierPrivatePayload> =
         getIdentifierResult
 
     public override suspend fun deleteIdentifier(
         userId: UserId,
-        identifierId: String
+        identifierId: UserIdentifierId
     ): AppResult<Unit> = deleteIdentifierResult
 
     public override suspend fun deleteIdentifierPassword(
         userId: UserId,
-        identifierId: String
+        identifierId: UserIdentifierId
     ): AppResult<Unit> = deleteIdentifierPasswordResult
 }

@@ -3,6 +3,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifie
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.identifier.ManagementIdentifierRepository
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserIdentifierId
 
 /**
  * Administratively removes the identifier record for the given user.
@@ -19,6 +20,6 @@ public class ManagementDeleteIdentifierUseCase(
      */
     public suspend operator fun invoke(
         userId: UserId,
-        identifierId: String
+        identifierId: UserIdentifierId
     ): AppResult<Unit> = managementIdentifierRepository.deleteIdentifier(userId, identifierId)
 }

@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.network.utils.callResult
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserSessionId
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.globallist.ManagementGlobalSessionListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.session.userlist.ManagementUserSessionListParams
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.contract.UserApiPaths
@@ -43,25 +44,27 @@ public class KtorManagementSessionApi(
         }
     }
 
-    override suspend fun getSession(sessionId: String): AppResult<UserSessionPrivatePayload> = client.callResult {
+    override suspend fun getSession(
+        sessionId: UserSessionId
+    ): AppResult<UserSessionPrivatePayload> = client.callResult {
         get(ManagementSessionsRoutes.GET_SESSION) {
-            parameter(UserApiPaths.SESSION_ID, sessionId)
+            parameter(UserApiPaths.SESSION_ID, sessionId.asHexDashString())
         }
     }
 
     override suspend fun deleteSession(
         userId: UserId,
-        sessionId: String
+        sessionId: UserSessionId
     ): AppResult<Unit> = client.callResult {
         delete(ManagementSessionsRoutes.DELETE_SESSION) {
-            parameter(UserApiPaths.USER_ID, userId.value)
-            parameter(UserApiPaths.SESSION_ID, sessionId)
+            parameter(UserApiPaths.USER_ID, userId.asHexDashString())
+            parameter(UserApiPaths.SESSION_ID, sessionId.asHexDashString())
         }
     }
 
     override suspend fun deleteAllUserSessions(userId: UserId): AppResult<Unit> = client.callResult {
         delete(ManagementSessionsRoutes.DELETE_ALL_USER_SESSIONS) {
-            parameter(UserApiPaths.USER_ID, userId.value)
+            parameter(UserApiPaths.USER_ID, userId.asHexDashString())
         }
     }
 }

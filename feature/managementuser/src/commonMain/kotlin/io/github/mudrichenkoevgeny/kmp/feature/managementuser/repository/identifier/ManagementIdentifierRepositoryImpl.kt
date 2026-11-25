@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.mapSuccess
 import io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.identifier.ManagementIdentifierApi
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserIdentifierId
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.mapper.pagedresult.mapItems
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierPrivate
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierSummary
@@ -42,7 +43,7 @@ public class ManagementIdentifierRepositoryImpl(
         }
     }
 
-    override suspend fun getIdentifier(identifierId: String): AppResult<UserIdentifierPrivate> =
+    override suspend fun getIdentifier(identifierId: UserIdentifierId): AppResult<UserIdentifierPrivate> =
         managementIdentifierApi.getIdentifier(
             identifierId
         ).mapSuccess { payload ->
@@ -51,7 +52,7 @@ public class ManagementIdentifierRepositoryImpl(
 
     override suspend fun deleteIdentifier(
         userId: UserId,
-        identifierId: String
+        identifierId: UserIdentifierId
     ): AppResult<Unit> = managementIdentifierApi.deleteIdentifier(
         userId = userId,
         identifierId = identifierId
@@ -59,7 +60,7 @@ public class ManagementIdentifierRepositoryImpl(
 
     override suspend fun deleteIdentifierPassword(
         userId: UserId,
-        identifierId: String
+        identifierId: UserIdentifierId
     ): AppResult<Unit> = managementIdentifierApi.deleteIdentifierPassword(
         userId = userId,
         identifierId = identifierId

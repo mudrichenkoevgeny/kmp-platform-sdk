@@ -50,8 +50,8 @@ class EncryptedAuthStorageTest {
 
         assertEquals(AccessToken(ACCESS_A), storage.getAccessToken())
         assertEquals(RefreshToken(REFRESH_A), storage.getRefreshToken())
-        assertEquals(token.sessionId.asHexDashString(), storage.getSessionId())
-        assertEquals(token.identifierId.asHexDashString(), storage.getIdentifierId())
+        assertEquals(token.sessionId, storage.getSessionId())
+        assertEquals(token.identifierId, storage.getIdentifierId())
         assertEquals(futureExpiryMs, storage.getExpiresAt())
         assertEquals(ACCESS_A, storage.accessTokenFlow.value)
     }
