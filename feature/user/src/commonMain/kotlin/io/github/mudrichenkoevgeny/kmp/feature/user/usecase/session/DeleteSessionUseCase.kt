@@ -2,7 +2,7 @@ package io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session
 
 import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.feature.user.repository.session.SessionRepository
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.UserSessionId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserSessionId
 
 /**
  * Deletes a specific active session for the current authenticated account.

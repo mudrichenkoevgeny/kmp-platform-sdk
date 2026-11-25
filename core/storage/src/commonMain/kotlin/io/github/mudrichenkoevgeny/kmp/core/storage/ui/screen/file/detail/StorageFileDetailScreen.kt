@@ -229,7 +229,7 @@ private fun StorageFileDetailContent(
                 file.ownerUserId?.let { ownerUserId ->
                     CoreDetailRow(
                         label = storageUi.ownerUserId,
-                        value = ownerUserId,
+                        value = ownerUserId.asHexDashString(),
                         onClick = onUserClick,
                         modifier = Modifier.testTag(StorageFileDetailTestTags.USER_ROW)
                     )

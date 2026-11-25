@@ -23,6 +23,7 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.datasour
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.dialog.StorageFileListDialogChild
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list.dialog.StorageFileListDialogConfig
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.ListingDefaultValues
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.StorageFileSummary
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.listing.StorageFileFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.status.StorageFileStatus
@@ -46,8 +47,8 @@ public class StorageFileListComponentImpl(
     componentContext: ComponentContext,
     private val dataSource: StorageFileListDataSource,
     public override val includeOwnerFilter: Boolean = false,
-    private val initialUserId: String? = null,
-    private val initialUserIdProvider: (suspend () -> String?)? = null,
+    private val initialUserId: UserId? = null,
+    private val initialUserIdProvider: (suspend () -> UserId?)? = null,
     initialFilterStates: Map<String, ListingFilterState>? = null,
     initialDialogConfig: StorageFileListDialogConfig? = null,
     private val onNavigateToUpload: (() -> Unit)? = null,

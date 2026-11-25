@@ -43,10 +43,7 @@ kmp-platform-sdk-testing = { group = "io.github.mudrichenkoevgeny", name = "kmp-
 
 # Shared Foundation
 shared-foundation-bom = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-bom", version.ref = "sharedFoundationVersion" }
-shared-foundation-core-common = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-common" }
-shared-foundation-core-security = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-security" }
-shared-foundation-core-settings = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-settings" }
-shared-foundation-core-storage = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core-storage" }
+shared-foundation-core = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-core" }
 shared-foundation-feature-user = { group = "io.github.mudrichenkoevgeny", name = "shared-foundation-feature-user" }
 
 # Optional downstream contracts BOM:

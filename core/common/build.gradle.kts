@@ -48,7 +48,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // Shared Foundation
-            implementation(libs.shared.foundation.core.common)
+            implementation(libs.shared.foundation.core)
 
             // Kotlin
             api(libs.kotlinx.coroutines.core)

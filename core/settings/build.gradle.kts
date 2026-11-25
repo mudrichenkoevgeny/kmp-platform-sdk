@@ -49,8 +49,7 @@ kotlin {
             implementation(project(":core:common"))
 
             // Shared Foundation
-            implementation(libs.shared.foundation.core.common)
-            implementation(libs.shared.foundation.core.settings)
+            implementation(libs.shared.foundation.core)
 
             // Kotlin
             implementation(libs.kotlinx.serialization.json)

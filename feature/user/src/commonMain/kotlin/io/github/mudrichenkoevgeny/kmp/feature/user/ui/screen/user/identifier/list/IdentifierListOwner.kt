@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list
 
 import com.arkivanov.decompose.router.stack.ChildStack
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.identifier.UserIdentifierId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserIdentifierId
 
 /**
  * Interface for components or child wrappers that manage an active list of user identifiers.

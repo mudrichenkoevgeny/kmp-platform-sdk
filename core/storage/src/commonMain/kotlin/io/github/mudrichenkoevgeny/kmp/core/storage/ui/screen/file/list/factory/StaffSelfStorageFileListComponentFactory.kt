@@ -9,6 +9,8 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.Managemen
 import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.ManagementDeleteFilesBatchUseCase
 import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.ManagementGetFilesUseCase
 
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
+
 /**
  * Creates a [StorageFileListComponent] for staff self-service storage file list screen (`/self/storage/files/`).
  *
@@ -29,8 +31,8 @@ public fun createStaffSelfStorageFileListComponent(
     getFilesUseCase: ManagementGetFilesUseCase,
     deleteFileUseCase: ManagementDeleteFileUseCase,
     deleteFilesBatchUseCase: ManagementDeleteFilesBatchUseCase,
-    initialUserIdProvider: (suspend () -> String?)? = null,
-    currentUserId: String? = null,
+    initialUserIdProvider: (suspend () -> UserId?)? = null,
+    currentUserId: UserId? = null,
     initialFilterStates: Map<String, ListingFilterState>? = null,
     onNavigateToUpload: (() -> Unit)? = null,
     onNavigateToFileDetail: ((fileId: String) -> Unit)? = null,

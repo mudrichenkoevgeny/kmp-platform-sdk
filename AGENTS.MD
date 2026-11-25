@@ -56,22 +56,24 @@ This document is the entry point for architectural and coding standards. These r
 ## Detailed Standards (`.agent/`)
 
 ### Global Shared Standards (`.agent/global/`)
+
 - **Common (`.agent/global/common/`):**
-  - **[`agent-workflow-basics.md`](.agent/global/common/agent-workflow-basics.md)** — Universal agent interaction constraints, operational rules (git mutation ban, targeted test execution), dependency rules, and architectural layering.
+    - **[`agent-workflow-basics.md`](.agent/global/common/agent-workflow-basics.md)** — Universal agent interaction constraints, operational rules (git mutation ban, targeted test execution), dependency rules, and architectural layering.
 - **Kotlin (`.agent/global/kotlin/`):**
-  - **[`kotlin-coding-style-basics.md`](.agent/global/kotlin/kotlin-coding-style-basics.md)** — Naming, `when` subject rules, brace requirements, FQN/Comments ban, Trailing Commas ban, `!!` ban, companion objects, value classes, and `.value` usage.
-  - **[`docs-kdoc-basics.md`](.agent/global/kotlin/docs-kdoc-basics.md)** — Language standards, link resolution rules, and KDoc Definition of Done.
-  - **[`docs-kdoc-type-basics.md`](.agent/global/kotlin/docs-kdoc-type-basics.md)** — Specific KDoc patterns for DTOs, Error Codes, Sealed types, Routes, and Navigation Screen Params.
-  - **[`kotlin-testing-basics.md`](.agent/global/kotlin/kotlin-testing-basics.md)** — Unit and integration test standards, mocking policy, and targeted execution rules.
+    - **[`kotlin-coding-style-basics.md`](.agent/global/kotlin/kotlin-coding-style-basics.md)** — Naming, `when` subject rules, brace requirements, FQN/Comments ban, Trailing Commas ban, `!!` ban, companion objects, value classes, and `.value` usage.
+    - **[`docs-kdoc-basics.md`](.agent/global/kotlin/docs-kdoc-basics.md)** — Language standards, link resolution rules, and KDoc Definition of Done.
+    - **[`docs-kdoc-type-basics.md`](.agent/global/kotlin/docs-kdoc-type-basics.md)** — Specific KDoc patterns for DTOs, Error Codes, Sealed types, Routes, and Navigation Screen Params.
+    - **[`kotlin-testing-basics.md`](.agent/global/kotlin/kotlin-testing-basics.md)** — Unit and integration test standards, mocking policy, and targeted execution rules.
 - **KMP (`.agent/global/kmp/`):**
-  - **[`agent-workflow-kmp.md`](.agent/global/kmp/agent-workflow-kmp.md)** — KMP-specific agent engineering constraints and target platform boundaries.
-  - **[`architecture-patterns-kmp.md`](.agent/global/kmp/architecture-patterns-kmp.md)** — MVI architecture, Decompose component hierarchy, slot navigation, and state flows.
-  - **[`docs-kdoc-type-kmp.md`](.agent/global/kmp/docs-kdoc-type-kmp.md)** — KDoc rules for KMP-specific components and expect/actual declarations.
-  - **[`localization-kmp.md`](.agent/global/kmp/localization-kmp.md)** — `shared-foundation` localization system integration rules.
-  - **[`testing-kmp.md`](.agent/global/kmp/testing-kmp.md)** — Robolectric UI testing and Roborazzi screenshot testing standards.
-  - **[`ui-kmp.md`](.agent/global/kmp/ui-kmp.md)** — Compose Multiplatform UI guidelines and preview container standards.
+    - **[`agent-workflow-kmp.md`](.agent/global/kmp/agent-workflow-kmp.md)** — KMP-specific agent engineering constraints and target platform boundaries.
+    - **[`architecture-patterns-kmp.md`](.agent/global/kmp/architecture-patterns-kmp.md)** — MVI architecture, Decompose component hierarchy, slot navigation, and state flows.
+    - **[`docs-kdoc-type-kmp.md`](.agent/global/kmp/docs-kdoc-type-kmp.md)** — KDoc rules for KMP-specific components and expect/actual declarations.
+    - **[`localization-kmp.md`](.agent/global/kmp/localization-kmp.md)** — `shared-foundation` localization system integration rules.
+    - **[`testing-kmp.md`](.agent/global/kmp/testing-kmp.md)** — Robolectric UI testing and Roborazzi screenshot testing standards.
+    - **[`ui-kmp.md`](.agent/global/kmp/ui-kmp.md)** — Compose Multiplatform UI guidelines and preview container standards.
 
 ### Local Standards (`.agent/local/`)
+
 - **[`project-overview.md`](.agent/local/project-overview.md)** — Project identity, module boundaries, and convention plugins.
 - **[`architecture-patterns.md`](.agent/local/architecture-patterns.md)** — SDK bootstrap lifecycle and Decompose slot navigation.
 - **[`localization.md`](.agent/local/localization.md)** — Embedded strings in `shared-foundation`.

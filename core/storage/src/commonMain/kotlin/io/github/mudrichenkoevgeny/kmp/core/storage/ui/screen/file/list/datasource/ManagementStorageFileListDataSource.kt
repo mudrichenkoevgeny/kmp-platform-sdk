@@ -5,6 +5,7 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.Managemen
 import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.ManagementDeleteFilesBatchUseCase
 import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.ManagementGetFilesUseCase
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.PagedResult
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.toUserIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.file.StorageFileSummary
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.screen.management.list.ManagementStorageFileListParams
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.network.request.file.DeleteFilesBatchRequest
@@ -39,7 +40,7 @@ public class ManagementStorageFileListDataSource(
 
     private fun StorageFileListQuery.toManagementParams(): ManagementStorageFileListParams {
         val ownerUserIdsList = ownerUserId?.let { listOf(it) }
-            ?: ownerUserIdText?.let { listOf(it) }
+            ?: ownerUserIdText?.toUserIdOrNull()?.let { listOf(it) }
             ?: emptyList()
 
         return ManagementStorageFileListParams(

@@ -33,7 +33,8 @@ class ProjectGeneratorConfigTest {
         ) {
             val config = ProjectGeneratorConfig.fromSystemProperties()
 
-            val rawTemplate = "project={{PROJECT_NAME}}, title={{PROJECT_TITLE}}, pkg={{PACKAGE_NAME}}, kotlin={{KOTLIN_VERSION}}"
+            val rawTemplate =
+                "project={{PROJECT_NAME}}, title={{PROJECT_TITLE}}, pkg={{PACKAGE_NAME}}, kotlin={{KOTLIN_VERSION}}"
             val evaluated = TemplateReplacer.replaceTokens(rawTemplate, config)
 
             assertEquals("project=sample-app, title=SampleApp, pkg=com.example.sampleapp.kmp, kotlin=1.0.0", evaluated)

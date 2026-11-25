@@ -14,8 +14,8 @@ import io.github.mudrichenkoevgeny.kmp.core.common.result.AppResult
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail.datasource.StorageFileDetailDataSource
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail.dialog.StorageFileDetailDialogChild
 import io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail.dialog.StorageFileDetailDialogConfig
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.screen.base.detail.StorageFileDetailParams
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.toUserIdOrNull
 import kotlinx.coroutines.launch
 
 /**
@@ -33,7 +33,7 @@ public class StorageFileDetailComponentImpl(
     componentContext: ComponentContext,
     private val params: StorageFileDetailParams,
     private val dataSource: StorageFileDetailDataSource,
-    private val onNavigateToUserDetail: ((userId: String) -> Unit)? = null,
+    private val onNavigateToUserDetail: ((userId: UserId) -> Unit)? = null,
     private val onNavigateToUserMain: (() -> Unit)? = null,
     private val onNavigateBack: () -> Unit,
     initialDialogConfig: StorageFileDetailDialogConfig? = null
@@ -117,11 +117,10 @@ public class StorageFileDetailComponentImpl(
 
     public override fun onUserClick() {
         val current = _state.value as? StorageFileDetailScreenState.Content ?: return
-        val rawOwnerUserId = current.file.ownerUserId?.trim() ?: return
-        val typedOwnerUserId = rawOwnerUserId.toUserIdOrNull() ?: return
+        val ownerUserId = current.file.ownerUserId ?: return
 
         if (onNavigateToUserDetail != null) {
-            onNavigateToUserDetail.invoke(typedOwnerUserId.asHexDashString())
+            onNavigateToUserDetail.invoke(ownerUserId)
         } else if (onNavigateToUserMain != null) {
             onNavigateToUserMain.invoke()
         }

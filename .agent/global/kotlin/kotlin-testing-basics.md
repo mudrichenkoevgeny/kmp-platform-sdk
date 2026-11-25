@@ -10,8 +10,8 @@ This document defines universal testing methodology and code quality standards f
 
 ## 1. Operational Policy (Targeted Execution)
 
-- **No Full-Suite Auto-Runs:** Never automatically trigger full-project test suites (`test`, `check` tasks) unless explicitly requested by the developer, to prevent resource exhaustion and maintain a focused development flow.
-- **Mandatory Targeted Verification:** Whenever writing new tests, fixing a bug, or modifying production logic, the agent MUST compile and execute the specific affected test class or method (e.g., `:module:test --tests "com.example.SubjectTest"` or platform-specific targets like `jvmTest` / `testDebugUnitTest`) to verify that the code compiles and tests pass.
+- **No Full-Suite Auto-Runs:** Never automatically trigger full-project test suites (`./gradlew test`, `./gradlew check`) unless explicitly requested by the developer, to prevent resource exhaustion and maintain a focused development flow.
+- **Mandatory Targeted Verification:** Whenever writing new tests, fixing a bug, or modifying production logic, the agent MUST compile and execute the specific affected test class or method (e.g., `./gradlew :module:test --tests "com.example.SubjectTest"` or platform-specific targets like `jvmTest` / `testDebugUnitTest`) to verify that the code compiles and tests pass.
 - **Mandatory Bug Fix Test Coverage:** Whenever fixing a bug, defect, or regression, automated unit or integration test coverage MUST be written and executed via a targeted test run to verify that the bug is resolved and cannot resurface.
 
 ## 2. Test Organization & Naming

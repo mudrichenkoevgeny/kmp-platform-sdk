@@ -14,7 +14,7 @@ public class KmpKotlinConventionPlugin : Plugin<Project> {
      *
      * @param target The target Gradle project to configure.
      */
-    override fun apply(target: Project): Unit {
+    override fun apply(target: Project) {
         target.pluginManager.apply(SHARED_FOUNDATION_KOTLIN_PLUGIN_ID)
 
         if (!isKmpPlatformSdk(target)) {

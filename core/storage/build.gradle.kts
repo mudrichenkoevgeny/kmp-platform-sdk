@@ -51,8 +51,7 @@ kotlin {
             implementation(project(":core:common"))
 
             // Shared Foundation
-            api(libs.shared.foundation.core.common)
-            api(libs.shared.foundation.core.storage)
+            api(libs.shared.foundation.core)
 
             // Kotlin
             implementation(libs.kotlinx.serialization.json)
@@ -99,7 +98,7 @@ kotlin {
             implementation(project(":testing"))
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
-            implementation(libs.shared.foundation.core.storage)
+            implementation(libs.shared.foundation.core)
             implementation(libs.shared.foundation.testing)
             implementation(libs.compose.ui.test)
             implementation(libs.androidx.compose.ui.test.junit4)

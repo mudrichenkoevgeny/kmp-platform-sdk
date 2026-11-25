@@ -22,7 +22,7 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.lis
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.domain.model.status.AuditStatus
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.screen.management.audit.list.ManagementAuditEventListParams
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.role.UserRole
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserRole
 import kotlinx.coroutines.launch
 
 /**
@@ -178,7 +178,7 @@ public class AuditEventListComponentImpl(
             actorIds = eventAndActorFilters.actorIds,
             actorTypes = eventAndActorFilters.actorTypes,
             excludeActorTypes = eventAndActorFilters.excludeActorTypes,
-            actorUserRoles = eventAndActorFilters.actorUserRoles.map { it.value },
+            actorUserRoles = eventAndActorFilters.actorUserRoles,
             actions = actionAndResourceFilters.actions,
             excludeActions = actionAndResourceFilters.excludeActions,
             resources = actionAndResourceFilters.resources,
@@ -205,7 +205,7 @@ public class AuditEventListComponentImpl(
                 ?.selectedIds?.mapNotNull { AuditActorType.fromValueOrNull(it) } ?: params.excludeActorTypes
         val actorUserRoles = (filterStates?.get(AuditEventFilterValues.ACTOR_USER_ROLE) as? ChoiceListingFilterState)
             ?.selectedIds?.mapNotNull { id -> UserRole.fromValueOrNull(id) }
-            ?: params.actorUserRoles.mapNotNull { id -> UserRole.fromValueOrNull(id) }
+            ?: params.actorUserRoles
 
         return AuditEventAndActorFilters(
             eventIds = eventIds,

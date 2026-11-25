@@ -51,11 +51,7 @@ kotlin {
             implementation(project(":feature:managementuser"))
 
             // Shared Foundation
-            implementation(libs.shared.foundation.core.common)
-            implementation(libs.shared.foundation.core.settings)
-            implementation(libs.shared.foundation.core.security)
-            implementation(libs.shared.foundation.core.storage)
-            implementation(libs.shared.foundation.core.audit)
+            implementation(libs.shared.foundation.core)
             implementation(libs.shared.foundation.feature.user)
 
             // Kotlin
@@ -97,7 +93,7 @@ kotlin {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.shared.foundation.testing)
-            implementation(libs.shared.foundation.core.security)
+            implementation(libs.shared.foundation.core)
             implementation(libs.shared.foundation.feature.user)
             implementation(libs.ktor.client.mock)
             implementation(libs.ktor.client.cio)

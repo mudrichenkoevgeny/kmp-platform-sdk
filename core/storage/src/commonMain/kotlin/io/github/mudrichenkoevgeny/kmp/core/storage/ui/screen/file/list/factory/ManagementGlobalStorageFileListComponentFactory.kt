@@ -9,6 +9,8 @@ import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.Managemen
 import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.ManagementDeleteFilesBatchUseCase
 import io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management.ManagementGetFilesUseCase
 
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
+
 /**
  * Creates a [StorageFileListComponent] for management global storage file list screen (`/storage/files/`).
  *
@@ -29,7 +31,7 @@ public fun createManagementGlobalStorageFileListComponent(
     getFilesUseCase: ManagementGetFilesUseCase,
     deleteFileUseCase: ManagementDeleteFileUseCase,
     deleteFilesBatchUseCase: ManagementDeleteFilesBatchUseCase,
-    ownerUserId: String? = null,
+    ownerUserId: UserId? = null,
     initialFilterStates: Map<String, ListingFilterState>? = null,
     isSelfView: Boolean = false,
     onNavigateToUpload: (() -> Unit)? = null,

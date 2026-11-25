@@ -76,6 +76,7 @@ import io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session.DeleteSessio
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.route.management.ManagementAuditNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.screen.management.audit.detail.ManagementAuditEventDetailParams
 import io.github.mudrichenkoevgeny.shared.foundation.core.audit.navigation.screen.management.audit.list.ManagementAuditEventListParams
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.toUserSessionIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.NavigationRoute
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.navigation.route.management.ManagementMainNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.core.security.navigation.route.management.ManagementSecurityNavigation
@@ -86,7 +87,6 @@ import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.rou
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.screen.base.detail.StorageFileDetailParams
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.navigation.screen.management.list.ManagementStorageFileListParams
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.ui.component.fileupload.StorageFileUploadUiConfig
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.session.toUserSessionIdOrNull
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.management.ManagementAuthSettingsNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.route.management.ManagementUsersNavigation
 import io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.base.user.identifier.detail.IdentifierDetailParams
@@ -331,7 +331,7 @@ public class ManagementRootComponentImpl(
             onNavigateToFilesList = { userId ->
                 navigation.bringToFront(
                     ManagementStorageNavigation.FileList(
-                        params = ManagementStorageFileListParams(ownerUserIds = listOf(userId.asHexDashString()))
+                        params = ManagementStorageFileListParams(ownerUserIds = listOf(userId))
                     )
                 )
             },
@@ -710,7 +710,7 @@ public class ManagementRootComponentImpl(
                 },
                 onNavigateToUserDetail = { userId ->
                     navigation.bringToFront(
-                        ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId))
+                        ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString()))
                     )
                 },
                 onNavigateBack = { handleBack(ManagementStorageNavigation.FileList()) }
@@ -726,7 +726,7 @@ public class ManagementRootComponentImpl(
             getFilesUseCase = dependencies.getFilesUseCase,
             deleteFileUseCase = dependencies.deleteFileUseCase,
             deleteFilesBatchUseCase = dependencies.deleteFilesBatchUseCase,
-            initialUserIdProvider = { userRepository.currentUser.firstOrNull()?.id?.asHexDashString() },
+            initialUserIdProvider = { userRepository.currentUser.firstOrNull()?.id },
             onNavigateToUpload = {
                 navigation.bringToFront(ManagementSelfStorageNavigation.FileUpload())
             },
@@ -757,7 +757,7 @@ public class ManagementRootComponentImpl(
                 },
                 onNavigateToUserDetail = { userId ->
                     navigation.bringToFront(
-                        ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId))
+                        ManagementUsersNavigation.UserDetail(UserDetailParams(userId = userId.asHexDashString()))
                     )
                 },
                 onNavigateBack = { handleBack(ManagementSelfStorageNavigation.FileList()) }

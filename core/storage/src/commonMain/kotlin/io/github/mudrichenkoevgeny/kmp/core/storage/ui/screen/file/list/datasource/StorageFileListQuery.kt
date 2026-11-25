@@ -7,6 +7,7 @@ import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter.TextListingFilterState
 import io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort.ListingSortState
 import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing.SortOrder
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.category.StorageCategory
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.listing.StorageFileFilterValues
 import io.github.mudrichenkoevgeny.shared.foundation.core.storage.domain.model.listing.StorageFileSortBy
@@ -25,7 +26,7 @@ public data class StorageFileListQuery(
     public val pageNumber: Int,
     public val sortState: ListingSortState? = null,
     public val filterStates: Map<String, ListingFilterState> = emptyMap(),
-    public val ownerUserId: String? = null
+    public val ownerUserId: UserId? = null
 ) {
 
     /** Parsed file ID filter text or null if blank. */

@@ -1,7 +1,7 @@
 package io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist
 
 import com.arkivanov.decompose.router.stack.ChildStack
-import io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.user.UserId
+import io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user.UserId
 
 /**
  * Interface for components or child wrappers that manage an active list of platform users.

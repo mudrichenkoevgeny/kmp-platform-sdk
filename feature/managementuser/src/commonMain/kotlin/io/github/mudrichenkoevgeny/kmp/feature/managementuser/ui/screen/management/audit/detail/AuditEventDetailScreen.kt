@@ -139,8 +139,9 @@ private fun Content(
 
     val subjectValue = buildString {
         append(event.actorType.value)
-        if (!event.actorUserRole.isNullOrBlank()) {
-            append(" (${event.actorUserRole})")
+        val role = event.actorUserRole
+        if (role != null) {
+            append(" (${role.value})")
         }
         if (!event.actorId.isNullOrBlank()) {
             append(": ${event.actorId}")
