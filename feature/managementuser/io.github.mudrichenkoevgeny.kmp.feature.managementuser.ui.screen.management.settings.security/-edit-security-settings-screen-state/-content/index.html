@@ -1,0 +1,655 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Content</title>
+<link href="../../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../../index.html" tabindex="1">
+                    kmp-platform-sdk
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.1.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":feature:managementuser/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":feature:managementuser/commonMain" data-filter=":feature:managementuser/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    kmp-platform-sdk
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="managementuser::io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.security/EditSecuritySettingsScreenState.Content///PointingToDeclaration//555308681">
+  <div class="breadcrumbs"><a href="../../../index.html">managementuser</a><span class="delimiter">/</span><a href="../../index.html">io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.security</a><span class="delimiter">/</span><a href="../index.html">EditSecuritySettingsScreenState</a><span class="delimiter">/</span><span class="current">Content</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Content</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">Content</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>recentAuthenticationValiditySecondsForOpenUser<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>recentAuthenticationValiditySecondsForManagementUser<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>mfaTokenExpirationSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>passwordMinLength<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>passwordRequireLetter<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>passwordRequireUpperCase<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>passwordRequireLowerCase<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>passwordRequireDigit<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>passwordRequireSpecialChar<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>commonPasswords<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>accountLockoutMaxFailedPasswordAttempts<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>accountLockoutMaxFailedOtpAttempts<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>accountLockoutMaxFailedTotpAttempts<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>accountLockoutFailedAttemptsWindowSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>accountLockoutDurationSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>accountLockoutIndefiniteLockoutThreshold<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>accountLockoutIsSelfServiceUnlockEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>accountLockoutCheckIntervalSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>refreshTokenRotationGracePeriodSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>openIpBlacklistEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>openIpBlacklist<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>openIpWhitelistEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>openIpWhitelist<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>managementIpBlacklistEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>managementIpBlacklist<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>managementIpWhitelistEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>managementIpWhitelist<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>otpRetryAfterSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>otpNumberOfSymbols<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>otpExpirationSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>maxRequestsPerPeriod<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">"100"</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>rateLimitPeriodSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">"60"</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>isSaving<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>saveError<span class="token operator">: </span><a href="../../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.error.model/-app-error/index.html">AppError</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span> : <a href="../index.html">EditSecuritySettingsScreenState</a></div><p class="paragraph">Form content state.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="668943534%2FConstructors%2F555308681" anchor-label="Content" id="668943534%2FConstructors%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-content.html"><span><span>Content</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="668943534%2FConstructors%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">recentAuthenticationValiditySecondsForOpenUser<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">recentAuthenticationValiditySecondsForManagementUser<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">mfaTokenExpirationSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">passwordMinLength<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">passwordRequireLetter<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">passwordRequireUpperCase<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">passwordRequireLowerCase<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">passwordRequireDigit<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">passwordRequireSpecialChar<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">commonPasswords<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">accountLockoutMaxFailedPasswordAttempts<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">accountLockoutMaxFailedOtpAttempts<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">accountLockoutMaxFailedTotpAttempts<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">accountLockoutFailedAttemptsWindowSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">accountLockoutDurationSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">accountLockoutIndefiniteLockoutThreshold<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">accountLockoutIsSelfServiceUnlockEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">accountLockoutCheckIntervalSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">refreshTokenRotationGracePeriodSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">openIpBlacklistEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">openIpBlacklist<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">openIpWhitelistEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">openIpWhitelist<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">managementIpBlacklistEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">managementIpBlacklist<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">managementIpWhitelistEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">managementIpWhitelist<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">otpRetryAfterSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">otpNumberOfSymbols<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">otpExpirationSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">maxRequestsPerPeriod<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">"100"</span><span class="token punctuation">, </span></span><span class="parameter ">rateLimitPeriodSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">"60"</span><span class="token punctuation">, </span></span><span class="parameter ">isSaving<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">saveError<span class="token operator">: </span><a href="../../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.error.model/-app-error/index.html">AppError</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-651197128%2FProperties%2F555308681" anchor-label="accountLockoutCheckIntervalSeconds" id="-651197128%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="account-lockout-check-interval-seconds.html"><span>account</span><wbr><span>Lockout</span><wbr><span>Check</span><wbr><span>Interval</span><wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-651197128%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="account-lockout-check-interval-seconds.html">accountLockoutCheckIntervalSeconds</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="918596261%2FProperties%2F555308681" anchor-label="accountLockoutDurationSeconds" id="918596261%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="account-lockout-duration-seconds.html"><span>account</span><wbr><span>Lockout</span><wbr><span>Duration</span><wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="918596261%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="account-lockout-duration-seconds.html">accountLockoutDurationSeconds</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="578056452%2FProperties%2F555308681" anchor-label="accountLockoutFailedAttemptsWindowSeconds" id="578056452%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="account-lockout-failed-attempts-window-seconds.html"><span>account</span><wbr><span>Lockout</span><wbr><span>Failed</span><wbr><span>Attempts</span><wbr><span>Window</span><wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="578056452%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="account-lockout-failed-attempts-window-seconds.html">accountLockoutFailedAttemptsWindowSeconds</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1524316557%2FProperties%2F555308681" anchor-label="accountLockoutIndefiniteLockoutThreshold" id="1524316557%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="account-lockout-indefinite-lockout-threshold.html"><span>account</span><wbr><span>Lockout</span><wbr><span>Indefinite</span><wbr><span>Lockout</span><wbr><span><span>Threshold</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1524316557%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="account-lockout-indefinite-lockout-threshold.html">accountLockoutIndefiniteLockoutThreshold</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1543570796%2FProperties%2F555308681" anchor-label="accountLockoutIsSelfServiceUnlockEnabled" id="1543570796%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="account-lockout-is-self-service-unlock-enabled.html"><span>account</span><wbr><span>Lockout</span><wbr><span>Is</span><wbr><span>Self</span><wbr><span>Service</span><wbr><span>Unlock</span><wbr><span><span>Enabled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1543570796%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="account-lockout-is-self-service-unlock-enabled.html">accountLockoutIsSelfServiceUnlockEnabled</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1962034362%2FProperties%2F555308681" anchor-label="accountLockoutMaxFailedOtpAttempts" id="1962034362%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="account-lockout-max-failed-otp-attempts.html"><span>account</span><wbr><span>Lockout</span><wbr><span>Max</span><wbr><span>Failed</span><wbr><span>Otp</span><wbr><span><span>Attempts</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1962034362%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="account-lockout-max-failed-otp-attempts.html">accountLockoutMaxFailedOtpAttempts</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1602716974%2FProperties%2F555308681" anchor-label="accountLockoutMaxFailedPasswordAttempts" id="1602716974%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="account-lockout-max-failed-password-attempts.html"><span>account</span><wbr><span>Lockout</span><wbr><span>Max</span><wbr><span>Failed</span><wbr><span>Password</span><wbr><span><span>Attempts</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1602716974%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="account-lockout-max-failed-password-attempts.html">accountLockoutMaxFailedPasswordAttempts</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1806323182%2FProperties%2F555308681" anchor-label="accountLockoutMaxFailedTotpAttempts" id="-1806323182%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="account-lockout-max-failed-totp-attempts.html"><span>account</span><wbr><span>Lockout</span><wbr><span>Max</span><wbr><span>Failed</span><wbr><span>Totp</span><wbr><span><span>Attempts</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1806323182%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="account-lockout-max-failed-totp-attempts.html">accountLockoutMaxFailedTotpAttempts</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2031210259%2FProperties%2F555308681" anchor-label="commonPasswords" id="-2031210259%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="common-passwords.html"><span>common</span><wbr><span><span>Passwords</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2031210259%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="common-passwords.html">commonPasswords</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1529434628%2FProperties%2F555308681" anchor-label="isSaving" id="-1529434628%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-saving.html"><span>is</span><wbr><span><span>Saving</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1529434628%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="is-saving.html">isSaving</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-117019129%2FProperties%2F555308681" anchor-label="managementIpBlacklist" id="-117019129%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-ip-blacklist.html"><span>management</span><wbr><span>Ip</span><wbr><span><span>Blacklist</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-117019129%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-ip-blacklist.html">managementIpBlacklist</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1619101234%2FProperties%2F555308681" anchor-label="managementIpBlacklistEnabled" id="1619101234%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-ip-blacklist-enabled.html"><span>management</span><wbr><span>Ip</span><wbr><span>Blacklist</span><wbr><span><span>Enabled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1619101234%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-ip-blacklist-enabled.html">managementIpBlacklistEnabled</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1506944483%2FProperties%2F555308681" anchor-label="managementIpWhitelist" id="-1506944483%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-ip-whitelist.html"><span>management</span><wbr><span>Ip</span><wbr><span><span>Whitelist</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1506944483%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-ip-whitelist.html">managementIpWhitelist</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-708676260%2FProperties%2F555308681" anchor-label="managementIpWhitelistEnabled" id="-708676260%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-ip-whitelist-enabled.html"><span>management</span><wbr><span>Ip</span><wbr><span>Whitelist</span><wbr><span><span>Enabled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-708676260%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-ip-whitelist-enabled.html">managementIpWhitelistEnabled</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="471230890%2FProperties%2F555308681" anchor-label="maxRequestsPerPeriod" id="471230890%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="max-requests-per-period.html"><span>max</span><wbr><span>Requests</span><wbr><span>Per</span><wbr><span><span>Period</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="471230890%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="max-requests-per-period.html">maxRequestsPerPeriod</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="834177179%2FProperties%2F555308681" anchor-label="mfaTokenExpirationSeconds" id="834177179%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="mfa-token-expiration-seconds.html"><span>mfa</span><wbr><span>Token</span><wbr><span>Expiration</span><wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="834177179%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="mfa-token-expiration-seconds.html">mfaTokenExpirationSeconds</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1954009522%2FProperties%2F555308681" anchor-label="openIpBlacklist" id="-1954009522%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="open-ip-blacklist.html"><span>open</span><wbr><span>Ip</span><wbr><span><span>Blacklist</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1954009522%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="open-ip-blacklist.html">openIpBlacklist</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-604293109%2FProperties%2F555308681" anchor-label="openIpBlacklistEnabled" id="-604293109%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="open-ip-blacklist-enabled.html"><span>open</span><wbr><span>Ip</span><wbr><span>Blacklist</span><wbr><span><span>Enabled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-604293109%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="open-ip-blacklist-enabled.html">openIpBlacklistEnabled</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="951032420%2FProperties%2F555308681" anchor-label="openIpWhitelist" id="951032420%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="open-ip-whitelist.html"><span>open</span><wbr><span>Ip</span><wbr><span><span>Whitelist</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="951032420%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="open-ip-whitelist.html">openIpWhitelist</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1362896693%2FProperties%2F555308681" anchor-label="openIpWhitelistEnabled" id="1362896693%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="open-ip-whitelist-enabled.html"><span>open</span><wbr><span>Ip</span><wbr><span>Whitelist</span><wbr><span><span>Enabled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1362896693%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="open-ip-whitelist-enabled.html">openIpWhitelistEnabled</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1595354235%2FProperties%2F555308681" anchor-label="otpExpirationSeconds" id="1595354235%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="otp-expiration-seconds.html"><span>otp</span><wbr><span>Expiration</span><wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1595354235%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="otp-expiration-seconds.html">otpExpirationSeconds</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-375100304%2FProperties%2F555308681" anchor-label="otpNumberOfSymbols" id="-375100304%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="otp-number-of-symbols.html"><span>otp</span><wbr><span>Number</span><wbr><span>Of</span><wbr><span><span>Symbols</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-375100304%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="otp-number-of-symbols.html">otpNumberOfSymbols</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1793300000%2FProperties%2F555308681" anchor-label="otpRetryAfterSeconds" id="-1793300000%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="otp-retry-after-seconds.html"><span>otp</span><wbr><span>Retry</span><wbr><span>After</span><wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1793300000%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="otp-retry-after-seconds.html">otpRetryAfterSeconds</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="800065469%2FProperties%2F555308681" anchor-label="passwordMinLength" id="800065469%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="password-min-length.html"><span>password</span><wbr><span>Min</span><wbr><span><span>Length</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="800065469%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="password-min-length.html">passwordMinLength</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1770963427%2FProperties%2F555308681" anchor-label="passwordRequireDigit" id="-1770963427%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="password-require-digit.html"><span>password</span><wbr><span>Require</span><wbr><span><span>Digit</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1770963427%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="password-require-digit.html">passwordRequireDigit</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1310055690%2FProperties%2F555308681" anchor-label="passwordRequireLetter" id="1310055690%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="password-require-letter.html"><span>password</span><wbr><span>Require</span><wbr><span><span>Letter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1310055690%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="password-require-letter.html">passwordRequireLetter</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1263138951%2FProperties%2F555308681" anchor-label="passwordRequireLowerCase" id="-1263138951%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="password-require-lower-case.html"><span>password</span><wbr><span>Require</span><wbr><span>Lower</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1263138951%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="password-require-lower-case.html">passwordRequireLowerCase</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="306922523%2FProperties%2F555308681" anchor-label="passwordRequireSpecialChar" id="306922523%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="password-require-special-char.html"><span>password</span><wbr><span>Require</span><wbr><span>Special</span><wbr><span><span>Char</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="306922523%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="password-require-special-char.html">passwordRequireSpecialChar</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1621497480%2FProperties%2F555308681" anchor-label="passwordRequireUpperCase" id="-1621497480%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="password-require-upper-case.html"><span>password</span><wbr><span>Require</span><wbr><span>Upper</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1621497480%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="password-require-upper-case.html">passwordRequireUpperCase</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1635571677%2FProperties%2F555308681" anchor-label="rateLimitPeriodSeconds" id="1635571677%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="rate-limit-period-seconds.html"><span>rate</span><wbr><span>Limit</span><wbr><span>Period</span><wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1635571677%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="rate-limit-period-seconds.html">rateLimitPeriodSeconds</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-519387613%2FProperties%2F555308681" anchor-label="recentAuthenticationValiditySecondsForManagementUser" id="-519387613%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="recent-authentication-validity-seconds-for-management-user.html"><span>recent</span><wbr><span>Authentication</span><wbr><span>Validity</span><wbr><span>Seconds</span><wbr><span>For</span><wbr><span>Management</span><wbr><span><span>User</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-519387613%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="recent-authentication-validity-seconds-for-management-user.html">recentAuthenticationValiditySecondsForManagementUser</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="756357244%2FProperties%2F555308681" anchor-label="recentAuthenticationValiditySecondsForOpenUser" id="756357244%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="recent-authentication-validity-seconds-for-open-user.html"><span>recent</span><wbr><span>Authentication</span><wbr><span>Validity</span><wbr><span>Seconds</span><wbr><span>For</span><wbr><span>Open</span><wbr><span><span>User</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="756357244%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="recent-authentication-validity-seconds-for-open-user.html">recentAuthenticationValiditySecondsForOpenUser</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1573616130%2FProperties%2F555308681" anchor-label="refreshTokenRotationGracePeriodSeconds" id="-1573616130%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="refresh-token-rotation-grace-period-seconds.html"><span>refresh</span><wbr><span>Token</span><wbr><span>Rotation</span><wbr><span>Grace</span><wbr><span>Period</span><wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1573616130%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="refresh-token-rotation-grace-period-seconds.html">refreshTokenRotationGracePeriodSeconds</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1369569937%2FProperties%2F555308681" anchor-label="saveError" id="-1369569937%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="save-error.html"><span>save</span><wbr><span><span>Error</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1369569937%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="save-error.html">saveError</a><span class="token operator">: </span><a href="../../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.error.model/-app-error/index.html">AppError</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

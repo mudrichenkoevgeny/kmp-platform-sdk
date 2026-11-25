@@ -1,0 +1,550 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Content</title>
+<link href="../../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../../index.html" tabindex="1">
+                    kmp-platform-sdk
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.1.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":feature:managementuser/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":feature:managementuser/commonMain" data-filter=":feature:managementuser/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    kmp-platform-sdk
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="managementuser::io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.auth/EditAuthSettingsScreenState.Content///PointingToDeclaration//555308681">
+  <div class="breadcrumbs"><a href="../../../index.html">managementuser</a><span class="delimiter">/</span><a href="../../index.html">io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.auth</a><span class="delimiter">/</span><a href="../index.html">EditAuthSettingsScreenState</a><span class="delimiter">/</span><span class="current">Content</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Content</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">Content</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>enabledProviders<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider/UserAuthProvider///PointingToDeclaration/">UserAuthProvider</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>maxTotalIdentifiers<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>maxEmailIdentifiers<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>maxPhoneIdentifiers<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>maxIdentifiersPerExternalProvider<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>userNicknameMinLength<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>userNicknameMaxLength<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>userDisplayNameMinLength<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>userDisplayNameMaxLength<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>isUserNicknameChangeAllowed<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>maxActiveSessionsForOpenUser<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>maxActiveSessionsForManagementUser<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>accessTokenExpirationSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>refreshTokenExpirationSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>accountDeletionGracePeriodSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>accountDeletionCheckIntervalSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>isRegistrationEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>openEmailBlacklistEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>openEmailBlacklist<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">""</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>openEmailWhitelistEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>openEmailWhitelist<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">""</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>managementEmailBlacklistEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>managementEmailBlacklist<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">""</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>managementEmailWhitelistEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>managementEmailWhitelist<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">""</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>isSaving<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>saveError<span class="token operator">: </span><a href="../../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.error.model/-app-error/index.html">AppError</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span> : <a href="../index.html">EditAuthSettingsScreenState</a></div><p class="paragraph">Form content state.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="-1897732128%2FConstructors%2F555308681" anchor-label="Content" id="-1897732128%2FConstructors%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-content.html"><span><span>Content</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1897732128%2FConstructors%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">enabledProviders<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider/UserAuthProvider///PointingToDeclaration/">UserAuthProvider</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">maxTotalIdentifiers<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">maxEmailIdentifiers<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">maxPhoneIdentifiers<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">maxIdentifiersPerExternalProvider<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">userNicknameMinLength<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">userNicknameMaxLength<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">userDisplayNameMinLength<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">userDisplayNameMaxLength<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">isUserNicknameChangeAllowed<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">maxActiveSessionsForOpenUser<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">maxActiveSessionsForManagementUser<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">accessTokenExpirationSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">refreshTokenExpirationSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">accountDeletionGracePeriodSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">accountDeletionCheckIntervalSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">isRegistrationEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">openEmailBlacklistEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">openEmailBlacklist<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">""</span><span class="token punctuation">, </span></span><span class="parameter ">openEmailWhitelistEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">openEmailWhitelist<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">""</span><span class="token punctuation">, </span></span><span class="parameter ">managementEmailBlacklistEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">managementEmailBlacklist<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">""</span><span class="token punctuation">, </span></span><span class="parameter ">managementEmailWhitelistEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">managementEmailWhitelist<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">""</span><span class="token punctuation">, </span></span><span class="parameter ">isSaving<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">saveError<span class="token operator">: </span><a href="../../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.error.model/-app-error/index.html">AppError</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-47114939%2FProperties%2F555308681" anchor-label="accessTokenExpirationSeconds" id="-47114939%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="access-token-expiration-seconds.html"><span>access</span><wbr><span>Token</span><wbr><span>Expiration</span><wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-47114939%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="access-token-expiration-seconds.html">accessTokenExpirationSeconds</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="241061357%2FProperties%2F555308681" anchor-label="accountDeletionCheckIntervalSeconds" id="241061357%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="account-deletion-check-interval-seconds.html"><span>account</span><wbr><span>Deletion</span><wbr><span>Check</span><wbr><span>Interval</span><wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="241061357%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="account-deletion-check-interval-seconds.html">accountDeletionCheckIntervalSeconds</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="195164185%2FProperties%2F555308681" anchor-label="accountDeletionGracePeriodSeconds" id="195164185%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="account-deletion-grace-period-seconds.html"><span>account</span><wbr><span>Deletion</span><wbr><span>Grace</span><wbr><span>Period</span><wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="195164185%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="account-deletion-grace-period-seconds.html">accountDeletionGracePeriodSeconds</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2074400641%2FProperties%2F555308681" anchor-label="enabledProviders" id="-2074400641%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="enabled-providers.html"><span>enabled</span><wbr><span><span>Providers</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2074400641%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="enabled-providers.html">enabledProviders</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider/UserAuthProvider///PointingToDeclaration/">UserAuthProvider</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="932906140%2FProperties%2F555308681" anchor-label="isRegistrationEnabled" id="932906140%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-registration-enabled.html"><span>is</span><wbr><span>Registration</span><wbr><span><span>Enabled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="932906140%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="is-registration-enabled.html">isRegistrationEnabled</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="811254396%2FProperties%2F555308681" anchor-label="isSaving" id="811254396%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-saving.html"><span>is</span><wbr><span><span>Saving</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="811254396%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="is-saving.html">isSaving</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1515320453%2FProperties%2F555308681" anchor-label="isUserNicknameChangeAllowed" id="1515320453%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-user-nickname-change-allowed.html"><span>is</span><wbr><span>User</span><wbr><span>Nickname</span><wbr><span>Change</span><wbr><span><span>Allowed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1515320453%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="is-user-nickname-change-allowed.html">isUserNicknameChangeAllowed</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-964261572%2FProperties%2F555308681" anchor-label="managementEmailBlacklist" id="-964261572%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-email-blacklist.html"><span>management</span><wbr><span>Email</span><wbr><span><span>Blacklist</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-964261572%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-email-blacklist.html">managementEmailBlacklist</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1537518243%2FProperties%2F555308681" anchor-label="managementEmailBlacklistEnabled" id="-1537518243%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-email-blacklist-enabled.html"><span>management</span><wbr><span>Email</span><wbr><span>Blacklist</span><wbr><span><span>Enabled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1537518243%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-email-blacklist-enabled.html">managementEmailBlacklistEnabled</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1940780370%2FProperties%2F555308681" anchor-label="managementEmailWhitelist" id="1940780370%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-email-whitelist.html"><span>management</span><wbr><span>Email</span><wbr><span><span>Whitelist</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1940780370%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-email-whitelist.html">managementEmailWhitelist</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="429671559%2FProperties%2F555308681" anchor-label="managementEmailWhitelistEnabled" id="429671559%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-email-whitelist-enabled.html"><span>management</span><wbr><span>Email</span><wbr><span>Whitelist</span><wbr><span><span>Enabled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="429671559%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-email-whitelist-enabled.html">managementEmailWhitelistEnabled</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1740082000%2FProperties%2F555308681" anchor-label="maxActiveSessionsForManagementUser" id="-1740082000%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="max-active-sessions-for-management-user.html"><span>max</span><wbr><span>Active</span><wbr><span>Sessions</span><wbr><span>For</span><wbr><span>Management</span><wbr><span><span>User</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1740082000%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="max-active-sessions-for-management-user.html">maxActiveSessionsForManagementUser</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1437070537%2FProperties%2F555308681" anchor-label="maxActiveSessionsForOpenUser" id="1437070537%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="max-active-sessions-for-open-user.html"><span>max</span><wbr><span>Active</span><wbr><span>Sessions</span><wbr><span>For</span><wbr><span>Open</span><wbr><span><span>User</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1437070537%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="max-active-sessions-for-open-user.html">maxActiveSessionsForOpenUser</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="590341096%2FProperties%2F555308681" anchor-label="maxEmailIdentifiers" id="590341096%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="max-email-identifiers.html"><span>max</span><wbr><span>Email</span><wbr><span><span>Identifiers</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="590341096%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="max-email-identifiers.html">maxEmailIdentifiers</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="541001255%2FProperties%2F555308681" anchor-label="maxIdentifiersPerExternalProvider" id="541001255%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="max-identifiers-per-external-provider.html"><span>max</span><wbr><span>Identifiers</span><wbr><span>Per</span><wbr><span>External</span><wbr><span><span>Provider</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="541001255%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="max-identifiers-per-external-provider.html">maxIdentifiersPerExternalProvider</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-711994182%2FProperties%2F555308681" anchor-label="maxPhoneIdentifiers" id="-711994182%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="max-phone-identifiers.html"><span>max</span><wbr><span>Phone</span><wbr><span><span>Identifiers</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-711994182%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="max-phone-identifiers.html">maxPhoneIdentifiers</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-280248432%2FProperties%2F555308681" anchor-label="maxTotalIdentifiers" id="-280248432%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="max-total-identifiers.html"><span>max</span><wbr><span>Total</span><wbr><span><span>Identifiers</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-280248432%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="max-total-identifiers.html">maxTotalIdentifiers</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1730777195%2FProperties%2F555308681" anchor-label="openEmailBlacklist" id="-1730777195%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="open-email-blacklist.html"><span>open</span><wbr><span>Email</span><wbr><span><span>Blacklist</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1730777195%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="open-email-blacklist.html">openEmailBlacklist</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-691713820%2FProperties%2F555308681" anchor-label="openEmailBlacklistEnabled" id="-691713820%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="open-email-blacklist-enabled.html"><span>open</span><wbr><span>Email</span><wbr><span>Blacklist</span><wbr><span><span>Enabled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-691713820%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="open-email-blacklist-enabled.html">openEmailBlacklistEnabled</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1174264747%2FProperties%2F555308681" anchor-label="openEmailWhitelist" id="1174264747%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="open-email-whitelist.html"><span>open</span><wbr><span>Email</span><wbr><span><span>Whitelist</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1174264747%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="open-email-whitelist.html">openEmailWhitelist</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1275475982%2FProperties%2F555308681" anchor-label="openEmailWhitelistEnabled" id="1275475982%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="open-email-whitelist-enabled.html"><span>open</span><wbr><span>Email</span><wbr><span>Whitelist</span><wbr><span><span>Enabled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1275475982%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="open-email-whitelist-enabled.html">openEmailWhitelistEnabled</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="971262024%2FProperties%2F555308681" anchor-label="refreshTokenExpirationSeconds" id="971262024%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="refresh-token-expiration-seconds.html"><span>refresh</span><wbr><span>Token</span><wbr><span>Expiration</span><wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="971262024%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="refresh-token-expiration-seconds.html">refreshTokenExpirationSeconds</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1822654225%2FProperties%2F555308681" anchor-label="saveError" id="-1822654225%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="save-error.html"><span>save</span><wbr><span><span>Error</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1822654225%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="save-error.html">saveError</a><span class="token operator">: </span><a href="../../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.error.model/-app-error/index.html">AppError</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="984571864%2FProperties%2F555308681" anchor-label="userDisplayNameMaxLength" id="984571864%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="user-display-name-max-length.html"><span>user</span><wbr><span>Display</span><wbr><span>Name</span><wbr><span>Max</span><wbr><span><span>Length</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="984571864%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="user-display-name-max-length.html">userDisplayNameMaxLength</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-678772438%2FProperties%2F555308681" anchor-label="userDisplayNameMinLength" id="-678772438%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="user-display-name-min-length.html"><span>user</span><wbr><span>Display</span><wbr><span>Name</span><wbr><span>Min</span><wbr><span><span>Length</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-678772438%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="user-display-name-min-length.html">userDisplayNameMinLength</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-186040663%2FProperties%2F555308681" anchor-label="userNicknameMaxLength" id="-186040663%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="user-nickname-max-length.html"><span>user</span><wbr><span>Nickname</span><wbr><span>Max</span><wbr><span><span>Length</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-186040663%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="user-nickname-max-length.html">userNicknameMaxLength</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1849384965%2FProperties%2F555308681" anchor-label="userNicknameMinLength" id="-1849384965%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="user-nickname-min-length.html"><span>user</span><wbr><span>Nickname</span><wbr><span>Min</span><wbr><span><span>Length</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1849384965%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="user-nickname-min-length.html">userNicknameMinLength</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

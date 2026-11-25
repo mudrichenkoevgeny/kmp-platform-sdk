@@ -1,0 +1,299 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>ManagementUserApiMock</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    kmp-platform-sdk
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.1.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":feature:managementuser/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":feature:managementuser/commonMain" data-filter=":feature:managementuser/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    kmp-platform-sdk
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="managementuser::io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.network.api.user/ManagementUserApiMock///PointingToDeclaration//555308681">
+  <div class="breadcrumbs"><a href="../../index.html">managementuser</a><span class="delimiter">/</span><a href="../index.html">io.github.mudrichenkoevgeny.kmp.feature.managementuser.mock.network.api.user</a><span class="delimiter">/</span><span class="current">ManagementUserApiMock</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Management</span><wbr><span>User</span><wbr><span>Api</span><wbr><span><span>Mock</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">ManagementUserApiMock</a> : <a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user/-management-user-api/index.html">ManagementUserApi</a></div><p class="paragraph">Mock implementation of <a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.network.api.user/-management-user-api/index.html">ManagementUserApi</a> for testing.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="927067938%2FConstructors%2F555308681" anchor-label="ManagementUserApiMock" id="927067938%2FConstructors%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-management-user-api-mock.html"><span>Management</span><wbr><span>User</span><wbr><span>Api</span><wbr><span><span>Mock</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="927067938%2FConstructors%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="1375181502%2FProperties%2F555308681" anchor-label="createUserResult" id="1375181502%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-user-result.html"><span>create</span><wbr><span>User</span><wbr><span><span>Result</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1375181502%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="create-user-result.html">createUserResult</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user/UserPrivatePayload///PointingToDeclaration/">UserPrivatePayload</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1986248623%2FProperties%2F555308681" anchor-label="deleteUserResult" id="1986248623%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="delete-user-result.html"><span>delete</span><wbr><span>User</span><wbr><span><span>Result</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1986248623%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="delete-user-result.html">deleteUserResult</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="704866170%2FProperties%2F555308681" anchor-label="getUserResult" id="704866170%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-user-result.html"><span>get</span><wbr><span>User</span><wbr><span><span>Result</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="704866170%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="get-user-result.html">getUserResult</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user/UserPrivatePayload///PointingToDeclaration/">UserPrivatePayload</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-951127757%2FProperties%2F555308681" anchor-label="getUsersResult" id="-951127757%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-users-result.html"><span>get</span><wbr><span>Users</span><wbr><span><span>Result</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-951127757%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="get-users-result.html">getUsersResult</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing/PagedResult///PointingToDeclaration/">PagedResult</span><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user/UserSummaryPayload///PointingToDeclaration/">UserSummaryPayload</span><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1107441711%2FProperties%2F555308681" anchor-label="updateUserResult" id="-1107441711%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-user-result.html"><span>update</span><wbr><span>User</span><wbr><span><span>Result</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1107441711%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="update-user-result.html">updateUserResult</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="110674959%2FFunctions%2F555308681" anchor-label="createUser" id="110674959%2FFunctions%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-user.html"><span>create</span><wbr><span><span>User</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="110674959%2FFunctions%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend override </span><span class="token keyword">fun </span><a href="create-user.html"><span class="token function">createUser</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">request<span class="token operator">: </span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.auth.create/CreateByEmailRequest///PointingToDeclaration/">CreateByEmailRequest</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user/UserPrivatePayload///PointingToDeclaration/">UserPrivatePayload</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Creates a new user account administratively.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="51053754%2FFunctions%2F555308681" anchor-label="deleteUser" id="51053754%2FFunctions%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="delete-user.html"><span>delete</span><wbr><span><span>User</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="51053754%2FFunctions%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend override </span><span class="token keyword">fun </span><a href="delete-user.html"><span class="token function">deleteUser</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">userId<span class="token operator">: </span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user/UserId///PointingToDeclaration/">UserId</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Deletes a user account administratively.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="544111621%2FFunctions%2F555308681" anchor-label="getUser" id="544111621%2FFunctions%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-user.html"><span>get</span><wbr><span><span>User</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="544111621%2FFunctions%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend override </span><span class="token keyword">fun </span><a href="get-user.html"><span class="token function">getUser</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">userId<span class="token operator">: </span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user/UserId///PointingToDeclaration/">UserId</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user/UserPrivatePayload///PointingToDeclaration/">UserPrivatePayload</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Retrieves full management-level details of a specific user.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2072251755%2FFunctions%2F555308681" anchor-label="getUsers" id="2072251755%2FFunctions%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-users.html"><span>get</span><wbr><span><span>Users</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2072251755%2FFunctions%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend override </span><span class="token keyword">fun </span><a href="get-users.html"><span class="token function">getUsers</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">params<span class="token operator">: </span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.navigation.screen.management.user.globallist/ManagementUserListParams///PointingToDeclaration/">ManagementUserListParams</span><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing/PagedResult///PointingToDeclaration/">PagedResult</span><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.model.user/UserSummaryPayload///PointingToDeclaration/">UserSummaryPayload</span><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns a paginated and filtered list of user summaries based on search criteria.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-153396124%2FFunctions%2F555308681" anchor-label="updateUser" id="-153396124%2FFunctions%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-user.html"><span>update</span><wbr><span><span>User</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-153396124%2FFunctions%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend override </span><span class="token keyword">fun </span><a href="update-user.html"><span class="token function">updateUser</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">userId<span class="token operator">: </span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user/UserId///PointingToDeclaration/">UserId</span><span class="token punctuation">, </span></span><span class="parameter ">request<span class="token operator">: </span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.network.request.user/ManagementUpdateUserRequest///PointingToDeclaration/">ManagementUpdateUserRequest</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Updates user details, status, or permissions for a specific user administratively.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

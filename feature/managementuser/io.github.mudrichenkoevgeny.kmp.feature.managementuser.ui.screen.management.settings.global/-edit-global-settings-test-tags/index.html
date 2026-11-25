@@ -1,0 +1,396 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>EditGlobalSettingsTestTags</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    kmp-platform-sdk
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.1.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":feature:managementuser/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":feature:managementuser/commonMain" data-filter=":feature:managementuser/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    kmp-platform-sdk
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="managementuser::io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.global/EditGlobalSettingsTestTags///PointingToDeclaration//555308681">
+  <div class="breadcrumbs"><a href="../../index.html">managementuser</a><span class="delimiter">/</span><a href="../index.html">io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.global</a><span class="delimiter">/</span><span class="current">EditGlobalSettingsTestTags</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Edit</span><wbr><span>Global</span><wbr><span>Settings</span><wbr><span>Test</span><wbr><span><span>Tags</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">EditGlobalSettingsTestTags</a></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-1673129543%2FProperties%2F555308681" anchor-label="BACK_BUTTON" id="-1673129543%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-b-a-c-k_-b-u-t-t-o-n.html"><span>BACK_</span><wbr><span>BUTTON</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1673129543%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-b-a-c-k_-b-u-t-t-o-n.html">BACK_BUTTON</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="953028907%2FProperties%2F555308681" anchor-label="CONTACT_SUPPORT_EMAIL_INPUT" id="953028907%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-o-n-t-a-c-t_-s-u-p-p-o-r-t_-e-m-a-i-l_-i-n-p-u-t.html"><span>CONTACT_</span><wbr><span>SUPPORT_</span><wbr><span>EMAIL_</span><wbr><span>INPUT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="953028907%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-c-o-n-t-a-c-t_-s-u-p-p-o-r-t_-e-m-a-i-l_-i-n-p-u-t.html">CONTACT_SUPPORT_EMAIL_INPUT</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="748016491%2FProperties%2F555308681" anchor-label="GLOBAL_ERROR" id="748016491%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-g-l-o-b-a-l_-e-r-r-o-r.html"><span>GLOBAL_</span><wbr><span>ERROR</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="748016491%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-g-l-o-b-a-l_-e-r-r-o-r.html">GLOBAL_ERROR</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="723665809%2FProperties%2F555308681" anchor-label="IS_METRICS_ENABLED_CHECKBOX" id="723665809%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-s_-m-e-t-r-i-c-s_-e-n-a-b-l-e-d_-c-h-e-c-k-b-o-x.html"><span>IS_</span><wbr><span>METRICS_</span><wbr><span>ENABLED_</span><wbr><span>CHECKBOX</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="723665809%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-i-s_-m-e-t-r-i-c-s_-e-n-a-b-l-e-d_-c-h-e-c-k-b-o-x.html">IS_METRICS_ENABLED_CHECKBOX</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="573891792%2FProperties%2F555308681" anchor-label="IS_TRACING_ENABLED_CHECKBOX" id="573891792%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-s_-t-r-a-c-i-n-g_-e-n-a-b-l-e-d_-c-h-e-c-k-b-o-x.html"><span>IS_</span><wbr><span>TRACING_</span><wbr><span>ENABLED_</span><wbr><span>CHECKBOX</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="573891792%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-i-s_-t-r-a-c-i-n-g_-e-n-a-b-l-e-d_-c-h-e-c-k-b-o-x.html">IS_TRACING_ENABLED_CHECKBOX</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1805641584%2FProperties%2F555308681" anchor-label="IS_VERBOSE_LOGGING_ENABLED_CHECKBOX" id="-1805641584%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-s_-v-e-r-b-o-s-e_-l-o-g-g-i-n-g_-e-n-a-b-l-e-d_-c-h-e-c-k-b-o-x.html"><span>IS_</span><wbr><span>VERBOSE_</span><wbr><span>LOGGING_</span><wbr><span>ENABLED_</span><wbr><span>CHECKBOX</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1805641584%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-i-s_-v-e-r-b-o-s-e_-l-o-g-g-i-n-g_-e-n-a-b-l-e-d_-c-h-e-c-k-b-o-x.html">IS_VERBOSE_LOGGING_ENABLED_CHECKBOX</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-293887971%2FProperties%2F555308681" anchor-label="MIN_VERSION_ANDROID_INPUT" id="-293887971%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-m-i-n_-v-e-r-s-i-o-n_-a-n-d-r-o-i-d_-i-n-p-u-t.html"><span>MIN_</span><wbr><span>VERSION_</span><wbr><span>ANDROID_</span><wbr><span>INPUT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-293887971%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-m-i-n_-v-e-r-s-i-o-n_-a-n-d-r-o-i-d_-i-n-p-u-t.html">MIN_VERSION_ANDROID_INPUT</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-398176048%2FProperties%2F555308681" anchor-label="MIN_VERSION_DESKTOP_INPUT" id="-398176048%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-m-i-n_-v-e-r-s-i-o-n_-d-e-s-k-t-o-p_-i-n-p-u-t.html"><span>MIN_</span><wbr><span>VERSION_</span><wbr><span>DESKTOP_</span><wbr><span>INPUT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-398176048%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-m-i-n_-v-e-r-s-i-o-n_-d-e-s-k-t-o-p_-i-n-p-u-t.html">MIN_VERSION_DESKTOP_INPUT</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1561530303%2FProperties%2F555308681" anchor-label="MIN_VERSION_IOS_INPUT" id="1561530303%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-m-i-n_-v-e-r-s-i-o-n_-i-o-s_-i-n-p-u-t.html"><span>MIN_</span><wbr><span>VERSION_</span><wbr><span>IOS_</span><wbr><span>INPUT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1561530303%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-m-i-n_-v-e-r-s-i-o-n_-i-o-s_-i-n-p-u-t.html">MIN_VERSION_IOS_INPUT</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1087491176%2FProperties%2F555308681" anchor-label="MIN_VERSION_WEB_INPUT" id="-1087491176%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-m-i-n_-v-e-r-s-i-o-n_-w-e-b_-i-n-p-u-t.html"><span>MIN_</span><wbr><span>VERSION_</span><wbr><span>WEB_</span><wbr><span>INPUT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1087491176%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-m-i-n_-v-e-r-s-i-o-n_-w-e-b_-i-n-p-u-t.html">MIN_VERSION_WEB_INPUT</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="262345683%2FProperties%2F555308681" anchor-label="PRIVACY_POLICY_URL_INPUT" id="262345683%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-r-i-v-a-c-y_-p-o-l-i-c-y_-u-r-l_-i-n-p-u-t.html"><span>PRIVACY_</span><wbr><span>POLICY_</span><wbr><span>URL_</span><wbr><span>INPUT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="262345683%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-p-r-i-v-a-c-y_-p-o-l-i-c-y_-u-r-l_-i-n-p-u-t.html">PRIVACY_POLICY_URL_INPUT</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1974727221%2FProperties%2F555308681" anchor-label="RESET_BUTTON" id="1974727221%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-r-e-s-e-t_-b-u-t-t-o-n.html"><span>RESET_</span><wbr><span>BUTTON</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1974727221%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-r-e-s-e-t_-b-u-t-t-o-n.html">RESET_BUTTON</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-356125105%2FProperties%2F555308681" anchor-label="SAVE_BUTTON" id="-356125105%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-s-a-v-e_-b-u-t-t-o-n.html"><span>SAVE_</span><wbr><span>BUTTON</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-356125105%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-a-v-e_-b-u-t-t-o-n.html">SAVE_BUTTON</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="936203933%2FProperties%2F555308681" anchor-label="SAVE_ERROR_TEXT" id="936203933%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-s-a-v-e_-e-r-r-o-r_-t-e-x-t.html"><span>SAVE_</span><wbr><span>ERROR_</span><wbr><span>TEXT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="936203933%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-a-v-e_-e-r-r-o-r_-t-e-x-t.html">SAVE_ERROR_TEXT</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1008300516%2FProperties%2F555308681" anchor-label="SECTION_MIN_VERSIONS_TITLE" id="-1008300516%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-s-e-c-t-i-o-n_-m-i-n_-v-e-r-s-i-o-n-s_-t-i-t-l-e.html"><span>SECTION_</span><wbr><span>MIN_</span><wbr><span>VERSIONS_</span><wbr><span>TITLE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1008300516%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-e-c-t-i-o-n_-m-i-n_-v-e-r-s-i-o-n-s_-t-i-t-l-e.html">SECTION_MIN_VERSIONS_TITLE</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="830422379%2FProperties%2F555308681" anchor-label="SECTION_TELEMETRY_TITLE" id="830422379%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-s-e-c-t-i-o-n_-t-e-l-e-m-e-t-r-y_-t-i-t-l-e.html"><span>SECTION_</span><wbr><span>TELEMETRY_</span><wbr><span>TITLE</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="830422379%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-e-c-t-i-o-n_-t-e-l-e-m-e-t-r-y_-t-i-t-l-e.html">SECTION_TELEMETRY_TITLE</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-536289353%2FProperties%2F555308681" anchor-label="TERMS_OF_SERVICE_URL_INPUT" id="-536289353%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-t-e-r-m-s_-o-f_-s-e-r-v-i-c-e_-u-r-l_-i-n-p-u-t.html"><span>TERMS_</span><wbr><span>OF_</span><wbr><span>SERVICE_</span><wbr><span>URL_</span><wbr><span>INPUT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-536289353%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-t-e-r-m-s_-o-f_-s-e-r-v-i-c-e_-u-r-l_-i-n-p-u-t.html">TERMS_OF_SERVICE_URL_INPUT</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1654674101%2FProperties%2F555308681" anchor-label="TITLE" id="-1654674101%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-t-i-t-l-e.html"><span><span>TITLE</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1654674101%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-t-i-t-l-e.html">TITLE</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

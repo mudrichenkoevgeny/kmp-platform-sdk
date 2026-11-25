@@ -1,0 +1,476 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>UnlockRepositoryMock</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    kmp-platform-sdk
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.1.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":feature:user/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":feature:user/commonMain" data-filter=":feature:user/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    kmp-platform-sdk
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="user::io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.unlock/UnlockRepositoryMock///PointingToDeclaration//1428137388">
+  <div class="breadcrumbs"><a href="../../index.html">user</a><span class="delimiter">/</span><a href="../index.html">io.github.mudrichenkoevgeny.kmp.feature.user.mock.repository.auth.unlock</a><span class="delimiter">/</span><span class="current">UnlockRepositoryMock</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Unlock</span><wbr><span>Repository</span><wbr><span><span>Mock</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">UnlockRepositoryMock</a> : <a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.unlock/-unlock-repository/index.html">UnlockRepository</a></div><p class="paragraph">Mock implementation of <a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.unlock/-unlock-repository/index.html">UnlockRepository</a> for testing.</p></div>    </div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="1675107852%2FConstructors%2F1428137388" anchor-label="UnlockRepositoryMock" id="1675107852%2FConstructors%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-unlock-repository-mock.html"><span>Unlock</span><wbr><span>Repository</span><wbr><span><span>Mock</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1675107852%2FConstructors%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-806673291%2FProperties%2F1428137388" anchor-label="lastAuthProvider" id="-806673291%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="last-auth-provider.html"><span>last</span><wbr><span>Auth</span><wbr><span><span>Provider</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-806673291%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="last-auth-provider.html">lastAuthProvider</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1932291060%2FProperties%2F1428137388" anchor-label="lastConfirmationCode" id="-1932291060%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="last-confirmation-code.html"><span>last</span><wbr><span>Confirmation</span><wbr><span><span>Code</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1932291060%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="last-confirmation-code.html">lastConfirmationCode</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1285208688%2FProperties%2F1428137388" anchor-label="lastEmail" id="1285208688%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="last-email.html"><span>last</span><wbr><span><span>Email</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1285208688%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="last-email.html">lastEmail</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-960776529%2FProperties%2F1428137388" anchor-label="lastExternalProviderToken" id="-960776529%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="last-external-provider-token.html"><span>last</span><wbr><span>External</span><wbr><span>Provider</span><wbr><span><span>Token</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-960776529%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="last-external-provider-token.html">lastExternalProviderToken</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1456591659%2FProperties%2F1428137388" anchor-label="lastPhoneNumber" id="-1456591659%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="last-phone-number.html"><span>last</span><wbr><span>Phone</span><wbr><span><span>Number</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1456591659%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="last-phone-number.html">lastPhoneNumber</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="831984290%2FProperties%2F1428137388" anchor-label="remainingEmailDelaySeconds" id="831984290%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remaining-email-delay-seconds.html"><span>remaining</span><wbr><span>Email</span><wbr><span>Delay</span><wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="831984290%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="remaining-email-delay-seconds.html">remainingEmailDelaySeconds</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-885703664%2FProperties%2F1428137388" anchor-label="remainingPhoneDelaySeconds" id="-885703664%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remaining-phone-delay-seconds.html"><span>remaining</span><wbr><span>Phone</span><wbr><span>Delay</span><wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-885703664%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="remaining-phone-delay-seconds.html">remainingPhoneDelaySeconds</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-708404556%2FProperties%2F1428137388" anchor-label="sendUnlockEmailConfirmationResult" id="-708404556%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="send-unlock-email-confirmation-result.html"><span>send</span><wbr><span>Unlock</span><wbr><span>Email</span><wbr><span>Confirmation</span><wbr><span><span>Result</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-708404556%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="send-unlock-email-confirmation-result.html">sendUnlockEmailConfirmationResult</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation/OtpConfirmation///PointingToDeclaration/">OtpConfirmation</span><span class="token operator">&gt;</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-615548510%2FProperties%2F1428137388" anchor-label="sendUnlockPhoneConfirmationResult" id="-615548510%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="send-unlock-phone-confirmation-result.html"><span>send</span><wbr><span>Unlock</span><wbr><span>Phone</span><wbr><span>Confirmation</span><wbr><span><span>Result</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-615548510%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="send-unlock-phone-confirmation-result.html">sendUnlockPhoneConfirmationResult</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation/OtpConfirmation///PointingToDeclaration/">OtpConfirmation</span><span class="token operator">&gt;</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1110102968%2FProperties%2F1428137388" anchor-label="unlockByEmailResult" id="1110102968%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unlock-by-email-result.html"><span>unlock</span><wbr><span>By</span><wbr><span>Email</span><wbr><span><span>Result</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1110102968%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="unlock-by-email-result.html">unlockByEmailResult</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1817249608%2FProperties%2F1428137388" anchor-label="unlockByExternalAuthProviderResult" id="1817249608%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unlock-by-external-auth-provider-result.html"><span>unlock</span><wbr><span>By</span><wbr><span>External</span><wbr><span>Auth</span><wbr><span>Provider</span><wbr><span><span>Result</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1817249608%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="unlock-by-external-auth-provider-result.html">unlockByExternalAuthProviderResult</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1380460454%2FProperties%2F1428137388" anchor-label="unlockByPhoneResult" id="1380460454%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unlock-by-phone-result.html"><span>unlock</span><wbr><span>By</span><wbr><span>Phone</span><wbr><span><span>Result</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1380460454%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="unlock-by-phone-result.html">unlockByPhoneResult</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-956580654%2FFunctions%2F1428137388" anchor-label="getRemainingUnlockEmailConfirmationDelayInSeconds" id="-956580654%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-remaining-unlock-email-confirmation-delay-in-seconds.html"><span>get</span><wbr><span>Remaining</span><wbr><span>Unlock</span><wbr><span>Email</span><wbr><span>Confirmation</span><wbr><span>Delay</span><wbr><span>In</span><wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-956580654%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="get-remaining-unlock-email-confirmation-delay-in-seconds.html"><span class="token function">getRemainingUnlockEmailConfirmationDelayInSeconds</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">email<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Gets the remaining client-side cooldown in seconds before another email unlock OTP can be sent.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="245178020%2FFunctions%2F1428137388" anchor-label="getRemainingUnlockPhoneConfirmationDelayInSeconds" id="245178020%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-remaining-unlock-phone-confirmation-delay-in-seconds.html"><span>get</span><wbr><span>Remaining</span><wbr><span>Unlock</span><wbr><span>Phone</span><wbr><span>Confirmation</span><wbr><span>Delay</span><wbr><span>In</span><wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="245178020%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="get-remaining-unlock-phone-confirmation-delay-in-seconds.html"><span class="token function">getRemainingUnlockPhoneConfirmationDelayInSeconds</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">phoneNumber<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Gets the remaining client-side cooldown in seconds before another phone unlock OTP can be sent.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1406452397%2FFunctions%2F1428137388" anchor-label="sendUnlockEmailConfirmation" id="-1406452397%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="send-unlock-email-confirmation.html"><span>send</span><wbr><span>Unlock</span><wbr><span>Email</span><wbr><span><span>Confirmation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1406452397%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend override </span><span class="token keyword">fun </span><a href="send-unlock-email-confirmation.html"><span class="token function">sendUnlockEmailConfirmation</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">email<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation/OtpConfirmation///PointingToDeclaration/">OtpConfirmation</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Sends an account unlock confirmation code (OTP) to the specified email address.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1243326811%2FFunctions%2F1428137388" anchor-label="sendUnlockPhoneConfirmation" id="-1243326811%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="send-unlock-phone-confirmation.html"><span>send</span><wbr><span>Unlock</span><wbr><span>Phone</span><wbr><span><span>Confirmation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1243326811%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend override </span><span class="token keyword">fun </span><a href="send-unlock-phone-confirmation.html"><span class="token function">sendUnlockPhoneConfirmation</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">phoneNumber<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.otpconfirmation/OtpConfirmation///PointingToDeclaration/">OtpConfirmation</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Sends an account unlock confirmation code (OTP) to the specified phone number.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1526047348%2FFunctions%2F1428137388" anchor-label="unlockByEmail" id="1526047348%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unlock-by-email.html"><span>unlock</span><wbr><span>By</span><wbr><span><span>Email</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1526047348%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend override </span><span class="token keyword">fun </span><a href="unlock-by-email.html"><span class="token function">unlockByEmail</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">email<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">confirmationCode<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Unlocks an account using an email confirmation code.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1945520356%2FFunctions%2F1428137388" anchor-label="unlockByExternalAuthProvider" id="1945520356%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unlock-by-external-auth-provider.html"><span>unlock</span><wbr><span>By</span><wbr><span>External</span><wbr><span>Auth</span><wbr><span><span>Provider</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1945520356%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend override </span><span class="token keyword">fun </span><a href="unlock-by-external-auth-provider.html"><span class="token function">unlockByExternalAuthProvider</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">authProvider<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">externalProviderToken<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Unlocks an account using an external authentication provider token.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-624054458%2FFunctions%2F1428137388" anchor-label="unlockByPhone" id="-624054458%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unlock-by-phone.html"><span>unlock</span><wbr><span>By</span><wbr><span><span>Phone</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-624054458%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend override </span><span class="token keyword">fun </span><a href="unlock-by-phone.html"><span class="token function">unlockByPhone</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">phoneNumber<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">confirmationCode<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.result/-app-result/index.html">AppResult</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Unlocks an account using a phone confirmation code.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

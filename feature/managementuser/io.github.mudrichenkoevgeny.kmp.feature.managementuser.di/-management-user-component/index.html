@@ -1,0 +1,1514 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>ManagementUserComponent</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    kmp-platform-sdk
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.1.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":feature:managementuser/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":feature:managementuser/commonMain" data-filter=":feature:managementuser/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    kmp-platform-sdk
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="managementuser::io.github.mudrichenkoevgeny.kmp.feature.managementuser.di/ManagementUserComponent///PointingToDeclaration//555308681">
+  <div class="breadcrumbs"><a href="../../index.html">managementuser</a><span class="delimiter">/</span><a href="../index.html">io.github.mudrichenkoevgeny.kmp.feature.managementuser.di</a><span class="delimiter">/</span><span class="current">ManagementUserComponent</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Management</span><wbr><span>User</span><wbr><span><span>Component</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">ManagementUserComponent</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>commonComponent<span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.di/-common-component/index.html">CommonComponent</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>settingsComponent<span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.settings.di/-settings-component/index.html">SettingsComponent</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>securityComponent<span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.security.di/-security-component/index.html">SecurityComponent</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>storageComponent<span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.di/-storage-component/index.html">StorageComponent</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>authStorage<span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth/-auth-storage/index.html">AuthStorage</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>authServices<span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.auth/-user-auth-services/index.html">UserAuthServices</a><span class="token punctuation">, </span></span><span class="parameter ">parentScope<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineScope///PointingToDeclaration/">CoroutineScope</span><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span></div><p class="paragraph">Feature-level dependency root for the user module.</p><p class="paragraph">Requires a fully wired <code class="lang-kotlin">CommonComponent</code> (HTTP client, WebSocket service, encrypted settings), <code class="lang-kotlin">SettingsComponent</code>, <code class="lang-kotlin">SecurityComponent</code>, a concrete <a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth/-auth-storage/index.html">AuthStorage</a>, and platform <a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.auth/-user-auth-services/index.html">UserAuthServices</a>.</p><p class="paragraph">Exposes repositories, auth-related use cases, the user WebSocket handler, and a factory for the login dialog Decompose tree (<a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root/-management-login-root-component/index.html">ManagementLoginRootComponent</a>).</p><h4 class="tableheader">Parameters</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>common</span><wbr><span><span>Component</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Shared infrastructure from <code class="lang-kotlin">core:common</code>.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>settings</span><wbr><span><span>Component</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Global settings repository access from <code class="lang-kotlin">core:settings</code>.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>security</span><wbr><span><span>Component</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Security settings and validators from <code class="lang-kotlin">core:security</code>.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>storage</span><wbr><span><span>Component</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Storage repositories and use cases from <code class="lang-kotlin">core:storage</code>.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>auth</span><wbr><span><span>Storage</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Token and auth-settings persistence implementing <a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth/-auth-storage/index.html">AuthStorage</a>.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>auth</span><wbr><span><span>Services</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Optional platform services (e.g. Google Sign-In); may provide a null Google delegate.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>parent</span><wbr><span><span>Scope</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Optional coroutine scope for repository-driven work; if null, an internal supervisor scope is used.</p></div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="-1713060424%2FConstructors%2F555308681" anchor-label="ManagementUserComponent" id="-1713060424%2FConstructors%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-management-user-component.html"><span>Management</span><wbr><span>User</span><wbr><span><span>Component</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1713060424%2FConstructors%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">commonComponent<span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.di/-common-component/index.html">CommonComponent</a><span class="token punctuation">, </span></span><span class="parameter ">settingsComponent<span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.settings.di/-settings-component/index.html">SettingsComponent</a><span class="token punctuation">, </span></span><span class="parameter ">securityComponent<span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.security.di/-security-component/index.html">SecurityComponent</a><span class="token punctuation">, </span></span><span class="parameter ">storageComponent<span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.di/-storage-component/index.html">StorageComponent</a><span class="token punctuation">, </span></span><span class="parameter ">authStorage<span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth/-auth-storage/index.html">AuthStorage</a><span class="token punctuation">, </span></span><span class="parameter ">authServices<span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.auth/-user-auth-services/index.html">UserAuthServices</a><span class="token punctuation">, </span></span><span class="parameter ">parentScope<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineScope///PointingToDeclaration/">CoroutineScope</span><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="1920958369%2FProperties%2F555308681" anchor-label="addUserIdentifierEmailUseCase" id="1920958369%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-user-identifier-email-use-case.html"><span>add</span><wbr><span>User</span><wbr><span>Identifier</span><wbr><span>Email</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1920958369%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="add-user-identifier-email-use-case.html">addUserIdentifierEmailUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier/-add-user-identifier-email-use-case/index.html">AddUserIdentifierEmailUseCase</a></div><div class="brief "><p class="paragraph">Links new email (manager).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1712105843%2FProperties%2F555308681" anchor-label="addUserIdentifierPhoneUseCase" id="1712105843%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-user-identifier-phone-use-case.html"><span>add</span><wbr><span>User</span><wbr><span>Identifier</span><wbr><span>Phone</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1712105843%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="add-user-identifier-phone-use-case.html">addUserIdentifierPhoneUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier/-add-user-identifier-phone-use-case/index.html">AddUserIdentifierPhoneUseCase</a></div><div class="brief "><p class="paragraph">Links new phone (manager).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="564579171%2FProperties%2F555308681" anchor-label="authServices" id="564579171%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="auth-services.html"><span>auth</span><wbr><span><span>Services</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="564579171%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="auth-services.html">authServices</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.auth/-user-auth-services/index.html">UserAuthServices</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1839095252%2FProperties%2F555308681" anchor-label="authSettingsRepository" id="1839095252%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="auth-settings-repository.html"><span>auth</span><wbr><span>Settings</span><wbr><span><span>Repository</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1839095252%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="auth-settings-repository.html">authSettingsRepository</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.auth.settings/-management-auth-settings-repository/index.html">ManagementAuthSettingsRepository</a></div><div class="brief "><p class="paragraph">Repository for management-specific authentication settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="549029598%2FProperties%2F555308681" anchor-label="authStorage" id="549029598%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="auth-storage.html"><span>auth</span><wbr><span><span>Storage</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="549029598%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="auth-storage.html">authStorage</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.storage.auth/-auth-storage/index.html">AuthStorage</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1405062625%2FProperties%2F555308681" anchor-label="commonComponent" id="-1405062625%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="common-component.html"><span>common</span><wbr><span><span>Component</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1405062625%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="common-component.html">commonComponent</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.di/-common-component/index.html">CommonComponent</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2075688511%2FProperties%2F555308681" anchor-label="createUserUseCase" id="-2075688511%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-user-use-case.html"><span>create</span><wbr><span>User</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2075688511%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="create-user-use-case.html">createUserUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user/-create-user-use-case/index.html">CreateUserUseCase</a></div><div class="brief "><p class="paragraph">Creates a new user account.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1816925103%2FProperties%2F555308681" anchor-label="deleteAllOtherSessionsUseCase" id="-1816925103%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="delete-all-other-sessions-use-case.html"><span>delete</span><wbr><span>All</span><wbr><span>Other</span><wbr><span>Sessions</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1816925103%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="delete-all-other-sessions-use-case.html">deleteAllOtherSessionsUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session/-delete-all-other-sessions-use-case/index.html">DeleteAllOtherSessionsUseCase</a></div><div class="brief "><p class="paragraph">Revokes all other manager sessions.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="926794569%2FProperties%2F555308681" anchor-label="deleteIdentifierPasswordUseCase" id="926794569%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="delete-identifier-password-use-case.html"><span>delete</span><wbr><span>Identifier</span><wbr><span>Password</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="926794569%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="delete-identifier-password-use-case.html">deleteIdentifierPasswordUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier/-management-delete-identifier-password-use-case/index.html">ManagementDeleteIdentifierPasswordUseCase</a></div><div class="brief "><p class="paragraph">Removes a user identifier password administratively.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1408229341%2FProperties%2F555308681" anchor-label="deleteSessionUseCase" id="1408229341%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="delete-session-use-case.html"><span>delete</span><wbr><span>Session</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1408229341%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="delete-session-use-case.html">deleteSessionUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session/-delete-session-use-case/index.html">DeleteSessionUseCase</a></div><div class="brief "><p class="paragraph">Revokes specific manager session.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1543928633%2FProperties%2F555308681" anchor-label="deleteUserIdentifierUseCase" id="1543928633%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="delete-user-identifier-use-case.html"><span>delete</span><wbr><span>User</span><wbr><span>Identifier</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1543928633%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="delete-user-identifier-use-case.html">deleteUserIdentifierUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier/-delete-user-identifier-use-case/index.html">DeleteUserIdentifierUseCase</a></div><div class="brief "><p class="paragraph">Removes a manager identifier.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-312476944%2FProperties%2F555308681" anchor-label="deleteUserUseCase" id="-312476944%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="delete-user-use-case.html"><span>delete</span><wbr><span>User</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-312476944%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="delete-user-use-case.html">deleteUserUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user/-delete-user-use-case/index.html">DeleteUserUseCase</a></div><div class="brief "><p class="paragraph">Deletes user account.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1334427215%2FProperties%2F555308681" anchor-label="disableTotpUseCase" id="-1334427215%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="disable-totp-use-case.html"><span>disable</span><wbr><span>Totp</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1334427215%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="disable-totp-use-case.html">disableTotpUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security/-disable-totp-use-case/index.html">DisableTotpUseCase</a></div><div class="brief "><p class="paragraph">Disables TOTP for the manager.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-535256679%2FProperties%2F555308681" anchor-label="emailChangePasswordUseCase" id="-535256679%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="email-change-password-use-case.html"><span>email</span><wbr><span>Change</span><wbr><span>Password</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-535256679%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="email-change-password-use-case.html">emailChangePasswordUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier/-email-change-password-use-case/index.html">EmailChangePasswordUseCase</a></div><div class="brief "><p class="paragraph">Updates account password.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1276140852%2FProperties%2F555308681" anchor-label="enableTotpUseCase" id="1276140852%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="enable-totp-use-case.html"><span>enable</span><wbr><span>Totp</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1276140852%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="enable-totp-use-case.html">enableTotpUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security/-enable-totp-use-case/index.html">EnableTotpUseCase</a></div><div class="brief "><p class="paragraph">Enables TOTP for the manager.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1993111432%2FProperties%2F555308681" anchor-label="getAuditEventsUseCase" id="-1993111432%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-audit-events-use-case.html"><span>get</span><wbr><span>Audit</span><wbr><span>Events</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1993111432%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="get-audit-events-use-case.html">getAuditEventsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit/-get-audit-events-use-case/index.html">GetAuditEventsUseCase</a></div><div class="brief "><p class="paragraph">Returns paginated audit events.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1647450343%2FProperties%2F555308681" anchor-label="getAuditEventUseCase" id="1647450343%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-audit-event-use-case.html"><span>get</span><wbr><span>Audit</span><wbr><span>Event</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1647450343%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="get-audit-event-use-case.html">getAuditEventUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.audit/-get-audit-event-use-case/index.html">GetAuditEventUseCase</a></div><div class="brief "><p class="paragraph">Retrieves specific audit event by ID.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1626652818%2FProperties%2F555308681" anchor-label="getAvailableUserAuthProvidersUseCase" id="-1626652818%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-available-user-auth-providers-use-case.html"><span>get</span><wbr><span>Available</span><wbr><span>User</span><wbr><span>Auth</span><wbr><span>Providers</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1626652818%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="get-available-user-auth-providers-use-case.html">getAvailableUserAuthProvidersUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings/-get-available-user-auth-providers-use-case/index.html">GetAvailableUserAuthProvidersUseCase</a></div><div class="brief "><p class="paragraph">Returns auth providers for management app.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-973084618%2FProperties%2F555308681" anchor-label="getManagementAuthSettingsUseCase" id="-973084618%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-management-auth-settings-use-case.html"><span>get</span><wbr><span>Management</span><wbr><span>Auth</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-973084618%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="get-management-auth-settings-use-case.html">getManagementAuthSettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings/-get-management-auth-settings-use-case/index.html">GetManagementAuthSettingsUseCase</a></div><div class="brief "><p class="paragraph">Returns management auth settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1875389967%2FProperties%2F555308681" anchor-label="getManagementGlobalSettingsUseCase" id="-1875389967%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-management-global-settings-use-case.html"><span>get</span><wbr><span>Management</span><wbr><span>Global</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1875389967%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="get-management-global-settings-use-case.html">getManagementGlobalSettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings/-get-management-global-settings-use-case/index.html">GetManagementGlobalSettingsUseCase</a></div><div class="brief "><p class="paragraph">Returns management global settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="724340558%2FProperties%2F555308681" anchor-label="getManagementSecuritySettingsUseCase" id="724340558%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-management-security-settings-use-case.html"><span>get</span><wbr><span>Management</span><wbr><span>Security</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="724340558%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="get-management-security-settings-use-case.html">getManagementSecuritySettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings/-get-management-security-settings-use-case/index.html">GetManagementSecuritySettingsUseCase</a></div><div class="brief "><p class="paragraph">Returns management security settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-190097377%2FProperties%2F555308681" anchor-label="getManagementStorageSettingsUseCase" id="-190097377%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-management-storage-settings-use-case.html"><span>get</span><wbr><span>Management</span><wbr><span>Storage</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-190097377%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="get-management-storage-settings-use-case.html">getManagementStorageSettingsUseCase</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-get-management-storage-settings-use-case/index.html">GetManagementStorageSettingsUseCase</a></div><div class="brief "><p class="paragraph">Returns management storage settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1906689611%2FProperties%2F555308681" anchor-label="getRecoveryCodesUseCase" id="-1906689611%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-recovery-codes-use-case.html"><span>get</span><wbr><span>Recovery</span><wbr><span>Codes</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1906689611%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="get-recovery-codes-use-case.html">getRecoveryCodesUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security/-get-recovery-codes-use-case/index.html">GetRecoveryCodesUseCase</a></div><div class="brief "><p class="paragraph">Returns active MFA recovery codes for the manager.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1223839099%2FProperties%2F555308681" anchor-label="getSessionsUseCase" id="-1223839099%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-sessions-use-case.html"><span>get</span><wbr><span>Sessions</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1223839099%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="get-sessions-use-case.html">getSessionsUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session/-get-sessions-use-case/index.html">GetSessionsUseCase</a></div><div class="brief "><p class="paragraph">Returns active sessions for the manager.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="9697594%2FProperties%2F555308681" anchor-label="getSessionUseCase" id="9697594%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-session-use-case.html"><span>get</span><wbr><span>Session</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="9697594%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="get-session-use-case.html">getSessionUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session/-get-session-use-case/index.html">GetSessionUseCase</a></div><div class="brief "><p class="paragraph">Returns specific session details for the manager.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="507698371%2FProperties%2F555308681" anchor-label="getUserIdentifiersUseCase" id="507698371%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-user-identifiers-use-case.html"><span>get</span><wbr><span>User</span><wbr><span>Identifiers</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="507698371%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="get-user-identifiers-use-case.html">getUserIdentifiersUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier/-get-user-identifiers-use-case/index.html">GetUserIdentifiersUseCase</a></div><div class="brief "><p class="paragraph">Returns account identifiers for the manager.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1458467012%2FProperties%2F555308681" anchor-label="getUserIdentifierUseCase" id="-1458467012%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-user-identifier-use-case.html"><span>get</span><wbr><span>User</span><wbr><span>Identifier</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1458467012%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="get-user-identifier-use-case.html">getUserIdentifierUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier/-get-user-identifier-use-case/index.html">GetUserIdentifierUseCase</a></div><div class="brief "><p class="paragraph">Returns identifier details for the manager.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="644265004%2FProperties%2F555308681" anchor-label="getUsersUseCase" id="644265004%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-users-use-case.html"><span>get</span><wbr><span>Users</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="644265004%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="get-users-use-case.html">getUsersUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user/-get-users-use-case/index.html">GetUsersUseCase</a></div><div class="brief "><p class="paragraph">Returns paginated list of users.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1731156301%2FProperties%2F555308681" anchor-label="getUserUseCase" id="-1731156301%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-user-use-case.html"><span>get</span><wbr><span>User</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1731156301%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="get-user-use-case.html">getUserUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user/-get-user-use-case/index.html">GetUserUseCase</a></div><div class="brief "><p class="paragraph">Retrieves specific user details.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-333277703%2FProperties%2F555308681" anchor-label="globalSettingsRepository" id="-333277703%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="global-settings-repository.html"><span>global</span><wbr><span>Settings</span><wbr><span><span>Repository</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-333277703%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="global-settings-repository.html">globalSettingsRepository</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.globalsettings/-management-global-settings-repository/index.html">ManagementGlobalSettingsRepository</a></div><div class="brief "><p class="paragraph">Repository for management-specific global settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1848089526%2FProperties%2F555308681" anchor-label="loginByEmailUseCase" id="1848089526%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="login-by-email-use-case.html"><span>login</span><wbr><span>By</span><wbr><span>Email</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1848089526%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="login-by-email-use-case.html">loginByEmailUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login/-login-by-email-use-case/index.html">LoginByEmailUseCase</a></div><div class="brief "><p class="paragraph">Signs in as manager via email.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="946443051%2FProperties%2F555308681" anchor-label="loginByTotpRecoveryCodeUseCase" id="946443051%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="login-by-totp-recovery-code-use-case.html"><span>login</span><wbr><span>By</span><wbr><span>Totp</span><wbr><span>Recovery</span><wbr><span>Code</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="946443051%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="login-by-totp-recovery-code-use-case.html">loginByTotpRecoveryCodeUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login/-login-by-totp-recovery-code-use-case/index.html">LoginByTotpRecoveryCodeUseCase</a></div><div class="brief "><p class="paragraph">Signs in as manager via recovery code.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="636019817%2FProperties%2F555308681" anchor-label="loginByTotpUseCase" id="636019817%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="login-by-totp-use-case.html"><span>login</span><wbr><span>By</span><wbr><span>Totp</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="636019817%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="login-by-totp-use-case.html">loginByTotpUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login/-login-by-totp-use-case/index.html">LoginByTotpUseCase</a></div><div class="brief "><p class="paragraph">Signs in as manager via TOTP.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1485446914%2FProperties%2F555308681" anchor-label="loginRepository" id="-1485446914%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="login-repository.html"><span>login</span><wbr><span><span>Repository</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1485446914%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="login-repository.html">loginRepository</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.login/-login-repository/index.html">LoginRepository</a></div><div class="brief "><p class="paragraph">Repository for self-management login (email/totp).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-642284956%2FProperties%2F555308681" anchor-label="logoutUseCase" id="-642284956%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="logout-use-case.html"><span>logout</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-642284956%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="logout-use-case.html">logoutUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session/-logout-use-case/index.html">LogoutUseCase</a></div><div class="brief "><p class="paragraph">Signs out the manager.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1624832371%2FProperties%2F555308681" anchor-label="managementDeleteAllUserSessionsUseCase" id="-1624832371%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-delete-all-user-sessions-use-case.html"><span>management</span><wbr><span>Delete</span><wbr><span>All</span><wbr><span>User</span><wbr><span>Sessions</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1624832371%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-delete-all-user-sessions-use-case.html">managementDeleteAllUserSessionsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session/-management-delete-all-user-sessions-use-case/index.html">ManagementDeleteAllUserSessionsUseCase</a></div><div class="brief "><p class="paragraph">Revokes all sessions for a specific user administratively.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-478294965%2FProperties%2F555308681" anchor-label="managementDeleteFilesBatchUseCase" id="-478294965%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-delete-files-batch-use-case.html"><span>management</span><wbr><span>Delete</span><wbr><span>Files</span><wbr><span>Batch</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-478294965%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-delete-files-batch-use-case.html">managementDeleteFilesBatchUseCase</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-management-delete-files-batch-use-case/index.html">ManagementDeleteFilesBatchUseCase</a></div><div class="brief "><p class="paragraph">Administrative storage file batch deletion.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1654009788%2FProperties%2F555308681" anchor-label="managementDeleteFileUseCase" id="-1654009788%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-delete-file-use-case.html"><span>management</span><wbr><span>Delete</span><wbr><span>File</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1654009788%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-delete-file-use-case.html">managementDeleteFileUseCase</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-management-delete-file-use-case/index.html">ManagementDeleteFileUseCase</a></div><div class="brief "><p class="paragraph">Administrative storage file deletion.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="237488474%2FProperties%2F555308681" anchor-label="managementDeleteSessionUseCase" id="237488474%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-delete-session-use-case.html"><span>management</span><wbr><span>Delete</span><wbr><span>Session</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="237488474%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-delete-session-use-case.html">managementDeleteSessionUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session/-management-delete-session-use-case/index.html">ManagementDeleteSessionUseCase</a></div><div class="brief "><p class="paragraph">Revokes a specific session for a user administratively.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-39557522%2FProperties%2F555308681" anchor-label="managementDisableTotpUseCase" id="-39557522%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-disable-totp-use-case.html"><span>management</span><wbr><span>Disable</span><wbr><span>Totp</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-39557522%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-disable-totp-use-case.html">managementDisableTotpUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user.security/-management-disable-totp-use-case/index.html">ManagementDisableTotpUseCase</a></div><div class="brief "><p class="paragraph">Disables TOTP for a specific user administratively.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-804479022%2FProperties%2F555308681" anchor-label="managementGetFileDetailUseCase" id="-804479022%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-get-file-detail-use-case.html"><span>management</span><wbr><span>Get</span><wbr><span>File</span><wbr><span>Detail</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-804479022%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-get-file-detail-use-case.html">managementGetFileDetailUseCase</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-management-get-file-detail-use-case/index.html">ManagementGetFileDetailUseCase</a></div><div class="brief "><p class="paragraph">Administrative storage file detail.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1838858494%2FProperties%2F555308681" anchor-label="managementGetFilesUseCase" id="1838858494%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-get-files-use-case.html"><span>management</span><wbr><span>Get</span><wbr><span>Files</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1838858494%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-get-files-use-case.html">managementGetFilesUseCase</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-management-get-files-use-case/index.html">ManagementGetFilesUseCase</a></div><div class="brief "><p class="paragraph">Administrative storage file listing.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="817956529%2FProperties%2F555308681" anchor-label="managementGetIdentifiersUseCase" id="817956529%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-get-identifiers-use-case.html"><span>management</span><wbr><span>Get</span><wbr><span>Identifiers</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="817956529%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-get-identifiers-use-case.html">managementGetIdentifiersUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier/-management-get-identifiers-use-case/index.html">ManagementGetIdentifiersUseCase</a></div><div class="brief "><p class="paragraph">Retrieves user identifiers administratively.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1045393294%2FProperties%2F555308681" anchor-label="managementGetIdentifierUseCase" id="1045393294%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-get-identifier-use-case.html"><span>management</span><wbr><span>Get</span><wbr><span>Identifier</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1045393294%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-get-identifier-use-case.html">managementGetIdentifierUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier/-management-get-identifier-use-case/index.html">ManagementGetIdentifierUseCase</a></div><div class="brief "><p class="paragraph">Retrieves specific user identifier details administratively.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="71030594%2FProperties%2F555308681" anchor-label="managementGetSessionsUseCase" id="71030594%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-get-sessions-use-case.html"><span>management</span><wbr><span>Get</span><wbr><span>Sessions</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="71030594%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-get-sessions-use-case.html">managementGetSessionsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session/-management-get-sessions-use-case/index.html">ManagementGetSessionsUseCase</a></div><div class="brief "><p class="paragraph">Retrieves user sessions administratively.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1021298909%2FProperties%2F555308681" anchor-label="managementGetSessionUseCase" id="1021298909%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-get-session-use-case.html"><span>management</span><wbr><span>Get</span><wbr><span>Session</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1021298909%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-get-session-use-case.html">managementGetSessionUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session/-management-get-session-use-case/index.html">ManagementGetSessionUseCase</a></div><div class="brief "><p class="paragraph">Retrieves specific user session details administratively.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1662887578%2FProperties%2F555308681" anchor-label="managementGetUserIdentifiersUseCase" id="-1662887578%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-get-user-identifiers-use-case.html"><span>management</span><wbr><span>Get</span><wbr><span>User</span><wbr><span>Identifiers</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1662887578%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-get-user-identifiers-use-case.html">managementGetUserIdentifiersUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.identifier/-management-get-user-identifiers-use-case/index.html">ManagementGetUserIdentifiersUseCase</a></div><div class="brief "><p class="paragraph">Retrieves user identifiers for a specific user administratively.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="312576173%2FProperties%2F555308681" anchor-label="managementGetUserSessionsUseCase" id="312576173%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-get-user-sessions-use-case.html"><span>management</span><wbr><span>Get</span><wbr><span>User</span><wbr><span>Sessions</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="312576173%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-get-user-sessions-use-case.html">managementGetUserSessionsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.session/-management-get-user-sessions-use-case/index.html">ManagementGetUserSessionsUseCase</a></div><div class="brief "><p class="paragraph">Retrieves active user sessions for a specific user administratively.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1529424048%2FProperties%2F555308681" anchor-label="managementStorageDependencies" id="-1529424048%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-storage-dependencies.html"><span>management</span><wbr><span>Storage</span><wbr><span><span>Dependencies</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1529424048%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-storage-dependencies.html">managementStorageDependencies</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.di/-management-storage-dependencies/index.html">ManagementStorageDependencies</a></div><div class="brief "><p class="paragraph">Bundles management storage dependencies.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="439893785%2FProperties%2F555308681" anchor-label="observeManagementStorageSettingsUseCase" id="439893785%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="observe-management-storage-settings-use-case.html"><span>observe</span><wbr><span>Management</span><wbr><span>Storage</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="439893785%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="observe-management-storage-settings-use-case.html">observeManagementStorageSettingsUseCase</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-observe-management-storage-settings-use-case/index.html">ObserveManagementStorageSettingsUseCase</a></div><div class="brief "><p class="paragraph">Observes management storage settings flow.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-122701140%2FProperties%2F555308681" anchor-label="passwordPolicyValidator" id="-122701140%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="password-policy-validator.html"><span>password</span><wbr><span>Policy</span><wbr><span><span>Validator</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-122701140%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="password-policy-validator.html">passwordPolicyValidator</a><span class="token operator">: </span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.core.security.passwordpolicy.validator/PasswordPolicyValidator///PointingToDeclaration/">PasswordPolicyValidator</span></div><div class="brief "><p class="paragraph">Validator for password rules from core security.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-728784604%2FProperties%2F555308681" anchor-label="passwordRepository" id="-728784604%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="password-repository.html"><span>password</span><wbr><span><span>Repository</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-728784604%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="password-repository.html">passwordRepository</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.resetpassword/-reset-password-repository/index.html">ResetPasswordRepository</a></div><div class="brief "><p class="paragraph">Repository for password recovery in management context.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1001704032%2FProperties%2F555308681" anchor-label="reauthenticateSessionUseCase" id="1001704032%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="reauthenticate-session-use-case.html"><span>reauthenticate</span><wbr><span>Session</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1001704032%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="reauthenticate-session-use-case.html">reauthenticateSessionUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.session/-reauthenticate-session-use-case/index.html">ReauthenticateSessionUseCase</a></div><div class="brief "><p class="paragraph">Re-authenticates session via TOTP to update its trust level.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1690537979%2FProperties%2F555308681" anchor-label="refreshManagementAuthSettingsUseCase" id="1690537979%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="refresh-management-auth-settings-use-case.html"><span>refresh</span><wbr><span>Management</span><wbr><span>Auth</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1690537979%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="refresh-management-auth-settings-use-case.html">refreshManagementAuthSettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings/-refresh-management-auth-settings-use-case/index.html">RefreshManagementAuthSettingsUseCase</a></div><div class="brief "><p class="paragraph">Forces refresh of auth settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1934582666%2FProperties%2F555308681" anchor-label="refreshManagementGlobalSettingsUseCase" id="-1934582666%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="refresh-management-global-settings-use-case.html"><span>refresh</span><wbr><span>Management</span><wbr><span>Global</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1934582666%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="refresh-management-global-settings-use-case.html">refreshManagementGlobalSettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings/-refresh-management-global-settings-use-case/index.html">RefreshManagementGlobalSettingsUseCase</a></div><div class="brief "><p class="paragraph">Forces refresh of global settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-325268333%2FProperties%2F555308681" anchor-label="refreshManagementSecuritySettingsUseCase" id="-325268333%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="refresh-management-security-settings-use-case.html"><span>refresh</span><wbr><span>Management</span><wbr><span>Security</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-325268333%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="refresh-management-security-settings-use-case.html">refreshManagementSecuritySettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings/-refresh-management-security-settings-use-case/index.html">RefreshManagementSecuritySettingsUseCase</a></div><div class="brief "><p class="paragraph">Forces refresh of security settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2025071046%2FProperties%2F555308681" anchor-label="refreshManagementStorageSettingsUseCase" id="-2025071046%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="refresh-management-storage-settings-use-case.html"><span>refresh</span><wbr><span>Management</span><wbr><span>Storage</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2025071046%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="refresh-management-storage-settings-use-case.html">refreshManagementStorageSettingsUseCase</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-refresh-management-storage-settings-use-case/index.html">RefreshManagementStorageSettingsUseCase</a></div><div class="brief "><p class="paragraph">Refreshes management storage settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="50412984%2FProperties%2F555308681" anchor-label="refreshTokenUseCase" id="50412984%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="refresh-token-use-case.html"><span>refresh</span><wbr><span>Token</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="50412984%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="refresh-token-use-case.html">refreshTokenUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.refreshtoken/-refresh-token-use-case/index.html">RefreshTokenUseCase</a></div><div class="brief "><p class="paragraph">Refreshes the management session.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1630173482%2FProperties%2F555308681" anchor-label="refreshUserConfigurationUseCase" id="1630173482%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="refresh-user-configuration-use-case.html"><span>refresh</span><wbr><span>User</span><wbr><span>Configuration</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1630173482%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="refresh-user-configuration-use-case.html">refreshUserConfigurationUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.configuration/-refresh-management-user-configuration-use-case/index.html">RefreshManagementUserConfigurationUseCase</a></div><div class="brief "><p class="paragraph">Refreshes full configuration for the management user.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1002369083%2FProperties%2F555308681" anchor-label="regenerateRecoveryCodesUseCase" id="1002369083%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="regenerate-recovery-codes-use-case.html"><span>regenerate</span><wbr><span>Recovery</span><wbr><span>Codes</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1002369083%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="regenerate-recovery-codes-use-case.html">regenerateRecoveryCodesUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security/-regenerate-recovery-codes-use-case/index.html">RegenerateRecoveryCodesUseCase</a></div><div class="brief "><p class="paragraph">Generates new MFA recovery codes for the manager.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1561813026%2FProperties%2F555308681" anchor-label="resetEmailPasswordUseCase" id="1561813026%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="reset-email-password-use-case.html"><span>reset</span><wbr><span>Email</span><wbr><span>Password</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1561813026%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="reset-email-password-use-case.html">resetEmailPasswordUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword/-reset-email-password-use-case/index.html">ResetEmailPasswordUseCase</a></div><div class="brief "><p class="paragraph">Resets management password.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1100764302%2FProperties%2F555308681" anchor-label="resetRemoteAuthSettingsUseCase" id="-1100764302%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="reset-remote-auth-settings-use-case.html"><span>reset</span><wbr><span>Remote</span><wbr><span>Auth</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1100764302%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="reset-remote-auth-settings-use-case.html">resetRemoteAuthSettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings/-reset-remote-auth-settings-use-case/index.html">ResetRemoteAuthSettingsUseCase</a></div><div class="brief "><p class="paragraph">Resets remote auth settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-21514707%2FProperties%2F555308681" anchor-label="resetRemoteGlobalSettingsUseCase" id="-21514707%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="reset-remote-global-settings-use-case.html"><span>reset</span><wbr><span>Remote</span><wbr><span>Global</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-21514707%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="reset-remote-global-settings-use-case.html">resetRemoteGlobalSettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings/-reset-remote-global-settings-use-case/index.html">ResetRemoteGlobalSettingsUseCase</a></div><div class="brief "><p class="paragraph">Resets remote global settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1847470624%2FProperties%2F555308681" anchor-label="resetRemoteManagementStorageSettingsUseCase" id="-1847470624%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="reset-remote-management-storage-settings-use-case.html"><span>reset</span><wbr><span>Remote</span><wbr><span>Management</span><wbr><span>Storage</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1847470624%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="reset-remote-management-storage-settings-use-case.html">resetRemoteManagementStorageSettingsUseCase</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-reset-remote-management-storage-settings-use-case/index.html">ResetRemoteManagementStorageSettingsUseCase</a></div><div class="brief "><p class="paragraph">Resets remote management storage settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-112962422%2FProperties%2F555308681" anchor-label="resetRemoteSecuritySettingsUseCase" id="-112962422%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="reset-remote-security-settings-use-case.html"><span>reset</span><wbr><span>Remote</span><wbr><span>Security</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-112962422%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="reset-remote-security-settings-use-case.html">resetRemoteSecuritySettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings/-reset-remote-security-settings-use-case/index.html">ResetRemoteSecuritySettingsUseCase</a></div><div class="brief "><p class="paragraph">Resets remote security settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2027960341%2FProperties%2F555308681" anchor-label="restoreUserUseCase" id="-2027960341%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="restore-user-use-case.html"><span>restore</span><wbr><span>User</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2027960341%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="restore-user-use-case.html">restoreUserUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user/-restore-user-use-case/index.html">RestoreUserUseCase</a></div><div class="brief "><p class="paragraph">Restores an account scheduled for deletion.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="525096584%2FProperties%2F555308681" anchor-label="saveRemoteAuthSettingsUseCase" id="525096584%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="save-remote-auth-settings-use-case.html"><span>save</span><wbr><span>Remote</span><wbr><span>Auth</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="525096584%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="save-remote-auth-settings-use-case.html">saveRemoteAuthSettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.auth.settings/-save-remote-auth-settings-use-case/index.html">SaveRemoteAuthSettingsUseCase</a></div><div class="brief "><p class="paragraph">Saves remote auth settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-937299005%2FProperties%2F555308681" anchor-label="saveRemoteGlobalSettingsUseCase" id="-937299005%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="save-remote-global-settings-use-case.html"><span>save</span><wbr><span>Remote</span><wbr><span>Global</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-937299005%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="save-remote-global-settings-use-case.html">saveRemoteGlobalSettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.globalsettings/-save-remote-global-settings-use-case/index.html">SaveRemoteGlobalSettingsUseCase</a></div><div class="brief "><p class="paragraph">Saves remote global settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="286622880%2FProperties%2F555308681" anchor-label="saveRemoteSecuritySettingsUseCase" id="286622880%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="save-remote-security-settings-use-case.html"><span>save</span><wbr><span>Remote</span><wbr><span>Security</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="286622880%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="save-remote-security-settings-use-case.html">saveRemoteSecuritySettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.security.settings/-save-remote-security-settings-use-case/index.html">SaveRemoteSecuritySettingsUseCase</a></div><div class="brief "><p class="paragraph">Saves remote security settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="107998922%2FProperties%2F555308681" anchor-label="scheduleUserDeletionUseCase" id="107998922%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="schedule-user-deletion-use-case.html"><span>schedule</span><wbr><span>User</span><wbr><span>Deletion</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="107998922%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="schedule-user-deletion-use-case.html">scheduleUserDeletionUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user/-schedule-user-deletion-use-case/index.html">ScheduleUserDeletionUseCase</a></div><div class="brief "><p class="paragraph">Schedules the manager account for deletion.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1968726732%2FProperties%2F555308681" anchor-label="securityComponent" id="-1968726732%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="security-component.html"><span>security</span><wbr><span><span>Component</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1968726732%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="security-component.html">securityComponent</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.security.di/-security-component/index.html">SecurityComponent</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1756221244%2FProperties%2F555308681" anchor-label="securitySettingsRepository" id="1756221244%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="security-settings-repository.html"><span>security</span><wbr><span>Settings</span><wbr><span><span>Repository</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1756221244%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="security-settings-repository.html">securitySettingsRepository</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.repository.security.settings/-management-security-settings-repository/index.html">ManagementSecuritySettingsRepository</a></div><div class="brief "><p class="paragraph">Repository for management-specific security settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1552670043%2FProperties%2F555308681" anchor-label="sendAddEmailIdentifierConfirmationUseCase" id="1552670043%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="send-add-email-identifier-confirmation-use-case.html"><span>send</span><wbr><span>Add</span><wbr><span>Email</span><wbr><span>Identifier</span><wbr><span>Confirmation</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1552670043%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="send-add-email-identifier-confirmation-use-case.html">sendAddEmailIdentifierConfirmationUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier/-send-add-email-identifier-confirmation-use-case/index.html">SendAddEmailIdentifierConfirmationUseCase</a></div><div class="brief "><p class="paragraph">Sends email confirmation for linking (manager).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1184103853%2FProperties%2F555308681" anchor-label="sendAddPhoneIdentifierConfirmationUseCase" id="1184103853%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="send-add-phone-identifier-confirmation-use-case.html"><span>send</span><wbr><span>Add</span><wbr><span>Phone</span><wbr><span>Identifier</span><wbr><span>Confirmation</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1184103853%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="send-add-phone-identifier-confirmation-use-case.html">sendAddPhoneIdentifierConfirmationUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.identifier/-send-add-phone-identifier-confirmation-use-case/index.html">SendAddPhoneIdentifierConfirmationUseCase</a></div><div class="brief "><p class="paragraph">Sends phone confirmation for linking (manager).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1742905340%2FProperties%2F555308681" anchor-label="sendResetPasswordConfirmationToEmailUseCase" id="-1742905340%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="send-reset-password-confirmation-to-email-use-case.html"><span>send</span><wbr><span>Reset</span><wbr><span>Password</span><wbr><span>Confirmation</span><wbr><span>To</span><wbr><span>Email</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1742905340%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="send-reset-password-confirmation-to-email-use-case.html">sendResetPasswordConfirmationToEmailUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.resetpassword/-send-reset-password-confirmation-to-email-use-case/index.html">SendResetPasswordConfirmationToEmailUseCase</a></div><div class="brief "><p class="paragraph">Requests password reset code.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1289468201%2FProperties%2F555308681" anchor-label="sendUnlockEmailConfirmationUseCase" id="-1289468201%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="send-unlock-email-confirmation-use-case.html"><span>send</span><wbr><span>Unlock</span><wbr><span>Email</span><wbr><span>Confirmation</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1289468201%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="send-unlock-email-confirmation-use-case.html">sendUnlockEmailConfirmationUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock/-send-unlock-email-confirmation-use-case/index.html">SendUnlockEmailConfirmationUseCase</a></div><div class="brief "><p class="paragraph">Sends an account unlock code to the specified email.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1589069225%2FProperties%2F555308681" anchor-label="sendUnlockPhoneConfirmationUseCase" id="1589069225%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="send-unlock-phone-confirmation-use-case.html"><span>send</span><wbr><span>Unlock</span><wbr><span>Phone</span><wbr><span>Confirmation</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1589069225%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="send-unlock-phone-confirmation-use-case.html">sendUnlockPhoneConfirmationUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock/-send-unlock-phone-confirmation-use-case/index.html">SendUnlockPhoneConfirmationUseCase</a></div><div class="brief "><p class="paragraph">Sends an account unlock code to the specified phone.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="817424727%2FProperties%2F555308681" anchor-label="settingsComponent" id="817424727%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="settings-component.html"><span>settings</span><wbr><span><span>Component</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="817424727%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="settings-component.html">settingsComponent</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.settings.di/-settings-component/index.html">SettingsComponent</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1454635578%2FProperties%2F555308681" anchor-label="setupTotpUseCase" id="-1454635578%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="setup-totp-use-case.html"><span>setup</span><wbr><span>Totp</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1454635578%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="setup-totp-use-case.html">setupTotpUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.user.security/-setup-totp-use-case/index.html">SetupTotpUseCase</a></div><div class="brief "><p class="paragraph">Initiates TOTP setup for the manager.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="887677511%2FProperties%2F555308681" anchor-label="storageComponent" id="887677511%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="storage-component.html"><span>storage</span><wbr><span><span>Component</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="887677511%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="storage-component.html">storageComponent</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.di/-storage-component/index.html">StorageComponent</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-813839597%2FProperties%2F555308681" anchor-label="unlockByEmailUseCase" id="-813839597%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unlock-by-email-use-case.html"><span>unlock</span><wbr><span>By</span><wbr><span>Email</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-813839597%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="unlock-by-email-use-case.html">unlockByEmailUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock/-unlock-by-email-use-case/index.html">UnlockByEmailUseCase</a></div><div class="brief "><p class="paragraph">Unlocks an account using an email code.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1979418535%2FProperties%2F555308681" anchor-label="unlockByExternalAuthProviderUseCase" id="-1979418535%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unlock-by-external-auth-provider-use-case.html"><span>unlock</span><wbr><span>By</span><wbr><span>External</span><wbr><span>Auth</span><wbr><span>Provider</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1979418535%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="unlock-by-external-auth-provider-use-case.html">unlockByExternalAuthProviderUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock/-unlock-by-external-auth-provider-use-case/index.html">UnlockByExternalAuthProviderUseCase</a></div><div class="brief "><p class="paragraph">Unlocks an account using an external provider.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1022692123%2FProperties%2F555308681" anchor-label="unlockByPhoneUseCase" id="-1022692123%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unlock-by-phone-use-case.html"><span>unlock</span><wbr><span>By</span><wbr><span>Phone</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1022692123%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="unlock-by-phone-use-case.html">unlockByPhoneUseCase</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.unlock/-unlock-by-phone-use-case/index.html">UnlockByPhoneUseCase</a></div><div class="brief "><p class="paragraph">Unlocks an account using a phone code.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1348224731%2FProperties%2F555308681" anchor-label="unlockRepository" id="1348224731%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unlock-repository.html"><span>unlock</span><wbr><span><span>Repository</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1348224731%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="unlock-repository.html">unlockRepository</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.repository.auth.unlock/-unlock-repository/index.html">UnlockRepository</a></div><div class="brief "><p class="paragraph">Repository for self-management account unlock operations.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-300917084%2FProperties%2F555308681" anchor-label="updateManagementStorageSettingsUseCase" id="-300917084%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-management-storage-settings-use-case.html"><span>update</span><wbr><span>Management</span><wbr><span>Storage</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-300917084%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="update-management-storage-settings-use-case.html">updateManagementStorageSettingsUseCase</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-update-management-storage-settings-use-case/index.html">UpdateManagementStorageSettingsUseCase</a></div><div class="brief "><p class="paragraph">Updates remote management storage settings.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1727596786%2FProperties%2F555308681" anchor-label="updateUserUseCase" id="-1727596786%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-user-use-case.html"><span>update</span><wbr><span>User</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1727596786%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="update-user-use-case.html">updateUserUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.usecase.user/-update-user-use-case/index.html">UpdateUserUseCase</a></div><div class="brief "><p class="paragraph">Updates user details.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2028845068%2FProperties%2F555308681" anchor-label="userRepository" id="-2028845068%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="user-repository.html"><span>user</span><wbr><span><span>Repository</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2028845068%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="user-repository.html">userRepository</a><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.repository.user/-user-repository/index.html">UserRepository</a></div><div class="brief "><p class="paragraph">Repository for current management user data.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="118554450%2FProperties%2F555308681" anchor-label="userWebSocketMessageHandler" id="118554450%2FProperties%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="user-web-socket-message-handler.html"><span>user</span><wbr><span>Web</span><wbr><span>Socket</span><wbr><span>Message</span><wbr><span><span>Handler</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="118554450%2FProperties%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="user-web-socket-message-handler.html">userWebSocketMessageHandler</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler/-web-socket-message-handler/index.html">WebSocketMessageHandler</a></div><div class="brief "><p class="paragraph">WebSocket handler for management push events.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="148851163%2FFunctions%2F555308681" anchor-label="createLoginRootDialogComponent" id="148851163%2FFunctions%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-login-root-dialog-component.html"><span>create</span><wbr><span>Login</span><wbr><span>Root</span><wbr><span>Dialog</span><wbr><span><span>Component</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="148851163%2FFunctions%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="create-login-root-dialog-component.html"><span class="token function">createLoginRootDialogComponent</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">componentContext<span class="token operator">: </span><span data-unresolved-link="com.arkivanov.decompose/ComponentContext///PointingToDeclaration/">ComponentContext</span><span class="token punctuation">, </span></span><span class="parameter ">onFinished<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.auth.login.root/-management-login-root-component/index.html">ManagementLoginRootComponent</a></div><div class="brief "><p class="paragraph">Creates the root Decompose component for management login flow.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-205245909%2FFunctions%2F555308681" anchor-label="createManagementComponent" id="-205245909%2FFunctions%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-management-component.html"><span>create</span><wbr><span>Management</span><wbr><span><span>Component</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-205245909%2FFunctions%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="create-management-component.html"><span class="token function">createManagementComponent</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">componentContext<span class="token operator">: </span><span data-unresolved-link="com.arkivanov.decompose/ComponentContext///PointingToDeclaration/">ComponentContext</span><span class="token punctuation">, </span></span><span class="parameter ">onNavigateToUserMain<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator"> = </span>{}</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.root/-management-root-component/index.html">ManagementRootComponent</a></div><div class="brief "><p class="paragraph">Creates the root Decompose component for management flow.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-861785801%2FFunctions%2F555308681" anchor-label="createUserComponent" id="-861785801%2FFunctions%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-user-component.html"><span>create</span><wbr><span>User</span><wbr><span><span>Component</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-861785801%2FFunctions%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="create-user-component.html"><span class="token function">createUserComponent</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">componentContext<span class="token operator">: </span><span data-unresolved-link="com.arkivanov.decompose/ComponentContext///PointingToDeclaration/">ComponentContext</span><span class="token punctuation">, </span></span><span class="parameter ">onNavigateToSelfStorageFiles<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">onNavigateToLogin<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.root/-user-root-component/index.html">UserRootComponent</a></div><div class="brief "><p class="paragraph">Creates the root Decompose component for the management user flow.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,489 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>IdentifierListQuery</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    kmp-platform-sdk
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.1.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":feature:user/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":feature:user/commonMain" data-filter=":feature:user/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    kmp-platform-sdk
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="user::io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.datasource/IdentifierListQuery///PointingToDeclaration//1428137388">
+  <div class="breadcrumbs"><a href="../../index.html">user</a><span class="delimiter">/</span><a href="../index.html">io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.datasource</a><span class="delimiter">/</span><span class="current">IdentifierListQuery</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Identifier</span><wbr><span>List</span><wbr><span><span>Query</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">IdentifierListQuery</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>pageNumber<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>sortState<span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort/-listing-sort-state/index.html">ListingSortState</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>filterStates<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-map/index.html">Map</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter/-listing-filter-state/index.html">ListingFilterState</a><span class="token operator">&gt;</span><span class="token operator"> = </span>emptyMap()<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>targetUserId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span></div><p class="paragraph">Query parameters passed from UI to identifier list data sources.</p></div>    </div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="263271430%2FConstructors%2F1428137388" anchor-label="IdentifierListQuery" id="263271430%2FConstructors%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-identifier-list-query.html"><span>Identifier</span><wbr><span>List</span><wbr><span><span>Query</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="263271430%2FConstructors%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pageNumber<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">sortState<span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort/-listing-sort-state/index.html">ListingSortState</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">filterStates<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-map/index.html">Map</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter/-listing-filter-state/index.html">ListingFilterState</a><span class="token operator">&gt;</span><span class="token operator"> = </span>emptyMap()<span class="token punctuation">, </span></span><span class="parameter ">targetUserId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="46711546%2FProperties%2F1428137388" anchor-label="authProvidersChoices" id="46711546%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="auth-providers-choices.html"><span>auth</span><wbr><span>Providers</span><wbr><span><span>Choices</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="46711546%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="auth-providers-choices.html">authProvidersChoices</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider/UserAuthProvider///PointingToDeclaration/">UserAuthProvider</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Parsed auth provider choices.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-955658282%2FProperties%2F1428137388" anchor-label="createdAtFromText" id="-955658282%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="created-at-from-text.html"><span>created</span><wbr><span>At</span><wbr><span>From</span><wbr><span><span>Text</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-955658282%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="created-at-from-text.html">createdAtFromText</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Parsed creation lower bound timestamp text.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1104084315%2FProperties%2F1428137388" anchor-label="createdAtToText" id="-1104084315%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="created-at-to-text.html"><span>created</span><wbr><span>At</span><wbr><span>To</span><wbr><span><span>Text</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1104084315%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="created-at-to-text.html">createdAtToText</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Parsed creation upper bound timestamp text.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1875168082%2FProperties%2F1428137388" anchor-label="displayNameText" id="-1875168082%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="display-name-text.html"><span>display</span><wbr><span>Name</span><wbr><span><span>Text</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1875168082%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="display-name-text.html">displayNameText</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Parsed display name text or null if blank.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1417919050%2FProperties%2F1428137388" anchor-label="excludeAuthProvidersChoices" id="-1417919050%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="exclude-auth-providers-choices.html"><span>exclude</span><wbr><span>Auth</span><wbr><span>Providers</span><wbr><span><span>Choices</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1417919050%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="exclude-auth-providers-choices.html">excludeAuthProvidersChoices</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider/UserAuthProvider///PointingToDeclaration/">UserAuthProvider</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Parsed excluded auth provider choices.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="15863835%2FProperties%2F1428137388" anchor-label="externalProviderEmailText" id="15863835%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="external-provider-email-text.html"><span>external</span><wbr><span>Provider</span><wbr><span>Email</span><wbr><span><span>Text</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="15863835%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="external-provider-email-text.html">externalProviderEmailText</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Parsed external provider email text or null if blank.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="99282008%2FProperties%2F1428137388" anchor-label="filterStates" id="99282008%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="filter-states.html"><span>filter</span><wbr><span><span>States</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="99282008%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="filter-states.html">filterStates</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-map/index.html">Map</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter/-listing-filter-state/index.html">ListingFilterState</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Map of filter ID to active <a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter/-listing-filter-state/index.html">ListingFilterState</a>.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-640967071%2FProperties%2F1428137388" anchor-label="identifierIdText" id="-640967071%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="identifier-id-text.html"><span>identifier</span><wbr><span>Id</span><wbr><span><span>Text</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-640967071%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="identifier-id-text.html">identifierIdText</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Parsed identifier ID text or null if blank.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-98880324%2FProperties%2F1428137388" anchor-label="identifierText" id="-98880324%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="identifier-text.html"><span>identifier</span><wbr><span><span>Text</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-98880324%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="identifier-text.html">identifierText</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Parsed identifier text or null if blank.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2117505883%2FProperties%2F1428137388" anchor-label="isExternalProviderEmailSetChoice" id="-2117505883%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-external-provider-email-set-choice.html"><span>is</span><wbr><span>External</span><wbr><span>Provider</span><wbr><span>Email</span><wbr><span>Set</span><wbr><span><span>Choice</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2117505883%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="is-external-provider-email-set-choice.html">isExternalProviderEmailSetChoice</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Parsed boolean flag indicating whether external provider email is set.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="42196435%2FProperties%2F1428137388" anchor-label="isUpdatedAtSetChoice" id="42196435%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-updated-at-set-choice.html"><span>is</span><wbr><span>Updated</span><wbr><span>At</span><wbr><span>Set</span><wbr><span><span>Choice</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="42196435%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="is-updated-at-set-choice.html">isUpdatedAtSetChoice</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Parsed boolean flag indicating whether record has been updated.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1301285946%2FProperties%2F1428137388" anchor-label="pageNumber" id="1301285946%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="page-number.html"><span>page</span><wbr><span><span>Number</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1301285946%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="page-number.html">pageNumber</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Page number to fetch (1-based).</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-975262725%2FProperties%2F1428137388" anchor-label="searchQueryText" id="-975262725%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="search-query-text.html"><span>search</span><wbr><span>Query</span><wbr><span><span>Text</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-975262725%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="search-query-text.html">searchQueryText</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Parsed search query filter text or null if blank.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-460044931%2FProperties%2F1428137388" anchor-label="sortBy" id="-460044931%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="sort-by.html"><span>sort</span><wbr><span><span>By</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-460044931%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="sort-by.html">sortBy</a><span class="token operator">: </span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.listing/UserIdentifierSortBy///PointingToDeclaration/">UserIdentifierSortBy</span></div><div class="brief "><p class="paragraph">Parsed sort field option or default.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-937319784%2FProperties%2F1428137388" anchor-label="sortOrder" id="-937319784%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="sort-order.html"><span>sort</span><wbr><span><span>Order</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-937319784%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="sort-order.html">sortOrder</a><span class="token operator">: </span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.listing/SortOrder///PointingToDeclaration/">SortOrder</span></div><div class="brief "><p class="paragraph">Parsed sort order or default.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1900558667%2FProperties%2F1428137388" anchor-label="sortState" id="-1900558667%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="sort-state.html"><span>sort</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1900558667%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="sort-state.html">sortState</a><span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort/-listing-sort-state/index.html">ListingSortState</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Active listing sort state or null for default sorting.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1646229339%2FProperties%2F1428137388" anchor-label="targetUserId" id="1646229339%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="target-user-id.html"><span>target</span><wbr><span>User</span><wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1646229339%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="target-user-id.html">targetUserId</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Optional target user ID for scope-constrained queries.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-607566557%2FProperties%2F1428137388" anchor-label="updatedAtFromText" id="-607566557%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="updated-at-from-text.html"><span>updated</span><wbr><span>At</span><wbr><span>From</span><wbr><span><span>Text</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-607566557%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="updated-at-from-text.html">updatedAtFromText</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Parsed update lower bound timestamp text.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-352884942%2FProperties%2F1428137388" anchor-label="updatedAtToText" id="-352884942%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="updated-at-to-text.html"><span>updated</span><wbr><span>At</span><wbr><span>To</span><wbr><span><span>Text</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-352884942%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="updated-at-to-text.html">updatedAtToText</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Parsed update upper bound timestamp text.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="623163071%2FProperties%2F1428137388" anchor-label="userIdText" id="623163071%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="user-id-text.html"><span>user</span><wbr><span>Id</span><wbr><span><span>Text</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="623163071%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="user-id-text.html">userIdText</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Parsed user ID text or null if blank.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

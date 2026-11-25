@@ -1,0 +1,323 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>LoginWelcomeComponentImpl</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    kmp-platform-sdk
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.1.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":feature:user/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":feature:user/commonMain" data-filter=":feature:user/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    kmp-platform-sdk
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="user::io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome/LoginWelcomeComponentImpl///PointingToDeclaration//1428137388">
+  <div class="breadcrumbs"><a href="../../index.html">user</a><span class="delimiter">/</span><a href="../index.html">io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.auth.login.welcome</a><span class="delimiter">/</span><span class="current">LoginWelcomeComponentImpl</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Login</span><wbr><span>Welcome</span><wbr><span>Component</span><wbr><span><span>Impl</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">LoginWelcomeComponentImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">componentContext<span class="token operator">: </span><span data-unresolved-link="com.arkivanov.decompose/ComponentContext///PointingToDeclaration/">ComponentContext</span><span class="token punctuation">, </span></span><span class="parameter ">externalLauncher<span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.platform.externallauncher/-external-launcher/index.html">ExternalLauncher</a><span class="token punctuation">, </span></span><span class="parameter ">getOpenGlobalSettingsUseCase<span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.settings.usecase/-get-open-global-settings-use-case/index.html">GetOpenGlobalSettingsUseCase</a><span class="token punctuation">, </span></span><span class="parameter ">getAvailableUserAuthProvidersUseCase<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings/-get-available-user-auth-providers-use-case/index.html">GetAvailableUserAuthProvidersUseCase</a><span class="token punctuation">, </span></span><span class="parameter ">loginByGoogleUseCase<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login/-login-by-google-use-case/index.html">LoginByGoogleUseCase</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">onNavigateToLoginByEmail<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token punctuation">, </span></span><span class="parameter ">onNavigateToLoginByPhone<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token punctuation">, </span></span><span class="parameter ">onNavigateToTotp<span class="token operator">: </span><span class="token punctuation">(</span>mfaToken<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token punctuation">, </span></span><span class="parameter ">onNavigateToPendingDeletion<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token punctuation">, </span></span><span class="parameter ">onNavigateToAccountUnlock<span class="token operator">: </span><span class="token punctuation">(</span>lockoutType<span class="token operator">: </span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout/AccountLockoutType///PointingToDeclaration/">AccountLockoutType</span><span class="token operator">?</span><span class="token punctuation">, </span>lockoutUntil<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a><span class="token operator">?</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator"> = </span>{ _, _ -&gt; }<span class="token punctuation">, </span></span><span class="parameter ">onFinished<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span> : <a href="../-login-welcome-component/index.html">LoginWelcomeComponent</a>, <span data-unresolved-link="com.arkivanov.decompose/ComponentContext///PointingToDeclaration/">ComponentContext</span></div><p class="paragraph">Default <a href="../-login-welcome-component/index.html">LoginWelcomeComponent</a>: loads auth providers and legal URLs on init, routes provider taps, runs Google login.</p><h4 class="tableheader">Parameters</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>component</span><wbr><span><span>Context</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Decompose <span data-unresolved-link="com.arkivanov.decompose/ComponentContext///PointingToDeclaration/">ComponentContext</span>.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>params</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Prefilled parameters for welcome login screen.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>external</span><wbr><span><span>Launcher</span></span></u></div></span></div><div><div class="title"><p class="paragraph">opens privacy/terms URLs in the system browser or equivalent.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>get</span><wbr><span>Open</span><wbr><span>Global</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></u></div></span></div><div><div class="title"><p class="paragraph">loads legal URLs and related settings.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>get</span><wbr><span>Available</span><wbr><span>User</span><wbr><span>Auth</span><wbr><span>Providers</span><wbr><span>Use</span><wbr><span><span>Case</span></span></u></div></span></div><div><div class="title"><p class="paragraph">loads which <span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider/UserAuthProvider///PointingToDeclaration/">UserAuthProvider</span> values are enabled.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>login</span><wbr><span>By</span><wbr><span>Google</span><wbr><span>Use</span><wbr><span><span>Case</span></span></u></div></span></div><div><div class="title"><p class="paragraph">performs Google sign-in when that provider is chosen.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>on</span><wbr><span>Navigate</span><wbr><span>To</span><wbr><span>Login</span><wbr><span>By</span><wbr><span><span>Email</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Pushes the email login destination on the parent stack.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>on</span><wbr><span>Navigate</span><wbr><span>To</span><wbr><span>Login</span><wbr><span>By</span><wbr><span><span>Phone</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Pushes the phone login destination on the parent stack.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>on</span><wbr><span>Navigate</span><wbr><span>To</span><wbr><span><span>Totp</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Opens the MFA/TOTP screen on the parent stack.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>on</span><wbr><span>Navigate</span><wbr><span>To</span><wbr><span>Pending</span><wbr><span><span>Deletion</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Opens the pending deletion restoration screen on the parent stack.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>on</span><wbr><span><span>Finished</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Completes the flow when sign-in succeeds (e.g. Google).</p></div></div></div></div></div></div>    </div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="424649901%2FConstructors%2F1428137388" anchor-label="LoginWelcomeComponentImpl" id="424649901%2FConstructors%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-login-welcome-component-impl.html"><span>Login</span><wbr><span>Welcome</span><wbr><span>Component</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="424649901%2FConstructors%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">componentContext<span class="token operator">: </span><span data-unresolved-link="com.arkivanov.decompose/ComponentContext///PointingToDeclaration/">ComponentContext</span><span class="token punctuation">, </span></span><span class="parameter ">externalLauncher<span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.platform.externallauncher/-external-launcher/index.html">ExternalLauncher</a><span class="token punctuation">, </span></span><span class="parameter ">getOpenGlobalSettingsUseCase<span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.settings.usecase/-get-open-global-settings-use-case/index.html">GetOpenGlobalSettingsUseCase</a><span class="token punctuation">, </span></span><span class="parameter ">getAvailableUserAuthProvidersUseCase<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.settings/-get-available-user-auth-providers-use-case/index.html">GetAvailableUserAuthProvidersUseCase</a><span class="token punctuation">, </span></span><span class="parameter ">loginByGoogleUseCase<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.usecase.auth.login/-login-by-google-use-case/index.html">LoginByGoogleUseCase</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">onNavigateToLoginByEmail<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token punctuation">, </span></span><span class="parameter ">onNavigateToLoginByPhone<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token punctuation">, </span></span><span class="parameter ">onNavigateToTotp<span class="token operator">: </span><span class="token punctuation">(</span>mfaToken<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token punctuation">, </span></span><span class="parameter ">onNavigateToPendingDeletion<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token punctuation">, </span></span><span class="parameter ">onNavigateToAccountUnlock<span class="token operator">: </span><span class="token punctuation">(</span>lockoutType<span class="token operator">: </span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.core.security.domain.model.accountlockout/AccountLockoutType///PointingToDeclaration/">AccountLockoutType</span><span class="token operator">?</span><span class="token punctuation">, </span>lockoutUntil<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a><span class="token operator">?</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator"> = </span>{ _, _ -&gt; }<span class="token punctuation">, </span></span><span class="parameter ">onFinished<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="1029306802%2FProperties%2F1428137388" anchor-label="backHandler" id="1029306802%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.recovery/-totp-recovery-codes-component-impl/index.html#1029306802%2FProperties%2F1428137388"><span>back</span><wbr><span><span>Handler</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1029306802%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.recovery/-totp-recovery-codes-component-impl/index.html#1029306802%2FProperties%2F1428137388">backHandler</a><span class="token operator">: </span><span data-unresolved-link="com.arkivanov.essenty.backhandler/BackHandler///PointingToDeclaration/">BackHandler</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-577460421%2FProperties%2F1428137388" anchor-label="componentContextFactory" id="-577460421%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.recovery/-totp-recovery-codes-component-impl/index.html#-577460421%2FProperties%2F1428137388"><span>component</span><wbr><span>Context</span><wbr><span><span>Factory</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-577460421%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.recovery/-totp-recovery-codes-component-impl/index.html#-577460421%2FProperties%2F1428137388">componentContextFactory</a><span class="token operator">: </span><span data-unresolved-link="com.arkivanov.decompose/ComponentContextFactory///PointingToDeclaration/">ComponentContextFactory</span><span class="token operator">&lt;</span><span data-unresolved-link="com.arkivanov.decompose/ComponentContext///PointingToDeclaration/">ComponentContext</span><span class="token operator">&gt;</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-47807002%2FProperties%2F1428137388" anchor-label="instanceKeeper" id="-47807002%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.recovery/-totp-recovery-codes-component-impl/index.html#-47807002%2FProperties%2F1428137388"><span>instance</span><wbr><span><span>Keeper</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-47807002%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.recovery/-totp-recovery-codes-component-impl/index.html#-47807002%2FProperties%2F1428137388">instanceKeeper</a><span class="token operator">: </span><span data-unresolved-link="com.arkivanov.essenty.instancekeeper/InstanceKeeper///PointingToDeclaration/">InstanceKeeper</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1197012679%2FProperties%2F1428137388" anchor-label="lifecycle" id="-1197012679%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.recovery/-totp-recovery-codes-component-impl/index.html#-1197012679%2FProperties%2F1428137388"><span><span>lifecycle</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1197012679%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.recovery/-totp-recovery-codes-component-impl/index.html#-1197012679%2FProperties%2F1428137388">lifecycle</a><span class="token operator">: </span><span data-unresolved-link="com.arkivanov.essenty.lifecycle/Lifecycle///PointingToDeclaration/">Lifecycle</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-711162674%2FProperties%2F1428137388" anchor-label="state" id="-711162674%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="state.html"><span><span>state</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-711162674%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="state.html">state</a><span class="token operator">: </span><span data-unresolved-link="com.arkivanov.decompose.value/Value///PointingToDeclaration/">Value</span><span class="token operator">&lt;</span><a href="../-login-welcome-screen-state/index.html">LoginWelcomeScreenState</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Current screen state for <a href="../-login-welcome-screen.html">LoginWelcomeScreen</a>.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1128392690%2FProperties%2F1428137388" anchor-label="stateKeeper" id="1128392690%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.recovery/-totp-recovery-codes-component-impl/index.html#1128392690%2FProperties%2F1428137388"><span>state</span><wbr><span><span>Keeper</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1128392690%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.totp.recovery/-totp-recovery-codes-component-impl/index.html#1128392690%2FProperties%2F1428137388">stateKeeper</a><span class="token operator">: </span><span data-unresolved-link="com.arkivanov.essenty.statekeeper/StateKeeper///PointingToDeclaration/">StateKeeper</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-694723116%2FFunctions%2F1428137388" anchor-label="onLoginClick" id="-694723116%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-login-click.html"><span>on</span><wbr><span>Login</span><wbr><span><span>Click</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-694723116%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="on-login-click.html"><span class="token function">onLoginClick</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">authProvider<span class="token operator">: </span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider/UserAuthProvider///PointingToDeclaration/">UserAuthProvider</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Handles the user’s choice of sign-in method: navigates to email/phone flows or starts OAuth where supported.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-115046258%2FFunctions%2F1428137388" anchor-label="onPrivacyPolicyClick" id="-115046258%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-privacy-policy-click.html"><span>on</span><wbr><span>Privacy</span><wbr><span>Policy</span><wbr><span><span>Click</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-115046258%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="on-privacy-policy-click.html"><span class="token function">onPrivacyPolicyClick</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Opens the privacy policy URL from the loaded global settings when available.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1189378188%2FFunctions%2F1428137388" anchor-label="onRetryInitClick" id="1189378188%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-retry-init-click.html"><span>on</span><wbr><span>Retry</span><wbr><span>Init</span><wbr><span><span>Click</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1189378188%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="on-retry-init-click.html"><span class="token function">onRetryInitClick</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Retries loading available providers and global settings after <a href="../-login-welcome-screen-state/-initialization-error/index.html">LoginWelcomeScreenState.InitializationError</a>.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-640054227%2FFunctions%2F1428137388" anchor-label="onTermsOfServiceClick" id="-640054227%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-terms-of-service-click.html"><span>on</span><wbr><span>Terms</span><wbr><span>Of</span><wbr><span>Service</span><wbr><span><span>Click</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-640054227%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="on-terms-of-service-click.html"><span class="token function">onTermsOfServiceClick</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Opens the terms of service URL from the loaded global settings when available.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

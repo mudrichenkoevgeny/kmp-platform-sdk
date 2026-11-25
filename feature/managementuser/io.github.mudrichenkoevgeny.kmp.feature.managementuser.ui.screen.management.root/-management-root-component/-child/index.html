@@ -1,0 +1,441 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Child</title>
+<link href="../../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../../index.html" tabindex="1">
+                    kmp-platform-sdk
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.1.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":feature:managementuser/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":feature:managementuser/commonMain" data-filter=":feature:managementuser/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    kmp-platform-sdk
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="managementuser::io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.root/ManagementRootComponent.Child///PointingToDeclaration//555308681">
+  <div class="breadcrumbs"><a href="../../../index.html">managementuser</a><span class="delimiter">/</span><a href="../../index.html">io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.root</a><span class="delimiter">/</span><a href="../index.html">ManagementRootComponent</a><span class="delimiter">/</span><span class="current">Child</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Child</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">sealed </span><span class="token keyword">interface </span><a href="index.html">Child</a></div><p class="paragraph">Active child component in the navigation stack.</p><h4 class="tableheader">Inheritors</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-main/index.html">Main</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-settings-main/index.html">SettingsMain</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-edit-auth-settings/index.html">EditAuthSettings</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-edit-global-settings/index.html">EditGlobalSettings</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-edit-security-settings/index.html">EditSecuritySettings</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-edit-storage-settings/index.html">EditStorageSettings</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-global-user-list/index.html">GlobalUserList</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-create-user/index.html">CreateUser</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-user-detail/index.html">UserDetail</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-user-session-list/index.html">UserSessionList</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-user-identifier-list/index.html">UserIdentifierList</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-audit-event-list/index.html">AuditEventList</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-audit-event-detail/index.html">AuditEventDetail</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-global-session-list/index.html">GlobalSessionList</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-session-detail/index.html">SessionDetail</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-global-identifier-list/index.html">GlobalIdentifierList</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-identifier-detail/index.html">IdentifierDetail</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-global-storage-file-list/index.html">GlobalStorageFileList</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-self-storage-file-list/index.html">SelfStorageFileList</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-global-storage-file-detail/index.html">GlobalStorageFileDetail</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-global-storage-file-upload/index.html">GlobalStorageFileUpload</a></div></span></div><div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="1324800953%2FClasslikes%2F555308681" anchor-label="AuditEventDetail" id="1324800953%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-audit-event-detail/index.html"><span>Audit</span><wbr><span>Event</span><wbr><span><span>Detail</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1324800953%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-audit-event-detail/index.html">AuditEventDetail</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.detail/-audit-event-detail-component/index.html">AuditEventDetailComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a></div><div class="brief "><p class="paragraph">Audit event detail screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1123672500%2FClasslikes%2F555308681" anchor-label="AuditEventList" id="-1123672500%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-audit-event-list/index.html"><span>Audit</span><wbr><span>Event</span><wbr><span><span>List</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1123672500%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-audit-event-list/index.html">AuditEventList</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.audit.list/-audit-event-list-component/index.html">AuditEventListComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a></div><div class="brief "><p class="paragraph">Audit logs list screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1397006178%2FClasslikes%2F555308681" anchor-label="CreateUser" id="1397006178%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-create-user/index.html"><span>Create</span><wbr><span><span>User</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1397006178%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-create-user/index.html">CreateUser</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.create/-create-user-component/index.html">CreateUserComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a></div><div class="brief "><p class="paragraph">Create user screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1657933556%2FClasslikes%2F555308681" anchor-label="EditAuthSettings" id="1657933556%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-edit-auth-settings/index.html"><span>Edit</span><wbr><span>Auth</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1657933556%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-edit-auth-settings/index.html">EditAuthSettings</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.auth/-edit-auth-settings-component/index.html">EditAuthSettingsComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a></div><div class="brief "><p class="paragraph">Edit authentication settings screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2064513241%2FClasslikes%2F555308681" anchor-label="EditGlobalSettings" id="2064513241%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-edit-global-settings/index.html"><span>Edit</span><wbr><span>Global</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2064513241%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-edit-global-settings/index.html">EditGlobalSettings</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.global/-edit-global-settings-component/index.html">EditGlobalSettingsComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a></div><div class="brief "><p class="paragraph">Edit global settings screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-159633060%2FClasslikes%2F555308681" anchor-label="EditSecuritySettings" id="-159633060%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-edit-security-settings/index.html"><span>Edit</span><wbr><span>Security</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-159633060%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-edit-security-settings/index.html">EditSecuritySettings</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.security/-edit-security-settings-component/index.html">EditSecuritySettingsComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a></div><div class="brief "><p class="paragraph">Edit security settings screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="244253989%2FClasslikes%2F555308681" anchor-label="EditStorageSettings" id="244253989%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-edit-storage-settings/index.html"><span>Edit</span><wbr><span>Storage</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="244253989%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-edit-storage-settings/index.html">EditStorageSettings</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.settings/-edit-storage-settings-component/index.html">EditStorageSettingsComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a></div><div class="brief "><p class="paragraph">Edit storage settings screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1334794815%2FClasslikes%2F555308681" anchor-label="GlobalIdentifierList" id="1334794815%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-global-identifier-list/index.html"><span>Global</span><wbr><span>Identifier</span><wbr><span><span>List</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1334794815%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-global-identifier-list/index.html">GlobalIdentifierList</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list/-identifier-list-component/index.html">IdentifierListComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a>, <a href="../../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list/-identifier-list-owner/index.html">IdentifierListOwner</a></div><div class="brief "><p class="paragraph">All platform identifiers screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1160329576%2FClasslikes%2F555308681" anchor-label="GlobalSessionList" id="1160329576%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-global-session-list/index.html"><span>Global</span><wbr><span>Session</span><wbr><span><span>List</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1160329576%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-global-session-list/index.html">GlobalSessionList</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list/-session-list-component/index.html">SessionListComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a>, <a href="../../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list/-session-list-owner/index.html">SessionListOwner</a></div><div class="brief "><p class="paragraph">All platform sessions screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2063846964%2FClasslikes%2F555308681" anchor-label="GlobalStorageFileDetail" id="2063846964%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-global-storage-file-detail/index.html"><span>Global</span><wbr><span>Storage</span><wbr><span>File</span><wbr><span><span>Detail</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2063846964%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-global-storage-file-detail/index.html">GlobalStorageFileDetail</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.detail/-storage-file-detail-component/index.html">StorageFileDetailComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a></div><div class="brief "><p class="paragraph">Global storage file detail screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="924021639%2FClasslikes%2F555308681" anchor-label="GlobalStorageFileList" id="924021639%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-global-storage-file-list/index.html"><span>Global</span><wbr><span>Storage</span><wbr><span>File</span><wbr><span><span>List</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="924021639%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-global-storage-file-list/index.html">GlobalStorageFileList</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list/-storage-file-list-component/index.html">StorageFileListComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a></div><div class="brief "><p class="paragraph">All platform storage files screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-310337916%2FClasslikes%2F555308681" anchor-label="GlobalStorageFileUpload" id="-310337916%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-global-storage-file-upload/index.html"><span>Global</span><wbr><span>Storage</span><wbr><span>File</span><wbr><span><span>Upload</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-310337916%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-global-storage-file-upload/index.html">GlobalStorageFileUpload</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.upload/-storage-file-upload-screen-component/index.html">StorageFileUploadScreenComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a></div><div class="brief "><p class="paragraph">Storage file upload utility screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-609453539%2FClasslikes%2F555308681" anchor-label="GlobalUserList" id="-609453539%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-global-user-list/index.html"><span>Global</span><wbr><span>User</span><wbr><span><span>List</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-609453539%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-global-user-list/index.html">GlobalUserList</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist/-global-user-list-component/index.html">GlobalUserListComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a>, <a href="../../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.globallist/-user-list-owner/index.html">UserListOwner</a></div><div class="brief "><p class="paragraph">All platform users screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-42327729%2FClasslikes%2F555308681" anchor-label="IdentifierDetail" id="-42327729%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-identifier-detail/index.html"><span>Identifier</span><wbr><span><span>Detail</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-42327729%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-identifier-detail/index.html">IdentifierDetail</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.detail/-identifier-detail-component/index.html">IdentifierDetailComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a></div><div class="brief "><p class="paragraph">Identifier detail screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1834038992%2FClasslikes%2F555308681" anchor-label="Main" id="1834038992%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-main/index.html"><span><span>Main</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1834038992%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-main/index.html">Main</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.main/-main-management-component/index.html">MainManagementComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a></div><div class="brief "><p class="paragraph">Main management landing screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1561834544%2FClasslikes%2F555308681" anchor-label="SelfStorageFileList" id="1561834544%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-self-storage-file-list/index.html"><span>Self</span><wbr><span>Storage</span><wbr><span>File</span><wbr><span><span>List</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1561834544%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-self-storage-file-list/index.html">SelfStorageFileList</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../../../core/io.github.mudrichenkoevgeny.kmp.core.storage.ui.screen.file.list/-storage-file-list-component/index.html">StorageFileListComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a></div><div class="brief "><p class="paragraph">Staff self-service storage files screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1011337134%2FClasslikes%2F555308681" anchor-label="SessionDetail" id="-1011337134%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-session-detail/index.html"><span>Session</span><wbr><span><span>Detail</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1011337134%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-session-detail/index.html">SessionDetail</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.detail/-session-detail-component/index.html">SessionDetailComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a></div><div class="brief "><p class="paragraph">Session detail screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1824839315%2FClasslikes%2F555308681" anchor-label="SettingsMain" id="-1824839315%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-settings-main/index.html"><span>Settings</span><wbr><span><span>Main</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1824839315%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-settings-main/index.html">SettingsMain</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.settings.main/-settings-main-component/index.html">SettingsMainComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a></div><div class="brief "><p class="paragraph">System main settings screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-682162195%2FClasslikes%2F555308681" anchor-label="UserDetail" id="-682162195%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-user-detail/index.html"><span>User</span><wbr><span><span>Detail</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-682162195%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-user-detail/index.html">UserDetail</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../io.github.mudrichenkoevgeny.kmp.feature.managementuser.ui.screen.management.user.detail/-user-detail-component/index.html">UserDetailComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a></div><div class="brief "><p class="paragraph">User detail screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="170771223%2FClasslikes%2F555308681" anchor-label="UserIdentifierList" id="170771223%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-user-identifier-list/index.html"><span>User</span><wbr><span>Identifier</span><wbr><span><span>List</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="170771223%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-user-identifier-list/index.html">UserIdentifierList</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list/-identifier-list-component/index.html">IdentifierListComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a>, <a href="../../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list/-identifier-list-owner/index.html">IdentifierListOwner</a></div><div class="brief "><p class="paragraph">User identifiers screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-292077680%2FClasslikes%2F555308681" anchor-label="UserSessionList" id="-292077680%2FClasslikes%2F555308681" data-filterable-set=":feature:managementuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:managementuser/commonMain" data-filterable-set=":feature:managementuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-user-session-list/index.html"><span>User</span><wbr><span>Session</span><wbr><span><span>List</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-292077680%2FClasslikes%2F555308681"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:managementuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-user-session-list/index.html">UserSessionList</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>component<span class="token operator">: </span><a href="../../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list/-session-list-component/index.html">SessionListComponent</a></span></span><span class="token punctuation">)</span> : <a href="index.html">ManagementRootComponent.Child</a>, <a href="../../../../../feature/user/io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.session.list/-session-list-owner/index.html">SessionListOwner</a></div><div class="brief "><p class="paragraph">User sessions screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

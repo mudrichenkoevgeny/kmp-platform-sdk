@@ -1,0 +1,612 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>StorageComponent</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../index.html" tabindex="1">
+                    kmp-platform-sdk
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.1.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":core/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":core/commonMain" data-filter=":core/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    kmp-platform-sdk
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="core::io.github.mudrichenkoevgeny.kmp.core.storage.di/StorageComponent///PointingToDeclaration//25486556">
+  <div class="breadcrumbs"><a href="../../index.html">core</a><span class="delimiter">/</span><a href="../index.html">io.github.mudrichenkoevgeny.kmp.core.storage.di</a><span class="delimiter">/</span><span class="current">StorageComponent</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Storage</span><wbr><span><span>Component</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">StorageComponent</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">httpClient<span class="token operator">: </span><span data-unresolved-link="io.ktor.client/HttpClient///PointingToDeclaration/">HttpClient</span><span class="token punctuation">, </span></span><span class="parameter ">encryptedSettings<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.common.storage/-encrypted-settings/index.html">EncryptedSettings</a><span class="token punctuation">, </span></span><span class="parameter ">webSocketService<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service/-web-socket-service/index.html">WebSocketService</a><span class="token punctuation">, </span></span><span class="parameter ">parentScope<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineScope///PointingToDeclaration/">CoroutineScope</span><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span></div><p class="paragraph">Main entry point and dependency wiring for the <code class="lang-kotlin">core:storage</code> module.</p><p class="paragraph">Encapsulates network clients, local encrypted storage, and WebSocket message handling internally, exposing only high-level repositories and use cases.</p><h4 class="tableheader">Parameters</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>http</span><wbr><span><span>Client</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Shared Ktor client for REST operations.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>encrypted</span><wbr><span><span>Settings</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Encrypted settings backing store.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>web</span><wbr><span>Socket</span><wbr><span><span>Service</span></span></u></div></span></div><div><div class="title"><p class="paragraph">WebSocket service for reactive settings updates.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>parent</span><wbr><span><span>Scope</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Parent coroutine scope for repository jobs.</p></div></div></div></div></div></div>    </div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="-242021152%2FConstructors%2F25486556" anchor-label="StorageComponent" id="-242021152%2FConstructors%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-storage-component.html"><span>Storage</span><wbr><span><span>Component</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-242021152%2FConstructors%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">httpClient<span class="token operator">: </span><span data-unresolved-link="io.ktor.client/HttpClient///PointingToDeclaration/">HttpClient</span><span class="token punctuation">, </span></span><span class="parameter ">encryptedSettings<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.common.storage/-encrypted-settings/index.html">EncryptedSettings</a><span class="token punctuation">, </span></span><span class="parameter ">webSocketService<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.service/-web-socket-service/index.html">WebSocketService</a><span class="token punctuation">, </span></span><span class="parameter ">parentScope<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineScope///PointingToDeclaration/">CoroutineScope</span><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="385386295%2FProperties%2F25486556" anchor-label="directFileUploader" id="385386295%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="direct-file-uploader.html"><span>direct</span><wbr><span>File</span><wbr><span><span>Uploader</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="385386295%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="direct-file-uploader.html">directFileUploader</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.uploader/-direct-file-uploader/index.html">DirectFileUploader</a></div><div class="brief "><p class="paragraph">Direct S3 file uploader instance for client/management uploads.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="361550238%2FProperties%2F25486556" anchor-label="getManagementStorageSettingsUseCase" id="361550238%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-management-storage-settings-use-case.html"><span>get</span><wbr><span>Management</span><wbr><span>Storage</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="361550238%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="get-management-storage-settings-use-case.html">getManagementStorageSettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-get-management-storage-settings-use-case/index.html">GetManagementStorageSettingsUseCase</a></div><div class="brief "><p class="paragraph">Retrieves management storage settings use case.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1843167863%2FProperties%2F25486556" anchor-label="getOpenStorageSettingsUseCase" id="1843167863%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-open-storage-settings-use-case.html"><span>get</span><wbr><span>Open</span><wbr><span>Storage</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1843167863%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="get-open-storage-settings-use-case.html">getOpenStorageSettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.open/-get-open-storage-settings-use-case/index.html">GetOpenStorageSettingsUseCase</a></div><div class="brief "><p class="paragraph">Use case for getting open storage settings.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-316827254%2FProperties%2F25486556" anchor-label="managementDeleteFilesBatchUseCase" id="-316827254%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-delete-files-batch-use-case.html"><span>management</span><wbr><span>Delete</span><wbr><span>Files</span><wbr><span>Batch</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-316827254%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-delete-files-batch-use-case.html">managementDeleteFilesBatchUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-management-delete-files-batch-use-case/index.html">ManagementDeleteFilesBatchUseCase</a></div><div class="brief "><p class="paragraph">Administrative batch file deletion use case.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1723844413%2FProperties%2F25486556" anchor-label="managementDeleteFileUseCase" id="-1723844413%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-delete-file-use-case.html"><span>management</span><wbr><span>Delete</span><wbr><span>File</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1723844413%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-delete-file-use-case.html">managementDeleteFileUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-management-delete-file-use-case/index.html">ManagementDeleteFileUseCase</a></div><div class="brief "><p class="paragraph">Administrative single file deletion use case.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1811346163%2FProperties%2F25486556" anchor-label="managementGetFileDetailUseCase" id="1811346163%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-get-file-detail-use-case.html"><span>management</span><wbr><span>Get</span><wbr><span>File</span><wbr><span>Detail</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1811346163%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-get-file-detail-use-case.html">managementGetFileDetailUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-management-get-file-detail-use-case/index.html">ManagementGetFileDetailUseCase</a></div><div class="brief "><p class="paragraph">Administrative file detail use case.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="413089085%2FProperties%2F25486556" anchor-label="managementGetFilesUseCase" id="413089085%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-get-files-use-case.html"><span>management</span><wbr><span>Get</span><wbr><span>Files</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="413089085%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-get-files-use-case.html">managementGetFilesUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-management-get-files-use-case/index.html">ManagementGetFilesUseCase</a></div><div class="brief "><p class="paragraph">Administrative file listing use case.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="78978063%2FProperties%2F25486556" anchor-label="managementStorageDependencies" id="78978063%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-storage-dependencies.html"><span>management</span><wbr><span>Storage</span><wbr><span><span>Dependencies</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="78978063%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-storage-dependencies.html">managementStorageDependencies</a><span class="token operator">: </span><a href="../-management-storage-dependencies/index.html">ManagementStorageDependencies</a></div><div class="brief "><p class="paragraph">Bundles all management storage file use cases for administrative operations.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-675917874%2FProperties%2F25486556" anchor-label="managementStorageRepository" id="-675917874%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-storage-repository.html"><span>management</span><wbr><span>Storage</span><wbr><span><span>Repository</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-675917874%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-storage-repository.html">managementStorageRepository</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.repository.management/-management-storage-repository/index.html">ManagementStorageRepository</a></div><div class="brief "><p class="paragraph">Repository for management administrative storage operations.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1140753835%2FProperties%2F25486556" anchor-label="managementStorageSettingsRepository" id="1140753835%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="management-storage-settings-repository.html"><span>management</span><wbr><span>Storage</span><wbr><span>Settings</span><wbr><span><span>Repository</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1140753835%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="management-storage-settings-repository.html">managementStorageSettingsRepository</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.repository.management/-management-storage-settings-repository/index.html">ManagementStorageSettingsRepository</a></div><div class="brief "><p class="paragraph">Repository for management storage settings.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1833770728%2FProperties%2F25486556" anchor-label="observeManagementStorageSettingsUseCase" id="-1833770728%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="observe-management-storage-settings-use-case.html"><span>observe</span><wbr><span>Management</span><wbr><span>Storage</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1833770728%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="observe-management-storage-settings-use-case.html">observeManagementStorageSettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-observe-management-storage-settings-use-case/index.html">ObserveManagementStorageSettingsUseCase</a></div><div class="brief "><p class="paragraph">Observes management storage settings flow use case.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="112866673%2FProperties%2F25486556" anchor-label="observeOpenStorageSettingsUseCase" id="112866673%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="observe-open-storage-settings-use-case.html"><span>observe</span><wbr><span>Open</span><wbr><span>Storage</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="112866673%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="observe-open-storage-settings-use-case.html">observeOpenStorageSettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.open/-observe-open-storage-settings-use-case/index.html">ObserveOpenStorageSettingsUseCase</a></div><div class="brief "><p class="paragraph">Observes open storage settings flow use case.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1036728149%2FProperties%2F25486556" anchor-label="openStorageRepository" id="1036728149%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="open-storage-repository.html"><span>open</span><wbr><span>Storage</span><wbr><span><span>Repository</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1036728149%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="open-storage-repository.html">openStorageRepository</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.repository.base/-storage-repository/index.html">StorageRepository</a></div><div class="brief "><p class="paragraph">Repository for open/client storage file operations.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1179842098%2FProperties%2F25486556" anchor-label="openStorageSettingsRepository" id="1179842098%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="open-storage-settings-repository.html"><span>open</span><wbr><span>Storage</span><wbr><span>Settings</span><wbr><span><span>Repository</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1179842098%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="open-storage-settings-repository.html">openStorageSettingsRepository</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.repository.open/-open-storage-settings-repository/index.html">OpenStorageSettingsRepository</a></div><div class="brief "><p class="paragraph">Repository for open storage settings.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-3768263%2FProperties%2F25486556" anchor-label="refreshManagementStorageSettingsUseCase" id="-3768263%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="refresh-management-storage-settings-use-case.html"><span>refresh</span><wbr><span>Management</span><wbr><span>Storage</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-3768263%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="refresh-management-storage-settings-use-case.html">refreshManagementStorageSettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-refresh-management-storage-settings-use-case/index.html">RefreshManagementStorageSettingsUseCase</a></div><div class="brief "><p class="paragraph">Refreshes management storage settings use case.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1237843630%2FProperties%2F25486556" anchor-label="refreshOpenStorageSettingsUseCase" id="-1237843630%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="refresh-open-storage-settings-use-case.html"><span>refresh</span><wbr><span>Open</span><wbr><span>Storage</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1237843630%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="refresh-open-storage-settings-use-case.html">refreshOpenStorageSettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.open/-refresh-open-storage-settings-use-case/index.html">RefreshOpenStorageSettingsUseCase</a></div><div class="brief "><p class="paragraph">Use case for refreshing open storage settings.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="674062431%2FProperties%2F25486556" anchor-label="resetRemoteManagementStorageSettingsUseCase" id="674062431%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="reset-remote-management-storage-settings-use-case.html"><span>reset</span><wbr><span>Remote</span><wbr><span>Management</span><wbr><span>Storage</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="674062431%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="reset-remote-management-storage-settings-use-case.html">resetRemoteManagementStorageSettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-reset-remote-management-storage-settings-use-case/index.html">ResetRemoteManagementStorageSettingsUseCase</a></div><div class="brief "><p class="paragraph">Resets management storage settings use case.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-384117830%2FProperties%2F25486556" anchor-label="selfManagementStorageRepository" id="-384117830%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="self-management-storage-repository.html"><span>self</span><wbr><span>Management</span><wbr><span>Storage</span><wbr><span><span>Repository</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-384117830%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="self-management-storage-repository.html">selfManagementStorageRepository</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.repository.base/-storage-repository/index.html">StorageRepository</a></div><div class="brief "><p class="paragraph">Repository for staff self-service storage operations.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-779432517%2FProperties%2F25486556" anchor-label="storageWebSocketMessageHandler" id="-779432517%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="storage-web-socket-message-handler.html"><span>storage</span><wbr><span>Web</span><wbr><span>Socket</span><wbr><span>Message</span><wbr><span><span>Handler</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-779432517%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="storage-web-socket-message-handler.html">storageWebSocketMessageHandler</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.common.network.websocket.messagehandler/-web-socket-message-handler/index.html">WebSocketMessageHandler</a></div><div class="brief "><p class="paragraph">WebSocket message handler for storage push events.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1288306885%2FProperties%2F25486556" anchor-label="updateManagementStorageSettingsUseCase" id="1288306885%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-management-storage-settings-use-case.html"><span>update</span><wbr><span>Management</span><wbr><span>Storage</span><wbr><span>Settings</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1288306885%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="update-management-storage-settings-use-case.html">updateManagementStorageSettingsUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.management/-update-management-storage-settings-use-case/index.html">UpdateManagementStorageSettingsUseCase</a></div><div class="brief "><p class="paragraph">Updates management storage settings use case.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="780190006%2FProperties%2F25486556" anchor-label="uploadFileUseCase" id="780190006%2FProperties%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="upload-file-use-case.html"><span>upload</span><wbr><span>File</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="780190006%2FProperties%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="upload-file-use-case.html">uploadFileUseCase</a><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.base/-upload-file-use-case/index.html">UploadFileUseCase</a></div><div class="brief "><p class="paragraph">Default upload file use case bound to open storage repository.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-1497878937%2FFunctions%2F25486556" anchor-label="createDeleteFilesBatchUseCase" id="-1497878937%2FFunctions%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-delete-files-batch-use-case.html"><span>create</span><wbr><span>Delete</span><wbr><span>Files</span><wbr><span>Batch</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1497878937%2FFunctions%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="create-delete-files-batch-use-case.html"><span class="token function">createDeleteFilesBatchUseCase</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">storageRepository<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.repository.base/-storage-repository/index.html">StorageRepository</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.base/-delete-files-batch-use-case/index.html">DeleteFilesBatchUseCase</a></div><div class="brief "><p class="paragraph">Factory method for creating a <a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.base/-delete-files-batch-use-case/index.html">DeleteFilesBatchUseCase</a> bound to a given repository.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="776600736%2FFunctions%2F25486556" anchor-label="createDeleteFileUseCase" id="776600736%2FFunctions%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-delete-file-use-case.html"><span>create</span><wbr><span>Delete</span><wbr><span>File</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="776600736%2FFunctions%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="create-delete-file-use-case.html"><span class="token function">createDeleteFileUseCase</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">storageRepository<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.repository.base/-storage-repository/index.html">StorageRepository</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.base/-delete-file-use-case/index.html">DeleteFileUseCase</a></div><div class="brief "><p class="paragraph">Factory method for creating a <a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.base/-delete-file-use-case/index.html">DeleteFileUseCase</a> bound to a given repository.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-456309314%2FFunctions%2F25486556" anchor-label="createGetFileDetailUseCase" id="-456309314%2FFunctions%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-get-file-detail-use-case.html"><span>create</span><wbr><span>Get</span><wbr><span>File</span><wbr><span>Detail</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-456309314%2FFunctions%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="create-get-file-detail-use-case.html"><span class="token function">createGetFileDetailUseCase</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">storageRepository<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.repository.base/-storage-repository/index.html">StorageRepository</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.base/-get-file-detail-use-case/index.html">GetFileDetailUseCase</a></div><div class="brief "><p class="paragraph">Factory method for creating a <a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.base/-get-file-detail-use-case/index.html">GetFileDetailUseCase</a> bound to a given repository.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1413696986%2FFunctions%2F25486556" anchor-label="createGetFilesUseCase" id="1413696986%2FFunctions%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-get-files-use-case.html"><span>create</span><wbr><span>Get</span><wbr><span>Files</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1413696986%2FFunctions%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="create-get-files-use-case.html"><span class="token function">createGetFilesUseCase</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">storageRepository<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.repository.base/-storage-repository/index.html">StorageRepository</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.base/-get-files-use-case/index.html">GetFilesUseCase</a></div><div class="brief "><p class="paragraph">Factory method for creating a <a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.base/-get-files-use-case/index.html">GetFilesUseCase</a> bound to a given repository.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-81731412%2FFunctions%2F25486556" anchor-label="createStorageDependencies" id="-81731412%2FFunctions%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-storage-dependencies.html"><span>create</span><wbr><span>Storage</span><wbr><span><span>Dependencies</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-81731412%2FFunctions%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="create-storage-dependencies.html"><span class="token function">createStorageDependencies</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">storageRepository<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.repository.base/-storage-repository/index.html">StorageRepository</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-open-storage-dependencies/index.html">OpenStorageDependencies</a></div><div class="brief "><p class="paragraph">Creates <a href="../-open-storage-dependencies/index.html">OpenStorageDependencies</a> instance bound to the provided <a href="create-storage-dependencies.html">storageRepository</a>.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1645204342%2FFunctions%2F25486556" anchor-label="createUploadFileUseCase" id="1645204342%2FFunctions%2F25486556" data-filterable-set=":core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-upload-file-use-case.html"><span>create</span><wbr><span>Upload</span><wbr><span>File</span><wbr><span>Use</span><wbr><span><span>Case</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1645204342%2FFunctions%2F25486556"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core/commonMain" data-filterable-set=":core/commonMain" data-active="" data-toggle=":core/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="create-upload-file-use-case.html"><span class="token function">createUploadFileUseCase</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">storageRepository<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.repository.base/-storage-repository/index.html">StorageRepository</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.base/-upload-file-use-case/index.html">UploadFileUseCase</a></div><div class="brief "><p class="paragraph">Factory method for creating an <a href="../../io.github.mudrichenkoevgeny.kmp.core.storage.usecase.base/-upload-file-use-case/index.html">UploadFileUseCase</a> bound to a given repository.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,557 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>IdentifierListComponent</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    kmp-platform-sdk
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.1.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":feature:user/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":feature:user/commonMain" data-filter=":feature:user/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    kmp-platform-sdk
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="user::io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list/IdentifierListComponent///PointingToDeclaration//1428137388">
+  <div class="breadcrumbs"><a href="../../index.html">user</a><span class="delimiter">/</span><a href="../index.html">io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list</a><span class="delimiter">/</span><span class="current">IdentifierListComponent</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Identifier</span><wbr><span>List</span><wbr><span><span>Component</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">IdentifierListComponent</a> : <a href="../-identifier-list-owner/index.html">IdentifierListOwner</a></div><p class="paragraph">Universal Decompose component contract for user identifiers listing screens (client &amp; management).</p><h4 class="tableheader">Inheritors</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.mock.ui.screen.user.identifier/-identifier-list-component-mock/index.html">IdentifierListComponentMock</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-identifier-list-component-impl/index.html">IdentifierListComponentImpl</a></div></span></div><div></div></div></div></div></div>    </div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="1868231700%2FProperties%2F1428137388" anchor-label="addIdentifierDialogSlot" id="1868231700%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-identifier-dialog-slot.html"><span>add</span><wbr><span>Identifier</span><wbr><span>Dialog</span><wbr><span><span>Slot</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1868231700%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="add-identifier-dialog-slot.html">addIdentifierDialogSlot</a><span class="token operator">: </span><span data-unresolved-link="com.arkivanov.decompose.value/Value///PointingToDeclaration/">Value</span><span class="token operator">&lt;</span><span data-unresolved-link="com.arkivanov.decompose.router.slot/ChildSlot///PointingToDeclaration/">ChildSlot</span><span class="token operator">&lt;</span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.dialog/-add-identifier-dialog-config/index.html">AddIdentifierDialogConfig</a><span class="token punctuation">, </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.dialog/-add-identifier-dialog-child/index.html">AddIdentifierDialogChild</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Decompose child slot for the "Add Identifier" dialog wizard.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-469012576%2FProperties%2F1428137388" anchor-label="addIdentifierDialogSlotNavigation" id="-469012576%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-identifier-dialog-slot-navigation.html"><span>add</span><wbr><span>Identifier</span><wbr><span>Dialog</span><wbr><span>Slot</span><wbr><span><span>Navigation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-469012576%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="add-identifier-dialog-slot-navigation.html">addIdentifierDialogSlotNavigation</a><span class="token operator">: </span><span data-unresolved-link="com.arkivanov.decompose.router.slot/SlotNavigation///PointingToDeclaration/">SlotNavigation</span><span class="token operator">&lt;</span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.user.ui.screen.user.identifier.list.dialog/-add-identifier-dialog-config/index.html">AddIdentifierDialogConfig</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Slot navigator for the add identifier dialog.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1357108558%2FProperties%2F1428137388" anchor-label="includeFilterPanel" id="-1357108558%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="include-filter-panel.html"><span>include</span><wbr><span>Filter</span><wbr><span><span>Panel</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1357108558%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="include-filter-panel.html">includeFilterPanel</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether filter panel features are included (administrative mode).</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1889831272%2FProperties%2F1428137388" anchor-label="isAddIdentifierSupported" id="1889831272%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-add-identifier-supported.html"><span>is</span><wbr><span>Add</span><wbr><span>Identifier</span><wbr><span><span>Supported</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1889831272%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="is-add-identifier-supported.html">isAddIdentifierSupported</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether adding a new identifier is available for this contour.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-579926637%2FProperties%2F1428137388" anchor-label="state" id="-579926637%2FProperties%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="state.html"><span><span>state</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-579926637%2FProperties%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="state.html">state</a><span class="token operator">: </span><span data-unresolved-link="com.arkivanov.decompose.value/Value///PointingToDeclaration/">Value</span><span class="token operator">&lt;</span><a href="../-identifier-list-screen-state/index.html">IdentifierListScreenState</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Observable screen state flow.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-167438727%2FFunctions%2F1428137388" anchor-label="onAddIdentifierClick" id="-167438727%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-add-identifier-click.html"><span>on</span><wbr><span>Add</span><wbr><span>Identifier</span><wbr><span><span>Click</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-167438727%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-add-identifier-click.html"><span class="token function">onAddIdentifierClick</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Opens the add identifier dialog.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1216890218%2FFunctions%2F1428137388" anchor-label="onAddIdentifierCodeChanged" id="1216890218%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-add-identifier-code-changed.html"><span>on</span><wbr><span>Add</span><wbr><span>Identifier</span><wbr><span>Code</span><wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1216890218%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-add-identifier-code-changed.html"><span class="token function">onAddIdentifierCodeChanged</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">code<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Updates confirmation code input in dialog.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="613839754%2FFunctions%2F1428137388" anchor-label="onAddIdentifierDialogBack" id="613839754%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-add-identifier-dialog-back.html"><span>on</span><wbr><span>Add</span><wbr><span>Identifier</span><wbr><span>Dialog</span><wbr><span><span>Back</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="613839754%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-add-identifier-dialog-back.html"><span class="token function">onAddIdentifierDialogBack</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Goes back to provider selection or closes dialog.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1951937249%2FFunctions%2F1428137388" anchor-label="onAddIdentifierDialogDismiss" id="-1951937249%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-add-identifier-dialog-dismiss.html"><span>on</span><wbr><span>Add</span><wbr><span>Identifier</span><wbr><span>Dialog</span><wbr><span><span>Dismiss</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1951937249%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-add-identifier-dialog-dismiss.html"><span class="token function">onAddIdentifierDialogDismiss</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Closes the add identifier dialog.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-168060125%2FFunctions%2F1428137388" anchor-label="onAddIdentifierEmailChanged" id="-168060125%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-add-identifier-email-changed.html"><span>on</span><wbr><span>Add</span><wbr><span>Identifier</span><wbr><span>Email</span><wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-168060125%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-add-identifier-email-changed.html"><span class="token function">onAddIdentifierEmailChanged</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">email<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Updates email input in dialog.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-673219204%2FFunctions%2F1428137388" anchor-label="onAddIdentifierPasswordChanged" id="-673219204%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-add-identifier-password-changed.html"><span>on</span><wbr><span>Add</span><wbr><span>Identifier</span><wbr><span>Password</span><wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-673219204%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-add-identifier-password-changed.html"><span class="token function">onAddIdentifierPasswordChanged</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">password<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Updates password input in dialog.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1127713135%2FFunctions%2F1428137388" anchor-label="onAddIdentifierPhoneChanged" id="-1127713135%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-add-identifier-phone-changed.html"><span>on</span><wbr><span>Add</span><wbr><span>Identifier</span><wbr><span>Phone</span><wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1127713135%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-add-identifier-phone-changed.html"><span class="token function">onAddIdentifierPhoneChanged</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">phone<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Updates phone number input in dialog.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1753250683%2FFunctions%2F1428137388" anchor-label="onAddIdentifierSelectProvider" id="-1753250683%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-add-identifier-select-provider.html"><span>on</span><wbr><span>Add</span><wbr><span>Identifier</span><wbr><span>Select</span><wbr><span><span>Provider</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1753250683%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-add-identifier-select-provider.html"><span class="token function">onAddIdentifierSelectProvider</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">authProvider<span class="token operator">: </span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.feature.user.domain.model.authprovider/UserAuthProvider///PointingToDeclaration/">UserAuthProvider</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Selects an auth provider from the dialog.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1734094332%2FFunctions%2F1428137388" anchor-label="onAddIdentifierSendCode" id="-1734094332%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-add-identifier-send-code.html"><span>on</span><wbr><span>Add</span><wbr><span>Identifier</span><wbr><span>Send</span><wbr><span><span>Code</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1734094332%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-add-identifier-send-code.html"><span class="token function">onAddIdentifierSendCode</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sends confirmation code for the active dialog flow.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1388947425%2FFunctions%2F1428137388" anchor-label="onAddIdentifierSubmit" id="1388947425%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-add-identifier-submit.html"><span>on</span><wbr><span>Add</span><wbr><span>Identifier</span><wbr><span><span>Submit</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1388947425%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-add-identifier-submit.html"><span class="token function">onAddIdentifierSubmit</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Submits adding the identifier with confirmed code/password.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="762440344%2FFunctions%2F1428137388" anchor-label="onAddIdentifierTogglePasswordVisibility" id="762440344%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-add-identifier-toggle-password-visibility.html"><span>on</span><wbr><span>Add</span><wbr><span>Identifier</span><wbr><span>Toggle</span><wbr><span>Password</span><wbr><span><span>Visibility</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="762440344%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-add-identifier-toggle-password-visibility.html"><span class="token function">onAddIdentifierTogglePasswordVisibility</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Toggles password visibility in dialog.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="906964906%2FFunctions%2F1428137388" anchor-label="onApplyFilters" id="906964906%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-apply-filters.html"><span>on</span><wbr><span>Apply</span><wbr><span><span>Filters</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="906964906%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-apply-filters.html"><span class="token function">onApplyFilters</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Applies selected filters and re-fetches list.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="182877250%2FFunctions%2F1428137388" anchor-label="onBackClick" id="182877250%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-back-click.html"><span>on</span><wbr><span>Back</span><wbr><span><span>Click</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="182877250%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-back-click.html"><span class="token function">onBackClick</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Navigates back to previous screen.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1955393187%2FFunctions%2F1428137388" anchor-label="onFilterChanged" id="-1955393187%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-filter-changed.html"><span>on</span><wbr><span>Filter</span><wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1955393187%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-filter-changed.html"><span class="token function">onFilterChanged</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">filterId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">filterState<span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.filter/-listing-filter-state/index.html">ListingFilterState</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called when an individual filter state changes.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1390162569%2FFunctions%2F1428137388" anchor-label="onIdentifierClick" id="1390162569%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-identifier-click.html"><span>on</span><wbr><span>Identifier</span><wbr><span><span>Click</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1390162569%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-identifier-click.html"><span class="token function">onIdentifierClick</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">identifierId<span class="token operator">: </span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user/UserIdentifierId///PointingToDeclaration/">UserIdentifierId</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Navigates to identifier detail screen.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1150309790%2FFunctions%2F1428137388" anchor-label="onIdentifierDeleted" id="-1150309790%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-identifier-list-owner/on-identifier-deleted.html"><span>on</span><wbr><span>Identifier</span><wbr><span><span>Deleted</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1150309790%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../-identifier-list-owner/on-identifier-deleted.html"><span class="token function">onIdentifierDeleted</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">identifierId<span class="token operator">: </span><span data-unresolved-link="io.github.mudrichenkoevgeny.shared.foundation.core.common.domain.model.user/UserIdentifierId///PointingToDeclaration/">UserIdentifierId</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Removes or refreshes the identifier list when an identifier is deleted.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="555380111%2FFunctions%2F1428137388" anchor-label="onLoadNextPage" id="555380111%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-load-next-page.html"><span>on</span><wbr><span>Load</span><wbr><span>Next</span><wbr><span><span>Page</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="555380111%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-load-next-page.html"><span class="token function">onLoadNextPage</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Triggers loading next page.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1761990920%2FFunctions%2F1428137388" anchor-label="onRefresh" id="1761990920%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-refresh.html"><span>on</span><wbr><span><span>Refresh</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1761990920%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-refresh.html"><span class="token function">onRefresh</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Refreshes current identifier list page.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="999610365%2FFunctions%2F1428137388" anchor-label="onSortChanged" id="999610365%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-sort-changed.html"><span>on</span><wbr><span>Sort</span><wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="999610365%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-sort-changed.html"><span class="token function">onSortChanged</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sortState<span class="token operator">: </span><a href="../../../../core/io.github.mudrichenkoevgeny.kmp.core.common.infrastructure.listing.sort/-listing-sort-state/index.html">ListingSortState</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called when active sort state changes.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-355558005%2FFunctions%2F1428137388" anchor-label="onToggleFilterPanel" id="-355558005%2FFunctions%2F1428137388" data-filterable-set=":feature:user/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-toggle-filter-panel.html"><span>on</span><wbr><span>Toggle</span><wbr><span>Filter</span><wbr><span><span>Panel</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-355558005%2FFunctions%2F1428137388"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:user/commonMain" data-filterable-set=":feature:user/commonMain" data-active="" data-toggle=":feature:user/commonMain">common</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:user/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-toggle-filter-panel.html"><span class="token function">onToggleFilterPanel</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Toggles expansion state of filter options panel.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

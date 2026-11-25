@@ -1,0 +1,434 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>RegistrationByEmailComponentMock</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    kmp-platform-sdk
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.1.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":feature:clientuser/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":feature:clientuser/commonMain" data-filter=":feature:clientuser/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    kmp-platform-sdk
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="clientuser::io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.ui.screen.auth.registration.email/RegistrationByEmailComponentMock///PointingToDeclaration//753832321">
+  <div class="breadcrumbs"><a href="../../index.html">clientuser</a><span class="delimiter">/</span><a href="../index.html">io.github.mudrichenkoevgeny.kmp.feature.clientuser.mock.ui.screen.auth.registration.email</a><span class="delimiter">/</span><span class="current">RegistrationByEmailComponentMock</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Registration</span><wbr><span>By</span><wbr><span>Email</span><wbr><span>Component</span><wbr><span><span>Mock</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">RegistrationByEmailComponentMock</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">initialState<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email/-registration-by-email-screen-state/index.html">RegistrationByEmailScreenState</a><span class="token operator"> = </span>RegistrationByEmailScreenState()</span></span><span class="token punctuation">)</span> : <a href="../../io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email/-registration-by-email-component/index.html">RegistrationByEmailComponent</a></div><p class="paragraph">Mock implementation of <a href="../../io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email/-registration-by-email-component/index.html">RegistrationByEmailComponent</a> for testing and Compose previews.</p><h4 class="tableheader">Parameters</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>initial</span><wbr><span><span>State</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Initial screen state to initialize the mock with.</p></div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="-530669052%2FConstructors%2F753832321" anchor-label="RegistrationByEmailComponentMock" id="-530669052%2FConstructors%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-registration-by-email-component-mock.html"><span>Registration</span><wbr><span>By</span><wbr><span>Email</span><wbr><span>Component</span><wbr><span><span>Mock</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-530669052%2FConstructors%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">initialState<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email/-registration-by-email-screen-state/index.html">RegistrationByEmailScreenState</a><span class="token operator"> = </span>RegistrationByEmailScreenState()</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-549926173%2FProperties%2F753832321" anchor-label="backCalls" id="-549926173%2FProperties%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="back-calls.html"><span>back</span><wbr><span><span>Calls</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-549926173%2FProperties%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="back-calls.html">backCalls</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="605999840%2FProperties%2F753832321" anchor-label="lastCodeChanged" id="605999840%2FProperties%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="last-code-changed.html"><span>last</span><wbr><span>Code</span><wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="605999840%2FProperties%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="last-code-changed.html">lastCodeChanged</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-563094725%2FProperties%2F753832321" anchor-label="lastEmailChanged" id="-563094725%2FProperties%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="last-email-changed.html"><span>last</span><wbr><span>Email</span><wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-563094725%2FProperties%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="last-email-changed.html">lastEmailChanged</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="403042958%2FProperties%2F753832321" anchor-label="lastPasswordChanged" id="403042958%2FProperties%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="last-password-changed.html"><span>last</span><wbr><span>Password</span><wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="403042958%2FProperties%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="last-password-changed.html">lastPasswordChanged</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2005149281%2FProperties%2F753832321" anchor-label="registerCalls" id="-2005149281%2FProperties%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="register-calls.html"><span>register</span><wbr><span><span>Calls</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2005149281%2FProperties%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="register-calls.html">registerCalls</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1843436271%2FProperties%2F753832321" anchor-label="sendCodeCalls" id="-1843436271%2FProperties%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="send-code-calls.html"><span>send</span><wbr><span>Code</span><wbr><span><span>Calls</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1843436271%2FProperties%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="send-code-calls.html">sendCodeCalls</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="549527753%2FProperties%2F753832321" anchor-label="stack" id="549527753%2FProperties%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="stack.html"><span><span>stack</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="549527753%2FProperties%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="stack.html">stack</a><span class="token operator">: </span><span data-unresolved-link="com.arkivanov.decompose.value/Value///PointingToDeclaration/">Value</span><span class="token operator">&lt;</span><span data-unresolved-link="com.arkivanov.decompose.router.stack/ChildStack///PointingToDeclaration/">ChildStack</span><span class="token operator">&lt;</span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email/-registration-by-email-step-config/index.html">RegistrationByEmailStepConfig</a><span class="token punctuation">, </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email/-registration-by-email-component/-child/index.html">RegistrationByEmailComponent.Child</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Decompose navigation stack driving the registration wizard steps.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="576519701%2FProperties%2F753832321" anchor-label="stackNavigation" id="576519701%2FProperties%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="stack-navigation.html"><span>stack</span><wbr><span><span>Navigation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="576519701%2FProperties%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="stack-navigation.html">stackNavigation</a><span class="token operator">: </span><span data-unresolved-link="com.arkivanov.decompose.router.stack/StackNavigation///PointingToDeclaration/">StackNavigation</span><span class="token operator">&lt;</span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email/-registration-by-email-step-config/index.html">RegistrationByEmailStepConfig</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Stack navigator for the registration wizard.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-469021984%2FProperties%2F753832321" anchor-label="state" id="-469021984%2FProperties%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="state.html"><span><span>state</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-469021984%2FProperties%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="state.html">state</a><span class="token operator">: </span><span data-unresolved-link="com.arkivanov.decompose.value/Value///PointingToDeclaration/">Value</span><span class="token operator">&lt;</span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email/-registration-by-email-screen-state/index.html">RegistrationByEmailScreenState</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Current UI state for <a href="../../io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email/-registration-by-email-screen.html">RegistrationByEmailScreen</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1794435325%2FProperties%2F753832321" anchor-label="togglePasswordVisibilityCalls" id="1794435325%2FProperties%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="toggle-password-visibility-calls.html"><span>toggle</span><wbr><span>Password</span><wbr><span>Visibility</span><wbr><span><span>Calls</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1794435325%2FProperties%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="toggle-password-visibility-calls.html">togglePasswordVisibilityCalls</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-1548037169%2FFunctions%2F753832321" anchor-label="onBackClick" id="-1548037169%2FFunctions%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-back-click.html"><span>on</span><wbr><span>Back</span><wbr><span><span>Click</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1548037169%2FFunctions%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="on-back-click.html"><span class="token function">onBackClick</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Pops the screen or returns from registration input to email input.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-973932293%2FFunctions%2F753832321" anchor-label="onCodeChanged" id="-973932293%2FFunctions%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-code-changed.html"><span>on</span><wbr><span>Code</span><wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-973932293%2FFunctions%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="on-code-changed.html"><span class="token function">onCodeChanged</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">code<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Updates the confirmation code field.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="635918770%2FFunctions%2F753832321" anchor-label="onEmailChanged" id="635918770%2FFunctions%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-email-changed.html"><span>on</span><wbr><span>Email</span><wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="635918770%2FFunctions%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="on-email-changed.html"><span class="token function">onEmailChanged</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">email<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Updates the email field; may auto-advance to password/code step if a cooldown is active.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1924399245%2FFunctions%2F753832321" anchor-label="onPasswordChanged" id="1924399245%2FFunctions%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-password-changed.html"><span>on</span><wbr><span>Password</span><wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1924399245%2FFunctions%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="on-password-changed.html"><span class="token function">onPasswordChanged</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">password<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Updates the password field; triggers real-time password policy validation.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1930482933%2FFunctions%2F753832321" anchor-label="onRegisterClick" id="-1930482933%2FFunctions%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-register-click.html"><span>on</span><wbr><span>Register</span><wbr><span><span>Click</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1930482933%2FFunctions%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="on-register-click.html"><span class="token function">onRegisterClick</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Submits email, password, and code to create the account.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1768769923%2FFunctions%2F753832321" anchor-label="onSendCodeClick" id="-1768769923%2FFunctions%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-send-code-click.html"><span>on</span><wbr><span>Send</span><wbr><span>Code</span><wbr><span><span>Click</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1768769923%2FFunctions%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="on-send-code-click.html"><span class="token function">onSendCodeClick</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Requests a registration confirmation code for the current email.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1428382167%2FFunctions%2F753832321" anchor-label="onTogglePasswordVisibility" id="-1428382167%2FFunctions%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-toggle-password-visibility.html"><span>on</span><wbr><span>Toggle</span><wbr><span>Password</span><wbr><span><span>Visibility</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1428382167%2FFunctions%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="on-toggle-password-visibility.html"><span class="token function">onTogglePasswordVisibility</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Toggles password field masking.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="850846880%2FFunctions%2F753832321" anchor-label="setStep" id="850846880%2FFunctions%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-step.html"><span>set</span><wbr><span><span>Step</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="850846880%2FFunctions%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-step.html"><span class="token function">setStep</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">config<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email/-registration-by-email-step-config/index.html">RegistrationByEmailStepConfig</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Updates the current active step configuration in the Decompose child stack.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1035459337%2FFunctions%2F753832321" anchor-label="updateState" id="1035459337%2FFunctions%2F753832321" data-filterable-set=":feature:clientuser/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":feature:clientuser/commonMain" data-filterable-set=":feature:clientuser/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-state.html"><span>update</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1035459337%2FFunctions%2F753832321"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:clientuser/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="update-state.html"><span class="token function">updateState</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">state<span class="token operator">: </span><a href="../../io.github.mudrichenkoevgeny.kmp.feature.clientuser.ui.screen.auth.registration.email/-registration-by-email-screen-state/index.html">RegistrationByEmailScreenState</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Updates the current screen state emitted by <a href="update-state.html">state</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
