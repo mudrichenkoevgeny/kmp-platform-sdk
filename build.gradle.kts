@@ -53,6 +53,12 @@ subprojects {
         }
     }
 
+    tasks.withType<Test>().configureEach {
+        systemProperty("user.timezone", "UTC")
+        systemProperty("user.language", "en")
+        systemProperty("user.country", "US")
+    }
+
     plugins.withId("io.github.takahirom.roborazzi") {
         tasks.withType<KotlinCompilationTask<*>>().configureEach {
             if (name.contains("Test", ignoreCase = true)) {
