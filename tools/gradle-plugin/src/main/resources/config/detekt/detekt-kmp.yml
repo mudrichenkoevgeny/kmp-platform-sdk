@@ -24,3 +24,5 @@ kmp-rules:
   active: true
   NoRawStringInComposeUiRule:
     active: true
+  ScreenshotTestGraphicsModeRule:
+    active: true

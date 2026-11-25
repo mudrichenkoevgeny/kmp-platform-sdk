@@ -11,6 +11,9 @@ Custom static analysis rules for [Detekt](https://detekt.dev/) enforcing specifi
    - *Ignores tests and `@Preview` functions.*
    - *Ignores explicitly allowed argument names like `testTag` and `key`.*
 
+2. **`ScreenshotTestGraphicsModeRule`:**
+   Enforces that Robolectric screenshot test classes (classes ending with `ScreenshotTest`) declare `@GraphicsMode(GraphicsMode.Mode.NATIVE)` to ensure deterministic rendering across OS environments.
+
 ---
 
 ## Installation & Integration

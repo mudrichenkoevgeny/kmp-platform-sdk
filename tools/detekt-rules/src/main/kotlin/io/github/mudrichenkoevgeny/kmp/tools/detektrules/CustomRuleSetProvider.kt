@@ -21,7 +21,8 @@ public class CustomRuleSetProvider : RuleSetProvider {
     public override fun instance(): RuleSet = RuleSet(
         ruleSetId,
         listOf(
-            ::NoRawStringInComposeUiRule
+            ::NoRawStringInComposeUiRule,
+            ::ScreenshotTestGraphicsModeRule
         )
     )
 }

@@ -13,10 +13,12 @@ import io.github.mudrichenkoevgeny.kmp.testing.ui.test.captureAppScreen
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
 import kotlin.test.Test
 
 @InternalApi
 @RunWith(ParameterizedRobolectricTestRunner::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(
     sdk = [ROBOLECTRIC_SDK],
     application = Application::class,
