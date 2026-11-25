@@ -40,6 +40,16 @@ jobs:
       - name: Verify Roborazzi Screenshot Regression
         run: ./gradlew verifyRoborazzi
 
+      - name: Upload Roborazzi Test Reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: roborazzi-reports
+          path: |
+            **/build/outputs/roborazzi/*_compare.png
+            **/build/test-results/testAndroidHostTest/TEST-*.xml
+          if-no-files-found: ignore
+
       - name: Assemble Sample Host Applications
         run: |
           ./gradlew :sampleclient:androidApp:assembleDebug :samplemanagement:androidApp:assembleDebug
